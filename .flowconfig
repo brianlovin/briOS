@@ -1,5 +1,4 @@
 [ignore]
-.*/node_modules/config-chain/test/broken.json
 
 [include]
 
@@ -22,4 +21,4 @@ unclear-type=warn
 unsafe-getters-setters=error
 
 [version]
-0.80.0
+0.77.0

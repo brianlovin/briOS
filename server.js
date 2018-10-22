@@ -1,7 +1,7 @@
 // @flow
 const next = require('next')
 const path = require('path')
-const routes = require('./routes')
+const routes = require('./config/routes')
 const prod = process.env.NODE_ENV === 'production'
 const app = next({ dev: !prod })
 const handler = routes.getRequestHandler(app)

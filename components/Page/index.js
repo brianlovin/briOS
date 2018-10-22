@@ -14,7 +14,6 @@ export { SectionHeading, Heading, Subheading }
 type Props = {
   children: React.Node,
   showEmailCapture?: boolean,
-  dataCy?: string,
 }
 
 type State = {
@@ -75,20 +74,13 @@ export default class Page extends React.Component<Props, State> {
       <ThemeProvider theme={theme}>
         <Container>
           <Header showHeaderShadow={showHeaderShadow}/>
-          
           <InnerContainer>
             {this.props.children}
           </InnerContainer>
-          
           <Footer />
-          
-          <ScrollToTop 
-            isVisible={scrollToTopVisible} 
-            onClick={this.scrollToTop}
-          >
+          <ScrollToTop isVisible={scrollToTopVisible} onClick={this.scrollToTop}>
             <Icon glyph={'view-forward'} size={32} />
           </ScrollToTop>
-
         </Container>
       </ThemeProvider>
     )

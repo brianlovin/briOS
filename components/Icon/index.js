@@ -81,9 +81,23 @@ export const Glyph = ({ glyph }: GlyphProps) => {
     case 'spectrum-solid':
       return (
         <g>
-          <path fillRule="evenodd" clipRule="evenodd" d="M12 24C23 24 24 23 24 12C24 1 23 0 12 0C1 0 0 1 0 12C0 23 1 24 12 24ZM7.5 12C7.22388 12 7 11.7761 7 11.5V7.5C7 7.22388 7.22388 7 7.5 7H9C13.4183 7 17 10.5817 17 15V16.5C17 16.7761 16.7761 17 16.5 17H12.5C12.2239 17 12 16.7761 12 16.5V15C12 13.3431 10.6569 12 9 12H7.5Z" transform="translate(4 4)" />
+          <path fillRule="evenodd" clipRule="evenodd" d="M12 24C23 24 24 23 24 12C24 1 23 0 12 0C1 0 0 1 0 12C0 23 1 24 12 24ZM7.5 12C7.22388 12 7 11.7761 7 11.5V7.5C7 7.22388 7.22388 7 7.5 7H9C13.4183 7 17 10.5817 17 15V16.5C17 16.7761 16.7761 17 16.5 17H12.5C12.2239 17 12 16.7761 12 16.5V15C12 13.3431 10.6569 12 9 12H7.5Z" transform="translate(4 4)"/>
         </g>
       );
+    case 'pause':
+      return (
+        <g>
+          <rect width="5" height="26" rx="2"/>
+          <rect x="11" width="5" height="26" rx="2"/>
+        </g>
+
+      )
+    case 'play':
+      return (
+        <g>
+          <path fillRule="evenodd" clipRule="evenodd" d="M1 3C1 1.35191 2.88153 0.411146 4.2 1.4L18.8667 12.4C19.9333 13.2 19.9333 14.8 18.8667 15.6L4.2 26.6C2.88153 27.5889 1 26.6481 1 25V3Z"/>
+        </g>
+      )
   }
 };
 

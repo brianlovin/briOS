@@ -1,9 +1,9 @@
 {
   "name": "brian-lovin-next",
   "version": "1.0.0",
-  "description": "https://brianlovin.com",
   "scripts": {
     "dev": "node server.js",
+    "deploy": "now",
     "build": "next build",
     "start": "NODE_ENV=production node server.js",
     "flow": "flow",
@@ -12,44 +12,40 @@
     "flow status": "flow status",
     "flow coverage": "flow coverage"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/brianlovin/brian-lovin-next.git"
-  },
-  "author": "Brian Lovin",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/brianlovin/brian-lovin-next/issues"
-  },
-  "homepage": "https://github.com/brianlovin/brian-lovin-next#readme",
   "dependencies": {
-    "express": "^4.16.3",
-    "isomorphic-unfetch": "^2.1.1",
-    "next": "^6.1.2",
+    "eslint": "^5.7.0",
+    "express": "^4.16.4",
+    "isomorphic-unfetch": "^3.0.0",
+    "next": "^7.0.2",
     "next-compose-plugins": "^2.1.1",
     "next-nprogress": "^1.1.0",
     "next-optimized-images": "^1.4.1",
     "next-routes": "^1.4.2",
-    "react": "^16.5.0",
+    "react": "^16.5.2",
+    "react-clipboard": "^1.3.2",
     "react-clipboard.js": "^2.0.0",
-    "react-dom": "^16.5.0",
-    "react-image": "^1.4.1",
-    "react-markdown": "^3.6.0",
-    "react-visibility-sensor": "^4.1.0",
+    "react-dom": "^16.5.2",
+    "react-image": "^1.5.1",
+    "react-instantsearch": "^5.3.1",
+    "react-markdown": "^4.0.3",
+    "react-visibility": "^0.3.0",
+    "react-visibility-sensor": "^3.13.0",
     "serve-favicon": "^2.5.0",
-    "styled-components": "^3.4.5",
+    "styled-components": "^3.x.x",
     "throttle-debounce": "^2.0.1"
   },
   "devDependencies": {
-    "babel-eslint": "^9.0.0",
-    "babel-plugin-styled-components": "^1.6.4",
+    "babel-eslint": "^8.2.6",
+    "babel-plugin-styled-components": "^1.8.0",
     "babel-plugin-transform-define": "^1.3.0",
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
-    "eslint": "^5.5.0",
-    "eslint-plugin-flowtype": "^2.50.0",
+    "eslint-plugin-flowtype": "^2.50.3",
     "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-react": "^7.11.1",
-    "flow-bin": "^0.80.0"
-  }
+    "flow-bin": "^0.77.0",
+    "now-env": "^3.1.0",
+    "wait-on": "^2.1.1"
+  },
+  "license": "ISC"
 }

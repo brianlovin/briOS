@@ -6,6 +6,7 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  align-items: center;
   height: 100%;
   max-width: 100%;
 `
@@ -13,13 +14,15 @@ export const Container = styled.div`
 export const InnerContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
   flex: 1 0 auto;
   padding-top: 64px;
   padding-left: 32px;
   padding-right: 32px;
   position: relative;
+  width: 100%;
+  max-width: 768px;
 
   @media (max-width: 968px) {
     align-items: flex-start; 
@@ -34,10 +37,8 @@ export const SectionHeading = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: center;
-  margin-top: 72px;
-  margin-bottom: 48px;
-  max-width: 50%;
+  align-items: flex-start;
+  margin: 72px 0 0;
 
   @media (max-width: 968px) {
     align-items: flex-start;
@@ -46,10 +47,9 @@ export const SectionHeading = styled.div`
 `
 
 export const Heading = styled.h3`
-  font-size: 40px;
+  font-size: 24px;
   font-weight: 700;
   color: ${props => props.theme.text.default};
-  text-align: center;
 
   @media (max-width: 968px) {
     text-align: left; 
@@ -58,10 +58,9 @@ export const Heading = styled.h3`
 `
 
 export const Subheading = styled.h4`
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 400;
   color: ${props => props.theme.text.tertiary};
-  text-align: center;
   
   @media (max-width: 968px) {
     text-align: left;  
@@ -77,15 +76,16 @@ export const ScrollToTop = styled.button`
   align-items: center;
   justify-content: center;
   position: fixed;
-  bottom: 32px;
-  right: 32px;
+  bottom: 16px;
+  right: 16px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.08);
   transition: all 0.2s ease-in-out;
   opacity: ${props => props.isVisible ? '1' : '0'};
-  background: ${props => props.theme.brand.default};
+  background: ${props => props.theme.text.default};
   color: ${props => props.theme.bg.default};
   transform: translateY(${props => props.isVisible ? '0' : '80px'});
   cursor: pointer;
+  z-index: 9999;
 
   &:hover {
     box-shadow: 0 8px 24px rgba(0,0,0,0.10);
@@ -97,7 +97,7 @@ export const ScrollToTop = styled.button`
     box-shadow: 0 6px 20px rgba(0,0,0,0.09);
     transform :translateY(-2px);
     transition: all 0.2s ease-in-out;
-    background: ${props => tint(props.theme.brand.default, -4)};
+    background: ${props => tint(props.theme.text.default, -4)};
   }
 
   .icon {
@@ -107,5 +107,9 @@ export const ScrollToTop = styled.button`
   @media (max-width: 968px) {
     bottom: 16px;
     right: 16px;
+  }
+
+  @media (max-width: 556px) {
+    display: none;
   }
 `

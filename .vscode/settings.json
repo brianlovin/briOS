@@ -5,5 +5,8 @@
   "flow.useNPMPackagedFlow": true,
   "eslint.options": {
     "configFile": "../.eslintrc.json"
-  }
+  },
+  "eslint.workingDirectories": [
+    "./api"
+  ],
 }

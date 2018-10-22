@@ -47,6 +47,7 @@ export const Shadow = {
   high: '0 8px 16px',
 };
 
+
 export const Content = css`
   h1 {
     font-size: 40px;
@@ -101,10 +102,15 @@ export const Content = css`
 
   a {
     color: ${props => props.theme.brand.default};
+    font-weight: 500;
   }
 
   a:hover {
     text-decoration: underline;
+  }
+
+  a:hover button {
+    text-decoration: none!important;
   }
 
   ul, ol {
@@ -126,4 +132,11 @@ export const Content = css`
   strong {
     font-weight: 600;
   }
+`
+
+export const Truncate = (width: number) => css`
+  width: ${width}px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `

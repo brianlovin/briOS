@@ -7,14 +7,14 @@ import '../static/normalize'
 
 export default class MyDocument extends Document {
   // $FlowFixMe
-  static getInitialProps({ renderPage }) {
+  static getInitialProps ({ renderPage }) {
     const sheet = new ServerStyleSheet()
     const page = renderPage(App => props => sheet.collectStyles(<App {...props} />))
     const styleTags = sheet.getStyleElement()
     return { ...page, styleTags }
   }
 
-  render() {
+  render () {
     return (
       <html lang="en">
         <Head>
@@ -31,7 +31,7 @@ export default class MyDocument extends Document {
           <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`} />
           <script
             dangerouslySetInnerHTML={{
-              __html: `
+                __html: `
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());

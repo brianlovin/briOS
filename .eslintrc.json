@@ -1,18 +1,14 @@
 {
   "parser": "babel-eslint",
-  "env": {
-    "browser": true,
-    "node": true
-  },
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:flowtype/recommended"
   ],
   "plugins": [
-    "react",
-    "jsx-a11y",
-    "import",
+    "react", 
+    "jsx-a11y", 
+    "import", 
     "flowtype"
   ]
 }
