@@ -8,6 +8,7 @@ import { theme } from '../components/theme'
 import GlobalPlayerContext, { defaultPlayerContext } from '../components/GlobalPlayer/context'
 import GlobalPlayer from '../components/GlobalPlayer'
 import type { SimplecastEpisode } from '../types'
+import { GlobalStyles } from '../static/normalize'
 
 class MyApp extends App {
   constructor() {
@@ -91,6 +92,7 @@ class MyApp extends App {
     const { Component, pageProps } = this.props
     return (
       <Container>
+        <GlobalStyles />
         <NProgressStyles color={theme.brand.default} />
         <Head>
           <title>Brian Lovin · Nice Boy™</title>
