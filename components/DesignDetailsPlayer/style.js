@@ -5,13 +5,24 @@ import { theme } from '../theme'
 export const Card = styled.div`
   background: #fff;
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+  transition: all 0.2s ease-in-out;
   width: 100%;
   padding: 8px;
   display: flex;
   margin-top: 24px;
   align-items: center;
   position: relative;
+
+  &:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+    transition: all 0.2s ease-in-out;
+  }
+
+  &:active {
+    box-shadow: 0 6px 20px rgba(0,0,0,0.09);
+    transition: all 0.2s ease-in-out;
+  }
 
   > a {
     width: 114px;
