@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react'
-import data from './data'
+import data from '../../config/music'
 import { Grid, Spacer } from './style'
 import AlbumCard from './AlbumCard'
 

@@ -1,6 +1,7 @@
 // @flow
 import styled from 'styled-components'
 import { theme } from '../theme'
+import { tint } from '../globals'
 
 export const Card = styled.div`
   background: #fff;
@@ -93,15 +94,16 @@ export const Actions = styled.div`
 `
 
 export const AllEpsButton = styled.button`
-  background: ${theme.text.tertiary};
+  background: ${theme.bg.wash};
   font-size: 16px;
-  color: #fff;
+  color: ${theme.text.tertiary};
   font-weight: 600;
-  padding: 8px 24px;
+  padding: 10px 24px;
   border-radius: 20px;
   cursor: pointer;
 
   &:hover {
-    background: ${theme.text.default};
+    background: ${tint(theme.bg.wash, -4)};
+    color: ${theme.text.secondary};
   }
 `
