@@ -4,6 +4,8 @@ import type { SimplecastEpisode } from '../../types'
 import { podcasts, api } from '../../config'
 import { getDateObject } from '../../lib/getDateObject'
 import EpisodePlayButton from '../EpisodePlayButton'
+import AtvImage from '../AtvImage'
+import { ATVScript } from '../../lib/atvimg/script'
 import {
   Card,
   Artwork,
@@ -25,11 +27,19 @@ class DesignDetailsPlayer extends React.Component<{}, State> {
   
   componentDidMount = async () => {
     const episodes = await api.getEpisodes(podcasts[0].id)
+    
     return this.setState({
       episodes: episodes ? episodes : [],
       isLoading: false,
       error: episodes ? false : true
     }) 
+  }
+
+  componentDidUpdate(_:any, prevState: State) {
+    const curr = this.state
+    if (prevState.isLoading && !curr.isLoading) {
+      ATVScript()
+    }
   }
 
   render() {
@@ -47,7 +57,7 @@ class DesignDetailsPlayer extends React.Component<{}, State> {
       return (
         <Card>
           <a href="https://spec.fm/podcasts/design-details" target="_blank" rel="noopener noreferrer">
-            <Artwork src={'/static/img/podcasts/designdetails.jpg'} />
+            <AtvImage src={'/static/img/podcasts/designdetails.jpg'} Component={Artwork} />
           </a>
   
           <ContentContainer>

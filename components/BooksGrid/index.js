@@ -2,30 +2,31 @@
 import * as React from 'react'
 import data from './data'
 import { Grid, Spacer } from './style'
-import AlbumCard from './AlbumCard'
+import BookCard from './BookCard'
 
 type Props = {
   truncated: boolean
 }
 
-class MusicGrid extends React.Component<Props> {
+class BookGrid extends React.Component<Props> {
   render() {
     const { truncated } = this.props
-    const albums = truncated 
+    const books = truncated 
       ? data.slice(0, 5)
       : data
     
     return (
       <Grid>
         {
-          albums.map(album => (
-            <AlbumCard truncated={truncated} key={album.url} album={album} />
+          books.map(book => (
+            <BookCard truncated={truncated} key={book.url} book={book} />
           ))
         }
+
         <Spacer />
       </Grid>
     )
   }
 }
 
-export default MusicGrid
+export default BookGrid

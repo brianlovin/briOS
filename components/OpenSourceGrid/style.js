@@ -14,6 +14,14 @@ export const Grid = styled.div`
   ${StyledCard} {
     height: 100%;
   }
+
+  @media (max-width: 762px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 512px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
 `
 
 export const CardContent = styled.div`

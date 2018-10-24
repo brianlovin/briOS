@@ -4,7 +4,7 @@ import Page, { SectionHeading, Heading, Subheading } from '../components/Page'
 import type { ConfigPodcast, GetInitialProps } from '../types'
 import DesignDetailsGrid from '../components/DesignDetailsGrid'
 import OpenSourceGrid from '../components/OpenSourceGrid'
-import BookGrid from '../components/BookGrid'
+import BooksGrid from '../components/BooksGrid'
 import MusicGrid from '../components/MusicGrid'
 import DesignDetailsPlayer from '../components/DesignDetailsPlayer'
 
@@ -52,7 +52,7 @@ class Index extends React.Component<Props> {
           <Subheading>What I’m reading</Subheading>
         </SectionHeading>
 
-        <BookGrid truncated />
+        <BooksGrid truncated />
 
         <SectionHeading>
           <Heading>Music</Heading>

@@ -9,6 +9,8 @@ import GlobalPlayerContext, { defaultPlayerContext } from '../components/GlobalP
 import GlobalPlayer from '../components/GlobalPlayer'
 import type { SimplecastEpisode } from '../types'
 import { GlobalStyles } from '../static/normalize'
+import { ATVImgStyles } from '../lib/atvimg/style'
+import { ATVScript } from '../lib/atvimg/script'
 
 class MyApp extends App {
   constructor() {
@@ -24,6 +26,10 @@ class MyApp extends App {
       onProgress: this.onProgress,
       onTrackEnded: this.onTrackEnded,
     }
+  }
+
+  componentDidMount() {
+    ATVScript()
   }
 
   addTrackToQueue = (episode: SimplecastEpisode) => {
@@ -93,6 +99,8 @@ class MyApp extends App {
     return (
       <Container>
         <GlobalStyles />
+        <ATVImgStyles />
+
         <NProgressStyles color={theme.brand.default} />
         <Head>
           <title>Brian Lovin · Nice Boy™</title>
