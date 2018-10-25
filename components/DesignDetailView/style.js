@@ -1,7 +1,7 @@
 // @flow
 import styled from 'styled-components'
 import { theme } from '../theme'
-import { tint, Shadows } from '../globals'
+import { tint, Shadows, hexa } from '../globals'
 
 export const Container = styled.div`
   width: 100%;
@@ -96,7 +96,6 @@ export const IconContainer = styled.span`
 
   @media (max-width: 752px) {
     padding-left: 16px;
-    margin-top: 32px;
   }
 
   img {
@@ -148,7 +147,7 @@ export const LeftShadow = styled.div`
   top: 0;
   bottom: 0;
   width: 48px;
-  background-image: linear-gradient(to right, ${theme.bg.wash}, transparent);
+  background-image: linear-gradient(to right, ${theme.bg.wash}, ${hexa(theme.bg.wash, 0)});
   z-index: 10;
   pointer-events: none;
 
@@ -163,7 +162,7 @@ export const RightShadow = styled.div`
   top: 0;
   bottom: 0;
   width: 48px;
-  background-image: linear-gradient(to left, ${theme.bg.wash} , transparent);
+  background-image: linear-gradient(to left, ${theme.bg.wash} , ${hexa(theme.bg.wash, 0)});
   z-index: 10;
   pointer-events: none;
 `
