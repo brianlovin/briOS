@@ -27,7 +27,8 @@ class DesignDetailsPlayer extends React.Component<{}, State> {
   
   componentDidMount = async () => {
     const episodes = await api.getEpisodes(podcasts[0].id)
-    
+    ATVScript()
+
     return this.setState({
       episodes: episodes ? episodes : [],
       isLoading: false,
@@ -48,7 +49,25 @@ class DesignDetailsPlayer extends React.Component<{}, State> {
       ? episodes.filter(ep => ep && ep.published)[0]
       : null
 
-    if (error) return null  
+    if (error) {
+      return (
+        <Card>
+          <a href="https://spec.fm/podcasts/design-details" target="_blank" rel="noopener noreferrer">
+            <AtvImage src={'/static/img/podcasts/designdetails.jpg'} Component={Artwork} />
+          </a>
+
+          <ContentContainer>
+            <Date>New episodes weekly</Date>
+            <Title>View all episodes on the Spec Network</Title>
+            <Actions>
+              <a href="https://spec.fm/podcasts/design-details" target="_blank" rel="noopener noreferrer">
+                <AllEpsButton>All Episodes</AllEpsButton>
+              </a>
+            </Actions>
+          </ContentContainer>
+        </Card>
+      )
+    }
 
     if (episode) {
       const { month, year, day } = getDateObject(episode.published_at)
@@ -74,7 +93,24 @@ class DesignDetailsPlayer extends React.Component<{}, State> {
       )
     }
 
-    return null
+    // loading
+    return (
+      <Card>
+        <a href="https://spec.fm/podcasts/design-details" target="_blank" rel="noopener noreferrer">
+          <AtvImage src={'/static/img/podcasts/designdetails.jpg'} Component={Artwork} />
+        </a>
+
+        <ContentContainer>
+          <Date>Loading...</Date>
+          <Title>Grabbing the latest episode</Title>
+          <Actions>
+            <a href="https://spec.fm/podcasts/design-details" target="_blank" rel="noopener noreferrer">
+              <AllEpsButton>All Episodes</AllEpsButton>
+            </a>
+          </Actions>
+        </ContentContainer>
+      </Card>
+    )
   }
 }
 

@@ -5,7 +5,6 @@ import Page, { SectionHeading, Heading, Subheading } from '../../components/Page
 import type { GetInitialProps } from '../../types'
 import DesignDetailsGrid from "../../components/DesignDetailsGrid";
 
-
 class DesignDetails extends React.Component<{}> {
   static async getInitialProps({ res }: GetInitialProps) {
     if (res) {
@@ -20,7 +19,7 @@ class DesignDetails extends React.Component<{}> {
     return (
       <Page>
         <Head>
-          <title>Brian Lovin · Nice Boy™</title>
+          <title>Brian Lovin · Design Details</title>
           <meta content={"Brian Lovin · Design Details™"} name="og:title" key="og:title" />
           <meta content={"A visual exploration of digital products"} name="og:description" key="og:description" />
           <meta content="/static/img/podcasts/design-details.jpg" name="og:image" key="og:image" />

@@ -27,9 +27,9 @@ class Header extends React.Component<Props> {
             </a>
           </Link>
 
-          <Link href={'/contact'}>
+          <Link href={'mailto:briandlovin@gmail.com'}>
             <a style={{marginLeft:'8px'}}>
-              <PrimaryButton>Contact</PrimaryButton>
+              <PrimaryButton>Email me</PrimaryButton>
             </a>
           </Link>
         </ButtonRowContainer>

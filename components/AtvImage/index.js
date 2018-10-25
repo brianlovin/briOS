@@ -5,7 +5,7 @@ import { Img } from './style'
 type Props = {
   children: React.Node,
   src: string,
-  Component?: React.Node
+  Component?: React.Node,
 }
 
 class AtvImage extends React.Component<Props> {

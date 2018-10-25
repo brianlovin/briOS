@@ -23,11 +23,13 @@ class Books extends React.Component<{}> {
     return (
       <Page>
         <Head>
-          <title>Brian Lovin · Four Oh Four</title>
-          <meta content={"Brian Lovin · Four Oh Four™"} name="og:title" key="og:title" />
-          <meta content={"Are you lost?"} name="og:description" key="og:description" />
-          <meta content={"Brian Lovin · Four Oh Four™"} name="twitter:title" key="og:image" />
+          <title>Brian Lovin · Nice Boy™</title>
+          <meta content={"Brian Lovin · Nice Boy™™"} name="og:title" key="og:title" />
+          <meta content={"Nicest not the iciest"} name="og:description" key="og:description" />
+          <meta content={"Brian Lovin · Nice Boy™™"} name="twitter:title" key="og:image" />
         </Head>
+
+        <p>We couldn’t find this page</p>
 
         <SectionHeading>
           <Heading>Design Details Blog</Heading>
