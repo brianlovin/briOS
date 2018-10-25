@@ -19,6 +19,7 @@ export default class MyDocument extends Document {
         <Head>
           <meta name="viewport" content="width=device-width, initial-scale=1" key="viewport" />
           <meta charSet="utf-8" />
+          <link rel="icon" type="image/png" sizes="32x32" href="/static/meta/favicon-96x96.png" />
           <link rel="icon" type="image/png" sizes="32x32" href="/static/meta/favicon-32x32.png" />
           <link rel="icon" type="image/png" sizes="16x16" href="/static/meta/favicon-16x16.png" />
           {this.props.styleTags}
