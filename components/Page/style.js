@@ -30,7 +30,7 @@ export const InnerContainer = styled.div`
     max-width: 100%;
     padding-left: 16px;
     padding-right: 16px;
-    padding-top: 96px;
+    padding-top: 48px;
   }
 `
 
@@ -61,6 +61,11 @@ export const Subheading = styled.h4`
   font-size: 18px;
   font-weight: 400;
   color: ${theme.text.tertiary};
+
+  a {
+    color: ${theme.text.default};
+    font-weight: 500;
+  }
   
   @media (max-width: 968px) {
     max-width: 100%;
@@ -72,7 +77,7 @@ export const LargeHeading = styled(Heading)`
 `
 
 export const LargeSubheading = styled(Subheading)`
-  font-size: 22px;
+  font-size: 20px;
 `
 
 export const ScrollToTop = styled.button`

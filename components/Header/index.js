@@ -29,7 +29,7 @@ class Header extends React.Component<Props> {
 
           <Link href={'mailto:briandlovin@gmail.com'}>
             <a style={{marginLeft:'8px'}}>
-              <PrimaryButton>Email me</PrimaryButton>
+              <PrimaryButton>Email</PrimaryButton>
             </a>
           </Link>
         </ButtonRowContainer>

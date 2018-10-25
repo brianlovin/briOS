@@ -1,6 +1,6 @@
 {
-    "name": "Spec",
-    "short_name": "Spec",
+    "name": "",
+    "short_name": "",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
@@ -13,8 +13,7 @@
             "type": "image/png"
         }
     ],
-    "theme_color": "#212325",
-    "background_color": "#212325",
-    "start_url": "https://spec.fm",
+    "theme_color": "#ffffff",
+    "background_color": "#ffffff",
     "display": "standalone"
 }

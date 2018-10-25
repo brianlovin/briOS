@@ -116,12 +116,12 @@ class MyApp extends App {
           <meta name="og:type" content="website" key="og:type" />
           <meta name="og:image" content="https://brianlovin.com/static/og-image.jpg" key="og:image" />
           <meta name="og:site_name" content="Brian Lovin" key="og:site_name" />
-          <meta name="theme-color" content="#212325" key="theme-color" />
+          <meta name="theme-color" content="#16171A" key="theme-color" />
           <meta name="description" content="Designer"/>
 
           <link rel="apple-touch-icon" sizes="180x180" href="static/meta/apple-touch-icon.png" />
           <link rel="manifest" href="/static/meta/site.webmanifest" />
-          <link rel="mask-icon" href="/static/meta/safari-pinned-tab.svg" color="#212325" />
+          <link rel="mask-icon" href="/static/meta/safari-pinned-tab.svg" color="#16171A" />
           <meta name="msapplication-TileColor" content="#ffffff" />
 
           {this.props.styleTags}
