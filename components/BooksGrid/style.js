@@ -24,6 +24,7 @@ export const Grid = styled.div`
     padding-top: 4px;
     padding-bottom: 4px;
     position: relative;
+    -webkit-overflow-scrolling: touch;
 
     &::-webkit-scrollbar {
       display: none;

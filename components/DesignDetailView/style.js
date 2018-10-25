@@ -89,6 +89,7 @@ export const IconContainer = styled.span`
   position: relative;
   padding-top: 8px;
   padding-left: 48px;
+  -webkit-overflow-scrolling: touch;
 
   &::-webkit-scrollbar {
     display: none;
