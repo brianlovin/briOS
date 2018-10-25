@@ -25,6 +25,8 @@ export const ViewMoreContainer = styled.div`
     width: 100%;
     background: ${tint(theme.bg.wash, -4)};
     padding: 12px;
+    font-weight: 600;
+    color: ${theme.text.tertiary};
   }
 
   button:hover {

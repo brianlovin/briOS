@@ -116,7 +116,7 @@ class DesignDetailsView extends React.Component<Props> {
           <DesignDetailsPlayer />
         </Notice>
 
-        <Divider />
+        <div style={{ padding: '16px'}} />
 
         {
           post.details.map((detail, i) => {
