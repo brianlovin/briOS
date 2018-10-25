@@ -33,6 +33,18 @@ type Props = {
 }
 
 class DesignDetailsView extends React.Component<Props> {
+  iconContainerRef = React.createRef()
+
+  componentDidUpdate(prev: Props) {
+    const curr = this.props
+    if (prev.post.slug !== curr.post.slug) {
+      if (this.iconContainerRef) {
+        // $FlowIssue
+        return this.iconContainerRef.current.scrollLeft = 0
+      }
+    }
+  }
+
   render() {
     const { post } = this.props
     const { month, year, day } = getDateObject(post.createdAt)
@@ -45,19 +57,29 @@ class DesignDetailsView extends React.Component<Props> {
         <Head>
           <title>Brian Lovin · Design Details · {post.title}</title>
           <meta content={`Brian Lovin · Design Details · ${post.title}`} name="og:title" key="og:title" />
-          <meta content={"A visual exploration of digital products"} name="og:description" key="og:description" />
+          <meta content={post.description} name="og:description" key="og:description" />
           <meta content={`/static/img/design-details/${post.slug}.jpeg`} name="og:image" key="og:image" />
           <meta content={`Brian Lovin · Design Details · ${post.title}`} name="twitter:title" key="og:image" />
         </Head>
 
         <IconWrapper>
           <LeftShadow />
-          <IconContainer>
-            <AtvImage src={src} />
+
+          <IconContainer ref={this.iconContainerRef}>
             {
-              otherPosts.map((p, i) => {
+              [post, ...otherPosts].map((p, i) => {
+                if (p.slug === post.slug) {
+                  return (
+                    <RouteLink key={p.slug} route={'design-detail'} params={{ slug: p.slug }}>
+                      <a>
+                        <AtvImage src={`/static/img/design-details/${p.slug}.jpeg`} Component={Icon} />
+                      </a>
+                    </RouteLink>
+                  )
+                }
+
                 return (
-                  <LowOpacity key={i}>
+                  <LowOpacity key={p.slug}>
                     <RouteLink route={'design-detail'} params={{ slug: p.slug }}>
                       <a>
                         <AtvImage src={`/static/img/design-details/${p.slug}.jpeg`} Component={Icon} />
@@ -68,6 +90,7 @@ class DesignDetailsView extends React.Component<Props> {
               })
             }
           </IconContainer>
+
           <RightShadow />
         </IconWrapper>
 
@@ -96,7 +119,7 @@ class DesignDetailsView extends React.Component<Props> {
         {
           post.details.map((detail, i) => {
             return (
-              <DetailContainer key={i}>
+              <DetailContainer key={`${detail.title}-${i}`}>
                 <DetailTitle>{detail.title}</DetailTitle>
                 <Markdown>{detail.description}</Markdown>
 

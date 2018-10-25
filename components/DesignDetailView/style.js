@@ -40,6 +40,12 @@ export const MediaContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  @media (max-width: 752px) {
+    width: calc(100% + 32px);
+    margin-left: -16px;
+    border-radius: 0;
+  }
 `
 
 export const Video = styled.video`
@@ -63,6 +69,11 @@ export const IconWrapper = styled.div`
   width: calc(100% + 96px);
   margin-left: -48px;
   overflow: hidden;
+
+  @media (max-width: 752px) {
+    width: calc(100% + 32px);
+    margin-left: -16px;
+  }
 `
 
 export const IconContainer = styled.span`
@@ -81,6 +92,11 @@ export const IconContainer = styled.span`
 
   &::-webkit-scrollbar {
     display: none;
+  }
+
+  @media (max-width: 752px) {
+    padding-left: 16px;
+    margin-top: 32px;
   }
 
   img {
@@ -135,6 +151,10 @@ export const LeftShadow = styled.div`
   background-image: linear-gradient(to right, ${theme.bg.wash}, transparent);
   z-index: 10;
   pointer-events: none;
+
+  @media (max-width: 752px) {
+    width: 16px;
+  }
 `
 
 export const RightShadow = styled.div`
@@ -156,5 +176,6 @@ export const LowOpacity = styled.div`
   &:hover {
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
+    z-index: 11;
   }
 `

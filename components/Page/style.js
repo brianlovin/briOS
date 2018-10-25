@@ -72,7 +72,7 @@ export const LargeHeading = styled(Heading)`
 `
 
 export const LargeSubheading = styled(Subheading)`
-  font-size: 20px;
+  font-size: 22px;
 `
 
 export const ScrollToTop = styled.button`

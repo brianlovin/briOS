@@ -39,6 +39,13 @@ export const Notice = styled.div`
   background-color: ${props => tint(props.theme.bg.wash, -4)};
   padding: 24px;
   margin: 32px 0;
+
+  @media (max-width: 752px) {
+    width: calc(100% + 32px);
+    margin-left: -16px;
+    border-radius: 0;
+    padding: 16px;
+  }
 `
 
 export const NoticeTitle = styled.h6`

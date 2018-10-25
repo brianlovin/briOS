@@ -11,9 +11,9 @@ class Post extends React.Component<{}> {
 
         <Head>
           <title>Brian Lovin · About™</title>
-          <meta content={"Brian Lovin · About™"} name="og:title" key="og:title" />
-          <meta content={"Nicest not the niciest"} name="og:description" key="og:description" />
-          <meta content={"Brian Lovin · About™"} name="twitter:title" key="twitter:title" />
+          <meta content={"Brian Lovin · About"} name="og:title" key="og:title" />
+          <meta content={"Designer"} name="og:description" key="og:description" />
+          <meta content={"Brian Lovin · About"} name="twitter:title" key="twitter:title" />
         </Head>
 
         <Container>

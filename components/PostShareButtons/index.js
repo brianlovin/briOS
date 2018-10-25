@@ -8,7 +8,7 @@ type Props = {
   post: DesignDetailsPost
 }
 
-class EpisodeShareButtons extends React.Component<Props> {
+class PostShareButtons extends React.Component<Props> {
   render() {
     const { post } = this.props
 
@@ -42,4 +42,4 @@ class EpisodeShareButtons extends React.Component<Props> {
   }
 }
 
-export default EpisodeShareButtons
+export default PostShareButtons

@@ -109,15 +109,15 @@ class MyApp extends App {
         <NProgressStyles color={theme.brand.default} />
         <Head>
           <title>Brian Lovin · Nice Boy™</title>
-          <meta content="@specfm" name="twitter:site" key="twitter:site" />
+          <meta content="@brian_lovin" name="twitter:site" key="twitter:site" />
           <meta content={"Brian Lovin · Nice Boy™"} name="og:title" key="og:title" />
-          <meta content={"Nicest not the iciest"} name="og:description" key="og:description" />
+          <meta content={"Designer"} name="og:description" key="og:description" />
           <meta content={"Brian Lovin · Nice Boy™"} name="twitter:title" key="twitter:title" />
           <meta name="og:type" content="website" key="og:type" />
           <meta name="og:image" content="https://brianlovin.com/static/og-image.jpg" key="og:image" />
           <meta name="og:site_name" content="Brian Lovin" key="og:site_name" />
           <meta name="theme-color" content="#212325" key="theme-color" />
-          <meta name="description" content="Nicest not the iciest"/>
+          <meta name="description" content="Designer"/>
 
           <link rel="apple-touch-icon" sizes="180x180" href="static/meta/apple-touch-icon.png" />
           <link rel="manifest" href="/static/meta/site.webmanifest" />
