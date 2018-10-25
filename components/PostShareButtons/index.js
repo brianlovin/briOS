@@ -1,21 +1,21 @@
 // @flow
 import * as React from 'react'
-import type { ConfigPodcast } from '../../types'
+import type { DesignDetailsPost } from '../../types'
 import { FacebookButton, TwitterButton, CopyLinkButton } from '../Button'
 import { Container } from './style'
 
 type Props = {
-  podcast: ConfigPodcast
+  post: DesignDetailsPost
 }
 
-class PodcastShareButtons extends React.Component<Props> {
+class EpisodeShareButtons extends React.Component<Props> {
   render() {
-    const { podcast } = this.props
+    const { post } = this.props
 
     return (
       <Container>
         <a
-          href={`https://www.facebook.com/sharer/sharer.php?u=https://spec.fm/podcasts/${podcast.slug}`}
+          href={`https://www.facebook.com/sharer/sharer.php?u=https://brianlovin.com/design-details/${post.slug}`}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -25,7 +25,7 @@ class PodcastShareButtons extends React.Component<Props> {
         </a>
 
         <a
-          href={`https://twitter.com/share?text=Listening to @${podcast.twitterUsername} on @specfm&url=https://spec.fm/podcasts/${podcast.slug}`}
+          href={`https://twitter.com/share?text=Design Details: ${post.title} by @brian_lovin&url=https://brianlovin.com/design-details/${post.slug}`}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -34,7 +34,7 @@ class PodcastShareButtons extends React.Component<Props> {
           </TwitterButton>
         </a>
 
-        <CopyLinkButton text={`https://spec.fm/podcasts/${podcast.slug}`}>
+        <CopyLinkButton text={`https://brianlovin.com/design-details/${post.slug}`}>
           Copy
         </CopyLinkButton>
       </Container>
@@ -42,4 +42,4 @@ class PodcastShareButtons extends React.Component<Props> {
   }
 }
 
-export default PodcastShareButtons
+export default EpisodeShareButtons

@@ -7,4 +7,8 @@ export const Grid = styled.div`
   grid-gap: 24px;
   width: 100%;
   margin-top: 32px;
+
+  @media (max-width: 752px) {
+    grid-template-columns: 1fr;
+  }
 `

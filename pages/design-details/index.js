@@ -20,10 +20,10 @@ class DesignDetails extends React.Component<{}> {
       <Page>
         <Head>
           <title>Brian Lovin · Design Details</title>
-          <meta content={"Brian Lovin · Design Details™"} name="og:title" key="og:title" />
+          <meta content={"Brian Lovin · Design Details"} name="og:title" key="og:title" />
           <meta content={"A visual exploration of digital products"} name="og:description" key="og:description" />
           <meta content="/static/img/podcasts/design-details.jpg" name="og:image" key="og:image" />
-          <meta content={"Brian Lovin · Design Details™"} name="twitter:title" key="og:image" />
+          <meta content={"Brian Lovin · Design Details"} name="twitter:title" key="og:image" />
         </Head>
 
         <SectionHeading>
