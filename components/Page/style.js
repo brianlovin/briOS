@@ -1,6 +1,7 @@
 // @flow
 import styled from 'styled-components'
 import { tint } from '../globals'
+import { theme } from '../theme'
 
 export const Container = styled.div`
   display: flex;
@@ -24,7 +25,7 @@ export const InnerContainer = styled.div`
   width: 100%;
   max-width: 768px;
 
-  @media (max-width: 968px) {
+  @media (max-width: 752px) {
     align-items: flex-start; 
     max-width: 100%;
     padding-left: 16px;
@@ -49,10 +50,9 @@ export const SectionHeading = styled.div`
 export const Heading = styled.h3`
   font-size: 24px;
   font-weight: 700;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
 
   @media (max-width: 968px) {
-    text-align: left; 
     max-width: 100%;
   }
 `
@@ -60,12 +60,19 @@ export const Heading = styled.h3`
 export const Subheading = styled.h4`
   font-size: 18px;
   font-weight: 400;
-  color: ${props => props.theme.text.tertiary};
+  color: ${theme.text.tertiary};
   
   @media (max-width: 968px) {
-    text-align: left;  
     max-width: 100%;
   }
+`
+
+export const LargeHeading = styled(Heading)`
+  font-size: 32px;
+`
+
+export const LargeSubheading = styled(Subheading)`
+  font-size: 20px;
 `
 
 export const ScrollToTop = styled.button`
@@ -81,8 +88,8 @@ export const ScrollToTop = styled.button`
   box-shadow: 0 4px 8px rgba(0,0,0,0.08);
   transition: all 0.2s ease-in-out;
   opacity: ${props => props.isVisible ? '1' : '0'};
-  background: ${props => props.theme.text.default};
-  color: ${props => props.theme.bg.default};
+  background: ${theme.text.default};
+  color: ${theme.bg.default};
   transform: translateY(${props => props.isVisible ? '0' : '80px'});
   cursor: pointer;
   z-index: 9999;

@@ -14,6 +14,7 @@ export const Card = styled.div`
   margin-top: 24px;
   align-items: center;
   position: relative;
+  z-index: 2;
 
   &:hover {
     box-shadow: 0 8px 24px rgba(0,0,0,0.10);

@@ -32,6 +32,10 @@ class MyApp extends App {
     ATVScript()
   }
 
+  componentDidUpdate() {
+    ATVScript()
+  }
+
   addTrackToQueue = (episode: SimplecastEpisode) => {
     this.setState(state => ({
       ...state,
@@ -47,6 +51,7 @@ class MyApp extends App {
     trackQueue: [],
     progress: 0,
     displaySubscriptions: false,
+    isPlaying: false
   }))
 
   getAudioElement = () => document && document.getElementById('global-player-audio')

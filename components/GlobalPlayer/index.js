@@ -90,7 +90,7 @@ class GlobalPlayer extends React.Component<{}> {
 
                 {
                   podcast && 
-                  <SubscriptionsContainer isVisible={context.displaySubscriptions}>
+                  <SubscriptionsContainer isVisible={true}>
                     <SubscriptionButtons podcast={podcast} />
                   </SubscriptionsContainer>
                 }

@@ -22,8 +22,8 @@ class DesignDetailsCard extends React.Component<Props> {
               <AtvImage src={src} Component={Icon} />
             </ImageContainer>
             <CardContent>
-              <DetailsCount>{details.length} details</DetailsCount>
               <Title>{title}</Title>
+              <DetailsCount>{details.length} details</DetailsCount>
             </CardContent>
           </Card>
         </a>

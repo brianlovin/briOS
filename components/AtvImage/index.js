@@ -3,14 +3,13 @@ import * as React from 'react'
 import { Img } from './style'
 
 type Props = {
-  children: React.Node,
   src: string,
   Component?: React.Node,
 }
 
 class AtvImage extends React.Component<Props> {
   render() {
-    const { children, src, Component } = this.props
+    const { src, Component } = this.props
 
     return (
       <div className="atvImg">

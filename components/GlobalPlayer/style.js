@@ -1,7 +1,7 @@
 // @flow
 import styled, { css } from 'styled-components'
 import { theme } from '../theme'
-import { Truncate } from '../globals'
+import { Truncate, Shadows } from '../globals'
 
 export const Container = styled.div`
   position: fixed;
@@ -195,15 +195,30 @@ export const StyledAudioPlayer = styled.audio`
 export const SubscriptionsContainer = styled.div`
   padding: ${props => props.isVisible ? '16px' : '0 16px'};
   overflow: hidden;
-  background: #2D2E33;
+  background: ${props => props.isFooter ? theme.bg.wash : '#2D2E33'};
   border-radius: 0 0 8px 8px;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-gap: 16px;
+  grid-template-columns: repeat(7, 1fr);
+  justify-content: ${props => props.isFooter ? 'center' : 'space-between'};
   max-height: ${props => props.isVisible ? '64px' : '0'};
   transition: max-height 0.15s ease-out;
+  position: relative;
+  top: ${props => props.isFooter ? '-8px' : '0'};
+  padding-top: ${props => props.isFooter ? '20px' : '16px'};
+  z-index: 1;
+  box-shadow: ${props => props.isFooter ? theme.shadows.default : 'none'};
+  width: 100%;
 
   a {
     height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media(max-width: 752px) {
+    display: none;
   }
 `
 
@@ -212,4 +227,11 @@ export const SubscriptionAvatar = styled.img`
   height: 32px;
   border-radius: 16px;
   background-color: ${theme.bg.default};
+  transform: scale(1);
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s ease-in-out;
+  }
 `

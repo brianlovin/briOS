@@ -6,6 +6,8 @@ import { getDateObject } from '../../lib/getDateObject'
 import EpisodePlayButton from '../EpisodePlayButton'
 import AtvImage from '../AtvImage'
 import { ATVScript } from '../../lib/atvimg/script'
+import { SubscriptionsContainer } from '../GlobalPlayer/style'
+import SubscriptionButtons from '../GlobalPlayer/SubscriptionButtons'
 import {
   Card,
   Artwork,
@@ -51,21 +53,26 @@ class DesignDetailsPlayer extends React.Component<{}, State> {
 
     if (error) {
       return (
-        <Card>
-          <a href="https://spec.fm/podcasts/design-details" target="_blank" rel="noopener noreferrer">
-            <AtvImage src={'/static/img/podcasts/designdetails.jpg'} Component={Artwork} />
-          </a>
+        <React.Fragment>
+          <Card>
+            <a href="https://spec.fm/podcasts/design-details" target="_blank" rel="noopener noreferrer">
+              <AtvImage src={'/static/img/podcasts/designdetails.jpg'} Component={Artwork} />
+            </a>
 
-          <ContentContainer>
-            <Date>New episodes weekly</Date>
-            <Title>View all episodes on the Spec Network</Title>
-            <Actions>
-              <a href="https://spec.fm/podcasts/design-details" target="_blank" rel="noopener noreferrer">
-                <AllEpsButton>All Episodes</AllEpsButton>
-              </a>
-            </Actions>
-          </ContentContainer>
-        </Card>
+            <ContentContainer>
+              <Date>New episodes weekly</Date>
+              <Title>View all episodes on the Spec Network</Title>
+              <Actions>
+                <a href="https://spec.fm/podcasts/design-details" target="_blank" rel="noopener noreferrer">
+                  <AllEpsButton>All Episodes</AllEpsButton>
+                </a>
+              </Actions>
+            </ContentContainer>
+          </Card>
+          <SubscriptionsContainer isVisible={true} isFooter={true}>
+            <SubscriptionButtons podcast={podcasts[0]} />
+          </SubscriptionsContainer>
+        </React.Fragment>
       )
     }
 
@@ -74,42 +81,52 @@ class DesignDetailsPlayer extends React.Component<{}, State> {
       const datestring = `${month} ${day}, ${year}`
       
       return (
+        <React.Fragment>
+          <Card>
+            <a href="https://spec.fm/podcasts/design-details" target="_blank" rel="noopener noreferrer">
+              <AtvImage src={'/static/img/podcasts/designdetails.jpg'} Component={Artwork} />
+            </a>
+    
+            <ContentContainer>
+              <Date>{datestring}</Date>
+              <Title>{episode.title}</Title>
+              <Actions>
+                <EpisodePlayButton episode={episode} />
+                <a href="https://spec.fm/podcasts/design-details" target="_blank" rel="noopener noreferrer">
+                  <AllEpsButton>All Episodes</AllEpsButton>
+                </a>
+              </Actions>
+            </ContentContainer>
+          </Card>
+          <SubscriptionsContainer isVisible={true} isFooter={true}>
+            <SubscriptionButtons podcast={podcasts[0]} />
+          </SubscriptionsContainer>
+        </React.Fragment>
+      )
+    }
+
+    // loading
+    return (
+      <React.Fragment>
         <Card>
           <a href="https://spec.fm/podcasts/design-details" target="_blank" rel="noopener noreferrer">
             <AtvImage src={'/static/img/podcasts/designdetails.jpg'} Component={Artwork} />
           </a>
-  
+
           <ContentContainer>
-            <Date>{datestring}</Date>
-            <Title>{episode.title}</Title>
+            <Date>Loading...</Date>
+            <Title>Grabbing the latest episode</Title>
             <Actions>
-              <EpisodePlayButton episode={episode} />
               <a href="https://spec.fm/podcasts/design-details" target="_blank" rel="noopener noreferrer">
                 <AllEpsButton>All Episodes</AllEpsButton>
               </a>
             </Actions>
           </ContentContainer>
         </Card>
-      )
-    }
-
-    // loading
-    return (
-      <Card>
-        <a href="https://spec.fm/podcasts/design-details" target="_blank" rel="noopener noreferrer">
-          <AtvImage src={'/static/img/podcasts/designdetails.jpg'} Component={Artwork} />
-        </a>
-
-        <ContentContainer>
-          <Date>Loading...</Date>
-          <Title>Grabbing the latest episode</Title>
-          <Actions>
-            <a href="https://spec.fm/podcasts/design-details" target="_blank" rel="noopener noreferrer">
-              <AllEpsButton>All Episodes</AllEpsButton>
-            </a>
-          </Actions>
-        </ContentContainer>
-      </Card>
+        <SubscriptionsContainer isVisible={true} isFooter={true}>
+          <SubscriptionButtons podcast={podcasts[0]} />
+        </SubscriptionsContainer>
+      </React.Fragment>
     )
   }
 }

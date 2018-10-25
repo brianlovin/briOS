@@ -1,6 +1,7 @@
 // @flow
 import styled from 'styled-components'
 import { tint, Content, hexa } from '../globals'
+import { theme } from '../theme'
 
 export const Container = styled.div`
   max-width: 768px;
@@ -19,13 +20,13 @@ export const HeaderImage = styled.img`
 export const Title = styled.h1`
   font-size: 40px;
   font-weight: 700;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
 `
 
 export const Subtitle = styled.span`
   font-size: 24px;
   font-weight: 400;
-  color: ${props => props.theme.text.tertiary};
+  color: ${theme.text.tertiary};
 `
 
 export const PostHeader = styled.div`
@@ -41,10 +42,10 @@ export const Notice = styled.div`
 `
 
 export const NoticeTitle = styled.h6`
-  color: ${props => tint(props.theme.bg.wash, -88)};
+  color: ${theme.text.default};
   font-weight: 700!important;
   text-transform: uppercase;
-  font-size: 16px;
+  font-size: 14px;
   letter-spacing: 0.8px;
   margin-top: 0!important;
   display: flex;
@@ -53,8 +54,9 @@ export const NoticeTitle = styled.h6`
 
 export const NoticeDescription = styled.p`
   margin-top: 12px;
-  color: ${props => tint(props.theme.bg.wash, -72)};
+  color: ${theme.text.secondary};
   font-weight: 400;
+  font-size: 18px;
 
   a {
     color: ${props => tint(props.theme.bg.wash, -88)};
@@ -120,6 +122,6 @@ export const Grid = styled.div`
 
 export const Divider = styled.div`
   height: 1px;
-  background: ${props => props.theme.border.default};
+  background: ${theme.border.default};
   margin: 32px 0;
 `
