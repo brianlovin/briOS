@@ -18,7 +18,7 @@
     "isomorphic-unfetch": "^3.0.0",
     "next": "^7.0.2",
     "next-compose-plugins": "^2.1.1",
-    "next-nprogress": "^1.1.0",
+    "next-nprogress": "^1.2.0",
     "next-optimized-images": "^1.4.1",
     "next-routes": "^1.4.2",
     "react": "^16.6.0",

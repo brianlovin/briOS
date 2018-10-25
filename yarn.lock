@@ -5027,9 +5027,9 @@ next-compose-plugins@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/next-compose-plugins/-/next-compose-plugins-2.1.1.tgz#7da0a3ce0c8ce267b5cb4164d2fb6e4aaf61bf86"
 
-next-nprogress@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/next-nprogress/-/next-nprogress-1.1.0.tgz#149898d411adff795f9bebd1faa7a9b1db63bddd"
+next-nprogress@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/next-nprogress/-/next-nprogress-1.2.0.tgz#2ba21f3ea8d5ca401a0ed1e90498bd83f269a186"
   dependencies:
     nprogress "^0.2.0"
 
