@@ -5937,39 +5937,39 @@ react-image@^1.5.1:
     "@babel/runtime" "^7.0.0"
     prop-types "15.6.2"
 
-react-instantsearch-core@^5.3.1:
-  version "5.3.1"
-  resolved "https://registry.yarnpkg.com/react-instantsearch-core/-/react-instantsearch-core-5.3.1.tgz#06da53c2e88d5af5cbf642d4e6dc4f3efa11f71e"
+react-instantsearch-core@^5.3.2:
+  version "5.3.2"
+  resolved "https://registry.yarnpkg.com/react-instantsearch-core/-/react-instantsearch-core-5.3.2.tgz#f0adcd05a44b496ed3351f6864467887fe465b9c"
   dependencies:
     algoliasearch-helper "^2.26.0"
     lodash "^4.17.4"
     prop-types "^15.5.10"
 
-react-instantsearch-dom@^5.3.1:
-  version "5.3.1"
-  resolved "https://registry.yarnpkg.com/react-instantsearch-dom/-/react-instantsearch-dom-5.3.1.tgz#49ac502bc12f765451670011881ba0e7ae4e5150"
+react-instantsearch-dom@^5.3.2:
+  version "5.3.2"
+  resolved "https://registry.yarnpkg.com/react-instantsearch-dom/-/react-instantsearch-dom-5.3.2.tgz#fdf8071df66c0cc5c8417ab85138ca41eb6e3300"
   dependencies:
     algoliasearch "^3.27.1"
     algoliasearch-helper "^2.26.0"
     classnames "^2.2.5"
     lodash "^4.17.4"
     prop-types "^15.5.10"
-    react-instantsearch-core "^5.3.1"
+    react-instantsearch-core "^5.3.2"
 
-react-instantsearch-native@^5.3.1:
-  version "5.3.1"
-  resolved "https://registry.yarnpkg.com/react-instantsearch-native/-/react-instantsearch-native-5.3.1.tgz#b69e3631696639d73a68d26cb402a04141e4f188"
+react-instantsearch-native@^5.3.2:
+  version "5.3.2"
+  resolved "https://registry.yarnpkg.com/react-instantsearch-native/-/react-instantsearch-native-5.3.2.tgz#4d05b44bc50a510695cd3736e5baed27adfcb89a"
   dependencies:
     algoliasearch "^3.27.1"
-    react-instantsearch-core "^5.3.1"
+    react-instantsearch-core "^5.3.2"
 
-react-instantsearch@^5.3.1:
-  version "5.3.1"
-  resolved "https://registry.yarnpkg.com/react-instantsearch/-/react-instantsearch-5.3.1.tgz#07487ba68f55ff161c77f3d1c2f8a102b795a02b"
+react-instantsearch@^5.3.2:
+  version "5.3.2"
+  resolved "https://registry.yarnpkg.com/react-instantsearch/-/react-instantsearch-5.3.2.tgz#86828421dfba0a3aec05204147c05a91692b12f1"
   dependencies:
-    react-instantsearch-core "^5.3.1"
-    react-instantsearch-dom "^5.3.1"
-    react-instantsearch-native "^5.3.1"
+    react-instantsearch-core "^5.3.2"
+    react-instantsearch-dom "^5.3.2"
+    react-instantsearch-native "^5.3.2"
 
 react-is@^16.3.1:
   version "16.5.2"
