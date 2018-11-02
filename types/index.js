@@ -47,7 +47,6 @@ export type ConfigPodcast = {|
 |}
 
 export type DesignDetail = {
-  slug: string,
   title: string,
   description: string,
   media: Array<string>,
@@ -57,8 +56,8 @@ export type DesignDetailsPost = {
   slug: string,
   title: string,
   description: string,
-  details: Array<DesignDetail>,
   createdAt: string,
+  details: Array<DesignDetail>
 }
 
 export type GetInitialProps = {

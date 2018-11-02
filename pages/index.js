@@ -2,17 +2,14 @@
 import * as React from "react";
 import Page, { SectionHeading, Heading, Subheading } from '../components/Page'
 import type { ConfigPodcast, GetInitialProps } from '../types'
+import { Link as RouteLink } from '../config/routes'
 import DesignDetailsGrid from '../components/DesignDetailsGrid'
 import OpenSourceGrid from '../components/OpenSourceGrid'
-import BookGrid from '../components/BookGrid'
+import BooksGrid from '../components/BooksGrid'
 import MusicGrid from '../components/MusicGrid'
 import DesignDetailsPlayer from '../components/DesignDetailsPlayer'
 
-type Props = {
-  podcasts: Array<ConfigPodcast>
-}
-
-class Index extends React.Component<Props> {
+class Index extends React.Component<{}> {
   static async getInitialProps({ res }: GetInitialProps) {
     if (res) {
       // cache podcasts for a month
@@ -27,35 +24,57 @@ class Index extends React.Component<Props> {
     return (
       <Page>
         <SectionHeading>
-          <Heading>Design Details Blog</Heading>
+          <RouteLink route={'design-details'}>
+            <a>
+              <Heading>Design Details Blog</Heading>
+            </a>
+          </RouteLink>
           <Subheading>A visual exploration of digital products</Subheading>
         </SectionHeading>
 
         <DesignDetailsGrid truncated />
 
         <SectionHeading>
-          <Heading>Design Details Podcast</Heading>
+          <a 
+            href="https://spec.fm/podcasts/design-details"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Heading>Design Details Podcast</Heading>
+          </a>
           <Subheading>A weekly conversation about design process and culture</Subheading>
         </SectionHeading>
 
         <DesignDetailsPlayer />
 
         <SectionHeading>
-          <Heading>Open Source</Heading>
+          <RouteLink route={'oss'}>
+            <a>
+              <Heading>Open Source</Heading>
+            </a>
+          </RouteLink>
           <Subheading>What I’m working on</Subheading>
         </SectionHeading>
 
         <OpenSourceGrid />
 
         <SectionHeading>
-          <Heading>Books</Heading>
+          <RouteLink route={'books'}>
+            <a>
+              <Heading>Books</Heading>
+            </a>
+          </RouteLink>
           <Subheading>What I’m reading</Subheading>
         </SectionHeading>
 
-        <BookGrid truncated />
+        <BooksGrid truncated />
 
         <SectionHeading>
-          <Heading>Music</Heading>
+          <RouteLink route={'music'}>
+            <a>
+              <Heading>Music</Heading>
+            </a>
+          </RouteLink>
           <Subheading>Albums on repeat</Subheading>
         </SectionHeading>
 

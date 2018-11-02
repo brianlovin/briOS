@@ -5,11 +5,11 @@ import Icon from '../Icon'
 import Header from '../Header'
 import Footer from '../Footer'
 import { theme } from '../theme'
-import { Container, SectionHeading, Heading, Subheading, InnerContainer, ScrollToTop } from './style'
+import { Container, SectionHeading, Heading, Subheading, LargeHeading, LargeSubheading, InnerContainer, ScrollToTop } from './style'
 import { throttle } from 'throttle-debounce';
 import * as gtag from '../../lib/gtag'
 
-export { SectionHeading, Heading, Subheading }
+export { SectionHeading, Heading, Subheading, LargeHeading, LargeSubheading }
 
 type Props = {
   children: React.Node,

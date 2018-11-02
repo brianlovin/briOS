@@ -17,7 +17,7 @@ class DesignDetail extends React.Component<Props> {
       res.setHeader('Cache-Control', `public,s-maxage=${cacheAge}`)
     }
 
-    const post = api.getDesignDetailsFromSlug(query.params.slug)
+    const post = api.getDesignDetailsFromSlug(query.slug)
     return { post }
   }
 

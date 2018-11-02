@@ -1,5 +1,6 @@
 // @flow
 import { css } from 'styled-components'
+import { theme } from '../theme'
 
 export const hexa = (hex: string, alpha: number) => {
   const r = parseInt(hex.slice(1, 3), 16),
@@ -41,12 +42,20 @@ export const tint = (hex: string, amount: number) => {
   return `#${RR}${GG}${BB}`;
 };
 
-export const Shadow = {
-  low: '0 2px 8px',
-  mid: '0 4px 12px',
-  high: '0 8px 16px',
+export const Shadows = {
+  default: css`
+    box-shadow: ${theme.shadows.default};
+    transition: ${theme.animations.default};
+  `,
+  hover: css`
+    box-shadow: ${theme.shadows.hover};
+    transition: ${theme.animations.hover};
+  `,
+  active: css`
+    box-shadow: ${theme.shadows.active};
+    transition: ${theme.animations.active};
+  `,
 };
-
 
 export const Content = css`
   h1 {
@@ -140,3 +149,13 @@ export const Truncate = (width: number) => css`
   overflow: hidden;
   text-overflow: ellipsis;
 `
+
+export const shuffleArray = (array: Array<any>) => {
+  for (var i = array.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
+  }
+  return array
+}

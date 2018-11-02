@@ -19,7 +19,6 @@ export const Container = styled.div`
   @media (max-width: 968px) {
     padding: 8px 16px;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
     grid-template-areas: "logo actions";
   }
 `

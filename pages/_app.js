@@ -8,6 +8,9 @@ import { theme } from '../components/theme'
 import GlobalPlayerContext, { defaultPlayerContext } from '../components/GlobalPlayer/context'
 import GlobalPlayer from '../components/GlobalPlayer'
 import type { SimplecastEpisode } from '../types'
+import { GlobalStyles } from '../static/normalize'
+import { ATVImgStyles } from '../lib/atvimg/style'
+import { ATVScript } from '../lib/atvimg/script'
 
 class MyApp extends App {
   constructor() {
@@ -25,6 +28,14 @@ class MyApp extends App {
     }
   }
 
+  componentDidMount() {
+    ATVScript()
+  }
+
+  componentDidUpdate() {
+    ATVScript()
+  }
+
   addTrackToQueue = (episode: SimplecastEpisode) => {
     this.setState(state => ({
       ...state,
@@ -40,6 +51,7 @@ class MyApp extends App {
     trackQueue: [],
     progress: 0,
     displaySubscriptions: false,
+    isPlaying: false
   }))
 
   getAudioElement = () => document && document.getElementById('global-player-audio')
@@ -91,22 +103,25 @@ class MyApp extends App {
     const { Component, pageProps } = this.props
     return (
       <Container>
+        <GlobalStyles />
+        <ATVImgStyles />
+
         <NProgressStyles color={theme.brand.default} />
         <Head>
           <title>Brian Lovin · Nice Boy™</title>
-          <meta content="@specfm" name="twitter:site" key="twitter:site" />
+          <meta content="@brian_lovin" name="twitter:site" key="twitter:site" />
           <meta content={"Brian Lovin · Nice Boy™"} name="og:title" key="og:title" />
-          <meta content={"Nicest not the iciest"} name="og:description" key="og:description" />
+          <meta content={"Designer"} name="og:description" key="og:description" />
           <meta content={"Brian Lovin · Nice Boy™"} name="twitter:title" key="twitter:title" />
           <meta name="og:type" content="website" key="og:type" />
           <meta name="og:image" content="https://brianlovin.com/static/og-image.jpg" key="og:image" />
           <meta name="og:site_name" content="Brian Lovin" key="og:site_name" />
-          <meta name="theme-color" content="#212325" key="theme-color" />
-          <meta name="description" content="Nicest not the iciest"/>
+          <meta name="theme-color" content="#16171A" key="theme-color" />
+          <meta name="description" content="Designer"/>
 
           <link rel="apple-touch-icon" sizes="180x180" href="static/meta/apple-touch-icon.png" />
           <link rel="manifest" href="/static/meta/site.webmanifest" />
-          <link rel="mask-icon" href="/static/meta/safari-pinned-tab.svg" color="#212325" />
+          <link rel="mask-icon" href="/static/meta/safari-pinned-tab.svg" color="#16171A" />
           <meta name="msapplication-TileColor" content="#ffffff" />
 
           {this.props.styleTags}

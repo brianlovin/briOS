@@ -17,7 +17,7 @@ export const MiniPlayBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 24px 6px 20px;
+  padding: 6px 24px 8px 16px;
   background: ${theme.text.default};
   border-radius: 20px;
   cursor: pointer;

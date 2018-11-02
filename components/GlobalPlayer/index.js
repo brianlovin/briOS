@@ -15,7 +15,6 @@ import {
   SubscriptionsContainer,
   ContentContainer,
 } from './style'
-import { Link as RouteLink } from '../../config/routes'
 import SubscriptionButtons from './SubscriptionButtons';
 import { podcasts } from '../../config'
 
@@ -51,17 +50,21 @@ class GlobalPlayer extends React.Component<{}> {
                   {
                     hasTrack && queuedTrack && (
                       <TextContainer>
-                        <RouteLink route='episode' params={{ slug: podcast.slug, episodeId: queuedTrack.id }}>
-                          <a>
-                            <PodcastTitle>{podcast.name}</PodcastTitle> 
-                          </a>
-                        </RouteLink>
+                        <a 
+                          href={`https://spec.fm/podcasts/design-details/${queuedTrack.id}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                        >
+                          <PodcastTitle>{podcast.name}</PodcastTitle> 
+                        </a>
                         
-                        <RouteLink route='episode' params={{ slug: podcast.slug, episodeId: queuedTrack.id }}>
-                          <a>
-                            <EpisodeTitle>{queuedTrack.title}</EpisodeTitle>
-                          </a>
-                        </RouteLink>
+                        <a 
+                          href={`https://spec.fm/podcasts/design-details/${queuedTrack.id}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                        >
+                          <EpisodeTitle>{queuedTrack.title}</EpisodeTitle>
+                        </a>
                         
                         <StyledAudioPlayer
                           id="global-player-audio" 
@@ -87,7 +90,7 @@ class GlobalPlayer extends React.Component<{}> {
 
                 {
                   podcast && 
-                  <SubscriptionsContainer isVisible={context.displaySubscriptions}>
+                  <SubscriptionsContainer isVisible={true}>
                     <SubscriptionButtons podcast={podcast} />
                   </SubscriptionsContainer>
                 }
