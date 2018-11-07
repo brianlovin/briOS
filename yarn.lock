@@ -4957,12 +4957,6 @@ next-compose-plugins@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/next-compose-plugins/-/next-compose-plugins-2.1.1.tgz#7da0a3ce0c8ce267b5cb4164d2fb6e4aaf61bf86"
 
-next-nprogress@1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/next-nprogress/-/next-nprogress-1.3.0.tgz#9763724d6b867e29b8f4cb3b24587275050c1c00"
-  dependencies:
-    nprogress "^0.2.0"
-
 next-optimized-images@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/next-optimized-images/-/next-optimized-images-1.4.1.tgz#026f2914d83641ecca3be7b537ea9973afb3243f"
@@ -5164,10 +5158,6 @@ npmlog@^4.0.2:
     console-control-strings "~1.1.0"
     gauge "~2.7.3"
     set-blocking "~2.0.0"
-
-nprogress@^0.2.0:
-  version "0.2.0"
-  resolved "http://registry.npmjs.org/nprogress/-/nprogress-0.2.0.tgz#cb8f34c53213d895723fcbab907e9422adbcafb1"
 
 nth-check@^1.0.2:
   version "1.0.2"

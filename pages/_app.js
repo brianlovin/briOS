@@ -2,8 +2,6 @@
 import App, {Container} from 'next/app'
 import * as React from 'react'
 import Head from 'next/head'
-import withNProgress from "next-nprogress";
-import NProgressStyles from "next-nprogress/styles";
 import { theme } from '../components/theme'
 import GlobalPlayerContext, { defaultPlayerContext } from '../components/GlobalPlayer/context'
 import GlobalPlayer from '../components/GlobalPlayer'
@@ -106,7 +104,6 @@ class MyApp extends App {
         <GlobalStyles />
         <ATVImgStyles />
 
-        <NProgressStyles color={theme.brand.default} />
         <Head>
           <title>Brian Lovin · Nice Boy™</title>
           <meta content="@brian_lovin" name="twitter:site" key="twitter:site" />
@@ -137,5 +134,4 @@ class MyApp extends App {
   }
 }
 
-const msDelay = 500;
-export default withNProgress(msDelay)(MyApp);
+export default MyApp;
