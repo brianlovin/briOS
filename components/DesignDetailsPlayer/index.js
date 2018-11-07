@@ -63,7 +63,7 @@ class DesignDetailsPlayer extends React.Component<{}, State> {
               <Date>New episodes weekly</Date>
               <Title>View all episodes on the Spec Network</Title>
               <Actions>
-                <a href="https://spec.fm/podcasts/design-details" target="_blank" rel="noopener noreferrer">
+                <a name="View all episodes" href="https://spec.fm/podcasts/design-details" target="_blank" rel="noopener noreferrer">
                   <AllEpsButton>All Episodes</AllEpsButton>
                 </a>
               </Actions>

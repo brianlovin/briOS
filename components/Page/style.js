@@ -109,7 +109,6 @@ export const ScrollToTop = styled.button`
     box-shadow: 0 6px 20px rgba(0,0,0,0.09);
     transform :translateY(-2px);
     transition: all 0.2s ease-in-out;
-    background: ${props => tint(props.theme.text.default, -4)};
   }
 
   .icon {

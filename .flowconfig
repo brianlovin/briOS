@@ -21,4 +21,4 @@ unclear-type=warn
 unsafe-getters-setters=error
 
 [version]
-0.77.0
+0.84.0

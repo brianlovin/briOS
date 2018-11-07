@@ -8,6 +8,7 @@ import { Divider, Notice } from '../Blog'
 import { Link as RouteLink } from '../../config/routes'
 import type { DesignDetailsPost } from '../../types'
 import DesignDetailsGrid from "../DesignDetailsGrid";
+import DesignDetailMedia from '../DesignDetailMedia'
 import PostShareButtons from '../PostShareButtons'
 import Markdown from '../Markdown'
 import AtvImage from '../AtvImage'
@@ -71,7 +72,7 @@ class DesignDetailsView extends React.Component<Props> {
                 if (p.slug === post.slug) {
                   return (
                     <RouteLink key={p.slug} route={'design-detail'} params={{ slug: p.slug }}>
-                      <a>
+                      <a name={p.title}>
                         <AtvImage src={`/static/img/design-details/${p.slug}.jpeg`} Component={Icon} />
                       </a>
                     </RouteLink>
@@ -81,7 +82,7 @@ class DesignDetailsView extends React.Component<Props> {
                 return (
                   <LowOpacity key={p.slug}>
                     <RouteLink route={'design-detail'} params={{ slug: p.slug }}>
-                      <a>
+                      <a name={p.title}>
                         <AtvImage src={`/static/img/design-details/${p.slug}.jpeg`} Component={Icon} />
                       </a>
                     </RouteLink>
@@ -121,20 +122,7 @@ class DesignDetailsView extends React.Component<Props> {
         {
           post.details.map((detail, i) => {
             return (
-              <DetailContainer key={`${detail.title}-${i}`}>
-                <DetailTitle>{detail.title}</DetailTitle>
-                <Markdown>{detail.description}</Markdown>
-
-                <MediaContainer>
-                  {
-                    detail.media.map(src => (
-                      <Video key={src} controls>
-                        <source src={src} />
-                      </Video>
-                    ))
-                  }
-                </MediaContainer>
-              </DetailContainer>
+              <DesignDetailMedia detail={detail} key={`${detail.title}-${i}`} />
             )
           })
         }
