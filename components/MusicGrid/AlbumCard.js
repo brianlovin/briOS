@@ -19,7 +19,7 @@ class AlbumCard extends React.Component<Props> {
     
     return (
       <a name={name} href={url} target="_blank" rel="noopener noreferrer">
-        <AtvImage src={src} Component={Artwork} />
+        <AtvImage alt={name} src={src} Component={Artwork} />
       </a>
     )
   }

@@ -56,7 +56,7 @@ class DesignDetailsPlayer extends React.Component<{}, State> {
         <React.Fragment>
           <Card>
             <a href="https://spec.fm/podcasts/design-details" target="_blank" rel="noopener noreferrer">
-              <AtvImage src={'/static/img/podcasts/designdetails.jpg'} Component={Artwork} />
+              <AtvImage alt={'Design Details Podcast'} src={'/static/img/podcasts/designdetails.jpg'} Component={Artwork} />
             </a>
 
             <ContentContainer>
@@ -84,7 +84,7 @@ class DesignDetailsPlayer extends React.Component<{}, State> {
         <React.Fragment>
           <Card>
             <a href="https://spec.fm/podcasts/design-details" target="_blank" rel="noopener noreferrer">
-              <AtvImage src={'/static/img/podcasts/designdetails.jpg'} Component={Artwork} />
+              <AtvImage alt={'Design Details Podcast'} src={'/static/img/podcasts/designdetails.jpg'} Component={Artwork} />
             </a>
     
             <ContentContainer>
@@ -92,7 +92,7 @@ class DesignDetailsPlayer extends React.Component<{}, State> {
               <Title>{episode.title}</Title>
               <Actions>
                 <EpisodePlayButton episode={episode} />
-                <a href="https://spec.fm/podcasts/design-details" target="_blank" rel="noopener noreferrer">
+                <a name="All Episodes" href="https://spec.fm/podcasts/design-details" target="_blank" rel="noopener noreferrer">
                   <AllEpsButton>All Episodes</AllEpsButton>
                 </a>
               </Actions>
@@ -110,14 +110,14 @@ class DesignDetailsPlayer extends React.Component<{}, State> {
       <React.Fragment>
         <Card>
           <a href="https://spec.fm/podcasts/design-details" target="_blank" rel="noopener noreferrer">
-            <AtvImage src={'/static/img/podcasts/designdetails.jpg'} Component={Artwork} />
+            <AtvImage alt={'Design Details Podcast'} src={'/static/img/podcasts/designdetails.jpg'} Component={Artwork} />
           </a>
 
           <ContentContainer>
             <Date>Loading...</Date>
             <Title>Grabbing the latest episode</Title>
             <Actions>
-              <a href="https://spec.fm/podcasts/design-details" target="_blank" rel="noopener noreferrer">
+              <a name="All Episodes" href="https://spec.fm/podcasts/design-details" target="_blank" rel="noopener noreferrer">
                 <AllEpsButton>All Episodes</AllEpsButton>
               </a>
             </Actions>
