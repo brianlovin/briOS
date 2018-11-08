@@ -10,7 +10,9 @@
     "flow start": "flow start",
     "flow stop": "flow stop",
     "flow status": "flow status",
-    "flow coverage": "flow coverage"
+    "flow coverage": "flow coverage",
+    "prettier": "prettier",
+    "test": "echo 'No test suite, passing!'"
   },
   "dependencies": {
     "@sentry/browser": "^4.3.0",

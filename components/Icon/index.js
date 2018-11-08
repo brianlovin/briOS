@@ -1,5 +1,5 @@
 //@flow
-import React from 'react';
+import * as React from 'react';
 import styled from 'styled-components';
 
 type Props = {
@@ -34,7 +34,7 @@ type GlyphProps = {
   glyph: string,
 };
 
-export const Glyph = ({ glyph }: GlyphProps) => {
+export const Glyph = ({ glyph }: GlyphProps): any => {
   switch (glyph) {
     case 'facebook':
       return (
