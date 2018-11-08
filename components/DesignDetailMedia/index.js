@@ -42,7 +42,7 @@ class DesignDetailMedia extends React.Component<Props, State> {
                 <MediaContainer>
                   {
                     detail.media.map(src => (
-                      <Video playsInline muted loop autoPlay preload="metadata" key={src} controls>
+                      <Video playsInline muted loop autoPlay preload="metadata" key={src}>
                         <source src={`${src}#t=0.1`} />
                       </Video>
                     ))
