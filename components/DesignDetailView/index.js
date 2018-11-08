@@ -15,10 +15,6 @@ import AtvImage from '../AtvImage'
 import { 
   Container, 
   HeadingContainer,
-  DetailContainer, 
-  DetailTitle, 
-  MediaContainer, 
-  Video, 
   IconWrapper,
   IconContainer, 
   Icon,

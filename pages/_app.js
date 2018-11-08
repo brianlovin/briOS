@@ -14,8 +14,8 @@ import { ATVScript } from '../lib/atvimg/script'
 const SENTRY_PUBLIC_DSN = 'https://36dc16f06aff44a3b91d0a6196f2b1fa@sentry.io/1318162'
 
 class MyApp extends App {
-  constructor(...args) {
-    super(...args) 
+  constructor() {
+    super() 
 
     Sentry.init({dsn: SENTRY_PUBLIC_DSN})
 
@@ -31,7 +31,8 @@ class MyApp extends App {
     }
   }
 
-  componentDidCatch (error, errorInfo) {
+  // $FlowFixMe
+  componentDidCatch (error: mixed, errorInfo: any) {
     Sentry.configureScope(scope => {
       Object.keys(errorInfo).forEach(key => {
         scope.setExtra(key, errorInfo[key])

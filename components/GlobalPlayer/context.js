@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react'
 import type { SimplecastEpisode } from '../../types'
+
 export const defaultPlayerContext = {
   trackQueue: [],
   isPlaying: false,
@@ -20,4 +21,5 @@ export const defaultPlayerContext = {
   onTrackEnded: () => {},
 }
 
+// $FlowIssue
 export default React.createContext(defaultPlayerContext)
