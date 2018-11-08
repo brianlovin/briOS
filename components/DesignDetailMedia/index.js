@@ -14,25 +14,45 @@ type Props = {
   detail: DesignDetail
 }
 
-class DesignDetailMedia extends React.Component<Props> {
+type State = {
+  isVisible: boolean
+}
+
+class DesignDetailMedia extends React.Component<Props, State> {
+  state = { isVisible: false }
+
+  onChange = (isVisible: boolean) => {
+    if (this.state.isVisible) return
+    return this.setState({ isVisible })
+  }
+
   render() {
     const { detail } = this.props
+    const { isVisible } = this.state
 
     return (
-      <DetailContainer>
-        <DetailTitle>{detail.title}</DetailTitle>
-        <Markdown>{detail.description}</Markdown>
+      <VisibilitySensor partialVisibility onChange={this.onChange}>
+        <DetailContainer>
+          <DetailTitle>{detail.title}</DetailTitle>
+          <Markdown>{detail.description}</Markdown>
 
-        <MediaContainer>
-          {
-            detail.media.map(src => (
-              <Video preload="auto" key={src} controls>
-                <source src={src} />
-              </Video>
-            ))
-          }
-        </MediaContainer>
-      </DetailContainer>
+            {
+              isVisible
+              ? (
+                <MediaContainer>
+                  {
+                    detail.media.map(src => (
+                      <Video playsInline muted loop autoPlay preload="metadata" key={src} controls>
+                        <source src={`${src}#t=0.1`} />
+                      </Video>
+                    ))
+                  }
+                </MediaContainer>
+              )
+              : <span />
+            }
+        </DetailContainer>
+      </VisibilitySensor>
     )
   }
 }
