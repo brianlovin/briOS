@@ -1,5 +1,7 @@
 // @flow
-import * as React from 'react'
+// $FlowIssue
+import React, { useState, useRef } from 'react'
+import type { Node } from 'react'
 import * as Styled from './style'
 import Icon from '../Icon'
 import Clipboard from 'react-clipboard.js'
@@ -8,7 +10,7 @@ export type Size = 'small' | 'large' | 'default';
 export type Props = {
   size?: Size,
   disabled?: boolean,
-  children: React.Node,
+  children: Node,
 };
 
 export const ButtonRow = Styled.ButtonRow
@@ -85,41 +87,32 @@ type CopyLinkState = {
   isClicked: boolean
 }
 
-export class CopyLinkButton extends React.Component<CopyLinkProps, CopyLinkState> {
-  ref: ?any;
-  ref = null;
-  state = {
-    isClicked: false
+export const CopyLinkButton = (props: CopyLinkProps) => {
+  const { text } = props
+  let buttonRef = useRef(null)
+  const [ isClicked, handleClick ] = useState(false)
+
+  const onClick = () => {
+    handleClick(true)
+    const ref = setTimeout(() => handleClick(false), 2000);
+    buttonRef = ref;
   }
 
-  onClick = () => {
-    this.setState({ isClicked: true })
-
-    const ref = setTimeout(() => {
-      return this.setState({ isClicked: false });
-    }, 2000);
-    this.ref = ref;
-  }
-
-  render() {
-    const { text } = this.props
-    const { isClicked } = this.state
-    return (
-      <Clipboard
-        style={{ background: 'none' }}
-        data-clipboard-text={text}
-        onSuccess={this.onClick}
-        component="a"
-      >
-        <Styled.CopyLinkButton isClicked={isClicked} {...this.props}>
-          <Icon glyph="link" size={24} />
-          {
-            isClicked
-            ? 'Copied!'
-            : this.props.children
-          }
-        </Styled.CopyLinkButton>
-      </Clipboard>
-    )
-  }
+  return (
+    <Clipboard
+      style={{ background: 'none' }}
+      data-clipboard-text={text}
+      onSuccess={onClick}
+      component="a"
+    >
+      <Styled.CopyLinkButton isClicked={isClicked} {...props}>
+        <Icon glyph="link" size={24} />
+        {
+          isClicked
+          ? 'Copied!'
+          : props.children
+        }
+      </Styled.CopyLinkButton>
+    </Clipboard>
+  )
 }
