@@ -2,9 +2,12 @@
 // $FlowIssue
 import React, { useState, useRef } from 'react'
 import type { Node } from 'react'
+import dynamic from 'next/dynamic'
 import * as Styled from './style'
 import Icon from '../Icon'
-import Clipboard from 'react-clipboard.js'
+const Clipboard = dynamic(() => import('react-clipboard.js'), {
+  ssr: false
+})
 
 export type Size = 'small' | 'large' | 'default';
 export type Props = {
