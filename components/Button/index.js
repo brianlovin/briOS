@@ -105,7 +105,7 @@ export const CopyLinkButton = (props: CopyLinkProps) => {
       onSuccess={onClick}
       component="a"
     >
-      <Styled.CopyLinkButton isClicked={isClicked} {...props}>
+      <Styled.CopyLinkButton data-cy="copy-link-button" isClicked={isClicked} {...props}>
         <Icon glyph="link" size={24} />
         {
           isClicked

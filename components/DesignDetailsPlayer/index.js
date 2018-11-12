@@ -67,7 +67,7 @@ export default () => {
 
   return (
     <React.Fragment>
-      <Card>
+      <Card data-cy="design-details-player">
         <PlayerArtwork />
 
         <ContentContainer>

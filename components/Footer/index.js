@@ -11,7 +11,7 @@ class Footer extends React.Component<{}> {
     const context = this.context
 
     return (
-      <Container addPlayerPadding={context.trackQueue.length > 0}>
+      <Container addPlayerPadding={context.trackQueue.length > 0} data-cy="footer">
         <Icons>
           <a href="https://twitter.com/brian_lovin" target="_blank" rel="noopener noreferrer">
             <Icon glyph={'twitter'} />

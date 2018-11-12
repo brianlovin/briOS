@@ -16,7 +16,7 @@ class BookGrid extends React.Component<Props> {
       : data
     
     return (
-      <Grid>
+      <Grid data-cy="books">
         {
           books.map(book => (
             <BookCard truncated={truncated} key={book.url} book={book} />

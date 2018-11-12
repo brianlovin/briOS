@@ -10,7 +10,7 @@ import {
   Description,
 } from './style'
 
-const projects = [
+export const projects = [
   { 
     org: 'withspectrum', 
     name: 'spectrum', 
@@ -31,7 +31,7 @@ const projects = [
 class OpenSourceGrid extends React.Component<{}> {
   render() {
     return (
-      <Grid>
+      <Grid data-cy="open-source">
         {
           projects.map(project => {
             return (

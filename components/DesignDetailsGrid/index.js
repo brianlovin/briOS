@@ -27,7 +27,7 @@ class DesignDetailsGrid extends React.Component<Props> {
 
         {
           truncated && (
-            <ViewMoreContainer>
+            <ViewMoreContainer data-cy="view-all-design-details">
               <RouteLink route={'design-details'}>
                 <GhostButton>View all {designDetails.length} explorations</GhostButton>
               </RouteLink>
