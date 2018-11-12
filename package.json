@@ -13,7 +13,7 @@
     "flow coverage": "flow coverage",
     "prettier": "prettier",
     "cypress:open": "cypress open",
-    "test": "echo 'No test suite, passing!'",
+    "cypress:run": "cypress run",
     "lint:staged": "lint-staged"
   },
   "dependencies": {
