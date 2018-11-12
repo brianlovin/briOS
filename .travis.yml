@@ -1,20 +1,18 @@
 language: node_js
 node_js:
-  - 8
-before_install:
-  - curl -o- -L https://yarnpkg.com/install.sh | bash -s
-  - export PATH="$HOME/.yarn/bin:$PATH"
+  - 10
+cache:
+  directories:
+    - ~/.npm
+    - ~/.cache
+install:  
+  - npm ci
 before_script:
-  - yarn run dev &
+  - npm run dev &
 script:
   - node --version
-  - yarn --version
-  - yarn run flow
-  - yarn run cypress:run
+  - npm --version
+  - npm run flow
+  - npm run cypress:run
 notifications:
   email: false
-cache:
-  yarn: true
-  directories:
-    - node_modules
-    - ./cache
