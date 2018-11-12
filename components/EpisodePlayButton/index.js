@@ -42,7 +42,7 @@ class EpisodePlayButton extends React.Component<Props> {
     }
     
     return (
-      <MiniPlayBox onClick={playAction}>
+      <MiniPlayBox data-cy="episode-play-button" onClick={playAction}>
         <IconContainer>
           {
             context.isPlaying && isSameTrackAsGlobalPlayer

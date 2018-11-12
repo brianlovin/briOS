@@ -16,7 +16,7 @@ class MusicGrid extends React.Component<Props> {
       : data
     
     return (
-      <Grid>
+      <Grid data-cy="music">
         {
           albums.map(album => (
             <AlbumCard truncated={truncated} key={album.url} album={album} />

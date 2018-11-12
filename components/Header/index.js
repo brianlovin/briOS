@@ -13,7 +13,7 @@ class Header extends React.Component<Props> {
     const { showHeaderShadow } = this.props
 
     return (
-      <Container showHeaderShadow={showHeaderShadow}>
+      <Container showHeaderShadow={showHeaderShadow} data-cy="header">
         <Link href={'/'}>
           <a style={{display:'flex',alignItems:'center'}}>
             <Logo>Brian Lovin</Logo>

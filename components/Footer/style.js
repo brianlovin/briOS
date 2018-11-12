@@ -3,8 +3,6 @@ import styled from 'styled-components'
 import { theme } from '../theme'
 
 export const Container = styled.div`
-  display: flex;
-  flex-direction: column;
   margin-top: 128px;
   padding: 0 16px;
   margin-bottom: ${props => props.addPlayerPadding ? '196px' : '0'};

@@ -1,0 +1,9 @@
+{
+  "baseUrl": "http://localhost:3000",
+  "viewportWidth": 1300,
+  "defaultCommandTimeout": 20000,
+  "video": false,
+  "blacklistHosts": [
+    "*.google-analytics.com"
+  ]
+}

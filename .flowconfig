@@ -1,8 +1,10 @@
 [ignore]
+<PROJECT_ROOT>/node_modules
 
 [include]
 
 [libs]
+./flow-typed
 
 [options]
 suppress_comment=.*\\$FlowFixMe

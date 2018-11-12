@@ -28,7 +28,7 @@ export default (props: Props) => {
       partialVisibility 
       onChange={(visible: boolean) => !isVisible && setIsVisible(visible)}
     >
-      <DetailContainer>
+      <DetailContainer data-cy="detail-media-container">
         <DetailTitle>{detail.title}</DetailTitle>
         <Markdown>{detail.description}</Markdown>
 
