@@ -1,3 +1,6 @@
 {
-  "alias": ["brianlovin.com"]
+  "alias": ["brianlovin.com"],
+  "github": {
+    "silent": true
+  } 
 }
