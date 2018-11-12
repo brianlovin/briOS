@@ -6,6 +6,7 @@ import { SectionHeading, Heading, Subheading } from '../../components/Page'
 
 class Post extends React.Component<{}> {
   render() {
+    //
     return (
       <Page showEmailCapture={false}>
 
