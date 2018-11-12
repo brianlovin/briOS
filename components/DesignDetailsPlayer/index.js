@@ -1,134 +1,84 @@
 // @flow
-import * as React from 'react'
+// $FlowIssue
+import React, { useReducer, useEffect } from 'react'
 import type { SimplecastEpisode } from '../../types'
 import { podcasts, api } from '../../config'
-import { getDateObject } from '../../lib/getDateObject'
-import EpisodePlayButton from '../EpisodePlayButton'
-import AtvImage from '../AtvImage'
 import { ATVScript } from '../../lib/atvimg/script'
-import { SubscriptionsContainer } from '../GlobalPlayer/style'
-import SubscriptionButtons from '../GlobalPlayer/SubscriptionButtons'
-import {
-  Card,
-  Artwork,
-  ContentContainer,
-  Date,
-  Title,
-  Actions,
-  AllEpsButton,
-} from './style'
+import { Card, ContentContainer, Date, Title } from './style'
+import { getDateString, PlayerActions, PlayerArtwork, PlayerFooter} from './components'
 
 type State = {
-  episodes: ?Array<?SimplecastEpisode>,
+  episode: ?SimplecastEpisode,
   isLoading: boolean,
-  error: boolean,
+  hasError: boolean,
+  date: string,
+  title: string,
 }
 
-class DesignDetailsPlayer extends React.Component<{}, State> {
-  state = { episodes: [], isLoading: true, error: false }
+type ReducerAction = {
+  type: string,
+  episode: SimplecastEpisode
+}
+
+const reducer = (state: State, action: ReducerAction) => {
+  switch(action.type) {
+    case 'LOADED':
+      return {
+        ...state,
+        isLoading: false,
+        hasError: false,
+        episode: action.episode,
+        date: getDateString(action.episode),
+        title: action.episode.title
+      }
+    case 'ERROR': 
+      return {
+        ...state,
+        isLoading: false,
+        hasError: true,
+        episode: null,
+        date: 'New episodes weekly',
+        title: 'View all episodes on the Spec Network'
+      }
+    default: return state
+  }
+}
+
+const initialState = {
+  episode: null,
+  isLoading: true,
+  hasError: false,
+  date: 'Loading...',
+  title: 'Grabbing the latest episode'
+}
+
+export default () => {
+  const [ state, dispatch ] = useReducer(reducer, initialState)
   
-  componentDidMount = async () => {
+  const { episode, isLoading, hasError, date, title } = state
+
+  useEffect(async () => {
     const episodes = await api.getEpisodes(podcasts[0].id)
-    ATVScript()
+    if (episodes && episodes.length > 0) return dispatch({ type: 'LOADED', episode: episodes[0] })
+    return dispatch({ type: 'ERROR' })
+  }, [])
 
-    return this.setState({
-      episodes: episodes ? episodes : [],
-      isLoading: false,
-      error: episodes ? false : true
-    }) 
-  }
+  useEffect(async () => { ATVScript() }, [ episode ])
 
-  componentDidUpdate(_:any, prevState: State) {
-    const curr = this.state
-    if (prevState.isLoading && !curr.isLoading) {
-      ATVScript()
-    }
-  }
+  return (
+    <React.Fragment>
+      <Card>
+        <PlayerArtwork />
 
-  render() {
-    const { episodes, isLoading, error } = this.state
-    const episode = episodes && episodes.length > 0
-      ? episodes.filter(ep => ep && ep.published)[0]
-      : null
+        <ContentContainer>
+          <Date>{date}</Date>
+          <Title>{title}</Title>
 
-    if (error) {
-      return (
-        <React.Fragment>
-          <Card>
-            <a href="https://spec.fm/podcasts/design-details" target="_blank" rel="noopener noreferrer">
-              <AtvImage alt={'Design Details Podcast'} src={'/static/img/podcasts/designdetails.jpg'} Component={Artwork} />
-            </a>
+          <PlayerActions episode={episode} />
+        </ContentContainer>
+      </Card>
 
-            <ContentContainer>
-              <Date>New episodes weekly</Date>
-              <Title>View all episodes on the Spec Network</Title>
-              <Actions>
-                <a name="View all episodes" href="https://spec.fm/podcasts/design-details" target="_blank" rel="noopener noreferrer">
-                  <AllEpsButton>All Episodes</AllEpsButton>
-                </a>
-              </Actions>
-            </ContentContainer>
-          </Card>
-          <SubscriptionsContainer isVisible={true} isFooter={true}>
-            <SubscriptionButtons podcast={podcasts[0]} />
-          </SubscriptionsContainer>
-        </React.Fragment>
-      )
-    }
-
-    if (episode) {
-      const { month, year, day } = getDateObject(episode.published_at)
-      const datestring = `${month} ${day}, ${year}`
-      
-      return (
-        <React.Fragment>
-          <Card>
-            <a href="https://spec.fm/podcasts/design-details" target="_blank" rel="noopener noreferrer">
-              <AtvImage alt={'Design Details Podcast'} src={'/static/img/podcasts/designdetails.jpg'} Component={Artwork} />
-            </a>
-    
-            <ContentContainer>
-              <Date>{datestring}</Date>
-              <Title>{episode.title}</Title>
-              <Actions>
-                <EpisodePlayButton episode={episode} />
-                <a name="All Episodes" href="https://spec.fm/podcasts/design-details" target="_blank" rel="noopener noreferrer">
-                  <AllEpsButton>All Episodes</AllEpsButton>
-                </a>
-              </Actions>
-            </ContentContainer>
-          </Card>
-          <SubscriptionsContainer isVisible={true} isFooter={true}>
-            <SubscriptionButtons podcast={podcasts[0]} />
-          </SubscriptionsContainer>
-        </React.Fragment>
-      )
-    }
-
-    // loading
-    return (
-      <React.Fragment>
-        <Card>
-          <a href="https://spec.fm/podcasts/design-details" target="_blank" rel="noopener noreferrer">
-            <AtvImage alt={'Design Details Podcast'} src={'/static/img/podcasts/designdetails.jpg'} Component={Artwork} />
-          </a>
-
-          <ContentContainer>
-            <Date>Loading...</Date>
-            <Title>Grabbing the latest episode</Title>
-            <Actions>
-              <a name="All Episodes" href="https://spec.fm/podcasts/design-details" target="_blank" rel="noopener noreferrer">
-                <AllEpsButton>All Episodes</AllEpsButton>
-              </a>
-            </Actions>
-          </ContentContainer>
-        </Card>
-        <SubscriptionsContainer isVisible={true} isFooter={true}>
-          <SubscriptionButtons podcast={podcasts[0]} />
-        </SubscriptionsContainer>
-      </React.Fragment>
-    )
-  }
+      <PlayerFooter />
+    </React.Fragment>
+  )
 }
-
-export default DesignDetailsPlayer
