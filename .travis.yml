@@ -9,7 +9,7 @@ install:
   - npm ci
 before_script:
   - npm run build
-  - npm run start
+  - npm run start &
 script:
   - node --version
   - npm --version
