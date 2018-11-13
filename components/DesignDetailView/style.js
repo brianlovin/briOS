@@ -1,7 +1,7 @@
 // @flow
-import styled from 'styled-components'
-import { theme } from '../theme'
-import { tint, Shadows, hexa } from '../globals'
+import styled from 'styled-components';
+import { theme } from '../theme';
+import { tint, Shadows, hexa } from '../globals';
 
 export const Container = styled.div`
   width: 100%;
@@ -11,7 +11,7 @@ export const Container = styled.div`
   justify-content: center;
   position: relative;
   z-index: 2;
-`
+`;
 
 export const HeadingContainer = styled.div`
   display: flex;
@@ -24,7 +24,7 @@ export const HeadingContainer = styled.div`
     align-items: flex-start;
     max-width: 100%;
   }
-`
+`;
 
 export const IconWrapper = styled.div`
   position: relative;
@@ -36,7 +36,7 @@ export const IconWrapper = styled.div`
     width: calc(100% + 32px);
     margin-left: -16px;
   }
-`
+`;
 
 export const IconContainer = styled.span`
   background: transparent;
@@ -64,7 +64,7 @@ export const IconContainer = styled.span`
   img {
     width: 64px;
     height: 64px;
-    border-radius: 16px!important;
+    border-radius: 16px !important;
     background: ${theme.bg.wash};
   }
 
@@ -84,9 +84,9 @@ export const IconContainer = styled.span`
   .atvImg-layers,
   .atvImg-shine,
   .atvImg-shadow {
-    border-radius: 16px!important;
+    border-radius: 16px !important;
   }
-`
+`;
 
 export const Icon = styled.img`
   ${Shadows.default};
@@ -102,7 +102,7 @@ export const Icon = styled.img`
   &:active {
     ${Shadows.active};
   }
-`
+`;
 
 export const LeftShadow = styled.div`
   position: absolute;
@@ -110,14 +110,18 @@ export const LeftShadow = styled.div`
   top: 0;
   bottom: 0;
   width: 48px;
-  background-image: linear-gradient(to right, ${theme.bg.wash}, ${hexa(theme.bg.wash, 0)});
+  background-image: linear-gradient(
+    to right,
+    ${theme.bg.wash},
+    ${hexa(theme.bg.wash, 0)}
+  );
   z-index: 10;
   pointer-events: none;
 
   @media (max-width: 752px) {
     width: 16px;
   }
-`
+`;
 
 export const RightShadow = styled.div`
   position: absolute;
@@ -125,10 +129,14 @@ export const RightShadow = styled.div`
   top: 0;
   bottom: 0;
   width: 48px;
-  background-image: linear-gradient(to left, ${theme.bg.wash} , ${hexa(theme.bg.wash, 0)});
+  background-image: linear-gradient(
+    to left,
+    ${theme.bg.wash},
+    ${hexa(theme.bg.wash, 0)}
+  );
   z-index: 10;
   pointer-events: none;
-`
+`;
 
 export const LowOpacity = styled.div`
   opacity: 0.1;
@@ -140,4 +148,4 @@ export const LowOpacity = styled.div`
     transition: opacity 0.2s ease-in-out;
     z-index: 11;
   }
-`
+`;

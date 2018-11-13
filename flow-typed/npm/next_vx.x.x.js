@@ -370,7 +370,9 @@ declare module 'next/constants.js' {
   declare module.exports: $Exports<'next/constants'>;
 }
 declare module 'next/dist/build/babel/plugins/react-loadable-plugin.js' {
-  declare module.exports: $Exports<'next/dist/build/babel/plugins/react-loadable-plugin'>;
+  declare module.exports: $Exports<
+    'next/dist/build/babel/plugins/react-loadable-plugin'
+  >;
 }
 declare module 'next/dist/build/babel/preset.js' {
   declare module.exports: $Exports<'next/dist/build/babel/preset'>;
@@ -382,52 +384,82 @@ declare module 'next/dist/build/webpack.js' {
   declare module.exports: $Exports<'next/dist/build/webpack'>;
 }
 declare module 'next/dist/build/webpack/loaders/emit-file-loader.js' {
-  declare module.exports: $Exports<'next/dist/build/webpack/loaders/emit-file-loader'>;
+  declare module.exports: $Exports<
+    'next/dist/build/webpack/loaders/emit-file-loader'
+  >;
 }
 declare module 'next/dist/build/webpack/loaders/hot-self-accept-loader.js' {
-  declare module.exports: $Exports<'next/dist/build/webpack/loaders/hot-self-accept-loader'>;
+  declare module.exports: $Exports<
+    'next/dist/build/webpack/loaders/hot-self-accept-loader'
+  >;
 }
 declare module 'next/dist/build/webpack/loaders/next-babel-loader.js' {
-  declare module.exports: $Exports<'next/dist/build/webpack/loaders/next-babel-loader'>;
+  declare module.exports: $Exports<
+    'next/dist/build/webpack/loaders/next-babel-loader'
+  >;
 }
 declare module 'next/dist/build/webpack/plugins/build-manifest-plugin.js' {
-  declare module.exports: $Exports<'next/dist/build/webpack/plugins/build-manifest-plugin'>;
+  declare module.exports: $Exports<
+    'next/dist/build/webpack/plugins/build-manifest-plugin'
+  >;
 }
 declare module 'next/dist/build/webpack/plugins/chunk-names-plugin.js' {
-  declare module.exports: $Exports<'next/dist/build/webpack/plugins/chunk-names-plugin'>;
+  declare module.exports: $Exports<
+    'next/dist/build/webpack/plugins/chunk-names-plugin'
+  >;
 }
 declare module 'next/dist/build/webpack/plugins/nextjs-require-cache-hot-reloader.js' {
-  declare module.exports: $Exports<'next/dist/build/webpack/plugins/nextjs-require-cache-hot-reloader'>;
+  declare module.exports: $Exports<
+    'next/dist/build/webpack/plugins/nextjs-require-cache-hot-reloader'
+  >;
 }
 declare module 'next/dist/build/webpack/plugins/nextjs-ssr-import.js' {
-  declare module.exports: $Exports<'next/dist/build/webpack/plugins/nextjs-ssr-import'>;
+  declare module.exports: $Exports<
+    'next/dist/build/webpack/plugins/nextjs-ssr-import'
+  >;
 }
 declare module 'next/dist/build/webpack/plugins/nextjs-ssr-module-cache.js' {
-  declare module.exports: $Exports<'next/dist/build/webpack/plugins/nextjs-ssr-module-cache'>;
+  declare module.exports: $Exports<
+    'next/dist/build/webpack/plugins/nextjs-ssr-module-cache'
+  >;
 }
 declare module 'next/dist/build/webpack/plugins/pages-manifest-plugin.js' {
-  declare module.exports: $Exports<'next/dist/build/webpack/plugins/pages-manifest-plugin'>;
+  declare module.exports: $Exports<
+    'next/dist/build/webpack/plugins/pages-manifest-plugin'
+  >;
 }
 declare module 'next/dist/build/webpack/plugins/pages-plugin.js' {
-  declare module.exports: $Exports<'next/dist/build/webpack/plugins/pages-plugin'>;
+  declare module.exports: $Exports<
+    'next/dist/build/webpack/plugins/pages-plugin'
+  >;
 }
 declare module 'next/dist/build/webpack/plugins/react-loadable-plugin.js' {
-  declare module.exports: $Exports<'next/dist/build/webpack/plugins/react-loadable-plugin'>;
+  declare module.exports: $Exports<
+    'next/dist/build/webpack/plugins/react-loadable-plugin'
+  >;
 }
 declare module 'next/dist/build/webpack/plugins/unlink-file-plugin.js' {
-  declare module.exports: $Exports<'next/dist/build/webpack/plugins/unlink-file-plugin'>;
+  declare module.exports: $Exports<
+    'next/dist/build/webpack/plugins/unlink-file-plugin'
+  >;
 }
 declare module 'next/dist/build/webpack/utils.js' {
   declare module.exports: $Exports<'next/dist/build/webpack/utils'>;
 }
 declare module 'next/dist/client/dev-error-overlay/eventsource.js' {
-  declare module.exports: $Exports<'next/dist/client/dev-error-overlay/eventsource'>;
+  declare module.exports: $Exports<
+    'next/dist/client/dev-error-overlay/eventsource'
+  >;
 }
 declare module 'next/dist/client/dev-error-overlay/format-webpack-messages.js' {
-  declare module.exports: $Exports<'next/dist/client/dev-error-overlay/format-webpack-messages'>;
+  declare module.exports: $Exports<
+    'next/dist/client/dev-error-overlay/format-webpack-messages'
+  >;
 }
 declare module 'next/dist/client/dev-error-overlay/hot-dev-client.js' {
-  declare module.exports: $Exports<'next/dist/client/dev-error-overlay/hot-dev-client'>;
+  declare module.exports: $Exports<
+    'next/dist/client/dev-error-overlay/hot-dev-client'
+  >;
 }
 declare module 'next/dist/client/error-boundary.js' {
   declare module.exports: $Exports<'next/dist/client/error-boundary'>;
@@ -454,7 +486,9 @@ declare module 'next/dist/client/source-map-support.js' {
   declare module.exports: $Exports<'next/dist/client/source-map-support'>;
 }
 declare module 'next/dist/client/webpack-hot-middleware-client.js' {
-  declare module.exports: $Exports<'next/dist/client/webpack-hot-middleware-client'>;
+  declare module.exports: $Exports<
+    'next/dist/client/webpack-hot-middleware-client'
+  >;
 }
 declare module 'next/dist/export/index.js' {
   declare module.exports: $Exports<'next/dist/export/index'>;
@@ -541,7 +575,9 @@ declare module 'next/dist/server/hot-reloader.js' {
   declare module.exports: $Exports<'next/dist/server/hot-reloader'>;
 }
 declare module 'next/dist/server/lib/error-overlay-middleware.js' {
-  declare module.exports: $Exports<'next/dist/server/lib/error-overlay-middleware'>;
+  declare module.exports: $Exports<
+    'next/dist/server/lib/error-overlay-middleware'
+  >;
 }
 declare module 'next/dist/server/lib/path-match.js' {
   declare module.exports: $Exports<'next/dist/server/lib/path-match'>;

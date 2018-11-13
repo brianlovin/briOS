@@ -1,41 +1,37 @@
 // @flow
-import * as React from 'react'
-import Link from 'next/link'
-import { Container, Logo, ButtonRowContainer } from './style'
-import { PrimaryButton, GhostButton } from '../Button'
+import * as React from 'react';
+import Link from 'next/link';
+import { Container, Logo, ButtonRowContainer } from './style';
+import { PrimaryButton, GhostButton } from '../Button';
 
 type Props = {
-  showHeaderShadow: boolean
-}
+  showHeaderShadow: boolean,
+};
 
-class Header extends React.Component<Props> {
-  render() {
-    const { showHeaderShadow } = this.props
+export default function Header(props: Props) {
+  const { showHeaderShadow } = props;
 
-    return (
-      <Container showHeaderShadow={showHeaderShadow} data-cy="header">
-        <Link href={'/'}>
-          <a style={{display:'flex',alignItems:'center'}}>
-            <Logo>Brian Lovin</Logo>
+  return (
+    <Container showHeaderShadow={showHeaderShadow} data-cy="header">
+      <Link href="/">
+        <a style={{ display: 'flex', alignItems: 'center' }}>
+          <Logo>Brian Lovin</Logo>
+        </a>
+      </Link>
+
+      <ButtonRowContainer>
+        <Link href="/about">
+          <a>
+            <GhostButton>About</GhostButton>
           </a>
         </Link>
 
-        <ButtonRowContainer>
-          <Link href={'/about'}>
-            <a>
-              <GhostButton>About</GhostButton>
-            </a>
-          </Link>
-
-          <Link href={'mailto:briandlovin@gmail.com'}>
-            <a style={{marginLeft:'8px'}}>
-              <PrimaryButton>Email</PrimaryButton>
-            </a>
-          </Link>
-        </ButtonRowContainer>
-      </Container>
-    )
-  }
+        <Link href="mailto:briandlovin@gmail.com">
+          <a style={{ marginLeft: '8px' }}>
+            <PrimaryButton>Email</PrimaryButton>
+          </a>
+        </Link>
+      </ButtonRowContainer>
+    </Container>
+  );
 }
-
-export default Header

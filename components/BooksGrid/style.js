@@ -1,6 +1,6 @@
 // @flow
-import styled from 'styled-components'
-import { Shadows } from '../globals'
+import styled from 'styled-components';
+import { Shadows } from '../globals';
 
 export const Grid = styled.div`
   display: grid;
@@ -38,7 +38,7 @@ export const Grid = styled.div`
       margin-right: 16px;
     }
   }
-`
+`;
 
 export const Spacer = styled.div`
   display: none;
@@ -49,7 +49,7 @@ export const Spacer = styled.div`
   @media (max-width: 752px) {
     display: block;
   }
-`
+`;
 
 export const Artwork = styled.img`
   ${Shadows.default};
@@ -65,4 +65,4 @@ export const Artwork = styled.img`
   &:active {
     ${Shadows.active};
   }
-`
+`;

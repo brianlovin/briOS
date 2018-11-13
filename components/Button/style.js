@@ -1,10 +1,10 @@
 // @flow
 import styled, { css } from 'styled-components';
 import { hexa, tint } from '../globals';
-import type { Size } from './';
-import { theme } from '../theme'
+import type { ButtonSize } from './types';
+import { theme } from '../theme';
 
-const getPadding = (size: Size) => {
+const getPadding = (size: ButtonSize) => {
   switch (size) {
     case 'small':
       return '4px 8px';
@@ -18,7 +18,7 @@ const getPadding = (size: Size) => {
   }
 };
 
-const getFontSize = (size: Size) => {
+const getFontSize = (size: ButtonSize) => {
   switch (size) {
     case 'small':
       return '14px';
@@ -88,8 +88,9 @@ export const Button = styled.button`
   }
 
   &:focus {
-    box-shadow: 0 0 0 1px ${props =>
-      props.theme.bg.default}, 0 0 0 3px ${theme.border.default};
+    box-shadow: 0 0 0 1px ${props => props.theme.bg.default}, 0 0 0 3px ${
+  theme.border.default
+};
   }
 `;
 
@@ -111,8 +112,7 @@ export const PrimaryButton = styled.button`
         props.theme.brand.default,
         16
       )})`};
-    box-shadow: ${props =>
-      props.disabled ? 'none' : theme.shadows.button};
+    box-shadow: ${props => (props.disabled ? 'none' : theme.shadows.button)};
   }
 
   &:active {
@@ -125,10 +125,10 @@ export const PrimaryButton = styled.button`
 
   &:focus {
     box-shadow: 0 0 0 1px ${props =>
-      props.theme.bg.default}, 0 0 0 3px ${props => hexa(props.theme.brand.alt, 0.16)};
+      props.theme.bg.default}, 0 0 0 3px ${props =>
+  hexa(props.theme.brand.alt, 0.16)};
   }
 `;
-
 
 export const GhostButton = styled.button`
   ${base} border: none;
@@ -167,8 +167,9 @@ export const OutlineButton = styled.button`
   }
 
   &:focus {
-    box-shadow: 0 0 0 1px ${props =>
-      props.theme.bg.default}, 0 0 0 3px ${theme.border.default};
+    box-shadow: 0 0 0 1px ${props => props.theme.bg.default}, 0 0 0 3px ${
+  theme.border.default
+};
   }
 `;
 
@@ -177,8 +178,8 @@ export const ButtonRow = styled.div`
   align-items: center;
 
   @media (max-width: 968px) {
-    flex-wrap: nowrap; 
-    
+    flex-wrap: nowrap;
+
     button {
       margin-top: 8px;
     }
@@ -224,7 +225,6 @@ export const ButtonSegmentRow = styled.div`
   }
 `;
 
-
 export const FacebookButton = styled.button`
   ${base}
   border: 1px solid ${theme.social.facebook};
@@ -244,12 +244,11 @@ export const FacebookButton = styled.button`
   &:hover {
     color: ${theme.text.reverse};
     background-image: ${props =>
-      `linear-gradient(to bottom, ${tint(props.theme.social.facebook, 16)}, ${tint(
+      `linear-gradient(to bottom, ${tint(
         props.theme.social.facebook,
         16
-      )})`};
-    box-shadow: ${props =>
-      props.disabled ? 'none' : theme.shadows.button};
+      )}, ${tint(props.theme.social.facebook, 16)})`};
+    box-shadow: ${props => (props.disabled ? 'none' : theme.shadows.button)};
   }
 
   &:active {
@@ -262,7 +261,8 @@ export const FacebookButton = styled.button`
 
   &:focus {
     box-shadow: 0 0 0 1px ${props =>
-      props.theme.bg.default}, 0 0 0 3px ${props => hexa(props.theme.social.facebook, 0.16)};
+      props.theme.bg.default}, 0 0 0 3px ${props =>
+  hexa(props.theme.social.facebook, 0.16)};
   }
 `;
 
@@ -285,12 +285,11 @@ export const TwitterButton = styled.button`
   &:hover {
     color: ${theme.text.reverse};
     background-image: ${props =>
-      `linear-gradient(to bottom, ${tint(props.theme.social.twitter, 4)}, ${tint(
+      `linear-gradient(to bottom, ${tint(
         props.theme.social.twitter,
         4
-      )})`};
-    box-shadow: ${props =>
-      props.disabled ? 'none' : theme.shadows.button};
+      )}, ${tint(props.theme.social.twitter, 4)})`};
+    box-shadow: ${props => (props.disabled ? 'none' : theme.shadows.button)};
   }
 
   &:active {
@@ -303,30 +302,48 @@ export const TwitterButton = styled.button`
 
   &:focus {
     box-shadow: 0 0 0 1px ${props =>
-      props.theme.bg.default}, 0 0 0 3px ${props => hexa(props.theme.social.twitter, 0.16)};
+      props.theme.bg.default}, 0 0 0 3px ${props =>
+  hexa(props.theme.social.twitter, 0.16)};
   }
 `;
 
 export const CopyLinkButton = styled.button`
   ${base}
-  border: 1px solid ${props => props.isClicked ? tint(props.theme.success.default, -10) : props.theme.border.default};
-  color: ${props => props.isClicked ? props.theme.bg.default : props.theme.text.secondary};
-  background-color: ${props => props.isClicked ? props.theme.success.default : props.theme.bg.default};
+  border: 1px solid ${props =>
+    props.isClicked
+      ? tint(props.theme.success.default, -10)
+      : props.theme.border.default};
+  color: ${props =>
+    props.isClicked ? props.theme.bg.default : props.theme.text.secondary};
+  background-color: ${props =>
+    props.isClicked ? props.theme.success.default : props.theme.bg.default};
   background-image: ${props =>
-    `linear-gradient(to bottom, ${props.isClicked ? props.theme.success.default : props.theme.bg.default}, ${
-      props.isClicked ? tint(props.theme.success.default, -4) : props.theme.bg.wash
+    `linear-gradient(to bottom, ${
+      props.isClicked ? props.theme.success.default : props.theme.bg.default
+    }, ${
+      props.isClicked
+        ? tint(props.theme.success.default, -4)
+        : props.theme.bg.wash
     })`};
   transition: border 0.2s ease-in-out, background-color 0.2s ease-in-out, background-image 0.2s ease-in-out;
 
   &:hover {
     transition: border 0.2s ease-in-out, background-color 0.2s ease-in-out, background-image 0.2s ease-in-out;
-    color: ${props => props.isClicked ? props.theme.bg.default : props.theme.text.default};
+    color: ${props =>
+      props.isClicked ? props.theme.bg.default : props.theme.text.default};
   }
 
   &:active {
-    border: 1px solid ${props => props.isClicked ? tint(props.theme.success.default, -10) : props.theme.border.active};
+    border: 1px solid ${props =>
+      props.isClicked
+        ? tint(props.theme.success.default, -10)
+        : props.theme.border.active};
     background-image: ${props =>
-      `linear-gradient(to bottom, ${props.isClicked ? tint(props.theme.success.default, -4) : props.theme.bg.default}, ${
+      `linear-gradient(to bottom, ${
+        props.isClicked
+          ? tint(props.theme.success.default, -4)
+          : props.theme.bg.default
+      }, ${
         props.isClicked ? props.theme.success.default : props.theme.bg.wash
       })`};
   }
@@ -337,6 +354,10 @@ export const CopyLinkButton = styled.button`
   }
 
   &:focus {
-    box-shadow: 0 0 0 1px ${props =>props.theme.bg.default}, 0 0 0 3px ${props => props.isClicked ? hexa(props.theme.success.default, 0.16) : props.theme.border.default};
+    box-shadow: 0 0 0 1px ${props =>
+      props.theme.bg.default}, 0 0 0 3px ${props =>
+  props.isClicked
+    ? hexa(props.theme.success.default, 0.16)
+    : props.theme.border.default};
   }
-`
+`;

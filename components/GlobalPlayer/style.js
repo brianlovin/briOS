@@ -1,7 +1,7 @@
 // @flow
-import styled, { css } from 'styled-components'
-import { theme } from '../theme'
-import { Truncate, Shadows } from '../globals'
+import styled, { css } from 'styled-components';
+import { theme } from '../theme';
+import { Truncate, Shadows } from '../globals';
 
 export const Container = styled.div`
   position: fixed;
@@ -12,10 +12,11 @@ export const Container = styled.div`
   background: ${theme.text.default};
   color: #fff;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
   z-index: 999;
-  opacity: ${props => props.isVisible ? '1' : '0'};
-  transform: translateY(${props => props.isVisible ? '-16px' : '80px'}) scale(1);
+  opacity: ${props => (props.isVisible ? '1' : '0')};
+  transform: translateY(${props => (props.isVisible ? '-16px' : '80px')})
+    scale(1);
   transition: all 0.2s ease-in;
   display: flex;
   justify-content: center;
@@ -31,27 +32,24 @@ export const Container = styled.div`
     width: 100%;
     max-width: calc(100% - 32px);
 
-    @media only screen 
-    and (device-width : 375px) 
-    and (device-height : 812px) 
-    and (-webkit-device-pixel-ratio : 3) { 
+    @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
       bottom: 20px;
     }
   }
-`
+`;
 
 export const ContentContainer = styled.div`
   display: flex;
   padding: 16px;
-`
+`;
 
 export const PodcastTitle = styled.h6`
   font-size: 14px;
-  color: rgba(255,255,255,0.8);
+  color: rgba(255, 255, 255, 0.8);
   display: block;
   ${Truncate(250)};
   cursor: pointer;
-`
+`;
 
 export const EpisodeTitle = styled.h5`
   font-size: 16px;
@@ -65,13 +63,13 @@ export const EpisodeTitle = styled.h5`
   @media (max-width: 420px) {
     ${Truncate(256)};
   }
-`
+`;
 
 export const DismissContainer = styled.span`
   position: absolute;
   right: 8px;
   top: 8px;
-`
+`;
 
 export const IconContainer = styled.div`
   margin-right: 8px;
@@ -82,12 +80,12 @@ export const IconContainer = styled.div`
   position: relative;
   top: 2px;
   cursor: pointer;
-`
+`;
 
 export const TextContainer = styled.div`
   display: flex;
   flex-direction: column;
-`
+`;
 
 const defaultThumbStyles = css`
   height: 16px;
@@ -96,20 +94,20 @@ const defaultThumbStyles = css`
   background: #ffffff;
   cursor: pointer;
   border: 2px solid ${theme.text.default};
-`
+`;
 
 const defaultTrackStyles = css`
   width: 100%;
   height: 4px;
   cursor: pointer;
-  background: rgba(255,255,255,0.6);
+  background: rgba(255, 255, 255, 0.6);
   border-radius: 4px;
-`
+`;
 
 const msFill = css`
-  background: rgba(255,255,255,0.6);
+  background: rgba(255, 255, 255, 0.6);
   border-radius: 8px;
-`
+`;
 
 export const Scrubber = styled.input`
   -webkit-appearance: none;
@@ -123,14 +121,14 @@ export const Scrubber = styled.input`
   &::-ms-track {
     width: 100%;
     cursor: pointer;
-    background: transparent; 
+    background: transparent;
     border-color: transparent;
     color: transparent;
   }
 
   &::-webkit-slider-thumb {
     -webkit-appearance: none;
-    margin-top: -6px; 
+    margin-top: -6px;
     ${defaultThumbStyles};
   }
 
@@ -186,28 +184,28 @@ export const Scrubber = styled.input`
       background: #fff;
     }
   }
-`
+`;
 
 export const StyledAudioPlayer = styled.audio`
   display: none;
-`
+`;
 
 export const SubscriptionsContainer = styled.div`
-  padding: ${props => props.isVisible ? '16px' : '0 16px'};
+  padding: ${props => (props.isVisible ? '16px' : '0 16px')};
   overflow: hidden;
-  background: ${props => props.isFooter ? theme.bg.wash : '#2D2E33'};
+  background: ${props => (props.isFooter ? theme.bg.wash : '#2D2E33')};
   border-radius: 0 0 8px 8px;
   display: grid;
   grid-gap: 16px;
   grid-template-columns: repeat(7, 1fr);
-  justify-content: ${props => props.isFooter ? 'center' : 'space-between'};
-  max-height: ${props => props.isVisible ? '64px' : '0'};
+  justify-content: ${props => (props.isFooter ? 'center' : 'space-between')};
+  max-height: ${props => (props.isVisible ? '64px' : '0')};
   transition: max-height 0.15s ease-out;
   position: relative;
-  top: ${props => props.isFooter ? '-8px' : '0'};
-  padding-top: ${props => props.isFooter ? '20px' : '16px'};
+  top: ${props => (props.isFooter ? '-8px' : '0')};
+  padding-top: ${props => (props.isFooter ? '20px' : '16px')};
   z-index: 1;
-  box-shadow: ${props => props.isFooter ? theme.shadows.default : 'none'};
+  box-shadow: ${props => (props.isFooter ? theme.shadows.default : 'none')};
   width: 100%;
 
   a {
@@ -217,10 +215,10 @@ export const SubscriptionsContainer = styled.div`
     justify-content: center;
   }
 
-  @media(max-width: 752px) {
+  @media (max-width: 752px) {
     display: none;
   }
-`
+`;
 
 export const SubscriptionAvatar = styled.img`
   width: 32px;
@@ -234,4 +232,4 @@ export const SubscriptionAvatar = styled.img`
     transform: scale(1.1);
     transition: transform 0.2s ease-in-out;
   }
-`
+`;

@@ -1,8 +1,8 @@
 // @flow
-import styled from 'styled-components'
-import { theme } from '../theme'
-import { StyledCard } from '../Card/style'
-import { Shadows } from '../globals'
+import styled from 'styled-components';
+import { theme } from '../theme';
+import { StyledCard } from '../Card/style';
+import { Shadows } from '../globals';
 
 export const CardContent = styled.div`
   display: flex;
@@ -10,18 +10,18 @@ export const CardContent = styled.div`
   position: relative;
   padding: 12px 16px;
   padding-left: 72px;
-`
+`;
 
 export const DetailsCount = styled.p`
   font-size: 14px;
   color: ${theme.text.tertiary};
-`
+`;
 
 export const Title = styled.p`
   font-size: 18px;
   color: ${theme.text.default};
   font-weight: 600;
-`
+`;
 
 export const ImageContainer = styled.span`
   background: transparent;
@@ -35,7 +35,7 @@ export const ImageContainer = styled.span`
   img {
     width: 64px;
     height: 64px;
-    border-radius: 16px!important;
+    border-radius: 16px !important;
     background: ${theme.bg.wash};
   }
 
@@ -44,9 +44,9 @@ export const ImageContainer = styled.span`
   .atvImg-layers,
   .atvImg-shine,
   .atvImg-shadow {
-    border-radius: 16px!important;
+    border-radius: 16px !important;
   }
-`
+`;
 
 export const Icon = styled.img`
   ${Shadows.default};
@@ -62,4 +62,4 @@ export const Icon = styled.img`
   &:active {
     ${Shadows.active};
   }
-`
+`;

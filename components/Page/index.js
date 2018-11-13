@@ -1,88 +1,90 @@
 // @flow
-import * as React from 'react'
-import { ThemeProvider } from 'styled-components'
-import Icon from '../Icon'
-import Header from '../Header'
-import Footer from '../Footer'
-import { theme } from '../theme'
-import { Container, SectionHeading, Heading, Subheading, LargeHeading, LargeSubheading, InnerContainer, ScrollToTop } from './style'
+// $FlowIssue
+import React, { useState, useEffect } from 'react';
+import type { Node } from 'react';
+import { ThemeProvider } from 'styled-components';
 import { throttle } from 'throttle-debounce';
-import * as gtag from '../../lib/gtag'
+import Icon from '../Icon';
+import Header from '../Header';
+import Footer from '../Footer';
+import { theme } from '../theme';
+import {
+  Container,
+  SectionHeading,
+  Heading,
+  Subheading,
+  LargeHeading,
+  LargeSubheading,
+  InnerContainer,
+  ScrollToTop,
+} from './style';
+import * as gtag from '../../lib/gtag';
 
-export { SectionHeading, Heading, Subheading, LargeHeading, LargeSubheading }
+export { SectionHeading, Heading, Subheading, LargeHeading, LargeSubheading };
 
 type Props = {
-  children: React.Node,
-  showEmailCapture?: boolean,
-}
+  children: Node,
+};
 
-type State = {
-  showHeaderShadow: boolean,
-  scrollToTopVisible: boolean,
-}
+export default function Page(props: Props) {
+  const { children } = props;
+  let lastTrackedPageview = null;
+  const [showHeaderShadow, setHeaderShadow] = useState(false);
+  const [scrollToTopVisible, setScrollToTopVisible] = useState(false);
 
-
-export default class Page extends React.Component<Props, State> {
-  lastTrackedPageview: ?string;
-
-  constructor() {
-    super()
-
-    this.state = { showHeaderShadow: false, scrollToTopVisible: false }
-    this.handleScroll = throttle(300, this.handleScroll)
-    this.lastTrackedPageview = null
+  function handleScroll() {
+    const headerShadowState = window && window.pageYOffset > 0;
+    const scrollToTopState = window && window.pageYOffset > 240;
+    setHeaderShadow(headerShadowState);
+    setScrollToTopVisible(scrollToTopState);
   }
 
-  componentDidMount() {
-    window && window.addEventListener('scroll', this.handleScroll);
-    
-    if (document) {
-      gtag.pageview(document.location.pathname)
-      this.lastTrackedPageview = document.location.pathname
+  const throttledScroll = throttle(300, handleScroll);
+
+  const scrollToTop = () => {
+    if (window) {
+      window.scrollTo(0, 0);
     }
-  }
+  };
 
-  componentWillUnmount() {
-    window && window.removeEventListener('scroll', this.handleScroll);
-    this.lastTrackedPageview = null
-  }
+  useEffect(() => {
+    if (window) {
+      window.addEventListener('scroll', throttledScroll);
+    }
 
-  componentDidUpdate() {
     if (document) {
-      const newLocation = document.location.pathname
-      if (newLocation !== this.lastTrackedPageview) {
-        gtag.pageview(document.location.pathname)
-        this.lastTrackedPageview = newLocation
+      gtag.pageview(document.location.pathname);
+      lastTrackedPageview = document.location.pathname;
+    }
+
+    return () => {
+      if (window) {
+        window.removeEventListener('scroll', throttledScroll);
+        lastTrackedPageview = null;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (document) {
+      const newLocation = document.location.pathname;
+      if (newLocation !== lastTrackedPageview) {
+        gtag.pageview(document.location.pathname);
+        lastTrackedPageview = newLocation;
       }
     }
-  }
+  });
 
-  handleScroll = () => {
-    const showHeaderShadow = window && window.pageYOffset > 0
-    const scrollToTopVisible = window && window.pageYOffset > 240
-    return this.setState({ showHeaderShadow, scrollToTopVisible })
-  }
-
-  scrollToTop = () => {
-    return window && window.scrollTo(0, 0)
-  }
-
-  render() {
-    const { showHeaderShadow, scrollToTopVisible } = this.state
-
-    return (
-      <ThemeProvider theme={theme}>
-        <Container>
-          <Header showHeaderShadow={showHeaderShadow}/>
-          <InnerContainer>
-            {this.props.children}
-          </InnerContainer>
-          <Footer />
-          <ScrollToTop isVisible={scrollToTopVisible} onClick={this.scrollToTop}>
-            <Icon glyph={'view-forward'} size={32} />
-          </ScrollToTop>
-        </Container>
-      </ThemeProvider>
-    )
-  }
+  return (
+    <ThemeProvider theme={theme}>
+      <Container>
+        <Header showHeaderShadow={showHeaderShadow} />
+        <InnerContainer>{children}</InnerContainer>
+        <Footer />
+        <ScrollToTop isVisible={scrollToTopVisible} onClick={scrollToTop}>
+          <Icon glyph="view-forward" size={32} />
+        </ScrollToTop>
+      </Container>
+    </ThemeProvider>
+  );
 }

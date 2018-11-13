@@ -1,7 +1,7 @@
 // flow
-import * as React from 'react'
-import { Artwork } from './style'
-import AtvImage from '../AtvImage'
+import * as React from 'react';
+import { Artwork } from './style';
+import AtvImage from '../AtvImage';
 
 type Props = {
   album: {
@@ -10,19 +10,18 @@ type Props = {
     name: string,
   },
   truncated: boolean,
-}
+};
 
-class AlbumCard extends React.Component<Props> {
-  render() {
-    const { album: { name, url, artworkUrl }, truncated } = this.props
-    const src = truncated ? `${artworkUrl}.lo.jpeg` : `${artworkUrl}.high.jpeg`
-    
-    return (
-      <a name={name} href={url} target="_blank" rel="noopener noreferrer">
-        <AtvImage alt={name} src={src} Component={Artwork} />
-      </a>
-    )
-  }
-}
+export default function AlbumCard(props: Props) {
+  const {
+    album: { name, url, artworkUrl },
+    truncated,
+  } = props;
+  const src = truncated ? `${artworkUrl}.lo.jpeg` : `${artworkUrl}.high.jpeg`;
 
-export default AlbumCard
+  return (
+    <a name={name} href={url} target="_blank" rel="noopener noreferrer">
+      <AtvImage alt={name} src={src} Component={Artwork} />
+    </a>
+  );
+}

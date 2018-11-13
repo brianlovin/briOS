@@ -1,5 +1,5 @@
 // @flow
-import { createGlobalStyle } from 'styled-components'
+import { createGlobalStyle } from 'styled-components';
 
 export const GlobalStyles = createGlobalStyle`
   * {
@@ -324,4 +324,4 @@ export const GlobalStyles = createGlobalStyle`
   .ais-Hits-item:last-of-type section {
     border-bottom: 0;
   }
-`
+`;

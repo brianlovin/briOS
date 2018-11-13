@@ -1,6 +1,6 @@
 // @flow
-import styled from 'styled-components'
-import { theme } from '../theme'
+import styled from 'styled-components';
+import { theme } from '../theme';
 
 export const IconContainer = styled.div`
   margin-right: 8px;
@@ -11,7 +11,7 @@ export const IconContainer = styled.div`
   position: relative;
   top: 2px;
   color: #fff;
-`
+`;
 
 export const MiniPlayBox = styled.div`
   display: flex;
@@ -28,10 +28,10 @@ export const MiniPlayBox = styled.div`
     transform: scale(0.96);
     transition: transform 0.1s ease-in-out;
   }
-`
+`;
 
 export const Label = styled.p`
   font-size: 16px;
   color: #fff;
   font-weight: 600;
-`
+`;

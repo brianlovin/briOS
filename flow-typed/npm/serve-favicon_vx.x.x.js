@@ -23,7 +23,6 @@ declare module 'serve-favicon' {
  * needed.
  */
 
-
 // Filename aliases
 declare module 'serve-favicon/index' {
   declare module.exports: $Exports<'serve-favicon'>;

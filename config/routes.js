@@ -1,5 +1,5 @@
 // @flow
-const routes = require('next-routes')
+const routes = require('next-routes');
 
 module.exports = routes()
   .add('about')
@@ -8,4 +8,4 @@ module.exports = routes()
   .add('design-detail', '/design-details/:slug', 'design-detail')
   .add('books')
   .add('music')
-  .add('oss')
+  .add('oss');

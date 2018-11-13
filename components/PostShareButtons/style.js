@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 export const Container = styled.div`
   display: grid;
@@ -13,10 +13,10 @@ export const Container = styled.div`
   @media (max-width: 440px) {
     grid-template-columns: 1fr;
     grid-gap: 0;
-    
+
     button {
       margin-top: 16px;
       width: 100%;
     }
   }
-`
+`;

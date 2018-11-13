@@ -1,7 +1,7 @@
 // @flow
-import styled from 'styled-components'
-import { theme } from '../theme'
-import { StyledCard } from '../Card/style'
+import styled from 'styled-components';
+import { theme } from '../theme';
+import { StyledCard } from '../Card/style';
 
 export const Grid = styled.div`
   display: grid;
@@ -22,29 +22,29 @@ export const Grid = styled.div`
   @media (max-width: 512px) {
     grid-template-columns: repeat(1, 1fr);
   }
-`
+`;
 
 export const CardContent = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
   padding: 16px;
-`
+`;
 
 export const Org = styled.p`
   font-size: 14px;
   color: ${theme.text.tertiary};
-`
+`;
 
 export const Name = styled.p`
   font-size: 18px;
   color: ${theme.text.default};
   font-weight: 600;
   margin-bottom: 8px;
-`
+`;
 
 export const Description = styled.p`
   font-size: 16px;
   color: ${theme.text.secondary};
   line-height: 1.4;
-`
+`;
