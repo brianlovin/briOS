@@ -31,10 +31,7 @@ export default function DesignDetailsCard(props: Props) {
           </ImageContainer>
           <CardContent>
             <Title>{title}</Title>
-            <DetailsCount>
-              {details.length}
-              details
-            </DetailsCount>
+            <DetailsCount>{details.length} details</DetailsCount>
           </CardContent>
         </Card>
       </a>

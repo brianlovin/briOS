@@ -26,9 +26,7 @@ export default function DesignDetailsGrid(props: Props) {
         <ViewMoreContainer data-cy="view-all-design-details">
           <RouteLink route="design-details">
             <GhostButton>
-              View all
-              {designDetails.length}
-              explorations
+              View all {designDetails.length} explorations
             </GhostButton>
           </RouteLink>
         </ViewMoreContainer>
