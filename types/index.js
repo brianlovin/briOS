@@ -18,11 +18,11 @@ export type SimplecastEpisode = {
   images: {
     large: string,
     small: string,
-    thumb: string
+    thumb: string,
   },
   sponsors: Array<?any>,
   error?: string,
-}
+};
 
 export type ConfigPodcast = {|
   id: ?number,
@@ -43,22 +43,22 @@ export type ConfigPodcast = {|
   colors: {
     text: string,
     button: string,
-  }
-|}
+  },
+|};
 
 export type DesignDetail = {
   title: string,
   description: string,
   media: Array<string>,
-}
+};
 
 export type DesignDetailsPost = {
   slug: string,
   title: string,
   description: string,
   createdAt: string,
-  details: Array<DesignDetail>
-}
+  details: Array<DesignDetail>,
+};
 
 export type GetInitialProps = {
   pathname: string,
@@ -67,4 +67,4 @@ export type GetInitialProps = {
   res?: any,
   jsonPageRes?: any,
   err?: any,
-}
+};

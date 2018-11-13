@@ -1,7 +1,7 @@
 // @flow
-import styled from 'styled-components'
-import ReactMarkdown from 'react-markdown'
-import { Content } from '../globals'
+import styled from 'styled-components';
+import ReactMarkdown from 'react-markdown';
+import { Content } from '../globals';
 
 export const Notes = styled(ReactMarkdown)`
   ${Content}
@@ -11,4 +11,4 @@ export const Notes = styled(ReactMarkdown)`
   p:first-of-type {
     margin-top: 0;
   }
-`
+`;

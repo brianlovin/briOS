@@ -72,16 +72,22 @@ declare module 'react-visibility-sensor/webpack.config' {
 
 // Filename aliases
 declare module 'react-visibility-sensor/dist/visibility-sensor.js' {
-  declare module.exports: $Exports<'react-visibility-sensor/dist/visibility-sensor'>;
+  declare module.exports: $Exports<
+    'react-visibility-sensor/dist/visibility-sensor'
+  >;
 }
 declare module 'react-visibility-sensor/dist/visibility-sensor.min.js' {
-  declare module.exports: $Exports<'react-visibility-sensor/dist/visibility-sensor.min'>;
+  declare module.exports: $Exports<
+    'react-visibility-sensor/dist/visibility-sensor.min'
+  >;
 }
 declare module 'react-visibility-sensor/example-umd/main.js' {
   declare module.exports: $Exports<'react-visibility-sensor/example-umd/main'>;
 }
 declare module 'react-visibility-sensor/example/dist/bundle.js' {
-  declare module.exports: $Exports<'react-visibility-sensor/example/dist/bundle'>;
+  declare module.exports: $Exports<
+    'react-visibility-sensor/example/dist/bundle'
+  >;
 }
 declare module 'react-visibility-sensor/example/main.js' {
   declare module.exports: $Exports<'react-visibility-sensor/example/main'>;
@@ -90,7 +96,9 @@ declare module 'react-visibility-sensor/karma.conf.js' {
   declare module.exports: $Exports<'react-visibility-sensor/karma.conf'>;
 }
 declare module 'react-visibility-sensor/lib/is-visible-with-offset.js' {
-  declare module.exports: $Exports<'react-visibility-sensor/lib/is-visible-with-offset'>;
+  declare module.exports: $Exports<
+    'react-visibility-sensor/lib/is-visible-with-offset'
+  >;
 }
 declare module 'react-visibility-sensor/testconf.js' {
   declare module.exports: $Exports<'react-visibility-sensor/testconf'>;
@@ -99,7 +107,9 @@ declare module 'react-visibility-sensor/tests/bundle.js' {
   declare module.exports: $Exports<'react-visibility-sensor/tests/bundle'>;
 }
 declare module 'react-visibility-sensor/tests/visibility-sensor-spec.jsx' {
-  declare module.exports: $Exports<'react-visibility-sensor/tests/visibility-sensor-spec'>;
+  declare module.exports: $Exports<
+    'react-visibility-sensor/tests/visibility-sensor-spec'
+  >;
 }
 declare module 'react-visibility-sensor/visibility-sensor.js' {
   declare module.exports: $Exports<'react-visibility-sensor/visibility-sensor'>;

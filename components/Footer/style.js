@@ -1,13 +1,13 @@
 // @flow
-import styled from 'styled-components'
-import { theme } from '../theme'
+import styled from 'styled-components';
+import { theme } from '../theme';
 
 export const Container = styled.div`
   margin-top: 128px;
   padding: 0 16px;
-  margin-bottom: ${props => props.addPlayerPadding ? '196px' : '0'};
+  margin-bottom: ${props => (props.addPlayerPadding ? '196px' : '0')};
   width: 100%;
-`
+`;
 
 export const Description = styled.p`
   font-size: 14px;
@@ -22,7 +22,7 @@ export const Description = styled.p`
     color: ${theme.text.default};
     margin-left: 4px;
   }
-`
+`;
 
 export const Icons = styled.div`
   display: flex;
@@ -30,7 +30,7 @@ export const Icons = styled.div`
   align-items: flex-start;
   margin-left: -16px;
   padding-bottom: 8px;
-  
+
   a {
     color: ${theme.text.tertiary};
   }
@@ -42,4 +42,4 @@ export const Icons = styled.div`
   .icon {
     margin-left: 16px;
   }
-`
+`;

@@ -1,6 +1,6 @@
 // @flow
-import styled from 'styled-components'
-import { Shadows } from '../globals'
+import styled from 'styled-components';
+import { Shadows } from '../globals';
 
 export const StyledCard = styled.div`
   position: relative;
@@ -15,4 +15,4 @@ export const StyledCard = styled.div`
   &:active {
     ${Shadows.active};
   }
-`
+`;

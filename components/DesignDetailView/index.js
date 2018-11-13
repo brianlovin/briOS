@@ -1,143 +1,162 @@
 // @flow
-import * as React from "react";
-import Head from 'next/head'
-import { designDetails } from '../../config'
-import { getDateObject } from '../../lib/getDateObject'
-import { SectionHeading, Heading, LargeHeading, LargeSubheading } from '../Page'
-import { Divider, Notice } from '../Blog'
-import { Link as RouteLink } from '../../config/routes'
-import type { DesignDetailsPost } from '../../types'
-import DesignDetailsGrid from "../DesignDetailsGrid";
-import DesignDetailMedia from '../DesignDetailMedia'
-import PostShareButtons from '../PostShareButtons'
-import Markdown from '../Markdown'
-import AtvImage from '../AtvImage'
-import { 
-  Container, 
+// $FlowIssue
+import React, { useEffect, useRef } from 'react';
+import Head from 'next/head';
+import { designDetails } from '../../config';
+import { getDateObject } from '../../lib/getDateObject';
+import { LargeHeading, LargeSubheading } from '../Page';
+import { Divider, Notice } from '../Blog';
+import { Link as RouteLink } from '../../config/routes';
+import type { DesignDetailsPost } from '../../types';
+import DesignDetailsGrid from '../DesignDetailsGrid';
+import DesignDetailMedia from '../DesignDetailMedia';
+import PostShareButtons from '../PostShareButtons';
+import Markdown from '../Markdown';
+import AtvImage from '../AtvImage';
+import {
+  Container,
   HeadingContainer,
   IconWrapper,
-  IconContainer, 
+  IconContainer,
   Icon,
   LeftShadow,
   RightShadow,
-  LowOpacity
-} from './style'
-import DesignDetailsPlayer from "../DesignDetailsPlayer";
-import { ATVScript } from "../../lib/atvimg/script";
+  LowOpacity,
+} from './style';
+import DesignDetailsPlayer from '../DesignDetailsPlayer';
 
 type Props = {
-  post: DesignDetailsPost
-}
+  post: DesignDetailsPost,
+};
 
-class DesignDetailsView extends React.Component<Props> {
-  iconContainerRef = React.createRef()
+export default function DesignDetailView(props: Props) {
+  const iconContainerRef = useRef(null);
+  const { post } = props;
 
-  componentDidUpdate(prev: Props) {
-    const curr = this.props
-    if (prev.post.slug !== curr.post.slug) {
-      if (this.iconContainerRef) {
+  useEffect(
+    () => {
+      if (iconContainerRef) {
         // $FlowIssue
-        return this.iconContainerRef.current.scrollLeft = 0
+        iconContainerRef.current.scrollLeft = 0;
       }
-    }
-  }
+    },
+    [post.slug]
+  );
 
-  render() {
-    const { post } = this.props
-    const { month, year, day } = getDateObject(post.createdAt)
-    const datestring = `${month} ${day}, ${year}`
-    const otherPosts = designDetails.filter(p => p.slug !== post.slug)
-    const src = `/static/img/design-details/${post.slug}.jpeg`
-    
-    return (
-      <Container>
-        <Head>
-          <title>Brian Lovin · Design Details · {post.title}</title>
-          <meta content={`Brian Lovin · Design Details · ${post.title}`} name="og:title" key="og:title" />
-          <meta content={post.description} name="og:description" key="og:description" />
-          <meta content={`/static/img/design-details/${post.slug}.jpeg`} name="og:image" key="og:image" />
-          <meta content={`Brian Lovin · Design Details · ${post.title}`} name="twitter:title" key="og:image" />
-        </Head>
+  const { month, year, day } = getDateObject(post.createdAt);
+  const datestring = `${month} ${day}, ${year}`;
+  const otherPosts = designDetails.filter(p => p.slug !== post.slug);
+  const title = `Brian Lovin · Design Details · ${post.title}`;
+  const subheading = `${datestring} · ${post.details.length} details`;
 
-        <IconWrapper>
-          <LeftShadow />
+  return (
+    <Container>
+      <Head>
+        <title>{title}</title>
+        <meta content={title} name="og:title" key="og:title" />
+        <meta
+          content={post.description}
+          name="og:description"
+          key="og:description"
+        />
+        <meta
+          content={`/static/img/design-details/${post.slug}.jpeg`}
+          name="og:image"
+          key="og:image"
+        />
+        <meta
+          content={`Brian Lovin · Design Details · ${post.title}`}
+          name="twitter:title"
+          key="og:image"
+        />
+      </Head>
 
-          <IconContainer ref={this.iconContainerRef}>
-            {
-              [post, ...otherPosts].map((p, i) => {
-                if (p.slug === post.slug) {
-                  return (
-                    <RouteLink key={p.slug} route={'design-detail'} params={{ slug: p.slug }}>
-                      <a name={p.title}>
-                        <AtvImage src={`/static/img/design-details/${p.slug}.jpeg`} Component={Icon} />
-                      </a>
-                    </RouteLink>
-                  )
-                }
+      <IconWrapper>
+        <LeftShadow />
 
-                return (
-                  <LowOpacity key={p.slug}>
-                    <RouteLink route={'design-detail'} params={{ slug: p.slug }}>
-                      <a name={p.title}>
-                        <AtvImage src={`/static/img/design-details/${p.slug}.jpeg`} Component={Icon} />
-                      </a>
-                    </RouteLink>
-                  </LowOpacity>
-                )
-              })
+        <IconContainer ref={iconContainerRef}>
+          {[post, ...otherPosts].map(p => {
+            if (p.slug === post.slug) {
+              return (
+                <RouteLink
+                  key={p.slug}
+                  route="design-detail"
+                  params={{ slug: p.slug }}
+                >
+                  <a name={p.title}>
+                    <AtvImage
+                      src={`/static/img/design-details/${p.slug}.jpeg`}
+                      Component={Icon}
+                    />
+                  </a>
+                </RouteLink>
+              );
             }
-          </IconContainer>
 
-          <RightShadow />
-        </IconWrapper>
-
-        <HeadingContainer>
-          <LargeHeading>{post.title}</LargeHeading>
-          <LargeSubheading>{datestring} · {post.details.length} details</LargeSubheading>
-        </HeadingContainer>
-
-        <div style={{ padding: '16px'}} />
-
-        <PostShareButtons post={post} />
-
-        <div style={{ padding: '16px'}} />
-
-        <Markdown>
-          {post.description}
-        </Markdown>
-
-        <Notice>
-          <Notice.Title>Listen while you read</Notice.Title>
-          <Notice.Description>Design Details is also a podcast, a weekly conversation about design process and culture. Listen to the latest episode while you read, or subscribe in your favorite app.</Notice.Description>
-
-          <DesignDetailsPlayer />
-        </Notice>
-
-        <div style={{ padding: '16px'}} />
-
-        {
-          post.details.map((detail, i) => {
             return (
-              <DesignDetailMedia detail={detail} key={`${detail.title}-${i}`} />
-            )
-          })
-        }
+              <LowOpacity key={p.slug}>
+                <RouteLink route="design-detail" params={{ slug: p.slug }}>
+                  <a name={p.title}>
+                    <AtvImage
+                      src={`/static/img/design-details/${p.slug}.jpeg`}
+                      Component={Icon}
+                    />
+                  </a>
+                </RouteLink>
+              </LowOpacity>
+            );
+          })}
+        </IconContainer>
 
-        <PostShareButtons post={post} />
+        <RightShadow />
+      </IconWrapper>
 
-        <Divider />
+      <HeadingContainer>
+        <LargeHeading>{post.title}</LargeHeading>
+        <LargeSubheading>{subheading}</LargeSubheading>
+      </HeadingContainer>
 
-        <Notice>
-          <Notice.Title>Design Details Podcast</Notice.Title>
-          <Notice.Description>Design Details is also a podcast, a weekly conversation about design process and culture. Listen to the latest episode while you explore more posts, or subscribe in your favorite app.</Notice.Description>
+      <div style={{ padding: '16px' }} />
 
-          <DesignDetailsPlayer />
-        </Notice>
+      <PostShareButtons post={post} />
 
-        <DesignDetailsGrid truncated={false} />
-      </Container>
-    )
-  }
+      <div style={{ padding: '16px' }} />
+
+      <Markdown>{post.description}</Markdown>
+
+      <Notice>
+        <Notice.Title>Listen while you read</Notice.Title>
+        <Notice.Description>
+          Design Details is also a podcast, a weekly conversation about design
+          process and culture. Listen to the latest episode while you read, or
+          subscribe in your favorite app.
+        </Notice.Description>
+
+        <DesignDetailsPlayer />
+      </Notice>
+
+      <div style={{ padding: '16px' }} />
+
+      {post.details.map((detail, i) => (
+        <DesignDetailMedia detail={detail} key={`${detail.title}-${i}`} />
+      ))}
+
+      <PostShareButtons post={post} />
+
+      <Divider />
+
+      <Notice>
+        <Notice.Title>Design Details Podcast</Notice.Title>
+        <Notice.Description>
+          Design Details is also a podcast, a weekly conversation about design
+          process and culture. Listen to the latest episode while you explore
+          more posts, or subscribe in your favorite app.
+        </Notice.Description>
+
+        <DesignDetailsPlayer />
+      </Notice>
+
+      <DesignDetailsGrid truncated={false} />
+    </Container>
+  );
 }
-
-export default DesignDetailsView;

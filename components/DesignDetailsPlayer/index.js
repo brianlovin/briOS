@@ -1,11 +1,16 @@
 // @flow
 // $FlowIssue
-import React, { useReducer, useEffect } from 'react'
-import type { SimplecastEpisode } from '../../types'
-import { podcasts, api } from '../../config'
-import { ATVScript } from '../../lib/atvimg/script'
-import { Card, ContentContainer, Date, Title } from './style'
-import { getDateString, PlayerActions, PlayerArtwork, PlayerFooter} from './components'
+import React, { useReducer, useEffect } from 'react';
+import type { SimplecastEpisode } from '../../types';
+import { podcasts, api } from '../../config';
+import { ATVScript } from '../../lib/atvimg/script';
+import { Card, ContentContainer, Date, Title } from './style';
+import {
+  getDateString,
+  PlayerActions,
+  PlayerArtwork,
+  PlayerFooter,
+} from './components';
 
 type State = {
   episode: ?SimplecastEpisode,
@@ -13,57 +18,58 @@ type State = {
   hasError: boolean,
   date: string,
   title: string,
-}
+};
 
 type ReducerAction = {
   type: string,
-  episode: SimplecastEpisode
-}
+  episode: SimplecastEpisode,
+};
 
 const reducer = (state: State, action: ReducerAction) => {
-  switch(action.type) {
+  switch (action.type) {
     case 'LOADED':
       return {
         ...state,
-        isLoading: false,
-        hasError: false,
         episode: action.episode,
         date: getDateString(action.episode),
-        title: action.episode.title
-      }
-    case 'ERROR': 
+        title: action.episode.title,
+      };
+    case 'ERROR':
       return {
         ...state,
-        isLoading: false,
-        hasError: true,
         episode: null,
         date: 'New episodes weekly',
-        title: 'View all episodes on the Spec Network'
-      }
-    default: return state
+        title: 'View all episodes on the Spec Network',
+      };
+    default:
+      return state;
   }
-}
+};
 
 const initialState = {
   episode: null,
-  isLoading: true,
-  hasError: false,
   date: 'Loading...',
-  title: 'Grabbing the latest episode'
-}
+  title: 'Grabbing the latest episode',
+};
 
-export default () => {
-  const [ state, dispatch ] = useReducer(reducer, initialState)
-  
-  const { episode, isLoading, hasError, date, title } = state
+export default function DesignDetailsPlayer() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  const { episode, date, title } = state;
 
   useEffect(async () => {
-    const episodes = await api.getEpisodes(podcasts[0].id)
-    if (episodes && episodes.length > 0) return dispatch({ type: 'LOADED', episode: episodes[0] })
-    return dispatch({ type: 'ERROR' })
-  }, [])
+    const episodes = await api.getEpisodes(podcasts[0].id);
+    if (episodes && episodes.length > 0)
+      return dispatch({ type: 'LOADED', episode: episodes[0] });
+    return dispatch({ type: 'ERROR' });
+  }, []);
 
-  useEffect(async () => { ATVScript() }, [ episode ])
+  useEffect(
+    async () => {
+      ATVScript();
+    },
+    [episode]
+  );
 
   return (
     <React.Fragment>
@@ -80,5 +86,5 @@ export default () => {
 
       <PlayerFooter />
     </React.Fragment>
-  )
+  );
 }

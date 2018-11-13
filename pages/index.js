@@ -1,30 +1,30 @@
 // @flow
-import * as React from "react";
-import Page, { SectionHeading, Heading, Subheading } from '../components/Page'
-import type { ConfigPodcast, GetInitialProps } from '../types'
-import { Link as RouteLink } from '../config/routes'
-import DesignDetailsGrid from '../components/DesignDetailsGrid'
-import OpenSourceGrid from '../components/OpenSourceGrid'
-import BooksGrid from '../components/BooksGrid'
-import MusicGrid from '../components/MusicGrid'
-import DesignDetailsPlayer from '../components/DesignDetailsPlayer'
+import * as React from 'react';
+import Page, { SectionHeading, Heading, Subheading } from '../components/Page';
+import type { GetInitialProps } from '../types';
+import { Link as RouteLink } from '../config/routes';
+import DesignDetailsGrid from '../components/DesignDetailsGrid';
+import OpenSourceGrid from '../components/OpenSourceGrid';
+import BooksGrid from '../components/BooksGrid';
+import MusicGrid from '../components/MusicGrid';
+import DesignDetailsPlayer from '../components/DesignDetailsPlayer';
 
 class Index extends React.Component<{}> {
   static async getInitialProps({ res }: GetInitialProps) {
     if (res) {
       // cache podcasts for a month
-      const cacheAge = 60 * 60 * 24 * 30
-      res.setHeader('Cache-Control', `public,s-maxage=${cacheAge}`)
+      const cacheAge = 60 * 60 * 24 * 30;
+      res.setHeader('Cache-Control', `public,s-maxage=${cacheAge}`);
     }
 
-    return {}
+    return {};
   }
 
   render() {
     return (
       <Page>
         <SectionHeading>
-          <RouteLink route={'design-details'}>
+          <RouteLink route="design-details">
             <a>
               <Heading>Design Details Blog</Heading>
             </a>
@@ -35,20 +35,22 @@ class Index extends React.Component<{}> {
         <DesignDetailsGrid truncated />
 
         <SectionHeading>
-          <a 
+          <a
             href="https://spec.fm/podcasts/design-details"
             target="_blank"
             rel="noopener noreferrer"
           >
             <Heading>Design Details Podcast</Heading>
           </a>
-          <Subheading>A weekly conversation about design process and culture</Subheading>
+          <Subheading>
+            A weekly conversation about design process and culture
+          </Subheading>
         </SectionHeading>
 
         <DesignDetailsPlayer />
 
         <SectionHeading>
-          <RouteLink route={'oss'}>
+          <RouteLink route="oss">
             <a>
               <Heading>Open Source</Heading>
             </a>
@@ -59,7 +61,7 @@ class Index extends React.Component<{}> {
         <OpenSourceGrid />
 
         <SectionHeading>
-          <RouteLink route={'books'}>
+          <RouteLink route="books">
             <a>
               <Heading>Books</Heading>
             </a>
@@ -70,7 +72,7 @@ class Index extends React.Component<{}> {
         <BooksGrid truncated />
 
         <SectionHeading>
-          <RouteLink route={'music'}>
+          <RouteLink route="music">
             <a>
               <Heading>Music</Heading>
             </a>
@@ -80,7 +82,7 @@ class Index extends React.Component<{}> {
 
         <MusicGrid truncated />
       </Page>
-    )
+    );
   }
 }
 

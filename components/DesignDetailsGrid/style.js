@@ -1,7 +1,7 @@
 // @flow
-import styled from 'styled-components'
-import { tint } from '../globals'
-import { theme } from '../theme'
+import styled from 'styled-components';
+import { tint } from '../globals';
+import { theme } from '../theme';
 
 export const Grid = styled.div`
   display: grid;
@@ -13,7 +13,7 @@ export const Grid = styled.div`
   @media (max-width: 752px) {
     grid-template-columns: 1fr;
   }
-`
+`;
 
 export const ViewMoreContainer = styled.div`
   margin-top: 32px;
@@ -32,4 +32,4 @@ export const ViewMoreContainer = styled.div`
   button:hover {
     background: ${tint(theme.bg.wash, -8)};
   }
-`
+`;

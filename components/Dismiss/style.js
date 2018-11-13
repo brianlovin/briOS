@@ -1,8 +1,8 @@
 // @flow
-import styled from 'styled-components'
-import { theme } from '../theme'
+import styled from 'styled-components';
+import { theme } from '../theme';
 
-export const Dismiss = styled.button`
+export const StyledDismiss = styled.button`
   display: flex;
   width: 18px;
   height: 18px;
@@ -10,7 +10,7 @@ export const Dismiss = styled.button`
   align-items: center;
   justify-content: center;
   border-radius: 18px;
-  color: ${props => props.tint ? props.tint(theme) : theme.text.tertiary};
+  color: ${props => (props.tint ? props.tint(theme) : theme.text.tertiary)};
   opacity: 0.5;
   cursor: pointer;
 
@@ -32,4 +32,4 @@ export const Dismiss = styled.button`
   @media (max-width: 768px) {
     font-size: 20px;
   }
-`
+`;

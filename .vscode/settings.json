@@ -1,12 +1,14 @@
 {
-  "editor.formatOnSave": false,
   "javascript.format.enable": false,
-  "prettier.eslintIntegration": true,
   "flow.useNPMPackagedFlow": true,
+  "eslint.enable": true,
+  "eslint.autoFixOnSave": true,
+  "eslint.alwaysShowStatus": true,
   "eslint.options": {
-    "configFile": "../.eslintrc.json"
+    "configFile": "./.eslintrc.json"
   },
-  "eslint.workingDirectories": [
-    "./api"
-  ],
+  "editor.formatOnSave": true,
+  "[javascript]": {
+    "editor.formatOnSave": true
+  }
 }

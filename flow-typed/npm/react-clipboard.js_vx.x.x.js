@@ -39,7 +39,9 @@ declare module 'react-clipboard.js/dist/react-clipboard.js' {
   declare module.exports: $Exports<'react-clipboard.js/dist/react-clipboard'>;
 }
 declare module 'react-clipboard.js/dist/react-clipboard.min.js' {
-  declare module.exports: $Exports<'react-clipboard.js/dist/react-clipboard.min'>;
+  declare module.exports: $Exports<
+    'react-clipboard.js/dist/react-clipboard.min'
+  >;
 }
 declare module 'react-clipboard.js/index' {
   declare module.exports: $Exports<'react-clipboard.js'>;

@@ -1,7 +1,7 @@
 // flow
-import * as React from 'react'
-import { Artwork } from './style'
-import AtvImage from '../AtvImage'
+import * as React from 'react';
+import { Artwork } from './style';
+import AtvImage from '../AtvImage';
 
 type Props = {
   book: {
@@ -9,19 +9,18 @@ type Props = {
     artworkUrl: string,
   },
   truncated: boolean,
-}
+};
 
-class BookCard extends React.Component<Props> {
-  render() {
-    const { book: { name, url, artworkUrl }, truncated } = this.props
-    const src = truncated ? `${artworkUrl}.lo.jpeg` : `${artworkUrl}.high.jpeg`
-    
-    return (
-      <a name={name} href={url} target="_blank" rel="noopener noreferrer">
-        <AtvImage alt={name} src={src} Component={Artwork} />
-      </a>
-    )
-  }
-}
+export default function Bookcard(props: Props) {
+  const {
+    book: { name, url, artworkUrl },
+    truncated,
+  } = props;
+  const src = truncated ? `${artworkUrl}.lo.jpeg` : `${artworkUrl}.high.jpeg`;
 
-export default BookCard
+  return (
+    <a name={name} href={url} target="_blank" rel="noopener noreferrer">
+      <AtvImage alt={name} src={src} Component={Artwork} />
+    </a>
+  );
+}
