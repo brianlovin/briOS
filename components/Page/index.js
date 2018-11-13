@@ -28,7 +28,7 @@ type Props = {
 
 export default function Page(props: Props) {
   const { children } = props;
-  let lastTrackedPageview = null;
+  const [lastTrackedPageview, setLastTrackedPageview] = useState(null);
   const [showHeaderShadow, setHeaderShadow] = useState(false);
   const [scrollToTopVisible, setScrollToTopVisible] = useState(false);
 
@@ -52,15 +52,10 @@ export default function Page(props: Props) {
       window.addEventListener('scroll', throttledScroll);
     }
 
-    if (document) {
-      gtag.pageview(document.location.pathname);
-      lastTrackedPageview = document.location.pathname;
-    }
-
     return () => {
       if (window) {
         window.removeEventListener('scroll', throttledScroll);
-        lastTrackedPageview = null;
+        setLastTrackedPageview(null);
       }
     };
   }, []);
@@ -70,7 +65,7 @@ export default function Page(props: Props) {
       const newLocation = document.location.pathname;
       if (newLocation !== lastTrackedPageview) {
         gtag.pageview(document.location.pathname);
-        lastTrackedPageview = newLocation;
+        setLastTrackedPageview(newLocation);
       }
     }
   });
