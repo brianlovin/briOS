@@ -9452,10 +9452,10 @@ strip-outer@^1.0.0:
   dependencies:
     escape-string-regexp "^1.0.2"
 
-styled-components@^4.0.3:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-4.1.0.tgz#16f5cbe1afcc8adc932e9764992c19906e6a6289"
-  integrity sha512-cxdVoxXDFu0D343ECr2ZY4YijI2oKk3xZKxZkgTLfFf7Zixx17CZlNIU2XpBYL/8OUKZv3AkDAOH8oaqrPJdBA==
+styled-components@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-4.1.1.tgz#943922048fae556e286bcbfdd29da4f1399446bc"
+  integrity sha512-UzT/qyoOyKpYooeLdwKrPHZ85R8KWl8i0fbyH9I3z6B2WT9uGDCV7J4kbfKsBeSWFD9EytBriEODOkybcUFD/Q==
   dependencies:
     "@emotion/is-prop-valid" "^0.6.8"
     "@emotion/unitless" "^0.7.0"
