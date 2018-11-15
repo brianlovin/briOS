@@ -1,5 +1,6 @@
 // @flow
 import App, { Container } from 'next/app';
+import NProgress from 'next-nprogress/component'
 import * as React from 'react';
 import Head from 'next/head';
 import * as Sentry from '@sentry/browser';
@@ -11,6 +12,7 @@ import type { SimplecastEpisode } from '../types';
 import { GlobalStyles } from '../static/normalize';
 import { ATVImgStyles } from '../lib/atvimg/style';
 import { ATVScript } from '../lib/atvimg/script';
+import { theme } from '../components/theme'
 
 const SENTRY_PUBLIC_DSN =
   'https://36dc16f06aff44a3b91d0a6196f2b1fa@sentry.io/1318162';
@@ -132,6 +134,10 @@ class MyApp extends App {
       <Container>
         <GlobalStyles />
         <ATVImgStyles />
+        <NProgress
+          color={theme.brand.default}
+          showAfterMs={300}
+        />
 
         <Head>
           <title>Brian Lovin · Nice Boy™</title>

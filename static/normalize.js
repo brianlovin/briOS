@@ -324,4 +324,8 @@ export const GlobalStyles = createGlobalStyle`
   .ais-Hits-item:last-of-type section {
     border-bottom: 0;
   }
+
+  #nprogress .spinner {
+    display: none!important;
+  }
 `;
