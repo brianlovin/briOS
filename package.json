@@ -68,5 +68,5 @@
     ]
   },
   "pre-commit": "lint:staged",
-  "license": "ISC"
+  "license": "MIT"
 }
