@@ -11,7 +11,7 @@ export default function About() {
   return (
     <Page showEmailCapture={false}>
       <Head>
-        <title>Brian Lovin · About™</title>
+        <title>Brian Lovin · About</title>
         <meta content="Brian Lovin · About" name="og:title" key="og:title" />
         <meta content="Designer" name="og:description" key="og:description" />
         <meta
