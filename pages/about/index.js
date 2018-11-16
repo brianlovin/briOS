@@ -27,7 +27,7 @@ export default function About() {
         <div style={{ padding: '8px' }} />
 
         <Subheading>
-          I’m a designer and developer, currently working on
+          I’m a designer and developer, currently working on{' '}
           <a
             href="https://spectrum.chat"
             target="_blank"
@@ -35,15 +35,15 @@ export default function About() {
           >
             Spectrum
           </a>
-          . Feel free to
+          . Feel free to{' '}
           <a
             href="https://twitter.com/brian_lovin"
             target="_blank"
             rel="noopener noreferrer"
           >
-            tweet at me
+            tweet at me{' '}
           </a>
-          or
+          or{' '}
           <a
             href="mailto:briandlovin@gmail.com"
             target="_blank"
@@ -57,7 +57,7 @@ export default function About() {
         <div style={{ padding: '8px' }} />
 
         <Subheading>
-          The code that powers this website is
+          The code that powers this website is{' '}
           <a
             href="https://github.com/brianlovin/brian-lovin-next"
             target="_blank"
