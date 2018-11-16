@@ -35,15 +35,15 @@ export default function About() {
           >
             Spectrum
           </a>
-          . Feel free to
+          . Feel free to&nbsp;
           <a
             href="https://twitter.com/brian_lovin"
             target="_blank"
             rel="noopener noreferrer"
           >
-            tweet at me
+            tweet at me&nbsp;
           </a>
-          or
+          or&nbsp;
           <a
             href="mailto:briandlovin@gmail.com"
             target="_blank"
@@ -57,7 +57,7 @@ export default function About() {
         <div style={{ padding: '8px' }} />
 
         <Subheading>
-          The code that powers this website is
+          The code that powers this website is&nbsp;
           <a
             href="https://github.com/brianlovin/brian-lovin-next"
             target="_blank"
