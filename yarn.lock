@@ -8257,10 +8257,10 @@ rc@^1.1.2, rc@^1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-clipboard.js@^2.0.0:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/react-clipboard.js/-/react-clipboard.js-2.0.1.tgz#aa05590f047a2671e890e51c8af113404fbf6967"
-  integrity sha512-Erq0sAqH69cEAKArGt5geeF4uJVy+MT6PFWchapfc3jx1FPuhUA2EQHtLBugzBIjHf1SfKg+9wgq/3Y8OyhYHA==
+react-clipboard.js@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/react-clipboard.js/-/react-clipboard.js-2.0.2.tgz#bceb55e9cd00e2b937c36158f2a7b7038311bd24"
+  integrity sha512-F4VyDVgHetULOpIbn2DuXSM9vBN2gGuk8MQovTdfMaXanE3zOGmR07FNBycoYC4QmMt4QD3Ve29FqbrLm21RXA==
   dependencies:
     clipboard "^2.0.0"
     prop-types "^15.5.0"
