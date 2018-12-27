@@ -14,8 +14,6 @@ import {
 
 type State = {
   episode: ?SimplecastEpisode,
-  isLoading: boolean,
-  hasError: boolean,
   date: string,
   title: string,
 };
@@ -59,12 +57,19 @@ export default function DesignDetailsPlayer() {
 
   useEffect(async () => {
     const episodes = await api.getEpisodes(podcasts[0].id);
-    if (episodes && episodes.length > 0)
-      return dispatch({ type: 'LOADED', episode: episodes[0] });
+
+    if (episodes && episodes.length > 0) {
+      const thisEpisode = episodes[0];
+      // $FlowFixMe
+      return dispatch({ type: 'LOADED', episode: thisEpisode });
+    }
+
+    // $FlowFixMe
     return dispatch({ type: 'ERROR' });
   }, []);
 
   useEffect(
+    // $FlowFixMe
     async () => {
       ATVScript();
     },
