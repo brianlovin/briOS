@@ -45,7 +45,7 @@ export default function About() {
           </a>
           or{' '}
           <a
-            href="mailto:briandlovin@gmail.com"
+            href="mailto:hi@brianlovin.com"
             target="_blank"
             rel="noopener noreferrer"
           >
