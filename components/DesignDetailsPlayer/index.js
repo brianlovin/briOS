@@ -55,7 +55,7 @@ export default function DesignDetailsPlayer() {
 
   const { episode, date, title } = state;
 
-  useEffect(async () => {
+  const fetchEpisodes = async () => {
     const episodes = await api.getEpisodes(podcasts[0].id);
 
     if (episodes && episodes.length > 0) {
@@ -66,13 +66,15 @@ export default function DesignDetailsPlayer() {
 
     // $FlowFixMe
     return dispatch({ type: 'ERROR' });
+  };
+
+  useEffect(() => {
+    fetchEpisodes();
   }, []);
 
   useEffect(
     // $FlowFixMe
-    async () => {
-      ATVScript();
-    },
+    () => ATVScript(),
     [episode]
   );
 
