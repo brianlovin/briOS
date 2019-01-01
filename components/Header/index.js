@@ -26,7 +26,7 @@ export default function Header(props: Props) {
           </a>
         </Link>
 
-        <Link href="mailto:briandlovin@gmail.com">
+        <Link href="mailto:hi@brianlovin.com">
           <a style={{ marginLeft: '8px' }}>
             <PrimaryButton>Email</PrimaryButton>
           </a>
