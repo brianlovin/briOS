@@ -55,19 +55,21 @@ export default function DesignDetailsPlayer() {
 
   const { episode, date, title } = state;
 
-  useEffect(() => {
-    (async () => {
-      const episodes = await api.getEpisodes(podcasts[0].id);
+  const fetchEpisodes = async () => {
+    const episodes = await api.getEpisodes(podcasts[0].id);
 
-      if (episodes && episodes.length > 0) {
-        const thisEpisode = episodes[0];
-        // $FlowFixMe
-        return dispatch({ type: 'LOADED', episode: thisEpisode });
-      }
-
+    if (episodes && episodes.length > 0) {
+      const thisEpisode = episodes[0];
       // $FlowFixMe
-      return dispatch({ type: 'ERROR' });
-    })();
+      return dispatch({ type: 'LOADED', episode: thisEpisode });
+    }
+
+    // $FlowFixMe
+    return dispatch({ type: 'ERROR' });
+  };
+
+  useEffect(() => {
+    fetchEpisodes();
   }, []);
 
   useEffect(
