@@ -58,7 +58,7 @@
     "now-env": "^3.1.0",
     "prettier": "^1.15.3",
     "prettier-eslint": "^8.8.2",
-    "wait-on": "^2.1.1"
+    "wait-on": "^3.2.0"
   },
   "lint-staged": {
     "*.js": [
