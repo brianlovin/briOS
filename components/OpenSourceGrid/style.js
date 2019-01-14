@@ -5,7 +5,7 @@ import { StyledCard } from '../Card/style';
 
 export const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   grid-template-rows: auto-fill;
   grid-gap: 16px;
   width: 100%;
