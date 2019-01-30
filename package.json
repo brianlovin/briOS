@@ -54,7 +54,7 @@
     "eslint-plugin-prettier": "^3.0.1",
     "eslint-plugin-react": "^7.12.4",
     "flow-bin": "^0.89.0",
-    "lint-staged": "^8.1.0",
+    "lint-staged": "^8.1.1",
     "now-env": "^3.1.0",
     "prettier": "^1.16.1",
     "prettier-eslint": "^8.8.2",
