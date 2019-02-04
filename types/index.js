@@ -11,6 +11,7 @@ export type SimplecastEpisode = {
   published: boolean,
   description: string,
   long_description: string,
+  published: boolean,
   published_at: string,
   audio_file_size: number,
   audio_url: string,
