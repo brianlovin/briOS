@@ -59,7 +59,7 @@ export default function DesignDetailsPlayer() {
     const episodes = await api.getEpisodes(podcasts[0].id);
 
     if (episodes && episodes.length > 0) {
-      const thisEpisode = episodes[0];
+      const thisEpisode = episodes.find(e => e.published);
       // $FlowFixMe
       return dispatch({ type: 'LOADED', episode: thisEpisode });
     }
