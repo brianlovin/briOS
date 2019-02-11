@@ -20,7 +20,7 @@
     "@sentry/browser": "^4.5.3",
     "express": "^4.16.4",
     "isomorphic-unfetch": "^3.0.0",
-    "next": "^7.0.2",
+    "next": "^7.0.3",
     "next-compose-plugins": "^2.1.1",
     "next-nprogress": "^1.4.0",
     "next-optimized-images": "^2.3.1",
