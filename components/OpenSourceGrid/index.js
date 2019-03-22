@@ -11,7 +11,7 @@ export const projects = [
   },
   {
     org: 'specfm',
-    name: 'specfm-next',
+    name: 'spec-next',
     description: 'Level up',
   },
   {
