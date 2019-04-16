@@ -30,7 +30,7 @@
     "react-clipboard.js": "^2.0.7",
     "react-dom": "16.7.0-alpha.2",
     "react-image": "^2.1.1",
-    "react-markdown": "^4.0.6",
+    "react-markdown": "^4.0.8",
     "react-visibility-sensor": "^5.0.2",
     "serve-favicon": "^2.5.0",
     "styled-components": "^4.2.0",
