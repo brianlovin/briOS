@@ -69,7 +69,7 @@ class Index extends React.Component<{}> {
           <Subheading>What I’m reading</Subheading>
         </SectionHeading>
 
-        <BooksGrid truncated />
+        <BooksGrid />
 
         <SectionHeading>
           <RouteLink route="music">

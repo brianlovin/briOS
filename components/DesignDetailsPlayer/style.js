@@ -27,6 +27,8 @@ export const Card = styled.div`
   }
 
   > a {
+    min-width: 114px;
+    min-height: 114px;
     width: 114px;
     height: 114px;
   }

@@ -22,7 +22,8 @@ export const Grid = styled.div`
     width: calc(100% + 32px);
     margin-left: -16px;
     padding-top: 4px;
-    padding-bottom: 4px;
+    padding-bottom: 32px;
+    margin-bottom: -32px;
     position: relative;
     -webkit-overflow-scrolling: touch;
 
