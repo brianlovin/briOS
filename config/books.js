@@ -1,5 +1,11 @@
 export default [
   {
+    name: 'Dark Matter',
+    url:
+      'https://www.amazon.com/Dark-Matter-Novel-Blake-Crouch/dp/1524763241/ref=sr_1_3?keywords=dark+matter&qid=1558048636&s=gateway&sr=8-3',
+    artworkUrl: '/static/img/books/dark-matter',
+  },
+  {
     name: 'We Are Legion (We Are Bob)',
     url:
       'https://www.amazon.com/We-Are-Legion-Bob-Bobiverse/dp/1680680587/ref=sr_1_3?keywords=bobiverse&qid=1556983228&s=books&sr=1-3',
