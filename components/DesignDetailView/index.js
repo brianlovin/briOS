@@ -2,11 +2,11 @@
 // $FlowIssue
 import React, { useEffect, useRef } from 'react';
 import Head from 'next/head';
+import Link from 'next/link';
 import { designDetails } from '../../config';
 import { getDateObject } from '../../lib/getDateObject';
 import { LargeHeading, LargeSubheading } from '../Page';
 import { Divider, Notice } from '../Blog';
-import { Link as RouteLink } from '../../config/routes';
 import type { DesignDetailsPost } from '../../types';
 import DesignDetailsGrid from '../DesignDetailsGrid';
 import DesignDetailMedia from '../DesignDetailMedia';
@@ -33,15 +33,12 @@ export default function DesignDetailView(props: Props) {
   const iconContainerRef = useRef(null);
   const { post } = props;
 
-  useEffect(
-    () => {
-      if (iconContainerRef) {
-        // $FlowIssue
-        iconContainerRef.current.scrollLeft = 0;
-      }
-    },
-    [post.slug]
-  );
+  useEffect(() => {
+    if (iconContainerRef) {
+      // $FlowIssue
+      iconContainerRef.current.scrollLeft = 0;
+    }
+  }, [post.slug]);
 
   const { month, year, day } = getDateObject(post.createdAt);
   const datestring = `${month} ${day}, ${year}`;
@@ -78,10 +75,10 @@ export default function DesignDetailView(props: Props) {
           {[post, ...otherPosts].map(p => {
             if (p.slug === post.slug) {
               return (
-                <RouteLink
+                <Link
                   key={p.slug}
-                  route="design-detail"
-                  params={{ slug: p.slug }}
+                  href="/design-details/[slug]"
+                  as={`/design-details/${p.slug}`}
                 >
                   <a name={p.title}>
                     <AtvImage
@@ -89,20 +86,20 @@ export default function DesignDetailView(props: Props) {
                       Component={Icon}
                     />
                   </a>
-                </RouteLink>
+                </Link>
               );
             }
 
             return (
               <LowOpacity key={p.slug}>
-                <RouteLink route="design-detail" params={{ slug: p.slug }}>
+                <Link href={`/design-details/${p.slug}`}>
                   <a name={p.title}>
                     <AtvImage
                       src={`/static/img/design-details/${p.slug}.jpeg`}
                       Component={Icon}
                     />
                   </a>
-                </RouteLink>
+                </Link>
               </LowOpacity>
             );
           })}

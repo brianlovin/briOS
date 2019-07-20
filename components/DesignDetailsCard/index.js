@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import Link from 'next/link';
 import type { DesignDetailsPost } from '../../types';
 import Card from '../Card';
 import {
@@ -9,7 +10,6 @@ import {
   ImageContainer,
   Icon,
 } from './style';
-import { Link as RouteLink } from '../../config/routes';
 import AtvImage from '../AtvImage';
 
 type Props = {
@@ -23,7 +23,7 @@ export default function DesignDetailsCard(props: Props) {
   const src = `/static/img/design-details/${slug}.jpeg`;
 
   return (
-    <RouteLink route="design-detail" params={{ slug }}>
+    <Link href="/design-details/[slug]" as={`/design-details/${slug}`}>
       <a>
         <Card style={{ display: 'flex' }}>
           <ImageContainer>
@@ -35,6 +35,6 @@ export default function DesignDetailsCard(props: Props) {
           </CardContent>
         </Card>
       </a>
-    </RouteLink>
+    </Link>
   );
 }

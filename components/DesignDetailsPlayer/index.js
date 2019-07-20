@@ -60,7 +60,7 @@ export default function DesignDetailsPlayer() {
 
     // $FlowFixMe
     if (episodes && episodes.length > 0) {
-      const thisEpisode = episodes.find(e => console.log({ e }) || e.published);
+      const thisEpisode = episodes.find(e => e.published);
       // $FlowFixMe
       return dispatch({ type: 'LOADED', episode: thisEpisode });
     }

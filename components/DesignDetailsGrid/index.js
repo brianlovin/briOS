@@ -1,9 +1,9 @@
 // @flow
 import * as React from 'react';
+import Link from 'next/link';
 import { designDetails } from '../../config';
 import DesignDetailsCard from '../DesignDetailsCard';
 import { Grid, ViewMoreContainer } from './style';
-import { Link as RouteLink } from '../../config/routes';
 import { GhostButton } from '../Button';
 
 type Props = {
@@ -24,11 +24,11 @@ export default function DesignDetailsGrid(props: Props) {
 
       {truncated && (
         <ViewMoreContainer data-cy="view-all-design-details">
-          <RouteLink route="design-details">
+          <Link href="/design-details">
             <GhostButton>
               View all {designDetails.length} explorations
             </GhostButton>
-          </RouteLink>
+          </Link>
         </ViewMoreContainer>
       )}
     </React.Fragment>
