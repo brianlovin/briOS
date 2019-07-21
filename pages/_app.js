@@ -146,7 +146,7 @@ class MyApp extends App {
           <meta name="og:type" content="website" key="og:type" />
           <meta
             name="og:image"
-            content="https://brianlovin.com/static/og-image.jpg"
+            content="https://brianlovin.com/static/og-image.png"
             key="og:image"
           />
           <meta name="og:site_name" content="Brian Lovin" key="og:site_name" />
