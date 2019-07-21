@@ -193,19 +193,19 @@ export default function About() {
           >
             Security Checklist
           </a>
-          . This small app was my first solo{' '}
+          . This small app is an{' '}
           <a
             href="https://github.com/brianlovin/security-checklist"
             target="_blank"
             rel="noopener noreferrer"
           >
             open-source project
-          </a>
-          , aimed at helping individuals improve their online security and
-          protect their data from the endless barrage of data-hungry
-          corporations on the internet. Security Checklist has received
-          contributions from dozens of people and the site has reached hundreds
-          of thousands of people online.
+          </a>{' '}
+          aimed at helping individuals improve their online security and protect
+          their data from the endless barrage of data-hungry corporations on the
+          internet. Security Checklist has received contributions from dozens of
+          people and the site has reached hundreds of thousands of people
+          online.
         </Paragraph>
 
         <div style={{ padding: '16px' }} />
