@@ -1,23 +1,30 @@
 language: node_js
 node_js:
   - 10
+# if using Ubuntu 16 need this library
+# https://github.com/cypress-io/cypress-documentation/pull/1647
+addons:
+  apt:
+    packages:
+    - libgconf-2-4
+
 cache:
   directories:
     - ~/.npm
     - ~/.cache
+
 install:  
   - npm install
+
 before_script:
   - npm run build
   - npm run start &
+
 script:
   - node --version
   - npm --version
   - npm run flow
   - npm run cypress:run
+  
 notifications:
   email: false
-addons:
-  apt:
-    packages:
-    - libgconf-2-4
