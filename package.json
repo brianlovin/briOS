@@ -55,7 +55,7 @@
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-react": "^7.13.0",
-    "flow-bin": "^0.95.1",
+    "flow-bin": "^0.103.0",
     "lint-staged": "^8.2.1",
     "now-env": "^3.2.0",
     "prettier": "^1.17.1",
