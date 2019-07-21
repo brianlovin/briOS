@@ -32,6 +32,25 @@ export const Logo = styled.h1`
   color: ${theme.text.default};
 `;
 
+export const Icons = styled.div`
+  display: flex;
+  align-items: center;
+
+  a {
+    color: ${theme.text.tertiary};
+    display: flex;
+    align-items: center;
+  }
+
+  a:hover {
+    color: ${theme.text.default};
+  }
+
+  .icon {
+    margin-right: 16px;
+  }
+`;
+
 export const ButtonRowContainer = styled.div`
   display: flex;
   justify-content: flex-end;

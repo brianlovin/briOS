@@ -1,8 +1,9 @@
 // @flow
 import * as React from 'react';
 import Link from 'next/link';
-import { Container, Logo, ButtonRowContainer } from './style';
-import { PrimaryButton, GhostButton } from '../Button';
+import Icon from '../Icon';
+import { Container, Logo, ButtonRowContainer, Icons } from './style';
+import { OutlineButton } from '../Button';
 
 type Props = {
   showHeaderShadow: boolean,
@@ -20,15 +21,26 @@ export default function Header(props: Props) {
       </Link>
 
       <ButtonRowContainer>
+        <Icons>
+          <a
+            href="https://twitter.com/brian_lovin"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Icon glyph="twitter" />
+          </a>
+
+          <a
+            href="https://github.com/brianlovin"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Icon glyph="github" />
+          </a>
+        </Icons>
         <Link href="/about">
           <a>
-            <GhostButton>About</GhostButton>
-          </a>
-        </Link>
-
-        <Link href="mailto:hi@brianlovin.com">
-          <a style={{ marginLeft: '8px' }}>
-            <PrimaryButton>Email</PrimaryButton>
+            <OutlineButton>About</OutlineButton>
           </a>
         </Link>
       </ButtonRowContainer>

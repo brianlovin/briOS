@@ -72,6 +72,22 @@ export const Subheading = styled.h4`
   }
 `;
 
+export const Paragraph = styled.p`
+  font-size: 18px;
+  font-weight: 400;
+  color: ${theme.text.tertiary};
+  margin-bottom: 16px;
+
+  a {
+    color: ${theme.text.default};
+    font-weight: 500;
+  }
+
+  @media (max-width: 968px) {
+    max-width: 100%;
+  }
+`;
+
 export const LargeHeading = styled(Heading)`
   font-size: 32px;
 `;
