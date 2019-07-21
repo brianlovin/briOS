@@ -8,25 +8,21 @@ type Props = {
   alt: string,
 };
 
-class AtvImage extends React.Component<Props> {
-  render() {
-    const { src, Component, alt } = this.props;
+export default function AtvImage(props: Props) {
+  const { src, Component, alt } = props;
 
-    return (
-      <div className="atvImg">
-        {Component ? (
-          <Component
-            className="atvImg-layer"
-            data-img={src}
-            src={src}
-            alt={alt}
-          />
-        ) : (
-          <Img className="atvImg-layer" data-img={src} src={src} alt={alt} />
-        )}
-      </div>
-    );
-  }
+  return (
+    <div className="atvImg">
+      {Component ? (
+        <Component
+          className="atvImg-layer"
+          data-img={src}
+          src={src}
+          alt={alt}
+        />
+      ) : (
+        <Img className="atvImg-layer" data-img={src} src={src} alt={alt} />
+      )}
+    </div>
+  );
 }
-
-export default AtvImage;

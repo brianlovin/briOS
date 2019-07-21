@@ -11,7 +11,6 @@ import type { SimplecastEpisode } from '../types';
 import { GlobalStyles } from '../static/normalize';
 import { ATVImgStyles } from '../lib/atvimg/style';
 import { ATVScript } from '../lib/atvimg/script';
-import { theme } from '../components/theme';
 
 const SENTRY_PUBLIC_DSN =
   'https://36dc16f06aff44a3b91d0a6196f2b1fa@sentry.io/1318162';
