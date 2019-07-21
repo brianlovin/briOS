@@ -12,6 +12,14 @@
   ],
   "routes": [
     {
+      "src": "/_next/static/(?:[^/]+/pages|chunks|runtime)/.+",
+      "headers": { "cache-control": "immutable" }
+    },
+    {
+      "src": "^/(favicon.ico|manifest.json|humans.txt|sitemap.xml|sitemap.xsl)$",
+      "headers": { "cache-control": "max-age=300 must-revalidate" }
+    },
+    {
       "src": "/(.*)",
       "dest": "/web/$1"
     }
