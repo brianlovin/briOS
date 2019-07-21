@@ -152,7 +152,7 @@ export default function About() {
           downloaded more than 5,000,000 times from designers all around the
           world. Today we record weekly shows talking about the latest indsutry
           news, answering listener questions, interviewing people doing
-          interesting work, and sharing cool things that we find interesting.
+          interesting work, and sharing the cool things we find each week.
         </Paragraph>
 
         <Paragraph>
