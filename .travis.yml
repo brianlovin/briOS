@@ -17,3 +17,7 @@ script:
   - npm run cypress:run
 notifications:
   email: false
+addons:
+  apt:
+    packages:
+    - libgconf-2-4
