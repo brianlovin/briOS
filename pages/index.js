@@ -2,7 +2,6 @@
 import * as React from 'react';
 import Link from 'next/link';
 import Page, { SectionHeading, Heading, Subheading } from '../components/Page';
-import type { GetInitialProps } from '../types';
 import DesignDetailsGrid from '../components/DesignDetailsGrid';
 import OpenSourceGrid from '../components/OpenSourceGrid';
 import BooksGrid from '../components/BooksGrid';
@@ -10,16 +9,6 @@ import MusicGrid from '../components/MusicGrid';
 import DesignDetailsPlayer from '../components/DesignDetailsPlayer';
 
 class Index extends React.Component<{}> {
-  static async getInitialProps({ res }: GetInitialProps) {
-    if (res) {
-      // cache podcasts for a month
-      const cacheAge = 60 * 60 * 24 * 30;
-      res.setHeader('Cache-Control', `public,s-maxage=${cacheAge}`);
-    }
-
-    return {};
-  }
-
   render() {
     return (
       <Page>

@@ -135,16 +135,12 @@ class MyApp extends App {
         <ATVImgStyles />
 
         <Head>
-          <title>Brian Lovin · Nice Boy™</title>
+          <title>Brian Lovin</title>
           <meta content="@brian_lovin" name="twitter:site" key="twitter:site" />
-          <meta
-            content="Brian Lovin · Nice Boy™"
-            name="og:title"
-            key="og:title"
-          />
+          <meta content="Brian Lovin" name="og:title" key="og:title" />
           <meta content="Designer" name="og:description" key="og:description" />
           <meta
-            content="Brian Lovin · Nice Boy™"
+            content="Brian Lovin"
             name="twitter:title"
             key="twitter:title"
           />

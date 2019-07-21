@@ -6,19 +6,9 @@ import Page, {
   Heading,
   Subheading,
 } from '../../components/Page';
-import type { GetInitialProps } from '../../types';
 import OpenSourceGrid from '../../components/OpenSourceGrid';
 
-class Books extends React.Component<{}> {
-  static async getInitialProps({ res }: GetInitialProps) {
-    if (res) {
-      const cacheAge = 60 * 60 * 24 * 30;
-      res.setHeader('Cache-Control', `public,s-maxage=${cacheAge}`);
-    }
-
-    return {};
-  }
-
+class OSS extends React.Component<{}> {
   render() {
     return (
       <Page>
@@ -52,4 +42,4 @@ class Books extends React.Component<{}> {
   }
 }
 
-export default Books;
+export default OSS;

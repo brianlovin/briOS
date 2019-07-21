@@ -6,19 +6,9 @@ import Page, {
   Heading,
   Subheading,
 } from '../../components/Page';
-import type { GetInitialProps } from '../../types';
 import BooksGrid from '../../components/BooksGrid';
 
 class Books extends React.Component<{}> {
-  static async getInitialProps({ res }: GetInitialProps) {
-    if (res) {
-      const cacheAge = 60 * 60 * 24 * 30;
-      res.setHeader('Cache-Control', `public,s-maxage=${cacheAge}`);
-    }
-
-    return {};
-  }
-
   render() {
     return (
       <Page>
