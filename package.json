@@ -5,7 +5,7 @@
     "dev": "next",
     "deploy": "now",
     "build": "next build",
-    "start": "NODE_ENV=production node server.js",
+    "start": "next",
     "flow": "flow",
     "flow start": "flow start",
     "flow stop": "flow stop",
