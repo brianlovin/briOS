@@ -1,8 +1,8 @@
 // @flow
 import * as React from 'react';
+import Link from 'next/link';
 import Page, { SectionHeading, Heading, Subheading } from '../components/Page';
 import type { GetInitialProps } from '../types';
-import { Link as RouteLink } from '../config/routes';
 import DesignDetailsGrid from '../components/DesignDetailsGrid';
 import OpenSourceGrid from '../components/OpenSourceGrid';
 import BooksGrid from '../components/BooksGrid';
@@ -24,11 +24,11 @@ class Index extends React.Component<{}> {
     return (
       <Page>
         <SectionHeading>
-          <RouteLink route="design-details">
+          <Link href="/design-details">
             <a>
               <Heading>Design Details Blog</Heading>
             </a>
-          </RouteLink>
+          </Link>
           <Subheading>A visual exploration of digital products</Subheading>
         </SectionHeading>
 
@@ -50,33 +50,33 @@ class Index extends React.Component<{}> {
         <DesignDetailsPlayer />
 
         <SectionHeading>
-          <RouteLink route="oss">
+          <Link href="/oss">
             <a>
               <Heading>Open Source</Heading>
             </a>
-          </RouteLink>
+          </Link>
           <Subheading>What I’m working on</Subheading>
         </SectionHeading>
 
         <OpenSourceGrid />
 
         <SectionHeading>
-          <RouteLink route="books">
+          <Link href="/books">
             <a>
               <Heading>Books</Heading>
             </a>
-          </RouteLink>
+          </Link>
           <Subheading>What I’m reading</Subheading>
         </SectionHeading>
 
         <BooksGrid />
 
         <SectionHeading>
-          <RouteLink route="music">
+          <Link href="/music">
             <a>
               <Heading>Music</Heading>
             </a>
-          </RouteLink>
+          </Link>
           <Subheading>Albums on repeat</Subheading>
         </SectionHeading>
 

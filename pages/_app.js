@@ -1,6 +1,5 @@
 // @flow
 import App, { Container } from 'next/app';
-import NProgress from 'next-nprogress/component';
 import * as React from 'react';
 import Head from 'next/head';
 import * as Sentry from '@sentry/browser';
@@ -134,7 +133,6 @@ class MyApp extends App {
       <Container>
         <GlobalStyles />
         <ATVImgStyles />
-        <NProgress color={theme.brand.default} showAfterMs={300} />
 
         <Head>
           <title>Brian Lovin · Nice Boy™</title>

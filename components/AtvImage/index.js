@@ -9,11 +9,6 @@ type Props = {
 };
 
 class AtvImage extends React.Component<Props> {
-  componentDidUpdate(prev: Props) {
-    const curr = this.props;
-    if (curr.src !== prev.src) console.log('changed src');
-  }
-
   render() {
     const { src, Component, alt } = this.props;
 
