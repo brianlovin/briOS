@@ -208,6 +208,38 @@ export default function About() {
           online.
         </Paragraph>
 
+        <Paragraph>
+          In early 2019 I worked with{' '}
+          <a
+            href="https://twitter.com/mxstbr"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Max Stoiber
+          </a>{' '}
+          and{' '}
+          <a
+            href="https://twitter.com/nikgraf"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Nik Graf
+          </a>{' '}
+          on{' '}
+          <a
+            href="https://changefeed.app"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Changefeed
+          </a>
+          , a tool to create a beautiful changelog for any product in seconds.
+          We learned through our experience of maintaining a changelog for
+          Spectrum how powerful a public record of changes can be. It helps to
+          keep people engaged and excited about what you’re building. Changefeed
+          aims to make the creation and subscription of changelogs much easier.
+        </Paragraph>
+
         <div style={{ padding: '16px' }} />
 
         <Heading>How can I help?</Heading>
