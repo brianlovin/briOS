@@ -80,6 +80,5 @@ describe('Home', () => {
       .should('be.visible');
 
     cy.get(`[href="/about"]`).should('be.visible');
-    cy.get(`[href="mailto:hi@brianlovin.com"]`).should('be.visible');
   });
 });

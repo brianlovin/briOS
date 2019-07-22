@@ -13,6 +13,7 @@ import {
   SectionHeading,
   Heading,
   Subheading,
+  Paragraph,
   LargeHeading,
   LargeSubheading,
   InnerContainer,
@@ -20,7 +21,14 @@ import {
 } from './style';
 import * as gtag from '../../lib/gtag';
 
-export { SectionHeading, Heading, Subheading, LargeHeading, LargeSubheading };
+export {
+  SectionHeading,
+  Heading,
+  Subheading,
+  LargeHeading,
+  LargeSubheading,
+  Paragraph,
+};
 
 type Props = {
   children: Node,

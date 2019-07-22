@@ -11,7 +11,6 @@ import type { SimplecastEpisode } from '../types';
 import { GlobalStyles } from '../static/normalize';
 import { ATVImgStyles } from '../lib/atvimg/style';
 import { ATVScript } from '../lib/atvimg/script';
-import { theme } from '../components/theme';
 
 const SENTRY_PUBLIC_DSN =
   'https://36dc16f06aff44a3b91d0a6196f2b1fa@sentry.io/1318162';
@@ -135,23 +134,19 @@ class MyApp extends App {
         <ATVImgStyles />
 
         <Head>
-          <title>Brian Lovin · Nice Boy™</title>
+          <title>Brian Lovin</title>
           <meta content="@brian_lovin" name="twitter:site" key="twitter:site" />
-          <meta
-            content="Brian Lovin · Nice Boy™"
-            name="og:title"
-            key="og:title"
-          />
+          <meta content="Brian Lovin" name="og:title" key="og:title" />
           <meta content="Designer" name="og:description" key="og:description" />
           <meta
-            content="Brian Lovin · Nice Boy™"
+            content="Brian Lovin"
             name="twitter:title"
             key="twitter:title"
           />
           <meta name="og:type" content="website" key="og:type" />
           <meta
             name="og:image"
-            content="https://brianlovin.com/static/og-image.jpg"
+            content="https://brianlovin.com/static/og-image.png"
             key="og:image"
           />
           <meta name="og:site_name" content="Brian Lovin" key="og:site_name" />
