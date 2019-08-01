@@ -33,7 +33,7 @@ describe('Design Detail Post', () => {
     cy.get('[data-cy="design-details-player"]')
       .first()
       .scrollIntoView()
-      .should('be.visible');
+      .should('not.be.visible');
 
     cy.get(`[href="https://spec.fm/podcasts/design-details"]`).should(
       'be.visible'
