@@ -31,7 +31,7 @@
     "react-dom": "^16.8.6",
     "react-image": "^2.1.1",
     "react-markdown": "^4.1.0",
-    "react-visibility-sensor": "^5.0.2",
+    "react-visibility-sensor": "^5.1.1",
     "serve-favicon": "^2.5.0",
     "styled-components": "^4.3.2",
     "throttle-debounce": "^2.1.0"
