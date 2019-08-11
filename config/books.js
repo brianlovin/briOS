@@ -1,5 +1,59 @@
 export default [
   {
+    name: 'Replay',
+    url:
+      'https://www.amazon.com/Replay-Ken-Grimwood/dp/068816112X/ref=sr_1_7?keywords=replay&qid=1565534673&s=gateway&sr=8-7',
+    artworkUrl: '/static/img/books/replay',
+  },
+  {
+    name: 'Jitterbug Perfume',
+    url:
+      'https://www.amazon.com/Jitterbug-Perfume-Novel-Tom-Robbins/dp/0553348981/ref=sr_1_1?keywords=jitterbug+perfume&qid=1565534702&s=gateway&sr=8-1',
+    artworkUrl: '/static/img/books/jitterbug-perfume',
+  },
+  {
+    name: 'The Mom Test',
+    url:
+      'https://www.amazon.com/Mom-Test-customers-business-everyone/dp/1492180742/ref=sr_1_1?keywords=the+mom+test&qid=1565534745&s=gateway&sr=8-1',
+    artworkUrl: '/static/img/books/mom-test',
+  },
+  {
+    name: 'Recursion',
+    url:
+      'https://www.amazon.com/Recursion-Novel-Blake-Crouch-ebook/dp/B07HDSHP7N/ref=sr_1_1?keywords=recursion&qid=1565534789&s=gateway&sr=8-1',
+    artworkUrl: '/static/img/books/recursion',
+  },
+  {
+    name: 'Snow Crash',
+    url:
+      'https://www.amazon.com/Snow-Crash-Neal-Stephenson/dp/0553380958/ref=sr_1_1?keywords=snow+crash&qid=1565534840&s=gateway&sr=8-1',
+    artworkUrl: '/static/img/books/snow-crash',
+  },
+  {
+    name: 'The Score Takes Care of Itself',
+    url:
+      'https://www.amazon.com/Score-Takes-Care-Itself-Philosophy/dp/1591843472/ref=sr_1_1?crid=39N37TQYLTPPD&keywords=the+score+takes+care+of+itself+by+bill+walsh&qid=1565534862&s=gateway&sprefix=the+score+takes%2Caps%2C136&sr=8-1',
+    artworkUrl: '/static/img/books/the-score',
+  },
+  {
+    name: 'The Manual',
+    url:
+      'https://www.amazon.com/Manual-Philosophers-Guide-Life/dp/1545461112/ref=sr_1_1_sspa?crid=3ALUN26GAZYAT&keywords=the+manual+epictetus&qid=1565534885&s=gateway&sprefix=the+manual+epi%2Caps%2C133&sr=8-1-spons&psc=1&spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEzU1o4OEFMMExOWkdOJmVuY3J5cHRlZElkPUEwMzM3NjU1M0JUMFlTWUhBT05CSSZlbmNyeXB0ZWRBZElkPUEwMzExOTE1T0RNNVhMTkFLMktKJndpZGdldE5hbWU9c3BfYXRmJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==',
+    artworkUrl: '/static/img/books/manual',
+  },
+  {
+    name: 'Dark Dark',
+    url:
+      'https://www.amazon.com/Dark-Stories-Samantha-Hunt/dp/0374282137/ref=sr_1_3?keywords=dark+dark&qid=1565534910&s=gateway&sr=8-3',
+    artworkUrl: '/static/img/books/dark-dark',
+  },
+  {
+    name: 'Team Human',
+    url:
+      'https://www.amazon.com/Team-Human-Douglas-Rushkoff/dp/039365169X/ref=sr_1_1?keywords=team+human&qid=1565534935&s=gateway&sr=8-1',
+    artworkUrl: '/static/img/books/team-human',
+  },
+  {
     name: 'Dark Matter',
     url:
       'https://www.amazon.com/Dark-Matter-Novel-Blake-Crouch/dp/1524763241/ref=sr_1_3?keywords=dark+matter&qid=1558048636&s=gateway&sr=8-3',
