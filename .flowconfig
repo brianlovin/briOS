@@ -21,6 +21,3 @@ untyped-type-import=error
 untyped-import=warn
 unclear-type=warn
 unsafe-getters-setters=error
-
-[version]
-0.103.0
