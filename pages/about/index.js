@@ -109,7 +109,7 @@ export default function About() {
 
         <Paragraph>
           In 2014 I became fascinated with the tiny design details that made the
-          best applications and products betterr. I began documenting these
+          best applications and products better. I began documenting these
           interactions, animations, and beautiful touches in a blog series
           called{' '}
           <Link href="/design-details" as="/design-details">
