@@ -1,12 +1,12 @@
-workflow "Build, Test, and Publish" {
+workflow "Build, Flow, Cypress" {
   on = "push"
-  resolves = ["E2E Tests"]
+  resolves = ["Cypress"]
 }
 
 action "Build" {
   uses = "actions/npm@master"
   args = "install"
-
+}
 
 action "Flow" {
   uses = "bartlett705/npm-cy@f69478046d80aef1be0e17582c189a59bbfc9aa1"
@@ -14,7 +14,7 @@ action "Flow" {
   args = "run flow"
 }
 
-action "E2E Tests" {
+action "Cypress" {
   uses = "bartlett705/npm-cy@f69478046d80aef1be0e17582c189a59bbfc9aa1"
   needs = ["Flow"]
   args = "run cypress:run"
