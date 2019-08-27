@@ -1,23 +1,21 @@
-workflow "Test my code" {
+workflow "Build, Test, and Publish" {
   on = "push"
-  resolves = ["npm test"]
+  resolves = ["E2E Tests"]
 }
 
-action "npm ci" {
-  uses = "docker://node:alpine"
-  runs = "npm"
-  args = "ci"
-}
+action "Build" {
+  uses = "actions/npm@master"
+  args = "install"
 
-action "npm test" {
-  needs = "npm ci"
-  uses = "docker://node:alpine"
-  runs = "npm"
-  args = "test"
+
+action "Flow" {
+  uses = "bartlett705/npm-cy@f69478046d80aef1be0e17582c189a59bbfc9aa1"
+  needs = ["Build"]
+  args = "run flow"
 }
 
 action "E2E Tests" {
   uses = "bartlett705/npm-cy@f69478046d80aef1be0e17582c189a59bbfc9aa1"
-  needs = ["Unit Tests"]
+  needs = ["Flow"]
   args = "run cypress:run"
 }
