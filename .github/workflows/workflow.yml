@@ -21,7 +21,7 @@ jobs:
       run: |
         npm install
         npm run build --if-present
-        npm start
+        npm start &
     - name: flow
       run: |
         npm run flow
