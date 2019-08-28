@@ -14,26 +14,20 @@ action "Flow" {
   args = "run flow"
 }
 
-action "Build API" {
+action "Build" {
   uses = "bartlett705/npm-cy@f69478046d80aef1be0e17582c189a59bbfc9aa1"
   needs = ["Flow"]
   args = "run build"
 }
 
-action "Start Dev" {
+action "Start" {
   uses = "bartlett705/npm-cy@f69478046d80aef1be0e17582c189a59bbfc9aa1"
-  needs = ["Build API"]
-  args = "run dev:api"
-}
-
-action "Start API" {
-  uses = "bartlett705/npm-cy@f69478046d80aef1be0e17582c189a59bbfc9aa1"
-  needs = ["Start Dev"]
+  needs = ["Build"]
   args = "run start"
 }
 
 action "Cypress" {
   uses = "bartlett705/npm-cy@f69478046d80aef1be0e17582c189a59bbfc9aa1"
-  needs = ["Start API"]
+  needs = ["Start"]
   args = "run cypress:run"
 }
