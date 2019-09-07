@@ -48,7 +48,7 @@ export const Card = styled.div`
 export const Artwork = styled.img`
   width: 114px;
   height: 114px;
-  border-radius: 8px;
+  border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.12);
   cursor: pointer;
 

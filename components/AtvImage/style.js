@@ -4,5 +4,5 @@ import { Shadows } from '../globals';
 
 export const Img = styled.img`
   ${Shadows.default};
-  border-radius: 8px;
+  border-radius: 12px;
 `;
