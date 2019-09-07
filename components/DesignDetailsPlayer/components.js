@@ -44,16 +44,6 @@ export const PlayerActions = (props: Props) => {
       >
         <AllEpsButton>All Episodes</AllEpsButton>
       </a>
-
-      <a
-        name="All Episodes"
-        href="https://twitter.com/designdetailsfm"
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{ marginLeft: '8px' }}
-      >
-        <AllEpsButton>@designdetailsfm</AllEpsButton>
-      </a>
     </Actions>
   );
 };
