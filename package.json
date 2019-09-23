@@ -33,7 +33,7 @@
     "react-markdown": "^4.2.2",
     "react-visibility-sensor": "^5.1.1",
     "serve-favicon": "^2.5.0",
-    "styled-components": "^4.3.2",
+    "styled-components": "^4.4.0",
     "throttle-debounce": "^2.1.0"
   },
   "devDependencies": {
