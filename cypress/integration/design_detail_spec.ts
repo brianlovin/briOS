@@ -2,8 +2,6 @@
 
 import designDetails from '../../src/data/designDetails';
 
-console.log({ designDetails })
-
 const slug = 'instagram-ios';
 // @ts-ignore
 const detail = designDetails.find(d => d.slug === slug)
