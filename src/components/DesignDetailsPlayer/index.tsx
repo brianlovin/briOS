@@ -10,7 +10,7 @@ class LatestEpisode extends React.Component {
   };
 
   async componentDidMount() {
-    return await fetch('https://api.spec.fm/podcasts/1034/episodes.json')
+    return await fetch('https://spec.fm/api/podcasts/1034/episodes')
       .then(res => {
         return res.json();
       })
