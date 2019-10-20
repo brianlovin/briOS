@@ -1,13 +1,6 @@
 {
   "version": 2,
-  "alias": ["brianlovin.com"],
   "github": {
     "silent": true
-  },
-  "builds": [
-    {
-      "src": "next.config.js",
-      "use": "@now/next"
-    }
-  ]
+  }
 }
