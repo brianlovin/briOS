@@ -1,4 +1,5 @@
 /// <reference types="cypress" />
+/// <reference types="@testing-library/cypress" />
 
 import { designDetails } from '../../src/data';
 

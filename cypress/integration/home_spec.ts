@@ -1,4 +1,5 @@
 /// <reference types="cypress" />
+/// <reference types="@testing-library/cypress" />
 
 import { designDetails, books, music, oss as repos } from '../../src/data';
 

@@ -1,4 +1,5 @@
 /// <reference types="cypress" />
+/// <reference types="@testing-library/cypress" />
 
 import { oss as repos } from '../../src/data';
 
