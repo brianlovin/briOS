@@ -17,7 +17,7 @@
     "next-seo": "^2.2.0",
     "react": "^16.11.0",
     "react-clipboard.js": "^2.0.16",
-    "react-dom": "^16.10.2",
+    "react-dom": "^16.11.0",
     "react-markdown": "^4.2.2",
     "react-visibility-sensor": "^5.1.1",
     "serve-favicon": "^2.5.0",
