@@ -28,7 +28,7 @@
     "@bahmutov/add-typescript-to-cypress": "^2.1.2",
     "@cypress/webpack-preprocessor": "^4.1.0",
     "@testing-library/cypress": "^5.0.2",
-    "@types/chai": "^4.2.3",
+    "@types/chai": "^4.2.4",
     "@types/jest": "^24.0.19",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.11.6",
