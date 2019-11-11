@@ -37,7 +37,7 @@
     "@typescript-eslint/parser": "^2.6.1",
     "babel-eslint": "^10.0.3",
     "babel-plugin-styled-components": "^1.10.6",
-    "cypress": "^3.6.0",
+    "cypress": "^3.6.1",
     "eslint": "^6.6.0",
     "eslint-config-prettier": "^6.5.0",
     "eslint-plugin-cypress": "^2.7.0",
