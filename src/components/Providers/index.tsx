@@ -83,7 +83,7 @@ export default ({ children }: Props) => (
         sizes="16x16"
         href="/static/meta/favicon-16x16.png"
       />
-      <link rel="manifest" href="/static/manifest.json" />
+      <link rel="manifest" href="/static/meta/site.webmanifest" />
       <meta name="msapplication-TileColor" content={theme.brand.default} />
       <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
       <meta name="theme-color" content={theme.brand.default} />
