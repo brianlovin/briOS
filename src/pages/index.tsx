@@ -11,11 +11,8 @@ export default function Index() {
       <ContentContainer>
         <SectionHeading style={{ marginTop: '48px'}}>
           <LargeHeading>Brian Lovin</LargeHeading>
-          <Subheading style={{ marginTop: '24px' }}>👋 I'm a product designer living in New York City.</Subheading>
-          <Subheading>I'm currently designing <a href="https://github.com/mobile" target="_blank" rel="noopener noreferrer">native mobile apps</a> at <a href="https://github.com/brianlovin" target="_blank" rel="noopener noreferrer">GitHub</a>. Before GitHub, I co-founded <a href="https://spectrum.chat" target="_blank" rel="noopener noreferrer">Spectrum</a>, a platform for large-scale communities to have better public conversations. Spectrum was acquired by GitHub in November, 2018.</Subheading>
-          <Subheading>Before Spectrum I designed payments experiences at Facebook, working across Facebook, Messenger, WhatsApp, and Instagram. I originally cut my teeth as the first product designer at <a href="https://buffer.com" target="_blank" rel="noopener noreferrer">Buffer</a>.</Subheading>
-          <Subheading>I also co-host the <a href="https://designdetails.fm" target="_blank" rel="noopener noreferrer">Design Details Podcast</a>, a weekly conversation about design process and culture. Design Details is part of <a href="https://spec.fm" target="_blank" rel="noopener noreferrer">Spec.fm</a>, a podcast network for designers and developers, which I co-founded in 2015.</Subheading>
-          <Subheading>You can find me on <a href="https://twitter.com/brian_lovin" target="_blank" rel="noopener noreferrer">Twitter</a> where I talk about design and development, or on <a href="https://github.com/brianlovin" target="_blank" rel="noopener noreferrer">GitHub</a> where I'm building in the open, or on <a href="https://figma.com/@brian" target="_blank" rel="noopener noreferrer">Figma</a> where I'm exploring how plugins can automate the tedious parts of interface design.</Subheading>
+          <Subheading style={{ marginTop: '24px' }}>I'm a product designer living in New York City, currently building native mobile apps at GitHub.</Subheading>
+          <Subheading><Link href="/about">More about me</Link> &rarr;</Subheading>
         </SectionHeading>
       </ContentContainer>
 

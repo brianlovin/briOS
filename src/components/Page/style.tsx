@@ -41,7 +41,7 @@ export const SectionHeading = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   align-self: flex-start;
-  margin: 128px 0 0;
+  margin: 96px 0 0;
 
   @media (max-width: 968px) {
     align-items: flex-start;
