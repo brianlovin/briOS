@@ -1,23 +1,23 @@
 export default {
-  title: 'Design Details',
-  description: 'A weekly conversation about design process and culture',
+  title: 'Brian Lovin',
+  description: 'Product designer',
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://designdetails.fm',
-    site_name: 'Design Details',
+    url: 'https://brianlovin.com',
+    site_name: 'Brian Lovin',
     images: [
       {
-        url: 'https://designdetails.fm/static/img/dd-wide.png',
+        url: 'https://brianlovin.com/static/og-image.png',
         width: 1600,
         height: 400,
-        alt: 'Design Details'
+        alt: 'Brian Lovin'
       }
     ]
   },
   twitter: {
-    handle: '@designdetailsfm',
-    site: '@designdetailsfm',
+    handle: '@brian_lovin',
+    site: '@brian_lovin',
     cardType: 'summary_large_image'
   }
 };
