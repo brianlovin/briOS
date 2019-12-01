@@ -58,7 +58,7 @@ export default [
   },
   {
     description:
-      "One of the best touches in Shorts is the commenting - rather than building a reverse-chron feed of comments, people can drag and arrange their notes exactly on the parts of the photo that catch their attention. It's a lot of fun to use and feels lightweight enough to encourage lots of engagement.",
+      "One of the best touches in Shorts is the commenting - rather than building a reverse-chronological feed of comments, people can drag and arrange their notes exactly on the parts of the photo that catch their attention. It's a lot of fun to use and feels lightweight enough to encourage lots of engagement.",
     title: 'Comments',
     media: [
       'https://player.vimeo.com/external/160549091.hd.mp4?s=f26b43a33487d07108ff17b059326567160b65f3&profile_id=113',
