@@ -8,7 +8,7 @@ export default {
     site_name: 'Brian Lovin',
     images: [
       {
-        url: 'https://brianlovin.com/static/og-image.png',
+        url: 'https://brianlovin.com/static/og-image.jpeg',
         width: 1600,
         height: 400,
         alt: 'Brian Lovin'
