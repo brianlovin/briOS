@@ -1,11 +1,8 @@
  
 import * as React from 'react';
-import Link from 'next/link';
-import Page, { SectionHeading, LargeHeading, Heading, Subheading, ContentContainer } from '../components/Page';
-import DesignDetailsGrid from '../components/DesignDetailsGrid';
-import DesignDetailsPlayer from '../components/DesignDetailsPlayer';
+import Page, { SectionHeading, LargeHeading, Subheading, ContentContainer } from '../components/Page';
 
-export default function Index() {
+export default function About() {
   return (
     <Page withHeader>
       <ContentContainer>

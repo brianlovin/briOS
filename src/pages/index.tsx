@@ -42,6 +42,11 @@ export default function Index() {
           <Subheading>
             A weekly conversation about design process and culture.
           </Subheading>
+          <Subheading><a
+            href="https://designdetails.fm"
+            target="_blank"
+            rel="noopener noreferrer"
+          >Go to site</a> &rarr;</Subheading>
         </SectionHeading>
 
         <DesignDetailsPlayer />
