@@ -1,6 +1,5 @@
 import React from 'react';
 import Head from 'next/head';
-import Link from 'next/link';
 import { getDateObject } from '../../lib/getDateObject';
 import { LargeHeading, LargeSubheading, ContentContainer } from '../Page';
 import { Notice } from '../Blog';

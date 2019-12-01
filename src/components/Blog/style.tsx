@@ -1,12 +1,11 @@
 import styled from 'styled-components';
-import { tint, Content, hexa } from '../globals';
+import { tint, hexa } from '../globals';
 
 export const Container = styled.div`
   width: 100%;
 `;
 
 export const ContentContainer = styled.div`
-  ${Content};
 `;
 
 export const HeaderImage = styled.img`

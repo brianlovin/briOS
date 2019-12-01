@@ -18,6 +18,10 @@ export const Container = styled.div`
   transition: all 0.2s ease-in-out;
   backdrop-filter: saturate(180%) blur(20px);
 
+  a {
+    text-decoration: none!important;
+  }
+
   @media (max-width: 968px) {
     padding: 8px 16px;
     grid-template-columns: 1fr 1fr;
@@ -30,6 +34,7 @@ export const Logo = styled.h1`
   font-size: 18px;
   font-weight: 700;
   color: ${props => props.theme.text.default};
+  margin: 0;
 `;
 
 export const Icons = styled.div`
