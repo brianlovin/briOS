@@ -16,6 +16,7 @@ export const Description = styled.p`
   align-items: flex-start;
   padding-bottom: 16px;
   font-weight: 600;
+  margin: 0;
 
   a {
     color: ${props => props.theme.text.default};

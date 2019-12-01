@@ -126,12 +126,14 @@ export const DetailsCount = styled.p`
   font-weight: 600;
   text-transform: uppercase;
   color: ${props => props.theme.text.quarternary};
+  margin: 0;
 `;
 
 export const Title = styled.p`
   font-size: 18px;
   color: ${props => props.theme.text.default};
   font-weight: 700;
+  margin: 0;
 `;
 
 export const ImageContainer = styled.span`
