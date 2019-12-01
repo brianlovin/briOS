@@ -1,5 +1,5 @@
 import { css } from 'styled-components';
-import { theme } from '../theme';
+import theme from '../theme';
 
 export const hexa = (hex: string, alpha: number) => {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -103,20 +103,21 @@ export const Content = css`
   }
 
   p {
-    font-size: 18px;
+    font-size: 22px;
     font-weight: 400;
-    line-height: 1.6;
+    line-height: 1.5;
     color: ${props => props.theme.text.secondary};
-    margin-top: 16px;
+    margin-top: 32px;
   }
 
   a {
-    color: ${props => props.theme.brand.default};
+    color: ${props => props.theme.text.default};
     font-weight: 500;
+    text-decoration: underline solid ${props => props.theme.border.default};
   }
 
   a:hover {
-    text-decoration: underline;
+    text-decoration: underline solid ${props => props.theme.text.default};
   }
 
   a:hover button {

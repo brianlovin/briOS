@@ -1,15 +1,14 @@
 import styled from 'styled-components';
-import { tint } from '../globals';
-import { theme } from '../theme';
 
 export const DetailContainer = styled.div`
   display: flex;
   flex-direction: column;
+  min-height: 680px;
 `;
 
 export const MediaContainer = styled.div`
   border-radius: 8px;
-  background: ${tint(theme.bg.wash, -4)};
+  background: ${props => props.theme.bg.inset};
   margin: 32px 0 64px;
   padding: 16px;
   width: 100%;
@@ -17,7 +16,7 @@ export const MediaContainer = styled.div`
   align-items: center;
   justify-content: center;
 
-  @media (max-width: 752px) {
+  @media (max-width: 968px) {
     width: calc(100% + 32px);
     margin-left: -16px;
     border-radius: 0;
@@ -26,13 +25,16 @@ export const MediaContainer = styled.div`
 
 export const Video = styled.video`
   width: 100%;
-  max-width: 320px;
+  height: 100%;
+  min-height: 680px;
+  max-width: ${props => props.landscape ? '100%' : '400px'};
+  border-radius: 4px;
 `;
 
 export const DetailTitle = styled.h5`
   font-size: 24px;
   font-weight: 700;
-  color: ${theme.text.default};
+  color: ${props => props.theme.text.default};
   margin-bottom: 16px;
 
   @media (max-width: 968px) {

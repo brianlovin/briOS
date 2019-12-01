@@ -2,14 +2,13 @@
 import * as React from 'react';
 import App from 'next/app';
 import Fathom from 'fathom-client'
-import { ATVImgStyles } from '../lib/atvimg/style';
-import { ATVScript } from '../lib/atvimg/script';
 import Providers from '../components/Providers';
 import Router from 'next/router'
 
 Router.events.on('routeChangeComplete', () => {
-  Fathom.trackPageview()
-  ATVScript();
+  if (process.env.NODE_ENV === 'production') {
+    Fathom.trackPageview()
+  }
 })
 
 function FathomWrapper(props) {
@@ -19,9 +18,8 @@ function FathomWrapper(props) {
       Fathom.setSiteId('ONFMHEEY');
       Fathom.trackPageview();
     }
-    ATVScript();
   }, [])
-  return <div {...props} />
+  return <span {...props} />
 }
 
 class MyApp extends App {
@@ -30,7 +28,6 @@ class MyApp extends App {
     return (
       <FathomWrapper>
         <Providers>
-          <ATVImgStyles />
           <Component {...pageProps} />
         </Providers>
       </FathomWrapper>

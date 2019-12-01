@@ -31,7 +31,7 @@ describe('Design Detail Post', () => {
 
   it('should render podcast player', () => {
     cy.get('[data-cy="design-details-player"]').should($p => {
-      expect($p).to.have.length(2);
+      expect($p).to.have.length(1);
     });
 
     cy.get('[data-cy="design-details-player"]')

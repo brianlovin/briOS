@@ -23,7 +23,8 @@
     "react-visibility-sensor": "^5.1.1",
     "serve-favicon": "^2.5.0",
     "styled-components": "^4.4.1",
-    "throttle-debounce": "^2.1.0"
+    "throttle-debounce": "^2.1.0",
+    "use-dark-mode": "^2.3.1"
   },
   "devDependencies": {
     "@bahmutov/add-typescript-to-cypress": "^2.1.2",

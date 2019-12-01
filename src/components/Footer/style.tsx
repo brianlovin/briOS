@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { theme } from '../theme';
 
 export const Container = styled.div`
   margin-top: 128px;
@@ -10,15 +9,16 @@ export const Container = styled.div`
 
 export const Description = styled.p`
   font-size: 14px;
-  color: ${theme.text.tertiary};
+  color: ${props => props.theme.text.tertiary};
   max-width: 320px;
   display: flex;
   flex: 1 0 auto;
   align-items: flex-start;
   padding-bottom: 16px;
+  font-weight: 600;
 
   a {
-    color: ${theme.text.default};
+    color: ${props => props.theme.text.default};
     margin-left: 4px;
   }
 `;
@@ -31,11 +31,11 @@ export const Icons = styled.div`
   padding-bottom: 8px;
 
   a {
-    color: ${theme.text.tertiary};
+    color: ${props => props.theme.text.tertiary};
   }
 
   a:hover {
-    color: ${theme.text.default};
+    color: ${props => props.theme.text.default};
   }
 
   .icon {

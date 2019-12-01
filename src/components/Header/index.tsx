@@ -37,11 +37,6 @@ export default function Header(props: Props) {
             <Icon glyph="github" />
           </a>
         </Icons>
-        <Link href="/about">
-          <a>
-            <OutlineButton>About</OutlineButton>
-          </a>
-        </Link>
       </ButtonRowContainer>
     </Container>
   );

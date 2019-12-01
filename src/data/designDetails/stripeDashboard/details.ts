@@ -108,6 +108,7 @@ export default [
     description:
       "I could sit and stare at any Stripe product page all day. The [landing page for Dashboard](https://stripe.com/dashboard/iphone) isn't well-advertised, but that doesn't mean it received any less care. It animates beautifully into place and kicks off a video reel to showcase some of the app's different functions.\r\n\r\nThis page is also especially useful for me here, since the demo video shows several interactions that I wasn't able to capture in this post!",
     title: 'Landing Page',
+    orientation: 'landscape',
     media: [
       'https://player.vimeo.com/external/157887475.hd.mp4?s=acf74e2896bead7ace08fdd64db1c34eb8907f92&profile_id=119',
     ],

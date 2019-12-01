@@ -1,7 +1,6 @@
 import styled, { css } from 'styled-components';
 import { hexa, tint } from '../globals';
 import { ButtonSize } from './types';
-import { theme } from '../theme';
 
 const getPadding = (size: ButtonSize) => {
   switch (size) {
@@ -24,7 +23,7 @@ const getFontSize = (size: ButtonSize) => {
     case 'default':
       return '16px';
     case 'large':
-      return '18px';
+      return '28px';
     default: {
       return '16px';
     }
@@ -40,7 +39,7 @@ const base = css`
   justify-content: center;
   border-radius: 4px;
   font-size: ${props => getFontSize(props.size)};
-  font-weight: 500;
+  font-weight: 700;
   white-space: nowrap;
   word-break: keep-all;
   transition: all 0.2s ease-in-out;
@@ -60,26 +59,26 @@ const base = css`
   &:hover {
     transition: all 0.2s ease-in-out;
     box-shadow: ${props =>
-      props.disabled ? 'none' : `${theme.shadows.button}`};
+      props.disabled ? 'none' : `${props => props.theme.shadows.button}`};
   }
 `;
 
 export const Button = styled.button`
   ${base}
-  border: 1px solid ${theme.border.default};
-  color: ${theme.text.secondary};
-  background-color: ${theme.bg.default};
+  border: 1px solid ${props => props.theme.border.default};
+  color: ${props => props.theme.text.secondary};
+  background-color: ${props => props.theme.bg.default};
   background-image: ${props =>
     `linear-gradient(to bottom, ${props.theme.bg.default}, ${
       props.theme.bg.wash
     })`};
   
   &:hover {
-    color: ${theme.text.default};
+    color: ${props => props.theme.text.default};
   }
 
   &:active {
-    border: 1px solid ${theme.border.active};
+    border: 1px solid ${props => props.theme.border.active};
     background-image: ${props =>
       `linear-gradient(to top, ${props.theme.bg.default}, ${
         props.theme.bg.wash
@@ -87,35 +86,34 @@ export const Button = styled.button`
   }
 
   &:focus {
-    box-shadow: 0 0 0 1px ${props => props.theme.bg.default}, 0 0 0 3px ${
-  theme.border.default
+    box-shadow: 0 0 0 1px ${props => props.theme.bg.wash}, 0 0 0 3px ${
+  props => props.theme.border.default
 };
   }
 `;
 
 export const PrimaryButton = styled.button`
   ${base}
-  border: 1px solid ${theme.brand.default};
-  color: ${theme.bg.default};
-  background-color: ${theme.brand.alt};
+  border: 1px solid ${props => props.theme.brand.default};
+  color: ${props => props.theme.bg.default};
+  background-color: ${props => props.theme.brand.alt};
   background-image: ${props =>
     `linear-gradient(to bottom, ${props.theme.brand.alt}, ${
       props.theme.brand.default
     })`};
-  text-shadow: 0 1px 1px rgba(0,0,0,0.08);
 
   &:hover {
-    color: ${theme.text.reverse};
+    color: ${props => props.theme.text.reverse};
     background-image: ${props =>
       `linear-gradient(to bottom, ${tint(props.theme.brand.alt, 16)}, ${tint(
         props.theme.brand.default,
         16
       )})`};
-    box-shadow: ${props => (props.disabled ? 'none' : theme.shadows.button)};
+    box-shadow: ${props => (props.disabled ? 'none' : props.theme.shadows.button)};
   }
 
   &:active {
-    border: 1px solid ${theme.brand.default};
+    border: 1px solid ${props => props.theme.brand.default};
     background-image: ${props =>
       `linear-gradient(to top, ${props.theme.brand.alt}, ${
         props.theme.brand.default
@@ -131,43 +129,43 @@ export const PrimaryButton = styled.button`
 
 export const GhostButton = styled.button`
   ${base} border: none;
-  color: ${theme.text.secondary};
+  color: ${props => props.theme.text.secondary};
   box-shadow: none;
   background-color: transparent;
   background-image: none;
 
   &:hover {
     background: ${props => tint(props.theme.bg.wash, -3)};
-    color: ${theme.text.default};
+    color: ${props => props.theme.text.default};
     box-shadow: none;
   }
 
   &:focus {
-    box-shadow: 0 0 0 1px ${theme.bg.default},
+    box-shadow: 0 0 0 1px ${props => props.theme.bg.wash},
       0 0 0 3px ${props => hexa(props.theme.text.tertiary, 0.08)};
   }
 `;
 
 export const OutlineButton = styled.button`
   ${base}
-  border: 1px solid ${theme.border.default};
-  color: ${theme.text.secondary};
+  border: 1px solid ${props => props.theme.border.default};
+  color: ${props => props.theme.text.secondary};
   background-color: transparent;
   background-image: none;
 
   &:hover {
-    color: ${theme.text.default};
-    border: 1px solid ${theme.border.active};
+    color: ${props => props.theme.text.default};
+    border: 1px solid ${props => props.theme.border.active};
     box-shadow: none;
   }
 
   &:active {
-    border: 1px solid ${theme.text.placeholder};
+    border: 1px solid ${props => props.theme.text.placeholder};
   }
 
   &:focus {
-    box-shadow: 0 0 0 1px ${props => props.theme.bg.default}, 0 0 0 3px ${
-  theme.border.default
+    box-shadow: 0 0 0 1px ${props => props.theme.bg.wash}, 0 0 0 3px ${
+  props => props.theme.border.default
 };
   }
 `;
@@ -218,7 +216,7 @@ export const ButtonSegmentRow = styled.div`
 
   ${PrimaryButton} {
     &:focus {
-      box-shadow: 0 0 0 1px ${theme.bg.default},
+      box-shadow: 0 0 0 1px ${props => props.theme.bg.wash},
         0 0 0 3px ${props => hexa(props.theme.brand.alt, 0.16)};
     }
   }
@@ -226,14 +224,13 @@ export const ButtonSegmentRow = styled.div`
 
 export const FacebookButton = styled.button`
   ${base}
-  border: 1px solid ${theme.social.facebook};
-  color: ${theme.bg.default};
-  background-color: ${theme.social.facebook};
+  border: 1px solid ${props => props.theme.social.facebook};
+  color: ${props => props.theme.bg.default};
+  background-color: ${props => props.theme.social.facebook};
   background-image: ${props =>
     `linear-gradient(to bottom, ${props.theme.social.facebook}, ${
       props.theme.social.facebook
     })`};
-  text-shadow: 0 1px 1px rgba(0,0,0,0.08);
 
   .icon {
     margin-right: 8px;
@@ -241,17 +238,17 @@ export const FacebookButton = styled.button`
   }
 
   &:hover {
-    color: ${theme.text.reverse};
+    color: ${props => props.theme.text.reverse};
     background-image: ${props =>
       `linear-gradient(to bottom, ${tint(
         props.theme.social.facebook,
         16
       )}, ${tint(props.theme.social.facebook, 16)})`};
-    box-shadow: ${props => (props.disabled ? 'none' : theme.shadows.button)};
+    box-shadow: ${props => (props.disabled ? 'none' : props.theme.shadows.button)};
   }
 
   &:active {
-    border: 1px solid ${theme.social.facebook};
+    border: 1px solid ${props => props.theme.social.facebook};
     background-image: ${props =>
       `linear-gradient(to top, ${props.theme.social.facebook}, ${
         props.theme.social.facebook
@@ -267,14 +264,13 @@ export const FacebookButton = styled.button`
 
 export const TwitterButton = styled.button`
   ${base}
-  border: 1px solid ${theme.social.twitter};
-  color: ${theme.bg.default};
-  background-color: ${theme.social.twitter};
+  border: 1px solid ${props => props.theme.social.twitter};
+  color: ${props => props.theme.bg.default};
+  background-color: ${props => props.theme.social.twitter};
   background-image: ${props =>
     `linear-gradient(to bottom, ${props.theme.social.twitter}, ${
       props.theme.social.twitter
     })`};
-  text-shadow: 0 1px 1px rgba(0,0,0,0.08);
 
   .icon {
     margin-right: 8px;
@@ -282,17 +278,17 @@ export const TwitterButton = styled.button`
   }
 
   &:hover {
-    color: ${theme.text.reverse};
+    color: ${props => props.theme.text.reverse};
     background-image: ${props =>
       `linear-gradient(to bottom, ${tint(
         props.theme.social.twitter,
         4
       )}, ${tint(props.theme.social.twitter, 4)})`};
-    box-shadow: ${props => (props.disabled ? 'none' : theme.shadows.button)};
+    box-shadow: ${props => (props.disabled ? 'none' : props.theme.shadows.button)};
   }
 
   &:active {
-    border: 1px solid ${theme.social.twitter};
+    border: 1px solid ${props => props.theme.social.twitter};
     background-image: ${props =>
       `linear-gradient(to top, ${props.theme.social.twitter}, ${
         props.theme.social.twitter
@@ -308,22 +304,11 @@ export const TwitterButton = styled.button`
 
 export const CopyLinkButton = styled.button`
   ${base}
-  border: 1px solid ${props =>
-    props.isClicked
-      ? tint(props.theme.success.default, -10)
-      : props.theme.border.default};
+  border: 1px solid transparent;
   color: ${props =>
     props.isClicked ? props.theme.bg.default : props.theme.text.secondary};
   background-color: ${props =>
     props.isClicked ? props.theme.success.default : props.theme.bg.default};
-  background-image: ${props =>
-    `linear-gradient(to bottom, ${
-      props.isClicked ? props.theme.success.default : props.theme.bg.default
-    }, ${
-      props.isClicked
-        ? tint(props.theme.success.default, -4)
-        : props.theme.bg.wash
-    })`};
   transition: border 0.2s ease-in-out, background-color 0.2s ease-in-out, background-image 0.2s ease-in-out;
 
   &:hover {
@@ -333,18 +318,7 @@ export const CopyLinkButton = styled.button`
   }
 
   &:active {
-    border: 1px solid ${props =>
-      props.isClicked
-        ? tint(props.theme.success.default, -10)
-        : props.theme.border.active};
-    background-image: ${props =>
-      `linear-gradient(to bottom, ${
-        props.isClicked
-          ? tint(props.theme.success.default, -4)
-          : props.theme.bg.default
-      }, ${
-        props.isClicked ? props.theme.success.default : props.theme.bg.wash
-      })`};
+    border: 1px solid transparent;
   }
 
   .icon {

@@ -1,35 +1,16 @@
 import * as React from 'react';
-import Link from 'next/link';
 import { designDetails } from '../../data';
 import DesignDetailsCard from '../DesignDetailsCard';
-import { Grid, ViewMoreContainer } from './style';
-import { GhostButton } from '../Button';
+import { Grid } from './style';
 
-type Props = {
-  truncated: boolean,
-};
-
-export default function DesignDetailsGrid(props: Props) {
-  const { truncated } = props;
-  const posts = truncated ? designDetails.slice(0, 4) : designDetails;
-
+export default function DesignDetailsGrid() {
   return (
     <React.Fragment>
       <Grid>
-        {posts.map(post => (
+        {designDetails.map(post => (
           <DesignDetailsCard key={post.slug} post={post} />
         ))}
       </Grid>
-
-      {truncated && (
-        <ViewMoreContainer data-cy="view-all-design-details">
-          <Link href="/design-details">
-            <GhostButton>
-              View all {designDetails.length} explorations
-            </GhostButton>
-          </Link>
-        </ViewMoreContainer>
-      )}
     </React.Fragment>
   );
 }

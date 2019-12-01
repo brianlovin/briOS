@@ -1,11 +1,8 @@
- 
-import React, { useState, useEffect } from 'react';
-import { ThemeProvider } from 'styled-components';
+ import React, { useState, useEffect } from 'react';
 import { throttle } from 'throttle-debounce';
 import Icon from '../Icon';
 import Header from '../Header';
 import Footer from '../Footer';
-import { theme } from '../theme';
 import {
   Container,
   SectionHeading,
@@ -15,7 +12,7 @@ import {
   LargeHeading,
   LargeSubheading,
   InnerContainer,
-  ScrollToTop,
+  ContentContainer,
 } from './style';
 
 export {
@@ -25,14 +22,16 @@ export {
   LargeHeading,
   LargeSubheading,
   Paragraph,
+  ContentContainer,
 };
 
-type Props = {
-  children: React.ReactNode,
+interface Props {
+  children: React.ReactNode;
+  withHeader?: boolean;
 };
 
 export default function Page(props: Props) {
-  const { children } = props;
+  const { children, withHeader = false } = props;
   const [showHeaderShadow, setHeaderShadow] = useState(false);
   const [scrollToTopVisible, setScrollToTopVisible] = useState(false);
 
@@ -64,15 +63,10 @@ export default function Page(props: Props) {
   }, []);
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container>
-        <Header showHeaderShadow={showHeaderShadow} />
-        <InnerContainer>{children}</InnerContainer>
-        <Footer />
-        <ScrollToTop isVisible={scrollToTopVisible} onClick={scrollToTop}>
-          <Icon glyph="view-forward" size={32} />
-        </ScrollToTop>
-      </Container>
-    </ThemeProvider>
+    <Container>
+      {withHeader && <Header showHeaderShadow={showHeaderShadow} />}
+      <InnerContainer>{children}</InnerContainer>
+      <Footer />
+    </Container>
   );
 }

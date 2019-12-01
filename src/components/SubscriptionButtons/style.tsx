@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { theme } from '../theme';
+import theme from '../theme';
 import { Truncate } from '../globals';
 
 export const Container = styled.div`
@@ -8,7 +8,7 @@ export const Container = styled.div`
   left: 16px;
   width: 100%;
   max-width: 384px;
-  background: ${theme.text.default};
+  background: ${props => props.theme.text.default};
   color: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
@@ -30,10 +30,6 @@ export const Container = styled.div`
   @media (max-width: 556px) {
     width: 100%;
     max-width: calc(100% - 32px);
-
-    @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
-      bottom: 20px;
-    }
   }
 `;
 
@@ -92,7 +88,7 @@ const defaultThumbStyles = css`
   border-radius: 8px;
   background: #ffffff;
   cursor: pointer;
-  border: 2px solid ${theme.text.default};
+  border: 2px solid ${props => props.theme.text.default};
 `;
 
 const defaultTrackStyles = css`
@@ -191,20 +187,19 @@ export const StyledAudioPlayer = styled.audio`
 
 export const SubscriptionsContainer = styled.div`
   padding: ${props => (props.isVisible ? '16px' : '0 16px')};
-  overflow: hidden;
-  background: ${props => (props.isFooter ? theme.bg.wash : '#2D2E33')};
+  background: ${props => props.theme.bg.wash};
   border-radius: 0 0 8px 8px;
   display: grid;
   grid-gap: 16px;
   grid-template-columns: repeat(7, 1fr);
-  justify-content: ${props => (props.isFooter ? 'center' : 'space-between')};
-  max-height: ${props => (props.isVisible ? '64px' : '0')};
+  justify-content: center;
   transition: max-height 0.15s ease-out;
   position: relative;
-  top: ${props => (props.isFooter ? '-8px' : '0')};
-  padding-top: ${props => (props.isFooter ? '20px' : '16px')};
+  top: -8px;
+  padding: 24px 0;
+  padding-top: 32px;
   z-index: 1;
-  box-shadow: ${props => (props.isFooter ? theme.shadows.default : 'none')};
+  box-shadow: ${theme.shadows.default};
   width: 100%;
 
   a {
@@ -214,7 +209,7 @@ export const SubscriptionsContainer = styled.div`
     justify-content: center;
   }
 
-  @media (max-width: 752px) {
+  @media (max-width: 968px) {
     display: none;
   }
 `;
@@ -223,12 +218,13 @@ export const SubscriptionAvatar = styled.img`
   width: 32px;
   height: 32px;
   border-radius: 16px;
-  background-color: ${theme.bg.default};
+  background-color: ${props => props.theme.bg.default};
   transform: scale(1);
   transition: transform 0.2s ease-in-out;
 
   &:hover {
     transform: scale(1.1);
     transition: transform 0.2s ease-in-out;
+    box-shadow: ${theme.shadows.hover};
   }
 `;
