@@ -1,6 +1,6 @@
  
 import * as React from 'react';
-import Head from 'next/head';
+import { NextSeo } from 'next-seo'
 import Page, {
   SectionHeading,
   LargeHeading,
@@ -12,30 +12,11 @@ import DesignDetailsGrid from '../../components/DesignDetailsGrid';
 export default function DesignDetails() {
   return (
     <Page withHeader>
-      <Head>
-        <title>Brian Lovin · Design Details</title>
-        <meta
-          content="Brian Lovin · Design Details"
-          name="og:title"
-          key="og:title"
-        />
-        <meta
-          content="A visual exploration of digital products"
-          name="og:description"
-          key="og:description"
-        />
-        <meta
-          content="/static/img/podcasts/design-details.jpg"
-          name="og:image"
-          key="og:image"
-        />
-        <meta
-          content="Brian Lovin · Design Details"
-          name="twitter:title"
-          key="og:image"
-        />
-      </Head>
-
+      <NextSeo
+        title={"Brian Lovin · Design Details"}
+        description={"A visual exploration of digital products"}
+      />
+      
       <ContentContainer>
         <SectionHeading>
           <LargeHeading>Design Details</LargeHeading>
