@@ -7,9 +7,28 @@ import GlobalStyles from '../GlobalStyles';
 import SEO from '../SEO';
 import { light, dark } from '../theme';
 import SentryProvider from '../Sentry';
+import Fathom from 'fathom-client'
+import Router from 'next/router'
 
 interface Props {
   children?: any;
+}
+
+Router.events.on('routeChangeComplete', () => {
+  if (process.env.NODE_ENV === 'production') {
+    Fathom.trackPageview()
+  }
+})
+
+function FathomWrapper(props) {
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === 'production') {
+      Fathom.load();
+      Fathom.setSiteId('ONFMHEEY');
+      Fathom.trackPageview();
+    }
+  }, [])
+  return <span {...props} />
 }
 
 export default ({ children }: Props) => {
@@ -17,7 +36,7 @@ export default ({ children }: Props) => {
   const theme = light
 
   return (
-    <>
+    <FathomWrapper>
       <DefaultSeo {...SEO} />
       <Head>
         <link
@@ -105,6 +124,6 @@ export default ({ children }: Props) => {
           <GlobalStyles />
         </ThemeProvider>
       </SentryProvider>
-    </>
+    </FathomWrapper>
   );
 }
