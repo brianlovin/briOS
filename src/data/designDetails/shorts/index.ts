@@ -8,4 +8,5 @@ export default {
   description:
     "I came across [Shorts](https://itunes.apple.com/us/app/shorts-follow-peoples-camera/id1088453734?mt=8) a while back when it was featured on Product Hunt. The app isn't quite for me, but I had fun trying it out and came away impressed with some of the interactions and design choices.\r\n\r\nIn today's post I'm also going to try and give critique where I think it's due - I understand that all products are a work in progress, but sometimes an outside viewpoint can be useful!",
   details,
+  tint: "#fda052"
 };

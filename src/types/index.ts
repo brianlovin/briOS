@@ -45,24 +45,26 @@ export interface ConfigPodcast {
 };
 
 export interface DesignDetail {
-  title: string,
-  description: string,
-  media: Array<string>,
+  title: string;
+  description: string;
+  media: Array<string>;
+  orientation?: 'landscape';
 };
 
 export interface DesignDetailsPost {
-  slug: string,
-  title: string,
-  description: string,
-  createdAt: string,
-  details: Array<DesignDetail>,
+  slug: string;
+  title: string;
+  description: string;
+  createdAt: string;
+  details: Array<DesignDetail>;
+  tint: string;
 };
 
 export interface GetInitialProps {
-  pathname: string,
-  query: any,
-  req?: any,
-  res?: any,
-  jsonPageRes?: any,
-  err?: any,
+  pathname: string;
+  query: any;
+  req?: any;
+  res?: any;
+  jsonPageRes?: any;
+  err?: any;
 };

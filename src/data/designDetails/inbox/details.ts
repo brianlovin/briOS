@@ -156,6 +156,7 @@ export default [
     description:
       'Let’s shift gears a bit now to take a look at some of the details in the web version of Inbox. This is the landing page that the Google team has created, which pairs color, typography and animation perfectly with what we’ve already experienced in the mobile app. Some of the scroll-jacking on this page is a bit cumbersome, but for the most part this is a slick site with an almost obsessive attention to detail.\r\n\r\nWatch the arrow in the bottom right corner of the page scroll ever-so-slightly faster than the page, guiding us down the page and onto the next set of imagery.',
     title: 'Web landing page',
+    orientation: 'landscape',
     media: [
       'https://player.vimeo.com/external/157936466.hd.mp4?s=8ec3fae1ae54eae7610a9af52e95e75fc9ef378f&profile_id=119',
     ],
@@ -164,6 +165,7 @@ export default [
     description:
       'Designers and developers, I know you’ll appreciate just how difficult it can be to maintain a consistent UI across platforms; especially on iOS where small tweaks or adjustments might lag up to a week in the App Store review process. So my hat is off wholeheartedly to the Google folks who have put in the effort to make their web app this consistent with the mobile offering.\r\n\r\nAlso: I love the light bouncing of the shadows on the circular + button in the bottom right corner each time I click. The depth feels so appropriate here.',
     title: 'Web view',
+    orientation: 'landscape',
     media: [
       'https://player.vimeo.com/external/157936447.hd.mp4?s=2300e19f6d09e1eaf84f71774c02a5c00c77f66a&profile_id=119',
     ],
@@ -172,6 +174,7 @@ export default [
     description:
       'There’s a lot of good things that come from adding depth to an otherwise two-dimensional design. The flat movement has come and swept our collective heart, but in my mind there’s still something so appealing and tangible about a design with depth and shadow. I can’t quite wrestle the words out of my mind into writing, but I’ll do my best: Depth on the web creates space and a truer sense of touch that flat design simply cannot imitate.\r\n\r\nIn Google’s case, it’s the small things here – the cards lifted slightly off the page, the scroll arrow responding gently to my clicks, to the lightboxed images that take center stage. It’s these layers and shadows which bring an enriching interactivity to the web – I hope this never goes out of style.',
     title: 'Depth',
+    orientation: 'landscape',
     media: [
       'https://player.vimeo.com/external/157936449.hd.mp4?s=d817388b7b3eed6338227a7dd7424122dcc4f68d&profile_id=119',
     ],
@@ -180,6 +183,7 @@ export default [
     description:
       'I watched this video at least 20 times. I’m sitting here trying to wrap my head about some of the transitions here and what they mean for user experience and design in a general sense. Let me try to explain my line of thought:\r\n\r\nWhen I mark an item as done, or sweep some emails out of my inbox, the rest of the interface reacts accordingly and slides up quickly to fill the new void. This makes sense, of course. It fits our mental model of how these elements should behave in relation to one another. There is space and connection. With me?\r\n\r\nBut when I undo an action, the animation doesn’t just replay in reverse. No, the hidden elements snap sharply back into view and instantly readjust the page to accommodate for the extra objects.\r\n\r\nMy gut reaction was that this was simply a lack of polish – that the team had missed this step of keeping all the interface transitions smooth and consistent. But as I pondered more, I can’t help but think this was a very intentional decision by the Google team.\r\n\r\nAs a user, if I realize I’ve made a mistake, I want to undo that action as quickly and painlessly as possible. I want the interface to react accordingly – don’t waste a split second of my time before ensuring that my mistake was easily remedied. I think that’s what’s going on here: an undone action should be undoubtedly clear that it was complete and my information was restored. Simply reversing the transition makes me wonder if a) my information was never really gone at all or b) if I should wait for something else to happen on the page to ‘complete the undo.’\r\n\r\nI’m likely overthinking this, but would love anyone else’s feedback if they have thoughts on this UX quandary!',
     title: 'Motion',
+    orientation: 'landscape',
     media: [
       'https://player.vimeo.com/external/157936448.hd.mp4?s=2b570561e3cfe7114c9e6a41166be67fb8aff33f&profile_id=119',
     ],
@@ -188,6 +192,7 @@ export default [
     description:
       'This video is just a showcase of some of the Material Design elements in action. Slick datepickers with wonderful layering in the UI, smooth transitions as I mark my emails as done, and of course this refreshingly-colorful empty view.',
     title: 'Web view',
+    orientation: 'landscape',
     media: [
       'https://player.vimeo.com/external/157936455.hd.mp4?s=076a1510733bab34d453aeecd57c7ee22c4afce6&profile_id=119',
     ],
@@ -196,6 +201,7 @@ export default [
     description:
       'The search interface in Inbox is bold and dramatic. There’s a lot of motion going on whenever you focus on the search input; in many ways it feels quite sudden and surprising, almost disorienting. I’d love to learn more about some of the testing that went into this design and flow – after all, Google is the king of search!',
     title: 'Search',
+    orientation: 'landscape',
     media: [
       'https://player.vimeo.com/external/157936460.hd.mp4?s=8c05c16bedddc1da5beb3b30865ed00e2080e628&profile_id=119',
     ],

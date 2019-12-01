@@ -3,14 +3,15 @@ import * as React from 'react';
 import Head from 'next/head';
 import Page, {
   SectionHeading,
-  Heading,
+  LargeHeading,
   Subheading,
+  ContentContainer,
 } from '../../components/Page';
 import DesignDetailsGrid from '../../components/DesignDetailsGrid';
 
 export default function DesignDetails() {
   return (
-    <Page>
+    <Page withHeader>
       <Head>
         <title>Brian Lovin · Design Details</title>
         <meta
@@ -35,12 +36,14 @@ export default function DesignDetails() {
         />
       </Head>
 
-      <SectionHeading>
-        <Heading>Design Details</Heading>
-        <Subheading>A visual exploration of digital products</Subheading>
-      </SectionHeading>
+      <ContentContainer>
+        <SectionHeading>
+          <LargeHeading>Design Details</LargeHeading>
+          <Subheading style={{ marginTop: '24px' }}>This collection of posts explores some of the best interaction patterns, visual styles, and design decisions of well-known apps. Each detail features a video and my commentary on the functionality and effectiveness of the interface.</Subheading>
+        </SectionHeading>
+      </ContentContainer>
 
-      <DesignDetailsGrid truncated={false} />
+      <DesignDetailsGrid />
     </Page>
   );
 }

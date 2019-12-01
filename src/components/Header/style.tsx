@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { theme } from '../theme';
+import { hexa } from '../globals'
 
 export const Container = styled.div`
   display: grid;
@@ -11,11 +11,12 @@ export const Container = styled.div`
   left: 0;
   right: 0;
   background: ${props =>
-    props.showHeaderShadow ? props.theme.bg.default : props.theme.bg.wash};
-  z-index: 3;
+    props.showHeaderShadow ? hexa(props.theme.bg.default, 0.8) : hexa(props.theme.bg.wash, 0.8)};
+  z-index: 4;
   box-shadow: ${props =>
     props.showHeaderShadow ? '0 4px 8px rgba(0,0,0,0.04)' : 'none'};
   transition: all 0.2s ease-in-out;
+  backdrop-filter: saturate(180%) blur(20px);
 
   @media (max-width: 968px) {
     padding: 8px 16px;
@@ -28,7 +29,7 @@ export const Logo = styled.h1`
   grid-area: logo;
   font-size: 18px;
   font-weight: 700;
-  color: ${theme.text.default};
+  color: ${props => props.theme.text.default};
 `;
 
 export const Icons = styled.div`
@@ -36,13 +37,13 @@ export const Icons = styled.div`
   align-items: center;
 
   a {
-    color: ${theme.text.tertiary};
+    color: ${props => props.theme.text.tertiary};
     display: flex;
     align-items: center;
   }
 
   a:hover {
-    color: ${theme.text.default};
+    color: ${props => props.theme.text.default};
   }
 
   .icon {

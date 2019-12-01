@@ -4,7 +4,7 @@ import { SubscriptionsContainer } from '../SubscriptionButtons/style';
 import SubscriptionButtons from '../SubscriptionButtons';
 
 export const PlayerFooter = () => (
-  <SubscriptionsContainer isVisible isFooter>
+  <SubscriptionsContainer isVisible>
     <SubscriptionButtons podcast={podcasts[0]} />
   </SubscriptionsContainer>
 );

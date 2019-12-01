@@ -1,9 +1,9 @@
 import styled from 'styled-components';
-import { theme } from '../theme';
+import theme from '../theme';
 import { tint } from '../globals';
 
 export const Card = styled.div`
-  background: #fff;
+  background: ${props => props.theme.bg.default};
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
   transition: all 0.2s ease-in-out;
@@ -74,12 +74,12 @@ export const ContentContainer = styled.div`
 
 export const Date = styled.span`
   font-size: 14px;
-  color: ${theme.text.tertiary};
+  color: ${props => props.theme.text.tertiary};
 `;
 
 export const Title = styled.span`
   font-size: 18px;
-  color: ${theme.text.default};
+  color: ${props => props.theme.text.default};
   font-weight: 600;
 `;
 
@@ -99,16 +99,16 @@ export const Actions = styled.div`
 `;
 
 export const AllEpsButton = styled.button`
-  background: ${theme.bg.wash};
+  background: ${props => props.theme.bg.wash};
   font-size: 16px;
-  color: ${theme.text.tertiary};
+  color: ${props => props.theme.text.tertiary};
   font-weight: 600;
   padding: 10px 24px;
   border-radius: 20px;
   cursor: pointer;
 
   &:hover {
-    background: ${tint(theme.bg.wash, -4)};
-    color: ${theme.text.secondary};
+    background: ${props => tint(props.theme.bg.wash, -4)};
+    color: ${props => props.theme.text.secondary};
   }
 `;

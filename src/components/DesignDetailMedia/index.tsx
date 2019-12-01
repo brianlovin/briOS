@@ -31,6 +31,7 @@ export default function DesignDetailMedia(props: Props) {
                 autoPlay
                 preload="metadata"
                 key={src}
+                landscape={detail.orientation === 'landscape'}
               >
                 <source src={`${src}#t=0.1`} />
               </Video>

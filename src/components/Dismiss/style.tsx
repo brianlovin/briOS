@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { theme } from '../theme';
+import theme from '../theme';
 
 export const StyledDismiss = styled.button`
   display: flex;
@@ -9,14 +9,14 @@ export const StyledDismiss = styled.button`
   align-items: center;
   justify-content: center;
   border-radius: 18px;
-  color: ${props => (props.tint ? props.tint(theme) : theme.text.tertiary)};
+  color: ${props => (props.tint ? props.tint(theme) : props.theme.text.tertiary)};
   opacity: 0.5;
   cursor: pointer;
 
   &:hover {
     opacity: 1;
-    background: ${theme.text.tertiary};
-    color: ${theme.bg.default};
+    background: ${props => props.theme.text.tertiary};
+    color: ${props => props.theme.bg.default};
   }
 
   i {

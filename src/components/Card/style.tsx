@@ -4,11 +4,12 @@ import { Shadows } from '../globals';
 export const StyledCard = styled.div`
   position: relative;
   background: ${props => props.theme.bg.default};
-  border-radius: 8px;
-  ${Shadows.default};
+  transition: box-shadow ${props => props.theme.animations.default};
 
   &:hover {
-    ${Shadows.hover};
+    box-shadow: ${props => props.theme.shadows.heavyHover};
+    transition: box-shadow ${props => props.theme.animations.hover};
+    z-index: 2;
   }
 
   &:active {

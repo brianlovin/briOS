@@ -21,14 +21,6 @@ export default function Footer() {
         >
           <Icon glyph="github" />
         </a>
-
-        <a
-          href="https://spectrum.chat/users/brian"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Icon glyph="spectrum-solid" />
-        </a>
       </Icons>
 
       <Description>

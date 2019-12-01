@@ -1,9 +1,7 @@
 import styled from 'styled-components';
 import { tint, Content, hexa } from '../globals';
-import { theme } from '../theme';
 
 export const Container = styled.div`
-  max-width: 768px;
   width: 100%;
 `;
 
@@ -19,13 +17,13 @@ export const HeaderImage = styled.img`
 export const Title = styled.h1`
   font-size: 40px;
   font-weight: 700;
-  color: ${theme.text.default};
+  color: ${props => props.theme.text.default};
 `;
 
 export const Subtitle = styled.span`
   font-size: 24px;
   font-weight: 400;
-  color: ${theme.text.tertiary};
+  color: ${props => props.theme.text.tertiary};
 `;
 
 export const PostHeader = styled.div`
@@ -35,11 +33,11 @@ export const PostHeader = styled.div`
 export const Notice = styled.div`
   width: 100%;
   border-radius: 8px;
-  background-color: ${props => tint(props.theme.bg.wash, -4)};
+  background-color: ${props => props.theme.bg.inset};
   padding: 24px;
   margin: 32px 0;
 
-  @media (max-width: 752px) {
+  @media (max-width: 968px) {
     width: calc(100% + 32px);
     margin-left: -16px;
     border-radius: 0;
@@ -48,11 +46,9 @@ export const Notice = styled.div`
 `;
 
 export const NoticeTitle = styled.h6`
-  color: ${theme.text.default};
-  font-weight: 700 !important;
-  text-transform: uppercase;
-  font-size: 14px;
-  letter-spacing: 0.8px;
+  color: ${props => props.theme.text.default};
+  font-weight: 700;
+  font-size: 22px;
   margin-top: 0 !important;
   display: flex;
   align-items: center;
@@ -60,9 +56,10 @@ export const NoticeTitle = styled.h6`
 
 export const NoticeDescription = styled.p`
   margin-top: 12px;
-  color: ${theme.text.secondary};
-  font-weight: 400;
-  font-size: 18px;
+  color: ${props => props.theme.text.tertiary};
+  font-weight: 500;
+  line-height: 1.5;
+  font-size: 20px;
 
   a {
     color: ${props => tint(props.theme.bg.wash, -88)};
@@ -128,6 +125,6 @@ export const Grid = styled.div`
 
 export const Divider = styled.div`
   height: 1px;
-  background: ${theme.border.default};
+  background: ${props => props.theme.border.default};
   margin: 32px 0;
 `;
