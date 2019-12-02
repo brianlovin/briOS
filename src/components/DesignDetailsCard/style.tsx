@@ -58,7 +58,7 @@ export const Container = styled.div`
     }
   }
 
-  @media (max-width: 512px) {
+  @media (max-width: 968px) {
     height: auto;
 
     ${Circle} {
@@ -135,7 +135,7 @@ export const VideoPlayer = styled.video`
     right: -20px;
   }
 
-  @media (max-width: 512px) {
+  @media (max-width: 968px) {
     display: none;
   }
 `

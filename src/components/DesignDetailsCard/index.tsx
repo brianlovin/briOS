@@ -42,7 +42,7 @@ export default function DesignDetailsCard(props: Props) {
 
   React.useEffect(() => {
     setIsMounted(true)
-    setIsMobile(window.innerWidth <= 512)
+    setIsMobile(window.innerWidth <= 968)
   }, [])
 
   return (

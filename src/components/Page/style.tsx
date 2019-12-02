@@ -84,6 +84,7 @@ export const Subheading = styled.h4`
   @media (max-width: 968px) {
     max-width: 100%;
     font-size: 18px;
+    margin-top: 8px;
   }
 `;
 
@@ -105,6 +106,10 @@ export const Paragraph = styled.p`
 
 export const LargeHeading = styled(Heading)`
   font-size: 44px;
+
+  @media (max-width: 968px) {
+    font-size: 32px;
+  }
 `;
 
 export const LargeSubheading = styled(Subheading)`
