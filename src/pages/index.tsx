@@ -9,7 +9,7 @@ export default function Index() {
   return (
     <Page>
       <ContentContainer>
-        <SectionHeading style={{ marginTop: '48px'}}>
+        <SectionHeading>
           <LargeHeading>Brian Lovin</LargeHeading>
           <Subheading style={{ marginTop: '24px' }}>I'm a product designer living in New York City, currently building native mobile apps at GitHub.</Subheading>
           <Subheading><Link href="/about"><a>More about me</a></Link> &rarr;</Subheading>

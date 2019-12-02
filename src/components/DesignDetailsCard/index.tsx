@@ -22,6 +22,8 @@ type Props = {
 export default function DesignDetailsCard(props: Props) {
   const videoEl = React.useRef(null);
   const [isVisible, setIsVisible] = React.useState(false)
+  const [isMounted, setIsMounted] = React.useState(false)
+  const [isMobile, setIsMobile] = React.useState(false)
   const {
     post: { title, slug, details, tint },
   } = props;
@@ -31,12 +33,17 @@ export default function DesignDetailsCard(props: Props) {
   const videosrc = details[0].media[0]
 
   const pause = () => {
-    videoEl.current.pause()
+    videoEl.current && videoEl.current.pause()
   }
 
   const play = () => {
-    videoEl.current.play()
+    videoEl.current && videoEl.current.play()
   }
+
+  React.useEffect(() => {
+    setIsMounted(true)
+    setIsMobile(window.innerWidth <= 512)
+  }, [])
 
   return (
     <ReactVisibilitySensor
@@ -57,7 +64,7 @@ export default function DesignDetailsCard(props: Props) {
             <Arrow>
               <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg>
             </Arrow>
-            {isVisible &&
+            {isVisible && isMounted && !isMobile &&
               <VideoPlayer 
                 playsInline
                 muted

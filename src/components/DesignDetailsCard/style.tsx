@@ -57,6 +57,34 @@ export const Container = styled.div`
       opacity: 1;
     }
   }
+
+  @media (max-width: 512px) {
+    height: auto;
+
+    ${Circle} {
+      left: 70%;
+      right: 0;
+      transform: scale(1);
+      border-radius: 50%;
+      transform: rotateZ(35deg);
+    }
+
+    ${Arrow} {
+      opacity: 1;
+      right: 32px;
+      top: 50%;
+      height: 32px;
+      transform: translateY(-50%);
+
+    }
+    
+    &:hover {
+      ${Arrow} {
+        transition: transform ${theme.animations.hover}, opacity ${theme.animations.hover};
+        transform: translateX(12px) translateY(-50%);
+      }
+    }
+  }
 `
 
 export const VideoPlayer = styled.video`
@@ -108,7 +136,7 @@ export const VideoPlayer = styled.video`
   }
 
   @media (max-width: 512px) {
-    right: -20%;
+    display: none;
   }
 `
 

@@ -68,7 +68,8 @@ export const ContentContainer = styled.div`
     margin-top: 8px;
     margin-left: 8px;
     padding-bottom: 8px;
-    width: 100%;
+    width: calc(100% - 16px);
+    height: calc(100% - 16px);
   }
 `;
 

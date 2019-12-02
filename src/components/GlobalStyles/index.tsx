@@ -291,7 +291,6 @@ const GlobalStyles = createGlobalStyle`
     font-weight: 500;
     color: ${props => props.theme.text.default};
     margin-top: 16px;
-    text-transform: uppercase;
   }
 
   p {
@@ -300,6 +299,12 @@ const GlobalStyles = createGlobalStyle`
     line-height: 1.5;
     color: ${props => props.theme.text.secondary};
     margin-top: 32px;
+  }
+
+  @media all and (max-width: 968px) {
+    p {
+      font-size: 17px;
+    }
   }
 
   a {

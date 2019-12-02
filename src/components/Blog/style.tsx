@@ -51,6 +51,10 @@ export const NoticeTitle = styled.h6`
   margin-top: 0 !important;
   display: flex;
   align-items: center;
+
+  @media(max-width: 968px) {
+    font-size: 18px;
+  }
 `;
 
 export const NoticeDescription = styled.p`
@@ -59,6 +63,10 @@ export const NoticeDescription = styled.p`
   font-weight: 500;
   line-height: 1.5;
   font-size: 20px;
+
+  @media(max-width: 968px) {
+    font-size: 16px;
+  }
 
   a {
     color: ${props => tint(props.theme.bg.wash, -88)};
