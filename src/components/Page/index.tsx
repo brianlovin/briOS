@@ -13,6 +13,7 @@ import {
   LargeSubheading,
   InnerContainer,
   ContentContainer,
+  Rarr,
 } from './style';
 
 export {
@@ -23,6 +24,7 @@ export {
   LargeSubheading,
   Paragraph,
   ContentContainer,
+  Rarr,
 };
 
 interface Props {

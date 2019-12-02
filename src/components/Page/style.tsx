@@ -50,11 +50,31 @@ export const SectionHeading = styled.div`
   }
 `;
 
+
+export const Rarr = styled.span.attrs({
+  children: '→'
+})`
+  position: relative;
+  display: inline-block;
+  transform: translateX(4px);
+  opacity: 0.4;
+  font-weight: 500;
+  transition: all ${props => props.theme.animations.default};
+`
+
 export const Heading = styled.h3`
   font-size: 32px;
   font-weight: 800;
   color: ${props => props.theme.text.default};
   letter-spacing: -0.6px;
+
+  &:hover {
+    ${Rarr} {
+      opacity: 1;
+      transform: translateX(8px);
+      transition: all ${props => props.theme.animations.default};
+    }
+  }
 
   @media (max-width: 968px) {
     max-width: 100%;
@@ -73,12 +93,15 @@ export const Subheading = styled.h4`
 
   a {
     color: ${props => props.theme.text.default};
-    font-weight: 500;
-    text-decoration: underline solid ${props => props.theme.border.active};
+    font-weight: 600;
   }
 
-  a:hover {
-    text-decoration: underline solid ${props => props.theme.text.active};
+  &:hover {
+    ${Rarr} {
+      opacity: 1;
+      transform: translateX(8px);
+      transition: all ${props => props.theme.animations.default};
+    }
   }
 
   @media (max-width: 968px) {
