@@ -20,6 +20,7 @@ export const MediaContainer = styled.div`
     width: calc(100% + 32px);
     margin-left: -16px;
     border-radius: 0;
+    padding: 8px;
   }
 `;
 
@@ -29,6 +30,10 @@ export const Video = styled.video`
   min-height: 680px;
   max-width: ${props => props.landscape ? '100%' : '400px'};
   border-radius: 4px;
+
+  @media (max-width: 968px) {
+    min-height: 630px;
+  }
 `;
 
 export const DetailTitle = styled.h5`

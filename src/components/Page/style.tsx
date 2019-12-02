@@ -46,6 +46,7 @@ export const SectionHeading = styled.div`
   @media (max-width: 968px) {
     align-items: flex-start;
     max-width: 100%;
+    margin-top: 48px;
   }
 `;
 
@@ -57,6 +58,7 @@ export const Heading = styled.h3`
 
   @media (max-width: 968px) {
     max-width: 100%;
+    font-size: 24px;
   }
 `;
 
@@ -81,6 +83,8 @@ export const Subheading = styled.h4`
 
   @media (max-width: 968px) {
     max-width: 100%;
+    font-size: 18px;
+    margin-top: 8px;
   }
 `;
 
@@ -102,8 +106,16 @@ export const Paragraph = styled.p`
 
 export const LargeHeading = styled(Heading)`
   font-size: 44px;
+
+  @media (max-width: 968px) {
+    font-size: 32px;
+  }
 `;
 
 export const LargeSubheading = styled(Subheading)`
   font-size: 20px;
+
+  @media (max-width: 968px) {
+    margin-top: 8px;
+  }
 `;
