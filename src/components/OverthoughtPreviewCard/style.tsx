@@ -26,10 +26,17 @@ export const FeaturedImage = styled.img`
   @media (max-width: 768px) {
     width: 100%;
     min-height: 0;
+    margin: 0;
+    margin-top: -24px;
   }
 `
 
-export const PreviewImage = styled(FeaturedImage)`
+export const PreviewImage = styled.img`
+  width: calc(100% + 48px);
+  margin-left: -24px;
+  margin-top: -24px;
+  margin-right: -24px;
+  margin-bottom: 20px;
   border-radius: 16px 16px 0 0;
 
   @media (max-width: 768px) {
