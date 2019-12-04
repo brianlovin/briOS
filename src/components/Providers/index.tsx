@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { ThemeProvider } from 'styled-components';
 import Head from 'next/head';
-// import useDarkMode from 'use-dark-mode'
+import useDarkMode from 'use-dark-mode'
 import { DefaultSeo } from 'next-seo';
 import GlobalStyles from '../GlobalStyles';
 import SEO from '../SEO';
@@ -32,8 +32,16 @@ function FathomWrapper(props) {
 }
 
 export default ({ children }: Props) => {
-  // const { value } = useDarkMode(false)
-  const theme = light
+  const [mounted, setMounted] = React.useState(false)
+  const { value } = useDarkMode(false)
+  const theme = value ? dark : light
+
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // prevents ssr flash for mismatched dark mode
+  if (!mounted) return null
 
   return (
     <FathomWrapper>

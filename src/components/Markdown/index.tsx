@@ -2,8 +2,9 @@
 import * as React from 'react';
 import { Notes } from './style';
 
-type Props = {
-  children: React.ReactNode,
+interface Props {
+  children: React.ReactNode;
+  escapeHtml?: boolean;
 };
 
 function LinkRenderer(props: any) {
@@ -16,6 +17,6 @@ function LinkRenderer(props: any) {
 }
 
 export default function Markdown(props: Props) {
-  const { children } = props;
-  return <Notes renderers={{ link: LinkRenderer }}>{children}</Notes>;
+  const { children, ...rest } = props;
+  return <Notes {...rest} renderers={{ link: LinkRenderer }}>{children}</Notes>;
 }

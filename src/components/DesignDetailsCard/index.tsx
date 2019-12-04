@@ -30,7 +30,7 @@ export default function DesignDetailsCard(props: Props) {
   
   const src = `/static/img/design-details/${slug}.jpeg`;
   
-  const videosrc = details[0].media[0]
+  const videosrc = details[1].media[0]
 
   const pause = () => {
     videoEl.current && videoEl.current.pause()

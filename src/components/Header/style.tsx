@@ -5,18 +5,18 @@ export const Container = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-areas: 'logo actions';
-  padding: 16px;
+  padding: 12px 16px;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   background: ${props =>
-    props.showHeaderShadow ? hexa(props.theme.bg.default, 0.8) : hexa(props.theme.bg.wash, 0.8)};
+    props.showHeaderShadow ? hexa(props.theme.bg.default, 0.8) : 'transparent'};
   z-index: 4;
   box-shadow: ${props =>
     props.showHeaderShadow ? '0 4px 8px rgba(0,0,0,0.04)' : 'none'};
   transition: all 0.2s ease-in-out;
-  backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: ${props => props.showHeaderShadow ? 'saturate(180%) blur(20px)' : 'none'};
 
   a {
     text-decoration: none!important;

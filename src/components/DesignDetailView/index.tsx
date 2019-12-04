@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import { getDateObject } from '../../lib/getDateObject';
-import { LargeHeading, LargeSubheading, ContentContainer } from '../Page';
+import { LargeHeading, LargeSubheading, ContentContainer, SectionHeading, Heading, Subheading, Larr } from '../Page';
 import { Notice } from '../Blog';
 import { DesignDetailsPost } from '../../types';
 import DesignDetailsGrid from '../DesignDetailsGrid';
@@ -11,6 +11,7 @@ import Markdown from '../Markdown';
 import {
   HeadingContainer,
   Icon,
+  LinkOverrides,
 } from './style';
 import DesignDetailsPlayer from '../DesignDetailsPlayer';
 
@@ -28,6 +29,7 @@ export default function DesignDetailView(props: Props) {
 
   return (
     <React.Fragment>
+      <LinkOverrides tint={post.tint} />
       <ContentContainer style={{ marginTop: '96px'}}>
         <Head>
           <title>{title}</title>
@@ -54,14 +56,14 @@ export default function DesignDetailView(props: Props) {
           alt={post.title}
         />
 
-        <HeadingContainer>
+        <HeadingContainer style={{ marginTop: '0' }}>
           <LargeHeading>{post.title}</LargeHeading>
           <LargeSubheading>{subheading}</LargeSubheading>
         </HeadingContainer>
 
         <div style={{ padding: '16px' }} />
 
-        <PostShareButtons post={post} />
+        <PostShareButtons route={`design-details/${post.slug}`} title={`Design Details: ${post.title}`} />
 
         <div style={{ padding: '16px' }} />
 
@@ -84,7 +86,14 @@ export default function DesignDetailView(props: Props) {
           <DesignDetailMedia detail={detail} key={`${detail.title}-${i}`} />
         ))}
 
-        </ContentContainer>
+        <SectionHeading>
+          <Heading>All Design Details Posts</Heading>
+          <Subheading>A visual exploration of digital products</Subheading>
+        </SectionHeading>
+
+      </ContentContainer>
+
+
       <DesignDetailsGrid />
     </React.Fragment>
   );

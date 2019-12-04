@@ -1,5 +1,6 @@
 import React from 'react';
 import VisibilitySensor from 'react-visibility-sensor';
+import useDarkMode from 'use-dark-mode'
 import { Card, ContentContainer } from './style'
 import { PlayerFooter } from './components'
 import LoadingSpinner from '../LoadingSpinner';
@@ -7,7 +8,7 @@ import LoadingSpinner from '../LoadingSpinner';
 export default function LatestEpisode() {
   const [episode, setEpisode] = React.useState(null)
   const [loading, setLoading] = React.useState(false)
-  const [visible, setVisible] = React.useState(false)
+  const { value } = useDarkMode(false)
 
   async function fetchEpisode() {
     setLoading(true)
@@ -55,7 +56,7 @@ export default function LatestEpisode() {
             height="200px"
             scrolling="no"
             seamless
-            src={`https://embed.simplecast.com/${id}?color=f5f5f5`}
+            src={`https://embed.simplecast.com/${id}?color=${value ? '3d3d3d' : 'f5f5f5'}`}
             width="100%"
             data-cy="latest-episode"
           />

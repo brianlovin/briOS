@@ -1,20 +1,20 @@
  
 import * as React from 'react';
-import { DesignDetailsPost } from '../../types';
 import { FacebookButton, TwitterButton, CopyLinkButton } from '../Button';
 import { Container } from './style';
 
-type Props = {
-  post: DesignDetailsPost,
+interface Props {
+  route: string;
+  title: string;
 };
 
 export default function PostShareButtons(props: Props) {
-  const { post } = props;
+  const { route, title } = props;
 
   return (
     <Container>
       <a
-        href={`https://www.facebook.com/sharer/sharer.php?u=https://brianlovin.com/design-details/${post.slug}`}
+        href={`https://www.facebook.com/sharer/sharer.php?u=https://brianlovin.com/${route}`}
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -22,7 +22,7 @@ export default function PostShareButtons(props: Props) {
       </a>
 
       <a
-        href={`https://twitter.com/share?text=Design Details: ${post.title} by @brian_lovin&url=https://brianlovin.com/design-details/${post.slug}`}
+        href={`https://twitter.com/share?text=${title} by @brian_lovin&url=https://brianlovin.com/${route}`}
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -30,7 +30,7 @@ export default function PostShareButtons(props: Props) {
       </a>
 
       <CopyLinkButton
-        text={`https://brianlovin.com/design-details/${post.slug}`}
+        text={`https://brianlovin.com/${route}`}
       >
         Copy
       </CopyLinkButton>

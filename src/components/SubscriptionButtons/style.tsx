@@ -187,7 +187,6 @@ export const StyledAudioPlayer = styled.audio`
 
 export const SubscriptionsContainer = styled.div`
   padding: ${props => (props.isVisible ? '16px' : '0 16px')};
-  background: ${props => props.theme.bg.wash};
   border-radius: 0 0 8px 8px;
   display: grid;
   grid-gap: 16px;
@@ -196,10 +195,9 @@ export const SubscriptionsContainer = styled.div`
   transition: max-height 0.15s ease-out;
   position: relative;
   top: -8px;
-  padding: 24px 0;
+  padding: 24px 0 0;
   padding-top: 32px;
   z-index: 1;
-  box-shadow: ${theme.shadows.default};
   width: 100%;
 
   a {
@@ -210,7 +208,8 @@ export const SubscriptionsContainer = styled.div`
   }
 
   @media (max-width: 968px) {
-    display: none;
+    grid-gap: 24px;
+    grid-template-columns: repeat(4, 1fr);
   }
 `;
 
@@ -225,6 +224,6 @@ export const SubscriptionAvatar = styled.img`
   &:hover {
     transform: scale(1.1);
     transition: transform 0.2s ease-in-out;
-    box-shadow: ${theme.shadows.hover};
+    box-shadow: ${theme.shadows.heavyHover};
   }
 `;

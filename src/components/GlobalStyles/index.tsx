@@ -267,28 +267,28 @@ const GlobalStyles = createGlobalStyle`
 
   h3 {
     font-size: 24px;
-    font-weight: 600;
+    font-weight: 700;
     color: ${props => props.theme.text.default};
-    margin-top: 24px;
+    margin-top: 48px;
   }
 
   h4 {
     font-size: 20px;
-    font-weight: 600;
+    font-weight: 700;
     color: ${props => props.theme.text.default};
     margin-top: 16px;
   }
 
   h5 {
     font-size: 18px;
-    font-weight: 600;
+    font-weight: 700;
     color: ${props => props.theme.text.default};
     margin-top: 16px;
   }
 
   h6 {
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 600;
     color: ${props => props.theme.text.default};
     margin-top: 16px;
   }
@@ -296,20 +296,14 @@ const GlobalStyles = createGlobalStyle`
   p {
     font-size: 22px;
     font-weight: 400;
-    line-height: 1.5;
+    line-height: 1.4;
     color: ${props => props.theme.text.secondary};
-    margin-top: 32px;
-  }
-
-  @media all and (max-width: 968px) {
-    p {
-      font-size: 17px;
-    }
+    margin-top: 24px;
   }
 
   a {
     color: ${props => props.theme.text.default};
-    font-weight: 500;
+    font-weight: 600;
   }
 
   p a {
@@ -329,7 +323,7 @@ const GlobalStyles = createGlobalStyle`
     margin-left: 24px;
     margin-top: 12px;
     margin-bottom: 16px;
-    font-size: 18px;
+    font-size: 22px;
     font-weight: 400;
     line-height: 1.5;
     color: ${props => props.theme.text.secondary};
@@ -342,7 +336,13 @@ const GlobalStyles = createGlobalStyle`
   }
 
   strong {
-    font-weight: 600;
+    font-weight: 700;
+  }
+
+  @media all and (max-width: 968px) {
+    p, ul, ol {
+      font-size: 20px;
+    }
   }
 `;
 

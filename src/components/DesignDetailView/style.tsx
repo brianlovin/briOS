@@ -1,5 +1,15 @@
-import styled from 'styled-components';
-import { Shadows } from '../globals';
+import styled, { createGlobalStyle } from 'styled-components';
+import { Shadows, hexa, tint } from '../globals';
+
+export const LinkOverrides = createGlobalStyle`
+  p a {
+    text-decoration: underline solid ${props => hexa(props.tint, 0.4)};
+  }
+
+  p a:hover {
+    text-decoration: underline solid ${props => props.tint};
+  }
+`
 
 export const HeadingContainer = styled.div`
   display: flex;

@@ -1,15 +1,25 @@
 import styled from 'styled-components';
+import theme from '../theme';
 
 export const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 4px;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 16px;
   grid-auto-rows: auto;
   width: 100%;
+  max-width: 1440px;
   margin-top: 32px;
+  padding: 0 16px;
 
-  @media (max-width: 1440px) {
-    grid-template-columns: repeat(3, 1fr);
+  a {
+    border-radius: 16px;
+    overflow: hidden;
+    will-change: box-shadow;
+  }
+
+  a:hover {
+    box-shadow: ${theme.shadows.heavyHover};
+    transition: box-shadow ${theme.animations.hover};
   }
 
   @media (max-width: 1256px) {
