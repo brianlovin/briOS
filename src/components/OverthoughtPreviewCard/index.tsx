@@ -4,7 +4,6 @@ import { Card, PreviewImage, ReadingTime, Title } from './style'
 import { Subheading } from '../Page'
 
 export default function OverthoughtGrid({ post }) {
-  console.log({ post, image: post.feature_image })
   return (
     <Link href="/overthought/[slug]" as={`/overthought/${post.slug}`}>
       <a>

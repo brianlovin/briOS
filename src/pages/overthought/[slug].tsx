@@ -13,7 +13,6 @@ type Props = {
 };
 
 export function OverthoughtPost({ post }) {
-  console.log({ post })
   return (
     <Page withHeader>
       <ContentContainer>
