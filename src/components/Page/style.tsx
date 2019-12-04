@@ -112,6 +112,11 @@ export const Subheading = styled.h4`
   a {
     color: ${props => props.theme.text.default};
     font-weight: 600;
+    text-decoration: underline solid ${props => props.theme.border.default};
+  }
+
+  a:hover {
+    text-decoration: underline solid ${props => props.theme.text.default};
   }
 
   &:hover {
