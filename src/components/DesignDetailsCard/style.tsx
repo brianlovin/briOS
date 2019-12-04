@@ -34,9 +34,9 @@ export const Container = styled.div`
   align-items: flex-start;
   height: 400px;
   overflow: hidden;
+  z-index: 3;
 
   &:hover {
-    z-index: 3;
 
     ${Circle} {
       transform: scale(1);
