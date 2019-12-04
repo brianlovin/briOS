@@ -68,3 +68,33 @@ export interface GetInitialProps {
   jsonPageRes?: any;
   err?: any;
 };
+
+export interface BlogPost {
+  canonical_url: string | void;
+  codeinjection_foot: string | void;
+  codeinjection_head: string | void;
+  comment_id: string;
+  created_at: string;
+  custom_excerpt: string;
+  excerpt: string;
+  feature_image: string | void;
+  featured: boolean;
+  html: string;
+  id: string
+  meta_description: string | void;
+  meta_title: string | void;
+  og_description: string | void;
+  og_image: string | void;
+  og_title: string | void;
+  published_at: string;
+  reading_time: number;
+  slug: string;
+  title: string;
+  twitter_description: string | void;
+  twitter_image: string | void;
+  twitter_title: string | void;
+  updated_at: string;
+  url: string;
+  uuid: string;
+  visibility: "public" | "private"
+}

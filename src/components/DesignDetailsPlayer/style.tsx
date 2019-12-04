@@ -5,10 +5,9 @@ import { tint } from '../globals';
 export const Card = styled.div`
   background: ${props => props.theme.bg.default};
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
   transition: all 0.2s ease-in-out;
   width: 100%;
-  padding: 8px;
+  padding: 24px;
   display: flex;
   margin-top: 24px;
   align-items: center;
@@ -16,13 +15,8 @@ export const Card = styled.div`
   z-index: 2;
 
   &:hover {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s ease-in-out;
-  }
-
-  &:active {
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.09);
-    transition: all 0.2s ease-in-out;
+    box-shadow: ${theme.shadows.heavyHover};
+    transition: ${theme.animations.hover};
   }
 
   > a {
@@ -69,7 +63,7 @@ export const ContentContainer = styled.div`
     margin-left: 8px;
     padding-bottom: 8px;
     width: calc(100% - 16px);
-    height: calc(100% - 16px);
+    height: 208px;
   }
 `;
 

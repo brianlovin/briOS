@@ -2,16 +2,17 @@
 import * as React from 'react';
 import Link from 'next/link';
 import Page, { SectionHeading, LargeHeading, Heading, Subheading, ContentContainer, Rarr } from '../components/Page';
+import OverthoughtGrid from '../components/OverthoughtGrid'
 import DesignDetailsGrid from '../components/DesignDetailsGrid';
 import DesignDetailsPlayer from '../components/DesignDetailsPlayer';
 import { getPosts } from '../data/ghost'
+import { BlogPost } from '../types'
 
 interface Props {
-  posts?: Array<any>
+  posts?: Array<BlogPost>
 }
 
 function Home({ posts }: Props) {
-  console.log({ posts }) 
   return (
     <Page>
       <ContentContainer>
@@ -29,9 +30,11 @@ function Home({ posts }: Props) {
               <Heading>Overthought <Rarr /></Heading>
             </a>
           </Link>
-          <Subheading>Overthinking out loud about design, development, and building products.</Subheading>
+          <Subheading>Thinking out loud about design, development, and building products.</Subheading>
         </SectionHeading>
       </ContentContainer>
+
+      <OverthoughtGrid posts={posts} />
 
       <ContentContainer>
         <SectionHeading>

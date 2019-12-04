@@ -41,7 +41,7 @@ export const SectionHeading = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   align-self: flex-start;
-  margin: 96px 0 0;
+  margin: 72px 0 0;
 
   @media (max-width: 968px) {
     align-items: flex-start;
@@ -62,6 +62,17 @@ export const Rarr = styled.span.attrs({
   transition: all ${props => props.theme.animations.default};
 `
 
+export const Larr = styled.span.attrs({
+  children: '←'
+})`
+  position: relative;
+  display: inline-block;
+  transform: translateX(-4px);
+  opacity: 0.4;
+  font-weight: 500;
+  transition: all ${props => props.theme.animations.default};
+`
+
 export const Heading = styled.h3`
   font-size: 32px;
   font-weight: 800;
@@ -72,6 +83,12 @@ export const Heading = styled.h3`
     ${Rarr} {
       opacity: 1;
       transform: translateX(8px);
+      transition: all ${props => props.theme.animations.default};
+    }
+
+    ${Larr} {
+      opacity: 1;
+      transform: translateX(-8px);
       transition: all ${props => props.theme.animations.default};
     }
   }
@@ -85,6 +102,7 @@ export const Heading = styled.h3`
 export const Subheading = styled.h4`
   font-size: 22px;
   font-weight: 500;
+  margin-top: 12px;
   color: ${props => props.theme.text.secondary};
 
   & + & {
@@ -100,6 +118,12 @@ export const Subheading = styled.h4`
     ${Rarr} {
       opacity: 1;
       transform: translateX(8px);
+      transition: all ${props => props.theme.animations.default};
+    }
+
+    ${Larr} {
+      opacity: 1;
+      transform: translateX(-8px);
       transition: all ${props => props.theme.animations.default};
     }
   }

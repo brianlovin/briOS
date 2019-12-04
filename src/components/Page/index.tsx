@@ -14,6 +14,7 @@ import {
   InnerContainer,
   ContentContainer,
   Rarr,
+  Larr,
 } from './style';
 
 export {
@@ -25,6 +26,7 @@ export {
   Paragraph,
   ContentContainer,
   Rarr,
+  Larr,
 };
 
 interface Props {

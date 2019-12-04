@@ -29,6 +29,7 @@ export const Container = styled.div`
   display: flex;
   position: relative;
   padding: 24px;
+  border-radius: 16px;
   transition: ${theme.animations.default};
   align-items: flex-start;
   height: 400px;
@@ -91,36 +92,24 @@ export const VideoPlayer = styled.video`
   position: absolute;
   top: 0;
   width: calc(340px);
-  right: -20px;
   top: 30px;
   transform: rotate3d(.342,-.2,0,22deg) rotateZ(7deg);
   z-index: 2;
   transition: ${theme.animations.hover};
-  box-shadow: ${theme.shadows.hover};
+  box-shadow: ${theme.shadows.heavyHover};
   filter: grayscale(1);
   opacity: 0.2;
   min-width: 327px;
   min-height: 600px;
   border-radius: 4px;
+  clip-path: padding-box;
 
-  @media (max-width: 2000px) {
-    right: -35%;
-  }
-
-  @media (max-width: 1900px) {
-    right: -32%;
-  }
-
-  @media (max-width: 1800px) {
-    right: -30%;
-  }
-
-  @media (max-width: 1700px) {
-    right: -28%;
+  @media (min-width: 1440px) {
+    right: -48px;
   }
 
   @media (max-width: 1440px) {
-    right: -20%;
+    right: -24%;
   }
 
   @media (max-width: 1256px) {
@@ -145,13 +134,13 @@ export const CardContent = styled.div`
   flex-direction: column;
   position: relative;
   justify-content: center;
-  padding: 3px 16px;
-  z-index: 5;
+  padding: 6px 16px;
+  z-index: 3;
 `;
 
 export const DetailsCount = styled.p`
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
   text-transform: uppercase;
   color: ${props => props.theme.text.quarternary};
   margin: 0;
@@ -162,6 +151,7 @@ export const Title = styled.p`
   color: ${props => props.theme.text.default};
   font-weight: 700;
   margin: 0;
+  line-height: 1.3;
 `;
 
 export const ImageContainer = styled.span`

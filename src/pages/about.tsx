@@ -1,12 +1,17 @@
- 
 import * as React from 'react';
-import Page, { SectionHeading, LargeHeading, Subheading, ContentContainer } from '../components/Page';
+import Link from 'next/link'
+import Page, { SectionHeading, LargeHeading, Subheading, ContentContainer, Larr } from '../components/Page';
 
 export default function About() {
   return (
     <Page withHeader>
       <ContentContainer>
-        <SectionHeading style={{ marginTop: '48px'}}>
+        <SectionHeading>
+          <Link href="/">
+            <a>
+              <Subheading><Larr /> Home</Subheading>
+            </a>
+          </Link>
           <LargeHeading>About me</LargeHeading>
           <Subheading style={{ marginTop: '24px' }}>👋 I'm a product designer living in New York City.</Subheading>
           <Subheading>I'm currently designing <a href="https://github.com/mobile" target="_blank" rel="noopener noreferrer">native mobile apps</a> at <a href="https://github.com/brianlovin" target="_blank" rel="noopener noreferrer">GitHub</a>. Before GitHub, I co-founded <a href="https://spectrum.chat" target="_blank" rel="noopener noreferrer">Spectrum</a>, a platform for large-scale communities to have better public conversations. Spectrum was acquired by GitHub in November, 2018.</Subheading>
