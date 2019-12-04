@@ -36,8 +36,6 @@ export const Container = styled.div`
   overflow: hidden;
 
   &:hover {
-    box-shadow: ${theme.shadows.heavyHover};
-    transition: box-shadow ${theme.animations.hover};
     z-index: 3;
 
     ${Circle} {
