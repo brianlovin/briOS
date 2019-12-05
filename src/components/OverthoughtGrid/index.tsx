@@ -3,12 +3,6 @@ import OverthoughtPreviewCard from '../OverthoughtPreviewCard'
 import { Grid } from './style'
 
 export default function OverthoughtGrid({ posts }) {
-  if (!posts || posts.length === 0) return null
-  return (
-    <Grid>
-      <OverthoughtPreviewCard post={posts[0]} />
-    </Grid>
-  )
   return (
     <Grid>
       {
