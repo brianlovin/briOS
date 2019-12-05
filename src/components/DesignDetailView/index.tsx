@@ -1,7 +1,8 @@
 import React from 'react';
 import Head from 'next/head';
 import { getDateObject } from '../../lib/getDateObject';
-import { LargeHeading, LargeSubheading, ContentContainer, SectionHeading, Heading, Subheading, Larr } from '../Page';
+import { ContentContainer, SectionHeading, } from '../Page';
+import { H1, H2, Subheading } from '../Typography'
 import { Notice } from '../Blog';
 import { DesignDetailsPost } from '../../types';
 import DesignDetailsGrid from '../DesignDetailsGrid';
@@ -57,8 +58,8 @@ export default function DesignDetailView(props: Props) {
         />
 
         <HeadingContainer style={{ marginTop: '0' }}>
-          <LargeHeading>{post.title}</LargeHeading>
-          <LargeSubheading>{subheading}</LargeSubheading>
+          <H1>{post.title}</H1>
+          <Subheading>{subheading}</Subheading>
         </HeadingContainer>
 
         <div style={{ padding: '16px' }} />
@@ -87,7 +88,7 @@ export default function DesignDetailView(props: Props) {
         ))}
 
         <SectionHeading>
-          <Heading>All Design Details Posts</Heading>
+          <H2>All Design Details Posts</H2>
           <Subheading>A visual exploration of digital products</Subheading>
         </SectionHeading>
 

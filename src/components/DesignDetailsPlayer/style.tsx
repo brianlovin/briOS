@@ -1,9 +1,9 @@
 import styled from 'styled-components';
-import theme from '../theme';
+import theme from '../Theme';
 import { tint } from '../globals';
 
 export const Card = styled.div`
-  background: ${props => props.theme.bg.default};
+  background: ${props => props.theme.bg.secondary};
   border-radius: 10px;
   transition: all 0.2s ease-in-out;
   width: 100%;
@@ -15,7 +15,7 @@ export const Card = styled.div`
   z-index: 2;
 
   &:hover {
-    box-shadow: ${theme.shadows.heavyHover};
+    box-shadow: ${theme.shadows.largeHover};
     transition: ${theme.animations.hover};
   }
 
@@ -30,6 +30,7 @@ export const Card = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
+    padding: 8px;
 
     > a {
       width: 100%;
@@ -74,7 +75,7 @@ export const Date = styled.span`
 
 export const Title = styled.span`
   font-size: 18px;
-  color: ${props => props.theme.text.default};
+  color: ${props => props.theme.text.primary};
   font-weight: 600;
 `;
 
@@ -94,7 +95,7 @@ export const Actions = styled.div`
 `;
 
 export const AllEpsButton = styled.button`
-  background: ${props => props.theme.bg.wash};
+  background: ${props => props.theme.bg.primary};
   font-size: 16px;
   color: ${props => props.theme.text.tertiary};
   font-weight: 600;
@@ -103,7 +104,7 @@ export const AllEpsButton = styled.button`
   cursor: pointer;
 
   &:hover {
-    background: ${props => tint(props.theme.bg.wash, -4)};
+    background: ${props => tint(props.theme.bg.primary, -4)};
     color: ${props => props.theme.text.secondary};
   }
 `;

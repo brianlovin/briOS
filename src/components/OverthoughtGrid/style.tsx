@@ -8,8 +8,4 @@ export const Grid = styled.div`
   width: 100%;
   max-width: 768px;
   margin-top: 32px;
-
-  @media (max-width: 768px) {
-    padding: 0 16px;
-  }
 `

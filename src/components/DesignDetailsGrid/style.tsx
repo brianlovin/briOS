@@ -1,15 +1,14 @@
 import styled from 'styled-components';
-import theme from '../theme';
+import defaultTheme from '../Theme';
 
 export const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-gap: 16px;
+  grid-gap: ${defaultTheme.space[3]};
   grid-auto-rows: auto;
   width: 100%;
-  max-width: 1440px;
-  margin-top: 32px;
-  padding: 0 16px;
+  max-width: ${defaultTheme.breakpoints[0]};
+  margin-top: ${defaultTheme.space[5]};
 
   a {
     border-radius: 16px;
@@ -18,15 +17,19 @@ export const Grid = styled.div`
   }
 
   a:hover {
-    box-shadow: ${theme.shadows.heavyHover};
-    transition: box-shadow ${theme.animations.hover};
+    box-shadow: ${defaultTheme.shadows.largeHover};
+    transition: box-shadow ${defaultTheme.animations.hover};
   }
 
-  @media (max-width: 1256px) {
+  @media (min-width: ${defaultTheme.breakpoints[4]}) {
+    padding: 0 ${defaultTheme.space[3]};
+  }
+
+  @media (max-width: ${defaultTheme.breakpoints[1]}) {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  @media (max-width: 968px) {
+  @media (max-width: ${defaultTheme.breakpoints[3]}) {
     grid-template-columns: repeat(1, 1fr);
   }
 `;

@@ -1,7 +1,8 @@
- 
 import styled from 'styled-components';
+import defaultTheme from '../Theme';
+import { P } from '../Typography'
 
-export const Container = styled.div`
+export const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -12,26 +13,23 @@ export const Container = styled.div`
 
 export const ContentContainer = styled.div`
   width: 100%;
-  max-width: 768px;
-
-  @media (max-width: 968px) {
-    padding: 0 16px;
-  }
+  max-width: ${defaultTheme.breakpoints[4]};
 `
 
-export const InnerContainer = styled.div`
+export const InnerPageContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  flex: 1 0 auto;
-  padding-top: 64px;
   position: relative;
+  flex: 1 0 auto;
   width: 100%;
+  padding-top: ${defaultTheme.space[7]};
 
-  @media (max-width: 968px) {
+  @media (max-width: ${defaultTheme.breakpoints[4]}) {
     max-width: 100%;
-    padding-top: 48px;
+    padding: 0 ${defaultTheme.space[3]};
+    padding-top: ${defaultTheme.space[6]};
   }
 `;
 
@@ -41,133 +39,11 @@ export const SectionHeading = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   align-self: flex-start;
-  margin: 72px 0 0;
+  margin: ${defaultTheme.space[8]} 0 0;
 
-  @media (max-width: 968px) {
+  @media (max-width: ${defaultTheme.breakpoints[4]}) {
     align-items: flex-start;
     max-width: 100%;
-    margin-top: 48px;
-  }
-`;
-
-
-export const Rarr = styled.span.attrs({
-  children: '→'
-})`
-  position: relative;
-  display: inline-block;
-  transform: translateX(4px);
-  opacity: 0.4;
-  font-weight: 500;
-  transition: all ${props => props.theme.animations.default};
-`
-
-export const Larr = styled.span.attrs({
-  children: '←'
-})`
-  position: relative;
-  display: inline-block;
-  transform: translateX(-4px);
-  opacity: 0.4;
-  font-weight: 500;
-  transition: all ${props => props.theme.animations.default};
-`
-
-export const Heading = styled.h3`
-  font-size: 32px;
-  font-weight: 800;
-  color: ${props => props.theme.text.default};
-  letter-spacing: -0.6px;
-
-  &:hover {
-    ${Rarr} {
-      opacity: 1;
-      transform: translateX(8px);
-      transition: all ${props => props.theme.animations.default};
-    }
-
-    ${Larr} {
-      opacity: 1;
-      transform: translateX(-8px);
-      transition: all ${props => props.theme.animations.default};
-    }
-  }
-
-  @media (max-width: 968px) {
-    max-width: 100%;
-    font-size: 24px;
-  }
-`;
-
-export const Subheading = styled.h4`
-  font-size: 22px;
-  font-weight: 500;
-  margin-top: 12px;
-  color: ${props => props.theme.text.secondary};
-
-  & + & {
-    margin-top: 24px;
-  }
-
-  a {
-    color: ${props => props.theme.text.default};
-    font-weight: 600;
-    text-decoration: underline solid ${props => props.theme.border.default};
-  }
-
-  a:hover {
-    text-decoration: underline solid ${props => props.theme.text.default};
-  }
-
-  &:hover {
-    ${Rarr} {
-      opacity: 1;
-      transform: translateX(8px);
-      transition: all ${props => props.theme.animations.default};
-    }
-
-    ${Larr} {
-      opacity: 1;
-      transform: translateX(-8px);
-      transition: all ${props => props.theme.animations.default};
-    }
-  }
-
-  @media (max-width: 968px) {
-    max-width: 100%;
-    font-size: 18px;
-    margin-top: 8px;
-  }
-`;
-
-export const Paragraph = styled.p`
-  font-size: 18px;
-  font-weight: 400;
-  color: ${props => props.theme.text.tertiary};
-  margin-bottom: 16px;
-
-  a {
-    color: ${props => props.theme.text.default};
-    font-weight: 500;
-  }
-
-  @media (max-width: 968px) {
-    max-width: 100%;
-  }
-`;
-
-export const LargeHeading = styled(Heading)`
-  font-size: 44px;
-
-  @media (max-width: 968px) {
-    font-size: 32px;
-  }
-`;
-
-export const LargeSubheading = styled(Subheading)`
-  font-size: 20px;
-
-  @media (max-width: 968px) {
-    margin-top: 8px;
+    margin-top: ${defaultTheme.space[6]};
   }
 `;

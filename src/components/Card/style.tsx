@@ -1,18 +1,20 @@
 import styled from 'styled-components';
-import { Shadows } from '../globals';
+import defaultTheme from '../Theme';
 
 export const StyledCard = styled.div`
+  padding: ${defaultTheme.space[4]};
   position: relative;
-  background: ${props => props.theme.bg.default};
+  border-radius: 16px;
+  background: ${props => props.theme.bg.secondary};
   transition: box-shadow ${props => props.theme.animations.default};
 
   &:hover {
-    box-shadow: ${props => props.theme.shadows.heavyHover};
+    box-shadow: ${props => props.theme.shadows.largeHover};
     transition: box-shadow ${props => props.theme.animations.hover};
     z-index: 2;
   }
 
   &:active {
-    ${Shadows.active};
+    box-shadow: ${props => props.theme.shadows.largeHover};
   }
 `;
