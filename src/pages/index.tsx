@@ -28,18 +28,22 @@ function Home(props: Props) {
         </SectionHeading>
       </ContentContainer>
 
-      <ContentContainer>
-        <SectionHeading>
-          <Link href="/overthought">
-            <A>
-              <H2>Overthought <Rarr /></H2>
-            </A>
-          </Link>
-          <Subheading>Thinking out loud about design, development, and building products.</Subheading>
-        </SectionHeading>
-      </ContentContainer>
+      {posts && posts.length > 0 && (
+        <React.Fragment>
+          <ContentContainer>
+            <SectionHeading>
+              <Link href="/overthought">
+                <A>
+                  <H2>Overthought <Rarr /></H2>
+                </A>
+              </Link>
+              <Subheading>Thinking out loud about design, development, and building products.</Subheading>
+            </SectionHeading>
+          </ContentContainer>
 
-      <OverthoughtGrid posts={posts} />
+          <OverthoughtGrid posts={posts} />
+        </React.Fragment>
+      )}
 
       <ContentContainer>
         <SectionHeading>
