@@ -1,6 +1,7 @@
  
 import * as React from 'react';
 import Link from 'next/link'
+import Prism from 'prismjs'
 import htmlParser from 'react-markdown/plugins/html-parser'
 import GlobalStyles from '../GlobalStyles';
 import { Notes } from './style';
@@ -33,9 +34,15 @@ function LinkRenderer(props: any) {
 
 export default function Markdown(props: Props) {
   const { children, ...rest } = props;
+
+  React.useEffect(() => {
+    Prism.highlightAll()
+  }, [])
+
   return (
     <React.Fragment>
       <GlobalStyles.MarkdownStyles />
+      <GlobalStyles.PrismStyles />
       <Notes 
         {...rest} 
         astPlugins={[ parseHtml ]}

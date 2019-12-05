@@ -1,5 +1,5 @@
-import { createGlobalStyle } from 'styled-components';
-import { h1, h2, h3, h4, h5, h6, p, list, listItem } from '../Typography';
+import { createGlobalStyle, css } from 'styled-components';
+import { h1, h2, h3, h4, h5, h6, p, list, listItem, pre, code, blockquote } from '../Typography';
 import defaultTheme from '../Theme';
 
 const GlobalMarkdownStyles = createGlobalStyle`
@@ -46,8 +46,20 @@ const GlobalMarkdownStyles = createGlobalStyle`
     ${listItem}
   }
 
+  pre {
+    ${pre}
+  }
+
+  code {
+    ${code}
+  }
+
   strong {
     font-weight: ${defaultTheme.fontWeights.bold};
+  }
+
+  blockquote {
+    ${blockquote}
   }
 `
 
