@@ -130,7 +130,28 @@ export const P = styled.p`
   ${p};
 `
 
-export const Blockquote = styled.blockquote``
+export const blockquote = css`
+  ${p};
+  margin-top: ${defaultTheme.space[5]};
+  padding-left: ${defaultTheme.space[4]};
+  font-style: italic;
+  color: ${props => props.theme.text.tertiary};
+  display: block;
+  position: relative;
+
+  &:before {
+    content: '';
+    height: 100%;
+    width: 4px;
+    border-radius: 4px;
+    background: ${props => props.theme.border.opaque};
+    position: absolute;
+    left: 0;
+  }
+`
+export const Blockquote = styled.blockquote`
+  ${blockquote};
+`
 
 export const list = css`
   margin: ${defaultTheme.space[4]};
@@ -156,9 +177,43 @@ export const Li = styled.li`
   ${listItem}
 `
 
-export const Pre = styled.pre``
+export const pre = css`
+  ${p};
+  font-size: ${defaultTheme.fontSizes[2]}!important;
+  font-family: ${defaultTheme.fonts.monospace}!important;
+  padding: ${defaultTheme.space[3]}!important;
+  background: ${props => props.theme.bg.inset}!important;
+  text-shadow: none!important;
+  border-radius: 8px;
+  margin: ${defaultTheme.space[4]} 0!important;
 
-export const Code = styled.code``
+  code {
+    padding: ${defaultTheme.space[2]};
+    line-height: ${defaultTheme.lineHeights.code};;
+  }
+`
+export const Pre = styled.pre`
+  ${pre};
+`
+
+export const code = css`
+  ${p};
+  font-family: ${defaultTheme.fonts.monospace}!important;
+  font-size: ${defaultTheme.fontSizes[2]}!important;
+  padding:  ${defaultTheme.space[1]} ${defaultTheme.space[2]}!important;
+  background: ${props => props.theme.bg.inset}!important;
+  border-radius: 8px;
+  display: inline-block;
+  background: ${props => props.theme.bg.inset}!important;
+  text-shadow: none!important;
+
+  .token.operator {
+    background: none!important;
+  }
+`
+export const Code = styled.code`
+  ${code};
+`
 
 export const Hr = styled.hr``
 
