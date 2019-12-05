@@ -17,6 +17,8 @@ export default function About() {
 
           <H1>About me</H1>
           
+          <div style={{ padding: '16px' }} />
+
           <P>👋 I'm a product designer living in New York City.</P>
           <P>I'm currently designing <a href="https://github.com/mobile" target="_blank" rel="noopener noreferrer">native mobile apps</a> at <a href="https://github.com/brianlovin" target="_blank" rel="noopener noreferrer">GitHub</a>. Before GitHub, I co-founded <a href="https://spectrum.chat" target="_blank" rel="noopener noreferrer">Spectrum</a>, a platform for large-scale communities to have better public conversations. Spectrum was acquired by GitHub in November, 2018.</P>
           <P>Before Spectrum I designed payments experiences at Facebook, working across Facebook, Messenger, WhatsApp, and Instagram. I originally cut my teeth as the first product designer at <a href="https://buffer.com" target="_blank" rel="noopener noreferrer">Buffer</a>.</P>

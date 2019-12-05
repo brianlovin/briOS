@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components'
-import defaultTheme from '../Theme'
+import defaultTheme from '../theme'
 
 
 // captures the interaction on <Larr /> and <Rarr /> components
@@ -110,6 +110,7 @@ export const p = css`
   color: ${props => props.theme.text.secondary};
 
   a {
+    color: ${props => props.theme.text.primary};
     text-decoration: underline solid ${props => props.theme.border.default};
   }
 
