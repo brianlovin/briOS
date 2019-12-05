@@ -50,6 +50,7 @@ const defaultTheme = {
   lineHeights: {
     body: 1.5,
     heading: 1.3,
+    code: 1.6,
   },
   shadows: {
     default: '0 4px 8px rgba(0,0,0,0.08)',

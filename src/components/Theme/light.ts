@@ -1,4 +1,5 @@
 export default {
+  mode: 'light',
   bg: {
     primary: '#eff0f5',
     secondary: '#ffffff',
