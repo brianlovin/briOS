@@ -23,6 +23,7 @@ export const FeaturedImage = styled.img`
   margin-top: -24px;
   margin-right: -24px;
   border-radius: 16px;
+  margin-bottom: 24px;
 
   @media (max-width: 768px) {
     width: 100%;
