@@ -19,7 +19,7 @@ export const Description = styled.p`
   margin: 0;
 
   a {
-    color: ${props => props.theme.text.default};
+    color: ${props => props.theme.text.primary};
     margin-left: 4px;
   }
 `;
@@ -36,7 +36,7 @@ export const Icons = styled.div`
   }
 
   a:hover {
-    color: ${props => props.theme.text.default};
+    color: ${props => props.theme.text.primary};
   }
 
   .icon {

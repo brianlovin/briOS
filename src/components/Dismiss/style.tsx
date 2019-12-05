@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import theme from '../theme';
+import theme from '../Theme';
 
 export const StyledDismiss = styled.button`
   display: flex;
@@ -16,7 +16,7 @@ export const StyledDismiss = styled.button`
   &:hover {
     opacity: 1;
     background: ${props => props.theme.text.tertiary};
-    color: ${props => props.theme.bg.default};
+    color: ${props => props.theme.bg.secondary};
   }
 
   i {

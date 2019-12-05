@@ -67,26 +67,26 @@ export const Button = styled.button`
   ${base}
   border: 1px solid ${props => props.theme.border.default};
   color: ${props => props.theme.text.secondary};
-  background-color: ${props => props.theme.bg.default};
+  background-color: ${props => props.theme.bg.secondary};
   background-image: ${props =>
-    `linear-gradient(to bottom, ${props.theme.bg.default}, ${
-      props.theme.bg.wash
+    `linear-gradient(to bottom, ${props.theme.bg.secondary}, ${
+      props.theme.bg.primary
     })`};
   
   &:hover {
-    color: ${props => props.theme.text.default};
+    color: ${props => props.theme.text.primary};
   }
 
   &:active {
-    border: 1px solid ${props => props.theme.border.active};
+    border: 1px solid ${props => props.theme.border.opaque};
     background-image: ${props =>
-      `linear-gradient(to top, ${props.theme.bg.default}, ${
-        props.theme.bg.wash
+      `linear-gradient(to top, ${props.theme.bg.secondary}, ${
+        props.theme.bg.primary
       })`};
   }
 
   &:focus {
-    box-shadow: 0 0 0 1px ${props => props.theme.bg.wash}, 0 0 0 3px ${
+    box-shadow: 0 0 0 1px ${props => props.theme.bg.primary}, 0 0 0 3px ${
   props => props.theme.border.default
 };
   }
@@ -94,36 +94,36 @@ export const Button = styled.button`
 
 export const PrimaryButton = styled.button`
   ${base}
-  border: 1px solid ${props => props.theme.brand.default};
-  color: ${props => props.theme.bg.default};
-  background-color: ${props => props.theme.brand.alt};
+  border: 1px solid ${props => props.theme.accent.blue};
+  color: ${props => props.theme.bg.secondary};
+  background-color: ${props => props.theme.accent.blue};
   background-image: ${props =>
-    `linear-gradient(to bottom, ${props.theme.brand.alt}, ${
-      props.theme.brand.default
+    `linear-gradient(to bottom, ${props.theme.accent.blue}, ${
+      props.theme.accent.blue
     })`};
 
   &:hover {
-    color: ${props => props.theme.text.reverse};
+    color: ${props => props.theme.text.onPrimary};
     background-image: ${props =>
-      `linear-gradient(to bottom, ${tint(props.theme.brand.alt, 16)}, ${tint(
-        props.theme.brand.default,
+      `linear-gradient(to bottom, ${tint(props.theme.accent.blue, 16)}, ${tint(
+        props.theme.accent.blue,
         16
       )})`};
     box-shadow: ${props => (props.disabled ? 'none' : props.theme.shadows.button)};
   }
 
   &:active {
-    border: 1px solid ${props => props.theme.brand.default};
+    border: 1px solid ${props => props.theme.accent.blue};
     background-image: ${props =>
-      `linear-gradient(to top, ${props.theme.brand.alt}, ${
-        props.theme.brand.default
+      `linear-gradient(to top, ${props.theme.accent.blue}, ${
+        props.theme.accent.blue
       })`};
   }
 
   &:focus {
     box-shadow: 0 0 0 1px ${props =>
-      props.theme.bg.default}, 0 0 0 3px ${props =>
-  hexa(props.theme.brand.alt, 0.16)};
+      props.theme.bg.secondary}, 0 0 0 3px ${props =>
+  hexa(props.theme.accent.blue, 0.16)};
   }
 `;
 
@@ -135,13 +135,13 @@ export const GhostButton = styled.button`
   background-image: none;
 
   &:hover {
-    background: ${props => tint(props.theme.bg.wash, -3)};
-    color: ${props => props.theme.text.default};
+    background: ${props => tint(props.theme.bg.primary, -3)};
+    color: ${props => props.theme.text.primary};
     box-shadow: none;
   }
 
   &:focus {
-    box-shadow: 0 0 0 1px ${props => props.theme.bg.wash},
+    box-shadow: 0 0 0 1px ${props => props.theme.bg.primary},
       0 0 0 3px ${props => hexa(props.theme.text.tertiary, 0.08)};
   }
 `;
@@ -154,8 +154,8 @@ export const OutlineButton = styled.button`
   background-image: none;
 
   &:hover {
-    color: ${props => props.theme.text.default};
-    border: 1px solid ${props => props.theme.border.active};
+    color: ${props => props.theme.text.primary};
+    border: 1px solid ${props => props.theme.border.opaque};
     box-shadow: none;
   }
 
@@ -164,7 +164,7 @@ export const OutlineButton = styled.button`
   }
 
   &:focus {
-    box-shadow: 0 0 0 1px ${props => props.theme.bg.wash}, 0 0 0 3px ${
+    box-shadow: 0 0 0 1px ${props => props.theme.bg.primary}, 0 0 0 3px ${
   props => props.theme.border.default
 };
   }
@@ -216,8 +216,8 @@ export const ButtonSegmentRow = styled.div`
 
   ${PrimaryButton} {
     &:focus {
-      box-shadow: 0 0 0 1px ${props => props.theme.bg.wash},
-        0 0 0 3px ${props => hexa(props.theme.brand.alt, 0.16)};
+      box-shadow: 0 0 0 1px ${props => props.theme.bg.primary},
+        0 0 0 3px ${props => hexa(props.theme.accent.blue, 0.16)};
     }
   }
 `;
@@ -225,7 +225,7 @@ export const ButtonSegmentRow = styled.div`
 export const FacebookButton = styled.button`
   ${base}
   border: 1px solid ${props => props.theme.social.facebook};
-  color: ${props => props.theme.bg.default};
+  color: ${props => props.theme.bg.secondary};
   background-color: ${props => props.theme.social.facebook};
   background-image: ${props =>
     `linear-gradient(to bottom, ${props.theme.social.facebook}, ${
@@ -238,7 +238,7 @@ export const FacebookButton = styled.button`
   }
 
   &:hover {
-    color: ${props => props.theme.text.reverse};
+    color: ${props => props.theme.text.onPrimary};
     background-image: ${props =>
       `linear-gradient(to bottom, ${tint(
         props.theme.social.facebook,
@@ -257,7 +257,7 @@ export const FacebookButton = styled.button`
 
   &:focus {
     box-shadow: 0 0 0 1px ${props =>
-      props.theme.bg.default}, 0 0 0 3px ${props =>
+      props.theme.bg.secondary}, 0 0 0 3px ${props =>
   hexa(props.theme.social.facebook, 0.16)};
   }
 `;
@@ -265,7 +265,7 @@ export const FacebookButton = styled.button`
 export const TwitterButton = styled.button`
   ${base}
   border: 1px solid ${props => props.theme.social.twitter};
-  color: ${props => props.theme.bg.default};
+  color: ${props => props.theme.bg.secondary};
   background-color: ${props => props.theme.social.twitter};
   background-image: ${props =>
     `linear-gradient(to bottom, ${props.theme.social.twitter}, ${
@@ -278,7 +278,7 @@ export const TwitterButton = styled.button`
   }
 
   &:hover {
-    color: ${props => props.theme.text.reverse};
+    color: ${props => props.theme.text.onPrimary};
     background-image: ${props =>
       `linear-gradient(to bottom, ${tint(
         props.theme.social.twitter,
@@ -297,7 +297,7 @@ export const TwitterButton = styled.button`
 
   &:focus {
     box-shadow: 0 0 0 1px ${props =>
-      props.theme.bg.default}, 0 0 0 3px ${props =>
+      props.theme.bg.secondary}, 0 0 0 3px ${props =>
   hexa(props.theme.social.twitter, 0.16)};
   }
 `;
@@ -306,15 +306,15 @@ export const CopyLinkButton = styled.button`
   ${base}
   border: 1px solid transparent;
   color: ${props =>
-    props.isClicked ? props.theme.bg.default : props.theme.text.secondary};
+    props.isClicked ? props.theme.bg.secondary : props.theme.text.secondary};
   background-color: ${props =>
-    props.isClicked ? props.theme.success.default : props.theme.bg.default};
+    props.isClicked ? props.theme.accent.green : props.theme.bg.secondary};
   transition: border 0.2s ease-in-out, background-color 0.2s ease-in-out, background-image 0.2s ease-in-out;
 
   &:hover {
     transition: border 0.2s ease-in-out, background-color 0.2s ease-in-out, background-image 0.2s ease-in-out;
     color: ${props =>
-      props.isClicked ? props.theme.bg.default : props.theme.text.default};
+      props.isClicked ? props.theme.bg.secondary : props.theme.text.primary};
   }
 
   &:active {
@@ -328,9 +328,9 @@ export const CopyLinkButton = styled.button`
 
   &:focus {
     box-shadow: 0 0 0 1px ${props =>
-      props.theme.bg.default}, 0 0 0 3px ${props =>
+      props.theme.bg.secondary}, 0 0 0 3px ${props =>
   props.isClicked
-    ? hexa(props.theme.success.default, 0.16)
+    ? hexa(props.theme.accent.green, 0.16)
     : props.theme.border.default};
   }
 `;

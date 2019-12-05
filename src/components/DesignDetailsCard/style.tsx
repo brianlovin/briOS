@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import theme from '../theme';
+import theme from '../Theme';
 
 export const Arrow = styled.div`
   position: absolute;
@@ -25,7 +25,7 @@ export const Circle = styled.div`
 `
 
 export const Container = styled.div`
-  background: ${props => props.theme.bg.default};
+  background: ${props => props.theme.bg.secondary};
   display: flex;
   position: relative;
   padding: 24px;
@@ -94,7 +94,7 @@ export const VideoPlayer = styled.video`
   transform: rotate3d(.342,-.2,0,22deg) rotateZ(7deg);
   z-index: 2;
   transition: ${theme.animations.hover};
-  box-shadow: ${theme.shadows.heavyHover};
+  box-shadow: ${theme.shadows.largeHover};
   filter: grayscale(1);
   opacity: 0.2;
   min-width: 327px;
@@ -146,7 +146,7 @@ export const DetailsCount = styled.p`
 
 export const Title = styled.p`
   font-size: 18px;
-  color: ${props => props.theme.text.default};
+  color: ${props => props.theme.text.primary};
   font-weight: 700;
   margin: 0;
   line-height: 1.3;
@@ -162,7 +162,7 @@ export const ImageContainer = styled.span`
     width: 56px;
     height: 56px;
     border-radius: 12px !important;
-    background: ${props => props.theme.bg.wash};
+    background: ${props => props.theme.bg.primary};
   }
 `;
 

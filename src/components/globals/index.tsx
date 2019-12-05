@@ -1,5 +1,5 @@
 import { css } from 'styled-components';
-import theme from '../theme';
+import theme from '../Theme';
 
 export const hexa = (hex: string, alpha: number) => {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -42,21 +42,6 @@ export const tint = (hex: string, amount: number) => {
 
   return `#${RR}${GG}${BB}`;
 };
-
-export const Shadows = {
-  default: css`
-    box-shadow: ${theme.shadows.default};
-    transition: ${theme.animations.default};
-  `,
-  hover: css`
-    box-shadow: ${theme.shadows.hover};
-    transition: ${theme.animations.hover};
-  `,
-  active: css`
-    box-shadow: ${theme.shadows.active};
-    transition: ${theme.animations.active};
-  `,
-}
 
 export const Truncate = (width: number) => css`
   width: ${width}px;

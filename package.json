@@ -22,6 +22,7 @@
     "react-dom": "^16.12.0",
     "react-markdown": "^4.2.2",
     "react-visibility-sensor": "^5.1.1",
+    "rebass": "^4.0.7",
     "serve-favicon": "^2.5.0",
     "styled-components": "^4.4.1",
     "throttle-debounce": "^2.1.0",

@@ -1,9 +1,10 @@
  
 import * as React from 'react';
+import Link from 'next/link';
 import { BlogPost } from '../../types';
 import { getPostBySlug } from '../../data/ghost'
-import Page, { ContentContainer, SectionHeading, Heading, Subheading, Larr } from '../../components/Page';
-import Link from 'next/link';
+import Page, { ContentContainer, SectionHeading } from '../../components/Page';
+import { H1, Larr, Subheading } from '../../components/Typography'
 import { FeaturedImage, ReadingTime } from '../../components/OverthoughtPreviewCard/style'
 import Markdown from '../../components/Markdown';
 import PostShareButtons from '../../components/PostShareButtons';
@@ -26,7 +27,7 @@ export function OverthoughtPost({ post }) {
           <div style={{ paddingBottom: '64px' }} />
 
           {post.feature_image && <FeaturedImage src={`https://overthought.ghost.io${post.og_image}`} />}
-          <Heading style={{marginTop: '24px'}}>{post.title}</Heading>
+          <H1>{post.title}</H1>
           <ReadingTime>{post.reading_time} minute read</ReadingTime>
           <div style={{ padding: '16px '}} />
         </SectionHeading>

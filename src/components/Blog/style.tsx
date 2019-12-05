@@ -16,7 +16,7 @@ export const HeaderImage = styled.img`
 export const Title = styled.h1`
   font-size: 40px;
   font-weight: 700;
-  color: ${props => props.theme.text.default};
+  color: ${props => props.theme.text.primary};
 `;
 
 export const Subtitle = styled.span`
@@ -45,7 +45,7 @@ export const Notice = styled.div`
 `;
 
 export const NoticeTitle = styled.h6`
-  color: ${props => props.theme.text.default};
+  color: ${props => props.theme.text.primary};
   font-weight: 700;
   font-size: 22px;
   margin-top: 0 !important;
@@ -69,7 +69,7 @@ export const NoticeDescription = styled.p`
   }
 
   a {
-    color: ${props => tint(props.theme.bg.wash, -88)};
+    color: ${props => tint(props.theme.bg.primary, -88)};
     font-weight: 600;
   }
 

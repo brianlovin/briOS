@@ -1,5 +1,6 @@
 import styled, { createGlobalStyle } from 'styled-components';
-import { Shadows, hexa, tint } from '../globals';
+import { hexa } from '../globals';
+import defaultTheme from '../Theme';
 
 export const LinkOverrides = createGlobalStyle`
   p a {
@@ -25,17 +26,19 @@ export const HeadingContainer = styled.div`
 `;
 
 export const Icon = styled.img`
-  ${Shadows.default};
+  box-shadow: ${defaultTheme.shadows.default};
+  transition: box-shadow ${defaultTheme.animations.default};
   border-radius: 16px;
   overflow: hidden;
   width: 64px;
   height: 64px;
 
   &:hover {
-    ${Shadows.hover};
+    transition: box-shadow ${defaultTheme.animations.hover};
+    box-shadow: ${defaultTheme.shadows.hover};
   }
 
   &:active {
-    ${Shadows.active};
+    box-shadow: ${defaultTheme.shadows.hover};
   }
 `;

@@ -9,7 +9,7 @@ export const DetailContainer = styled.div`
 export const MediaContainer = styled.div`
   border-radius: 8px;
   background: ${props => props.theme.bg.inset};
-  margin: 32px 0 64px;
+  margin: 32px 0 0;
   padding: 16px;
   width: 100%;
   display: flex;
@@ -39,7 +39,7 @@ export const Video = styled.video`
 export const DetailTitle = styled.h5`
   font-size: 24px;
   font-weight: 700;
-  color: ${props => props.theme.text.default};
+  color: ${props => props.theme.text.primary};
   margin-bottom: 16px;
 
   @media (max-width: 968px) {

@@ -1,8 +1,9 @@
  
 import * as React from 'react';
 import Link from 'next/link';
-import Page, { SectionHeading, Subheading, ContentContainer, Rarr, LargeHeading, Larr } from '../../components/Page';
+import Page, { SectionHeading, ContentContainer } from '../../components/Page';
 import OverthoughtGrid from '../../components/OverthoughtGrid'
+import { H1, Larr, Subheading } from '../../components/Typography'
 import { getPosts } from '../../data/ghost'
 import { BlogPost } from '../../types'
 
@@ -14,14 +15,17 @@ function Overthought({ posts }: Props) {
   return (
     <Page withHeader>
       <ContentContainer>
-        <SectionHeading style={{ marginBottom: '32px' }}>
+        <SectionHeading>
+          
           <Link href="/">
             <a>
               <Subheading><Larr /> Home</Subheading>
             </a>
           </Link>
-          <LargeHeading>Overthought</LargeHeading>
+
+          <H1>Overthought</H1>
           <Subheading>Overthinking out loud about design, development, and building products.</Subheading>
+        
         </SectionHeading>
       </ContentContainer>
 

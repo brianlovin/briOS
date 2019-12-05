@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import theme from '../theme';
+import theme from '../Theme';
 import { Truncate } from '../globals';
 
 export const Container = styled.div`
@@ -8,7 +8,7 @@ export const Container = styled.div`
   left: 16px;
   width: 100%;
   max-width: 384px;
-  background: ${props => props.theme.text.default};
+  background: ${props => props.theme.text.primary};
   color: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
@@ -88,7 +88,7 @@ const defaultThumbStyles = css`
   border-radius: 8px;
   background: #ffffff;
   cursor: pointer;
-  border: 2px solid ${props => props.theme.text.default};
+  border: 2px solid ${props => props.theme.text.primary};
 `;
 
 const defaultTrackStyles = css`
@@ -217,13 +217,13 @@ export const SubscriptionAvatar = styled.img`
   width: 32px;
   height: 32px;
   border-radius: 16px;
-  background-color: ${props => props.theme.bg.default};
+  background-color: ${props => props.theme.bg.secondary};
   transform: scale(1);
   transition: transform 0.2s ease-in-out;
 
   &:hover {
     transform: scale(1.1);
     transition: transform 0.2s ease-in-out;
-    box-shadow: ${theme.shadows.heavyHover};
+    box-shadow: ${theme.shadows.largeHover};
   }
 `;

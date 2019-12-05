@@ -11,7 +11,7 @@ export const Container = styled.div`
   left: 0;
   right: 0;
   background: ${props =>
-    props.showHeaderShadow ? hexa(props.theme.bg.default, 0.8) : 'transparent'};
+    props.showHeaderShadow ? hexa(props.theme.bg.secondary, 0.8) : 'transparent'};
   z-index: 4;
   box-shadow: ${props =>
     props.showHeaderShadow ? '0 4px 8px rgba(0,0,0,0.04)' : 'none'};
@@ -29,11 +29,11 @@ export const Container = styled.div`
   }
 `;
 
-export const Logo = styled.h1`
+export const Logo = styled.p`
   grid-area: logo;
   font-size: 18px;
   font-weight: 700;
-  color: ${props => props.theme.text.default};
+  color: ${props => props.theme.text.primary};
   margin: 0;
 `;
 
@@ -48,7 +48,7 @@ export const Icons = styled.div`
   }
 
   a:hover {
-    color: ${props => props.theme.text.default};
+    color: ${props => props.theme.text.primary};
   }
 
   .icon {

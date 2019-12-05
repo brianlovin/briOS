@@ -1,14 +1,16 @@
 import styled from 'styled-components'
+import defaultTheme from '../Theme'
+import { H6 } from '../Typography'
 
 export const Card = styled.div`
   position: relative;
-  background: ${props => props.theme.bg.default};
+  background: ${props => props.theme.bg.secondary};
   padding: 24px;
   border-radius: 16px;
   transition: box-shadow ${props => props.theme.animations.default};
 
   &:hover {
-    box-shadow: ${props => props.theme.shadows.heavyHover};
+    box-shadow: ${props => props.theme.shadows.largeHover};
     transition: box-shadow ${props => props.theme.animations.hover};
     z-index: 2;
   }
@@ -20,7 +22,6 @@ export const FeaturedImage = styled.img`
   margin-left: -24px;
   margin-top: -24px;
   margin-right: -24px;
-  margin-bottom: 20px;
   border-radius: 16px;
 
   @media (max-width: 768px) {
@@ -46,23 +47,8 @@ export const PreviewImage = styled.img`
   }
 `
 
-export const Title = styled.h3`
-  font-size: 26px;
-  color: ${props => props.theme.text.default};
-  font-weight: 700;
-  margin: 0;
-  line-height: 1.3;
-
-  @media (max-width: 768px) {
-    font-size: 22px;
-  }
-`
-
-export const ReadingTime = styled.p`
-  font-size: 14px;
-  font-weight: 700;
+export const ReadingTime = styled(H6)`
   text-transform: uppercase;
   color: ${props => props.theme.text.quarternary};
-  margin: 0;
-  margin-top: 16px;
+  margin-top: ${defaultTheme.space[3]};
 `
