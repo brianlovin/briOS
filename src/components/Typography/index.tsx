@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components'
-import defaultTheme from '../theme'
+import defaultTheme from '../Theme'
 
 
 // captures the interaction on <Larr /> and <Rarr /> components
