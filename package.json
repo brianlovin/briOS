@@ -25,6 +25,7 @@
     "rebass": "^4.0.7",
     "serve-favicon": "^2.5.0",
     "styled-components": "^4.4.1",
+    "swr": "^0.1.12",
     "throttle-debounce": "^2.1.0",
     "use-dark-mode": "^2.3.1"
   },

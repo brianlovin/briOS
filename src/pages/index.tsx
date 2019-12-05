@@ -1,6 +1,7 @@
  
 import * as React from 'react';
 import Link from 'next/link';
+import useSWR from 'swr'
 import Page, { SectionHeading, ContentContainer } from '../components/Page';
 import { H1, H2, A, Rarr, Subheading } from '../components/Typography'
 import OverthoughtGrid from '../components/OverthoughtGrid'
@@ -13,7 +14,10 @@ interface Props {
   posts?: Array<BlogPost>
 }
 
-function Home({ posts }: Props) {
+function Home(props: Props) {
+  const initialData = props.posts
+  const { data: posts } = useSWR('/api/getPosts', getPosts, { initialData })
+
   return (
     <Page>
       <ContentContainer>
