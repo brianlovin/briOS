@@ -14,7 +14,7 @@ interface Props {
 function Overthought({ posts }: Props) {
   return (
     <Page withHeader>
-      <ContentContainer>
+      <ContentContainer data-cy="overthought">
         <SectionHeading>
           
           <Link href="/">

@@ -14,6 +14,12 @@ describe('Home', () => {
     });
   });
 
+  it('should render overthought', () => {
+    cy.contains('Overthought')
+      .scrollIntoView()
+      .should('be.visible');
+  });
+
   it('should render podcast player', () => {
     cy.get('[data-cy="design-details-player"]')
       .scrollIntoView()
