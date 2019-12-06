@@ -7,6 +7,7 @@ import parse from 'rehype-parse'
 import rehype2remark from 'rehype-remark'
 import stringify from 'remark-stringify'
 import { NextSeo } from 'next-seo';
+import Head from 'next/head'
 import { BlogPost } from '../../types';
 import { getPostBySlug } from '../../data/ghost'
 import Page, { ContentContainer, SectionHeading } from '../../components/Page';
@@ -26,6 +27,13 @@ export function OverthoughtPost(props: Props) {
   
   if (!post) return (
     <Page withHeader>
+      <Head>
+        <link 
+          rel="alternate" 
+          type="application/rss+xml" 
+          title="RSS Feed for Overthought" 
+          href="/overthought/rss" />
+      </Head>
       <ContentContainer data-cy="overthought-not-found">
         <SectionHeading>
           
@@ -50,6 +58,13 @@ export function OverthoughtPost(props: Props) {
 
   return (
     <Page withHeader>
+      <Head>
+        <link 
+          rel="alternate" 
+          type="application/rss+xml" 
+          title="RSS Feed for Overthought" 
+          href="/overthought/rss" />
+      </Head>
       <NextSeo
         title={post.title}
         description={post.custom_excerpt || post.excerpt}
