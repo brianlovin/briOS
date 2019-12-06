@@ -6,6 +6,7 @@ import unified from 'unified'
 import parse from 'rehype-parse'
 import rehype2remark from 'rehype-remark'
 import stringify from 'remark-stringify'
+import { NextSeo } from 'next-seo';
 import { BlogPost } from '../../types';
 import { getPostBySlug } from '../../data/ghost'
 import Page, { ContentContainer, SectionHeading } from '../../components/Page';
@@ -49,6 +50,23 @@ export function OverthoughtPost(props: Props) {
 
   return (
     <Page withHeader>
+      <NextSeo
+        title={post.title}
+        description={post.custom_excerpt || post.excerpt}
+        canonical={post.canonical_url}
+        openGraph={{
+          url: post.canonical_url,
+          title: post.title,
+          description: post.custom_excerpt || post.excerpt,
+          images: post.feature_image && [
+            {
+              url: post.feature_image,
+              alt: post.title,
+            },
+          ],
+          site_name: "Overthought",
+        }}
+      />
       <ContentContainer>
         <SectionHeading>
           <Link href={'/overthought'}>
