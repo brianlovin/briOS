@@ -118,6 +118,10 @@ export const p = css`
     text-decoration: underline solid ${props => props.theme.text.primary};
   }
 
+  > code {
+    margin-top: 0!important;
+  }
+
   & + & {
     margin-top: ${defaultTheme.space[4]};
   }
@@ -144,7 +148,7 @@ export const blockquote = css`
     height: 100%;
     width: 4px;
     border-radius: 4px;
-    background: ${props => props.theme.border.opaque};
+    background: ${props => props.theme.border.default};
     position: absolute;
     left: 0;
   }
@@ -189,11 +193,18 @@ export const pre = css`
   background: ${props => props.theme.bg.inset}!important;
   text-shadow: none!important;
   border-radius: 8px;
-  margin: ${defaultTheme.space[4]} 0!important;
+  margin: ${defaultTheme.space[5]} 0!important;
+  overflow-x: scroll;
+  box-shadow: 0 0 0 1px ${props => props.theme.border.default}, inset 0 1px 4px rgba(0,0,0,0.04);
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   code {
     padding: ${defaultTheme.space[2]};
-    line-height: ${defaultTheme.lineHeights.code};;
+    line-height: ${defaultTheme.lineHeights.code};
+    box-shadow: none!important;
   }
 `
 export const Pre = styled.pre`
@@ -204,8 +215,8 @@ export const code = css`
   ${p};
   font-family: ${defaultTheme.fonts.monospace}!important;
   font-size: ${defaultTheme.fontSizes[2]}!important;
-  padding:  ${defaultTheme.space[1]} ${defaultTheme.space[2]}!important;
-  background: ${props => props.theme.bg.inset}!important;
+  padding:  ${defaultTheme.space[0]} ${defaultTheme.space[2]}!important;
+  box-shadow: inset 0 0 0 1px ${props => props.theme.border.default};
   border-radius: 8px;
   display: inline-block;
   background: ${props => props.theme.bg.inset}!important;
@@ -252,6 +263,7 @@ export const Larr = styled.span.attrs({
 export const Subheading = styled(P)`
   font-weight: ${defaultTheme.fontWeights.subheading};
   margin-top: ${defaultTheme.space[2]};
+  line-height: 1.4;
 
   & + & {
     margin-top: ${defaultTheme.space[3]};
@@ -262,3 +274,8 @@ export const Subheading = styled(P)`
     margin-top: ${defaultTheme.space[2]};
   }
 `;
+
+export const img = css`
+  max-width: 100%;
+  border-radius: 4px;
+`

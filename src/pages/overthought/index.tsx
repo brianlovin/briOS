@@ -23,6 +23,8 @@ function Overthought({ posts }: Props) {
             </a>
           </Link>
 
+          <div style={{ padding: '16px' }} />
+
           <H1>Overthought</H1>
           <Subheading>Overthinking out loud about design, development, and building products.</Subheading>
         

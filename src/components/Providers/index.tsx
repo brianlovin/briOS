@@ -12,16 +12,25 @@ interface Props {
 }
 
 export default ({ children }: Props) => {
-  const { value } = useDarkMode(false)
+  const { value } = useDarkMode(false, { storageKey: null, onChange: null })
   const theme = value ? dark : light
+
+  const [mounted, setMounted] = React.useState(false)
+
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // prevents ssr flash for mismatched dark mode
+  if (!mounted) return null
 
   return (
     <Fathom>
       <Sentry>
       <SEO />
         <ThemeProvider theme={theme}>
-          {children}
           <GlobalStyles.ResetStyles />
+          {children}
         </ThemeProvider>
       </Sentry>
     </Fathom>

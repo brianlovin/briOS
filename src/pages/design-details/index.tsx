@@ -21,6 +21,9 @@ export default function DesignDetails() {
               <Subheading><Larr /> Home</Subheading>
             </a>
           </Link>
+
+          <div style={{ padding: '16px' }} />
+          
           <H1>Design Details</H1>
           <Subheading style={{ marginTop: '24px' }}>This collection of posts explores some of the best interaction patterns, visual styles, and design decisions of well-known apps. Each detail features a video and my commentary on the functionality and effectiveness of the interface.</Subheading>
         </SectionHeading>

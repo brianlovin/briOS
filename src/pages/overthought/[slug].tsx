@@ -22,7 +22,7 @@ interface Props {
 export function OverthoughtPost(props: Props) {
   const initialData = props.post
   const { data: post } = useSWR(`${props.slug}`, getPostBySlug, { initialData })
-
+  
   if (!post) return (
     <Page withHeader>
       <ContentContainer>

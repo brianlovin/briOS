@@ -55,13 +55,13 @@ const ResetStyles = createGlobalStyle`
 
   ::-moz-selection {
     /* Code for Firefox */
-    background: ${props => props.theme.text.primary};
-    color: ${props => props.theme.text.onPrimary};
+    background: ${props => props.theme.text.primary}!important;
+    color: ${props => props.theme.text.onPrimary}!important;
   }
 
   ::selection {
-    background: ${props => props.theme.text.primary};
-    color: ${props => props.theme.text.onPrimary};
+    background: ${props => props.theme.text.primary}!important;
+    color: ${props => props.theme.text.onPrimary}!important;
   }
 
   ::-webkit-input-placeholder {

@@ -8,7 +8,7 @@ import LoadingSpinner from '../LoadingSpinner';
 export default function LatestEpisode() {
   const [episode, setEpisode] = React.useState(null)
   const [loading, setLoading] = React.useState(false)
-  const { value } = useDarkMode(false)
+  const { value } = useDarkMode(false, { storageKey: null, onChange: null })
 
   async function fetchEpisode() {
     setLoading(true)

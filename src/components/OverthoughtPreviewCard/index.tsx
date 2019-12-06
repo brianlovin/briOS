@@ -8,7 +8,7 @@ export default function OverthoughtGrid({ post }) {
   return (
     <Link href="/overthought/[slug]" as={`/overthought/${post.slug}`}>
       <a>
-        <Card>
+        <Card style={{ height: '100%' }}>
           {post.feature_image && <PreviewImage src={`https://overthought.ghost.io${post.og_image}`} />}
           <H3>{post.title}</H3>
           <Subheading>{post.custom_excerpt || post.excerpt}</Subheading>

@@ -15,6 +15,8 @@ export default function About() {
             </a>
           </Link>
 
+          <div style={{ padding: '16px' }} />
+
           <H1>About me</H1>
           
           <div style={{ padding: '16px' }} />

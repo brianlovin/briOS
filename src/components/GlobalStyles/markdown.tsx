@@ -1,5 +1,5 @@
 import { createGlobalStyle, css } from 'styled-components';
-import { h1, h2, h3, h4, h5, h6, p, list, listItem, pre, code, blockquote } from '../Typography';
+import { h1, h2, h3, h4, h5, h6, p, list, listItem, pre, code, blockquote, img } from '../Typography';
 import defaultTheme from '../Theme';
 
 const GlobalMarkdownStyles = createGlobalStyle`
@@ -36,6 +36,10 @@ const GlobalMarkdownStyles = createGlobalStyle`
   p {
     ${p};
     margin-top: ${defaultTheme.space[3]};
+
+    img {
+      ${img};
+    }
   }
 
   ul, ol {

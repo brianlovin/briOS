@@ -12,6 +12,7 @@ export default class SentryProvider extends React.Component{
   }
 
   componentDidCatch(error: any, errorInfo: any) {
+    console.error({ errorInfo })
     Sentry.configureScope(scope => {
       Object.keys(errorInfo).forEach(key => {
         scope.setExtra(key, errorInfo[key]);

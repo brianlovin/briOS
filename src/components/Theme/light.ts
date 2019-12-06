@@ -1,5 +1,4 @@
 export default {
-  mode: 'light',
   bg: {
     primary: '#eff0f5',
     secondary: '#ffffff',
@@ -7,7 +6,7 @@ export default {
     input: 'rgba(65,67,78,0.12)'
   },
   border: {
-    default: 'rgba(65,67,78,0.25)',
+    default: 'rgba(65,67,78,0.16)',
     opaque: '#BFC1C9',
   },
   text: {

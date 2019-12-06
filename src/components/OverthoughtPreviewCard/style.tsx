@@ -7,6 +7,7 @@ export const Card = styled.div`
   background: ${props => props.theme.bg.secondary};
   padding: 24px;
   border-radius: 16px;
+  height: 100%;
   transition: box-shadow ${props => props.theme.animations.default};
 
   &:hover {
