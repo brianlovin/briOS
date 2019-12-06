@@ -33,15 +33,6 @@ function Overthought({ posts }: Props) {
           description: "Overthinking out loud about design, development, and building products.",
           site_name: "Overthought",
         }}
-        additionalMetaTags={[
-          {
-            property: 'dc:creator',
-            content: 'Jane Doe'
-          }, {
-            name: 'application-name',
-            content: 'NextSeo'
-          }
-        ]}
       />
       <ContentContainer data-cy="overthought">
         <SectionHeading>
