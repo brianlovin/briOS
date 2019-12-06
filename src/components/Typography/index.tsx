@@ -206,6 +206,10 @@ export const pre = css`
     line-height: ${defaultTheme.lineHeights.code};
     box-shadow: none!important;
   }
+
+  @media (max-width: ${defaultTheme.breakpoints[4]}) {
+    font-size: ${defaultTheme.fontSizes[1]}!important;
+  }
 `
 export const Pre = styled.pre`
   ${pre};
@@ -222,8 +226,8 @@ export const code = css`
   background: ${props => props.theme.bg.inset}!important;
   text-shadow: none!important;
 
-  .token.operator {
-    background: none!important;
+  @media (max-width: ${defaultTheme.breakpoints[4]}) {
+    font-size: ${defaultTheme.fontSizes[1]}!important;
   }
 `
 export const Code = styled.code`
