@@ -30,6 +30,7 @@ export const FeaturedImage = styled.img`
     min-height: 0;
     margin: 0;
     margin-top: -24px;
+    margin-bottom: 24px;
   }
 `
 

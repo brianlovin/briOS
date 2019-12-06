@@ -160,6 +160,10 @@ export const list = css`
   font-weight: ${defaultTheme.fontWeights.body};
   line-height: ${defaultTheme.fontWeights.body};
   color: ${props => props.theme.text.secondary};
+
+  @media (max-width: ${defaultTheme.breakpoints[4]}) {
+    font-size: ${defaultTheme.fontSizes[2]};
+  }
 `
 export const Ul = styled.ul`
   ${list};
