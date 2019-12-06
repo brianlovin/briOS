@@ -6,7 +6,7 @@ export default function OverthoughtGrid({ posts }) {
   return (
     <Grid>
       {
-        posts.map(post => (
+        posts.filter(post => post.slug.includes('fathom')).map(post => (
           <OverthoughtPreviewCard key={post.id} post={post} />
         ))
       }
