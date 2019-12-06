@@ -40,12 +40,10 @@ export const SectionHeading = styled.div`
   align-items: flex-start;
   align-self: flex-start;
   margin: ${defaultTheme.space[8]} 0 0;
-  padding: 0 ${defaultTheme.space[3]};
 
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
     align-items: flex-start;
     max-width: 100%;
     margin-top: ${defaultTheme.space[6]};
-    padding: 0;
   }
 `;

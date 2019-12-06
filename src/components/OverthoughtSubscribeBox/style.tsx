@@ -12,5 +12,17 @@ export const Container = styled.div`
     grid-template-columns: ${defaultTheme.space[5]} 1fr;
     grid-gap: ${defaultTheme.space[2]};
     align-items: center;
+    font-size: ${defaultTheme.fontSizes[2]};
+    font-weight: ${defaultTheme.fontWeights.link};
+
+    svg {
+      color: ${props => props.theme.icon.secondary};
+    }
+  }
+
+  a:hover {
+    svg {
+      color: ${props => props.theme.icon.primary};
+    }
   }
 `

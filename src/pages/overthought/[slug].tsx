@@ -103,7 +103,7 @@ export function OverthoughtPost(props: Props) {
         </Markdown>
 
 
-        <SectionHeading>
+        <SectionHeading style={{ paddingLeft: 0, paddingRight: 0 }}>
           <PostShareButtons route={`overthought/${post.slug}`} title={post.title} />
           <OverthoughtSubscribeBox />
         </SectionHeading>
