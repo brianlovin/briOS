@@ -10,7 +10,7 @@ export default function DesignDetails() {
   return (
     <Page withHeader>
       <NextSeo
-        title={"Brian Lovin · Design Details"}
+        title={"Design Details"}
         description={"A visual exploration of digital products"}
       />
       

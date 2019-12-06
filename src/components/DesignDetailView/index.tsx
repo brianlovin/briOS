@@ -25,33 +25,12 @@ export default function DesignDetailView(props: Props) {
 
   const { month, year, day } = getDateObject(post.createdAt);
   const datestring = `${month} ${day}, ${year}`;
-  const title = `Brian Lovin · Design Details · ${post.title}`;
   const subheading = `${datestring} · ${post.details.length} details`;
 
   return (
     <React.Fragment>
       <LinkOverrides tint={post.tint} />
       <ContentContainer style={{ marginTop: '96px'}}>
-        <Head>
-          <title>{title}</title>
-          <meta content={title} name="og:title" key="og:title" />
-          <meta
-            content={post.description}
-            name="og:description"
-            key="og:description"
-          />
-          <meta
-            content={`/static/img/design-details/${post.slug}.jpeg`}
-            name="og:image"
-            key="og:image"
-          />
-          <meta
-            content={`Brian Lovin · Design Details · ${post.title}`}
-            name="twitter:title"
-            key="og:image"
-          />
-        </Head>
-
         <Icon
           src={`/static/img/design-details/${post.slug}.jpeg`}
           alt={post.title}

@@ -6,6 +6,7 @@ import unified from 'unified'
 import parse from 'rehype-parse'
 import rehype2remark from 'rehype-remark'
 import stringify from 'remark-stringify'
+import { NextSeo } from 'next-seo';
 import { BlogPost } from '../../types';
 import { getPostBySlug } from '../../data/ghost'
 import Page, { ContentContainer, SectionHeading } from '../../components/Page';
@@ -13,6 +14,7 @@ import { H1, Larr, Subheading, A } from '../../components/Typography'
 import { FeaturedImage, ReadingTime } from '../../components/OverthoughtPreviewCard/style'
 import Markdown from '../../components/Markdown';
 import PostShareButtons from '../../components/PostShareButtons';
+import Head from 'next/head';
 
 interface Props {
   post: BlogPost;
@@ -47,8 +49,27 @@ export function OverthoughtPost(props: Props) {
     .processSync(post.html)
     .toString()
 
+  console.log({ post })
+
   return (
     <Page withHeader>
+      <NextSeo
+        title={post.title}
+        description={post.custom_excerpt || post.excerpt}
+        canonical={post.canonical_url}
+        openGraph={{
+          url: post.canonical_url,
+          title: post.title,
+          description: post.custom_excerpt || post.excerpt,
+          images: post.feature_image && [
+            {
+              url: post.feature_image,
+              alt: post.title,
+            },
+          ],
+          site_name: "Overthought",
+        }}
+      />
       <ContentContainer>
         <SectionHeading>
           <Link href={'/overthought'}>
