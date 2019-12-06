@@ -9,4 +9,10 @@ export const Grid = styled.div`
   width: 100%;
   max-width: ${defaultTheme.breakpoints[2]};
   margin-top: 32px;
+  padding: 0 ${defaultTheme.space[3]};
+
+  @media (max-width: ${defaultTheme.breakpoints[4]}) {
+    grid-template-columns: 1fr;
+    padding: 0;
+  }
 `

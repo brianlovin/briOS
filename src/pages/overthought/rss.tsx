@@ -9,7 +9,7 @@ export default class extends React.Component {
       })
       res.end()
     } else {
-      Router.push('https://overthought.ghost.io/rss/')
+      Router.push('/overthought/rss')
     }
     return {}
   }

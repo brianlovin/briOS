@@ -15,6 +15,7 @@ import { H1, Larr, Subheading, A } from '../../components/Typography'
 import { FeaturedImage, ReadingTime } from '../../components/OverthoughtPreviewCard/style'
 import Markdown from '../../components/Markdown';
 import PostShareButtons from '../../components/PostShareButtons';
+import OverthoughtSubscribeBox from '../../components/OverthoughtSubscribeBox'
 
 interface Props {
   post: BlogPost;
@@ -101,8 +102,10 @@ export function OverthoughtPost(props: Props) {
           {md}
         </Markdown>
 
+
         <SectionHeading>
           <PostShareButtons route={`overthought/${post.slug}`} title={post.title} />
+          <OverthoughtSubscribeBox />
         </SectionHeading>
       </ContentContainer>
     </Page>

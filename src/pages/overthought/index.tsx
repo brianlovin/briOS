@@ -8,6 +8,7 @@ import OverthoughtGrid from '../../components/OverthoughtGrid'
 import { H1, Larr, Subheading } from '../../components/Typography'
 import { getPosts } from '../../data/ghost'
 import { BlogPost } from '../../types'
+import OverthoughtSubscribeBox from '../../components/OverthoughtSubscribeBox';
 
 interface Props {
   posts?: Array<BlogPost>
@@ -55,6 +56,8 @@ function Overthought({ posts }: Props) {
 
           <H1>Overthought</H1>
           <Subheading>Overthinking out loud about design, development, and building products.</Subheading>
+          
+          <OverthoughtSubscribeBox />
         
         </SectionHeading>
       </ContentContainer>
