@@ -14,7 +14,6 @@ import { H1, Larr, Subheading, A } from '../../components/Typography'
 import { FeaturedImage, ReadingTime } from '../../components/OverthoughtPreviewCard/style'
 import Markdown from '../../components/Markdown';
 import PostShareButtons from '../../components/PostShareButtons';
-import Head from 'next/head';
 
 interface Props {
   post: BlogPost;
@@ -48,8 +47,6 @@ export function OverthoughtPost(props: Props) {
     .use(stringify)
     .processSync(post.html)
     .toString()
-
-  console.log({ post })
 
   return (
     <Page withHeader>
