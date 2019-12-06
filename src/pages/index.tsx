@@ -30,7 +30,7 @@ function Home(props: Props) {
 
       {posts && posts.length > 0 && (
         <React.Fragment>
-          <ContentContainer>
+          <ContentContainer data-cy="overthought">
             <SectionHeading>
               <Link href="/overthought">
                 <A>

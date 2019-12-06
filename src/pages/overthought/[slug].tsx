@@ -26,7 +26,7 @@ export function OverthoughtPost(props: Props) {
   
   if (!post) return (
     <Page withHeader>
-      <ContentContainer>
+      <ContentContainer data-cy="overthought-not-found">
         <SectionHeading>
           
           <H1 style={{ marginTop: 0 }}>Post not Found</H1>
@@ -67,7 +67,7 @@ export function OverthoughtPost(props: Props) {
           site_name: "Overthought",
         }}
       />
-      <ContentContainer>
+      <ContentContainer data-cy="overthought-post">
         <SectionHeading>
           <Link href={'/overthought'}>
             <a>
