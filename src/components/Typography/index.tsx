@@ -104,6 +104,7 @@ export const p = css`
 
   > code {
     margin-top: 0!important;
+    font-size: ${defaultTheme.fontSizes[1]};
   }
 
   & + & {
