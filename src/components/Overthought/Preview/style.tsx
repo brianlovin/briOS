@@ -34,7 +34,7 @@ export const FeaturedImage = styled.img`
   margin-top: -24px;
   margin-right: -24px;
   border-radius: 16px;
-  margin-bottom: 24px;
+  margin-bottom: 32px;
 
   @media (max-width: 768px) {
     width: 100%;
@@ -62,7 +62,7 @@ export const PreviewImage = styled.img`
 `
 
 export const ReadingTime = styled(H6)`
-  text-transform: uppercase;
   color: ${props => props.theme.text.quarternary};
   margin-top: ${defaultTheme.space[5]};
+  font-weight: ${defaultTheme.fontWeights.link};
 `

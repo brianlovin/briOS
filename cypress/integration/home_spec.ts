@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 /// <reference types="@testing-library/cypress" />
 
-import { designDetails } from '../../src/data';
+import { designDetailsPosts } from '../../src/data';
 
 describe('Home', () => {
   before(() => {
@@ -9,7 +9,7 @@ describe('Home', () => {
   });
 
   it('should render design details', () => {
-    designDetails.map(detail => {
+    designDetailsPosts.map(detail => {
       cy.contains(detail.title);
     });
   });

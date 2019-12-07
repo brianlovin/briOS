@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@sentry/browser": "^5.10.1",
+    "@statickit/react": "^1.2.0",
     "@tryghost/content-api": "^1.3.4",
     "fathom-client": "^1.0.0",
     "isomorphic-unfetch": "^3.0.0",

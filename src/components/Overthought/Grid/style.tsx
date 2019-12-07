@@ -8,8 +8,8 @@ export const Grid = styled.div`
   grid-auto-rows: auto;
   width: 100%;
   max-width: ${defaultTheme.breakpoints[0]};
-  margin-top: 32px;
   padding: 0 ${defaultTheme.space[3]};
+  margin-top: ${defaultTheme.space[5]};
 
   @media (max-width: ${defaultTheme.breakpoints[2]}) {
     grid-template-columns: repeat(2, 1fr);

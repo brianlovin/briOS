@@ -4,10 +4,11 @@ import Link from 'next/link';
 import { BlogPost } from '~/types';
 import { ContentContainer, SectionHeading } from '~/components/Page';
 import { H1, Larr, Subheading } from '~/components/Typography'
-import { FeaturedImage, ReadingTime } from '~/components/Overthought/Preview/style'
+import { FeaturedImage } from '~/components/Overthought/Preview/style'
 import PostShareButtons from '~/components/ShareButtons';
 import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe'
 import Body from './Body'
+import SEO from './SEO'
 
 interface Props {
   post: BlogPost;
@@ -16,7 +17,7 @@ interface Props {
 export default function Post({ post }) {
   return (
     <ContentContainer data-cy="overthought-post">
-      
+      <SEO post={post} />
       <SectionHeading>
         <Link href={'/overthought'}>
           <a>
@@ -28,8 +29,7 @@ export default function Post({ post }) {
 
         {post.feature_image && <FeaturedImage src={`https://overthought.ghost.io${post.og_image}`} />}
         <H1 style={{ marginTop: 0 }}>{post.title}</H1>
-        <ReadingTime>{post.reading_time} minute read</ReadingTime>
-        <div style={{ padding: '16px '}} />
+        <div style={{ padding: '8px '}} />
       </SectionHeading>
       
       <Body post={post} />

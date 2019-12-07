@@ -7,7 +7,6 @@ import { getPostBySlug } from '~/data/ghost'
 import Page from '~/components/Page';
 import Post from '~/components/Overthought/Post'
 import NotFound from '~/components/Overthought/NotFound';
-import SEO from '~/components/Overthought/Post/SEO'
 
 interface Props {
   post: BlogPost;
@@ -20,13 +19,10 @@ export function OverthoughtPost(props: Props) {
 
   return (
     <Page withHeader>
-      <SEO post={post} />
-      
       { post
         ? <Post post={post} />
         : <NotFound />
       }
-
     </Page>
   )
 }

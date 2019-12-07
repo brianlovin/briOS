@@ -1,36 +1,51 @@
 import styled from 'styled-components'
 import defaultTheme from '~/components/Theme'
+import { hexa, tint } from '~/components/utils'
 
 export const Container = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-gap: ${defaultTheme.space[4]};
-  padding: ${defaultTheme.space[5]} 0 ${defaultTheme.space[2]};
+  grid-template-columns: repeat(1, 1fr);
+  grid-gap: ${defaultTheme.space[3]};
+  margin: ${defaultTheme.space[6]} 0 ${defaultTheme.space[5]};
+  padding: ${defaultTheme.space[4]};
+  background: ${props => props.theme.bg.inset};
+  width: 100%;
+  border-radius: 16px;
+`
 
-  a {
-    display: grid;
-    grid-template-columns: ${defaultTheme.space[5]} 1fr;
-    grid-gap: ${defaultTheme.space[2]};
-    align-items: center;
-    font-size: ${defaultTheme.fontSizes[2]};
-    font-weight: ${defaultTheme.fontWeights.link};
-
-    svg {
-      color: ${props => props.theme.icon.secondary};
-    }
+export const Form = styled.form`
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  grid-gap: ${defaultTheme.space[3]};
+  margin-top: ${defaultTheme.space[2]};
+  button {
+    height: 100%;
   }
+`
 
-  a:hover {
-    svg {
-      color: ${props => props.theme.icon.primary};
-    }
+export const Input = styled.input`
+  padding: 11px ${defaultTheme.space[4]} 12px;
+  border: 1px solid ${props => props.theme.border.default};
+  color: ${props => props.theme.text.primary};
+  border-radius: 24px;
+  font-size: ${defaultTheme.fontSizes[2]};
+  background: ${props => props.theme.bg.primary};
+
+  &:focus {
+    border: 1px solid ${props => props.theme.accent.blue};
+    background: ${props => props.theme.bg.secondary};
   }
+`
 
-  @media (max-width: ${defaultTheme.breakpoints[5]}) {
-    grid-template-columns: 1fr;
-
-    a {
-      font-size: ${defaultTheme.fontSizes[1]};
-    }
-  }
+export const Success = styled.div`
+  margin-top: ${defaultTheme.space[2]};
+  padding: ${defaultTheme.space[2]} ${defaultTheme.space[4]};
+  border: 1px solid ${props => tint(props.theme.accent.green, -8)};
+  color: ${props => props.theme.text.onPrimary};
+  font-weight: ${defaultTheme.fontWeights.link};
+  background: ${props => props.theme.accent.green};
+  border-radius: 24px;
+  text-align: center;
+  font-size: ${defaultTheme.fontSizes[2]};
+  text-shadow: 0 1px 0 rgba(0,0,0,0.08);
 `
