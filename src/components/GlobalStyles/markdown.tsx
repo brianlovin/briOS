@@ -70,6 +70,7 @@ const GlobalMarkdownStyles = createGlobalStyle`
   .kg-embed-card {
     position: relative;
     padding-top: 56.25%;
+    margin: ${defaultTheme.space[4]} 0;
   }
 
   iframe {
