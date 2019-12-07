@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { hexa } from '../globals'
+import { hexa } from '~/components/globals'
 
 export const Container = styled.div`
   display: grid;

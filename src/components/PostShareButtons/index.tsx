@@ -1,6 +1,6 @@
  
 import * as React from 'react';
-import { FacebookButton, TwitterButton, CopyLinkButton } from '../Button';
+import { FacebookButton, TwitterButton, CopyLinkButton } from '~/components/Button';
 import { Container } from './style';
 
 interface Props {

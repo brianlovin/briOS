@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { A } from '~/Typography'
+import { A } from '~/components/Typography'
 import { Container } from './style'
 
 export default function OverthoughtSubscribeBox() {

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Link from 'next/link';
-import Icon from '../Icon';
+import Icon from '~/components/Icon';
 import { Container, Logo, ButtonRowContainer, Icons } from './style';
 
 type Props = {

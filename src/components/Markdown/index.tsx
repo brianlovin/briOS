@@ -3,7 +3,7 @@ import * as React from 'react';
 import Link from 'next/link'
 import Prism from 'prismjs'
 import htmlParser from 'react-markdown/plugins/html-parser'
-import GlobalStyles from '../GlobalStyles';
+import GlobalStyles from '~/components/GlobalStyles';
 import { Notes } from './style';
 
 interface Props {

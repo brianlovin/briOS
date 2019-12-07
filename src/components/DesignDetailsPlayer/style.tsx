@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import defaultTheme from '../Theme';
-import { H6 } from '../Typography'
+import defaultTheme from '~/components/Theme';
+import { H6 } from '~/components/Typography'
 
 export const Arrow = styled.div`
   position: absolute;

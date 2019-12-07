@@ -1,20 +1,20 @@
 import React from 'react';
 import Head from 'next/head';
 import { getDateObject } from '~/lib/getDateObject';
-import { ContentContainer, SectionHeading, } from '../Page';
-import { H1, H2, Subheading } from '../Typography'
-import { Notice } from '../Blog';
+import { ContentContainer, SectionHeading, } from '~/components/Page';
+import { H1, H2, Subheading } from '~/components/Typography'
+import { Notice } from '~/components/Blog';
 import { DesignDetailsPost } from '~/types';
-import DesignDetailsGrid from '../DesignDetailsGrid';
-import DesignDetailMedia from '../DesignDetailMedia';
-import PostShareButtons from '../PostShareButtons';
-import Markdown from '../Markdown';
+import DesignDetailsGrid from '~/components/DesignDetailsGrid';
+import DesignDetailMedia from '~/components/DesignDetailMedia';
+import PostShareButtons from '~/components/PostShareButtons';
+import Markdown from '~/components/Markdown';
 import {
   HeadingContainer,
   Icon,
   LinkOverrides,
 } from './style';
-import DesignDetailsPlayer from '../DesignDetailsPlayer';
+import DesignDetailsPlayer from '~/components/DesignDetailsPlayer';
 
 type Props = {
   post: DesignDetailsPost,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Description, Icons } from './style';
-import Icon from '../Icon';
+import Icon from '~/components/Icon';
 
 export default function Footer() {
   return (

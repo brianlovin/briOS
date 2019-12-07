@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import theme from '../Theme';
+import theme from '~/components/Theme';
 
 export const Arrow = styled.div`
   position: absolute;

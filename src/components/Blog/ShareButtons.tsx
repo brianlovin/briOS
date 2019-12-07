@@ -4,7 +4,7 @@ import {
   FacebookButton,
   TwitterButton,
   CopyLinkButton,
-} from '../Button';
+} from '~/components/Button';
 import { ShareButtonsContainer } from './style';
 
 type Props = {

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import defaultTheme from '../Theme';
+import defaultTheme from '~/components/Theme';
 
 export const SubscriptionsContainer = styled.div`
   padding: ${defaultTheme.space[4]} 0 0;

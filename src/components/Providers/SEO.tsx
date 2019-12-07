@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Head from 'next/head';
 import { DefaultSeo } from 'next-seo';
-import { light } from '../Theme';
+import { light } from '~/components/Theme';
 
 const SeoConfig = {
   title: 'Brian Lovin',

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import * as Styled from './style';
-import Icon from '../Icon';
+import Icon from '~/components/Icon';
 import { ButtonProps } from './types';
 
 const Clipboard = dynamic(() => import('react-clipboard.js'), {

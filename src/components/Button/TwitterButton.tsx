@@ -1,6 +1,6 @@
 import React from 'react';
 import * as Styled from './style';
-import Icon from '../Icon';
+import Icon from '~/components/Icon';
 import { ButtonProps } from './types';
 
 export default function TwitterButton(props: ButtonProps) {

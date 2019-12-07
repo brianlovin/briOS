@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { ThemeProvider } from 'styled-components';
 import useDarkMode from 'use-dark-mode'
-import GlobalStyles from '../GlobalStyles';
-import { light, dark } from '../Theme';
+import GlobalStyles from '~/components/GlobalStyles';
+import { light, dark } from '~/components/Theme';
 import Sentry from './Sentry';
 import Fathom from './Fathom'
 import SEO from './SEO'

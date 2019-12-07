@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { hexa, tint } from '../globals';
+import { hexa, tint } from '~/components/globals';
 import { ButtonSize } from './types';
 
 const getPadding = (size: ButtonSize) => {

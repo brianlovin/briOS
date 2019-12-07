@@ -1,5 +1,5 @@
 import * as React from 'react'
-import OverthoughtPreviewCard from '../Preview'
+import OverthoughtPreviewCard from '~/components/Overthought/Preview'
 import { Grid } from './style'
 
 export default function OverthoughtGrid({ posts }) {

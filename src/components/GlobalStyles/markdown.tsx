@@ -1,6 +1,6 @@
 import { createGlobalStyle, css } from 'styled-components';
-import { h1, h2, h3, h4, h5, h6, p, list, listItem, pre, code, blockquote, img } from '../Typography';
-import defaultTheme from '../Theme';
+import { h1, h2, h3, h4, h5, h6, p, list, listItem, pre, code, blockquote, img } from '~/components/Typography';
+import defaultTheme from '~/components/Theme';
 
 const GlobalMarkdownStyles = createGlobalStyle`
   h1 {
