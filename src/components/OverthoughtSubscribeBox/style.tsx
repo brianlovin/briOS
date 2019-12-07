@@ -25,4 +25,8 @@ export const Container = styled.div`
       color: ${props => props.theme.icon.primary};
     }
   }
+
+  @media (max-width: ${defaultTheme.breakpoints[5]}) {
+    grid-template-columns: 1fr;
+  }
 `
