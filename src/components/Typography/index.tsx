@@ -145,7 +145,6 @@ export const list = css`
   ${p};
   margin: ${defaultTheme.space[4]};
   margin-left: ${defaultTheme.space[5]};
-  font-size: ${defaultTheme.fontSizes[3]};
   font-weight: ${defaultTheme.fontWeights.body};
   line-height: ${defaultTheme.fontWeights.body};
   color: ${props => props.theme.text.secondary};
@@ -177,7 +176,7 @@ export const Li = styled.li`
 
 export const pre = css`
   ${p};
-  font-size: ${defaultTheme.fontSizes[1]}!important;
+  font-size: ${defaultTheme.fontSizes[1]};
   font-family: ${defaultTheme.fonts.monospace}!important;
   padding: ${defaultTheme.space[3]}!important;
   background: ${props => props.theme.bg.inset}!important;
@@ -195,6 +194,15 @@ export const pre = css`
     padding: ${defaultTheme.space[2]};
     line-height: ${defaultTheme.lineHeights.code};
     box-shadow: none!important;
+    font-size: ${defaultTheme.fontSizes[1]};
+  }
+
+  @media(max-width: ${defaultTheme.breakpoints[4]}) {
+    font-size: ${defaultTheme.fontSizes[0]};
+
+    code {
+      font-size: ${defaultTheme.fontSizes[0]};
+    }
   }
 `
 export const Pre = styled.pre`
@@ -203,7 +211,7 @@ export const Pre = styled.pre`
 
 export const code = css`
   ${p};
-  font-size: ${defaultTheme.fontSizes[1]}!important;
+  font-size: ${defaultTheme.fontSizes[1]};
   font-family: ${defaultTheme.fonts.monospace}!important;
   padding:  ${defaultTheme.space[0]} ${defaultTheme.space[1]}!important;
   box-shadow: inset 0 0 0 1px ${props => props.theme.border.default};
@@ -211,6 +219,10 @@ export const code = css`
   display: inline-block;
   background: ${props => props.theme.bg.inset}!important;
   text-shadow: none!important;
+
+  @media(max-width: ${defaultTheme.breakpoints[4]}) {
+    font-size: ${defaultTheme.fontSizes[0]};
+  }
 `
 export const Code = styled.code`
   ${code};

@@ -64,7 +64,7 @@ const GlobalPrismStyles = createGlobalStyle`
   .token.prolog,
   .token.doctype,
   .token.cdata {
-    color: slategray;
+    color: ${props => props.theme.text.quarternary};
   }
 
   .token.punctuation {
