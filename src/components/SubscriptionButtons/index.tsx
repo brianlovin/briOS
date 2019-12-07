@@ -73,6 +73,15 @@ export default function SubscriptionButtons(props: Props) {
         </a>
       )}
 
+      {podcast.spotifyUrl && (
+        <a href={podcast.spotifyUrl} target="_blank" rel="noopener noreferrer">
+          <SubscriptionAvatar
+            src="/static/img/subscription_icons/spotify.png"
+            alt="Spotify"
+          />
+        </a>
+      )}
+
       {podcast.rssFeedUrl && (
         <a href={podcast.rssFeedUrl} target="_blank" rel="noopener noreferrer">
           <SubscriptionAvatar

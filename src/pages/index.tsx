@@ -88,7 +88,11 @@ function Home(props: Props) {
   );
 }
 
-Home.getInitialProps = async () => {
+Home.getInitialProps = async ({ res }) => {
+  if (res) {
+    const cacheAge = 60 * 60 * 12;
+    res.setHeader('Cache-Control', `public,s-maxage=${cacheAge}`);
+  }
   const posts = await getPosts();
   return { posts: posts }
 }
