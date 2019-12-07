@@ -1,17 +1,16 @@
 import * as React from 'react'
 import Link from 'next/link'
-import Card from '../Card'
-import { PreviewImage, ReadingTime } from './style'
-import { Subheading, H3 } from '../Typography'
+import { H3, P } from '../Typography'
+import { Card, PreviewImage, ReadingTime } from './style'
 
 export default function OverthoughtGrid({ post }) {
   return (
     <Link href="/overthought/[slug]" as={`/overthought/${post.slug}`}>
       <a>
         <Card style={{ height: '100%' }}>
-          {post.feature_image && <PreviewImage src={`https://overthought.ghost.io${post.og_image}`} />}
+          {post.feature_image && <PreviewImage src={post.feature_image} />}
           <H3>{post.title}</H3>
-          <Subheading>{post.custom_excerpt || post.excerpt}</Subheading>
+          <P>{post.custom_excerpt || post.excerpt}</P>
           <ReadingTime>{post.reading_time} minute read</ReadingTime>
         </Card>
       </a>

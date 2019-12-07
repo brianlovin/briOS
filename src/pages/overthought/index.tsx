@@ -2,6 +2,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { NextSeo } from 'next-seo'
 import Head from 'next/head'
+import useSWR from 'swr'
 import Page, { SectionHeading, ContentContainer } from '../../components/Page';
 import OverthoughtGrid from '../../components/OverthoughtGrid'
 import { H1, Larr, Subheading } from '../../components/Typography'
@@ -13,7 +14,10 @@ interface Props {
   posts?: Array<BlogPost>
 }
 
-function Overthought({ posts }: Props) {
+function Overthought(props: Props) {
+  const initialData = props.posts
+  const { data: posts } = useSWR('/api/getPosts', getPosts, { initialData })
+  
   return (
     <Page withHeader>
       <Head>

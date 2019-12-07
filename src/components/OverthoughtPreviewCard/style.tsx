@@ -3,17 +3,27 @@ import defaultTheme from '../Theme'
 import { H6 } from '../Typography'
 
 export const Card = styled.div`
+  padding: ${defaultTheme.space[4]};
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto 1fr auto;
   position: relative;
-  background: ${props => props.theme.bg.secondary};
-  padding: 24px;
   border-radius: 16px;
-  height: 100%;
+  background: ${props => props.theme.bg.secondary};
   transition: box-shadow ${props => props.theme.animations.default};
 
   &:hover {
     box-shadow: ${props => props.theme.shadows.largeHover};
     transition: box-shadow ${props => props.theme.animations.hover};
     z-index: 2;
+  }
+
+  &:active {
+    box-shadow: ${props => props.theme.shadows.largeHover};
+  }
+
+  p {
+    margin-top: ${defaultTheme.space[3]};
   }
 `
 
@@ -54,5 +64,5 @@ export const PreviewImage = styled.img`
 export const ReadingTime = styled(H6)`
   text-transform: uppercase;
   color: ${props => props.theme.text.quarternary};
-  margin-top: ${defaultTheme.space[3]};
+  margin-top: ${defaultTheme.space[5]};
 `

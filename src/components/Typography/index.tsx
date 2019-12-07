@@ -99,7 +99,7 @@ export const H6 = styled.h6`
   font-weight: ${defaultTheme.fontWeights.bold};
 
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
-    font-size: ${defaultTheme.fontSizes[1]};
+    font-size: ${defaultTheme.fontSizes[0]};
   }
 `
 
