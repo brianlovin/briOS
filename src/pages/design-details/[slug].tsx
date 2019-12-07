@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { NextSeo } from 'next-seo'
 import Page, { SectionHeading } from '~/components/Page';
 import { H1, Subheading } from '~/components/Typography'
-import { designDetails } from '~/data'
+import { designDetailsPosts } from '~/data'
 import { DesignDetailsPost } from '~/types';
 import DesignDetailView from '~/components/DesignDetailView';
 import DesignDetailsGrid from '~/components/DesignDetailsGrid';
@@ -16,7 +16,7 @@ type Props = {
 export default function DesignDetail() {
   const router = useRouter()
   const { slug } = router.query
-  const post = designDetails.find(post => post.slug === slug)
+  const post = designDetailsPosts.find(post => post.slug === slug)
 
   if (post) {
     return (

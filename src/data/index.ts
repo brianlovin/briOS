@@ -1,5 +1,5 @@
  
 import podcast from './podcast';
-import designDetails from './designDetails';
+import designDetailsPosts from './designDetailsPosts';
 
-export { podcast, designDetails };
+export { podcast, designDetailsPosts };
