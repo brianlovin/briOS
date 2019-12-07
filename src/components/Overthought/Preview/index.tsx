@@ -9,7 +9,7 @@ export default function OverthoughtGrid({ post }) {
       <a>
         <Card style={{ height: '100%' }}>
           {post.feature_image && <PreviewImage src={post.feature_image} />}
-          <H4>{post.title}</H4>
+          <H4 style={{ marginTop: 0 }}>{post.title}</H4>
           <P>{post.custom_excerpt || post.excerpt}</P>
           <ReadingTime>{post.reading_time} minute read</ReadingTime>
         </Card>

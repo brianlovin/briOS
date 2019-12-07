@@ -1,12 +1,10 @@
 import * as React from 'react';
 import Link from 'next/link';
-import { NextSeo } from 'next-seo'
-import Head from 'next/head'
 import useSWR from 'swr'
+import { getPosts } from '~/data/ghost'
 import Page, { SectionHeading, ContentContainer } from '~/components/Page';
 import OverthoughtGrid from '~/components/Overthought/Grid'
 import { H1, Larr, Subheading } from '~/components/Typography'
-import { getPosts } from '~/data/ghost'
 import { BlogPost } from '~/types'
 import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe';
 import cacheSsrRes from '~/lib/cacheSsr';
