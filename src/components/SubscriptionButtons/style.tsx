@@ -190,7 +190,7 @@ export const SubscriptionsContainer = styled.div`
   border-radius: 0 0 8px 8px;
   display: grid;
   grid-gap: 16px;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(8, 1fr);
   justify-content: center;
   transition: max-height 0.15s ease-out;
   position: relative;
