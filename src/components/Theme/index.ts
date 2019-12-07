@@ -50,7 +50,7 @@ const defaultTheme = {
   },
   lineHeights: {
     body: 1.5,
-    heading: 1.3,
+    heading: 1.2,
     code: 1.6,
   },
   shadows: {

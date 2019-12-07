@@ -31,6 +31,7 @@ const ResetStyles = createGlobalStyle`
     margin: 0;
     -webkit-font-smoothing: antialiased;
     font-family: ${defaultTheme.fonts.body};
+    -webkit-text-size-adjust: none;
   }
 
   body {
@@ -92,11 +93,6 @@ const ResetStyles = createGlobalStyle`
     overflow: visible;
   }
 
-  pre {
-    font-family: monospace, monospace;
-    font-size: 1em;
-  }
-
   abbr[title] {
     border-bottom: none;
     text-decoration: underline;
@@ -112,7 +108,6 @@ const ResetStyles = createGlobalStyle`
   kbd,
   samp {
     font-family: monospace, monospace;
-    font-size: 1em;
   }
 
   small {

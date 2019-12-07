@@ -43,8 +43,6 @@ const GlobalPrismStyles = createGlobalStyle`
 
   /* Code blocks */
   pre[class*="language-"] {
-    padding: 1em;
-    margin: .5em 0;
     overflow: auto;
   }
 
