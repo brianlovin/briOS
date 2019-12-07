@@ -23,6 +23,7 @@ const heading = css`
   font-weight: ${defaultTheme.fontWeights.heading};
   color: ${props => props.theme.text.primary};
   line-height: ${defaultTheme.lineHeights.heading};
+  letter-spacing: -0.4px;
 
   ${arrows}
 `
@@ -30,7 +31,6 @@ const heading = css`
 export const h1 = css`
   ${heading};
   font-size: ${defaultTheme.fontSizes[6]};
-  letter-spacing: -0.6px;
 
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
     font-size: ${defaultTheme.fontSizes[5]};
@@ -124,10 +124,6 @@ export const p = css`
 
   & + & {
     margin-top: ${defaultTheme.space[4]};
-  }
-
-  @media (max-width: ${defaultTheme.breakpoints[4]}) {
-    font-size: ${defaultTheme.fontSizes[2]};
   }
 `
 export const P = styled.p`
@@ -228,9 +224,9 @@ export const code = css`
   ${p};
   font-family: ${defaultTheme.fonts.monospace}!important;
   font-size: ${defaultTheme.fontSizes[2]}!important;
-  padding:  ${defaultTheme.space[0]} ${defaultTheme.space[2]}!important;
+  padding:  ${defaultTheme.space[0]} ${defaultTheme.space[1]}!important;
   box-shadow: inset 0 0 0 1px ${props => props.theme.border.default};
-  border-radius: 8px;
+  border-radius: 4px;
   display: inline-block;
   background: ${props => props.theme.bg.inset}!important;
   text-shadow: none!important;
@@ -247,6 +243,7 @@ export const Hr = styled.hr``
 
 export const A = styled.a`
   ${arrows}
+  display: inline-block;
 `
 
 const baseArrowStyles = css`
@@ -274,6 +271,7 @@ export const Larr = styled.span.attrs({
 `
 
 export const Subheading = styled(P)`
+  font-size: ${defaultTheme.fontSizes[3]};
   font-weight: ${defaultTheme.fontWeights.subheading};
   margin-top: ${defaultTheme.space[2]};
   line-height: 1.4;

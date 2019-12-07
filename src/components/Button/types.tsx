@@ -5,4 +5,5 @@ export type ButtonProps = {
   size?: ButtonSize,
   disabled?: boolean,
   children: React.ReactNode | string,
+  type?: string,
 };

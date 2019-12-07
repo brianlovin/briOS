@@ -1,0 +1,20 @@
+{
+  "forms": {
+    "opt-in-form": {
+      "name": "Overthought",
+      "fields": {
+        "email": {
+          "type": "email",
+          "prettyName": "Email address"
+        }
+      },
+      "actions": [
+        {
+          "app": "convertkit",
+          "type": "applyTags",
+          "tags": ["overthought"]
+        }
+      ]
+    }
+  }
+}
