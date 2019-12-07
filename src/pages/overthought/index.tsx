@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import useSWR from 'swr'
-import { getPosts } from '~/data/ghost'
+import { getFeaturedPosts } from '~/data/ghost'
 import Page, { SectionHeading, ContentContainer } from '~/components/Page';
 import OverthoughtGrid from '~/components/Overthought/Grid'
 import { H1, Larr, Subheading } from '~/components/Typography'
@@ -16,7 +16,7 @@ interface Props {
 
 function Overthought(props: Props) {
   const initialData = props.posts
-  const { data: posts } = useSWR('/api/getPosts', getPosts, { initialData })
+  const { data: posts } = useSWR('/api/getFeaturedPosts', getFeaturedPosts, { initialData })
   
   return (
     <Page withHeader>
@@ -48,7 +48,7 @@ function Overthought(props: Props) {
 
 Overthought.getInitialProps = async ({ res }) => {
   cacheSsrRes({ res })
-  const posts = await getPosts();
+  const posts = await getFeaturedPosts();
   return { posts: posts }
 }
 

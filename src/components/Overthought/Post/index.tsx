@@ -2,7 +2,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import useSWR from 'swr'
-import { getPosts } from '~/data/ghost'
+import { getFeaturedPosts } from '~/data/ghost'
 import { BlogPost } from '~/types';
 import { ContentContainer, SectionHeading } from '~/components/Page';
 import { H1, Larr, Subheading } from '~/components/Typography'
@@ -18,7 +18,7 @@ interface Props {
 };
 
 export default function Post({ post }) {
-  const { data: posts } = useSWR('/api/getPosts', getPosts)
+  const { data: posts } = useSWR('/api/getFeaturedPosts', getFeaturedPosts)
   
   return (
     <React.Fragment>

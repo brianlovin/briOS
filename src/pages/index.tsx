@@ -7,7 +7,7 @@ import { H1, H2, A, Rarr, Subheading } from '~/components/Typography'
 import OverthoughtGrid from '~/components/Overthought/Grid'
 import DesignDetailsGrid from '~/components/DesignDetailsGrid';
 import DesignDetailsPlayer from '~/components/DesignDetailsPlayer';
-import { getPosts } from '~/data/ghost'
+import { getFeaturedPosts } from '~/data/ghost'
 import { BlogPost } from '~/types'
 import cacheSsrRes from '~/lib/cacheSsr';
 
@@ -17,7 +17,7 @@ interface Props {
 
 function Home(props: Props) {
   const initialData = props.posts
-  const { data: posts } = useSWR('/api/getPosts', getPosts, { initialData })
+  const { data: posts } = useSWR('/api/getFeaturedPosts', getFeaturedPosts, { initialData })
 
   return (
     <Page>
@@ -91,7 +91,7 @@ function Home(props: Props) {
 
 Home.getInitialProps = async ({ res }) => {
   cacheSsrRes({ res })
-  const posts = await getPosts();
+  const posts = await getFeaturedPosts();
   return { posts: posts }
 }
 
