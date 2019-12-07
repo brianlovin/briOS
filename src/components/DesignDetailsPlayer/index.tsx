@@ -2,7 +2,7 @@ import React from 'react';
 import VisibilitySensor from 'react-visibility-sensor';
 import useDarkMode from 'use-dark-mode'
 import { getDateObject } from '~/lib/getDateObject'
-import { podcasts } from '~/data';
+import { podcast } from '~/data';
 import LoadingSpinner from '~/components/LoadingSpinner';
 import SubscriptionButtons from '~/components/SubscriptionButtons'
 import { H3, P } from '~/components/Typography'
@@ -42,7 +42,7 @@ export default function LatestEpisode({ showMoreEpisodes }: Props) {
               <LoadingSpinner />
             </ContentContainer>
           </PlayerContainer>
-          <SubscriptionButtons podcast={podcasts[0]} />
+          <SubscriptionButtons podcast={podcast} />
         </OuterContainer>
       </VisibilitySensor>
     );
@@ -70,7 +70,7 @@ export default function LatestEpisode({ showMoreEpisodes }: Props) {
         </ContentContainer>
       </PlayerContainer>
 
-      <SubscriptionButtons podcast={podcasts[0]} />
+      <SubscriptionButtons podcast={podcast} />
 
       {showMoreEpisodes && (
         <EpisodeGrid>
@@ -85,7 +85,7 @@ export default function LatestEpisode({ showMoreEpisodes }: Props) {
                     <P>{ep.description.split('.')[0].substring(0, 200).trim() + '...'}</P>
                     <Date>{datestring}</Date>
                   </CardContent>
-                  <Circle color={podcasts[0].colors.text} />
+                  <Circle color={podcast.colors.text} />
                   <Arrow>
                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg>
                   </Arrow>
