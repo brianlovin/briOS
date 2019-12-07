@@ -23,7 +23,7 @@ export const Card = styled.div`
   }
 
   p {
-    margin-top: ${defaultTheme.space[3]};
+    margin-top: ${defaultTheme.space[2]};
   }
 `
 

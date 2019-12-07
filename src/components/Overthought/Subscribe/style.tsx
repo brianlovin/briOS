@@ -6,7 +6,7 @@ export const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   grid-gap: ${defaultTheme.space[3]};
-  margin: ${defaultTheme.space[6]} 0 ${defaultTheme.space[5]};
+  margin: ${defaultTheme.space[5]} 0 ${defaultTheme.space[4]};
   padding: ${defaultTheme.space[4]};
   background: ${props => props.theme.bg.inset};
   width: 100%;
@@ -21,10 +21,14 @@ export const Form = styled.form`
   button {
     height: 100%;
   }
+
+  @media(max-width: ${defaultTheme.breakpoints[4]}) {
+    grid-template-columns: 1fr;
+  }
 `
 
 export const Input = styled.input`
-  padding: 11px ${defaultTheme.space[4]} 12px;
+  padding: 10px ${defaultTheme.space[4]};
   border: 1px solid ${props => props.theme.border.default};
   color: ${props => props.theme.text.primary};
   border-radius: 24px;

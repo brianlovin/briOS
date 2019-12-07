@@ -33,7 +33,7 @@ export const h1 = css`
   font-size: ${defaultTheme.fontSizes[6]};
 
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
-    font-size: ${defaultTheme.fontSizes[5]};
+    font-size: ${defaultTheme.fontSizes[5]}
   }
 `
 export const H1 = styled.h1`
@@ -44,13 +44,13 @@ export const h2 = css`
   ${heading};
   font-size: ${defaultTheme.fontSizes[5]};
   letter-spacing: -0.6px;
-
-  @media (max-width: ${defaultTheme.breakpoints[4]}) {
-    font-size: ${defaultTheme.fontSizes[4]};
-  }
 `
 export const H2 = styled.h2`
   ${h2};
+
+  @media (max-width: ${defaultTheme.breakpoints[4]}) {
+    font-size: ${defaultTheme.fontSizes[4]}
+  }
 `
 
 export const h3 = css`
@@ -60,10 +60,6 @@ export const h3 = css`
 `
 export const H3 = styled.h3`
   ${h3};
-
-  @media (max-width: ${defaultTheme.breakpoints[4]}) {
-    font-size: ${defaultTheme.fontSizes[3]};
-  }
 `
 
 export const h4 = css`
@@ -72,10 +68,6 @@ export const h4 = css`
 `
 export const H4 = styled.h4`
   ${h4};
-
-  @media (max-width: ${defaultTheme.breakpoints[4]}) {
-    font-size: ${defaultTheme.fontSizes[2]};
-  }
 `
 
 export const h5 = css`
@@ -84,10 +76,6 @@ export const h5 = css`
 `
 export const H5 = styled.h5`
   ${h5};
-
-  @media (max-width: ${defaultTheme.breakpoints[4]}) {
-    font-size: ${defaultTheme.fontSizes[1]};
-  }
 `
 
 export const h6 = css`
@@ -97,14 +85,10 @@ export const h6 = css`
 export const H6 = styled.h6`
   ${h6};
   font-weight: ${defaultTheme.fontWeights.bold};
-
-  @media (max-width: ${defaultTheme.breakpoints[4]}) {
-    font-size: ${defaultTheme.fontSizes[0]};
-  }
 `
 
 export const p = css`
-  font-size: ${defaultTheme.fontSizes[3]};
+  font-size: ${defaultTheme.fontSizes[2]};
   font-weight: ${defaultTheme.fontWeights.body};
   line-height: ${defaultTheme.lineHeights.body};
   color: ${props => props.theme.text.secondary};
@@ -124,6 +108,10 @@ export const p = css`
 
   & + & {
     margin-top: ${defaultTheme.space[4]};
+  }
+
+  @media(min-width: ${defaultTheme.breakpoints[4]}) {
+    font-size: ${defaultTheme.fontSizes[3]};
   }
 `
 export const P = styled.p`
@@ -154,6 +142,7 @@ export const Blockquote = styled.blockquote`
 `
 
 export const list = css`
+  ${p};
   margin: ${defaultTheme.space[4]};
   margin-left: ${defaultTheme.space[5]};
   font-size: ${defaultTheme.fontSizes[3]};
@@ -168,10 +157,6 @@ export const list = css`
 
   a:hover {
     text-decoration: underline solid ${props => props.theme.text.primary};
-  }
-
-  @media (max-width: ${defaultTheme.breakpoints[4]}) {
-    font-size: ${defaultTheme.fontSizes[2]};
   }
 `
 export const Ul = styled.ul`
@@ -192,7 +177,7 @@ export const Li = styled.li`
 
 export const pre = css`
   ${p};
-  font-size: ${defaultTheme.fontSizes[2]}!important;
+  font-size: ${defaultTheme.fontSizes[1]}!important;
   font-family: ${defaultTheme.fonts.monospace}!important;
   padding: ${defaultTheme.space[3]}!important;
   background: ${props => props.theme.bg.inset}!important;
@@ -211,10 +196,6 @@ export const pre = css`
     line-height: ${defaultTheme.lineHeights.code};
     box-shadow: none!important;
   }
-
-  @media (max-width: ${defaultTheme.breakpoints[4]}) {
-    font-size: ${defaultTheme.fontSizes[1]}!important;
-  }
 `
 export const Pre = styled.pre`
   ${pre};
@@ -222,18 +203,14 @@ export const Pre = styled.pre`
 
 export const code = css`
   ${p};
+  font-size: ${defaultTheme.fontSizes[1]}!important;
   font-family: ${defaultTheme.fonts.monospace}!important;
-  font-size: ${defaultTheme.fontSizes[2]}!important;
   padding:  ${defaultTheme.space[0]} ${defaultTheme.space[1]}!important;
   box-shadow: inset 0 0 0 1px ${props => props.theme.border.default};
   border-radius: 4px;
   display: inline-block;
   background: ${props => props.theme.bg.inset}!important;
   text-shadow: none!important;
-
-  @media (max-width: ${defaultTheme.breakpoints[4]}) {
-    font-size: ${defaultTheme.fontSizes[1]}!important;
-  }
 `
 export const Code = styled.code`
   ${code};

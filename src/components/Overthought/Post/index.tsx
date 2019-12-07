@@ -1,6 +1,8 @@
  
 import * as React from 'react';
 import Link from 'next/link';
+import useSWR from 'swr'
+import { getPosts } from '~/data/ghost'
 import { BlogPost } from '~/types';
 import { ContentContainer, SectionHeading } from '~/components/Page';
 import { H1, Larr, Subheading } from '~/components/Typography'
@@ -9,37 +11,48 @@ import PostShareButtons from '~/components/ShareButtons';
 import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe'
 import Body from './Body'
 import SEO from './SEO'
+import Grid from '../Grid'
 
 interface Props {
   post: BlogPost;
 };
 
 export default function Post({ post }) {
+  const { data: posts } = useSWR('/api/getPosts', getPosts)
+  
   return (
-    <ContentContainer data-cy="overthought-post">
-      <SEO post={post} />
-      <SectionHeading>
-        <Link href={'/overthought'}>
-          <a>
-            <Subheading><Larr /> Overthought</Subheading>
-          </a>
-        </Link>
+    <React.Fragment>
+      <ContentContainer data-cy="overthought-post">
+        <SEO post={post} />
+        <SectionHeading>
+          <Link href={'/overthought'}>
+            <a>
+              <Subheading><Larr /> Overthought</Subheading>
+            </a>
+          </Link>
+          
+          <div style={{ paddingBottom: '64px' }} />
+
+          {post.feature_image && <FeaturedImage src={`https://overthought.ghost.io${post.og_image}`} />}
+          <H1 style={{ marginTop: 0 }}>{post.title}</H1>
+          <div style={{ padding: '8px '}} />
+        </SectionHeading>
         
-        <div style={{ paddingBottom: '64px' }} />
-
-        {post.feature_image && <FeaturedImage src={`https://overthought.ghost.io${post.og_image}`} />}
-        <H1 style={{ marginTop: 0 }}>{post.title}</H1>
-        <div style={{ padding: '8px '}} />
-      </SectionHeading>
-      
-      <Body post={post} />
+        <Body post={post} />
 
 
-      <SectionHeading>
-        <PostShareButtons route={`overthought/${post.slug}`} title={post.title} />
-        <OverthoughtSubscribeBox />
-      </SectionHeading>
+        <SectionHeading>
+          <PostShareButtons route={`overthought/${post.slug}`} title={post.title} />
+          <OverthoughtSubscribeBox />
+        </SectionHeading>
 
-    </ContentContainer>
+        <SectionHeading>
+          <H1>Overthought</H1>
+          <Subheading>Overthinking out loud about design, development, and building products.</Subheading>
+        </SectionHeading>
+
+      </ContentContainer>
+      { posts && <Grid posts={posts} />}
+    </React.Fragment>
   )
 }
