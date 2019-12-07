@@ -3,12 +3,13 @@ import Link from 'next/link';
 import { NextSeo } from 'next-seo'
 import Head from 'next/head'
 import useSWR from 'swr'
-import Page, { SectionHeading, ContentContainer } from '../../components/Page';
-import OverthoughtGrid from '../../components/OverthoughtGrid'
-import { H1, Larr, Subheading } from '../../components/Typography'
-import { getPosts } from '../../data/ghost'
-import { BlogPost } from '../../types'
-import OverthoughtSubscribeBox from '../../components/OverthoughtSubscribeBox';
+import Page, { SectionHeading, ContentContainer } from '~/components/Page';
+import OverthoughtGrid from '~/components/Overthought/Grid'
+import { H1, Larr, Subheading } from '~/components/Typography'
+import { getPosts } from '~/data/ghost'
+import { BlogPost } from '~/types'
+import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe';
+import cacheSsrRes from '~/lib/cacheSsrRes';
 
 interface Props {
   posts?: Array<BlogPost>
@@ -62,10 +63,7 @@ function Overthought(props: Props) {
 }
 
 Overthought.getInitialProps = async ({ res }) => {
-  if (res) {
-    const cacheAge = 60 * 60 * 12;
-    res.setHeader('Cache-Control', `public,s-maxage=${cacheAge}`);
-  }
+  cacheSsrRes({ res })
   const posts = await getPosts();
   return { posts: posts }
 }

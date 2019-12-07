@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Link from 'next/link'
-import Page, { SectionHeading, ContentContainer } from '../components/Page';
-import { H1, P, Larr, Subheading } from '../components/Typography'
+import Page, { SectionHeading, ContentContainer } from '~/components/Page';
+import { H1, P, Larr, Subheading } from '~/components/Typography'
 
 export default function About() {
   return (

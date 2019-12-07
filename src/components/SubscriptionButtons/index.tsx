@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ConfigPodcast } from '../../types';
+import { ConfigPodcast } from '~/types';
 import { SubscriptionsContainer, SubscriptionAvatar} from './style';
 
 type Props = {

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Link from 'next/link'
-import { H3, P } from '../Typography'
+import { H3, P } from '~/components/Typography'
 import { Card, PreviewImage, ReadingTime } from './style'
 
 export default function OverthoughtGrid({ post }) {

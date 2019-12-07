@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { designDetails } from '../../data';
+import { designDetails } from '~/data';
 import DesignDetailsCard from '../DesignDetailsCard';
 import { Grid } from './style';
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import VisibilitySensor from 'react-visibility-sensor';
-import { DesignDetail } from '../../types';
+import { DesignDetail } from '~/types';
 import Markdown from '../Markdown';
 import { DetailContainer, DetailTitle, MediaContainer, Video } from './style';
 

@@ -2,13 +2,14 @@
 import * as React from 'react';
 import Link from 'next/link';
 import useSWR from 'swr'
-import Page, { SectionHeading, ContentContainer } from '../components/Page';
-import { H1, H2, A, Rarr, Subheading } from '../components/Typography'
-import OverthoughtGrid from '../components/OverthoughtGrid'
-import DesignDetailsGrid from '../components/DesignDetailsGrid';
-import DesignDetailsPlayer from '../components/DesignDetailsPlayer';
-import { getPosts } from '../data/ghost'
-import { BlogPost } from '../types'
+import Page, { SectionHeading, ContentContainer } from '~/components/Page';
+import { H1, H2, A, Rarr, Subheading } from '~/components/Typography'
+import OverthoughtGrid from '~/components/Overthought/Grid'
+import DesignDetailsGrid from '~/components/DesignDetailsGrid';
+import DesignDetailsPlayer from '~/components/DesignDetailsPlayer';
+import { getPosts } from '~/data/ghost'
+import { BlogPost } from '~/types'
+import cacheSsrRes from '~/lib/cacheSsrRes';
 
 interface Props {
   posts?: Array<BlogPost>
@@ -89,10 +90,7 @@ function Home(props: Props) {
 }
 
 Home.getInitialProps = async ({ res }) => {
-  if (res) {
-    const cacheAge = 60 * 60 * 12;
-    res.setHeader('Cache-Control', `public,s-maxage=${cacheAge}`);
-  }
+  cacheSsrRes({ res })
   const posts = await getPosts();
   return { posts: posts }
 }

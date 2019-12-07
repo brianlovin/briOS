@@ -2,12 +2,12 @@
 import * as React from 'react';
 import { useRouter } from 'next/router'
 import { NextSeo } from 'next-seo'
-import Page, { SectionHeading } from '../../components/Page';
-import { H1, Subheading } from '../../components/Typography'
-import { designDetails } from '../../data'
-import { DesignDetailsPost } from '../../types';
-import DesignDetailView from '../../components/DesignDetailView';
-import DesignDetailsGrid from '../../components/DesignDetailsGrid';
+import Page, { SectionHeading } from '~/components/Page';
+import { H1, Subheading } from '~/components/Typography'
+import { designDetails } from '~/data'
+import { DesignDetailsPost } from '~/types';
+import DesignDetailView from '~/components/DesignDetailView';
+import DesignDetailsGrid from '~/components/DesignDetailsGrid';
 
 type Props = {
   post: DesignDetailsPost,

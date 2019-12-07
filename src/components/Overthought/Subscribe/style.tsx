@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import defaultTheme from '../Theme'
+import defaultTheme from '~/components/Theme'
 
 export const Container = styled.div`
   display: grid;

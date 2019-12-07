@@ -1,8 +1,8 @@
 import React from 'react';
 import VisibilitySensor from 'react-visibility-sensor';
 import useDarkMode from 'use-dark-mode'
-import { getDateObject } from '../../lib/getDateObject'
-import { podcasts } from '../../data';
+import { getDateObject } from '~/lib/getDateObject'
+import { podcasts } from '~/data';
 import LoadingSpinner from '../LoadingSpinner';
 import SubscriptionButtons from '../SubscriptionButtons'
 import { H3, P } from '../Typography'

@@ -2,9 +2,9 @@
 import * as React from 'react';
 import Link from 'next/link'
 import { NextSeo } from 'next-seo'
-import Page, { SectionHeading, ContentContainer } from '../../components/Page';
-import { H1, Larr, Subheading } from '../../components/Typography'
-import DesignDetailsGrid from '../../components/DesignDetailsGrid';
+import Page, { SectionHeading, ContentContainer } from '~/components/Page';
+import { H1, Larr, Subheading } from '~/components/Typography'
+import DesignDetailsGrid from '~/components/DesignDetailsGrid';
 
 export default function DesignDetails() {
   return (
