@@ -28,5 +28,9 @@ export const Container = styled.div`
 
   @media (max-width: ${defaultTheme.breakpoints[5]}) {
     grid-template-columns: 1fr;
+
+    a {
+      font-size: ${defaultTheme.fontSizes[1]};
+    }
   }
 `

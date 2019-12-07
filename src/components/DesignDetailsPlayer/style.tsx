@@ -42,7 +42,7 @@ export const PlayerContainer = styled.div`
   background: ${props => props.theme.bg.secondary};
   border-radius: 10px;
   width: 100%;
-  max-width: calc(${defaultTheme.breakpoints[0]} - ${defaultTheme.space[5]});
+  max-width: calc(${defaultTheme.breakpoints[0]});
   padding: ${defaultTheme.space[3]};
   display: flex;
   margin-top: ${defaultTheme.space[5]};
