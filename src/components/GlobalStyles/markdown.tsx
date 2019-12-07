@@ -71,15 +71,16 @@ const GlobalMarkdownStyles = createGlobalStyle`
     position: relative;
     padding-top: 56.25%;
     margin: ${defaultTheme.space[4]} 0;
+    
+    iframe {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
   }
 
-  iframe {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
 `
 
 export default GlobalMarkdownStyles

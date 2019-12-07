@@ -28,10 +28,10 @@ export const Circle = styled.div`
 
 export const OuterContainer = styled.div`
   width: 100%;
-  padding: 0 ${defaultTheme.space[3]};
   display: flex;
   align-items: center;
   flex-direction: column;
+  position: relative;
 
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
     padding: 0;
@@ -90,9 +90,9 @@ export const ContentContainer = styled.div`
 `;
 
 export const Date = styled(H6)`
-  text-transform: uppercase;
   color: ${props => props.theme.text.quarternary};
-  margin-top: ${defaultTheme.space[3]};
+  margin-top: ${defaultTheme.space[5]};
+  font-weight: ${defaultTheme.fontWeights.link};
 `;
 
 export const Title = styled.span`
@@ -138,7 +138,8 @@ export const EpisodeCard = styled.div`
   border-radius: 16px;
   transition: ${defaultTheme.animations.default};
   align-items: flex-start;
-  height: 400px;
+  min-height: 300px;
+  height: 100%;
   overflow: hidden;
   z-index: 3;
 

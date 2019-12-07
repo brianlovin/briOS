@@ -29,7 +29,7 @@ export default function DesignDetails() {
         </SectionHeading>
       </ContentContainer>
 
-      <DesignDetailsGrid />
+      <DesignDetailsGrid truncate={false} />
     </Page>
   );
 }

@@ -49,7 +49,7 @@ const defaultTheme = {
     heading: 800,
   },
   lineHeights: {
-    body: 1.5,
+    body: 1.4,
     heading: 1.2,
     code: 1.6,
   },

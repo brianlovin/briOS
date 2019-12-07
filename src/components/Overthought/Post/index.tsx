@@ -2,11 +2,10 @@
 import * as React from 'react';
 import Link from 'next/link';
 import useSWR from 'swr'
-import Prism from 'prismjs'
 import { getFeaturedPosts } from '~/data/ghost'
 import { BlogPost } from '~/types';
 import { ContentContainer, SectionHeading } from '~/components/Page';
-import { H1, Larr, Subheading } from '~/components/Typography'
+import { H1, Larr, A, Rarr, Subheading } from '~/components/Typography'
 import { FeaturedImage } from '~/components/Overthought/Preview/style'
 import PostShareButtons from '~/components/ShareButtons';
 import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe'
@@ -25,7 +24,7 @@ export default function Post({ post }) {
   
   return (
     <React.Fragment>
-      <SyntaxHighlighter />
+      <SyntaxHighlighter data={post} />
       <GlobalStyles.PrismStyles />
       <GlobalStyles.MarkdownStyles />
 
@@ -53,12 +52,17 @@ export default function Post({ post }) {
         </SectionHeading>
 
         <SectionHeading>
-          <H1>Overthought</H1>
+          <H1>More from Overthought</H1>
           <Subheading>Overthinking out loud about design, development, and building products.</Subheading>
+          <Subheading style={{ marginTop: '24px'}}>
+            <Link href="/overthought">
+              <A>View all posts <Rarr /></A>
+            </Link>
+          </Subheading>
         </SectionHeading>
 
       </ContentContainer>
-      { posts && <Grid posts={posts} />}
+      { posts && <Grid truncate={true} posts={posts} />}
     </React.Fragment>
   )
 }

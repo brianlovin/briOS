@@ -41,7 +41,7 @@ function Overthought(props: Props) {
         </SectionHeading>
       </ContentContainer>
 
-      <OverthoughtGrid posts={posts} />
+      <OverthoughtGrid truncate={false} posts={posts} />
     </Page>
   );
 }

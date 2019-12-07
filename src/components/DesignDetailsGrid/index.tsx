@@ -3,11 +3,12 @@ import { designDetailsPosts } from '~/data';
 import DesignDetailsCard from '~/components/DesignDetailsCard';
 import { Grid } from './style';
 
-export default function DesignDetailsGrid() {
+export default function DesignDetailsGrid({ truncate }) {
+  const posts = truncate ? designDetailsPosts.slice(0, 3) : designDetailsPosts
   return (
     <React.Fragment>
       <Grid>
-        {designDetailsPosts.map(post => (
+        {posts.map(post => (
           <DesignDetailsCard key={post.slug} post={post} />
         ))}
       </Grid>

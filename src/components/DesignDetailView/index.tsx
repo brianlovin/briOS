@@ -1,9 +1,8 @@
 import React from 'react';
-import Head from 'next/head';
+import Link from 'next/link'
 import { getDateObject } from '~/lib/getDateObject';
 import { ContentContainer, SectionHeading, } from '~/components/Page';
-import { H1, H2, Subheading } from '~/components/Typography'
-import { Notice } from '~/components/Blog';
+import { H1, H2, Subheading, A, Rarr } from '~/components/Typography'
 import { DesignDetailsPost } from '~/types';
 import DesignDetailsGrid from '~/components/DesignDetailsGrid';
 import DesignDetailMedia from '~/components/DesignDetailMedia';
@@ -14,7 +13,6 @@ import {
   Icon,
   LinkOverrides,
 } from './style';
-import DesignDetailsPlayer from '~/components/DesignDetailsPlayer';
 
 type Props = {
   post: DesignDetailsPost,
@@ -30,7 +28,7 @@ export default function DesignDetailView(props: Props) {
   return (
     <React.Fragment>
       <LinkOverrides tint={post.tint} />
-      <ContentContainer style={{ marginTop: '96px'}}>
+      <ContentContainer style={{ marginTop: '96px' }}>
         <Icon
           src={`/static/img/design-details/${post.slug}.jpeg`}
           alt={post.title}
@@ -49,32 +47,24 @@ export default function DesignDetailView(props: Props) {
 
         <Markdown>{post.description}</Markdown>
 
-        <Notice>
-          <Notice.Title>Listen while you read</Notice.Title>
-          <Notice.Description>
-            Design Details is also a weekly podcast about design
-            process and culture. Listen to the latest episode while you read, or
-            subscribe in your favorite app.
-          </Notice.Description>
-
-          <DesignDetailsPlayer showMoreEpisodes={false} />
-        </Notice>
-
-        <div style={{ padding: '16px' }} />
-
         {post.details.map((detail, i) => (
           <DesignDetailMedia detail={detail} key={`${detail.title}-${i}`} />
         ))}
 
         <SectionHeading>
-          <H2>All Design Details Posts</H2>
+          <H2>More Design Details</H2>
           <Subheading>A visual exploration of digital products</Subheading>
+          <Subheading style={{ marginTop: '24px'}}>
+            <Link href="/design-details">
+              <A>View all posts <Rarr /></A>
+            </Link>
+          </Subheading>
         </SectionHeading>
 
       </ContentContainer>
 
 
-      <DesignDetailsGrid />
+      <DesignDetailsGrid truncate={true} />
     </React.Fragment>
   );
 }

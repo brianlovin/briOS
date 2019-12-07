@@ -33,55 +33,44 @@ function Home(props: Props) {
         <React.Fragment>
           <ContentContainer data-cy="overthought">
             <SectionHeading>
-              <Link href="/overthought">
-                <A>
-                  <H2>Overthought <Rarr /></H2>
-                </A>
-              </Link>
+              <H2>Overthought</H2>
               <Subheading>Thinking out loud about design, development, and building products.</Subheading>
+              <Subheading style={{ marginTop: '24px'}}>
+                <Link href="/overthought">
+                  <A>View all posts <Rarr /></A>
+                </Link>
+              </Subheading>
             </SectionHeading>
           </ContentContainer>
 
-          <OverthoughtGrid posts={posts} />
+          <OverthoughtGrid truncate={true} posts={posts} />
         </React.Fragment>
       )}
 
       <ContentContainer>
         <SectionHeading>
-          <Link href="/design-details">
-            <A>
-              <H2>Design Details <Rarr /></H2>
-            </A>
-          </Link>
+          <H2>Design Details</H2>
           <Subheading>An exploration of visual and interaction design in well-known apps.</Subheading>
+          <Subheading style={{ marginTop: '24px'}}>
+            <Link href="/design-details">
+              <A>View all posts <Rarr /></A>
+            </Link>
+          </Subheading>
         </SectionHeading>
       </ContentContainer>
 
-      <DesignDetailsGrid />
+      <DesignDetailsGrid truncate={true} />
 
       <ContentContainer>
         <SectionHeading>
-          <A
-            href="https://designdetails.fm"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <H2>Design Details Podcast</H2>
-          </A>
+          <H2>Design Details Podcast</H2>
           <Subheading>
             A weekly conversation about design process and culture.
           </Subheading>
-          <Subheading>
-            <A
-              href="https://designdetails.fm"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Go to site <Rarr />
-            </A>
+          <Subheading style={{ marginTop: '24px'}}>
+            <A href="https://designdetails.fm" target="_blank" rel="noopener noreferrer">Go to site <Rarr /></A>
           </Subheading>
         </SectionHeading>
-
       </ContentContainer>
       
       <DesignDetailsPlayer showMoreEpisodes />

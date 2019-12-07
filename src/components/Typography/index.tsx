@@ -85,6 +85,7 @@ export const h6 = css`
 export const H6 = styled.h6`
   ${h6};
   font-weight: ${defaultTheme.fontWeights.bold};
+  letter-spacing: 0.2px;
 `
 
 export const p = css`

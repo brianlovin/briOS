@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import theme from '~/components/Theme';
+import defaultTheme from '~/components/Theme';
+import { H6 } from '../Typography';
 
 export const Arrow = styled.div`
   position: absolute;
@@ -8,7 +9,7 @@ export const Arrow = styled.div`
   opacity: 0;
   will-change: transform;
   color: #fff;
-  transition: transform ${theme.animations.default}, opacity ${theme.animations.default};
+  transition: transform ${defaultTheme.animations.default}, opacity ${defaultTheme.animations.default};
 `
 
 export const Circle = styled.div`
@@ -21,7 +22,7 @@ export const Circle = styled.div`
   background:${props => props.color};
   transform: scale(0);
   will-change: transform;
-  transition: transform ${theme.animations.default};
+  transition: transform ${defaultTheme.animations.default};
 `
 
 export const Container = styled.div`
@@ -30,7 +31,7 @@ export const Container = styled.div`
   position: relative;
   padding: 24px;
   border-radius: 16px;
-  transition: ${theme.animations.default};
+  transition: ${defaultTheme.animations.default};
   align-items: flex-start;
   height: 400px;
   overflow: hidden;
@@ -40,17 +41,17 @@ export const Container = styled.div`
 
     ${Circle} {
       transform: scale(1);
-      transition: transform ${theme.animations.default};
+      transition: transform ${defaultTheme.animations.default};
     }
 
     ${Arrow} {
       opacity: 1;
-      transition: transform ${theme.animations.hover}, opacity ${theme.animations.hover};
+      transition: transform ${defaultTheme.animations.hover}, opacity ${defaultTheme.animations.hover};
       transform: translateX(32px);
     }
 
     video {
-      transition: opacity ${theme.animations.default}, filter ${theme.animations.default}, transform ${theme.animations.default};
+      transition: opacity ${defaultTheme.animations.default}, filter ${defaultTheme.animations.default}, transform ${defaultTheme.animations.default};
       transform: rotate3d(.342,-.94,0,22deg) rotateZ(4deg);
       filter: grayscale(0);
       opacity: 1;
@@ -79,7 +80,7 @@ export const Container = styled.div`
     
     &:hover {
       ${Arrow} {
-        transition: transform ${theme.animations.hover}, opacity ${theme.animations.hover};
+        transition: transform ${defaultTheme.animations.hover}, opacity ${defaultTheme.animations.hover};
         transform: translateX(12px) translateY(-50%);
       }
     }
@@ -93,8 +94,8 @@ export const VideoPlayer = styled.video`
   top: 30px;
   transform: rotate3d(.342,-.2,0,22deg) rotateZ(7deg);
   z-index: 2;
-  transition: ${theme.animations.hover};
-  box-shadow: ${theme.shadows.largeHover};
+  transition: ${defaultTheme.animations.hover};
+  box-shadow: ${defaultTheme.shadows.largeHover};
   filter: grayscale(1);
   opacity: 0.2;
   min-width: 327px;
@@ -136,12 +137,10 @@ export const CardContent = styled.div`
   z-index: 3;
 `;
 
-export const DetailsCount = styled.p`
-  font-size: 14px;
-  font-weight: 700;
-  text-transform: uppercase;
+export const DetailsCount = styled(H6)`
   color: ${props => props.theme.text.quarternary};
-  margin: 0;
+  margin-top: ${defaultTheme.space[1]};
+  font-weight: ${defaultTheme.fontWeights.link};
 `;
 
 export const Title = styled.p`

@@ -44,7 +44,7 @@ export default function DesignDetail() {
         <Subheading>A visual exploration of digital products</Subheading>
       </SectionHeading>
 
-      <DesignDetailsGrid />
+      <DesignDetailsGrid truncate={false} />
     </Page>
   );
 }
