@@ -12,13 +12,16 @@ import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe'
 import Body from './Body'
 import SEO from './SEO'
 import Grid from '../Grid'
+import GlobalStyles from '~/components/GlobalStyles';
 
 interface Props {
   post: BlogPost;
 };
 
 export default function Post({ post }) {
+  // fetch posts for the bottom of the view to show recent posts from the blog
   const { data: posts } = useSWR('/api/getFeaturedPosts', getFeaturedPosts)
+
   
   return (
     <React.Fragment>
@@ -38,8 +41,8 @@ export default function Post({ post }) {
           <div style={{ padding: '8px '}} />
         </SectionHeading>
         
-        <Body post={post} />
-
+        <GlobalStyles.MarkdownStyles />
+        <div dangerouslySetInnerHTML={{ __html: post.html }} />
 
         <SectionHeading>
           <PostShareButtons route={`overthought/${post.slug}`} title={post.title} />

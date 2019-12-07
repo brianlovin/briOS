@@ -65,6 +65,20 @@ const GlobalMarkdownStyles = createGlobalStyle`
   blockquote {
     ${blockquote}
   }
+
+  /* ghost's iframe wrapper element, used to add aspect ratio to iframes */
+  .kg-embed-card {
+    position: relative;
+    padding-top: 56.25%;
+  }
+
+  iframe {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
 `
 
 export default GlobalMarkdownStyles

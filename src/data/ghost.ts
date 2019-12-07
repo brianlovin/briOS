@@ -18,7 +18,11 @@ export async function getPosts() {
 }
 
 function isFeatured(post) {
-  return post.featured
+  if (process.env.NODE_ENV === 'production') {
+    return post.featured
+  }
+  // load all posts locally
+  return true
 }
 
 export async function getFeaturedPosts() {
