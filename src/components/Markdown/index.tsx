@@ -37,7 +37,7 @@ export default function Markdown(props: Props) {
 
   React.useEffect(() => {
     Prism.highlightAll()
-  }, [])
+  }, [ children ])
 
   return (
     <React.Fragment>
