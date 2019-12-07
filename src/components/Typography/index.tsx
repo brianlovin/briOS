@@ -165,6 +165,15 @@ export const list = css`
   line-height: ${defaultTheme.fontWeights.body};
   color: ${props => props.theme.text.secondary};
 
+  a {
+    color: ${props => props.theme.text.primary};
+    text-decoration: underline solid ${props => props.theme.border.default};
+  }
+
+  a:hover {
+    text-decoration: underline solid ${props => props.theme.text.primary};
+  }
+
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
     font-size: ${defaultTheme.fontSizes[2]};
   }
