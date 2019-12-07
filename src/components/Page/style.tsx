@@ -30,6 +30,7 @@ export const InnerPageContainer = styled.div`
     max-width: 100%;
     padding: 0 ${defaultTheme.space[3]};
     padding-top: ${defaultTheme.space[6]};
+    padding-bottom: ${defaultTheme.space[9]};
   }
 `;
 
@@ -44,6 +45,6 @@ export const SectionHeading = styled.div`
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
     align-items: flex-start;
     max-width: 100%;
-    margin-top: ${defaultTheme.space[6]};
+    margin-top: ${defaultTheme.space[8]};
   }
 `;
