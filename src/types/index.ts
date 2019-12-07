@@ -23,25 +23,26 @@ export interface SimplecastEpisode {
 };
 
 export interface ConfigPodcast {
-  id: number,
-  name: string,
-  slug: string,
-  description: string,
-  simplecastId: number,
-  artworkUrl: string,
-  iTunesUrl: string,
-  overcastUrl: string,
-  pocketCastsUrl: string,
-  rssFeedUrl: string,
-  googlePodcastsUrl: string,
-  castroUrl: string,
-  breakerUrl: string,
-  applePodcastId: string,
-  twitterUsername: string,
+  id: number;
+  name: string;
+  slug: string;
+  description: string;
+  simplecastId: number;
+  artworkUrl: string;
+  iTunesUrl: string;
+  overcastUrl: string;
+  pocketCastsUrl: string;
+  rssFeedUrl: string;
+  googlePodcastsUrl: string;
+  castroUrl: string;
+  breakerUrl: string;
+  spotifyUrl: string;
+  applePodcastId: string;
+  twitterUsername: string;
   colors: {
-    text: string,
-    button: string,
-  },
+    text: string;
+    button: string;
+  };
 };
 
 export interface DesignDetail {
