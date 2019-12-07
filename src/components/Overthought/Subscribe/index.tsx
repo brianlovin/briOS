@@ -10,12 +10,6 @@ export default function OverthoughtSubscribeBox() {
     form: 'overthought'
   });
 
-  if (state.succeeded) {
-    return (
-      <div>Thank you for signing up!</div>
-    )
-  }
-
   return (
     <Container>
       <H4 style={{ marginTop: 0 }}>Newsletter</H4>
