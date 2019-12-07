@@ -112,7 +112,12 @@ export function OverthoughtPost(props: Props) {
   )
 }
 
-OverthoughtPost.getInitialProps = async ({ query }) => {
+OverthoughtPost.getInitialProps = async ({ query, res }) => {
+  if (res) {
+    const cacheAge = 60 * 60 * 12;
+    res.setHeader('Cache-Control', `public,s-maxage=${cacheAge}`);
+  }
+
   const post = await getPostBySlug(query.slug);
   return { post: post, slug: query.slug }
 }
