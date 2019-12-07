@@ -1,12 +1,13 @@
 import React from 'react';
 import VisibilitySensor from 'react-visibility-sensor';
 import useDarkMode from 'use-dark-mode'
-import { Card, ContentContainer } from './style'
-import { PlayerFooter } from './components'
+import { podcasts } from '../../data';
 import LoadingSpinner from '../LoadingSpinner';
+import SubscriptionButtons from '../SubscriptionButtons'
+import { Card, ContentContainer, EpisodeGrid, EpisodeCard, CardContent, Title, Date } from './style'
 
 export default function LatestEpisode() {
-  const [episode, setEpisode] = React.useState(null)
+  const [episodes, setEpisodes] = React.useState(null)
   const [loading, setLoading] = React.useState(false)
   const { value } = useDarkMode(false, { storageKey: null, onChange: null })
 
@@ -17,16 +18,16 @@ export default function LatestEpisode() {
         return res.json();
       })
       .then(res => {
-        const episode = res.find(ep => !!ep.published);
+        const episodes = res.filter(ep => !!ep.published);
         setLoading(false)
-        setEpisode(episode)
+        setEpisodes(episodes)
       })
       .catch(() => {
         setLoading(false)
       });
   }
 
-  if (!episode || loading) {
+  if (!episodes || loading) {
     return (
       <React.Fragment>
         <VisibilitySensor partialVisibility onChange={(visible) => visible && fetchEpisode()}>
@@ -36,13 +37,12 @@ export default function LatestEpisode() {
             </ContentContainer>
           </Card>
         </VisibilitySensor>
-
-        <PlayerFooter />
       </React.Fragment>
     );
   }
 
-  const { sharing_url } = episode;
+  const [featured, ...allEpisodes] = episodes
+  const { sharing_url } = featured;
   const [, id] = sharing_url.split('s/');
 
   if (!id) return null;
@@ -63,7 +63,20 @@ export default function LatestEpisode() {
         </ContentContainer>
       </Card>
 
-      <PlayerFooter />
+      <SubscriptionButtons podcast={podcasts[0]} />
+
+      <EpisodeGrid>
+        {allEpisodes.slice(0,8).map(ep => (
+          <a href={`https://spec.fm/podcasts/design-details/${ep.id}`}>
+            <EpisodeCard>
+              <CardContent>
+                <Title>{ep.title}</Title>
+                <Date>{ep.created_at}</Date>
+              </CardContent>
+            </EpisodeCard>
+          </a>
+        ))}
+      </EpisodeGrid>
     </React.Fragment>
   );
 }

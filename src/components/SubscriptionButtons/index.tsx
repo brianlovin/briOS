@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ConfigPodcast } from '../../types';
-import { SubscriptionAvatar } from './style';
+import { SubscriptionsContainer, SubscriptionAvatar} from './style';
 
 type Props = {
   podcast: ConfigPodcast,
@@ -10,7 +10,7 @@ export default function SubscriptionButtons(props: Props) {
   const { podcast } = props;
 
   return (
-    <React.Fragment>
+    <SubscriptionsContainer>
       {podcast.iTunesUrl && (
         <a href={podcast.iTunesUrl} target="_blank" rel="noopener noreferrer">
           <SubscriptionAvatar
@@ -81,6 +81,6 @@ export default function SubscriptionButtons(props: Props) {
           />
         </a>
       )}
-    </React.Fragment>
+    </SubscriptionsContainer>
   );
 }

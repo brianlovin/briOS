@@ -1,12 +1,12 @@
 import styled from 'styled-components';
-import theme from '../Theme';
-import { tint } from '../globals';
+import defaultTheme from '../Theme';
 
 export const Card = styled.div`
   background: ${props => props.theme.bg.secondary};
   border-radius: 10px;
   transition: all 0.2s ease-in-out;
   width: 100%;
+  max-width: ${defaultTheme.breakpoints[0]};
   padding: 24px;
   display: flex;
   margin-top: 24px;
@@ -15,8 +15,8 @@ export const Card = styled.div`
   z-index: 2;
 
   &:hover {
-    box-shadow: ${theme.shadows.largeHover};
-    transition: ${theme.animations.hover};
+    box-shadow: ${defaultTheme.shadows.largeHover};
+    transition: ${defaultTheme.animations.hover};
   }
 
   > a {
@@ -36,19 +36,6 @@ export const Card = styled.div`
       width: 100%;
       height: 100%;
     }
-  }
-`;
-
-export const Artwork = styled.img`
-  width: 114px;
-  height: 114px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-  cursor: pointer;
-
-  @media (max-width: 440px) {
-    width: 100%;
-    height: 100%;
   }
 `;
 
@@ -74,37 +61,62 @@ export const Date = styled.span`
 `;
 
 export const Title = styled.span`
-  font-size: 18px;
+  font-size: ${defaultTheme.fontSizes[4]};
   color: ${props => props.theme.text.primary};
-  font-weight: 600;
+  font-weight: ${defaultTheme.fontWeights.heading};
 `;
 
-export const Actions = styled.div`
+export const EpisodeGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: ${defaultTheme.space[3]};
+  grid-auto-rows: auto;
+  width: 100%;
+  max-width: ${defaultTheme.breakpoints[0]};
+  margin-top: ${defaultTheme.space[5]};
+
+  a {
+    border-radius: 16px;
+    overflow: hidden;
+    will-change: box-shadow;
+  }
+
+  a:hover {
+    box-shadow: ${defaultTheme.shadows.largeHover};
+    transition: box-shadow ${defaultTheme.animations.hover};
+  }
+
+  @media (min-width: ${defaultTheme.breakpoints[4]}) {
+    padding: 0 ${defaultTheme.space[3]};
+  }
+
+  @media (max-width: ${defaultTheme.breakpoints[1]}) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: ${defaultTheme.breakpoints[3]}) {
+    grid-template-columns: repeat(1, 1fr);
+  }
+`
+
+export const EpisodeCard = styled.div`
+  background: ${props => props.theme.bg.secondary};
   display: flex;
-  align-items: center;
-  margin-top: 8px;
+  position: relative;
+  padding: 24px;
+  border-radius: 16px;
+  transition: ${defaultTheme.animations.default};
+  align-items: flex-start;
+  height: 400px;
+  overflow: hidden;
+  z-index: 3;
+`
 
-  @media (max-width: 440px) {
-    margin-top: 16px;
-    width: 100%;
-
-    button {
-      width: 100%;
-    }
-  }
-`;
-
-export const AllEpsButton = styled.button`
-  background: ${props => props.theme.bg.primary};
-  font-size: 16px;
-  color: ${props => props.theme.text.tertiary};
-  font-weight: 600;
-  padding: 10px 24px;
-  border-radius: 20px;
-  cursor: pointer;
-
-  &:hover {
-    background: ${props => tint(props.theme.bg.primary, -4)};
-    color: ${props => props.theme.text.secondary};
-  }
+export const CardContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  justify-content: center;
+  padding: 6px 16px;
+  z-index: 3;
 `;

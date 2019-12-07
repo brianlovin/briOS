@@ -81,8 +81,9 @@ function Home(props: Props) {
           </Subheading>
         </SectionHeading>
 
-        <DesignDetailsPlayer />
       </ContentContainer>
+      
+      <DesignDetailsPlayer />
     </Page>
   );
 }
