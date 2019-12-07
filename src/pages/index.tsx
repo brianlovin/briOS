@@ -9,7 +9,7 @@ import DesignDetailsGrid from '~/components/DesignDetailsGrid';
 import DesignDetailsPlayer from '~/components/DesignDetailsPlayer';
 import { getPosts } from '~/data/ghost'
 import { BlogPost } from '~/types'
-import cacheSsrRes from '~/lib/cacheSsrRes';
+import cacheSsrRes from '~/lib/cacheSsr';
 
 interface Props {
   posts?: Array<BlogPost>

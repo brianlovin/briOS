@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { tint, hexa } from '~/components/globals';
+import { tint, hexa } from '~/components/utils';
 
 export const Container = styled.div`
   width: 100%;

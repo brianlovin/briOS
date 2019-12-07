@@ -5,7 +5,7 @@ import { BlogPost } from '~/types';
 import { ContentContainer, SectionHeading } from '~/components/Page';
 import { H1, Larr, Subheading } from '~/components/Typography'
 import { FeaturedImage, ReadingTime } from '~/components/Overthought/Preview/style'
-import PostShareButtons from '~/components/PostShareButtons';
+import PostShareButtons from '~/components/ShareButtons';
 import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe'
 import Body from './Body'
 

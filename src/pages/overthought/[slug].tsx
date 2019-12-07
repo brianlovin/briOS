@@ -1,7 +1,7 @@
  
 import * as React from 'react';
 import useSWR from 'swr'
-import cacheSsr from '~/lib/cacheSsrRes'
+import cacheSsr from '~/lib/cacheSsr'
 import { BlogPost } from '~/types';
 import { getPostBySlug } from '~/data/ghost'
 import Page from '~/components/Page';

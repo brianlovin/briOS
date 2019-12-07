@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import VisibilitySensor from 'react-visibility-sensor';
 import { DesignDetail } from '~/types';
-import Markdown from '~/components/Markdown';
+import Markdown from '~/components/MarkdownRenderer';
 import { DetailContainer, DetailTitle, MediaContainer, Video } from './style';
 
 type Props = {

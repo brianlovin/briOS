@@ -9,7 +9,8 @@ import { H1, Larr, Subheading } from '~/components/Typography'
 import { getPosts } from '~/data/ghost'
 import { BlogPost } from '~/types'
 import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe';
-import cacheSsrRes from '~/lib/cacheSsrRes';
+import cacheSsrRes from '~/lib/cacheSsr';
+import SEO from '~/components/Providers/SEO';
 
 interface Props {
   posts?: Array<BlogPost>
@@ -21,23 +22,8 @@ function Overthought(props: Props) {
   
   return (
     <Page withHeader>
-      <Head>
-        <link 
-          rel="alternate" 
-          type="application/rss+xml" 
-          title="RSS Feed for Overthought" 
-          href="/overthought/rss" />
-      </Head>
-      <NextSeo
-        title={"Overthought"}
-        description={"Overthinking out loud about design, development, and building products."}
-        openGraph={{
-          url: "https://brianlovin.com/overthought",
-          title: "Overthought",
-          description: "Overthinking out loud about design, development, and building products.",
-          site_name: "Overthought",
-        }}
-      />
+      <SEO />
+
       <ContentContainer data-cy="overthought">
         <SectionHeading>
           

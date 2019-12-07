@@ -4,7 +4,7 @@ import Link from 'next/link'
 import Prism from 'prismjs'
 import htmlParser from 'react-markdown/plugins/html-parser'
 import GlobalStyles from '~/components/GlobalStyles';
-import { Notes } from './style';
+import Markdown from 'react-markdown';
 
 interface Props {
   children: React.ReactNode;
@@ -32,7 +32,7 @@ function LinkRenderer(props: any) {
   );
 }
 
-export default function Markdown(props: Props) {
+export default function MarkdownRenderer(props: Props) {
   const { children, ...rest } = props;
 
   React.useEffect(() => {
@@ -43,7 +43,7 @@ export default function Markdown(props: Props) {
     <React.Fragment>
       <GlobalStyles.MarkdownStyles />
       <GlobalStyles.PrismStyles />
-      <Notes 
+      <Markdown 
         {...rest} 
         astPlugins={[ parseHtml ]}
         renderers={{ 
@@ -51,7 +51,7 @@ export default function Markdown(props: Props) {
         }}
         >
         {children}
-      </Notes>
+      </Markdown>
     </React.Fragment>
   )
 }

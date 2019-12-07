@@ -5,7 +5,7 @@ import parse from 'rehype-parse'
 import rehype2remark from 'rehype-remark'
 import stringify from 'remark-stringify'
 import { BlogPost } from '~/types';
-import Markdown from '~/components/Markdown';
+import Markdown from '~/components/MarkdownRenderer';
 
 interface Props {
   post: BlogPost;

@@ -1,5 +1,5 @@
 import styled, { createGlobalStyle } from 'styled-components';
-import { hexa } from '~/components/globals';
+import { hexa } from '~/components/utils';
 import defaultTheme from '~/components/Theme';
 
 export const LinkOverrides = createGlobalStyle`

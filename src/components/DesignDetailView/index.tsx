@@ -7,8 +7,8 @@ import { Notice } from '~/components/Blog';
 import { DesignDetailsPost } from '~/types';
 import DesignDetailsGrid from '~/components/DesignDetailsGrid';
 import DesignDetailMedia from '~/components/DesignDetailMedia';
-import PostShareButtons from '~/components/PostShareButtons';
-import Markdown from '~/components/Markdown';
+import PostShareButtons from '~/components/ShareButtons';
+import Markdown from '~/components/MarkdownRenderer';
 import {
   HeadingContainer,
   Icon,

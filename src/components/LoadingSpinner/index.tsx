@@ -1,15 +1,8 @@
 import React from 'react';
-import Donut from './Donut';
+import { Container, Spinner } from './style';
 
 export default () => (
-  <div
-    style={{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      height: '100%',
-    }}
-  >
-    <Donut />
-  </div>
+  <Container>
+    <Spinner />
+  </Container>
 );
