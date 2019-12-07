@@ -29,15 +29,4 @@ describe('Home', () => {
       'be.visible'
     );
   });
-
-  it('should render footer', () => {
-    cy.get('[data-cy="footer"]')
-      .scrollIntoView()
-      .should('be.visible');
-
-    cy.get(`[href="https://twitter.com/brian_lovin"]`).should('be.visible');
-    cy.get(`[href="https://github.com/brianlovin/brian-lovin-next"]`).should(
-      'be.visible'
-    );
-  });
 });

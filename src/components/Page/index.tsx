@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { throttle } from 'throttle-debounce';
 import Header from '~/components/Header';
-import Footer from '~/components/Footer';
 import {
   PageContainer,
   InnerPageContainer,
@@ -47,7 +46,6 @@ export default function Page(props: Props) {
     <PageContainer>
       {withHeader && <Header showHeaderShadow={showHeaderShadow} />}
       <InnerPageContainer>{children}</InnerPageContainer>
-      <Footer />
     </PageContainer>
   );
 }

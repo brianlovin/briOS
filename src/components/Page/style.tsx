@@ -24,6 +24,7 @@ export const InnerPageContainer = styled.div`
   flex: 1 0 auto;
   width: 100%;
   padding-top: ${defaultTheme.space[7]};
+  padding-bottom: ${defaultTheme.space[9]};
 
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
     max-width: 100%;
