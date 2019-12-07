@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import defaultTheme from '../Theme';
-import { P } from '../Typography'
 
 export const PageContainer = styled.div`
   display: flex;
@@ -39,7 +38,7 @@ export const SectionHeading = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   align-self: flex-start;
-  margin: ${defaultTheme.space[8]} 0 0;
+  margin: ${defaultTheme.space[9]} 0 0;
 
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
     align-items: flex-start;

@@ -24,7 +24,8 @@ const defaultTheme = {
     '32px', // 5
     '48px', // 6
     '64px', // 7
-    '96px'  //8
+    '96px', // 8
+    '128px',// 9
   ],
   fontSizes: [
     '14px', // 0

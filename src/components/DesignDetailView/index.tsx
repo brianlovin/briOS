@@ -57,7 +57,7 @@ export default function DesignDetailView(props: Props) {
             subscribe in your favorite app.
           </Notice.Description>
 
-          <DesignDetailsPlayer />
+          <DesignDetailsPlayer showMoreEpisodes={false} />
         </Notice>
 
         <div style={{ padding: '16px' }} />

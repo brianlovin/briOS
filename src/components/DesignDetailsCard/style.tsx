@@ -171,4 +171,5 @@ export const Icon = styled.img`
   overflow: hidden;
   width: 56px;
   height: 56px;
+  user-select: none;
 `;

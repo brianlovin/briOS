@@ -83,7 +83,7 @@ function Home(props: Props) {
 
       </ContentContainer>
       
-      <DesignDetailsPlayer />
+      <DesignDetailsPlayer showMoreEpisodes />
     </Page>
   );
 }

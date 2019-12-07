@@ -1,12 +1,18 @@
 import React from 'react';
 import VisibilitySensor from 'react-visibility-sensor';
 import useDarkMode from 'use-dark-mode'
+import { getDateObject } from '../../lib/getDateObject'
 import { podcasts } from '../../data';
 import LoadingSpinner from '../LoadingSpinner';
 import SubscriptionButtons from '../SubscriptionButtons'
-import { Card, ContentContainer, EpisodeGrid, EpisodeCard, CardContent, Title, Date } from './style'
+import { H3, P } from '../Typography'
+import { OuterContainer, PlayerContainer, ContentContainer, EpisodeGrid, EpisodeCard, CardContent, Arrow, Circle, Date } from './style'
 
-export default function LatestEpisode() {
+interface Props {
+  showMoreEpisodes: boolean
+}
+
+export default function LatestEpisode({ showMoreEpisodes }: Props) {
   const [episodes, setEpisodes] = React.useState(null)
   const [loading, setLoading] = React.useState(false)
   const { value } = useDarkMode(false, { storageKey: null, onChange: null })
@@ -29,15 +35,16 @@ export default function LatestEpisode() {
 
   if (!episodes || loading) {
     return (
-      <React.Fragment>
-        <VisibilitySensor partialVisibility onChange={(visible) => visible && fetchEpisode()}>
-          <Card data-cy="design-details-player">
+      <VisibilitySensor partialVisibility onChange={(visible) => visible && fetchEpisode()}>
+        <OuterContainer>
+          <PlayerContainer data-cy="design-details-player">
             <ContentContainer>
               <LoadingSpinner />
             </ContentContainer>
-          </Card>
-        </VisibilitySensor>
-      </React.Fragment>
+          </PlayerContainer>
+          <SubscriptionButtons podcast={podcasts[0]} />
+        </OuterContainer>
+      </VisibilitySensor>
     );
   }
 
@@ -48,8 +55,8 @@ export default function LatestEpisode() {
   if (!id) return null;
 
   return (
-    <React.Fragment>
-      <Card data-cy="design-details-player">
+    <OuterContainer>
+      <PlayerContainer data-cy="design-details-player">
         <ContentContainer>
           <iframe
             frameBorder="0"
@@ -61,22 +68,33 @@ export default function LatestEpisode() {
             data-cy="latest-episode"
           />
         </ContentContainer>
-      </Card>
+      </PlayerContainer>
 
       <SubscriptionButtons podcast={podcasts[0]} />
 
-      <EpisodeGrid>
-        {allEpisodes.slice(0,8).map(ep => (
-          <a href={`https://spec.fm/podcasts/design-details/${ep.id}`}>
-            <EpisodeCard>
-              <CardContent>
-                <Title>{ep.title}</Title>
-                <Date>{ep.created_at}</Date>
-              </CardContent>
-            </EpisodeCard>
-          </a>
-        ))}
-      </EpisodeGrid>
-    </React.Fragment>
+      {showMoreEpisodes && (
+        <EpisodeGrid>
+          {allEpisodes.slice(0,9).map(ep => {
+            const { month, year, day } = getDateObject(ep.published_at);
+            const datestring = `${month} ${day}, ${year}`;
+            return (
+              <a target="_blank" rel="noopener noreferrer" key={ep.id} href={`https://spec.fm/podcasts/design-details/${ep.id}`}>
+                <EpisodeCard>
+                  <CardContent>
+                    <H3>{ep.title}</H3>
+                    <P>{ep.description.split('.')[0].substring(0, 200).trim() + '...'}</P>
+                    <Date>{datestring}</Date>
+                  </CardContent>
+                  <Circle color={podcasts[0].colors.text} />
+                  <Arrow>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg>
+                  </Arrow>
+                </EpisodeCard>
+              </a>
+            )}
+          )}
+        </EpisodeGrid>
+      )}
+    </OuterContainer>
   );
 }

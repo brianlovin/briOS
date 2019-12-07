@@ -1,18 +1,52 @@
 import styled from 'styled-components';
 import defaultTheme from '../Theme';
+import { H6 } from '../Typography'
 
-export const Card = styled.div`
+export const Arrow = styled.div`
+  position: absolute;
+  transform: translateX(-12px);
+  bottom: 48px;
+  right: 72px;
+  opacity: 0;
+  will-change: transform;
+  color: #fff;
+  transition: transform ${defaultTheme.animations.default}, opacity ${defaultTheme.animations.default};
+`
+
+export const Circle = styled.div`
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  position: absolute;
+  right: -200px;
+  bottom: -200px;
+  background:${props => props.color};
+  transform: scale(0);
+  will-change: transform;
+  transition: transform ${defaultTheme.animations.default};
+`
+
+export const OuterContainer = styled.div`
+  width: 100%;
+  padding: 0 ${defaultTheme.space[3]};
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  @media (max-width: ${defaultTheme.breakpoints[4]}) {
+    padding: 0;
+  }
+`
+
+export const PlayerContainer = styled.div`
   background: ${props => props.theme.bg.secondary};
   border-radius: 10px;
-  transition: all 0.2s ease-in-out;
   width: 100%;
-  max-width: ${defaultTheme.breakpoints[0]};
-  padding: 24px;
+  max-width: calc(${defaultTheme.breakpoints[0]} - ${defaultTheme.space[5]});
+  padding: ${defaultTheme.space[3]};
   display: flex;
-  margin-top: 24px;
+  margin-top: ${defaultTheme.space[5]};
   align-items: center;
-  position: relative;
-  z-index: 2;
 
   &:hover {
     box-shadow: ${defaultTheme.shadows.largeHover};
@@ -55,9 +89,10 @@ export const ContentContainer = styled.div`
   }
 `;
 
-export const Date = styled.span`
-  font-size: 14px;
-  color: ${props => props.theme.text.tertiary};
+export const Date = styled(H6)`
+  text-transform: uppercase;
+  color: ${props => props.theme.text.quarternary};
+  margin-top: ${defaultTheme.space[3]};
 `;
 
 export const Title = styled.span`
@@ -86,10 +121,6 @@ export const EpisodeGrid = styled.div`
     transition: box-shadow ${defaultTheme.animations.hover};
   }
 
-  @media (min-width: ${defaultTheme.breakpoints[4]}) {
-    padding: 0 ${defaultTheme.space[3]};
-  }
-
   @media (max-width: ${defaultTheme.breakpoints[1]}) {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -110,13 +141,42 @@ export const EpisodeCard = styled.div`
   height: 400px;
   overflow: hidden;
   z-index: 3;
+
+  &:hover {
+    ${Circle} {
+      transform: scale(1);
+      transition: transform ${defaultTheme.animations.default};
+    }
+
+    ${Arrow} {
+      opacity: 1;
+      transition: transform ${defaultTheme.animations.hover}, opacity ${defaultTheme.animations.hover};
+      transform: translateX(12px);
+    }
+  }
+
+  @media (max-width: 968px) {
+    height: auto;
+
+    ${Circle} {
+      display: none;
+    }
+
+    ${Arrow} {
+      display: none;
+    }
+  }
 `
 
 export const CardContent = styled.div`
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1;
+  grid-template-rows: auto 1fr auto;
+  height: 100%;
   position: relative;
-  justify-content: center;
-  padding: 6px 16px;
-  z-index: 3;
+  z-index: 2;
+
+  p {
+    margin-top: ${defaultTheme.space[3]};
+  }
 `;

@@ -1,5 +1,4 @@
 import { css } from 'styled-components';
-import theme from '../Theme';
 
 export const hexa = (hex: string, alpha: number) => {
   const r = parseInt(hex.slice(1, 3), 16);

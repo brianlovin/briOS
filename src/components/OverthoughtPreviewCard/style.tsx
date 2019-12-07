@@ -42,6 +42,7 @@ export const PreviewImage = styled.img`
   margin-right: -24px;
   margin-bottom: 20px;
   border-radius: 16px 16px 0 0;
+  user-select: none;
 
   @media (max-width: 768px) {
     margin-left: -24px;

@@ -29,7 +29,7 @@ export const Grid = styled.div`
     grid-template-columns: repeat(2, 1fr);
   }
 
-  @media (max-width: ${defaultTheme.breakpoints[3]}) {
+  @media (max-width: ${defaultTheme.breakpoints[4]}) {
     grid-template-columns: repeat(1, 1fr);
   }
 `;
