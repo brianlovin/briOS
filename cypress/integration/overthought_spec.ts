@@ -11,4 +11,10 @@ describe('Overthought index', () => {
       .scrollIntoView()
       .should('be.visible');
   });
+
+  it('should render newsletter', () => {
+    cy.contains('Newsletter')
+      .scrollIntoView()
+      .should('be.visible');
+  });
 });

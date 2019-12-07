@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 /// <reference types="@testing-library/cypress" />
 
-import designDetails from '../../src/data/designDetails';
+import { designDetailsPosts } from '../../src/data';
 
 const slug = 'instagram-ios';
 // @ts-ignore
@@ -47,7 +47,7 @@ describe('Design Detail Post', () => {
   });
 
   it('should render design details more to read', () => {
-    designDetails.map(detail => {
+    designDetailsPosts.map(detail => {
       cy.contains(detail.title);
       cy.contains(`${detail.details.length} details`);
     });
