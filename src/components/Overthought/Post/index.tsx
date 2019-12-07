@@ -8,6 +8,7 @@ import { FeaturedImage } from '~/components/Overthought/Preview/style'
 import PostShareButtons from '~/components/ShareButtons';
 import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe'
 import Body from './Body'
+import SEO from './SEO'
 
 interface Props {
   post: BlogPost;
@@ -16,7 +17,7 @@ interface Props {
 export default function Post({ post }) {
   return (
     <ContentContainer data-cy="overthought-post">
-      
+      <SEO post={post} />
       <SectionHeading>
         <Link href={'/overthought'}>
           <a>

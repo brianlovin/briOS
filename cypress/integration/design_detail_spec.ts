@@ -5,7 +5,7 @@ import { designDetailsPosts } from '../../src/data';
 
 const slug = 'instagram-ios';
 // @ts-ignore
-const detail = designDetails.find(d => d.slug === slug)
+const detail = designDetailsPosts.find(d => d.slug === slug)
 
 describe('Design Detail Post', () => {
   before(() => {
