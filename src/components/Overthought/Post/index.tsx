@@ -45,7 +45,7 @@ export default function Post({ post }) {
           {post.feature_image && <FeaturedImage src={post.feature_image} />}
           <H1 style={{ marginTop: 0 }}>{post.title}</H1>
           <ReadingTime>{datestring} · {post.reading_time}m read</ReadingTime>
-          <div style={{ padding: '16px '}} />
+          <div style={{ padding: '8px '}} />
         </SectionHeading>
         
         <div dangerouslySetInnerHTML={{ __html: post.html }} />
@@ -55,7 +55,7 @@ export default function Post({ post }) {
           <OverthoughtSubscribeBox />
         </SectionHeading>
 
-        <SectionHeading>
+        <SectionHeading style={{ marginTop: '32px' }}>
           <H1>More from Overthought</H1>
           <Subheading>Overthinking out loud about design, development, and building products.</Subheading>
           <Subheading style={{ marginTop: '24px'}}>

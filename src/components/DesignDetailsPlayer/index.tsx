@@ -6,7 +6,8 @@ import { podcast } from '~/data';
 import LoadingSpinner from '~/components/LoadingSpinner';
 import SubscriptionButtons from '~/components/SubscriptionButtons'
 import { H4, P } from '~/components/Typography'
-import { OuterContainer, PlayerContainer, ContentContainer, EpisodeGrid, EpisodeCard, CardContent, Arrow, Circle, Date } from './style'
+import { OuterContainer, PlayerContainer, ContentContainer, EpisodeCard, CardContent, Arrow, Circle, Date } from './style'
+import { ContentGrid } from '../Page';
 
 interface Props {
   showMoreEpisodes: boolean
@@ -73,7 +74,7 @@ export default function LatestEpisode({ showMoreEpisodes }: Props) {
       <SubscriptionButtons podcast={podcast} />
 
       {showMoreEpisodes && (
-        <EpisodeGrid>
+        <ContentGrid>
           {allEpisodes.slice(0,3).map(ep => {
             const { month, year, day } = getDateObject(ep.published_at);
             const datestring = `${month} ${day}, ${year}`;
@@ -93,7 +94,7 @@ export default function LatestEpisode({ showMoreEpisodes }: Props) {
               </a>
             )}
           )}
-        </EpisodeGrid>
+        </ContentGrid>
       )}
     </OuterContainer>
   );

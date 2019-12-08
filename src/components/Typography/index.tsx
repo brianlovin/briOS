@@ -266,6 +266,7 @@ export const Subheading = styled(P)`
   font-weight: ${defaultTheme.fontWeights.subheading};
   margin-top: ${defaultTheme.space[3]};
   line-height: 1.4;
+  max-width: ${defaultTheme.breakpoints[4]};
 
   & + & {
     margin-top: ${defaultTheme.space[3]};

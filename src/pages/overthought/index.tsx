@@ -2,7 +2,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import useSWR from 'swr'
 import { getFeaturedPosts } from '~/data/ghost'
-import Page, { SectionHeading, ContentContainer } from '~/components/Page';
+import Page, { SectionHeading } from '~/components/Page';
 import OverthoughtGrid from '~/components/Overthought/Grid'
 import { H1, Larr, Subheading } from '~/components/Typography'
 import { BlogPost } from '~/types'
@@ -22,24 +22,22 @@ function Overthought(props: Props) {
     <Page withHeader>
       <SEO />
 
-      <ContentContainer data-cy="overthought">
-        <SectionHeading>
-          
-          <Link href="/">
-            <a>
-              <Subheading><Larr /> Home</Subheading>
-            </a>
-          </Link>
-
-          <div style={{ padding: '16px' }} />
-
-          <H1>Overthought</H1>
-          <Subheading>Overthinking out loud about design, development, and building products.</Subheading>
-          
-          <OverthoughtSubscribeBox />
+      <SectionHeading data-cy="overthought">
         
-        </SectionHeading>
-      </ContentContainer>
+        <Link href="/">
+          <a>
+            <Subheading><Larr /> Home</Subheading>
+          </a>
+        </Link>
+
+        <div style={{ padding: '16px' }} />
+
+        <H1>Overthought</H1>
+        <Subheading>Overthinking out loud about design, development, and building products.</Subheading>
+        
+        <OverthoughtSubscribeBox />
+      
+      </SectionHeading>
 
       <OverthoughtGrid truncate={false} posts={posts} />
     </Page>

@@ -6,7 +6,7 @@ export const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   grid-gap: ${defaultTheme.space[3]};
-  margin: ${defaultTheme.space[5]} 0 ${defaultTheme.space[4]};
+  margin: ${defaultTheme.space[5]} 0 ${defaultTheme.space[3]};
   padding: ${defaultTheme.space[4]};
   background: ${props => props.theme.bg.inset};
   width: 100%;
