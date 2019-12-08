@@ -10,7 +10,7 @@ interface Props {
 }
 
 export default function OverthoughtGrid({ post }: Props) {
-  const { month, year, day } = getDateObject(post.created_at);
+  const { month, year, day } = getDateObject(post.published_at);
   const datestring = `${month.slice(0, 3)} ${day}, ${year}`;
 
   return (
