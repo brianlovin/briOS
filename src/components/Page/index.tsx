@@ -6,11 +6,13 @@ import {
   InnerPageContainer,
   SectionHeading,
   ContentContainer,
+  ContentGrid,
 } from './style';
 
 export {
   SectionHeading,
   ContentContainer,
+  ContentGrid,
 };
 
 interface Props {

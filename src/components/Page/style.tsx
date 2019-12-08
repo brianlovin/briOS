@@ -15,6 +15,25 @@ export const ContentContainer = styled.div`
   max-width: ${defaultTheme.breakpoints[4]};
 `
 
+export const ContentGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: ${defaultTheme.space[3]};
+  grid-auto-rows: auto;
+  width: 100%;
+  max-width: ${defaultTheme.breakpoints[0]};
+  margin-top: ${defaultTheme.space[5]};
+
+
+  @media (max-width: ${defaultTheme.breakpoints[1]}) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: ${defaultTheme.breakpoints[4]}) {
+    grid-template-columns: repeat(1, 1fr);
+  }
+`;
+
 export const InnerPageContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -23,13 +42,12 @@ export const InnerPageContainer = styled.div`
   position: relative;
   flex: 1 0 auto;
   width: 100%;
+  padding: 0 ${defaultTheme.space[3]};
   padding-top: ${defaultTheme.space[7]};
   padding-bottom: ${defaultTheme.space[9]};
 
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
     max-width: 100%;
-    padding: 0 ${defaultTheme.space[3]};
-    padding-top: ${defaultTheme.space[6]};
   }
 `;
 
@@ -38,12 +56,12 @@ export const SectionHeading = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  align-self: flex-start;
-  margin: ${defaultTheme.space[9]} 0 0;
+  margin-top: ${defaultTheme.space[9]};
+  width: 100%;
+  max-width: ${defaultTheme.breakpoints[3]};
 
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
-    align-items: flex-start;
     max-width: 100%;
-    margin-top: ${defaultTheme.space[6]};
+    margin-top: ${defaultTheme.space[8]};
   }
 `;

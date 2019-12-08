@@ -133,7 +133,7 @@ export const CardContent = styled.div`
   flex-direction: column;
   position: relative;
   justify-content: center;
-  padding: 6px 16px;
+  padding: 3px 16px;
   z-index: 3;
 `;
 

@@ -29,17 +29,6 @@ describe('Design Detail Post', () => {
     cy.get('[data-cy="copy-link-button"]').should('be.visible');
   });
 
-  it('should render podcast player', () => {
-    cy.get('[data-cy="design-details-player"]').should($p => {
-      expect($p).to.have.length(1);
-    });
-
-    cy.get('[data-cy="design-details-player"]')
-      .first()
-      .scrollIntoView()
-      .should('be.visible');
-  });
-
   it('should render a media player for each detail', () => {
     cy.get('[data-cy="detail-media-container"]').should($p => {
       expect($p).to.have.length(detail.details.length);
@@ -47,7 +36,7 @@ describe('Design Detail Post', () => {
   });
 
   it('should render design details more to read', () => {
-    designDetailsPosts.map(detail => {
+    designDetailsPosts.slice(0, 3).map(detail => {
       cy.contains(detail.title);
       cy.contains(`${detail.details.length} details`);
     });
