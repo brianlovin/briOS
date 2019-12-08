@@ -264,7 +264,7 @@ export const Larr = styled.span.attrs({
 export const Subheading = styled(P)`
   font-size: ${defaultTheme.fontSizes[3]};
   font-weight: ${defaultTheme.fontWeights.subheading};
-  margin-top: ${defaultTheme.space[2]};
+  margin-top: ${defaultTheme.space[3]};
   line-height: 1.4;
 
   & + & {
