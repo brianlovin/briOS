@@ -1,5 +1,3 @@
-import { css } from 'styled-components';
-
 export const hexa = (hex: string, alpha: number) => {
   const r = parseInt(hex.slice(1, 3), 16);
 
@@ -40,21 +38,4 @@ export const tint = (hex: string, amount: number) => {
   const BB = getDouble(B);
 
   return `#${RR}${GG}${BB}`;
-};
-
-export const Truncate = (width: number) => css`
-  width: ${width}px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
-
-export const shuffleArray = (array: Array<any>) => {
-  for (let i = array.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    const temp = array[i];
-    array[i] = array[j];
-    array[j] = temp;
-  }
-  return array;
 };
