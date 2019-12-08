@@ -8,6 +8,7 @@ import DesignDetailsGrid from '~/components/DesignDetailsGrid';
 import DesignDetailMedia from '~/components/DesignDetailMedia';
 import PostShareButtons from '~/components/ShareButtons';
 import Markdown from '~/components/MarkdownRenderer';
+import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe'
 import {
   HeadingContainer,
   Icon,
@@ -50,6 +51,10 @@ export default function DesignDetailView(props: Props) {
         {post.details.map((detail, i) => (
           <DesignDetailMedia detail={detail} key={`${detail.title}-${i}`} />
         ))}
+
+        <SectionHeading>
+          <PostShareButtons route={`design-details/${post.slug}`} title={post.title} />
+        </SectionHeading>
 
         <SectionHeading>
           <H2>More Design Details</H2>

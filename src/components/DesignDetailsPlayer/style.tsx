@@ -32,6 +32,7 @@ export const OuterContainer = styled.div`
   align-items: center;
   flex-direction: column;
   position: relative;
+  max-width: ${defaultTheme.breakpoints[0]};
 
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
     padding: 0;
@@ -42,8 +43,7 @@ export const PlayerContainer = styled.div`
   background: ${props => props.theme.bg.secondary};
   border-radius: 10px;
   width: 100%;
-  max-width: calc(${defaultTheme.breakpoints[0]});
-  padding: ${defaultTheme.space[3]};
+  padding: ${defaultTheme.space[4]};
   display: flex;
   margin-top: ${defaultTheme.space[5]};
   align-items: center;
@@ -60,11 +60,11 @@ export const PlayerContainer = styled.div`
     height: 114px;
   }
 
-  @media (max-width: 440px) {
+  @media (max-width: ${defaultTheme.breakpoints[4]}) {
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    padding: 8px;
+    padding: ${defaultTheme.space[1]};
 
     > a {
       width: 100%;
@@ -142,13 +142,10 @@ export const EpisodeCard = styled.div`
 
 export const CardContent = styled.div`
   display: grid;
-  grid-template-columns: 1;
-  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto  3fr 1fr;
+  grid-gap: ${defaultTheme.space[3]};
   height: 100%;
   position: relative;
   z-index: 2;
-
-  p {
-    margin-top: ${defaultTheme.space[3]};
-  }
 `;

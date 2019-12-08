@@ -58,7 +58,7 @@ export const SectionHeading = styled.div`
   align-items: flex-start;
   margin-top: ${defaultTheme.space[9]};
   width: 100%;
-  max-width: ${defaultTheme.breakpoints[0]};
+  max-width: ${defaultTheme.breakpoints[3]};
 
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
     max-width: 100%;
