@@ -39,7 +39,7 @@ export default function Post({ post }) {
           
           <div style={{ paddingBottom: '64px' }} />
 
-          {post.feature_image && <FeaturedImage src={`https://overthought.ghost.io${post.og_image}`} />}
+          {post.feature_image && <FeaturedImage src={post.feature_image} />}
           <H1 style={{ marginTop: 0 }}>{post.title}</H1>
           <div style={{ padding: '8px '}} />
         </SectionHeading>
