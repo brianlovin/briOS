@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components'
 import defaultTheme from '~/components/Theme'
+import { hexa } from '../utils'
 
 
 // captures the interaction on <Larr /> and <Rarr /> components
@@ -95,16 +96,16 @@ export const p = css`
   color: ${props => props.theme.text.secondary};
 
   a {
-    color: ${props => props.theme.text.primary};
-    text-decoration: underline solid ${props => props.theme.border.default};
+    color: ${props => props.theme.text.link};
+    text-decoration: none;
   }
 
   a:hover {
-    text-decoration: underline solid ${props => props.theme.text.primary};
+    text-decoration: none;
   }
 
   > code {
-    margin-top: 0!important;
+    margin-top: 0;
     font-size: ${defaultTheme.fontSizes[1]};
   }
 
@@ -114,6 +115,21 @@ export const p = css`
 
   @media(min-width: ${defaultTheme.breakpoints[4]}) {
     font-size: ${defaultTheme.fontSizes[3]};
+
+    code {
+      margin-top: 0;
+      font-size: ${defaultTheme.fontSizes[1]};
+    }
+
+    a code {
+      padding:  ${defaultTheme.space[0]} ${defaultTheme.space[1]};
+      box-shadow: inset 0 0 0 1px ${props => hexa(props.theme.text.link, 0.16)};
+      border-radius: 4px;
+      display: inline-block;
+      background: ${props => hexa(props.theme.text.link, 0.12)};
+      color: ${props => props.theme.text.link};
+      font-weight: 600;
+    }
   }
 `
 export const P = styled.p`
@@ -150,15 +166,6 @@ export const list = css`
   font-weight: ${defaultTheme.fontWeights.body};
   line-height: ${defaultTheme.fontWeights.body};
   color: ${props => props.theme.text.secondary};
-
-  a {
-    color: ${props => props.theme.text.primary};
-    text-decoration: underline solid ${props => props.theme.border.default};
-  }
-
-  a:hover {
-    text-decoration: underline solid ${props => props.theme.text.primary};
-  }
 `
 export const Ul = styled.ul`
   ${list};
@@ -179,12 +186,12 @@ export const Li = styled.li`
 export const pre = css`
   ${p};
   font-size: ${defaultTheme.fontSizes[1]};
-  font-family: ${defaultTheme.fonts.monospace}!important;
-  padding: ${defaultTheme.space[3]}!important;
-  background: ${props => props.theme.bg.inset}!important;
-  text-shadow: none!important;
+  font-family: ${defaultTheme.fonts.monospace};
+  padding: ${defaultTheme.space[3]};
+  background: ${props => props.theme.bg.inset};
+  text-shadow: none;
   border-radius: 8px;
-  margin: ${defaultTheme.space[5]} 0!important;
+  margin: ${defaultTheme.space[5]} 0;
   overflow-x: scroll;
   box-shadow: 0 0 0 1px ${props => props.theme.border.default}, inset 0 1px 4px rgba(0,0,0,0.04);
 
@@ -195,7 +202,7 @@ export const pre = css`
   code {
     padding: ${defaultTheme.space[2]};
     line-height: ${defaultTheme.lineHeights.code};
-    box-shadow: none!important;
+    box-shadow: none;
     font-size: ${defaultTheme.fontSizes[1]};
   }
 
@@ -214,13 +221,13 @@ export const Pre = styled.pre`
 export const code = css`
   ${p};
   font-size: ${defaultTheme.fontSizes[1]};
-  font-family: ${defaultTheme.fonts.monospace}!important;
-  padding:  ${defaultTheme.space[0]} ${defaultTheme.space[1]}!important;
+  font-family: ${defaultTheme.fonts.monospace};
+  padding:  ${defaultTheme.space[0]} ${defaultTheme.space[1]};
   box-shadow: inset 0 0 0 1px ${props => props.theme.border.default};
   border-radius: 4px;
   display: inline-block;
-  background: ${props => props.theme.bg.inset}!important;
-  text-shadow: none!important;
+  background: ${props => props.theme.bg.inset};
+  text-shadow: none;
 
   @media(max-width: ${defaultTheme.breakpoints[4]}) {
     font-size: ${defaultTheme.fontSizes[0]};

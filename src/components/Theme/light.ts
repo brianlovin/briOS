@@ -15,7 +15,8 @@ export default {
     tertiary: '#525560',
     quarternary: '#9194a1',
     placeholder: 'rgba(82,85,96,0.5)',
-    onPrimary: '#ffffff'
+    onPrimary: '#ffffff',
+    link: '#007AFF'
   },
   icon: {
     primary: '#525560',

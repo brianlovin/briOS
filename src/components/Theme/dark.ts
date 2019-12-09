@@ -1,8 +1,8 @@
 export default {
   bg: {
     primary: '#050505',
-    secondary: '#111111',
-    inset: '#111111',
+    secondary: '#191A1B',
+    inset: '#191A1B',
     input: 'rgba(191,193,201,0.12)'
   },
   border: {
@@ -15,7 +15,8 @@ export default {
     tertiary: '#a9abb6',
     quarternary: '#6c6f7e',
     placeholder: 'rgba(145,148,161,0.5)',
-    onPrimary: '#050505'
+    onPrimary: '#050505',
+    link: '#FF9500'
   },
   icon: {
     primary: '#9194a1',

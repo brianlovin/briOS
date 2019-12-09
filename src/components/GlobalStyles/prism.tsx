@@ -4,7 +4,6 @@ const GlobalPrismStyles = createGlobalStyle`
   code[class*="language-"],
   pre[class*="language-"] {
     color: ${props => props.theme.text.primary};
-    background: none;
     text-align: left;
     white-space: pre;
     word-spacing: normal;
@@ -48,7 +47,6 @@ const GlobalPrismStyles = createGlobalStyle`
 
   :not(pre) > code[class*="language-"],
   pre[class*="language-"] {
-    background: #f5f2f0;
   }
 
   /* Inline code */
