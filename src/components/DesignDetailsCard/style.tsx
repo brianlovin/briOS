@@ -38,6 +38,7 @@ export const Container = styled.div`
   z-index: 3;
 
   &:hover {
+    box-shadow: ${defaultTheme.shadows.largeHover};
 
     ${Circle} {
       transform: scale(1);

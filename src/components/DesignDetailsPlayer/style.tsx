@@ -115,6 +115,8 @@ export const EpisodeCard = styled.div`
   z-index: 3;
 
   &:hover {
+    box-shadow: ${defaultTheme.shadows.largeHover};
+    
     ${Circle} {
       transform: scale(1);
       transition: transform ${defaultTheme.animations.default};
