@@ -44,7 +44,7 @@
     "@types/jest": "^24.0.23",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.12.15",
-    "@types/react": "^16.9.15",
+    "@types/react": "^16.9.16",
     "@typescript-eslint/eslint-plugin": "^2.10.0",
     "@typescript-eslint/parser": "^2.10.0",
     "babel-eslint": "^10.0.3",
