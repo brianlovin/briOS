@@ -102,14 +102,6 @@ export const CustomNoticeDescription = styled(NoticeDescription)`
   color: ${props => props.color};
 `;
 
-export const ShareButtonsContainer = styled.div`
-  margin: 32px 0 40px;
-
-  button {
-    margin-right: 8px;
-  }
-`;
-
 export const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(${props => props.cols}, 1fr);

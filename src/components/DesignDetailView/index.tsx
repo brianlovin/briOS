@@ -6,13 +6,10 @@ import { H1, H2, Subheading, A, Rarr } from '~/components/Typography'
 import { DesignDetailsPost } from '~/types';
 import DesignDetailsGrid from '~/components/DesignDetailsGrid';
 import DesignDetailMedia from '~/components/DesignDetailMedia';
-import PostShareButtons from '~/components/ShareButtons';
 import Markdown from '~/components/MarkdownRenderer';
-import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe'
 import {
   HeadingContainer,
   Icon,
-  LinkOverrides,
 } from './style';
 
 type Props = {
@@ -28,7 +25,6 @@ export default function DesignDetailView(props: Props) {
 
   return (
     <React.Fragment>
-      <LinkOverrides tint={post.tint} />
       <ContentContainer style={{ marginTop: '96px' }}>
         <Icon
           src={`/static/img/design-details/${post.slug}.jpeg`}
@@ -42,19 +38,11 @@ export default function DesignDetailView(props: Props) {
 
         <div style={{ padding: '16px' }} />
 
-        <PostShareButtons route={`design-details/${post.slug}`} title={`Design Details: ${post.title}`} />
-
-        <div style={{ padding: '16px' }} />
-
         <Markdown>{post.description}</Markdown>
 
         {post.details.map((detail, i) => (
           <DesignDetailMedia detail={detail} key={`${detail.title}-${i}`} />
         ))}
-
-        <SectionHeading>
-          <PostShareButtons route={`design-details/${post.slug}`} title={post.title} />
-        </SectionHeading>
 
         <SectionHeading>
           <H2>More Design Details</H2>
