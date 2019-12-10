@@ -12,18 +12,7 @@ jobs:
         node-version: [10.x, 12.x]
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: yarn install, build, and start
-      run: |
-        yarn install
-        yarn run build --if-present
-        yarn start &
-    - name: cypress
-      run: |
-        yarn run cypress:run
+    - name: Cypress run
+        uses: cypress-io/github-action@v1
       env:
         CI: true
