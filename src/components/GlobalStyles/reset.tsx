@@ -247,7 +247,6 @@ const ResetStyles = createGlobalStyle`
 
   a {
     color: ${props => props.theme.text.primary};
-    font-weight: ${defaultTheme.fontWeights.link};
   }
 
   a:hover button {

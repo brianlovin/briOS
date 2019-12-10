@@ -126,7 +126,6 @@ export const p = css`
     display: inline-block;
     background: ${props => hexa(props.theme.text.link, 0.12)};
     color: ${props => props.theme.text.link};
-    font-weight: 500;
   }
 
   a:hover > code {
@@ -150,7 +149,8 @@ export const P = styled.p`
 
 export const blockquote = css`
   ${p};
-  margin-top: ${defaultTheme.space[5]};
+  margin-top: ${defaultTheme.space[4]};
+  margin-bottom: ${defaultTheme.space[5]};
   padding-left: ${defaultTheme.space[4]};
   font-style: italic;
   color: ${props => props.theme.text.tertiary};
