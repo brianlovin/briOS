@@ -7,7 +7,6 @@ import { BlogPost } from '~/types';
 import { ContentContainer, SectionHeading } from '~/components/Page';
 import { H1, Larr, A, Rarr, Subheading } from '~/components/Typography'
 import { FeaturedImage, ReadingTime } from '~/components/Overthought/Preview/style'
-import PostShareButtons from '~/components/ShareButtons';
 import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe'
 import SEO from './SEO'
 import Grid from '../Grid'
@@ -50,8 +49,7 @@ export default function Post({ post }) {
         
         <div dangerouslySetInnerHTML={{ __html: post.html }} />
 
-        <SectionHeading>
-          <PostShareButtons route={`overthought/${post.slug}`} title={post.title} />
+        <SectionHeading style={{ marginTop: '72px' }}>
           <OverthoughtSubscribeBox />
         </SectionHeading>
 

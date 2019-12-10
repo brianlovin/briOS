@@ -9,7 +9,6 @@ import {
   Divider,
 } from './style';
 import { Notice, WarnNotice, CustomNotice } from './Notice';
-import ShareButtons from './ShareButtons';
 
 export {
   Container,
@@ -21,7 +20,6 @@ export {
   Notice,
   WarnNotice,
   CustomNotice,
-  ShareButtons,
   Grid,
   Divider,
 };
