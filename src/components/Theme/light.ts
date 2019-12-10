@@ -13,7 +13,7 @@ export default {
     primary: '#050505',
     secondary: '#2f3037',
     tertiary: '#525560',
-    quarternary: '#9194a1',
+    quarternary: '#686B78',
     placeholder: 'rgba(82,85,96,0.5)',
     onPrimary: '#ffffff',
     link: '#007AFF'
