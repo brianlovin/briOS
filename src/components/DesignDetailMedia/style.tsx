@@ -29,7 +29,8 @@ export const Video = styled.video`
   height: 100%;
   min-height: 680px;
   max-width: ${props => props.landscape ? '100%' : '400px'};
-  border-radius: 4px;
+  border-radius: 8px;
+  overflow: hidden;
 
   @media (max-width: 968px) {
     min-height: 630px;
