@@ -8,15 +8,6 @@ export default function About() {
     <Page withHeader>
       <ContentContainer>
         <SectionHeading>
-          
-          <Link href="/">
-            <a>
-              <Subheading style={{ marginTop: 0 }}><Larr /> Home</Subheading>
-            </a>
-          </Link>
-
-          <div style={{ padding: '16px' }} />
-
           <H1>About me</H1>
           
           <div style={{ padding: '16px' }} />

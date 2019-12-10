@@ -1,55 +1,110 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { hexa } from '~/components/utils'
+import defaultTheme from '../Theme';
 
-export const Container = styled.div`
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-areas: 'logo actions';
-  padding: 12px 16px;
+const base = css`
+  padding: 4px 8px;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  background: ${props =>
-    props.showHeaderShadow ? hexa(props.theme.bg.secondary, 0.8) : 'transparent'};
+  background: ${props => hexa(props.theme.bg.secondary, 0.8)};
   z-index: 4;
-  box-shadow: ${props =>
-    props.showHeaderShadow ? '0 4px 8px rgba(0,0,0,0.04)' : 'none'};
+  box-shadow: 0 4px 8px rgba(0,0,0,0.04);
   transition: all 0.2s ease-in-out;
-  backdrop-filter: ${props => props.showHeaderShadow ? 'saturate(180%) blur(20px)' : 'none'};
+  backdrop-filter: saturate(180%) blur(20px);
+  font-size: ${defaultTheme.fontSizes[1]};
+  font-weight: 600;
+  margin: 0;
 
   a {
-    text-decoration: none!important;
+    padding: 8px 12px;
+    border-radius: 4px;
+    width: 100%;
+    text-align: center;
+    margin: 0 2px;
+  }
+
+  @media (max-width: ${defaultTheme.breakpoints[4]}) {
+    font-size: ${defaultTheme.fontSizes[1]};
+  }
+`
+
+export const Container = styled.header`
+  ${base};
+
+  justify-content: space-around;
+
+  @media (min-width: ${defaultTheme.breakpoints[4]}) {
+    display: flex;
+  }
+  @media (max-width: ${defaultTheme.breakpoints[4]}) {
+    display: none;
   }
 `;
 
-export const Logo = styled.p`
-  grid-area: logo;
-  font-size: 18px;
-  font-weight: 700;
-  color: ${props => props.theme.text.primary};
-  margin: 0;
-`;
-
-export const Icons = styled.div`
+export const InnerGrid = styled.div`
   display: flex;
-  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+  justify-self: center;
+  max-width: ${defaultTheme.breakpoints[3]};
+  grid-gap: ${defaultTheme.space[3]};
+`
+
+export const MobileContainer = styled.header`
+  ${base};
+
+  justify-content: center;
+  align-items: ${props => props.expanded ? 'flex-start' : 'center'};
+  flex-direction: ${props => props.expanded ? 'column' : 'row'};
 
   a {
-    color: ${props => props.theme.text.tertiary};
+    text-align: left;
+  }
+
+  @media (min-width: ${defaultTheme.breakpoints[4]}) {
+    display: none;
+  }
+  @media (max-width: ${defaultTheme.breakpoints[4]}) {
     display: flex;
-    align-items: center;
-    margin-left: 16px;
+  }
+`
+
+export const CloseButton = styled.div`
+  position: relative;
+  padding: 0 8px;
+  display: ${props => props.visible ? 'block' : 'none'};
+  font-size: 24px;
+  font-weight: 400;
+  cursor: pointer;
+`
+
+export const MenuButton = styled.div`
+  padding: 0 8px;
+  margin-top: 5px;
+  cursor: pointer;
+`
+
+export const Label = styled.span`
+  display: flex;
+  flex: 1;
+  
+  a {
+    text-align: center;
+    background: ${props => props.isActive ? hexa(props.theme.text.link, 0.04) : 'none'};
+    color: ${props => props.isActive ? props.theme.text.link : props.theme.text.primary};
   }
 
   a:hover {
-    color: ${props => props.theme.text.primary};
+    background: ${props => props.isActive ? hexa(props.theme.text.link, 0.08) : hexa(props.theme.text.primary, 0.04)};
   }
-`;
 
-export const ButtonRowContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  grid-area: actions;
-  align-items: center;
+  @media (max-width: ${defaultTheme.breakpoints[4]}) {
+    width: 100%;
+
+    a {
+      text-align: left;
+    }
+  }
 `

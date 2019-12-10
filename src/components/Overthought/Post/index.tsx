@@ -33,14 +33,6 @@ export default function Post({ post }) {
       <ContentContainer data-cy="overthought-post">
         <SEO post={post} />
         <SectionHeading>
-          <Link href={'/overthought'}>
-            <a>
-              <Subheading style={{ marginTop: 0 }}><Larr /> Overthought</Subheading>
-            </a>
-          </Link>
-          
-          <div style={{ paddingBottom: '64px' }} />
-
           {post.feature_image && <FeaturedImage src={post.feature_image} />}
           <H1 style={{ marginTop: 0 }}>{post.title}</H1>
           <ReadingTime>{datestring} · {post.reading_time}m read</ReadingTime>
