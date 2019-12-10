@@ -1,29 +1,16 @@
-name: E2E Tests
-
+name: E2E on Chrome
 on: [push]
-
 jobs:
-  build:
-
+  cypress-run:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [10.x, 12.x]
-
+    # let's make sure our tests pass on Chrome browser
+    name: E2E on Chrome
     steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: npm install, build, and start
-      run: |
-        npm install
-        npm run build --if-present
-        npm start &
-    - name: cypress
-      run: |
-        npm run cypress:run
-      env:
-        CI: true
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Cypress run
+        uses: cypress-io/github-action@v1
+        with:
+          build: yarn run build
+          start: yarn run start
+          browser: chrome

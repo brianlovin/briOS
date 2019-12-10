@@ -1,16 +1,23 @@
 import * as React from 'react'
 import OverthoughtPreviewCard from '~/components/Overthought/Preview'
-import { ContentGrid } from '~/components/Page'
+import { ContentGrid, PreviewContentGrid } from '~/components/Page'
+import { BlogPost } from '~/types'
 
-export default function OverthoughtGrid({ truncate, ...props }) {
+interface Props {
+  truncate: boolean;
+  posts: Array<BlogPost>;
+}
+
+export default function OverthoughtGrid({ truncate, ...props }: Props) {
   const posts = truncate ? props.posts.slice(0, 4) : props.posts
+  const Grid = truncate ? PreviewContentGrid : ContentGrid
   return (
-    <ContentGrid>
+    <Grid>
       {
         posts.map(post => (
           <OverthoughtPreviewCard key={post.id} post={post} />
         ))
       }
-    </ContentGrid>
+    </Grid>
   )
 }

@@ -1,17 +1,18 @@
 import * as React from 'react';
 import { designDetailsPosts } from '~/data';
 import DesignDetailsCard from '~/components/DesignDetailsCard';
-import { ContentGrid } from '../Page';
+import { ContentGrid, PreviewContentGrid } from '../Page';
 
 export default function DesignDetailsGrid({ truncate }) {
   const posts = truncate ? designDetailsPosts.slice(0, 4) : designDetailsPosts
+  const Grid = truncate ? PreviewContentGrid : ContentGrid
   return (
     <React.Fragment>
-      <ContentGrid>
+      <Grid>
         {posts.map(post => (
           <DesignDetailsCard key={post.slug} post={post} />
         ))}
-      </ContentGrid>
+      </Grid>
     </React.Fragment>
   );
 }
