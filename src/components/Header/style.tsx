@@ -18,7 +18,7 @@ const base = css`
   margin: 0;
 
   a {
-    padding: 8px 12px;
+    padding: 8px;
     border-radius: 4px;
     width: 100%;
     text-align: center;
@@ -75,9 +75,10 @@ export const MobileContainer = styled.header`
 export const CloseButton = styled.div`
   position: relative;
   padding: 0 8px;
+  margin-top: -2px;
   display: ${props => props.visible ? 'block' : 'none'};
-  font-size: 24px;
-  font-weight: 400;
+  font-size: 28px;
+  font-weight: 300;
   cursor: pointer;
 `
 
