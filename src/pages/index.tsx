@@ -23,7 +23,7 @@ function Home(props: Props) {
     <Page>
       <SectionHeading>
         <H1>Brian Lovin</H1>
-        <Subheading>I'm a product designer living in New York City, currently building native mobile apps at GitHub.</Subheading>
+        <Subheading>I'm a product designer, podcaster, and writer, living in New York City. I'm currently building native mobile apps at GitHub.</Subheading>
         <Subheading><Link href="/about"><A>More about me <Rarr /></A></Link></Subheading>
       </SectionHeading>
 
