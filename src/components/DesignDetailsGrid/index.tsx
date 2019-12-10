@@ -4,7 +4,7 @@ import DesignDetailsCard from '~/components/DesignDetailsCard';
 import { ContentGrid } from '../Page';
 
 export default function DesignDetailsGrid({ truncate }) {
-  const posts = truncate ? designDetailsPosts.slice(0, 3) : designDetailsPosts
+  const posts = truncate ? designDetailsPosts.slice(0, 4) : designDetailsPosts
   return (
     <React.Fragment>
       <ContentGrid>

@@ -75,7 +75,7 @@ export default function LatestEpisode({ showMoreEpisodes }: Props) {
 
       {showMoreEpisodes && (
         <ContentGrid>
-          {allEpisodes.slice(0,3).map(ep => {
+          {allEpisodes.slice(0, 4).map(ep => {
             const { month, year, day } = getDateObject(ep.published_at);
             const datestring = `${month} ${day}, ${year}`;
             return (

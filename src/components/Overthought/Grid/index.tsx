@@ -3,7 +3,7 @@ import OverthoughtPreviewCard from '~/components/Overthought/Preview'
 import { ContentGrid } from '~/components/Page'
 
 export default function OverthoughtGrid({ truncate, ...props }) {
-  const posts = truncate ? props.posts.slice(0, 3) : props.posts
+  const posts = truncate ? props.posts.slice(0, 4) : props.posts
   return (
     <ContentGrid>
       {

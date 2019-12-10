@@ -130,8 +130,6 @@ export const EpisodeCard = styled.div`
   }
 
   @media (max-width: 968px) {
-    height: auto;
-
     ${Circle} {
       display: none;
     }

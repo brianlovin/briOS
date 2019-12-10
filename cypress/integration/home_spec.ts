@@ -9,7 +9,7 @@ describe('Home', () => {
   });
 
   it('should render design details', () => {
-    designDetailsPosts.slice(0, 3).map(detail => {
+    designDetailsPosts.slice(0, 4).map(detail => {
       cy.contains(detail.title);
     });
   });

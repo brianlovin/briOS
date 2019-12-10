@@ -24,13 +24,24 @@ export const ContentGrid = styled.div`
   max-width: ${defaultTheme.breakpoints[0]};
   margin-top: ${defaultTheme.space[5]};
 
+  a:last-of-type {
+    display: none;
+  }
+
 
   @media (max-width: ${defaultTheme.breakpoints[1]}) {
     grid-template-columns: repeat(2, 1fr);
+    a:last-of-type {
+      display: inline-block;
+    }
   }
 
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
     grid-template-columns: repeat(1, 1fr);
+
+    a:first-of-type {
+      grid-column: 1;
+    }
   }
 `;
 

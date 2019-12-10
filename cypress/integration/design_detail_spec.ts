@@ -36,7 +36,7 @@ describe('Design Detail Post', () => {
   });
 
   it('should render design details more to read', () => {
-    designDetailsPosts.slice(0, 3).map(detail => {
+    designDetailsPosts.slice(0, 4).map(detail => {
       cy.contains(detail.title);
       cy.contains(`${detail.details.length} details`);
     });
