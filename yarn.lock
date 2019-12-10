@@ -5507,6 +5507,11 @@ lodash.camelcase@^4.3.0:
   resolved "https://registry.yarnpkg.com/lodash.camelcase/-/lodash.camelcase-4.3.0.tgz#b28aa6288a2b9fc651035c7711f65ab6190331a6"
   integrity sha1-soqmKIorn8ZRA1x3EfZathkDMaY=
 
+lodash.curry@4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/lodash.curry/-/lodash.curry-4.1.1.tgz#248e36072ede906501d75966200a86dab8b23170"
+  integrity sha1-JI42By7ekGUB11lmIAqG2riyMXA=
+
 lodash.merge@^4.6.0:
   version "4.6.2"
   resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.2.tgz#558aa53b43b661e1925a0afdfa36a9a1085fe57a"
@@ -6013,10 +6018,10 @@ next-seo@^3.1.0:
   resolved "https://registry.yarnpkg.com/next-seo/-/next-seo-3.1.0.tgz#2269408f720aa17369ac5fb8c118a9701a4da1fa"
   integrity sha512-zT2g4/dog5OHbwVreyz2UqpftV2q24zePB6jpz0hE35tBvya5VrhBxhhnyPk43Aug9k+V+Dc4i1Bf1YuKhJu0g==
 
-next@^9.1.5:
-  version "9.1.5"
-  resolved "https://registry.yarnpkg.com/next/-/next-9.1.5.tgz#3163e1d36b896a73d6da3c55f3aab1a0f7bb1f26"
-  integrity sha512-iXjXbZFKi8WxRFPUOxQmpgTHRvbE0Ln7lZ8LYqqIRXvggM51SeLrgLHYBJTBGw+RVbIT6gYokNE044IKTNgEGw==
+next@^9.1.6-canary.1:
+  version "9.1.6-canary.1"
+  resolved "https://registry.yarnpkg.com/next/-/next-9.1.6-canary.1.tgz#923725997f3f742b3bdaf266bdb7e4b0f55dd1d8"
+  integrity sha512-OVFTUKP8y5uHTFoaESyAFhOm9607loZZ6pVFtnymcY/NuKhblqpI/CMJS3XNNVaG7+bHvRfYSQR1Fml1MAwGLg==
   dependencies:
     "@ampproject/toolbox-optimizer" "1.1.1"
     "@babel/core" "7.7.2"
@@ -6063,6 +6068,7 @@ next@^9.1.5:
     json5 "2.1.1"
     launch-editor "2.2.1"
     loader-utils "1.2.3"
+    lodash.curry "4.1.1"
     lru-cache "5.1.1"
     mini-css-extract-plugin "0.8.0"
     mkdirp "0.5.1"
