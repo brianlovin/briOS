@@ -12,16 +12,6 @@ export const Card = styled.div`
   background: ${props => props.theme.bg.secondary};
   transition: box-shadow ${props => props.theme.animations.default};
 
-  &:hover {
-    box-shadow: ${props => props.theme.shadows.largeHover};
-    transition: box-shadow ${props => props.theme.animations.hover};
-    z-index: 2;
-  }
-
-  &:active {
-    box-shadow: ${props => props.theme.shadows.largeHover};
-  }
-
   p {
     margin-top: ${defaultTheme.space[2]};
   }

@@ -24,10 +24,20 @@ export const ContentGrid = styled.div`
   max-width: ${defaultTheme.breakpoints[0]};
   margin-top: ${defaultTheme.space[5]};
 
+  a {
+    overflow: hidden;
+    border-radius: 16px;
+    transition: box-shadow ${defaultTheme.animations.default};
+  }
+
+  a:hover {
+    box-shadow: ${defaultTheme.shadows.largeHover};
+    transition: box-shadow ${defaultTheme.animations.hover};
+  }
+
   a:last-of-type {
     display: none;
   }
-
 
   @media (max-width: ${defaultTheme.breakpoints[1]}) {
     grid-template-columns: repeat(2, 1fr);

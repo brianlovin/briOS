@@ -111,12 +111,9 @@ export const EpisodeCard = styled.div`
   align-items: flex-start;
   min-height: 300px;
   height: 100%;
-  overflow: hidden;
   z-index: 3;
 
   &:hover {
-    box-shadow: ${defaultTheme.shadows.largeHover};
-    
     ${Circle} {
       transform: scale(1);
       transition: transform ${defaultTheme.animations.default};
