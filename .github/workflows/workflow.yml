@@ -1,18 +1,12 @@
-name: E2E Tests
-
+name: E2E on Chrome
 on: [push]
-
 jobs:
-  build:
-
+  cypress-run:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [10.x, 12.x]
-
+    # let's make sure our tests pass on Chrome browser
+    name: E2E on Chrome
     steps:
-    - name: Cypress run
-        uses: cypress-io/github-action@v1
-      env:
-        CI: true
+      - uses: actions/checkout@v1
+      - uses: cypress-io/github-action@v1
+        with:
+          browser: chrome
