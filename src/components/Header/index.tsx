@@ -42,8 +42,6 @@ export default function Header() {
   if (router.pathname.includes('/design-details')) activeRoute = 'design-details'
   if (router.pathname.includes('/overthought')) activeRoute = 'overthought'
 
-  console.log({ activeRoute })
-
   return (
     <React.Fragment>
         <MobileContainer expanded={isExpanded} data-cy="header">
