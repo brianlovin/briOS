@@ -6,7 +6,11 @@ jobs:
     # let's make sure our tests pass on Chrome browser
     name: E2E on Chrome
     steps:
-      - uses: actions/checkout@v1
-      - uses: cypress-io/github-action@v1
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Cypress run
+        uses: cypress-io/github-action@v1
         with:
+          build: yarn run build
+          start: yarn run start
           browser: chrome
