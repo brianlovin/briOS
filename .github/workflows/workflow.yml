@@ -1,5 +1,5 @@
 name: E2E on Chrome
-on: [push]
+on: [push, pull_request]
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
