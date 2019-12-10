@@ -17,18 +17,6 @@ describe('Design Detail Post', () => {
     cy.contains(`${detail.details.length} details`);
   });
 
-  it('should render share links', () => {
-    cy.get(
-      `[href="https://www.facebook.com/sharer/sharer.php?u=https://brianlovin.com/design-details/${slug}"]`
-    ).should('be.visible');
-
-    cy.get(
-      `[href="https://twitter.com/share?text=Design Details: Instagram by @brian_lovin&url=https://brianlovin.com/design-details/${slug}"]`
-    ).should('be.visible');
-
-    cy.get('[data-cy="copy-link-button"]').should('be.visible');
-  });
-
   it('should render a media player for each detail', () => {
     cy.get('[data-cy="detail-media-container"]').should($p => {
       expect($p).to.have.length(detail.details.length);
