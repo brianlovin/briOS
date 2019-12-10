@@ -17,13 +17,13 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: npm install, build, and start
+    - name: yarn install, build, and start
       run: |
-        npm install
-        npm run build --if-present
-        npm start &
+        yarn install
+        yarn run build --if-present
+        yarn start &
     - name: cypress
       run: |
-        npm run cypress:run
+        yarn run cypress:run
       env:
         CI: true

@@ -12,8 +12,8 @@ import {
   Icon,
 } from './style';
 
-type Props = {
-  post: DesignDetailsPost,
+interface Props {
+  post: DesignDetailsPost;
 };
 
 export default function DesignDetailView(props: Props) {

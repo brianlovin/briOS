@@ -9,10 +9,10 @@ Clone the repository:
 `cd brian-lovin-next`
 
 Install dependencies:
-`npm install`
+`yarn`
 
 Start the client:
-`npm run dev`
+`yarn run dev`
 
 Open the site:
 `localhost:3000`
