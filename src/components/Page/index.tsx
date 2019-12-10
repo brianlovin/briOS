@@ -47,7 +47,7 @@ export default function Page(props: Props) {
   return (
     <PageContainer>
       {withHeader && <Header showHeaderShadow={showHeaderShadow} />}
-      <InnerPageContainer>{children}</InnerPageContainer>
+      <InnerPageContainer role="main">{children}</InnerPageContainer>
     </PageContainer>
   );
 }

@@ -45,7 +45,7 @@ export const ContentGrid = styled.div`
   }
 `;
 
-export const InnerPageContainer = styled.div`
+export const InnerPageContainer = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;

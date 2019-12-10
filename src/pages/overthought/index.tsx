@@ -26,7 +26,7 @@ function Overthought(props: Props) {
         
         <Link href="/">
           <a>
-            <Subheading><Larr /> Home</Subheading>
+            <Subheading style={{ marginTop: 0 }}><Larr /> Home</Subheading>
           </a>
         </Link>
 

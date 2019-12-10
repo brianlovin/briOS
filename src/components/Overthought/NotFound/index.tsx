@@ -13,7 +13,7 @@ export default function NotFound() {
 
         <Link href={'/overthought'}>
           <A>
-            <Subheading><Larr /> Back to Overthought</Subheading>
+            <Subheading style={{ marginTop: 0 }}><Larr /> Back to Overthought</Subheading>
           </A>
         </Link>
       </SectionHeading>

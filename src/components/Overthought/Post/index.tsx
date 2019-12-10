@@ -35,7 +35,7 @@ export default function Post({ post }) {
         <SectionHeading>
           <Link href={'/overthought'}>
             <a>
-              <Subheading><Larr /> Overthought</Subheading>
+              <Subheading style={{ marginTop: 0 }}><Larr /> Overthought</Subheading>
             </a>
           </Link>
           

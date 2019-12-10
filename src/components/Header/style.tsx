@@ -3,7 +3,7 @@ import { hexa } from '~/components/utils'
 
 export const Container = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: auto 1fr;
   grid-template-areas: 'logo actions';
   padding: 12px 16px;
   position: fixed;
@@ -20,12 +20,6 @@ export const Container = styled.div`
 
   a {
     text-decoration: none!important;
-  }
-
-  @media (max-width: 968px) {
-    padding: 8px 16px;
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas: 'logo actions';
   }
 `;
 
@@ -45,14 +39,11 @@ export const Icons = styled.div`
     color: ${props => props.theme.text.tertiary};
     display: flex;
     align-items: center;
+    margin-left: 16px;
   }
 
   a:hover {
     color: ${props => props.theme.text.primary};
-  }
-
-  .icon {
-    margin-left: 16px;
   }
 `;
 
@@ -61,7 +52,4 @@ export const ButtonRowContainer = styled.div`
   justify-content: flex-end;
   grid-area: actions;
   align-items: center;
-
-  @media (max-width: 968px) {
-  }
-`;
+`
