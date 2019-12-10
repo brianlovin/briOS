@@ -58,6 +58,7 @@ export const MobileContainer = styled.header`
   justify-content: center;
   align-items: ${props => props.expanded ? 'flex-start' : 'center'};
   flex-direction: ${props => props.expanded ? 'column' : 'row'};
+  padding-bottom: ${props => props.expanded ? '16px' : '4px'};
 
   a {
     text-align: left;
