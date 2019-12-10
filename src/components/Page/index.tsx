@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { throttle } from 'throttle-debounce';
+import React from 'react';
 import Header from '~/components/Header';
 import {
   PageContainer,
@@ -7,12 +6,14 @@ import {
   SectionHeading,
   ContentContainer,
   ContentGrid,
+  PreviewContentGrid,
 } from './style';
 
 export {
   SectionHeading,
   ContentContainer,
   ContentGrid,
+  PreviewContentGrid
 };
 
 interface Props {

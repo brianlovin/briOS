@@ -34,7 +34,9 @@ export const ContentGrid = styled.div`
     box-shadow: ${defaultTheme.shadows.largeHover};
     transition: box-shadow ${defaultTheme.animations.hover};
   }
+`;
 
+export const PreviewContentGrid = styled(ContentGrid)`
   a:last-of-type {
     display: none;
   }
@@ -53,7 +55,7 @@ export const ContentGrid = styled.div`
       grid-column: 1;
     }
   }
-`;
+`
 
 export const InnerPageContainer = styled.main`
   display: flex;
