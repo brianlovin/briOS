@@ -6018,10 +6018,10 @@ next-seo@^3.1.0:
   resolved "https://registry.yarnpkg.com/next-seo/-/next-seo-3.1.0.tgz#2269408f720aa17369ac5fb8c118a9701a4da1fa"
   integrity sha512-zT2g4/dog5OHbwVreyz2UqpftV2q24zePB6jpz0hE35tBvya5VrhBxhhnyPk43Aug9k+V+Dc4i1Bf1YuKhJu0g==
 
-next@^9.1.6-canary.2:
-  version "9.1.6-canary.2"
-  resolved "https://registry.yarnpkg.com/next/-/next-9.1.6-canary.2.tgz#776542466ad6d07db30399384f83e97df3695c1e"
-  integrity sha512-H2tpJVJENHhff4P2Cp6jysNXTWbcxEUVDoAHnCFHf5xVfcApVP9wOqZNN6eoUDeH4I9rTGpDOAIdA0cu+in5iQ==
+next@^9.1.6-canary.5:
+  version "9.1.6-canary.5"
+  resolved "https://registry.yarnpkg.com/next/-/next-9.1.6-canary.5.tgz#e176c9d7f047f9d894ac7032ad2e0f31a04ffa12"
+  integrity sha512-Blv4JYwwPO52ZF1LzN2UqtkN/EmSwHCc+mFPe+rpuE5xrzQL3eSdzTGiIMwTNABSzcNO7Jk2aPxHciIQEh5wbQ==
   dependencies:
     "@ampproject/toolbox-optimizer" "1.1.1"
     "@babel/core" "7.7.2"
