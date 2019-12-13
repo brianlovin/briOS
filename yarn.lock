@@ -1214,18 +1214,6 @@
   resolved "https://registry.yarnpkg.com/@sheerun/mutationobserver-shim/-/mutationobserver-shim-0.3.2.tgz#8013f2af54a2b7d735f71560ff360d3a8176a87b"
   integrity sha512-vTCdPp/T/Q3oSqwHmZ5Kpa9oI7iLtGl3RQaA/NyLHikvcrPxACkkKVr/XzkSPJWXHRhKGzVvb0urJsbMlRxi1Q==
 
-"@statickit/core@^1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@statickit/core/-/core-1.5.0.tgz#992b3bdff8fdca2d00c4c5b982df0fc1a6675f22"
-  integrity sha512-ckxEo4w4xA4x9ZxgRgUmKJ4uNNDzp91LupjUCQ/NCcdNbp7CgYLdNkYk9rWFzdh6z4lf9ZWYLO94s4pAzS5rIQ==
-
-"@statickit/react@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@statickit/react/-/react-1.2.0.tgz#a90117a72aeaebc2e4e34a0de30ecde102d9fe19"
-  integrity sha512-zdFuhzAkn9J/Y3B0FVY23U6ttNJDcLnXh9agBu06jFV7i8SEhkXJmXDsK/k42gDjMxRpw5BGNFN0Y3f/cmBv9g==
-  dependencies:
-    "@statickit/core" "^1.5.0"
-
 "@styled-system/background@^5.1.2":
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/@styled-system/background/-/background-5.1.2.tgz#75c63d06b497ab372b70186c0bf608d62847a2ba"
