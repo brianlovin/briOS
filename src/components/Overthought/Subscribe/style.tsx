@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import defaultTheme from '~/components/Theme'
-import { hexa, tint } from '~/components/utils'
+import { tint } from '~/components/utils'
+import { P } from '~/components/Typography'
 
 export const Container = styled.div`
   display: grid;
@@ -52,4 +53,10 @@ export const Success = styled.div`
   text-align: center;
   font-size: ${defaultTheme.fontSizes[2]};
   text-shadow: 0 1px 0 rgba(0,0,0,0.08);
+`
+
+export const Error = styled(P)`
+  color: ${props => props.theme.accent.red};
+  margin-left: ${defaultTheme.space[4]};
+  padding-right: ${defaultTheme.space[4]};
 `

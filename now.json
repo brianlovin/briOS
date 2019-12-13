@@ -2,5 +2,9 @@
   "version": 2,
   "github": {
     "silent": true
+  },
+  "env": {
+    "MAILCHIMP_API_KEY": "@mailchimp-api-key",
+    "MAILCHIMP_LIST_ID": "@mailchimp-list-id"
   }
 }
