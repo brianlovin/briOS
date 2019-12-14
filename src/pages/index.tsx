@@ -44,18 +44,6 @@ function Home(props: Props) {
       )}
 
       <SectionHeading>
-        <H2>Design Details</H2>
-        <Subheading>An exploration of visual and interaction design in well-known apps.</Subheading>
-        <Subheading>
-          <Link href="/design-details">
-            <A>View all posts <Rarr /></A>
-          </Link>
-        </Subheading>
-      </SectionHeading>
-
-      <DesignDetailsGrid truncate={true} />
-
-      <SectionHeading>
         <H2>Design Details Podcast</H2>
         <Subheading>
           A weekly conversation about design process and culture.
@@ -66,6 +54,18 @@ function Home(props: Props) {
       </SectionHeading>
       
       <DesignDetailsPlayer showMoreEpisodes />
+
+      <SectionHeading>
+        <H2>App Dissection</H2>
+        <Subheading>An exploration of visual and interaction design in well-known apps.</Subheading>
+        <Subheading>
+          <Link href="/design-details">
+            <A>View all posts <Rarr /></A>
+          </Link>
+        </Subheading>
+      </SectionHeading>
+
+      <DesignDetailsGrid truncate={true} />
     </Page>
   );
 }
