@@ -17,7 +17,7 @@ export const ContentContainer = styled.div`
 
 export const ContentGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(${props => props.defaultColumns || 3}, 1fr);
   grid-gap: ${defaultTheme.space[3]};
   grid-auto-rows: auto;
   width: 100%;

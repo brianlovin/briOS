@@ -7,6 +7,7 @@ import { H1, H2, A, Rarr, Subheading } from '~/components/Typography'
 import OverthoughtGrid from '~/components/Overthought/Grid'
 import DesignDetailsGrid from '~/components/DesignDetailsGrid';
 import DesignDetailsPlayer from '~/components/DesignDetailsPlayer';
+import FigmaPlugins from '~/components/FigmaPlugins';
 import { getFeaturedPosts } from '~/data/ghost'
 import { BlogPost } from '~/types'
 import cacheSsrRes from '~/lib/cacheSsr';
@@ -54,6 +55,18 @@ function Home(props: Props) {
       </SectionHeading>
       
       <DesignDetailsPlayer showMoreEpisodes />
+
+      <SectionHeading>
+        <H2>Figma Plugins</H2>
+        <Subheading>
+          Plugins I'm using to make product design a tiny bit less tedious.
+        </Subheading>
+        <Subheading>
+          <A href="https://figma.com/@brian" target="_blank" rel="noopener noreferrer">View on Figma <Rarr /></A>
+        </Subheading>
+      </SectionHeading>
+
+      <FigmaPlugins />
 
       <SectionHeading>
         <H2>App Dissection</H2>
