@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components'
 import defaultTheme from '~/components/Theme'
-import { hexa } from '../utils'
+import { hexa, tint } from '../utils'
 
 
 // captures the interaction on <Larr /> and <Rarr /> components
@@ -90,7 +90,7 @@ export const H6 = styled.h6`
 `
 
 export const p = css`
-  font-size: ${defaultTheme.fontSizes[2]};
+  font-size: ${defaultTheme.fontSizes[3]};
   font-weight: ${defaultTheme.fontWeights.body};
   line-height: ${defaultTheme.lineHeights.body};
   color: ${props => props.theme.text.secondary};
@@ -102,6 +102,7 @@ export const p = css`
 
   a:hover {
     text-decoration: none;
+    color: ${props => tint(props.theme.text.link, -30)};
   }
 
   code {
@@ -139,8 +140,8 @@ export const p = css`
   }
 
   /* larger screens read larger */
-  @media(min-width: ${defaultTheme.breakpoints[4]}) {
-    font-size: ${defaultTheme.fontSizes[3]};
+  @media(max-width: ${defaultTheme.breakpoints[4]}) {
+    font-size: ${defaultTheme.fontSizes[2]};
   }
 `
 export const P = styled.p`
@@ -281,6 +282,14 @@ export const Subheading = styled(P)`
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
     max-width: 100%;
     margin-top: ${defaultTheme.space[2]};
+  }
+`;
+
+export const LargeSubheading = styled(Subheading)`
+  font-size: ${defaultTheme.fontSizes[4]};
+
+  @media (max-width: ${defaultTheme.breakpoints[4]}) {
+    font-size: ${defaultTheme.fontSizes[3]};
   }
 `;
 
