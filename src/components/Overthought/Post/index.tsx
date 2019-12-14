@@ -5,7 +5,7 @@ import useSWR from 'swr'
 import { getFeaturedPosts } from '~/data/ghost'
 import { BlogPost } from '~/types';
 import { ContentContainer, SectionHeading } from '~/components/Page';
-import { H1, Larr, A, Rarr, Subheading } from '~/components/Typography'
+import { H1, A, Rarr, LargeSubheading, Subheading } from '~/components/Typography'
 import { FeaturedImage, ReadingTime } from '~/components/Overthought/Preview/style'
 import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe'
 import SEO from './SEO'
@@ -35,6 +35,7 @@ export default function Post({ post }) {
         <SectionHeading>
           {post.feature_image && <FeaturedImage loading="lazy" src={post.feature_image} />}
           <H1 style={{ marginTop: 0 }}>{post.title}</H1>
+          <LargeSubheading>{post.excerpt}</LargeSubheading>
           <ReadingTime>{datestring} · {post.reading_time}m read</ReadingTime>
           <div style={{ padding: '8px '}} />
         </SectionHeading>
