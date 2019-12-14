@@ -112,6 +112,7 @@ export const EpisodeCard = styled.div`
   min-height: 300px;
   height: 100%;
   z-index: 3;
+  overflow: hidden;
 
   &:hover {
     ${Circle} {
