@@ -17,7 +17,7 @@ export default function OverthoughtGrid({ post }: Props) {
     <Link href="/overthought/[slug]" as={`/overthought/${post.slug}`}>
       <a>
         <Card style={{ height: '100%' }}>
-          {post.feature_image && <PreviewImage src={post.feature_image} />}
+          {post.feature_image && <PreviewImage loading="lazy" src={post.feature_image} />}
           <H4 style={{ marginTop: 0 }}>{post.title}</H4>
           <P>{post.custom_excerpt || post.excerpt}</P>
           <ReadingTime>{datestring} · {post.reading_time}m read</ReadingTime>

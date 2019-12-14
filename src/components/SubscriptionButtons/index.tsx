@@ -15,6 +15,7 @@ export default function SubscriptionButtons(props: Props) {
         <a href={podcast.iTunesUrl} target="_blank" rel="noopener noreferrer">
           <SubscriptionAvatar
             src="/static/img/subscription_icons/podcasts.png"
+            loading="lazy"
             alt="Apple Podcasts"
           />
         </a>
@@ -24,6 +25,7 @@ export default function SubscriptionButtons(props: Props) {
         <a href={podcast.overcastUrl} target="_blank" rel="noopener noreferrer">
           <SubscriptionAvatar
             src="/static/img/subscription_icons/overcast.png"
+            loading="lazy"
             alt="Overcast"
           />
         </a>
@@ -37,6 +39,7 @@ export default function SubscriptionButtons(props: Props) {
         >
           <SubscriptionAvatar
             src="/static/img/subscription_icons/pocketcasts.png"
+            loading="lazy"
             alt="Pocketcasts"
           />
         </a>
@@ -50,6 +53,7 @@ export default function SubscriptionButtons(props: Props) {
         >
           <SubscriptionAvatar
             src="/static/img/subscription_icons/google-podcasts.png"
+            loading="lazy"
             alt="Google Podcasts"
           />
         </a>
@@ -59,6 +63,7 @@ export default function SubscriptionButtons(props: Props) {
         <a href={podcast.castroUrl} target="_blank" rel="noopener noreferrer">
           <SubscriptionAvatar
             src="/static/img/subscription_icons/castro.png"
+            loading="lazy"
             alt="Castro"
           />
         </a>
@@ -68,6 +73,7 @@ export default function SubscriptionButtons(props: Props) {
         <a href={podcast.breakerUrl} target="_blank" rel="noopener noreferrer">
           <SubscriptionAvatar
             src="/static/img/subscription_icons/breaker.png"
+            loading="lazy"
             alt="Breakrer"
           />
         </a>
@@ -77,6 +83,7 @@ export default function SubscriptionButtons(props: Props) {
         <a href={podcast.spotifyUrl} target="_blank" rel="noopener noreferrer">
           <SubscriptionAvatar
             src="/static/img/subscription_icons/spotify.png"
+            loading="lazy"
             alt="Spotify"
           />
         </a>
@@ -86,6 +93,7 @@ export default function SubscriptionButtons(props: Props) {
         <a href={podcast.rssFeedUrl} target="_blank" rel="noopener noreferrer">
           <SubscriptionAvatar
             src="/static/img/subscription_icons/rss.png"
+            loading="lazy"
             alt="RSS Feed"
           />
         </a>

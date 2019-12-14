@@ -33,7 +33,7 @@ export default function Post({ post }) {
       <ContentContainer data-cy="overthought-post">
         <SEO post={post} />
         <SectionHeading>
-          {post.feature_image && <FeaturedImage src={post.feature_image} />}
+          {post.feature_image && <FeaturedImage loading="lazy" src={post.feature_image} />}
           <H1 style={{ marginTop: 0 }}>{post.title}</H1>
           <ReadingTime>{datestring} · {post.reading_time}m read</ReadingTime>
           <div style={{ padding: '8px '}} />
