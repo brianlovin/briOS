@@ -34,9 +34,21 @@ export const ContentGrid = styled.div`
     box-shadow: ${defaultTheme.shadows.largeHover};
     transition: box-shadow ${defaultTheme.animations.hover};
   }
+
+  @media (max-width: ${defaultTheme.breakpoints[1]}) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: ${defaultTheme.breakpoints[4]}) {
+    grid-template-columns: repeat(1, 1fr);
+  }
 `;
 
 export const PreviewContentGrid = styled(ContentGrid)`
+  a {
+    overflow: hidden;
+  }
+
   a:last-of-type {
     display: none;
   }
