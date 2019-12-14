@@ -57,7 +57,7 @@ function Home(props: Props) {
 
       <SectionHeading>
         <H2>App Dissection</H2>
-        <Subheading>An exploration of visual and interaction design in well-known apps.</Subheading>
+        <Subheading>An in-depth exploration of visual and interaction design in well-known apps.</Subheading>
         <Subheading>
           <Link href="/design-details">
             <A>View all posts <Rarr /></A>
