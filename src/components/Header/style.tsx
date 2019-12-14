@@ -84,7 +84,7 @@ export const CloseButton = styled.div`
 
 export const MenuButton = styled.div`
   padding: 0 8px;
-  margin-top: 5px;
+  margin-top: 4px;
   cursor: pointer;
 `
 

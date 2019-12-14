@@ -15,7 +15,7 @@ export default function DesignDetails() {
       />
       
       <SectionHeading>
-        <H1>Design Details</H1>
+        <H1>App Dissection</H1>
         <Subheading style={{ marginTop: '24px' }}>This collection of posts explores some of the best interaction patterns, visual styles, and design decisions of well-known apps. Each detail features a video and my commentary on the functionality and effectiveness of the interface.</Subheading>
       </SectionHeading>
 
