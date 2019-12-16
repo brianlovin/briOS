@@ -189,8 +189,8 @@ export const Ol = styled.ol`
 `
 
 export const listItem = css`
-  line-height: ${defaultTheme.lineHeights.heading};
-  padding: ${defaultTheme.space[1]} ${defaultTheme.space[0]};
+  line-height: ${defaultTheme.lineHeights.body};
+  padding: ${defaultTheme.space[2]} ${defaultTheme.space[0]};
 `
 export const Li = styled.li`
   ${listItem}
