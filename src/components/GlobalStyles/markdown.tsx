@@ -118,7 +118,7 @@ const GlobalMarkdownStyles = createGlobalStyle`
 
     thead th {
       vertical-align: bottom;
-      border-bottom: 2px solid ${props => props.theme.border.default};
+      border-bottom: 1px solid ${props => props.theme.border.default};
     }
   }
 `
