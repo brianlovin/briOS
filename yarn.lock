@@ -6014,10 +6014,10 @@ neo-async@^2.5.0, neo-async@^2.6.1:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.1.tgz#ac27ada66167fa8849a6addd837f6b189ad2081c"
   integrity sha512-iyam8fBuCUpWeKPGpaNMetEocMt364qkCsfL9JuhjXX6dRnguRVOfk2GZaDpPjcOKiiXCPINZC1GczQ7iTq3Zw==
 
-next-seo@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/next-seo/-/next-seo-3.1.0.tgz#2269408f720aa17369ac5fb8c118a9701a4da1fa"
-  integrity sha512-zT2g4/dog5OHbwVreyz2UqpftV2q24zePB6jpz0hE35tBvya5VrhBxhhnyPk43Aug9k+V+Dc4i1Bf1YuKhJu0g==
+next-seo@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/next-seo/-/next-seo-3.2.0.tgz#ea656a12039b96eb094ce245c02643b9f1606dcc"
+  integrity sha512-U0sZyPJveXfkz5jl1wz2y6mAZlzZgG+DJawL02PKY5hnz+0c5CGIzMiYOT2od8fmruxBImJlVFw3h09qMGiFLw==
 
 next@^9.1.6-canary.10:
   version "9.1.6-canary.10"

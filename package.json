@@ -16,7 +16,7 @@
     "fathom-client": "^1.0.0",
     "isomorphic-unfetch": "^3.0.0",
     "next": "^9.1.6-canary.10",
-    "next-seo": "^3.1.0",
+    "next-seo": "^3.2.0",
     "prismjs": "^1.17.1",
     "react": "^16.12.0",
     "react-clipboard.js": "^2.0.16",
