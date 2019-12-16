@@ -175,7 +175,8 @@ export const Blockquote = styled.blockquote`
 export const list = css`
   ${p};
   margin: ${defaultTheme.space[4]};
-  margin-left: ${defaultTheme.space[5]};
+  margin-left: ${defaultTheme.space[4]};
+  margin-right: 0;
   font-weight: ${defaultTheme.fontWeights.body};
   line-height: ${defaultTheme.fontWeights.body};
   color: ${props => props.theme.text.secondary};

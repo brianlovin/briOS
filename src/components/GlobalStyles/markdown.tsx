@@ -82,16 +82,29 @@ const GlobalMarkdownStyles = createGlobalStyle`
   }
 
   table {
+    min-width: 100%;
     width: 100%;
     max-width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
     margin: ${defaultTheme.space[5]} 0;
+    table-layout: fixed;
+    white-space: nowrap;
+
+    tbody {
+      min-width: 100%;
+      display: block;
+      overflow: auto;
+      width: 100%;
+      max-width: 100%;
+      width: -webkit-fit-content;
+    }
 
     th {
       ${p};
       font-weight: ${defaultTheme.fontWeights.bold} !important;
       text-align: left;
       padding: ${defaultTheme.space[2]};
-      vertical-align: top;
     }
 
     td {
@@ -99,6 +112,8 @@ const GlobalMarkdownStyles = createGlobalStyle`
       padding: ${defaultTheme.space[2]};
       vertical-align: top;
       border-top: 1px solid ${props => props.theme.border.default};
+      text-overflow: ellipsis;
+      width: 100%;
     }
 
     thead th {
