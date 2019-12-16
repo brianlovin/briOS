@@ -3410,6 +3410,11 @@ dtrace-provider@~0.8:
   dependencies:
     nan "^2.14.0"
 
+duplexer@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/duplexer/-/duplexer-0.1.1.tgz#ace6ff808c1ce66b57d1ebf97977acb02334cfc1"
+  integrity sha1-rOb/gIwc5mtX0ev5eXessCM0z8E=
+
 duplexify@^3.4.2, duplexify@^3.6.0:
   version "3.7.1"
   resolved "https://registry.yarnpkg.com/duplexify/-/duplexify-3.7.1.tgz#2a4df5317f6ccfd91f86d6fd25d8d8a103b88309"
@@ -4356,6 +4361,14 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/graceful-readlink/-/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
   integrity sha1-TK+tdrxi8C+gObL5Tpo906ORpyU=
+
+gzip-size@5.1.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/gzip-size/-/gzip-size-5.1.1.tgz#cb9bee692f87c0612b232840a873904e4c135274"
+  integrity sha512-FNHi6mmoHvs1mxZAds4PpdCS6QG8B4C1krxJsMutgxl5t3+GlRTzzI3NEkifXx2pVsOvJdOGSmIgDhQ55FwdPA==
+  dependencies:
+    duplexer "^0.1.1"
+    pify "^4.0.1"
 
 har-schema@^2.0.0:
   version "2.0.0"
@@ -6006,10 +6019,10 @@ next-seo@^3.1.0:
   resolved "https://registry.yarnpkg.com/next-seo/-/next-seo-3.1.0.tgz#2269408f720aa17369ac5fb8c118a9701a4da1fa"
   integrity sha512-zT2g4/dog5OHbwVreyz2UqpftV2q24zePB6jpz0hE35tBvya5VrhBxhhnyPk43Aug9k+V+Dc4i1Bf1YuKhJu0g==
 
-next@^9.1.6-canary.5:
-  version "9.1.6-canary.5"
-  resolved "https://registry.yarnpkg.com/next/-/next-9.1.6-canary.5.tgz#e176c9d7f047f9d894ac7032ad2e0f31a04ffa12"
-  integrity sha512-Blv4JYwwPO52ZF1LzN2UqtkN/EmSwHCc+mFPe+rpuE5xrzQL3eSdzTGiIMwTNABSzcNO7Jk2aPxHciIQEh5wbQ==
+next@^9.1.6-canary.10:
+  version "9.1.6-canary.10"
+  resolved "https://registry.yarnpkg.com/next/-/next-9.1.6-canary.10.tgz#490a6ff09304bb595bc6fe01e6c7f2b08b224ce2"
+  integrity sha512-LE5LY2efa6VNGa1exvK1g1D9yf3lR2LwyLSOj34lHUG8s/hravLOxW9gh2cmTjLLC5ZCJin3U3ANHD/q2kpP2Q==
   dependencies:
     "@ampproject/toolbox-optimizer" "1.1.1"
     "@babel/core" "7.7.2"
@@ -6049,6 +6062,7 @@ next@^9.1.6-canary.5:
     find-up "4.0.0"
     fork-ts-checker-webpack-plugin "3.1.1"
     fresh "0.5.2"
+    gzip-size "5.1.1"
     ignore-loader "0.1.2"
     is-docker "2.0.0"
     is-wsl "2.1.1"
