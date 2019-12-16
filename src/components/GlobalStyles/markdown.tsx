@@ -81,6 +81,31 @@ const GlobalMarkdownStyles = createGlobalStyle`
     }
   }
 
+  table {
+    width: 100%;
+    max-width: 100%;
+    margin: ${defaultTheme.space[5]} 0;
+
+    th {
+      ${p};
+      font-weight: ${defaultTheme.fontWeights.bold} !important;
+      text-align: left;
+      padding: ${defaultTheme.space[2]};
+      vertical-align: top;
+    }
+
+    td {
+      ${p};
+      padding: ${defaultTheme.space[2]};
+      vertical-align: top;
+      border-top: 1px solid ${props => props.theme.border.default};
+    }
+
+    thead th {
+      vertical-align: bottom;
+      border-bottom: 2px solid ${props => props.theme.border.default};
+    }
+  }
 `
 
 export default GlobalMarkdownStyles
