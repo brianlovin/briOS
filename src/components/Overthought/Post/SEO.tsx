@@ -16,7 +16,7 @@ export default function SEO({ post }: Props) {
           rel="alternate" 
           type="application/rss+xml" 
           title="RSS Feed for Overthought" 
-          href="/overthought/rss" />
+          href="https://brianlovin.com/overthought/rss" />
       </Head>
       
       <NextSeo
@@ -32,6 +32,9 @@ export default function SEO({ post }: Props) {
             },
           ],
           site_name: "Overthought",
+        }}
+        twitter={{
+          cardType: 'summary_large_image',
         }}
       />
     </React.Fragment>

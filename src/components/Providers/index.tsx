@@ -22,7 +22,21 @@ export default ({ children }: Props) => {
   }, [])
 
   // prevents ssr flash for mismatched dark mode
-  if (!mounted) return null
+  if (!mounted) {
+    return (
+      <div style={{ visibility: 'hidden' }}>
+        <Fathom>
+          <Sentry>
+          <SEO />
+            <ThemeProvider theme={theme}>
+              <GlobalStyles.ResetStyles />
+              {children}
+            </ThemeProvider>
+          </Sentry>
+        </Fathom>
+      </div>
+    )
+  }
 
   return (
     <Fathom>
