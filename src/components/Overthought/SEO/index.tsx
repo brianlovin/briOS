@@ -14,12 +14,21 @@ export default function OverthoughtSEO() {
       </Head>
       <NextSeo
         title={"Overthought"}
-        description={"Overthinking out loud about design, development, and building products."}
+        description={"Thinking out loud about design, development, and building products."}
         openGraph={{
           url: "https://brianlovin.com/overthought",
           title: "Overthought",
-          description: "Overthinking out loud about design, development, and building products.",
+          description: "Thinking out loud about design, development, and building products.",
           site_name: "Overthought",
+          images: [
+            {
+              url: 'https://brianlovin.com/static/og-image.jpeg',
+              alt: 'Overthought',
+            },
+          ],
+        }}
+        twitter={{
+          cardType: 'summary_large_image',
         }}
       />
     </React.Fragment>
