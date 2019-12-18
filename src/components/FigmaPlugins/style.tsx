@@ -48,7 +48,7 @@ export const FeaturedImage = styled.img`
   }
 `
 
-export const PreviewImage = styled.div`
+export const PreviewImage = styled.img`
   width: calc(100% + 48px);
   margin-left: -24px;
   margin-top: -24px;
@@ -56,11 +56,6 @@ export const PreviewImage = styled.div`
   margin-bottom: 20px;
   border-radius: 16px 16px 0 0;
   user-select: none;
-  min-height: 240px;
-  background-image: url("${props => props.src}");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: 0% 50%;
 
   @media (max-width: 768px) {
     margin-left: -24px;
