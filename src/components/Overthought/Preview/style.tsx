@@ -8,7 +8,7 @@ export const Card = styled.div`
   grid-template-columns: 1fr;
   grid-template-rows: auto auto 1fr auto;
   position: relative;
-  border-radius: 16px;
+  border-radius: 8px;
   background: ${props => props.theme.bg.secondary};
   transition: box-shadow ${props => props.theme.animations.default};
 
@@ -23,7 +23,7 @@ export const FeaturedImage = styled.img`
   margin-left: -24px;
   margin-top: -24px;
   margin-right: -24px;
-  border-radius: 16px;
+  border-radius: 8px;
   margin-bottom: 32px;
 
   @media (max-width: 768px) {
@@ -41,7 +41,7 @@ export const PreviewImage = styled.div`
   margin-top: -24px;
   margin-right: -24px;
   margin-bottom: 20px;
-  border-radius: 16px 16px 0 0;
+  border-radius: 8px 8px 0 0;
   user-select: none;
   height: 234px;
   background-image: url("${props => props.src}");

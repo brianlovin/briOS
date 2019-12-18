@@ -15,7 +15,7 @@ export const Card = styled.div`
   grid-template-columns: 1fr;
   grid-template-rows: auto auto 1fr auto;
   position: relative;
-  border-radius: 16px;
+  border-radius: 8px;
   background: ${props => props.theme.bg.secondary};
   transition: box-shadow ${props => props.theme.animations.default};
 
@@ -30,31 +30,13 @@ export const Card = styled.div`
   }
 `
 
-export const FeaturedImage = styled.img`
-  width: calc(100% + 48px);
-  min-height: 256px;
-  margin-left: -24px;
-  margin-top: -24px;
-  margin-right: -24px;
-  border-radius: 16px;
-  margin-bottom: 32px;
-
-  @media (max-width: 768px) {
-    width: 100%;
-    min-height: 0;
-    margin: 0;
-    margin-top: -24px;
-    margin-bottom: 24px;
-  }
-`
-
 export const PreviewImage = styled.img`
   width: calc(100% + 48px);
   margin-left: -24px;
   margin-top: -24px;
   margin-right: -24px;
   margin-bottom: 20px;
-  border-radius: 16px 16px 0 0;
+  border-radius: 8px 8px 0 0;
   user-select: none;
 
   @media (max-width: 768px) {

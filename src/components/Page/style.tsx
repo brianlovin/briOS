@@ -26,7 +26,7 @@ export const ContentGrid = styled.div`
 
   a {
     overflow: hidden;
-    border-radius: 16px;
+    border-radius: 8px;
     transition: box-shadow ${defaultTheme.animations.default};
   }
 

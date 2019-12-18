@@ -30,7 +30,7 @@ export const Container = styled.div`
   display: flex;
   position: relative;
   padding: 24px;
-  border-radius: 16px;
+  border-radius: 8px;
   transition: ${defaultTheme.animations.default};
   align-items: flex-start;
   height: 400px;

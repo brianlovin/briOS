@@ -11,7 +11,7 @@ export const Container = styled.div`
   padding: ${defaultTheme.space[4]};
   background: ${props => props.theme.bg.inset};
   width: 100%;
-  border-radius: 16px;
+  border-radius: 8px;
 `
 
 export const Form = styled.form`
