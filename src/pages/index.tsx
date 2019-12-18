@@ -50,7 +50,7 @@ function Home(props: Props) {
           A weekly conversation about design process and culture.
         </Subheading>
         <Subheading>
-          <A href="https://designdetails.fm" target="_blank" rel="noopener noreferrer">Go to site <Rarr /></A>
+          <A href="https://designdetails.fm" target="_blank" rel="noopener noreferrer">See all episodes <Rarr /></A>
         </Subheading>
       </SectionHeading>
       
