@@ -3,7 +3,6 @@ import { ThemeProvider } from 'styled-components';
 import useDarkMode from 'use-dark-mode'
 import GlobalStyles from '~/components/GlobalStyles';
 import { light, dark } from '~/components/Theme';
-import Sentry from './Sentry';
 import Fathom from './Fathom'
 import SEO from './SEO'
 
@@ -23,13 +22,12 @@ export default ({ children }: Props) => {
 
   const body = 
     <Fathom>
-      <Sentry>
       <SEO />
-        <ThemeProvider theme={theme}>
-          <GlobalStyles.ResetStyles />
-          {children}
-        </ThemeProvider>
-      </Sentry>
+      
+      <ThemeProvider theme={theme}>
+        <GlobalStyles.ResetStyles />
+        {children}
+      </ThemeProvider>
     </Fathom>
 
   // prevents ssr flash for mismatched dark mode
