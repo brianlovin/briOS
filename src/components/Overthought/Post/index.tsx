@@ -6,13 +6,14 @@ import { getFeaturedPosts } from '~/data/ghost'
 import { BlogPost } from '~/types';
 import { ContentContainer, SectionHeading } from '~/components/Page';
 import { H1, A, Rarr, LargeSubheading, Subheading } from '~/components/Typography'
-import { FeaturedImage, ReadingTime } from '~/components/Overthought/Preview/style'
+import { ReadingTime } from '~/components/Overthought/PreviewCard/style'
 import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe'
 import SEO from './SEO'
 import Grid from '../Grid'
 import GlobalStyles from '~/components/GlobalStyles';
 import SyntaxHighlighter from '~/components/SyntaxHighlighter';
 import { getDateObject } from '~/lib/getDateObject'
+import { FeaturedImage } from './style'
 
 interface Props {
   post: BlogPost;

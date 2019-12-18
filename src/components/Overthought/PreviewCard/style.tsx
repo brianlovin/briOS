@@ -17,24 +17,6 @@ export const Card = styled.div`
   }
 `
 
-export const FeaturedImage = styled.img`
-  width: calc(100% + 48px);
-  min-height: 256px;
-  margin-left: -24px;
-  margin-top: -24px;
-  margin-right: -24px;
-  border-radius: 8px;
-  margin-bottom: 32px;
-
-  @media (max-width: 768px) {
-    width: 100%;
-    min-height: 0;
-    margin: 0;
-    margin-top: -24px;
-    margin-bottom: 24px;
-  }
-`
-
 export const PreviewImage = styled.div`
   width: calc(100% + 48px);
   margin-left: -24px;

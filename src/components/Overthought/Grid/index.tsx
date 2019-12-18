@@ -1,5 +1,5 @@
 import * as React from 'react'
-import OverthoughtPreviewCard from '~/components/Overthought/Preview'
+import OverthoughtPreviewCard from '~/components/Overthought/PreviewCard'
 import { ContentGrid, PreviewContentGrid } from '~/components/Page'
 import { BlogPost } from '~/types'
 

@@ -1,14 +1,13 @@
 import * as React from 'react';
-import Link from 'next/link';
 import useSWR from 'swr'
 import { getFeaturedPosts } from '~/data/ghost'
 import Page, { SectionHeading } from '~/components/Page';
-import OverthoughtGrid from '~/components/Overthought/Grid'
-import { H1, Larr, Subheading } from '~/components/Typography'
+import { H1, Subheading } from '~/components/Typography'
 import { BlogPost } from '~/types'
 import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe';
 import cacheSsrRes from '~/lib/cacheSsr';
 import SEO from '~/components/Providers/SEO';
+import OverthoughtList from '~/components/Overthought/List';
 
 interface Props {
   posts?: Array<BlogPost>
@@ -30,7 +29,7 @@ function Overthought(props: Props) {
       
       </SectionHeading>
 
-      <OverthoughtGrid truncate={false} posts={posts} />
+      <OverthoughtList posts={posts} />
     </Page>
   );
 }
