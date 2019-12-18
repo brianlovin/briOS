@@ -6,7 +6,7 @@ import { H1, Subheading } from '~/components/Typography'
 import { BlogPost } from '~/types'
 import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe';
 import cacheSsrRes from '~/lib/cacheSsr';
-import SEO from '~/components/Providers/SEO';
+import SEO from '~/components/Overthought/SEO';
 import OverthoughtList from '~/components/Overthought/List';
 
 interface Props {
