@@ -1,17 +1,28 @@
  
 import * as React from 'react';
-import Link from 'next/link'
 import { NextSeo } from 'next-seo'
 import Page, { SectionHeading } from '~/components/Page';
-import { H1, Larr, Subheading } from '~/components/Typography'
+import { H1, Subheading } from '~/components/Typography'
 import DesignDetailsGrid from '~/components/DesignDetailsGrid';
 
 export default function DesignDetails() {
   return (
     <Page withHeader>
       <NextSeo
-        title={"Design Details"}
+        title={"App Dissection"}
         description={"A visual exploration of digital products"}
+        openGraph={{
+          url: "https://brianlovin.com/design-details",
+          title: "App Dissection",
+          description: "A visual exploration of digital products",
+          site_name: "App Dissection",
+          images: [
+            {
+              url: 'https://brianlovin.com/static/og-image.jpeg',
+              alt: 'App Dissection',
+            },
+          ],
+        }}
       />
       
       <SectionHeading>
