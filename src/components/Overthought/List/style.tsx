@@ -51,7 +51,6 @@ export const Card = styled.div`
     grid-template-columns: 1fr;
     padding: 32px 16px;
     border-bottom: 1px solid ${props => props.theme.border.default};
-    background: linear-gradient(${props => props.theme.bg.primary}, ${props => hexa(props.theme.text.primary, 0.02)});
   }
 
   p {
