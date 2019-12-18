@@ -65,6 +65,7 @@ export const H3 = styled.h3`
 
 export const h4 = css`
   ${heading};
+  font-weight: 700;
   font-size: ${defaultTheme.fontSizes[3]};
 `
 export const H4 = styled.h4`
@@ -275,6 +276,11 @@ export const Subheading = styled(P)`
   margin-top: ${defaultTheme.space[3]};
   line-height: 1.4;
   max-width: ${defaultTheme.breakpoints[4]};
+  ${arrows}
+
+  a {
+    display: inline-block;
+  }
 
   & + & {
     margin-top: ${defaultTheme.space[3]};

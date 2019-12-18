@@ -25,7 +25,7 @@ function Home(props: Props) {
       <SectionHeading>
         <H1>Brian Lovin</H1>
         <Subheading>I'm a product designer, podcaster, and writer, living in New York City. I'm currently building native mobile apps at GitHub.</Subheading>
-        <Subheading><Link href="/about"><A>More about me <Rarr /></A></Link></Subheading>
+        <Subheading><Link href="/about" as="/about"><a>More about me <Rarr /></a></Link></Subheading>
       </SectionHeading>
 
       {posts && posts.length > 0 && (
@@ -34,8 +34,8 @@ function Home(props: Props) {
             <H2>Overthought</H2>
             <Subheading>Thinking out loud about design, development, and building products.</Subheading>
             <Subheading>
-              <Link href="/overthought">
-                <A>View all posts <Rarr /></A>
+              <Link href="/overthought" as="/overthought">
+                <a>View all posts <Rarr /></a>
               </Link>
             </Subheading>
           </SectionHeading>
@@ -73,7 +73,7 @@ function Home(props: Props) {
         <Subheading>An in-depth exploration of visual and interaction design in well-known apps.</Subheading>
         <Subheading>
           <Link href="/design-details">
-            <A>View all posts <Rarr /></A>
+            <a>View all posts <Rarr /></a>
           </Link>
         </Subheading>
       </SectionHeading>
