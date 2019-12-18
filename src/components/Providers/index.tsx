@@ -21,24 +21,7 @@ export default ({ children }: Props) => {
     setMounted(true)
   }, [])
 
-  // prevents ssr flash for mismatched dark mode
-  if (!mounted) {
-    return (
-      <div style={{ visibility: 'hidden' }}>
-        <Fathom>
-          <Sentry>
-          <SEO />
-            <ThemeProvider theme={theme}>
-              <GlobalStyles.ResetStyles />
-              {children}
-            </ThemeProvider>
-          </Sentry>
-        </Fathom>
-      </div>
-    )
-  }
-
-  return (
+  const body = 
     <Fathom>
       <Sentry>
       <SEO />
@@ -48,5 +31,13 @@ export default ({ children }: Props) => {
         </ThemeProvider>
       </Sentry>
     </Fathom>
-  );
+
+  // prevents ssr flash for mismatched dark mode
+  if (!mounted) {
+    return (
+      <div style={{ visibility: 'hidden' }}>{body}</div>
+    )
+  }
+
+  return body
 }
