@@ -4,7 +4,7 @@ import { H6 } from '~/components/Typography'
 
 
 export const ReadingTime = styled(H6)`
-  color: ${props => props.theme.text.quarternary};
+  color: ${props => props.theme.text.link};
   margin-top: ${defaultTheme.space[5]};
   font-weight: ${defaultTheme.fontWeights.link};
 `

@@ -2,30 +2,6 @@ import styled from 'styled-components';
 import defaultTheme from '~/components/Theme';
 import { H6 } from '~/components/Typography'
 
-export const Arrow = styled.div`
-  position: absolute;
-  transform: translateX(-12px);
-  bottom: 48px;
-  right: 72px;
-  opacity: 0;
-  will-change: transform;
-  color: #fff;
-  transition: transform ${defaultTheme.animations.default}, opacity ${defaultTheme.animations.default};
-`
-
-export const Circle = styled.div`
-  width: 400px;
-  height: 400px;
-  border-radius: 50%;
-  position: absolute;
-  right: -200px;
-  bottom: -200px;
-  background:${props => props.color};
-  transform: scale(0);
-  will-change: transform;
-  transition: transform ${defaultTheme.animations.default};
-`
-
 export const OuterContainer = styled.div`
   width: 100%;
   display: flex;
@@ -90,7 +66,7 @@ export const ContentContainer = styled.div`
 `;
 
 export const Date = styled(H6)`
-  color: ${props => props.theme.text.quarternary};
+  color: ${props => props.theme.text.link};
   margin-top: ${defaultTheme.space[5]};
   font-weight: ${defaultTheme.fontWeights.link};
 `;
@@ -113,29 +89,6 @@ export const EpisodeCard = styled.div`
   height: 100%;
   z-index: 3;
   overflow: hidden;
-
-  &:hover {
-    ${Circle} {
-      transform: scale(1);
-      transition: transform ${defaultTheme.animations.default};
-    }
-
-    ${Arrow} {
-      opacity: 1;
-      transition: transform ${defaultTheme.animations.hover}, opacity ${defaultTheme.animations.hover};
-      transform: translateX(12px);
-    }
-  }
-
-  @media (max-width: 968px) {
-    ${Circle} {
-      display: none;
-    }
-
-    ${Arrow} {
-      display: none;
-    }
-  }
 `
 
 export const CardContent = styled.div`
