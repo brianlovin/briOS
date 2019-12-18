@@ -1,16 +1,18 @@
 import styled from 'styled-components'
+import { hexa } from '~/components/utils'
 import defaultTheme from '~/components/Theme'
 import { H6 } from '~/components/Typography'
 
 export const ListGrid = styled.div`
   display: grid;
-  width: 100%;
+  width: calc(100% + 32px);
+  margin-left: -16px;
+  margin-right: -16px;
   max-width: ${defaultTheme.breakpoints[3]};
-  grid-gap: ${defaultTheme.space[4]};
-  margin-top: ${defaultTheme.space[5]};
+  margin-top: ${defaultTheme.space[3]};
 
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
-    grid-gap: ${defaultTheme.space[6]};
+    margin-top: 0;
   }
 `
 
@@ -27,7 +29,7 @@ export const Card = styled.div`
   grid-template-columns: 2fr 3fr;
   grid-template-rows: auto;
   position: relative;
-  border-radius: 8px;
+  padding: 16px 0;
 
   &:hover {
     h4 {
@@ -40,9 +42,16 @@ export const Card = styled.div`
     }
   }
 
+  @media (max-width: ${defaultTheme.breakpoints[2]}) {
+    padding: 16px;
+  }
+
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
     grid-gap: ${defaultTheme.space[2]};
     grid-template-columns: 1fr;
+    padding: 32px 16px;
+    border-bottom: 1px solid ${props => props.theme.border.default};
+    background: linear-gradient(${props => props.theme.bg.primary}, ${props => hexa(props.theme.text.primary, 0.02)});
   }
 
   p {

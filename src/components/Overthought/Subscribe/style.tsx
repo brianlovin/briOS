@@ -12,6 +12,15 @@ export const Container = styled.div`
   background: ${props => props.theme.bg.inset};
   width: 100%;
   border-radius: 8px;
+
+  @media (max-width: ${defaultTheme.breakpoints[5]}) {
+    margin-left: -16px;
+    margin-right: -16px;
+    width: calc(100% + 32px);
+    border-radius: 0;
+    border-top: 1px solid ${props => props.theme.border.default};
+    border-bottom: 1px solid ${props => props.theme.border.default};
+  }
 `
 
 export const Form = styled.form`
