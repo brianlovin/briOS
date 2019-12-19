@@ -8453,10 +8453,10 @@ supports-color@^6.1.0:
   dependencies:
     has-flag "^3.0.0"
 
-swr@^0.1.14:
-  version "0.1.14"
-  resolved "https://registry.yarnpkg.com/swr/-/swr-0.1.14.tgz#79b6f81ac33d20e5e7a9b66ebfb912b0558bd757"
-  integrity sha512-M+JJe1pV10s/MgWhERnzE60zZdGDNNWuxwgbIrOm9ckO88MkfX/P8U4iKCwbDimMB2tIYd4MPsGm1l0s7mDBkA==
+swr@^0.1.15:
+  version "0.1.15"
+  resolved "https://registry.yarnpkg.com/swr/-/swr-0.1.15.tgz#de3e5a264a959a74bb7c0eb583bac442f1e0d592"
+  integrity sha512-q0dQYDcGHjpo9MbQl5ssKdbxsMgBme8UhAn1MbKlX+0fbz6tw8loT2v/H4PGbeiICvOFzK9YaoslBCaV3IyNxA==
   dependencies:
     fast-deep-equal "2.0.1"
 
