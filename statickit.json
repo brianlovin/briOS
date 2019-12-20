@@ -1,18 +1,11 @@
 {
   "forms": {
-    "opt-in-form": {
-      "name": "Overthought",
-      "fields": {
-        "email": {
-          "type": "email",
-          "prettyName": "Email address"
-        }
-      },
+    "contact-form": {
+      "name": "Overthought Feedback",
       "actions": [
         {
-          "app": "convertkit",
-          "type": "applyTags",
-          "tags": ["overthought"]
+          "type": "email",
+          "to": "hi@brianlovin.com"
         }
       ]
     }

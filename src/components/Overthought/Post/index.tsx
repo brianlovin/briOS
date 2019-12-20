@@ -5,14 +5,15 @@ import useSWR from 'swr'
 import { getFeaturedPosts } from '~/data/ghost'
 import { BlogPost } from '~/types';
 import { ContentContainer, SectionHeading } from '~/components/Page';
-import { H1, A, Rarr, LargeSubheading, Subheading } from '~/components/Typography'
+import { H1, A, Rarr, LargeSubheading, Subheading, Hr } from '~/components/Typography'
 import { ReadingTime } from '~/components/Overthought/PreviewCard/style'
 import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe'
-import SEO from './SEO'
-import Grid from '../Grid'
 import GlobalStyles from '~/components/GlobalStyles';
 import SyntaxHighlighter from '~/components/SyntaxHighlighter';
 import { getDateObject } from '~/lib/getDateObject'
+import SEO from './SEO'
+import Grid from '../Grid'
+import Feedback from '../Feedback'
 import { FeaturedImage } from './style'
 
 interface Props {
@@ -22,7 +23,7 @@ interface Props {
 export default function Post({ post }) {
   // fetch posts for the bottom of the view to show recent posts from the blog
   const { data: posts } = useSWR('/api/getFeaturedPosts', getFeaturedPosts)
-  const filtered = posts.filter(p => p.slug !== post.slug)
+  const filtered = posts ? posts.filter(p => p.slug !== post.slug) : []
   const { month, year, day } = getDateObject(post.published_at);
   const datestring = `${month.slice(0, 3)} ${day}, ${year}`;
   
@@ -44,7 +45,8 @@ export default function Post({ post }) {
         
         <div dangerouslySetInnerHTML={{ __html: post.html }} />
 
-        <SectionHeading style={{ marginTop: '72px' }}>
+        <SectionHeading style={{ marginTop: '32px'}}>
+          <Feedback post={post} />
           <OverthoughtSubscribeBox />
         </SectionHeading>
 
@@ -57,8 +59,8 @@ export default function Post({ post }) {
             </Link>
           </Subheading>
         </SectionHeading>
-
       </ContentContainer>
+
       { filtered && <Grid truncate={true} posts={filtered} />}
     </React.Fragment>
   )
