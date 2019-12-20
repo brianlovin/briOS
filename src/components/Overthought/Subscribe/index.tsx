@@ -36,7 +36,12 @@ export default function OverthoughtSubscribeBox() {
 
   return (
     <Container>
-      <H4 style={{ marginTop: 0 }}>Newsletter</H4>
+      <H4 style={{ marginTop: 0, display: 'flex', alignItems: 'center' }}>
+        <span style={{ display: 'flex', alignItems: 'center', paddingRight: '16px' }}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" ><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+        </span>
+        Email updates
+      </H4>
       <P style={{ marginTop: 0 }}>Get an email whenever I publish new posts. Your email won’t be used for anything else. Alternatively, you can <A href="https://overthought.ghost.io/rss/" target="_blank" rel="noopener noreferrer">subscribe with RSS</A>.</P>
       {
         status === "succeeded"
