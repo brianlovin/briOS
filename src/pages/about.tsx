@@ -1,13 +1,35 @@
 import * as React from 'react';
-import Link from 'next/link'
+import styled from 'styled-components'
 import Page, { SectionHeading, ContentContainer } from '~/components/Page';
-import { H1, P, Larr, Subheading } from '~/components/Typography'
+import { H1, P } from '~/components/Typography'
+import defaultTheme from '~/components/Theme';
+
+const Img = styled.img`
+  border-radius: 8px;
+  width: 100%;
+  margin-top: ${defaultTheme.space[5]};
+
+  @media(max-width: ${defaultTheme.breakpoints[4]}) {
+    margin-top: -48px;
+    margin-left: -16px;
+    margin-right: -16px;
+    width: calc(100% + 32px);
+    border-radius: 0;
+  }
+`
+
+const Container = styled.div`
+  max-width: ${defaultTheme.breakpoints[2]};
+`
 
 export default function About() {
   return (
     <Page withHeader>
+      <Container>
+        <Img src={'/static/img/about.jpg'} />
+      </Container>
       <ContentContainer>
-        <SectionHeading>
+        <SectionHeading style={{ marginTop: '64px' }}>
           <H1>About me</H1>
           
           <div style={{ padding: '16px' }} />
