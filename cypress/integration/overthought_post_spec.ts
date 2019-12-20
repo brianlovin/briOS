@@ -18,7 +18,7 @@ describe('Overthought index', () => {
 
   it('should render newsletter', () => {
     cy.visit('/overthought/adding-dark-mode-with-next-js');
-    cy.contains('Newsletter')
+    cy.get('[data-cy="overthought-subscribe-box"]')
       .scrollIntoView()
       .should('be.visible');
   });

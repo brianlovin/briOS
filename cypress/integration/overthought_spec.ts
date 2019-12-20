@@ -13,7 +13,7 @@ describe('Overthought index', () => {
   });
 
   it('should render newsletter', () => {
-    cy.contains('Newsletter')
+    cy.get('[data-cy="overthought-subscribe-box"]')
       .scrollIntoView()
       .should('be.visible');
   });
