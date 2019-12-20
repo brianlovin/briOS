@@ -22,6 +22,7 @@ interface Props {
 export default function Post({ post }) {
   // fetch posts for the bottom of the view to show recent posts from the blog
   const { data: posts } = useSWR('/api/getFeaturedPosts', getFeaturedPosts)
+  const filtered = posts.filter(p => p.slug !== post.slug)
   const { month, year, day } = getDateObject(post.published_at);
   const datestring = `${month.slice(0, 3)} ${day}, ${year}`;
   
@@ -58,7 +59,7 @@ export default function Post({ post }) {
         </SectionHeading>
 
       </ContentContainer>
-      { posts && <Grid truncate={true} posts={posts} />}
+      { filtered && <Grid truncate={true} posts={filtered} />}
     </React.Fragment>
   )
 }
