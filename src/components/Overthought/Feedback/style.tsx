@@ -46,6 +46,7 @@ export const Textarea = styled.textarea`
   border-radius: ${defaultTheme.space[2]};
   font-size: ${defaultTheme.fontSizes[2]};
   background: ${props => props.theme.bg.primary};
+  resize: vertical;
 
   &:focus {
     border: 1px solid ${props => props.theme.accent.blue};
