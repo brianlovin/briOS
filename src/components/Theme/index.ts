@@ -28,17 +28,17 @@ const defaultTheme = {
     '128px',// 9
   ],
   fontSizes: [
-    '14px', // 0
-    '16px', // 1
-    '18px', // 2
-    '20px', // 3
-    '24px', // 4
-    '32px', // 5
-    '40px'  // 6
+    '0.8rem',   // 0
+    '1rem',     // 1
+    '1.2rem',  // 2
+    '1.5rem', // 3
+    '1.875rem', // 4
+    '2.25rem', // 5
+    '2.75rem'  // 6
   ],
   fonts: {
-    body: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
-    heading: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
+    body: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
+    heading: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
     monospace: 'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace',
   },
   fontWeights: {

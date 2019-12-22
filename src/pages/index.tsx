@@ -1,9 +1,9 @@
- 
+
 import * as React from 'react';
 import Link from 'next/link';
 import useSWR from 'swr'
 import Page, { SectionHeading } from '~/components/Page';
-import { H1, H2, A, Rarr, Subheading } from '~/components/Typography'
+import { H1, H3, A, Rarr, Subheading, LargeSubheading } from '~/components/Typography'
 import OverthoughtGrid from '~/components/Overthought/Grid'
 import DesignDetailsGrid from '~/components/DesignDetailsGrid';
 import DesignDetailsPlayer from '~/components/DesignDetailsPlayer';
@@ -24,15 +24,15 @@ function Home(props: Props) {
     <Page>
       <SectionHeading>
         <H1>Brian Lovin</H1>
-        <Subheading>I'm a product designer, podcaster, and writer, living in New York City. I'm currently building native mobile apps at GitHub.</Subheading>
+        <LargeSubheading>I'm a product designer, podcaster, and writer, living in New York City. I'm currently building native mobile apps at GitHub.</LargeSubheading>
         <Subheading><Link href="/about" as="/about"><a>More about me <Rarr /></a></Link></Subheading>
       </SectionHeading>
 
       {posts && posts.length > 0 && (
         <React.Fragment>
           <SectionHeading data-cy="overthought">
-            <H2>Overthought</H2>
-            <Subheading>Thinking out loud about design, development, and building products.</Subheading>
+            <H3>Overthought</H3>
+            <LargeSubheading>Thinking out loud about design, development, and building products.</LargeSubheading>
             <Subheading>
               <Link href="/overthought" as="/overthought">
                 <a>View all posts <Rarr /></a>
@@ -45,22 +45,22 @@ function Home(props: Props) {
       )}
 
       <SectionHeading>
-        <H2>Design Details Podcast</H2>
-        <Subheading>
+        <H3>Design Details Podcast</H3>
+        <LargeSubheading>
           A weekly conversation about design process and culture.
-        </Subheading>
+        </LargeSubheading>
         <Subheading>
           <A href="https://designdetails.fm" target="_blank" rel="noopener noreferrer">See all episodes <Rarr /></A>
         </Subheading>
       </SectionHeading>
-      
+
       <DesignDetailsPlayer showMoreEpisodes />
 
       <SectionHeading>
-        <H2>Figma Plugins</H2>
-        <Subheading>
+        <H3>Figma Plugins</H3>
+        <LargeSubheading>
           Plugins I'm using to make product design a tiny bit less tedious.
-        </Subheading>
+        </LargeSubheading>
         <Subheading>
           <A href="https://figma.com/@brian" target="_blank" rel="noopener noreferrer">View on Figma <Rarr /></A>
         </Subheading>
@@ -69,8 +69,8 @@ function Home(props: Props) {
       <FigmaPlugins />
 
       <SectionHeading>
-        <H2>App Dissection</H2>
-        <Subheading>An in-depth exploration of visual and interaction design in well-known apps.</Subheading>
+        <H3>App Dissection</H3>
+        <LargeSubheading>An in-depth exploration of visual and interaction design in well-known apps.</LargeSubheading>
         <Subheading>
           <Link href="/design-details">
             <a>View all posts <Rarr /></a>

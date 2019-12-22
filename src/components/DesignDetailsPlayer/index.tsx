@@ -5,7 +5,7 @@ import { getDateObject } from '~/lib/getDateObject'
 import { podcast } from '~/data';
 import LoadingSpinner from '~/components/LoadingSpinner';
 import SubscriptionButtons from '~/components/SubscriptionButtons'
-import { H4, P, Rarr } from '~/components/Typography'
+import { H5, P, Rarr } from '~/components/Typography'
 import { OuterContainer, PlayerContainer, ContentContainer, EpisodeCard, CardContent, Date } from './style'
 import { PreviewContentGrid } from '../Page';
 
@@ -82,13 +82,14 @@ export default function LatestEpisode({ showMoreEpisodes }: Props) {
               <a target="_blank" rel="noopener noreferrer" key={ep.id} href={`https://spec.fm/podcasts/design-details/${ep.id}`}>
                 <EpisodeCard>
                   <CardContent>
-                    <H4>{ep.title}</H4>
+                    <H5>{ep.title}</H5>
                     <P>{ep.description.split('.')[0].substring(0, 200).trim() + '...'}</P>
                     <Date>Listen <Rarr /></Date>
                   </CardContent>
                 </EpisodeCard>
               </a>
-            )}
+            )
+          }
           )}
         </PreviewContentGrid>
       )}

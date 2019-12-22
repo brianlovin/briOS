@@ -13,7 +13,7 @@ const base = css`
   box-shadow: 0 4px 8px rgba(0,0,0,0.04);
   transition: all 0.2s ease-in-out;
   backdrop-filter: saturate(180%) blur(20px);
-  font-size: ${defaultTheme.fontSizes[1]};
+  font-size: ${defaultTheme.fontSizes[0]};
   font-weight: 600;
   margin: 0;
 
@@ -77,7 +77,7 @@ export const CloseButton = styled.div`
   padding: 0 8px;
   margin-top: -2px;
   display: ${props => props.visible ? 'block' : 'none'};
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 300;
   cursor: pointer;
 `

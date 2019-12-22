@@ -2,7 +2,7 @@ import * as React from 'react';
 import useSWR from 'swr'
 import { getFeaturedPosts } from '~/data/ghost'
 import Page, { SectionHeading } from '~/components/Page';
-import { H1, Subheading } from '~/components/Typography'
+import { H1, LargeSubheading } from '~/components/Typography'
 import { BlogPost } from '~/types'
 import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe';
 import cacheSsrRes from '~/lib/cacheSsr';
@@ -16,17 +16,17 @@ interface Props {
 function Overthought(props: Props) {
   const initialData = props.posts
   const { data: posts } = useSWR('/api/getFeaturedPosts', getFeaturedPosts, { initialData })
-  
+
   return (
     <Page withHeader>
       <SEO />
 
       <SectionHeading data-cy="overthought">
         <H1>Overthought</H1>
-        <Subheading>Overthinking out loud about design, development, and building products.</Subheading>
-        
+        <LargeSubheading>Overthinking out loud about design, development, and building products.</LargeSubheading>
+
         <OverthoughtSubscribeBox />
-      
+
       </SectionHeading>
 
       <OverthoughtList posts={posts} />

@@ -44,7 +44,7 @@ export const Textarea = styled.textarea`
   border: 1px solid ${props => props.theme.border.default};
   color: ${props => props.theme.text.primary};
   border-radius: ${defaultTheme.space[2]};
-  font-size: ${defaultTheme.fontSizes[2]};
+  font-size: ${defaultTheme.fontSizes[1]};
   background: ${props => props.theme.bg.primary};
   resize: vertical;
 
@@ -69,7 +69,7 @@ export const Input = styled.input`
   border: 1px solid ${props => props.theme.border.default};
   color: ${props => props.theme.text.primary};
   border-radius: ${defaultTheme.space[2]};
-  font-size: ${defaultTheme.fontSizes[2]};
+  font-size: ${defaultTheme.fontSizes[1]};
   background: ${props => props.theme.bg.primary};
 
   &:focus {
@@ -87,7 +87,7 @@ export const Success = styled.div`
   background: ${props => props.theme.accent.green};
   border-radius: 8px;
   text-align: center;
-  font-size: ${defaultTheme.fontSizes[2]};
+  font-size: ${defaultTheme.fontSizes[1]};
   text-shadow: 0 1px 0 rgba(0,0,0,0.08);
 `
 

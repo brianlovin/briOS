@@ -41,7 +41,6 @@ export const DetailTitle = styled.h5`
   font-size: 24px;
   font-weight: 700;
   color: ${props => props.theme.text.primary};
-  margin-bottom: 16px;
 
   @media (max-width: 968px) {
     max-width: 100%;

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Link from 'next/link'
 import { getDateObject } from '~/lib/getDateObject'
-import { H4, P } from '~/components/Typography'
+import { H5, P } from '~/components/Typography'
 import { Card, PreviewImage, ReadingTime } from './style'
 import { BlogPost } from '~/types';
 
@@ -18,11 +18,11 @@ export default function OverthoughtPreviewCard({ post }: Props) {
       <a>
         <Card style={{ height: '100%' }}>
           {post.feature_image && <PreviewImage loading="lazy" src={post.feature_image} />}
-          <H4 style={{ marginTop: 0 }}>{post.title}</H4>
+          <H5 style={{ marginTop: 0 }}>{post.title}</H5>
           <P>{post.custom_excerpt || post.excerpt}</P>
           <ReadingTime>{post.reading_time}m read</ReadingTime>
         </Card>
       </a>
-    </Link>
+    </Link >
   )
 }

@@ -2,6 +2,12 @@ import { createGlobalStyle } from 'styled-components';
 import defaultTheme from '~/components/Theme';
 
 const ResetStyles = createGlobalStyle`
+  @import url('https://rsms.me/inter/inter.css');
+
+  @supports (font-variation-settings: normal) {
+    html { font-family: 'Inter var', sans-serif; }
+  }
+
   * {
     border: 0;
     box-sizing: inherit;
@@ -22,7 +28,7 @@ const ResetStyles = createGlobalStyle`
     max-height: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    font-size: ${defaultTheme.fontSizes[1]};
+    font-size: 18px;
     line-height: ${defaultTheme.lineHeights.body};
     background-color: ${props => props.theme.bg.primary};
     color: ${props => props.theme.text.primary};
@@ -31,6 +37,10 @@ const ResetStyles = createGlobalStyle`
     -webkit-font-smoothing: antialiased;
     font-family: ${defaultTheme.fonts.body};
     -webkit-text-size-adjust: none;
+
+    @media (max-width: ${defaultTheme.breakpoints[3]}) {
+      font-size: 16px;
+    }
   }
 
   body {
@@ -139,7 +149,7 @@ const ResetStyles = createGlobalStyle`
   select,
   textarea {
     font-family: inherit;
-    font-size: 100%;
+    font-size: 1rem;
     line-height: 1.15;
     margin: 0;
   }

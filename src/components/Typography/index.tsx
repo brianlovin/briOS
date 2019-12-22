@@ -82,7 +82,7 @@ export const H5 = styled.h5`
 
 export const h6 = css`
   ${heading};
-  font-size: ${defaultTheme.fontSizes[1]};
+  font-size: ${defaultTheme.fontSizes[0]};
 `
 export const H6 = styled.h6`
   ${h6};
@@ -91,7 +91,7 @@ export const H6 = styled.h6`
 `
 
 export const p = css`
-  font-size: ${defaultTheme.fontSizes[3]};
+  font-size: ${defaultTheme.fontSizes[1]};
   font-weight: ${defaultTheme.fontWeights.body};
   line-height: ${defaultTheme.lineHeights.body};
   color: ${props => props.theme.text.secondary};
@@ -99,6 +99,7 @@ export const p = css`
   a {
     color: ${props => props.theme.text.link};
     text-decoration: none;
+    font-weight: 500;
   }
 
   a:hover {
@@ -108,7 +109,7 @@ export const p = css`
 
   code {
     margin-top: 0;
-    font-size: ${defaultTheme.fontSizes[1]};
+    font-size: ${defaultTheme.fontSizes[0]};
     box-shadow: inset 0 0 0 1px ${props => props.theme.border.default};
   }
 
@@ -118,7 +119,7 @@ export const p = css`
 
   code {
     margin-top: 0;
-    font-size: ${defaultTheme.fontSizes[1]};
+    font-size: ${defaultTheme.fontSizes[0]};
   }
 
   a > code {
@@ -132,17 +133,6 @@ export const p = css`
 
   a:hover > code {
     background: ${props => hexa(props.theme.text.link, 0.16)};
-  }
-
-  @media(max-width: ${defaultTheme.breakpoints[4]}) {
-    code {
-      font-size: ${defaultTheme.fontSizes[0]}
-    }
-  }
-
-  /* larger screens read larger */
-  @media(max-width: ${defaultTheme.breakpoints[4]}) {
-    font-size: ${defaultTheme.fontSizes[2]};
   }
 `
 export const P = styled.p`
@@ -199,7 +189,7 @@ export const Li = styled.li`
 `
 
 export const pre = css`
-  font-size: ${defaultTheme.fontSizes[1]};
+  font-size: ${defaultTheme.fontSizes[0]};
   font-family: ${defaultTheme.fonts.monospace};
   padding: ${defaultTheme.space[3]};
   background: ${props => props.theme.bg.inset};
@@ -222,7 +212,7 @@ export const Pre = styled.pre`
 `
 
 export const code = css`
-  font-size: ${defaultTheme.fontSizes[1]};
+  font-size: ${defaultTheme.fontSizes[0]};
   font-family: ${defaultTheme.fonts.monospace};
   padding:  ${defaultTheme.space[0]} ${defaultTheme.space[1]};
   border-radius: 4px;
@@ -271,7 +261,7 @@ export const Larr = styled.span.attrs({
 `
 
 export const Subheading = styled(P)`
-  font-size: ${defaultTheme.fontSizes[3]};
+  font-size: ${defaultTheme.fontSizes[1]};
   font-weight: ${defaultTheme.fontWeights.subheading};
   margin-top: ${defaultTheme.space[3]};
   line-height: 1.4;
@@ -288,16 +278,11 @@ export const Subheading = styled(P)`
 
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
     max-width: 100%;
-    margin-top: ${defaultTheme.space[2]};
   }
 `;
 
 export const LargeSubheading = styled(Subheading)`
-  font-size: ${defaultTheme.fontSizes[4]};
-
-  @media (max-width: ${defaultTheme.breakpoints[4]}) {
-    font-size: ${defaultTheme.fontSizes[3]};
-  }
+  font-size: ${defaultTheme.fontSizes[2]};
 `;
 
 export const img = css`
