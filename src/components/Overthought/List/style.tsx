@@ -59,7 +59,7 @@ export const Card = styled.div`
 `
 
 export const Content = styled.div`
-  padding: ${defaultTheme.space[4]} 0;
+  padding: ${defaultTheme.space[3]} 0;
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: auto auto 1fr;
