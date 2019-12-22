@@ -21,7 +21,7 @@ export default function OverthoughtListItem({ post }: Props) {
           <Content>
             <H4 style={{ marginTop: 0 }}>{post.title}</H4>
             <P>{post.custom_excerpt || post.excerpt}</P>
-            <ReadingTime>{datestring} · {post.reading_time}m read</ReadingTime>
+            <ReadingTime>{post.reading_time}m read</ReadingTime>
           </Content>
         </Card>
       </a>

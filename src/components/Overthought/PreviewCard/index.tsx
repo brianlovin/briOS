@@ -20,7 +20,7 @@ export default function OverthoughtPreviewCard({ post }: Props) {
           {post.feature_image && <PreviewImage loading="lazy" src={post.feature_image} />}
           <H4 style={{ marginTop: 0 }}>{post.title}</H4>
           <P>{post.custom_excerpt || post.excerpt}</P>
-          <ReadingTime>{datestring} · {post.reading_time}m read</ReadingTime>
+          <ReadingTime>{post.reading_time}m read</ReadingTime>
         </Card>
       </a>
     </Link>
