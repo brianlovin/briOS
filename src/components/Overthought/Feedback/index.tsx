@@ -34,7 +34,7 @@ export default function Feedback({ post }: Props) {
         </span>
         A small favor
       </H4>
-      <P style={{ marginTop: 0 }}>Was anything I wrote confusing, outdated, or incorrect? Please let me know! Just write a few words below and I'll be sure to ammend this post with your suggestions.</P>
+      <P style={{ marginTop: 0 }}>Was anything I wrote confusing, outdated, or incorrect? Please let me know! Just write a few words below and I'll be sure to amend this post with your suggestions.</P>
 
       <Form onSubmit={handleSubmit}>
         <input style={{ display: 'none' }} type="text" value={post.title} id={post.title} name="title" />
