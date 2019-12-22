@@ -5,7 +5,7 @@ import { Card, PreviewImage, ReadingTime } from './style'
 
 export default function FigmaPlugins() {
   return (
-    <ContentGrid defaultColumns={2}>
+    <ContentGrid defaultColumns={4}>
       <a href="https://www.figma.com/c/plugin/744725347356614754/Dominant-Color-Toolkit-🎨" target="_blank" rel="noopener noreferrer">
         <Card style={{ height: '100%' }}>
           <PreviewImage src={'https://www.figma.com/c/plugin/744725347356614754/thumbnail'} />
