@@ -6,10 +6,10 @@ export default function OverthoughtSEO() {
   return (
     <React.Fragment>
       <Head>
-        <link 
-          rel="alternate" 
-          type="application/rss+xml" 
-          title="RSS Feed for Overthought" 
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="RSS Feed for Overthought"
           href="/overthought/rss" />
       </Head>
       <NextSeo
@@ -22,7 +22,7 @@ export default function OverthoughtSEO() {
           site_name: "Overthought",
           images: [
             {
-              url: 'https://brianlovin.com/static/og-image.jpeg',
+              url: 'https://brianlovin.com/static/overthought-og.jpeg',
               alt: 'Overthought',
             },
           ],
