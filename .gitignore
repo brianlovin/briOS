@@ -2,3 +2,5 @@ node_modules
 .next
 .DS_Store
 .env
+.vscode
+yarn-error.log
