@@ -58,18 +58,6 @@ export const Card = styled.div`
   }
 `
 
-export const ReadingTime = styled(H6)`
-  color: ${props => props.theme.text.quarternary};
-  margin-top: ${defaultTheme.space[5]};
-  font-weight: ${defaultTheme.fontWeights.link};
-  align-self: flex-end;
-
-  @media (max-width: ${defaultTheme.breakpoints[4]}) {
-    align-self: flex-start;
-    margin-top: ${defaultTheme.space[2]};
-  }
-`
-
 export const Content = styled.div`
   padding: ${defaultTheme.space[4]} 0;
   display: grid;

@@ -37,9 +37,3 @@ export const PreviewImage = styled.div`
     width: calc(100% + 48px);
   }
 `
-
-export const ReadingTime = styled(H6)`
-  color: ${props => props.theme.text.quarternary};
-  margin-top: ${defaultTheme.space[5]};
-  font-weight: ${defaultTheme.fontWeights.link};
-`

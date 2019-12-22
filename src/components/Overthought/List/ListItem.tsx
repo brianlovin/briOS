@@ -1,8 +1,7 @@
 import * as React from 'react'
 import Link from 'next/link'
-import { getDateObject } from '~/lib/getDateObject'
 import { H4, P } from '~/components/Typography'
-import { Card, PreviewImage, ReadingTime, Content } from './style'
+import { Card, PreviewImage, Content } from './style'
 import { BlogPost } from '~/types';
 
 interface Props {
@@ -10,8 +9,6 @@ interface Props {
 }
 
 export default function OverthoughtListItem({ post }: Props) {
-  const { month, year, day } = getDateObject(post.published_at);
-  const datestring = `${month.slice(0, 3)} ${day}, ${year}`;
 
   return (
     <Link href="/overthought/[slug]" as={`/overthought/${post.slug}`}>
@@ -21,7 +18,6 @@ export default function OverthoughtListItem({ post }: Props) {
           <Content>
             <H4 style={{ marginTop: 0 }}>{post.title}</H4>
             <P>{post.custom_excerpt || post.excerpt}</P>
-            <ReadingTime>{post.reading_time}m read</ReadingTime>
           </Content>
         </Card>
       </a>
