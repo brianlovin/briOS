@@ -7,6 +7,6 @@ describe('About', () => {
   });
 
   it('should render about', () => {
-    cy.contains('About me');
+    cy.get('[data-cy="about-page"]').should('be.visible')
   });
 });

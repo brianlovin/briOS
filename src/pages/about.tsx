@@ -25,8 +25,8 @@ const Container = styled.div`
 export default function About() {
   return (
     <Page withHeader>
-      <Container>
-        <Img src={'/static/img/about.jpg'} />
+      <Container data-cy="about-page">
+        <Img alt="Brian Lovin" src={'/static/img/about.jpg'} />
       </Container>
       <ContentContainer>
         <SectionHeading style={{ marginTop: '48px' }}>
