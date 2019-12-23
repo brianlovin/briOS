@@ -35,17 +35,6 @@ const GlobalMarkdownStyles = createGlobalStyle`
     margin-top: ${defaultTheme.space[6]};
   }
 
-  /* 
-    wrap all blog posts in this class for serif fonts
-    without breaking other page UI
-  */
-  .markdown p,
-  .markdown ol,
-  .markdown ul {
-    font-family: ${defaultTheme.fonts.serif};
-    line-height: 1.7;
-  }
-
   p {
     ${p};
     margin-top: ${defaultTheme.space[3]};
@@ -135,6 +124,21 @@ const GlobalMarkdownStyles = createGlobalStyle`
       vertical-align: bottom;
       border-bottom: 1px solid ${props => props.theme.border.default};
     }
+  }
+
+  /* 
+    wrap all blog posts in this class for serif fonts
+    without breaking other page UI
+  */
+  .markdown p,
+  .markdown ol,
+  .markdown ul {
+    font-family: ${defaultTheme.fonts.serif};
+    line-height: 1.7;
+  }
+
+  .markdown strong {
+    letter-spacing: -0.2px
   }
 `
 
