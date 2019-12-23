@@ -281,8 +281,25 @@ export const Subheading = styled(P)`
   }
 `;
 
-export const LargeSubheading = styled(Subheading)`
+export const LargeSubheading = styled.h2`
   font-size: ${defaultTheme.fontSizes[2]};
+  font-weight: ${defaultTheme.fontWeights.subheading};
+  margin-top: ${defaultTheme.space[3]};
+  line-height: 1.4;
+  max-width: ${defaultTheme.breakpoints[4]};
+  ${arrows}
+
+  a {
+    display: inline-block;
+  }
+
+  & + & {
+    margin-top: ${defaultTheme.space[3]};
+  }
+
+  @media (max-width: ${defaultTheme.breakpoints[4]}) {
+    max-width: 100%;
+  }
 `;
 
 export const img = css`

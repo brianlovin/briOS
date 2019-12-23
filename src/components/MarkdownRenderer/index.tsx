@@ -1,4 +1,4 @@
- 
+
 import * as React from 'react';
 import Link from 'next/link'
 import Prism from 'prismjs'
@@ -37,19 +37,20 @@ export default function MarkdownRenderer(props: Props) {
 
   React.useEffect(() => {
     Prism.highlightAll()
-  }, [ children ])
+  }, [children])
 
   return (
     <React.Fragment>
       <GlobalStyles.MarkdownStyles />
       <GlobalStyles.PrismStyles />
-      <Markdown 
-        {...rest} 
-        astPlugins={[ parseHtml ]}
-        renderers={{ 
-          link: LinkRenderer 
+      <Markdown
+        {...rest}
+        className="markdown"
+        astPlugins={[parseHtml]}
+        renderers={{
+          link: LinkRenderer
         }}
-        >
+      >
         {children}
       </Markdown>
     </React.Fragment>

@@ -3,6 +3,8 @@ import { h1, h2, h3, h4, h5, h6, p, list, listItem, pre, code, blockquote, img }
 import defaultTheme from '~/components/Theme';
 
 const GlobalMarkdownStyles = createGlobalStyle`
+  @import url('https://fonts.googleapis.com/css?family=Merriweather&display=swap');
+
   h1 {
     ${h1};
     margin-top: ${defaultTheme.space[6]};
@@ -33,6 +35,17 @@ const GlobalMarkdownStyles = createGlobalStyle`
     margin-top: ${defaultTheme.space[6]};
   }
 
+  /* 
+    wrap all blog posts in this class for serif fonts
+    without breaking other page UI
+  */
+  .markdown p,
+  .markdown ol,
+  .markdown ul {
+    font-family: ${defaultTheme.fonts.serif};
+    line-height: 1.7;
+  }
+
   p {
     ${p};
     margin-top: ${defaultTheme.space[3]};
@@ -44,6 +57,8 @@ const GlobalMarkdownStyles = createGlobalStyle`
 
   ul, ol {
     ${list};
+    font-family: ${defaultTheme.fonts.serif};
+    line-height: 1.7;
   }
 
   li {
