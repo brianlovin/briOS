@@ -26,10 +26,7 @@ export default function Feedback({ post }: Props) {
     const form = e.target;
     setServerState({ submitting: true, submitted: false, error: false });
 
-    // TODO: Replace the endpoint below with one created at
-    // https://formspree.io/create
-
-    fetch("https://formspree.io/xjvgkrar", {
+    fetch("https://formspree.io/xqkeqvkq", {
       method: "POST",
       body: new FormData(form),
       headers: {
@@ -63,7 +60,7 @@ export default function Feedback({ post }: Props) {
       <P style={{ marginTop: 0 }}>Was anything I wrote confusing, outdated, or incorrect? Please let me know! Just write a few words below and I'll be sure to amend this post with your suggestions.</P>
 
       <Form onSubmit={handleSubmit}>
-        <input type="hidden" value={`New comment on ${post.title}`} id={post.title} name="_subject" readOnly/>
+        <input type="hidden" value={`New comment on ${post.title}`} id={post.title} name="_subject" readOnly />
         <Textarea onChange={onChange} value={message} id="message" name="message" placeholder="What should I know?"></Textarea>
         <InputGrid>
           <Input id="email" name="email" placeholder="(Optional) Email" />
@@ -74,8 +71,8 @@ export default function Feedback({ post }: Props) {
           (serverState.error ? (
             <Error>{serverState.error}</Error>
           ) : (
-            <Success>Thanks for taking the time to leave a note!</Success>
-          ))
+              <Success>Thanks for taking the time to leave a note!</Success>
+            ))
         }
       </Form>
     </Container>
