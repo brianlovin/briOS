@@ -46,7 +46,7 @@ const GlobalMarkdownStyles = createGlobalStyle`
 
   ul, ol {
     ${list};
-    font-family: ${defaultTheme.fonts.serif};
+    font-family: ${defaultTheme.fonts.body};
     line-height: 1.7;
   }
 
@@ -124,21 +124,6 @@ const GlobalMarkdownStyles = createGlobalStyle`
       vertical-align: bottom;
       border-bottom: 1px solid ${props => props.theme.border.default};
     }
-  }
-
-  /* 
-    wrap all blog posts in this class for serif fonts
-    without breaking other page UI
-  */
-  .markdown p,
-  .markdown ol,
-  .markdown ul {
-    font-family: ${defaultTheme.fonts.serif};
-    line-height: 1.7;
-  }
-
-  .markdown strong {
-    letter-spacing: -0.2px
   }
 `
 

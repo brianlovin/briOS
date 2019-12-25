@@ -94,6 +94,7 @@ export const p = css`
   font-size: ${defaultTheme.fontSizes[1]};
   font-weight: ${defaultTheme.fontWeights.body};
   line-height: ${defaultTheme.lineHeights.body};
+  letter-spacing: -0.1px;
   color: ${props => props.theme.text.secondary};
 
   a {

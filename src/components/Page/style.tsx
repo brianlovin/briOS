@@ -12,7 +12,7 @@ export const PageContainer = styled.div`
 
 export const ContentContainer = styled.div`
   width: 100%;
-  max-width: ${defaultTheme.breakpoints[4]};
+  max-width: 600px;
 `
 
 export const ContentGrid = styled.div`

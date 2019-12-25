@@ -38,8 +38,6 @@ const defaultTheme = {
   ],
   fonts: {
     body: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
-    serif: "'Merriweather', Georgia, Times New Roman, Times, serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
-    heading: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
     monospace: 'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace',
   },
   fontWeights: {
@@ -47,7 +45,7 @@ const defaultTheme = {
     subheading: 500,
     link: 600,
     bold: 700,
-    heading: 800,
+    heading: 900,
   },
   lineHeights: {
     body: 1.5,
