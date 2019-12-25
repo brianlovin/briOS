@@ -57,7 +57,7 @@ export const Textarea = styled.textarea`
 export const InputGrid = styled.div`
   display: grid;
   grid-gap: ${defaultTheme.space[3]};
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: auto;
 
   @media(max-width: ${defaultTheme.breakpoints[4]}) {
     grid-template-columns: 1fr;
