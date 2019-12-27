@@ -39,7 +39,7 @@
     "@cypress/webpack-preprocessor": "^4.1.1",
     "@testing-library/cypress": "^5.0.2",
     "@types/chai": "^4.2.6",
-    "@types/jest": "^24.0.24",
+    "@types/jest": "^24.0.25",
     "@types/mocha": "^5.2.7",
     "@types/node": "^13.1.0",
     "@types/react": "^16.9.17",
