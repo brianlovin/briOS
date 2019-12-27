@@ -109,7 +109,7 @@ export default function SEO() {
         <link
           rel="mask-icon"
           href="/static/meta/website_icon.svg"
-          color={light.accent.blue}
+          color={light.text.primary}
         ></link>
       </Head>
     </React.Fragment>
