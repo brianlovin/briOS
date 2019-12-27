@@ -5,7 +5,7 @@ import useSWR from 'swr'
 import { getFeaturedPosts } from '~/data/ghost'
 import { BlogPost } from '~/types';
 import { ContentContainer, SectionHeading } from '~/components/Page';
-import { H3, A, Rarr, Subheading, LargeSubheading } from '~/components/Typography'
+import { H2, H3, A, Rarr, Subheading, LargeSubheading } from '~/components/Typography'
 import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe'
 import GlobalStyles from '~/components/GlobalStyles';
 import SyntaxHighlighter from '~/components/SyntaxHighlighter';
@@ -36,7 +36,7 @@ export default function Post({ post }) {
         <SEO post={post} />
         <SectionHeading style={{ marginTop: '32px' }}>
           {post.feature_image && <FeaturedImage loading="lazy" src={post.feature_image} />}
-          <H3 style={{ marginTop: 0 }}>{post.title}</H3>
+          <H2 style={{ marginTop: 0 }}>{post.title}</H2>
           <div style={{ padding: '4px 0' }} />
         </SectionHeading>
 
