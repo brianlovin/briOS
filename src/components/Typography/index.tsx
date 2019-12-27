@@ -101,13 +101,14 @@ export const p = css`
 
   a {
     color: ${props => props.theme.text.link};
+    text-decoration: none;
     font-weight: 500;
     word-break: break-all;
     hyphens: auto;
-    text-decoration: underline;
   }
 
   a:hover {
+    text-decoration: none;
     color: ${props => tint(props.theme.text.link, -30)};
   }
 
