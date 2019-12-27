@@ -50,7 +50,7 @@ export default function OverthoughtSubscribeBox() {
           )
           : (
             <Form onSubmit={submit}>
-              <Input value={email} disabled={status === "loading"} onChange={onChange} placeholder="Email address" id="email" type="email" name="email" />
+              <Input value={email} disabled={status === "loading"} onChange={onChange} placeholder="Email address" id="subscribe-email" type="email" name="email" />
               <PrimaryButton disabled={status === 'submitting' || !email} type="submit">Subscribe</PrimaryButton>
             </Form>
           )

@@ -63,7 +63,7 @@ export default function Feedback({ post }: Props) {
         <input type="hidden" value={`New comment on ${post.title}`} id={post.title} name="_subject" readOnly />
         <Textarea onChange={onChange} value={message} id="message" name="message" placeholder="What should I know?"></Textarea>
         <InputGrid>
-          <Input id="email" name="email" placeholder="(Optional) Email" />
+          <Input id="feedback-email" name="email" placeholder="(Optional) Email" />
           <Input id="twitter" name="twitter" placeholder="(Optional) Twitter handle" />
         </InputGrid>
         <PrimaryButton disabled={serverState.submitting || !message} type="submit">Send</PrimaryButton>
