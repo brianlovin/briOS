@@ -42,7 +42,7 @@ export const Input = styled.input`
   border: 1px solid ${props => props.theme.border.default};
   color: ${props => props.theme.text.primary};
   border-radius: 8px;
-  font-size: ${defaultTheme.fontSizes[1]};
+  font-size: 16px;
   background: ${props => props.theme.bg.primary};
 
   &:focus {
