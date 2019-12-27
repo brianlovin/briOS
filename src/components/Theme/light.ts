@@ -2,7 +2,7 @@ export default {
   bg: {
     primary: '#eff0f5',
     secondary: '#ffffff',
-    inset: '#e2e4e8',
+    inset: '#E5E6EB',
     input: 'rgba(65,67,78,0.12)'
   },
   border: {
