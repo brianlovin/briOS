@@ -101,6 +101,8 @@ export const p = css`
     color: ${props => props.theme.text.link};
     text-decoration: none;
     font-weight: 500;
+    word-break: break-all;
+    hyphens: auto;
   }
 
   a:hover {
