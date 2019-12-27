@@ -103,7 +103,7 @@ export const p = css`
     color: ${props => props.theme.text.link};
     text-decoration: none;
     font-weight: 500;
-    word-break: break-all;
+    word-break: break-word;
     hyphens: auto;
   }
 
