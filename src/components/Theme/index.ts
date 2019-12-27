@@ -45,10 +45,10 @@ const defaultTheme = {
     subheading: 500,
     link: 600,
     bold: 700,
-    heading: 900,
+    heading: 800,
   },
   lineHeights: {
-    body: 1.5,
+    body: 1.6,
     heading: 1.2,
     code: 1.6,
   },

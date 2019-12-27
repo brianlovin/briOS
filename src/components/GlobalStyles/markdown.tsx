@@ -85,6 +85,13 @@ const GlobalMarkdownStyles = createGlobalStyle`
     }
   }
 
+  hr {
+    width: 100%;
+    height: 1px;
+    background: ${props => props.theme.border.default};
+    margin: ${defaultTheme.space[6]} 0;
+  }
+
   table {
     min-width: 100%;
     width: 100%;

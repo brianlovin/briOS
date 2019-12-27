@@ -74,6 +74,7 @@ export const H4 = styled.h4`
 
 export const h5 = css`
   ${heading};
+  font-weight: 700;
   font-size: ${defaultTheme.fontSizes[2]};
 `
 export const H5 = styled.h5`
@@ -82,6 +83,7 @@ export const H5 = styled.h5`
 
 export const h6 = css`
   ${heading};
+  font-weight: 700;
   font-size: ${defaultTheme.fontSizes[0]};
 `
 export const H6 = styled.h6`
@@ -99,14 +101,13 @@ export const p = css`
 
   a {
     color: ${props => props.theme.text.link};
-    text-decoration: none;
     font-weight: 500;
     word-break: break-all;
     hyphens: auto;
+    text-decoration: underline;
   }
 
   a:hover {
-    text-decoration: none;
     color: ${props => tint(props.theme.text.link, -30)};
   }
 
