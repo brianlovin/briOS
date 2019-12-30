@@ -11,6 +11,7 @@ describe('Overthought index', () => {
 
   it('should render 404', () => {
     cy.visit('/overthought/foobar');
+    cy.wait(1000)
     cy.get('[data-cy="overthought-not-found"]')
       .scrollIntoView()
       .should('be.visible');

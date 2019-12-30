@@ -36,6 +36,6 @@ export async function getPostBySlug(slug) {
       slug
     })
     .catch(err => {
-      console.error(err);
+      console.error('Error getting post by slug: ', slug);
     });
 }
