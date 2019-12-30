@@ -8298,10 +8298,10 @@ supports-color@^6.1.0:
   dependencies:
     has-flag "^3.0.0"
 
-swr@^0.1.15:
-  version "0.1.15"
-  resolved "https://registry.yarnpkg.com/swr/-/swr-0.1.15.tgz#de3e5a264a959a74bb7c0eb583bac442f1e0d592"
-  integrity sha512-q0dQYDcGHjpo9MbQl5ssKdbxsMgBme8UhAn1MbKlX+0fbz6tw8loT2v/H4PGbeiICvOFzK9YaoslBCaV3IyNxA==
+swr@^0.1.16:
+  version "0.1.16"
+  resolved "https://registry.yarnpkg.com/swr/-/swr-0.1.16.tgz#e1667f2260ac091fb4c2cc6255ca1b8ff83b0acd"
+  integrity sha512-E+i0pJOCCPRxnwQMFKf3RYr4os+B4swNuwnHo+pBCNxwfuJiN0ZalwP9u4OqjoeMl9eZFgcQYUPHD8KVyTqM1g==
   dependencies:
     fast-deep-equal "2.0.1"
 
