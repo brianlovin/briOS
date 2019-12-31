@@ -3,7 +3,7 @@ import { ThemeProvider } from 'styled-components';
 import useDarkMode from 'use-dark-mode'
 import GlobalStyles from '~/components/GlobalStyles';
 import { light, dark } from '~/components/Theme';
-import Fathom from './Fathom'
+import FathomProvider from './Fathom'
 import SEO from './SEO'
 
 interface Props {
@@ -20,15 +20,15 @@ export default ({ children }: Props) => {
     setMounted(true)
   }, [])
 
-  const body = 
-    <Fathom>
+  const body =
+    <FathomProvider>
       <SEO />
-      
+
       <ThemeProvider theme={theme}>
         <GlobalStyles.ResetStyles />
         {children}
       </ThemeProvider>
-    </Fathom>
+    </FathomProvider>
 
   // prevents ssr flash for mismatched dark mode
   if (!mounted) {
