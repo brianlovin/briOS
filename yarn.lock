@@ -3822,10 +3822,10 @@ fastq@^1.6.0:
   dependencies:
     reusify "^1.0.0"
 
-fathom-client@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/fathom-client/-/fathom-client-1.0.0.tgz#de3127a9555081983654375789e665cc2e938c74"
-  integrity sha512-YUJJHGOm9KOIjoZDnQeCCPOKu28t6k+hPD49rGAV1/HTknAIDb8J2u5foPg2JgsWcB4ORvJjN/7xSTUPvRK4/Q==
+fathom-client@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/fathom-client/-/fathom-client-2.0.2.tgz#83c66b9c0111478ff75004563ea58f8dcf692c2d"
+  integrity sha512-2OvYKIuuSKwx658rSPwTMDXmRLUdNh4N2KzQCUHJUTVaCdK1Tv49zeJd3ovgIeont/r+1wk/7Ri/sMzoHY5MXw==
 
 fd-slicer@~1.0.1:
   version "1.0.1"
