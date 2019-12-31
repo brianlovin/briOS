@@ -1,5 +1,5 @@
 import * as React from 'react'
-import Fathom from 'fathom-client'
+import { trackPageview, setSiteId, load } from 'fathom-client'
 import Router from 'next/router'
 
 interface Props {
@@ -8,16 +8,16 @@ interface Props {
 
 Router.events.on('routeChangeComplete', () => {
   if (process.env.NODE_ENV === 'production') {
-    Fathom.trackPageview()
+    trackPageview()
   }
 })
 
-function FathomWrapper(props) {
+function FathomProvider(props) {
   React.useEffect(() => {
     if (process.env.NODE_ENV === 'production') {
-      Fathom.load();
-      Fathom.setSiteId('ONFMHEEY');
-      Fathom.trackPageview();
+      load();
+      setSiteId('ONFMHEEY');
+      trackPageview();
     }
   }, [])
   return <span {...props} />
@@ -25,8 +25,8 @@ function FathomWrapper(props) {
 
 export default ({ children }: Props) => {
   return (
-    <FathomWrapper>
+    <FathomProvider>
       {children}
-    </FathomWrapper>
+    </FathomProvider>
   );
 }
