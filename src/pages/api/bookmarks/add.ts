@@ -1,3 +1,4 @@
+const twilio = require('twilio');
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
 const URL = require("url").URL;
 
@@ -13,6 +14,23 @@ const stringIsAValidUrl = (s) => {
 };
 
 export default async (req, res) => {
+  if (process.env.NODE_ENV === "production") {
+    const twilioSignature = req.headers['x-twilio-signature'];
+    const params = req.body;
+    const webhookUrl = 'https://brianlovin.com/api/bookmarks/add';
+
+    const requestIsValid = twilio.validateRequest(
+      process.env.TWILIO_AUTH_TOKEN,
+      twilioSignature,
+      webhookUrl,
+      params
+    );
+
+    if (!requestIsValid) {
+      return res.status(500).json({ error: '🙅‍♂️' })
+    }
+  }
+
   const twiml = new MessagingResponse();
   const { Body, From } = req.body
 
