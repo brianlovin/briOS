@@ -1,4 +1,3 @@
- 
 export default {
   id: 1034,
   name: 'Design Details',
