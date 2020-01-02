@@ -10,6 +10,7 @@
     "TWILIO_AUTH_TOKEN": "@twilio-auth-token",
     "TWILIO_PHONE_NUMBER": "@twilio-phone-number",
     "MY_PHONE_NUMBER": "@my-phone-number",
-    "FIREBASE_CREDENTIALS": "@firebase-credentials"
+    "FIREBASE_CREDENTIALS": "@firebase-credentials",
+    "FIREBASE_PRIVATE_KEY": "@firebase-private-key"
   }
 }
