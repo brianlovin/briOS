@@ -5,6 +5,7 @@ export default async (_, res) => {
 
   try {
     await db.collection('bookmarks')
+      .orderBy('createdAt', 'desc')
       .get()
       .then(snapshot => {
         snapshot.forEach(doc => {
