@@ -1,5 +1,5 @@
 import admin from 'firebase-admin'
-import serviceAccount from '../../service-account'
+import serviceAccount from '~/firebase/service-account'
 
 const { apps } = admin
 
