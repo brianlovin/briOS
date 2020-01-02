@@ -1,12 +1,11 @@
 import admin from 'firebase-admin'
-import creds from './service-account'
 
 const { apps } = admin
 
 if (!apps.length) {
   admin.initializeApp({
     // @ts-ignore
-    credential: admin.credential.cert(creds)
+    credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_CREDENTIALS))
   });
 }
 
