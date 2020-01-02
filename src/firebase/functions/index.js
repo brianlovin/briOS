@@ -1,5 +1,6 @@
 const functions = require('firebase-functions');
 const cheerio = require('cheerio');
+const URL = require('url');
 const fetch = require('isomorphic-unfetch');
 const admin = require('firebase-admin');
 admin.initializeApp();
@@ -10,6 +11,8 @@ const getMetadata = async (url) => {
   const html = await res.text();
   const $ = cheerio.load(html);
 
+  const { host } = URL.parse(url)
+
   const getMetavalue = (name) => 
     $(`meta[name=${name}]`).attr('content') ||
     $(`meta[name="twitter:${name}"]`).attr('content') ||
@@ -19,6 +22,7 @@ const getMetadata = async (url) => {
 
   return {
     url,
+    host,
     title: $('title').first().text(),
     description: getMetavalue('description'),
     image: getMetavalue('image'),

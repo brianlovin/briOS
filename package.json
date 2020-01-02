@@ -9,7 +9,7 @@
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "lint:staged": "lint-staged",
-    "firebase:deploy:functions": "cd src/firebase && yarn deploy && cd ../"
+    "firebase": "cd src/firebase && firebase deploy --only functions && cd ../"
   },
   "dependencies": {
     "@tryghost/content-api": "^1.3.5",

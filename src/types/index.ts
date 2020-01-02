@@ -78,6 +78,7 @@ export interface Bookmark {
   image: string | void;
   site_name: string | void;
   title: string | void;
+  host: string | void;
 }
 
 export interface BlogPost {

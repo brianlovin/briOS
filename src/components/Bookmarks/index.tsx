@@ -16,7 +16,7 @@ function BookmarkListItem({ bookmark }: { bookmark: Bookmark }) {
         {bookmark.title || bookmark.url}
       </Title>
       {bookmark.description && <P>{bookmark.description.slice(0, 140)}...</P>}
-      <Url>{bookmark.url}</Url>
+      <Url>{bookmark.host || bookmark.url}</Url>
     </ListItem>
   )
 }
