@@ -1,1 +1,0 @@
-export default JSON.parse(process.env.FIREBASE_CREDENTIALS)
