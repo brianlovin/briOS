@@ -5,7 +5,12 @@ export default async (_, res) => {
   await db.collection('bookmarks').get()
     .then(snapshot => {
       snapshot.forEach(doc => {
-        data.push(doc.data())
+        const d = doc.data()
+        const id = doc.id
+        data.push({
+          ...d,
+          id: doc.id
+        })
       });
     })
     .catch(err => {

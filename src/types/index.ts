@@ -70,6 +70,16 @@ export interface GetInitialProps {
   err?: any;
 };
 
+export interface Bookmark {
+  url: string;
+  author: string | void;
+  creator: string | void;
+  description: string | void;
+  image: string | void;
+  site_name: string | void;
+  title: string | void;
+}
+
 export interface BlogPost {
   canonical_url: string | void;
   codeinjection_foot: string | void;
