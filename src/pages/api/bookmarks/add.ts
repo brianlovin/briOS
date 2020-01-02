@@ -1,7 +1,7 @@
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
 const URL = require("url").URL;
 
-import db from '~/firebase/db'
+import db from '~/data/firebase'
 
 const stringIsAValidUrl = (s) => {
   try {

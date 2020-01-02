@@ -1,4 +1,4 @@
-import db from '~/firebase/db'
+import db from '~/data/firebase'
 
 export default async (_, res) => {
   let data = []
