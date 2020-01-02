@@ -5,6 +5,7 @@ const { apps } = admin
 
 if (!apps.length) {
   admin.initializeApp({
+    // @ts-ignore
     credential: admin.credential.cert(serviceAccount)
   });
 }

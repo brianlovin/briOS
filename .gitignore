@@ -4,4 +4,4 @@ node_modules
 .env
 .vscode
 yarn-error.log
-*service-account.js
+*service-account.*
