@@ -4,7 +4,8 @@ export default async (_, res) => {
   let data = []
 
   try {
-    await db.collection('bookmarks').get()
+    await db.collection('bookmarks')
+      .get()
       .then(snapshot => {
         snapshot.forEach(doc => {
           const d = doc.data()
@@ -17,6 +18,7 @@ export default async (_, res) => {
       })
     return res.status(200).json({ data })
   } catch (error) {
+    console.error({ error })
     return res.status(200).json({ data, error })
   }
 
