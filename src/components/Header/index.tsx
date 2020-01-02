@@ -29,6 +29,12 @@ const NavLinks = ({ activeRoute }) => {
           <a>App Dissection</a>
         </Link>
       </Label>
+
+      <Label isActive={activeRoute === 'Bookmarks'}>
+        <Link href="/bookmarks">
+          <a>Bookmarks</a>
+        </Link>
+      </Label>
     </React.Fragment>
   )
 }
@@ -43,6 +49,10 @@ export default function Header() {
     activeRoute = 'About'
     activePath = '/about'
   }
+  if (router.pathname.includes('/bookmarks')) {
+    activeRoute = 'Bookmarks'
+    activePath = '/bookmarks'
+  }
   if (router.pathname.includes('/design-details')) {
     activeRoute = 'App Dissection'
     activePath = '/design-details'
@@ -54,15 +64,15 @@ export default function Header() {
 
   return (
     <React.Fragment>
-        <MobileContainer expanded={isExpanded} data-cy="header">
+      <MobileContainer expanded={isExpanded} data-cy="header">
         {
-          isExpanded 
+          isExpanded
             ? (
               <React.Fragment>
                 <CloseButton onClick={() => setExpanded(false)} visible={isExpanded}>×</CloseButton>
                 <NavLinks activeRoute={activeRoute} />
               </React.Fragment>
-              )
+            )
             : (
               <React.Fragment>
                 <MenuButton onClick={() => setExpanded(true)}>

@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import defaultTheme from '../Theme'
-import { p, H5 } from '../Typography'
+import { p } from '../Typography'
 
 export const Grid = styled.div`
   display: grid;
@@ -10,28 +10,40 @@ export const Grid = styled.div`
   grid-template-columns: 1fr;
 
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
-    margin-top: 0;
+    grid-gap: ${defaultTheme.space[4]};
   }
 `
 
-export const Container = styled.a`
+
+export const Title = styled.p`
+  ${p};
+  font-size: 1.1rem;
+  font-weight: 700;
+  display: grid;
+  align-items: center;
+  grid-gap: ${defaultTheme.space[3]};
+  grid-template-columns: 16px 1fr;
+
+  @media (max-width: ${defaultTheme.breakpoints[4]}) {
+    grid-template-columns: 1fr;
+
+    svg { display: none }
+  }
+`
+
+export const ListItem = styled.a`
   display: grid;
   grid-gap: ${defaultTheme.space[2]};
   grid-template-columns: 1fr;
 
   &:hover {
-    h5 {
+    ${Title} {
       color: ${props => props.theme.text.link};
     }
   }
-`
 
-export const Title = styled(H5)`
-  display: flex;
-  align-items: center;
-
-  svg {
-    margin-right: ${defaultTheme.space[3]};
+  @media (max-width: ${defaultTheme.breakpoints[4]}) {
+    grid-gap: ${defaultTheme.space[1]};
   }
 `
 

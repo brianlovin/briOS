@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Bookmark } from '~/types'
 import { P } from '../Typography';
-import { Container, Grid, Url, Title } from './style'
+import { ListItem, Grid, Url, Title } from './style'
 
 interface Props {
   bookmarks?: Array<Bookmark>
@@ -9,15 +9,15 @@ interface Props {
 
 function BookmarkListItem({ bookmark }: { bookmark: Bookmark }) {
   return (
-    <Container href={bookmark.url} target="_blank" rel="noopener noreferrer">
+    <ListItem href={bookmark.url} target="_blank" rel="noopener noreferrer">
       <Title>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" ><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
 
         {bookmark.title || bookmark.url}
       </Title>
       {bookmark.description && <P>{bookmark.description.slice(0, 140)}...</P>}
       <Url>{bookmark.url}</Url>
-    </Container>
+    </ListItem>
   )
 }
 
