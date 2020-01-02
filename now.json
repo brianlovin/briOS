@@ -5,6 +5,10 @@
   },
   "env": {
     "MAILCHIMP_API_KEY": "@mailchimp-api-key",
-    "MAILCHIMP_LIST_ID": "@mailchimp-list-id"
+    "MAILCHIMP_LIST_ID": "@mailchimp-list-id",
+    "TWILIO_ACCOUNT_SID": "@twilio-account-sid",
+    "TWILIO_AUTH_TOKEN": "@twilio-auth-token",
+    "TWILIO_PHONE_NUMBER": "@twilio-phone-number",
+    "MY_PHONE_NUMBER": "@my-phone-number"
   }
 }
