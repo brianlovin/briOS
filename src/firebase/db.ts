@@ -1,5 +1,5 @@
 import admin from 'firebase-admin'
-let serviceAccount = require('../../service-account.json');
+import serviceAccount from './service-account'
 
 const { apps } = admin
 
