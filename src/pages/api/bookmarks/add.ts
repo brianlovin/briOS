@@ -30,9 +30,19 @@ export default async (req, res) => {
     return res.end(twiml.toString());
   }
 
+
   const url = Body
-  await db.collection('bookmarks').add({ url })
-  twiml.message('Saved!');
+  const existingRef = await db.collection('bookmarks').where('url', '==', url).get()
+    .then(snapshot => !snapshot.empty)
+
+  if (existingRef) {
+    twiml.message('🧠 Already bookmarked');
+    res.writeHead(200, { 'Content-Type': 'text/xml' });
+    return res.end(twiml.toString());
+  }
+
+  await db.collection('bookmarks').add({ url, createdAt: new Date() })
+  twiml.message('✅ Saved');
   res.writeHead(200, { 'Content-Type': 'text/xml' });
   return res.end(twiml.toString());
 };
