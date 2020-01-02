@@ -7,12 +7,14 @@ export default async (_, res) => {
     await db.collection('bookmarks')
       .get()
       .then(snapshot => {
+        console.log({ snapshot })
         snapshot.forEach(doc => {
+          console.log({ doc })
           const d = doc.data()
           const id = doc.id
           data.push({
             ...d,
-            id: doc.id
+            id
           })
         });
       })
