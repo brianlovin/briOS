@@ -21,7 +21,7 @@ const getMetadata = async (url) => {
     null
 
   return {
-    url,
+    url: url.toLowerCase(),
     host,
     title: $('title').first().text(),
     description: getMetavalue('description'),
