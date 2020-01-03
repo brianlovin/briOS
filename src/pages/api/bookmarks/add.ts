@@ -60,7 +60,5 @@ export default async (req, res) => {
   }
 
   await db.collection('bookmarks').add({ url, createdAt: new Date() })
-  twiml.message('✅ Saved');
-  res.writeHead(200, { 'Content-Type': 'text/xml' });
-  return res.end(twiml.toString());
+  return res.status(200)
 };
