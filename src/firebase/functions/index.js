@@ -1,10 +1,13 @@
 const functions = require('firebase-functions');
 const cheerio = require('cheerio');
+const algoliasearch = require('algoliasearch');
 const URL = require('url');
 const fetch = require('isomorphic-unfetch');
 const admin = require('firebase-admin');
 admin.initializeApp();
 const db = admin.firestore();
+const client = algoliasearch(functions.config().algolia.id, functions.config().algolia.key);
+const index = client.initIndex('bookmarks');
 
 const getMetadata = async (url) => {
   const res = await fetch(url);
@@ -32,6 +35,17 @@ const getMetadata = async (url) => {
   };
 };
 
+const indexInSearch = async(metadata, objectID) => {
+  return await index.addObject({
+    ...metadata,
+    objectID
+  })
+}
+
+const removeFromSearch = async(objectID) => {
+  return await index.deleteObject(objectID)
+}
+
 exports.addMetadata = functions.firestore
   .document('bookmarks/{bookmarkId}')
   .onCreate(async (snap, context) => {
@@ -41,5 +55,23 @@ exports.addMetadata = functions.firestore
     const metadata = await getMetadata(url)
     const next = Object.assign(current, metadata) 
 
-    return db.doc(`bookmarks/${bookmarkId}`).set(next);
-})
+    return Promise.all([
+      db.doc(`bookmarks/${bookmarkId}`).set(next),
+      indexInSearch(next, bookmarkId)
+    ])
+  })
+
+exports.updateSearchData = functions.firestore
+  .document('bookmarks/{bookmarkId}')
+  .onUpdate(async (change, context) => {
+    const { bookmarkId } = context.params;
+    const current = change.after.data()
+    return await indexInSearch(current, bookmarkId)
+  })
+
+exports.removeSearchData = functions.firestore
+  .document('bookmarks/{bookmarkId}')
+  .onDelete(async (_, context) => {
+    const { bookmarkId } = context.params;
+    return await removeFromSearch(bookmarkId)
+  })

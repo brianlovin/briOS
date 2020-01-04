@@ -12,6 +12,7 @@
     "node": "8"
   },
   "dependencies": {
+    "algoliasearch": "^3.35.1",
     "cheerio": "^1.0.0-rc.3",
     "firebase-admin": "^8.6.0",
     "firebase-functions": "^3.3.0",
