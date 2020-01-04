@@ -4,7 +4,7 @@ import { ThemeProvider } from 'styled-components';
 import { light, dark } from '~/components/Theme';
 
 export default function DarkMode({ children }) {
-  const darkMode = useDarkMode(false);
+  const darkMode = useDarkMode(false, { storageKey: null, onChange: null });
   const [theme, setTheme] = React.useState(light);
 
   React.useEffect(() => {
