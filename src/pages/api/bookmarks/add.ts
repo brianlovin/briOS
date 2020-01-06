@@ -60,5 +60,5 @@ export default async (req, res) => {
   }
 
   await db.collection('bookmarks').add({ url, createdAt: new Date() })
-  return res.status(200)
+  return res.writeHead(200).end();
 };
