@@ -16,7 +16,7 @@
     "fathom-client": "^2.0.2",
     "firebase-admin": "^8.9.0",
     "isomorphic-unfetch": "^3.0.0",
-    "next": "^9.1.6",
+    "next": "^9.1.7",
     "next-seo": "^3.2.0",
     "prismjs": "^1.17.1",
     "react": "^16.12.0",
