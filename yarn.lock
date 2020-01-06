@@ -8046,10 +8046,10 @@ react-is@^16.6.0, react-is@^16.8.1, react-is@^16.8.4, react-is@^16.8.6:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.12.0.tgz#2cc0fe0fba742d97fd527c42a13bec4eeb06241c"
   integrity sha512-rPCkf/mWBtKc97aLL9/txD8DZdemK0vkA3JMLShjlJB3Pj3s+lpf1KaBzMfQrAmhMQB0n1cU/SUGgKKBCe837Q==
 
-react-markdown@^4.3.0:
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/react-markdown/-/react-markdown-4.3.0.tgz#9575a1d93bff138022689ebc809c7d463cb8ec63"
-  integrity sha512-DGecgkhonJRakIDqT7Q0SYdD7rkHpLOESl5XyoWW0KMj1eyu0VkNbFL0HVLwgr5sgjFBnX5DUZcq2e79tcABag==
+react-markdown@^4.3.1:
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/react-markdown/-/react-markdown-4.3.1.tgz#39f0633b94a027445b86c9811142d05381300f2f"
+  integrity sha512-HQlWFTbDxTtNY6bjgp3C3uv1h2xcjCSi1zAEzfBW9OwJJvENSYiLXWNXN5hHLsoqai7RnZiiHzcnWdXk2Splzw==
   dependencies:
     html-to-react "^1.3.4"
     mdast-add-list-metadata "1.0.1"
