@@ -47,7 +47,7 @@
     "@types/node": "^13.1.4",
     "@types/react": "^16.9.17",
     "@typescript-eslint/eslint-plugin": "^2.14.0",
-    "@typescript-eslint/parser": "^2.14.0",
+    "@typescript-eslint/parser": "^2.15.0",
     "babel-eslint": "^10.0.3",
     "babel-plugin-styled-components": "^1.10.6",
     "cypress": "^3.8.1",
