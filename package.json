@@ -44,7 +44,7 @@
     "@types/chai": "^4.2.6",
     "@types/jest": "^24.0.25",
     "@types/mocha": "^5.2.7",
-    "@types/node": "^13.1.4",
+    "@types/node": "^13.1.5",
     "@types/react": "^16.9.17",
     "@typescript-eslint/eslint-plugin": "^2.15.0",
     "@typescript-eslint/parser": "^2.15.0",
