@@ -9566,10 +9566,10 @@ tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-0.14.5.tgz#5ae68177f192d4456269d108afa93ff8743f4f64"
   integrity sha1-WuaBd/GS1EViadEIr6k/+HQ/T2Q=
 
-twilio@^3.39.2:
-  version "3.39.2"
-  resolved "https://registry.yarnpkg.com/twilio/-/twilio-3.39.2.tgz#596850f1fc91c82e6e2d1377ca874dfe725b0ec7"
-  integrity sha512-M0dM6wCaR+YVXQeqldiqXNAqqSeZSuhSL5paRFbFTJDpsq/R6eqqhSPvyoaS9hQIm2PNhaEKq+lvqCELckDWpg==
+twilio@^3.39.3:
+  version "3.39.3"
+  resolved "https://registry.yarnpkg.com/twilio/-/twilio-3.39.3.tgz#519fe68d1df0e25d658e27c4a52cfcca5fb5e02e"
+  integrity sha512-RxVuanhKyjvi6OqbvlKSuvwBIRAhlf5W3A9FkZsDBatVslvLGxxuB5y5SYkEqSZVBREFEt7/HqJpTuK1YUwMwQ==
   dependencies:
     "@types/express" "^4.17.2"
     dayjs "^1.8.19"
