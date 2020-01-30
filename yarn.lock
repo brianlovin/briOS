@@ -1451,10 +1451,10 @@
     "@styled-system/core" "^5.1.2"
     "@styled-system/css" "^5.1.4"
 
-"@testing-library/cypress@^5.1.0":
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/@testing-library/cypress/-/cypress-5.1.0.tgz#a2ffec80959dabb483f7e8200be06af6689d00cb"
-  integrity sha512-cS/sml7eOuAnnP9nlVfyWjc42xOWWlPznDpGrEXKJwrwIFN9iMeNeNXYdroW2NBEqr6fxZBg1kysAQZrWnd8qg==
+"@testing-library/cypress@^5.1.1":
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/@testing-library/cypress/-/cypress-5.1.1.tgz#eab5f5d84839954e1d38cd942ccab21fdefc3581"
+  integrity sha512-LosrKum7K1ueCTmM1eoISf3z4zbIMELWshy3db3E/kceDs4iIB5ADt4Z05onh3DyEvIZSBjYAEwcPnyqkbuf+g==
   dependencies:
     "@babel/runtime" "^7.5.5"
     "@testing-library/dom" "^6.0.0"
