@@ -6693,10 +6693,10 @@ neo-async@^2.5.0, neo-async@^2.6.0, neo-async@^2.6.1:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.1.tgz#ac27ada66167fa8849a6addd837f6b189ad2081c"
   integrity sha512-iyam8fBuCUpWeKPGpaNMetEocMt364qkCsfL9JuhjXX6dRnguRVOfk2GZaDpPjcOKiiXCPINZC1GczQ7iTq3Zw==
 
-next-seo@^3.4.0:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/next-seo/-/next-seo-3.4.0.tgz#3309f28f25d780c1f6ebfc191087a3b3d5b6d24a"
-  integrity sha512-zi1YUYeWmf6a7slkiI86z0rAQXYtwAdk0fxI31rxMEgxTqUkaGqylCp0c5GJJnlLg4ps5XbLe01XkJHjU2TuwA==
+next-seo@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/next-seo/-/next-seo-4.0.0.tgz#c95a1394084009a35a4a90bf9f47c0633119277a"
+  integrity sha512-0ApTcGAh2y5SeqngMQAgK7VIxUowTJqtns7vL1CZye+poiDjr2IUyxOR9uIIb7Wkyn5aq583+Nf1cWNbjo0zeQ==
 
 next@^9.2.0:
   version "9.2.0"
