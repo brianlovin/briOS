@@ -3458,10 +3458,10 @@ date-fns@^1.27.2:
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.30.1.tgz#2e71bf0b119153dbb4cc4e88d9ea5acfb50dc05c"
   integrity sha512-hBSVCvSmWC+QypYObzwGOd9wqdDpOt+0wl0KbU+R+uuZBS1jN8VsD1ss3irQDknRj5NvxiTF6oj/nDRnN/UQNw==
 
-dayjs@^1.8.19:
-  version "1.8.19"
-  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.8.19.tgz#5117dc390d8f8e586d53891dbff3fa308f51abfe"
-  integrity sha512-7kqOoj3oQSmqbvtvGFLU5iYqies+SqUiEGNT0UtUPPxcPYgY1BrkXR0Cq2R9HYSimBXN+xHkEN4Hi399W+Ovlg==
+dayjs@^1.8.20:
+  version "1.8.20"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.8.20.tgz#724a5cb6ad1f6fc066b0bd9a800dedcc7886f19e"
+  integrity sha512-mH0MCDxw6UCGJYxVN78h8ugWycZAO8thkj3bW6vApL5tS0hQplIDdAQcmbvl7n35H0AKdCJQaArTrIQw2xt4Qg==
 
 debug@2.6.9, debug@^2.2.0, debug@^2.3.3:
   version "2.6.9"
@@ -9566,13 +9566,13 @@ tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-0.14.5.tgz#5ae68177f192d4456269d108afa93ff8743f4f64"
   integrity sha1-WuaBd/GS1EViadEIr6k/+HQ/T2Q=
 
-twilio@^3.39.2:
-  version "3.39.2"
-  resolved "https://registry.yarnpkg.com/twilio/-/twilio-3.39.2.tgz#596850f1fc91c82e6e2d1377ca874dfe725b0ec7"
-  integrity sha512-M0dM6wCaR+YVXQeqldiqXNAqqSeZSuhSL5paRFbFTJDpsq/R6eqqhSPvyoaS9hQIm2PNhaEKq+lvqCELckDWpg==
+twilio@^3.39.4:
+  version "3.39.4"
+  resolved "https://registry.yarnpkg.com/twilio/-/twilio-3.39.4.tgz#e87e0d4a918832d1d71a95cc4b08c216a9d7233d"
+  integrity sha512-TTbXrSdIU7VMhBTzpMPstthoGUQhLjuMF6Dg+ma/hnftHU+WhIxRXOeFtxCqwd9kSYCUZdNCG1mOmm3g5ZKJhQ==
   dependencies:
     "@types/express" "^4.17.2"
-    dayjs "^1.8.19"
+    dayjs "^1.8.20"
     jsonwebtoken "^8.5.1"
     lodash "^4.17.15"
     q "2.0.x"
