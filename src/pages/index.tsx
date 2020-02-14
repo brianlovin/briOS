@@ -24,7 +24,7 @@ function Home(props: Props) {
     <Page>
       <SectionHeading>
         <H1>Brian Lovin</H1>
-        <LargeSubheading>I'm a product designer, podcaster, and writer, living in New York City. I'm currently building native mobile apps at GitHub.</LargeSubheading>
+        <LargeSubheading>I'm a product designer, podcaster, and writer, living in San Francisco. I'm currently building native mobile apps at GitHub.</LargeSubheading>
         <Subheading><Link href="/about" as="/about"><a>More about me <Rarr /></a></Link></Subheading>
       </SectionHeading>
 
