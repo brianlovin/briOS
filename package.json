@@ -30,7 +30,7 @@
     "remark-stringify": "^7.0.4",
     "serve-favicon": "^2.5.0",
     "styled-components": "^4.4.1",
-    "swr": "^0.1.16",
+    "swr": "^0.1.17",
     "throttle-debounce": "^2.1.0",
     "twilio": "^3.39.4",
     "unified": "^8.4.2",
