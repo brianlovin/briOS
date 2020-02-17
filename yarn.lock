@@ -9392,10 +9392,10 @@ supports-color@^7.1.0:
   dependencies:
     has-flag "^4.0.0"
 
-swr@^0.1.16:
-  version "0.1.16"
-  resolved "https://registry.yarnpkg.com/swr/-/swr-0.1.16.tgz#e1667f2260ac091fb4c2cc6255ca1b8ff83b0acd"
-  integrity sha512-E+i0pJOCCPRxnwQMFKf3RYr4os+B4swNuwnHo+pBCNxwfuJiN0ZalwP9u4OqjoeMl9eZFgcQYUPHD8KVyTqM1g==
+swr@^0.1.17:
+  version "0.1.17"
+  resolved "https://registry.yarnpkg.com/swr/-/swr-0.1.17.tgz#9777012d9bb7a72d75cc31225f8d39dfdf033c32"
+  integrity sha512-MTBjeuLAGvzuzoWnx5iQT8fJpiB+X8dHkiE6LcmfiuN4qz31l4mEHQ84QbB+yyGsquxinpqeqWOzBXcB7m82yg==
   dependencies:
     fast-deep-equal "2.0.1"
 
