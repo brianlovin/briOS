@@ -53,7 +53,7 @@
     "cypress": "^3.8.3",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.0",
-    "eslint-plugin-cypress": "^2.10.1",
+    "eslint-plugin-cypress": "^2.10.2",
     "eslint-plugin-prettier": "^3.1.2",
     "lint-staged": "^10.0.7",
     "now-env": "^3.2.0",

@@ -4019,10 +4019,10 @@ eslint-config-prettier@^6.10.0:
   dependencies:
     get-stdin "^6.0.0"
 
-eslint-plugin-cypress@^2.10.1:
-  version "2.10.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-cypress/-/eslint-plugin-cypress-2.10.1.tgz#76b15abd5b35975e21b465214ac2173036fbe271"
-  integrity sha512-Oo52+uEE7caVRIIeNCg743e3QKNY9Fkfd4KCzBq2BqG3EhhndekEu2YTwW6kSgca2jXSPmbGm0HiZktSakl4Og==
+eslint-plugin-cypress@^2.10.2:
+  version "2.10.2"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-cypress/-/eslint-plugin-cypress-2.10.2.tgz#f856de3130e67d1bd5efc200cacb908031a6393a"
+  integrity sha512-5rmgvbIoPhE6NUuRPeTTpxSCWkV0XYLzvfXFZIy3u5TJaf6g9ov55GM42DbONi0a6VpXNuzkluedWz5sxPYUNg==
   dependencies:
     globals "^11.12.0"
 
