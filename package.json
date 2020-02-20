@@ -32,7 +32,7 @@
     "styled-components": "^4.4.1",
     "swr": "^0.1.17",
     "throttle-debounce": "^2.1.0",
-    "twilio": "^3.39.4",
+    "twilio": "^3.39.5",
     "unified": "^8.4.2",
     "unified-stream": "^1.0.5",
     "use-dark-mode": "^2.3.1"
