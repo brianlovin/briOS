@@ -59,7 +59,7 @@
     "now-env": "^3.2.0",
     "prettier": "^1.19.1",
     "prettier-eslint": "^9.0.1",
-    "typescript": "^3.7.5",
+    "typescript": "^3.8.2",
     "typescript-eslint-parser": "^22.0.0"
   },
   "lint-staged": {
