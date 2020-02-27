@@ -19,7 +19,7 @@
     "next": "^9.2.2",
     "next-seo": "^4.4.0",
     "prismjs": "^1.19.0",
-    "react": "^16.12.0",
+    "react": "^16.13.0",
     "react-clipboard.js": "^2.0.16",
     "react-dom": "^16.13.0",
     "react-markdown": "^4.3.1",
