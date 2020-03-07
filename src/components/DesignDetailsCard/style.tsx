@@ -33,7 +33,7 @@ export const Container = styled.div`
   border-radius: 8px;
   transition: ${defaultTheme.animations.default};
   align-items: flex-start;
-  height: 400px;
+  height: 360px;
   overflow: hidden;
   z-index: 3;
 
@@ -101,26 +101,7 @@ export const VideoPlayer = styled.video`
   min-height: 600px;
   border-radius: 4px;
   clip-path: padding-box;
-
-  @media (min-width: 1440px) {
-    right: -48px;
-  }
-
-  @media (max-width: 1440px) {
-    right: -24%;
-  }
-
-  @media (max-width: 1256px) {
-    right: -18%;
-  }
-
-  @media (max-width: 1024px) {
-    right: -15%;
-  }
-
-  @media (max-width: 968px) {
-    right: -20px;
-  }
+  right: -3%;
 
   @media (max-width: 968px) {
     display: none;

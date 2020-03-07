@@ -21,5 +21,4 @@ export default async (_, res) => {
   } catch (error) {
     return res.status(200).json({ data, error })
   }
-
 };

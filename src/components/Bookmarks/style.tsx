@@ -4,9 +4,10 @@ import { p } from '../Typography'
 
 export const Grid = styled.div`
   display: grid;
-  max-width: ${defaultTheme.breakpoints[3]};
-  margin-top: ${defaultTheme.space[7]};
-  grid-gap: ${defaultTheme.space[6]};
+  width: 100%;
+  max-width: ${defaultTheme.breakpoints[4]};
+  margin-top: ${defaultTheme.space[5]};
+  grid-gap: ${defaultTheme.space[3]};
   grid-template-columns: 1fr;
 
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
@@ -17,23 +18,14 @@ export const Grid = styled.div`
 
 export const Title = styled.p`
   ${p};
-  font-size: 1.1rem;
   font-weight: 700;
   display: grid;
   align-items: center;
-  grid-gap: ${defaultTheme.space[3]};
-  grid-template-columns: 16px 1fr;
-
-  @media (max-width: ${defaultTheme.breakpoints[4]}) {
-    grid-template-columns: 1fr;
-
-    svg { display: none }
-  }
 `
 
 export const ListItem = styled.a`
   display: grid;
-  grid-gap: ${defaultTheme.space[2]};
+  grid-gap: ${defaultTheme.space[0]};
   grid-template-columns: 1fr;
 
   &:hover {

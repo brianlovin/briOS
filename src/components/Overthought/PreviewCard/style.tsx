@@ -3,13 +3,10 @@ import defaultTheme from '~/components/Theme'
 import { H6 } from '~/components/Typography'
 
 export const Card = styled.div`
-  padding: ${defaultTheme.space[4]};
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: auto auto 1fr auto;
   position: relative;
-  border-radius: 8px;
-  background: ${props => props.theme.bg.secondary};
   transition: box-shadow ${props => props.theme.animations.default};
 
   p {

@@ -39,14 +39,6 @@ const GlobalMarkdownStyles = createGlobalStyle`
     ${p};
     margin-top: ${defaultTheme.space[3]};
 
-    a {
-      text-decoration: underline;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
     img {
       ${img};
     }
