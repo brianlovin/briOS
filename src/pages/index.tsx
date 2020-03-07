@@ -26,7 +26,8 @@ function Home(props: Props) {
       <SectionHeading>
         <H2 style={{ marginBottom: defaultTheme.space[4] }}>👋</H2>
         
-        <P>I'm a product designer, podcaster, and writer, currently living in San Francisco. Right now I'm building native mobile apps at GitHub.</P>
+        <P><strong>Hey, I'm Brian.</strong></P>
+        <P>I'm a product designer, podcaster, and writer, currently living in San Francisco. Right now I'm building native mobile apps at GitHub. Let's grab a coffee.</P>
         
         <P>
           <Link href="/about" as="/about">
