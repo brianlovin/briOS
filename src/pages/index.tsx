@@ -20,18 +20,11 @@ interface Props {
 function Home(props: Props) {
   const initialData = props.posts
   const { data: posts } = useSWR('/api/getFeaturedPosts', getFeaturedPosts, { initialData })
-  
-  const greetings = ["👋", "🤔", "🤓", "🤙", "🙋‍♂️", "🐵", "🎙", "🎨", "⌨️", "🖱", "📝", "👨‍💻", "📱"]
-  const [greeting, setGreeting] = React.useState(null)
-  
-  React.useEffect(() => {
-    setGreeting(greetings[Math.floor(Math.random() * greetings.length)])
-  }, [])
 
   return (
     <Page>
       <SectionHeading>
-        <H2 style={{ marginBottom: defaultTheme.space[4] }}>{greeting}</H2>
+        <H2 style={{ marginBottom: defaultTheme.space[4] }}>👋</H2>
         
         <P>I'm a product designer, podcaster, and writer, currently living in San Francisco. Right now I'm building native mobile apps at GitHub.</P>
         
