@@ -22,7 +22,11 @@ function Home(props: Props) {
   const { data: posts } = useSWR('/api/getFeaturedPosts', getFeaturedPosts, { initialData })
   
   const greetings = ["👋", "🤔", "🤓", "🤙", "🙋‍♂️", "🐵", "🎙", "🎨", "⌨️", "🖱", "📝", "👨‍💻", "📱"]
-  const greeting = greetings[Math.floor(Math.random() * greetings.length)]
+  const [greeting, setGreeting] = React.useState(null)
+  
+  React.useEffect(() => {
+    setGreeting(greetings[Math.floor(Math.random() * greetings.length)])
+  }, [])
 
   return (
     <Page>
