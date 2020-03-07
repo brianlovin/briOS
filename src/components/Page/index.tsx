@@ -8,6 +8,7 @@ import {
   ContentGrid,
   PreviewContentGrid,
 } from './style';
+import { Footer } from '../Footer';
 
 export {
   SectionHeading,
@@ -27,6 +28,7 @@ export default function Page(props: Props) {
     <PageContainer>
       {withHeader && <Header />}
       <InnerPageContainer role="main">{children}</InnerPageContainer>
+      <Footer />
     </PageContainer>
   );
 }
