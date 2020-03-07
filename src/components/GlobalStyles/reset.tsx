@@ -2,12 +2,6 @@ import { createGlobalStyle } from 'styled-components';
 import defaultTheme from '~/components/Theme';
 
 const ResetStyles = createGlobalStyle`
-  @import url('https://rsms.me/inter/inter.css');
-
-  @supports (font-variation-settings: normal) {
-    html { font-family: 'Inter var', sans-serif; }
-  }
-
   * {
     border: 0;
     box-sizing: inherit;

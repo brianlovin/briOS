@@ -19,14 +19,4 @@ describe('Home', () => {
       .scrollIntoView()
       .should('be.visible');
   });
-
-  it('should render podcast player', () => {
-    cy.get('[data-cy="design-details-player"]')
-      .scrollIntoView()
-      .should('be.visible');
-
-    cy.get(`[href="https://designdetails.fm"]`).should(
-      'be.visible'
-    );
-  });
 });

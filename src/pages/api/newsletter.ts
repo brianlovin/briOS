@@ -28,7 +28,6 @@ export default async (req, res) => {
     .then(res => res.json())
 
     if (response.status >= 400) {
-      console.log({ response })
       return res.status(400).json({ error: 'Hm, couldn’t add you to the newsletter - ping me directly at hi@brianlovin.com and I’ll add you to this list!' });
     }
 

@@ -170,7 +170,7 @@ export const Blockquote = styled.blockquote`
 
 export const list = css`
   ${p};
-  margin: ${defaultTheme.space[4]};
+  margin: ${defaultTheme.space[3]};
   margin-left: ${defaultTheme.space[4]};
   margin-right: 0;
   font-weight: ${defaultTheme.fontWeights.body};
@@ -286,7 +286,7 @@ export const Subheading = styled(P)`
   }
 `;
 
-export const LargeSubheading = styled.h2`
+export const LargeSubheading = styled(P)`
   font-size: ${defaultTheme.fontSizes[2]};
   font-weight: ${defaultTheme.fontWeights.subheading};
   margin-top: ${defaultTheme.space[3]};
@@ -310,4 +310,11 @@ export const LargeSubheading = styled.h2`
 export const img = css`
   max-width: 100%;
   border-radius: 4px;
+`
+
+export const LineClamp = styled.span`
+  -webkit-line-clamp: ${props => props.lines || 1};
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  display: -webkit-box;
 `

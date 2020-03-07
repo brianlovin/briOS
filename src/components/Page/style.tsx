@@ -12,16 +12,15 @@ export const PageContainer = styled.div`
 
 export const ContentContainer = styled.div`
   width: 100%;
-  max-width: 600px;
+  max-width: ${defaultTheme.breakpoints[4]};
 `
 
 export const ContentGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(${props => props.defaultColumns || 3}, 1fr);
+  grid-template-columns: 1fr;
   grid-gap: ${defaultTheme.space[3]};
-  grid-auto-rows: auto;
   width: 100%;
-  max-width: ${defaultTheme.breakpoints[0]};
+  max-width: ${defaultTheme.breakpoints[4]};
   margin-top: ${defaultTheme.space[5]};
 
   a {
@@ -54,7 +53,6 @@ export const PreviewContentGrid = styled(ContentGrid)`
   }
 
   @media (max-width: ${defaultTheme.breakpoints[1]}) {
-    grid-template-columns: repeat(2, 1fr);
     a:last-of-type {
       display: inline-block;
     }
@@ -93,7 +91,7 @@ export const SectionHeading = styled.div`
   align-items: flex-start;
   margin-top: ${defaultTheme.space[9]};
   width: 100%;
-  max-width: ${defaultTheme.breakpoints[3]};
+  max-width: ${defaultTheme.breakpoints[4]};
 
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
     max-width: 100%;

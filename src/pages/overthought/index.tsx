@@ -2,12 +2,13 @@ import * as React from 'react';
 import useSWR from 'swr'
 import { getFeaturedPosts } from '~/data/ghost'
 import Page, { SectionHeading } from '~/components/Page';
-import { H1, LargeSubheading } from '~/components/Typography'
+import { H4, P } from '~/components/Typography'
 import { BlogPost } from '~/types'
 import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe';
 import cacheSsrRes from '~/lib/cacheSsr';
 import SEO from '~/components/Overthought/SEO';
 import OverthoughtList from '~/components/Overthought/List';
+import defaultTheme from '~/components/Theme';
 
 interface Props {
   posts?: Array<BlogPost>
@@ -22,14 +23,14 @@ function Overthought(props: Props) {
       <SEO />
 
       <SectionHeading data-cy="overthought">
-        <H1>Overthought</H1>
-        <LargeSubheading>Overthinking out loud about design, development, and building products.</LargeSubheading>
+        <H4 style={{ marginBottom: defaultTheme.space[2] }}>Overthought</H4>
+        <P style={{ fontWeight: 500 }}>Overthinking out loud about design, development, and building products.</P>
 
+        <OverthoughtList truncated={false} posts={posts} />
+        
         <OverthoughtSubscribeBox />
 
       </SectionHeading>
-
-      <OverthoughtList posts={posts} />
     </Page>
   );
 }
