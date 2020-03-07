@@ -9,25 +9,14 @@ const api = new GhostContentAPI({
 
 export async function getPosts() {
   return await api.posts
-    .browse({
-      limit: "all"
-    })
+    .browse({ limit: "all" })
     .catch(err => {
       console.error(err);
     });
 }
 
-function isFeatured(post) {
-  if (process.env.NODE_ENV === 'production') {
-    return post.featured
-  }
-  // load all posts locally
-  return true
-}
-
 export async function getFeaturedPosts() {
   return await getPosts()
-    .then(posts => posts.filter(isFeatured))
 }
 
 export async function getPostBySlug(slug) {
