@@ -35,9 +35,9 @@ function Home(props: Props) {
           <Link href="/about" as="/about">
             <A>More about me <Rarr /></A>
           </Link>
-          <div>
+          <span style={{ display: 'block' }}>
             <A href="https://twitter.com/brian_lovin" target="_blank" rel="noopener noreferrer">@brian_lovin on Twitter <Rarr /></A>
-          </div>
+          </span>
         </P>
 
         <H5 style={{ marginTop: defaultTheme.space[6], marginBottom: defaultTheme.space[2] }}>Writing</H5>
@@ -51,9 +51,9 @@ function Home(props: Props) {
             <A>See all {posts && posts.length} posts <Rarr /></A>
           </Link>
           
-          <div>
+          <span style={{ display: 'block' }}>
             <A href="https://overthought.ghost.io/rss/" target="_blank" rel="noopener noreferrer">Subscribe via RSS <Rarr /></A>
-          </div>
+          </span>
         </P>
 
 
@@ -84,35 +84,35 @@ function Home(props: Props) {
             <A href="https://github.com/specfm/design-details" target="_blank" rel="noopener noreferrer">
               specfm / design-details
             </A>
-            <div>The code that powers designdetails.fm.</div>
+            <span style={{ display: 'block' }}>The code that powers designdetails.fm.</span>
           </Li>
 
           <Li>
             <A href="https://github.com/brianlovin/brian-lovin-next" target="_blank" rel="noopener noreferrer">
               brian-lovin-next
             </A>
-            <div>The code that powers this website you’re looking at.</div>
+            <span style={{ display: 'block' }}>The code that powers this website you’re looking at.</span>
           </Li>
 
           <Li>
             <A href="https://github.com/brianlovin/security-checklist" target="_blank" rel="noopener noreferrer">
               security-checklist
             </A>
-            <div>A checklist for staying safe on the internet.</div>
+            <span style={{ display: 'block' }}>A checklist for staying safe on the internet.</span>
           </Li>
 
           <Li>
             <A href="https://github.com/withspectrum/spectrum" target="_blank" rel="noopener noreferrer">
               withspectrum / spectrum
             </A>
-            <div>Simple, powerful online communities.</div>
+            <span style={{ display: 'block' }}>Simple, powerful online communities.</span>
           </Li>
 
           <Li>
             <A href="https://github.com/specfm/spec-next" target="_blank" rel="noopener noreferrer">
               specfm / spec-next
             </A>
-            <div>A podcast network to help designers and developers level up.</div>
+            <span style={{ display: 'block' }}>A podcast network to help designers and developers level up.</span>
           </Li>
         </Ul>
 
@@ -127,35 +127,35 @@ function Home(props: Props) {
             <A href="https://www.swiftbysundell.com/podcast/67/" target="_blank" rel="noopener noreferrer">
               Building for open source
             </A>
-            <div>Ryan Nystrom and I talk about designing and building the mobile apps at GitHub.</div>
+            <span style={{ display: 'block' }}>Ryan Nystrom and I talk about designing and building the mobile apps at GitHub.</span>
           </Li>
           
           <Li>
             <A href="https://www.youtube.com/watch?v=SyS3h3kmBnY" target="_blank" rel="noopener noreferrer">
               Extend what's possible with Figma Plugins - Figma Config
             </A>
-            <div>An exploration into the plugins I built to automate the tedious parts of designing mobile apps at GitHub.</div>
+            <span style={{ display: 'block' }}>An exploration into the plugins I built to automate the tedious parts of designing mobile apps at GitHub.</span>
           </Li>
 
           <Li>
             <A href="https://www.youtube.com/watch?v=6MBBTdu8v6E" target="_blank" rel="noopener noreferrer">
               Designing with GraphQL - GraphQL Summit
             </A>
-            <div>Exploring the possibilities that open up when designers and developers can speak the same language.</div>
+            <span style={{ display: 'block' }}>Exploring the possibilities that open up when designers and developers can speak the same language.</span>
           </Li>
 
           <Li>
             <A href="https://interfacelovers.com/interviews/brian-lovin" target="_blank" rel="noopener noreferrer">
               Interface Lovers Interview
             </A>
-            <div>An interview about how I got into design, my process, and past work.</div>
+            <span style={{ display: 'block' }}>An interview about how I got into design, my process, and past work.</span>
           </Li>
 
           <Li>
             <A href="hhttps://spec.fm/podcasts/design-details/79352" target="_blank" rel="noopener noreferrer">
               Charmander++ – Interviewing ourselves on Design Details
             </A>
-            <div>Bryn Jackson and I interviewed each other. Totally humble.</div>
+            <span style={{ display: 'block' }}>Bryn Jackson and I interviewed each other. Totally humble.</span>
           </Li>
         </Ul>
 

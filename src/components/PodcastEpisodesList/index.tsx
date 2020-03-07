@@ -29,7 +29,13 @@ export default function LatestEpisode() {
 
   if (!episodes || loading) {
     return (
-      <div style={{ padding: `${defaultTheme.space[4]} 0`}}>
+      <div style={{ 
+        padding: `${defaultTheme.space[8]}`,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+      }}>
         <LoadingSpinner />
       </div>
     )
