@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link'
 import { getDateObject } from '~/lib/getDateObject';
 import { ContentContainer, SectionHeading, } from '~/components/Page';
-import { H1, H2, Subheading, LargeSubheading, A, Rarr } from '~/components/Typography'
+import { H3, H2, Subheading, LargeSubheading, A, Rarr } from '~/components/Typography'
 import { DesignDetailsPost } from '~/types';
 import DesignDetailsGrid from '~/components/DesignDetailsGrid';
 import DesignDetailMedia from '~/components/DesignDetailMedia';
@@ -25,14 +25,14 @@ export default function DesignDetailView(props: Props) {
 
   return (
     <React.Fragment>
-      <ContentContainer style={{ marginTop: '96px' }}>
+      <ContentContainer>
         <Icon
           src={`/static/img/design-details/${post.slug}.jpeg`}
           alt={post.title}
         />
 
         <HeadingContainer style={{ marginTop: '0' }}>
-          <H1>{post.title}</H1>
+          <H3>{post.title}</H3>
           <Subheading>{subheading}</Subheading>
         </HeadingContainer>
 
@@ -45,7 +45,7 @@ export default function DesignDetailView(props: Props) {
         ))}
 
         <SectionHeading>
-          <H2>More Design Details</H2>
+          <H3>More Dissections</H3>
           <LargeSubheading>A visual exploration of digital products</LargeSubheading>
           <Subheading style={{ marginTop: '24px' }}>
             <Link href="/design-details">

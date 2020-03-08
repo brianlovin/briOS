@@ -5,7 +5,6 @@ export const FeaturedImage = styled.img`
   width: calc(100% + 48px);
   min-height: 256px;
   margin-left: -24px;
-  margin-top: -24px;
   margin-right: -24px;
   border-radius: 8px;
   margin-bottom: 32px;

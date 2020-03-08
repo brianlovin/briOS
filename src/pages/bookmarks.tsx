@@ -2,7 +2,7 @@ import * as React from 'react';
 import useSWR from 'swr'
 import { getBookmarks } from '~/data/bookmarks'
 import Page, { SectionHeading } from '~/components/Page';
-import { H4 } from '~/components/Typography'
+import { H3 } from '~/components/Typography'
 import { Bookmark } from '~/types'
 import cacheSsrRes from '~/lib/cacheSsr';
 import BookmarksList from '~/components/Bookmarks'
@@ -18,10 +18,9 @@ function Bookmarks(props: Props) {
   return (
     <Page withHeader>
       <SectionHeading data-cy="bookmarks">
-        <H4>Bookmarks</H4>
+        <H3>Bookmarks</H3>
+        <BookmarksList bookmarks={bookmarks} />
       </SectionHeading>
-
-      <BookmarksList bookmarks={bookmarks} />
     </Page>
   );
 }

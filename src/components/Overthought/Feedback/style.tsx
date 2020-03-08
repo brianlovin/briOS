@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import defaultTheme from '~/components/Theme'
-import { tint, hexa } from '~/components/utils'
+import { tint } from '~/components/utils'
 import { P } from '~/components/Typography'
 
 export const Container = styled.div`

@@ -28,9 +28,9 @@ export default function Post({ post }) {
       <SyntaxHighlighter data={post} />
       <ContentContainer data-cy="overthought-post">
         <SEO post={post} />
-        <SectionHeading style={{ marginTop: '32px' }}>
+        <SectionHeading>
           {post.feature_image && <FeaturedImage loading="lazy" src={post.feature_image} />}
-          <H3 style={{ marginTop: 0 }}>{post.title}</H3>
+          <H3 style={{ marginTop: '0' }}>{post.title}</H3>
           <div style={{ padding: '4px 0' }} />
         </SectionHeading>
 

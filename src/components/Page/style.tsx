@@ -12,7 +12,7 @@ export const PageContainer = styled.div`
 
 export const ContentContainer = styled.div`
   width: 100%;
-  max-width: ${defaultTheme.breakpoints[4]};
+  max-width: ${defaultTheme.breakpoints[5]};
 `
 
 export const ContentGrid = styled.div`
@@ -77,7 +77,7 @@ export const InnerPageContainer = styled.main`
   flex: 1 0 auto;
   width: 100%;
   padding: 0 ${defaultTheme.space[3]};
-  padding-top: ${defaultTheme.space[7]};
+  padding-top: ${defaultTheme.space[9]};
   padding-bottom: ${defaultTheme.space[9]};
 
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
@@ -90,12 +90,10 @@ export const SectionHeading = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  margin-top: ${defaultTheme.space[9]};
   width: 100%;
-  max-width: ${defaultTheme.breakpoints[4]};
+  max-width: ${defaultTheme.breakpoints[5]};
 
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
     max-width: 100%;
-    margin-top: ${defaultTheme.space[8]};
   }
 `;

@@ -2,7 +2,7 @@ import * as React from 'react';
 import useSWR from 'swr'
 import { getFeaturedPosts } from '~/data/ghost'
 import Page, { SectionHeading } from '~/components/Page';
-import { H4, P } from '~/components/Typography'
+import { H3, P, LargeSubheading } from '~/components/Typography'
 import { BlogPost } from '~/types'
 import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe';
 import cacheSsrRes from '~/lib/cacheSsr';
@@ -23,8 +23,8 @@ function Overthought(props: Props) {
       <SEO />
 
       <SectionHeading data-cy="overthought">
-        <H4 style={{ marginBottom: defaultTheme.space[2] }}>Overthought</H4>
-        <P style={{ fontWeight: 500 }}>Overthinking out loud about design, development, and building products.</P>
+        <H3>Overthought</H3>
+        <LargeSubheading>Overthinking out loud about design, development, and building products.</LargeSubheading>
 
         <OverthoughtList truncated={false} posts={posts} />
         
