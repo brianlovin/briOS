@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     # let's make sure our tests pass on Chrome browser
     name: E2E on Chrome
+    env:
+      # pass the Dashboard record key as an environment variable
+      GHOST_API_KEY: ${{ secrets.GHOST_API_KEY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v1
