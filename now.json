@@ -19,7 +19,9 @@
     "FIREBASE_AUTH_URI": "@firebase-auth-uri",
     "FIREBASE_TOKEN_URI": "@firebase-token-uri",
     "FIREBASE_AUTH_PROVIDER_X509_CERT_URL": "@firebase-auth-provider-x509-cert-url",
-    "FIREBASE_CLIENT_X509_CERT_URL": "@firebase-client-x509-cert-url"
+    "FIREBASE_CLIENT_X509_CERT_URL": "@firebase-client-x509-cert-url",
+    "FATHOM_SITE_ID": "@fathom-site-id",
+    "GHOST_API_KEY": "@ghost-api-key"
   },
   "build": {
     "env": {
@@ -38,7 +40,9 @@
       "FIREBASE_AUTH_URI": "@firebase-auth-uri",
       "FIREBASE_TOKEN_URI": "@firebase-token-uri",
       "FIREBASE_AUTH_PROVIDER_X509_CERT_URL": "@firebase-auth-provider-x509-cert-url",
-      "FIREBASE_CLIENT_X509_CERT_URL": "@firebase-client-x509-cert-url"
+      "FIREBASE_CLIENT_X509_CERT_URL": "@firebase-client-x509-cert-url",
+      "FATHOM_SITE_ID": "@fathom-site-id",
+      "GHOST_API_KEY": "@ghost-api-key"
     }
   }
 }
