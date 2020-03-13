@@ -16,7 +16,7 @@ function FathomProvider(props) {
   React.useEffect(() => {
     if (process.env.NODE_ENV === 'production') {
       load();
-      setSiteId('ONFMHEEY');
+      setSiteId(process.env.FATHOM_SITE_ID);
       trackPageview();
     }
   }, [])
