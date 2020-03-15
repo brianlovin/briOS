@@ -41,6 +41,22 @@ const GlobalMarkdownStyles = createGlobalStyle`
 
     img {
       ${img};
+      margin-top: ${defaultTheme.space[3]};
+      max-width: 100%;
+    }
+  }
+
+  figure {
+    img {
+      ${img};
+    }
+
+    margin: ${defaultTheme.space[5]} -${defaultTheme.space[5]} 0;
+    max-width: calc(100% + 64px);
+
+    @media (max-width: ${defaultTheme.breakpoints[4]}) {
+      max-width: 100%;
+      margin: ${defaultTheme.space[3]} 0 0;
     }
   }
 
