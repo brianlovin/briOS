@@ -61,7 +61,7 @@ function Home(props: Props) {
         <PodcastEpisodesList />
 
         <P>
-          <A href="https://designdetails.fm" target="_blank" rel="noopener noreferrer">See all episodes <Rarr /></A>
+          <A href="https://designdetails.fm/episodes" target="_blank" rel="noopener noreferrer">See all episodes <Rarr /></A>
         </P>
 
         <H5 style={{ marginTop: defaultTheme.space[6], marginBottom: defaultTheme.space[2] }}>Figma plugins</H5>
