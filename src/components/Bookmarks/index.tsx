@@ -8,7 +8,7 @@ interface Props {
 
 function BookmarkListItem({ bookmark }: { bookmark: Bookmark }) {
   return (
-    <ListItem href={bookmark.url} target="_blank" rel="noopener noreferrer">
+    <ListItem href={`${bookmark.url}?ref=brianlovin.com`} target="_blank" rel="noopener noreferrer">
       <Title>
         {bookmark.title || bookmark.url}
       </Title>

@@ -112,6 +112,10 @@ export const p = css`
     color: ${props => tint(props.theme.text.link, -30)};
   }
 
+  a:visited {
+    color: ${props => tint(props.theme.text.link, -60)};
+  }
+
   code {
     margin-top: 0;
     font-size: ${defaultTheme.fontSizes[0]};

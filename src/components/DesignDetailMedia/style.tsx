@@ -3,15 +3,15 @@ import styled from 'styled-components';
 export const DetailContainer = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 680px;
+  min-height: 480px;
 `;
 
 export const MediaContainer = styled.div`
   border-radius: 8px;
   background: ${props => props.theme.bg.inset};
-  margin: 32px 0 0;
+  margin: 32px -32px 0;
   padding: 16px;
-  width: 100%;
+  width: calc(100% + 64px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -27,13 +27,13 @@ export const MediaContainer = styled.div`
 export const Video = styled.video`
   width: 100%;
   height: 100%;
-  min-height: 680px;
+  min-height: ${props => props.landscape ? '320px' : '680px'};
   max-width: ${props => props.landscape ? '100%' : '400px'};
   border-radius: 8px;
   overflow: hidden;
 
   @media (max-width: 968px) {
-    min-height: 630px;
+    min-height: ${props => props.landscape ? '320px' : '630px'};
   }
 `;
 
