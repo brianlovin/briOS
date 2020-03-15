@@ -35,6 +35,7 @@ export default function About() {
           <P>Before Spectrum I designed payments experiences at Facebook, working across Facebook, Messenger, WhatsApp, and Instagram. I originally cut my teeth as the first product designer at <a href="https://buffer.com" target="_blank" rel="noopener noreferrer">Buffer</a>.</P>
           <P>I also co-host the <a href="https://designdetails.fm" target="_blank" rel="noopener noreferrer">Design Details Podcast</a>, a weekly conversation about design process and culture. Design Details is part of <a href="https://spec.fm" target="_blank" rel="noopener noreferrer">Spec.fm</a>, a podcast network for designers and developers, which I co-founded in 2015.</P>
           <P>You can find me on <a href="https://twitter.com/brian_lovin" target="_blank" rel="noopener noreferrer">Twitter</a> where I talk about design and development, or on <a href="https://github.com/brianlovin" target="_blank" rel="noopener noreferrer">GitHub</a> where I'm building in the open, or on <a href="https://figma.com/@brian" target="_blank" rel="noopener noreferrer">Figma</a> where I'm exploring how plugins can automate the tedious parts of interface design.</P>
+          <P><em>Photo by <a href="https://twitter.com/rxnjmmt" target="_blank" rel="noopener noreferrer">@rxnjmmt</a></em></P>
         </SectionHeading>
       </ContentContainer>
     </Page>
