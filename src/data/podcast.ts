@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-unfetch'
+import { SimplecastEpisode } from '../types';
 
 export async function getPodcastEpisodes() {
   return await fetch('https://spec.fm/api/podcasts/1034/episodes')
@@ -6,7 +7,7 @@ export async function getPodcastEpisodes() {
       return res.json();
     })
     .then(res => {
-      const episodes = res.filter(ep => !!ep.published);
+      const episodes = res.filter((ep: SimplecastEpisode) => !!ep.published);
       return episodes
     })
 }
