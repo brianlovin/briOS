@@ -9,12 +9,13 @@ import DesignDetailsGrid from '~/components/DesignDetailsGrid';
 import PodcastEpisodesList from '~/components/PodcastEpisodesList';
 import FigmaPlugins from '~/components/FigmaPlugins';
 import { getFeaturedPosts } from '~/data/ghost'
-import { BlogPost } from '~/types'
-import cacheSsrRes from '~/lib/cacheSsr';
+import { BlogPost, SimplecastEpisode } from '~/types'
 import defaultTheme from '~/components/Theme';
+import { getPodcastEpisodes } from '~/data/podcast';
 
 interface Props {
-  posts?: Array<BlogPost>
+  posts?: Array<BlogPost>,
+  episodes?: Array<SimplecastEpisode>
 }
 
 function Home(props: Props) {
@@ -58,7 +59,7 @@ function Home(props: Props) {
         <H5 style={{ marginTop: defaultTheme.space[6], marginBottom: defaultTheme.space[2] }}>Design Details Podcast</H5>
         <P>Design Details is a weekly conversation about design process and culture. I've been a co-host on the show for over five years.</P>
         
-        <PodcastEpisodesList />
+        <PodcastEpisodesList episodes={props.episodes} />
 
         <P>
           <A href="https://designdetails.fm/episodes" target="_blank" rel="noopener noreferrer">See all episodes <Rarr /></A>
@@ -172,10 +173,12 @@ function Home(props: Props) {
   );
 }
 
-Home.getInitialProps = async ({ res }) => {
-  cacheSsrRes({ res })
-  const posts = await getFeaturedPosts();
-  return { posts: posts }
+export async function getStaticProps() {
+  const [posts, episodes] = await Promise.all([
+    getFeaturedPosts(), getPodcastEpisodes()
+  ]);
+  
+  return { props: { posts, episodes } }
 }
 
 export default Home

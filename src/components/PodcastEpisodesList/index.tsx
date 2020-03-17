@@ -1,33 +1,17 @@
 import React from 'react';
-import { Ul, Li, LineClamp, P } from '~/components/Typography'
+import { getPodcastEpisodes } from '../../data/podcast'
+import { Ul, Li, LineClamp } from '~/components/Typography'
 import LoadingSpinner from '../LoadingSpinner';
 import defaultTheme from '../Theme';
+import useSWR from 'swr';
 
-export default function LatestEpisode() {
-  const [episodes, setEpisodes] = React.useState(null)
-  const [loading, setLoading] = React.useState(false)
-  
-  async function fetchEpisode() {
-    setLoading(true)
-    return await fetch('https://spec.fm/api/podcasts/1034/episodes')
-      .then(res => {
-        return res.json();
-      })
-      .then(res => {
-        const episodes = res.filter(ep => !!ep.published);
-        setLoading(false)
-        setEpisodes(episodes)
-      })
-      .catch(() => {
-        setLoading(false)
-      });
-  }
+export default function PodcastEpisodesList({ episodes }) {
+  const initialData = episodes
+  const { data, error } = useSWR('https://spec.fm/api/podcasts/1034/episodes', getPodcastEpisodes, { initialData })
 
-  React.useEffect(() => {
-    fetchEpisode()
-  }, [])
+  if (error) return null
 
-  if (!episodes || loading) {
+  if (!data) {
     return (
       <div style={{ 
         padding: `${defaultTheme.space[8]}`,
@@ -43,7 +27,7 @@ export default function LatestEpisode() {
 
   return (
     <Ul>
-      {episodes.slice(0, 4).map(ep => {
+      {data.slice(0, 4).map(ep => {
           return (
             <Li key={ep.id}>
               <a target="_blank" rel="noopener noreferrer" href={`https://spec.fm/podcasts/design-details/${ep.id}`}>
