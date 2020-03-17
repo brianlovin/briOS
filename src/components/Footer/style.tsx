@@ -4,9 +4,11 @@ import defaultTheme from '../Theme'
 export const Grid = styled.footer`
   display: flex;
   align-items: center;
-  padding: ${defaultTheme.space[8]} 0;
+  padding: ${defaultTheme.space[8]} ${defaultTheme.space[4]} ;
   flex-wrap: wrap;
   position: relative;
+  justify-content: space-around;
+  align-content: center;
 
   &:before {
     content: "";
