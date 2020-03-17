@@ -1,3 +1,17 @@
+import fetch from 'isomorphic-unfetch'
+import { SimplecastEpisode } from '../types';
+
+export async function getPodcastEpisodes() {
+  return await fetch('https://spec.fm/api/podcasts/1034/episodes')
+    .then(res => {
+      return res.json();
+    })
+    .then(res => {
+      const episodes = res.filter((ep: SimplecastEpisode) => !!ep.published);
+      return episodes
+    })
+}
+
 export default {
   id: 1034,
   name: 'Design Details',

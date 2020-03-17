@@ -2,13 +2,11 @@ import * as React from 'react';
 import useSWR from 'swr'
 import { getFeaturedPosts } from '~/data/ghost'
 import Page, { SectionHeading } from '~/components/Page';
-import { H3, P, LargeSubheading } from '~/components/Typography'
+import { H3, LargeSubheading } from '~/components/Typography'
 import { BlogPost } from '~/types'
 import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe';
-import cacheSsrRes from '~/lib/cacheSsr';
 import SEO from '~/components/Overthought/SEO';
 import OverthoughtList from '~/components/Overthought/List';
-import defaultTheme from '~/components/Theme';
 
 interface Props {
   posts?: Array<BlogPost>
@@ -35,10 +33,9 @@ function Overthought(props: Props) {
   );
 }
 
-Overthought.getInitialProps = async ({ res }) => {
-  cacheSsrRes({ res })
+export async function getStaticProps() {
   const posts = await getFeaturedPosts();
-  return { posts: posts }
+  return { props: { posts }}
 }
 
 export default Overthought
