@@ -24,6 +24,7 @@ export default function SEO({ post }: Props) {
         description={post.custom_excerpt || post.excerpt}
         openGraph={{
           title: post.title,
+          url: `https://brianlovin.com/overthought/${post.slug}`,
           description: post.custom_excerpt || post.excerpt,
           images: post.feature_image && [
             {
