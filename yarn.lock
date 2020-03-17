@@ -1315,10 +1315,10 @@
     through2 "^3.0.0"
     xdg-basedir "^4.0.0"
 
-"@grpc/grpc-js@^0.6.18":
-  version "0.6.18"
-  resolved "https://registry.yarnpkg.com/@grpc/grpc-js/-/grpc-js-0.6.18.tgz#ba3b3dfef869533161d192a385412a4abd0db127"
-  integrity sha512-uAzv/tM8qpbf1vpx1xPMfcUMzbfdqJtdCYAqY/LsLeQQlnTb4vApylojr+wlCyr7bZeg3AFfHvtihnNOQQt/nA==
+"@grpc/grpc-js@^0.7.0":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@grpc/grpc-js/-/grpc-js-0.7.1.tgz#c450355edc83e3c5a5feb7d68153c38980fb9ae8"
+  integrity sha512-73LXh4Xop+Kef3Cyu36znbgInQeJVKu0Gt6ly+DWFe5BPR7Cx5lpmAL3QCtg/YWxHP3av43mLxucECu3uD4xIQ==
   dependencies:
     semver "^6.2.0"
 
@@ -1554,7 +1554,7 @@
     "@types/connect" "*"
     "@types/node" "*"
 
-"@types/chai@^4.2.10":
+"@types/chai@^4.2.11":
   version "4.2.11"
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.2.11.tgz#d3614d6c5f500142358e6ed24e1bf16657536c50"
   integrity sha512-t7uW6eFafjO+qJ3BIV2gGUyZs27egcNRkUdalkud+Qa3+kg//f129iuOFivHDXQ+vnU3fDXuwgv0cqMCbcE8sw==
@@ -5014,11 +5014,11 @@ google-auth-library@^5.0.0, google-auth-library@^5.5.0:
     lru-cache "^5.0.0"
 
 google-gax@^1.13.0:
-  version "1.14.2"
-  resolved "https://registry.yarnpkg.com/google-gax/-/google-gax-1.14.2.tgz#ce4f9a42c1bc2ca4a4ed8e8cc70c6f7a3548b790"
-  integrity sha512-Nde+FdqALbV3QgMA4KlkxOHfrj9busnZ3EECwy/1gDJm9vhKGwDLWzErqRU5g80OoGSAMgyY7DWIfqz7ina4Jw==
+  version "1.15.0"
+  resolved "https://registry.yarnpkg.com/google-gax/-/google-gax-1.15.0.tgz#0afa879e1a6909eb7be393249c00fe6f42e9f024"
+  integrity sha512-zNtna/JBZcR7QfUMN8vTa2+vQAgmaZDkQRyOp/hGksLDjS2aRmlgP6aMdqnlKIIQ9jRBopYOLazT3++jxBw/xw==
   dependencies:
-    "@grpc/grpc-js" "^0.6.18"
+    "@grpc/grpc-js" "^0.7.0"
     "@grpc/proto-loader" "^0.5.1"
     "@types/fs-extra" "^8.0.1"
     "@types/long" "^4.0.0"
@@ -5029,7 +5029,7 @@ google-gax@^1.13.0:
     lodash.at "^4.6.0"
     lodash.has "^4.5.2"
     node-fetch "^2.6.0"
-    protobufjs "^6.8.8"
+    protobufjs "^6.8.9"
     retry-request "^4.0.0"
     semver "^6.0.0"
     walkdir "^0.4.0"
@@ -8207,7 +8207,7 @@ property-information@^5.0.0:
   dependencies:
     xtend "^4.0.0"
 
-protobufjs@^6.8.6, protobufjs@^6.8.8:
+protobufjs@^6.8.6, protobufjs@^6.8.9:
   version "6.8.9"
   resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-6.8.9.tgz#0b1adbcdaa983d369c3d9108a97c814edc030754"
   integrity sha512-j2JlRdUeL/f4Z6x4aU4gj9I2LECglC+5qR2TrWb193Tla1qfdaNQTZ8I27Pt7K0Ajmvjjpft7O3KWTGciz4gpw==
