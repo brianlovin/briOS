@@ -151,7 +151,7 @@ function Home(props: Props) {
           </Li>
 
           <Li>
-            <A href="hhttps://spec.fm/podcasts/design-details/79352" target="_blank" rel="noopener noreferrer">
+            <A href="https://spec.fm/podcasts/design-details/79352" target="_blank" rel="noopener noreferrer">
               Charmander++ – Interviewing ourselves on Design Details
             </A>
             <span style={{ display: 'block' }}>Bryn Jackson and I interviewed each other. Totally humble.</span>
