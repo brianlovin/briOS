@@ -1,9 +1,9 @@
 export default {
   bg: {
-    primary: '#eff0f5',
+    primary: '#fff',
     secondary: '#ffffff',
-    inset: '#E5E6EB',
-    input: 'rgba(65,67,78,0.12)'
+    inset: '#eff0f5',
+    input: 'rgba(65,67,78,0.08)'
   },
   border: {
     default: 'rgba(65,67,78,0.16)',

@@ -113,7 +113,7 @@ export const p = css`
   }
 
   a:visited {
-    color: ${props => tint(props.theme.text.link, -60)};
+    color: ${props => tint(props.theme.text.link, -30)};
   }
 
   code {

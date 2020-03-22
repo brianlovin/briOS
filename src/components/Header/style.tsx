@@ -10,7 +10,7 @@ const base = css`
   right: 0;
   background: ${props => hexa(props.theme.bg.secondary, 0.8)};
   z-index: 4;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 2px rgba(0,0,0,0.04);
   transition: all 0.2s ease-in-out;
   backdrop-filter: saturate(180%) blur(20px);
   font-size: ${defaultTheme.fontSizes[0]};
