@@ -5,13 +5,13 @@ import Link from 'next/link'
 import { Li, Ul, Small } from '~/components/Typography'
 
 interface Props {
-  posts: Array<BlogPost>;
+  posts: BlogPost[];
   truncated: Boolean;
 }
 
 export default function OverthoughtList({ posts, truncated }: Props) {
   if (!posts || posts.length === 0) return null
-  
+
   if (truncated) {
     posts = posts.slice(0, 5)
   }

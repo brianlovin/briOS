@@ -1,8 +1,6 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import useSWR from 'swr'
-import { getFeaturedPosts } from '~/data/ghost'
 import { BlogPost } from '~/types';
 import { ContentContainer, SectionHeading } from '~/components/Page';
 import { H3, P, A, Rarr, H5 } from '~/components/Typography'
@@ -16,11 +14,10 @@ import { FeaturedImage } from './style'
 
 interface Props {
   post: BlogPost;
+  posts: BlogPost[];
 };
 
-export default function Post({ post }) {
-  // fetch posts for the bottom of the view to show recent posts from the blog
-  const { data: posts } = useSWR('/api/getFeaturedPosts', getFeaturedPosts)
+export default function Post({ post, posts }) {
   const filtered = posts ? posts.filter(p => p.slug !== post.slug) : []
 
   return (

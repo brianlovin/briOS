@@ -2,7 +2,7 @@ const twilio = require('twilio');
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
 const URL = require("url").URL;
 
-import db from '~/data/firebase'
+import db from '~/graphql/bookmarks/firebase'
 
 const stringIsAValidUrl = (s) => {
   try {

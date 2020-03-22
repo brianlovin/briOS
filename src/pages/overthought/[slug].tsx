@@ -1,25 +1,25 @@
  
 import * as React from 'react';
-import useSWR from 'swr'
 import { BlogPost } from '~/types';
-import { getPostBySlug, getFeaturedPosts } from '~/data/ghost'
+import { fetcher } from '~/api'
+import { POST, POSTS } from '~/api/queries'
 import Page from '~/components/Page';
 import Post from '~/components/Overthought/Post'
 import NotFound from '~/components/Overthought/NotFound';
 
 interface Props {
   post: BlogPost;
+  posts: BlogPost[];
   slug: string;
 };
 
 function OverthoughtPost(props: Props) {
-  const initialData = props.post
-  const { data } = useSWR(`${props.slug}`, getPostBySlug, { initialData })
+  const { post, posts } = props
 
   return (
     <Page withHeader>
-      { data
-        ? <Post post={data} />
+      { post.id
+        ? <Post post={post} posts={posts} />
         : <NotFound />
       }
     </Page>
@@ -27,7 +27,7 @@ function OverthoughtPost(props: Props) {
 }
 
 export async function getStaticPaths() {
-  const posts = await getFeaturedPosts();
+  const { posts } = await fetcher(POSTS);
   const paths = posts.map(({ slug }) => ({
     params: { slug }
   }))
@@ -36,8 +36,12 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const post = await getPostBySlug(params.slug);
-  return { props: { post, slug: params.slug  }}
+  const [{ post }, { posts }] = await Promise.all([
+    fetcher(POST(params.slug)),
+    fetcher(POSTS)
+  ])
+
+  return { props: { post, posts, slug: params.slug  }}
 }
 
 export default OverthoughtPost

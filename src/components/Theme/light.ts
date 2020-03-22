@@ -1,6 +1,6 @@
 export default {
   bg: {
-    primary: '#fff',
+    primary: '#fefefe',
     secondary: '#ffffff',
     inset: '#eff0f5',
     input: 'rgba(65,67,78,0.08)'

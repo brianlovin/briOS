@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { designDetailsPosts } from '~/data';
+import designDetailsPosts from '~/data/appDissections';
 import DesignDetailsCard from '~/components/DesignDetailsCard';
 import { ContentGrid, PreviewContentGrid } from '../Page';
 

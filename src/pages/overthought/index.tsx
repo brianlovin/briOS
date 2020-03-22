@@ -1,21 +1,18 @@
 import * as React from 'react';
-import useSWR from 'swr'
-import { getFeaturedPosts } from '~/data/ghost'
 import Page, { SectionHeading } from '~/components/Page';
 import { H3, LargeSubheading } from '~/components/Typography'
 import { BlogPost } from '~/types'
 import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe';
 import SEO from '~/components/Overthought/SEO';
 import OverthoughtList from '~/components/Overthought/List';
+import { POSTS } from '~/api/queries';
+import { fetcher } from '~/api';
 
 interface Props {
   posts?: Array<BlogPost>
 }
 
-function Overthought(props: Props) {
-  const initialData = props.posts
-  const { data: posts } = useSWR('/api/getFeaturedPosts', getFeaturedPosts, { initialData })
-
+function Overthought({ posts }: Props) {
   return (
     <Page withHeader>
       <SEO />
@@ -34,7 +31,7 @@ function Overthought(props: Props) {
 }
 
 export async function getStaticProps() {
-  const posts = await getFeaturedPosts();
+  const { posts } = await fetcher(POSTS);
   return { props: { posts }}
 }
 

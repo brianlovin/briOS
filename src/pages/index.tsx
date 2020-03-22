@@ -1,27 +1,23 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import useSWR from 'swr'
 import Page, { SectionHeading } from '~/components/Page';
 import { H2, A, Rarr, P, H5, Ul, Li } from '~/components/Typography'
 import OverthoughtList from '~/components/Overthought/List'
 import DesignDetailsGrid from '~/components/DesignDetailsGrid';
 import PodcastEpisodesList from '~/components/PodcastEpisodesList';
 import FigmaPlugins from '~/components/FigmaPlugins';
-import { getFeaturedPosts } from '~/data/ghost'
+import { HOME } from '~/api/queries'
+import { fetcher } from '~/api'
 import { BlogPost, SimplecastEpisode } from '~/types'
 import defaultTheme from '~/components/Theme';
-import { getPodcastEpisodes } from '~/data/podcast';
 
 interface Props {
-  posts?: Array<BlogPost>,
-  episodes?: Array<SimplecastEpisode>
+  posts?: BlogPost[],
+  episodes?: SimplecastEpisode[]
 }
 
-function Home(props: Props) {
-  const initialData = props.posts
-  const { data: posts } = useSWR('/api/getFeaturedPosts', getFeaturedPosts, { initialData })
-
+function Home({ posts, episodes }: Props) {
   return (
     <Page>
       <SectionHeading>
@@ -59,7 +55,7 @@ function Home(props: Props) {
         <H5 style={{ marginTop: defaultTheme.space[6], marginBottom: defaultTheme.space[2] }}>Design Details Podcast</H5>
         <P>Design Details is a weekly conversation about design process and culture. I've been a co-host on the show for over five years.</P>
         
-        <PodcastEpisodesList episodes={props.episodes} />
+        <PodcastEpisodesList episodes={episodes} />
 
         <P>
           <A href="https://designdetails.fm/episodes" target="_blank" rel="noopener noreferrer">See all episodes <Rarr /></A>
@@ -174,10 +170,8 @@ function Home(props: Props) {
 }
 
 export async function getStaticProps() {
-  const [posts, episodes] = await Promise.all([
-    getFeaturedPosts(), getPodcastEpisodes()
-  ]);
-  
+  const { posts, episodes } = await fetcher(HOME)
+
   return { props: { posts, episodes } }
 }
 

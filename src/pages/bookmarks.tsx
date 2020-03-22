@@ -1,19 +1,16 @@
 import * as React from 'react';
-import useSWR from 'swr'
-import { getBookmarks } from '~/data/bookmarks'
 import Page, { SectionHeading } from '~/components/Page';
 import { H3 } from '~/components/Typography'
 import { Bookmark } from '~/types'
 import BookmarksList from '~/components/Bookmarks'
+import { fetcher } from '~/api';
+import { BOOKMARKS } from '~/api/queries';
 
 interface Props {
-  bookmarks?: Array<Bookmark>
+  bookmarks?: Bookmark[]
 }
 
-function Bookmarks(props: Props) {
-  const initialData = props.bookmarks
-  const { data: bookmarks } = useSWR('/api/bookmarks/get', getBookmarks, { initialData })
-
+function Bookmarks({ bookmarks }: Props) {
   return (
     <Page withHeader>
       <SectionHeading data-cy="bookmarks">
@@ -25,7 +22,7 @@ function Bookmarks(props: Props) {
 }
 
 export async function getStaticProps() {
-  const bookmarks = await getBookmarks()
+  const { bookmarks } = await fetcher(BOOKMARKS)
   return { props: { bookmarks }}
 }
 
