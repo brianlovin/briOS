@@ -148,6 +148,12 @@ export const P = styled.p`
   ${p};
 `
 
+export const Small = styled(P)`
+  font-size: ${defaultTheme.fontSizes[0]};
+  margin-top: 0;
+  color: ${props => props.theme.text.quarternary};
+`
+
 export const blockquote = css`
   ${p};
   margin-top: ${defaultTheme.space[4]};

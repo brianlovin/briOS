@@ -26,7 +26,7 @@ export default function PodcastEpisodesList({ episodes }) {
   }
 
   return (
-    <Ul>
+    <Ul style={{ listStyleType: 'none', marginLeft: 0 }}>
       {data.slice(0, 4).map(ep => {
           return (
             <Li key={ep.id}>

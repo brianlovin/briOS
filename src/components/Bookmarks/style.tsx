@@ -38,10 +38,3 @@ export const ListItem = styled.a`
     grid-gap: ${defaultTheme.space[1]};
   }
 `
-
-export const Url = styled.p`
-  ${p};
-  font-size: ${defaultTheme.fontSizes[0]};
-  margin-top: 0;
-  color: ${props => props.theme.text.quarternary};
-`

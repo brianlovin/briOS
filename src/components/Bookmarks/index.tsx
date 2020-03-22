@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Bookmark } from '~/types'
-import { ListItem, Grid, Url, Title } from './style'
+import { ListItem, Grid, Title } from './style'
+import { Small } from '../Typography';
 
 interface Props {
   bookmarks?: Array<Bookmark>
@@ -12,7 +13,7 @@ function BookmarkListItem({ bookmark }: { bookmark: Bookmark }) {
       <Title>
         {bookmark.title || bookmark.url}
       </Title>
-      <Url>{bookmark.host || bookmark.url}</Url>
+      <Small>{bookmark.host || bookmark.url}</Small>
     </ListItem>
   )
 }

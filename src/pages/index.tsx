@@ -78,7 +78,7 @@ function Home(props: Props) {
 
         <H5 style={{ marginTop: defaultTheme.space[6] }}>Open source work</H5>
 
-        <Ul>
+        <Ul style={{ listStyleType: 'none', marginLeft: 0 }}>
           <Li>
             <A href="https://github.com/specfm/design-details" target="_blank" rel="noopener noreferrer">
               specfm / design-details
@@ -121,7 +121,7 @@ function Home(props: Props) {
 
         <H5 style={{ marginTop: defaultTheme.space[6] }}>Speaking and interviews</H5>
 
-        <Ul>
+        <Ul style={{ listStyleType: 'none', marginLeft: 0 }}>
           <Li>
             <A href="https://www.swiftbysundell.com/podcast/67/" target="_blank" rel="noopener noreferrer">
               Building for open source

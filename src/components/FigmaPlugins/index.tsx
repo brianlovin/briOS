@@ -3,7 +3,7 @@ import { Ul, Li } from '~/components/Typography'
 
 export default function FigmaPlugins() {
   return (
-    <Ul>
+    <Ul style={{ listStyleType: 'none', marginLeft: 0 }}>
       <Li>
         <a href="https://www.figma.com/c/plugin/744725347356614754/Dominant-Color-Toolkit-🎨" target="_blank" rel="noopener noreferrer">
             Dominant Color Toolkit
