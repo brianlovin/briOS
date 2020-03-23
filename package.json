@@ -19,7 +19,6 @@
     "graphql": "^14.6.0",
     "graphql-request": "^1.8.2",
     "isomorphic-unfetch": "^3.0.0",
-    "micro-cors": "^0.1.1",
     "next": "^9.3.1",
     "next-seo": "^4.4.0",
     "prismjs": "^1.19.0",
