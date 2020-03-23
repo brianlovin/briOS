@@ -1,13 +1,13 @@
 import fetch from 'isomorphic-unfetch'
-import { SimplecastEpisode } from '../../types';
+import { SimplecastEpisode } from '../../types'
 
 export async function getEpisodes() {
   return await fetch('https://spec.fm/api/podcasts/1034/episodes')
-    .then(res => {
-      return res.json();
+    .then((res) => {
+      return res.json()
     })
-    .then(res => {
-      const episodes = res.filter((ep: SimplecastEpisode) => !!ep.published);
+    .then((res) => {
+      const episodes = res.filter((ep: SimplecastEpisode) => !!ep.published)
       return episodes.slice(0, 5)
     })
 }
@@ -23,7 +23,8 @@ export default {
   overcastUrl: 'https://overcast.fm/itunes947191070',
   pocketCastsUrl: 'http://pca.st/itunes/947191070',
   rssFeedUrl: 'http://simplecast.fm/podcasts/1034/rss',
-  spotifyUrl: 'https://open.spotify.com/show/7kAx8RJce757LXVoX2FIpf?si=u_EJ07bBQKC-86Ypqhyn0A',
+  spotifyUrl:
+    'https://open.spotify.com/show/7kAx8RJce757LXVoX2FIpf?si=u_EJ07bBQKC-86Ypqhyn0A',
   googlePodcastsUrl:
     'https://play.google.com/music/m/Iyvjpq3k44ux2azsmvlxe3cc5by?t=Design_Details',
   castroUrl: 'https://castro.fm/itunes/947191070',

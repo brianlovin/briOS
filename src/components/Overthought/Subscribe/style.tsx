@@ -9,7 +9,7 @@ export const Container = styled.div`
   grid-gap: ${defaultTheme.space[3]};
   margin: ${defaultTheme.space[5]} 0 ${defaultTheme.space[3]};
   padding: ${defaultTheme.space[4]};
-  background: ${props => props.theme.bg.inset};
+  background: ${(props) => props.theme.bg.inset};
   width: 100%;
   border-radius: 8px;
 
@@ -18,8 +18,8 @@ export const Container = styled.div`
     margin-right: -16px;
     width: calc(100% + 32px);
     border-radius: 0;
-    border-top: 1px solid ${props => props.theme.border.default};
-    border-bottom: 1px solid ${props => props.theme.border.default};
+    border-top: 1px solid ${(props) => props.theme.border.default};
+    border-bottom: 1px solid ${(props) => props.theme.border.default};
   }
 `
 
@@ -32,40 +32,40 @@ export const Form = styled.form`
     height: 100%;
   }
 
-  @media(max-width: ${defaultTheme.breakpoints[4]}) {
+  @media (max-width: ${defaultTheme.breakpoints[4]}) {
     grid-template-columns: 1fr;
   }
 `
 
 export const Input = styled.input`
   padding: 10px ${defaultTheme.space[3]};
-  border: 1px solid ${props => props.theme.border.default};
-  color: ${props => props.theme.text.primary};
+  border: 1px solid ${(props) => props.theme.border.default};
+  color: ${(props) => props.theme.text.primary};
   border-radius: 8px;
   font-size: 16px;
-  background: ${props => props.theme.bg.primary};
+  background: ${(props) => props.theme.bg.primary};
 
   &:focus {
-    border: 1px solid ${props => props.theme.accent.blue};
-    background: ${props => props.theme.bg.secondary};
+    border: 1px solid ${(props) => props.theme.accent.blue};
+    background: ${(props) => props.theme.bg.secondary};
   }
 `
 
 export const Success = styled.div`
   margin-top: ${defaultTheme.space[2]};
   padding: ${defaultTheme.space[2]} ${defaultTheme.space[4]};
-  border: 1px solid ${props => tint(props.theme.accent.green, -8)};
-  color: ${props => props.theme.text.onPrimary};
+  border: 1px solid ${(props) => tint(props.theme.accent.green, -8)};
+  color: ${(props) => props.theme.text.onPrimary};
   font-weight: ${defaultTheme.fontWeights.link};
-  background: ${props => props.theme.accent.green};
+  background: ${(props) => props.theme.accent.green};
   border-radius: 8px;
   text-align: center;
   font-size: ${defaultTheme.fontSizes[1]};
-  text-shadow: 0 1px 0 rgba(0,0,0,0.08);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
 `
 
 export const Error = styled(P)`
-  color: ${props => props.theme.accent.red};
+  color: ${(props) => props.theme.accent.red};
   margin-left: ${defaultTheme.space[4]};
   padding-right: ${defaultTheme.space[4]};
 `

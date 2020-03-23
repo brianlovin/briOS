@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import defaultTheme from '~/components/Theme';
+import styled from 'styled-components'
+import defaultTheme from '~/components/Theme'
 
 export const PageContainer = styled.div`
   display: flex;
@@ -8,7 +8,7 @@ export const PageContainer = styled.div`
   align-items: center;
   height: 100%;
   max-width: 100%;
-`;
+`
 
 export const ContentContainer = styled.div`
   width: 100%;
@@ -26,7 +26,7 @@ export const ContentGrid = styled.div`
   a {
     overflow: hidden;
     border-radius: 8px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.04);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.04);
     transition: box-shadow ${defaultTheme.animations.default};
   }
 
@@ -42,7 +42,7 @@ export const ContentGrid = styled.div`
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
     grid-template-columns: repeat(1, 1fr);
   }
-`;
+`
 
 export const PreviewContentGrid = styled(ContentGrid)`
   a {
@@ -83,7 +83,7 @@ export const InnerPageContainer = styled.main`
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
     max-width: 100%;
   }
-`;
+`
 
 export const SectionHeading = styled.div`
   display: flex;
@@ -96,4 +96,4 @@ export const SectionHeading = styled.div`
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
     max-width: 100%;
   }
-`;
+`

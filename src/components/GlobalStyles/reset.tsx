@@ -1,5 +1,5 @@
-import { createGlobalStyle } from 'styled-components';
-import defaultTheme from '~/components/Theme';
+import { createGlobalStyle } from 'styled-components'
+import defaultTheme from '~/components/Theme'
 
 const ResetStyles = createGlobalStyle`
   * {
@@ -24,8 +24,8 @@ const ResetStyles = createGlobalStyle`
     box-sizing: border-box;
     font-size: 18px;
     line-height: ${defaultTheme.lineHeights.body};
-    background-color: ${props => props.theme.bg.primary};
-    color: ${props => props.theme.text.primary};
+    background-color: ${(props) => props.theme.bg.primary};
+    color: ${(props) => props.theme.text.primary};
     padding: 0;
     margin: 0;
     -webkit-font-smoothing: antialiased;
@@ -59,35 +59,35 @@ const ResetStyles = createGlobalStyle`
 
   ::-moz-selection {
     /* Code for Firefox */
-    background: ${props => props.theme.text.primary}!important;
-    color: ${props => props.theme.text.onPrimary}!important;
+    background: ${(props) => props.theme.text.primary}!important;
+    color: ${(props) => props.theme.text.onPrimary}!important;
   }
 
   ::selection {
-    background: ${props => props.theme.text.primary}!important;
-    color: ${props => props.theme.text.onPrimary}!important;
+    background: ${(props) => props.theme.text.primary}!important;
+    color: ${(props) => props.theme.text.onPrimary}!important;
   }
 
   ::-webkit-input-placeholder {
     /* WebKit, Blink, Edge */
-    color: ${props => props.theme.text.placeholder};
+    color: ${(props) => props.theme.text.placeholder};
   }
 
   :-moz-placeholder {
     /* Mozilla Firefox 4 to 18 */
-    color: ${props => props.theme.text.placeholder};
+    color: ${(props) => props.theme.text.placeholder};
     opacity: 1;
   }
 
   ::-moz-placeholder {
     /* Mozilla Firefox 19+ */
-    color: ${props => props.theme.text.placeholder};
+    color: ${(props) => props.theme.text.placeholder};
     opacity: 1;
   }
 
   :-ms-input-placeholder {
     /* Internet Explorer 10-11 */
-    color: ${props => props.theme.text.placeholder};
+    color: ${(props) => props.theme.text.placeholder};
   }
 
   hr {
@@ -249,12 +249,12 @@ const ResetStyles = createGlobalStyle`
   }
 
   a {
-    color: ${props => props.theme.text.primary};
+    color: ${(props) => props.theme.text.primary};
   }
 
   a:hover button {
     text-decoration: none !important;
   }
-`;
+`
 
 export default ResetStyles

@@ -1,8 +1,7 @@
- 
-import * as React from 'react';
-import { NextSeo } from 'next-seo';
+import * as React from 'react'
+import { NextSeo } from 'next-seo'
 import Head from 'next/head'
-import { BlogPost } from '~/types';
+import { BlogPost } from '~/types'
 
 interface Props {
   post: BlogPost
@@ -12,13 +11,14 @@ export default function SEO({ post }: Props) {
   return (
     <React.Fragment>
       <Head>
-        <link 
-          rel="alternate" 
-          type="application/rss+xml" 
-          title="RSS Feed for Overthought" 
-          href="https://brianlovin.com/overthought/rss" />
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="RSS Feed for Overthought"
+          href="https://brianlovin.com/overthought/rss"
+        />
       </Head>
-      
+
       <NextSeo
         title={post.title}
         description={post.custom_excerpt || post.excerpt}
@@ -32,7 +32,7 @@ export default function SEO({ post }: Props) {
               alt: post.title,
             },
           ],
-          site_name: "Overthought",
+          site_name: 'Overthought',
         }}
         twitter={{
           cardType: 'summary_large_image',

@@ -1,37 +1,37 @@
-const twilio = require('twilio');
-const MessagingResponse = require('twilio').twiml.MessagingResponse;
-const URL = require("url").URL;
+import twilio from 'twilio'
+const MessagingResponse = twilio.twiml.MessagingResponse
+import { URL } from 'url'
 
 import db from '~/graphql/bookmarks/firebase'
 
 const stringIsAValidUrl = (s) => {
   try {
-    new URL(s);
-    return true;
+    new URL(s)
+    return true
   } catch (err) {
-    return false;
+    return false
   }
-};
+}
 
 export default async (req, res) => {
-  if (process.env.NODE_ENV === "production") {
-    const twilioSignature = req.headers['x-twilio-signature'];
-    const params = req.body;
-    const webhookUrl = 'https://brianlovin.com/api/bookmarks/add';
+  if (process.env.NODE_ENV === 'production') {
+    const twilioSignature = req.headers['x-twilio-signature']
+    const params = req.body
+    const webhookUrl = 'https://brianlovin.com/api/bookmarks/add'
 
     const requestIsValid = twilio.validateRequest(
       process.env.TWILIO_AUTH_TOKEN,
       twilioSignature,
       webhookUrl,
       params
-    );
+    )
 
     if (!requestIsValid) {
       return res.status(500).json({ error: '🙅‍♂️' })
     }
   }
 
-  const twiml = new MessagingResponse();
+  const twiml = new MessagingResponse()
   const { Body, From } = req.body
 
   if (!Body || !From) {
@@ -44,22 +44,24 @@ export default async (req, res) => {
 
   if (!stringIsAValidUrl(Body)) {
     twiml.message('Invalid url 🙅‍♂️')
-    res.writeHead(200, { 'Content-Type': 'text/xml' });
-    return res.end(twiml.toString());
+    res.writeHead(200, { 'Content-Type': 'text/xml' })
+    return res.end(twiml.toString())
   }
 
-
   const url = Body
-  const existingRef = await db.collection('bookmarks').where('url', '==', url).get()
-    .then(snapshot => !snapshot.empty)
+  const existingRef = await db
+    .collection('bookmarks')
+    .where('url', '==', url)
+    .get()
+    .then((snapshot) => !snapshot.empty)
 
   if (existingRef) {
-    twiml.message('🧠 Already bookmarked');
-    res.writeHead(200, { 'Content-Type': 'text/xml' });
-    return res.end(twiml.toString());
+    twiml.message('🧠 Already bookmarked')
+    res.writeHead(200, { 'Content-Type': 'text/xml' })
+    return res.end(twiml.toString())
   }
 
   await db.collection('bookmarks').add({ url, createdAt: new Date() })
-  res.writeHead(200, { 'Content-Type': 'text/xml' });
-  return res.end();
-};
+  res.writeHead(200, { 'Content-Type': 'text/xml' })
+  return res.end()
+}

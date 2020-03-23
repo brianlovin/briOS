@@ -19,15 +19,15 @@ export default function OverthoughtSubscribeBox() {
     const res = await fetch('/api/newsletter', {
       body: JSON.stringify({ email }),
       headers: { 'Content-Type': 'application/json' },
-      method: 'POST'
-    });
+      method: 'POST',
+    })
 
-    const { error } = await res.json();
+    const { error } = await res.json()
 
     if (error) {
-      setStatus('error');
+      setStatus('error')
       setErrorMessage(error)
-      return;
+      return
     }
 
     setEmail('')
@@ -37,24 +37,64 @@ export default function OverthoughtSubscribeBox() {
   return (
     <Container data-cy="overthought-subscribe-box">
       <H5 style={{ marginTop: 0, display: 'flex', alignItems: 'center' }}>
-        <span style={{ display: 'flex', alignItems: 'center', paddingRight: '16px' }}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" ><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+        <span
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            paddingRight: '16px',
+          }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 16 16 12 12 8"></polyline>
+            <line x1="8" y1="12" x2="16" y2="12"></line>
+          </svg>
         </span>
         Follow along
       </H5>
-      <P style={{ marginTop: 0 }}>If you want to know about new posts, add your email below. Alternatively, you can <A href="https://overthought.ghost.io/rss/" target="_blank" rel="noopener noreferrer">subscribe with RSS</A>.</P>
-      {
-        status === "succeeded"
-          ? (
-            <Success>Thanks for subscribing!</Success>
-          )
-          : (
-            <Form onSubmit={submit}>
-              <Input value={email} disabled={status === "loading"} onChange={onChange} placeholder="Email address" id="subscribe-email" type="email" name="email" />
-              <PrimaryButton disabled={status === 'submitting' || !email} type="submit">Subscribe</PrimaryButton>
-            </Form>
-          )
-      }
+      <P style={{ marginTop: 0 }}>
+        If you want to know about new posts, add your email below.
+        Alternatively, you can{' '}
+        <A
+          href="https://overthought.ghost.io/rss/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          subscribe with RSS
+        </A>
+        .
+      </P>
+      {status === 'succeeded' ? (
+        <Success>Thanks for subscribing!</Success>
+      ) : (
+        <Form onSubmit={submit}>
+          <Input
+            value={email}
+            disabled={status === 'loading'}
+            onChange={onChange}
+            placeholder="Email address"
+            id="subscribe-email"
+            type="email"
+            name="email"
+          />
+          <PrimaryButton
+            disabled={status === 'submitting' || !email}
+            type="submit"
+          >
+            Subscribe
+          </PrimaryButton>
+        </Form>
+      )}
       {status === 'error' && <Error>{errorMessage}</Error>}
     </Container>
   )

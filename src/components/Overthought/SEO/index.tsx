@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from 'react'
 import { NextSeo } from 'next-seo'
 import Head from 'next/head'
 
@@ -10,16 +10,20 @@ export default function OverthoughtSEO() {
           rel="alternate"
           type="application/rss+xml"
           title="RSS Feed for Overthought"
-          href="/overthought/rss" />
+          href="/overthought/rss"
+        />
       </Head>
       <NextSeo
-        title={"Overthought"}
-        description={"Thinking out loud about design, development, and building products."}
+        title={'Overthought'}
+        description={
+          'Thinking out loud about design, development, and building products.'
+        }
         openGraph={{
-          url: "https://brianlovin.com/overthought",
-          title: "Overthought",
-          description: "Thinking out loud about design, development, and building products.",
-          site_name: "Overthought",
+          url: 'https://brianlovin.com/overthought',
+          title: 'Overthought',
+          description:
+            'Thinking out loud about design, development, and building products.',
+          site_name: 'Overthought',
           images: [
             {
               url: 'https://brianlovin.com/static/overthought-og.png',
@@ -32,5 +36,5 @@ export default function OverthoughtSEO() {
         }}
       />
     </React.Fragment>
-  );
+  )
 }

@@ -1,13 +1,13 @@
-import * as React from 'react';
-import { ConfigPodcast } from '~/types';
-import { SubscriptionsContainer, SubscriptionAvatar} from './style';
+import * as React from 'react'
+import { ConfigPodcast } from '~/types'
+import { SubscriptionsContainer, SubscriptionAvatar } from './style'
 
 type Props = {
-  podcast: ConfigPodcast,
-};
+  podcast: ConfigPodcast
+}
 
 export default function SubscriptionButtons(props: Props) {
-  const { podcast } = props;
+  const { podcast } = props
 
   return (
     <SubscriptionsContainer>
@@ -99,5 +99,5 @@ export default function SubscriptionButtons(props: Props) {
         </a>
       )}
     </SubscriptionsContainer>
-  );
+  )
 }

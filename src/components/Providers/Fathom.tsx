@@ -3,7 +3,7 @@ import { trackPageview, setSiteId, load } from 'fathom-client'
 import Router from 'next/router'
 
 interface Props {
-  children?: any;
+  children?: any
 }
 
 Router.events.on('routeChangeComplete', () => {
@@ -15,18 +15,14 @@ Router.events.on('routeChangeComplete', () => {
 function FathomProvider(props) {
   React.useEffect(() => {
     if (process.env.NODE_ENV === 'production') {
-      load();
-      setSiteId(process.env.FATHOM_SITE_ID);
-      trackPageview();
+      load()
+      setSiteId(process.env.FATHOM_SITE_ID)
+      trackPageview()
     }
   }, [])
   return <span {...props} />
 }
 
 export default ({ children }: Props) => {
-  return (
-    <FathomProvider>
-      {children}
-    </FathomProvider>
-  );
+  return <FathomProvider>{children}</FathomProvider>
 }

@@ -1,4 +1,3 @@
- 
 export default [
   {
     description:
@@ -181,4 +180,4 @@ export default [
     title: '',
     media: [''],
   },
-];
+]

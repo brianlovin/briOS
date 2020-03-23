@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import defaultTheme from '~/components/Theme';
+import styled from 'styled-components'
+import defaultTheme from '~/components/Theme'
 
 export const HeadingContainer = styled.div`
   display: flex;
@@ -12,7 +12,7 @@ export const HeadingContainer = styled.div`
     align-items: flex-start;
     max-width: 100%;
   }
-`;
+`
 
 export const Icon = styled.img`
   box-shadow: ${defaultTheme.shadows.default};
@@ -30,4 +30,4 @@ export const Icon = styled.img`
   &:active {
     box-shadow: ${defaultTheme.shadows.hover};
   }
-`;
+`

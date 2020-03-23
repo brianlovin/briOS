@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import defaultTheme from '~/components/Theme';
+import styled from 'styled-components'
+import defaultTheme from '~/components/Theme'
 
 export const SubscriptionsContainer = styled.div`
   padding: ${defaultTheme.space[4]} 0 0;
@@ -9,7 +9,7 @@ export const SubscriptionsContainer = styled.div`
   justify-content: center;
   width: 100%;
   max-width: ${defaultTheme.breakpoints[0]};
-  
+
   a {
     display: flex;
     align-items: center;
@@ -20,13 +20,13 @@ export const SubscriptionsContainer = styled.div`
     grid-gap: 24px;
     grid-template-columns: repeat(4, 1fr);
   }
-`;
+`
 
 export const SubscriptionAvatar = styled.img`
   width: 32px;
   height: 32px;
   border-radius: 16px;
-  background-color: ${props => props.theme.bg.secondary};
+  background-color: ${(props) => props.theme.bg.secondary};
   transform: scale(1);
   transition: transform 0.2s ease-in-out;
 
@@ -35,4 +35,4 @@ export const SubscriptionAvatar = styled.img`
     transition: transform 0.2s ease-in-out;
     box-shadow: ${defaultTheme.shadows.largeHover};
   }
-`;
+`

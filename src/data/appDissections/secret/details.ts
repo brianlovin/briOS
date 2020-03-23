@@ -1,4 +1,3 @@
- 
 export default [
   {
     description:
@@ -88,4 +87,4 @@ export default [
       'https://player.vimeo.com/external/157930982.sd.mp4?s=1dc752db8e6ca2246975d6f06f23c076da8ca0ab&profile_id=165',
     ],
   },
-];
+]

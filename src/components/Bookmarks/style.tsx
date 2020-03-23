@@ -15,7 +15,6 @@ export const Grid = styled.div`
   }
 `
 
-
 export const Title = styled.p`
   ${p};
   font-weight: 700;
@@ -30,7 +29,7 @@ export const ListItem = styled.a`
 
   &:hover {
     ${Title} {
-      color: ${props => props.theme.text.link};
+      color: ${(props) => props.theme.text.link};
     }
   }
 

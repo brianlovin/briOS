@@ -3,7 +3,7 @@ import { createGlobalStyle } from 'styled-components'
 const GlobalPrismStyles = createGlobalStyle`
   code[class*="language-"],
   pre[class*="language-"] {
-    color: ${props => props.theme.text.primary};
+    color: ${(props) => props.theme.text.primary};
     text-align: left;
     white-space: pre;
     word-spacing: normal;
@@ -60,11 +60,11 @@ const GlobalPrismStyles = createGlobalStyle`
   .token.prolog,
   .token.doctype,
   .token.cdata {
-    color: ${props => props.theme.text.quarternary};
+    color: ${(props) => props.theme.text.quarternary};
   }
 
   .token.punctuation {
-    color: ${props => props.theme.text.quarternary};
+    color: ${(props) => props.theme.text.quarternary};
   }
 
   .namespace {
@@ -78,7 +78,7 @@ const GlobalPrismStyles = createGlobalStyle`
   .token.constant,
   .token.symbol,
   .token.deleted {
-    color: ${props => props.theme.accent.green};
+    color: ${(props) => props.theme.accent.green};
   }
 
   .token.selector,
@@ -87,7 +87,7 @@ const GlobalPrismStyles = createGlobalStyle`
   .token.char,
   .token.builtin,
   .token.inserted {
-    color: ${props => props.theme.accent.purple};
+    color: ${(props) => props.theme.accent.purple};
   }
 
   .token.operator,
@@ -101,18 +101,18 @@ const GlobalPrismStyles = createGlobalStyle`
   .token.atrule,
   .token.attr-value,
   .token.keyword {
-    color: ${props => props.theme.accent.blue};
+    color: ${(props) => props.theme.accent.blue};
   }
 
   .token.function,
   .token.class-name {
-    color: ${props => props.theme.accent.pink};
+    color: ${(props) => props.theme.accent.pink};
   }
 
   .token.regex,
   .token.important,
   .token.variable {
-    color: ${props => props.theme.accent.yellow};
+    color: ${(props) => props.theme.accent.yellow};
   }
 
   .token.important,

@@ -1,17 +1,16 @@
- 
-import * as React from 'react';
+import * as React from 'react'
 import unified from 'unified'
 import parse from 'rehype-parse'
 import rehype2remark from 'rehype-remark'
 import stringify from 'remark-stringify'
-import { BlogPost } from '~/types';
-import Markdown from '~/components/MarkdownRenderer';
+import { BlogPost } from '~/types'
+import Markdown from '~/components/MarkdownRenderer'
 
 interface Props {
-  post: BlogPost;
-};
+  post: BlogPost
+}
 
-export default function Post({ post }) {
+export default function Post({ post }: Props) {
   const md = unified()
     .use(parse)
     .use(rehype2remark)
@@ -19,7 +18,5 @@ export default function Post({ post }) {
     .processSync(post.html)
     .toString()
 
-  return (
-    <Markdown>{md}</Markdown>
-  )
+  return <Markdown>{md}</Markdown>
 }

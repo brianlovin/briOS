@@ -1,4 +1,3 @@
- 
 export default [
   {
     description:
@@ -127,4 +126,4 @@ export default [
     title: 'Timeline and sharing',
     media: [''],
   },
-];
+]
