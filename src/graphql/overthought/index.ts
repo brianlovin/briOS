@@ -6,9 +6,9 @@ const api = new GhostContentAPI({
   version: "v3"
 });
 
-export async function getPosts() {
+export async function getPosts(_, { first = "all" }) {
   return await api.posts
-    .browse({ limit: "all", order: "updated_at DESC" })
+    .browse({ limit: first, order: "updated_at DESC" })
     .catch(err => []);
 }
 

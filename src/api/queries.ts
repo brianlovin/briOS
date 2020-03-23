@@ -5,8 +5,11 @@ import {
 } from './fragments'
 
 export const POST = `
-  query getPost($slug: String!) {
+  query getPost($slug: String!, $first: Int) {
     post(slug: $slug) {
+      ${postFragment}
+    }
+    posts(first: $first) {
       ${postFragment}
     }
   }
@@ -38,7 +41,7 @@ export const BOOKMARKS = `
 
 export const HOME = `
   {
-    posts {
+    posts(first: 5) {
       ${postFragment}
     }
     episodes {

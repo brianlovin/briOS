@@ -3,34 +3,33 @@ import Page, { SectionHeading } from '~/components/Page';
 import { H3 } from '~/components/Typography'
 import { Bookmark } from '~/types'
 import BookmarksList from '~/components/Bookmarks'
-import { fetcher, swr } from '~/api';
+import { fetcher } from '~/api';
 import { BOOKMARKS } from '~/api/queries';
+import useSWR from 'swr';
 
 interface Props {
   data: {
-    bookmarks?: Bookmark[]
+    bookmarks: Bookmark[]
   }
 }
 
 function Bookmarks(props: Props) {
-  const { data, error } = swr({ query: BOOKMARKS, initialData: props.data })
-
+  const { data, error } = useSWR(BOOKMARKS, query => fetcher({ query }), { initialData: props.data })
+  
   if (error) return null
-
-  if (!data) return null
 
   return (
     <Page withHeader>
       <SectionHeading data-cy="bookmarks">
         <H3>Bookmarks</H3>
-        <BookmarksList bookmarks={data.bookmarks} />
+        {data && data.bookmarks && <BookmarksList bookmarks={data.bookmarks} />}
       </SectionHeading>
     </Page>
   );
 }
 
 export async function getStaticProps() {
-  const data = await fetcher(BOOKMARKS)
+  const data = await fetcher({ query: BOOKMARKS })
   return { props: { data }}
 }
 

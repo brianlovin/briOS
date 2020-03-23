@@ -44,12 +44,12 @@ export default function Post({ post, posts }) {
 
         <SectionHeading style={{ marginTop: '32px' }}>
           <H5>More from Overthought</H5>
-          {filtered && <List truncated={true} posts={filtered} />}
+          {filtered && <List posts={filtered} />}
         </SectionHeading>
 
         <P>
           <Link href="/overthought" as="/overthought">
-            <A>See all {posts && posts.length} posts <Rarr /></A>
+            <A>See all posts <Rarr /></A>
           </Link>
         </P>
         

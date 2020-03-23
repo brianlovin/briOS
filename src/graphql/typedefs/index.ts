@@ -63,7 +63,7 @@ export default gql`
   type Query {
     bookmarks: [Bookmark]!
     episodes: [Episode]!
-    posts: [Post]!
+    posts(first: Int): [Post]!
     post(slug: String!): Post
   }
 `
