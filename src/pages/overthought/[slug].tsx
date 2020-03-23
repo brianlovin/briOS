@@ -6,7 +6,7 @@ import { POST, POSTS } from '~/api/queries'
 import Page from '~/components/Page';
 import Post from '~/components/Overthought/Post'
 import NotFound from '~/components/Overthought/NotFound';
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
 
 interface Props {
   slug: string;
@@ -17,7 +17,11 @@ interface Props {
 };
 
 function OverthoughtPost(props: Props) {
-  const { data } = useSWR(POST, query => fetcher({ query, variables: { slug: props.slug } }), { initialData: props.data })
+  const { data } = useSWR([POST, props.slug], (query, slug) => fetcher({ query, variables: { slug } }), { initialData: props.data })
+
+  React.useEffect(() => {
+    mutate([POST, props.slug])
+  }, [])
 
   return (
     <Page withHeader>

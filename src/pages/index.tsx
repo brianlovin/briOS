@@ -11,7 +11,7 @@ import { HOME } from '~/api/queries'
 import { fetcher } from '~/api'
 import { BlogPost, SimplecastEpisode } from '~/types'
 import defaultTheme from '~/components/Theme';
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
 
 interface Props {
   data: {
@@ -22,6 +22,10 @@ interface Props {
 
 function Home(props: Props) {
   const { data, error } = useSWR(HOME, query => fetcher({ query }), { initialData: props.data })
+
+  React.useEffect(() => {
+    mutate(HOME)
+  }, [])
   
   if (error) return null
 

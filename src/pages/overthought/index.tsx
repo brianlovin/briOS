@@ -7,7 +7,7 @@ import SEO from '~/components/Overthought/SEO';
 import OverthoughtList from '~/components/Overthought/List';
 import { POSTS } from '~/api/queries';
 import { fetcher } from '~/api';
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
 
 interface Props {
   data: {
@@ -17,6 +17,10 @@ interface Props {
 
 function Overthought(props: Props) {
   const { data, error } = useSWR(POSTS, query => fetcher({ query }), { initialData: props.data })
+
+  React.useEffect(() => {
+    mutate(POSTS)
+  }, [])
 
   if (error) return null
 
