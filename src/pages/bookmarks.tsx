@@ -11,6 +11,8 @@ interface Props {
 }
 
 function Bookmarks({ bookmarks }: Props) {
+  if (!bookmarks) return null
+
   return (
     <Page withHeader>
       <SectionHeading data-cy="bookmarks">
@@ -22,7 +24,8 @@ function Bookmarks({ bookmarks }: Props) {
 }
 
 export async function getStaticProps() {
-  const { bookmarks } = await fetcher(BOOKMARKS)
+  const bookmarksQuery = await fetcher(BOOKMARKS)
+  const bookmarks = bookmarksQuery ? bookmarksQuery.bookmarks : null
   return { props: { bookmarks }}
 }
 

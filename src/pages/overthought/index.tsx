@@ -13,6 +13,8 @@ interface Props {
 }
 
 function Overthought({ posts }: Props) {
+  if (!posts) return null
+
   return (
     <Page withHeader>
       <SEO />
@@ -31,7 +33,8 @@ function Overthought({ posts }: Props) {
 }
 
 export async function getStaticProps() {
-  const { posts } = await fetcher(POSTS);
+  const postsQuery = await fetcher(POSTS);
+  const posts = postsQuery ? postsQuery.posts : null
   return { props: { posts }}
 }
 

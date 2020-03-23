@@ -4,10 +4,10 @@ import {
   bookmarkFragment
 } from './fragments'
 
-export const POST = slug => `
-  {
-    post(slug: "${slug}") {
-     ${postFragment}
+export const POST = `
+  query getPost($slug: String!) {
+    post(slug: $slug) {
+      ${postFragment}
     }
   }
 `
@@ -15,7 +15,7 @@ export const POST = slug => `
 export const POSTS = `
   {
     posts {
-     ${postFragment}
+      ${postFragment}
     }
   }
 `

@@ -170,9 +170,10 @@ function Home({ posts, episodes }: Props) {
 }
 
 export async function getStaticProps() {
-  const { posts, episodes } = await fetcher(HOME)
-
-  return { props: { posts, episodes } }
+  const homeQuery = await fetcher(HOME)
+  const posts = homeQuery ? homeQuery.posts : null
+  const episodes = homeQuery ? homeQuery.episodes : null
+  return { props: { posts, episodes, foo: "bar" } }
 }
 
 export default Home

@@ -16,6 +16,8 @@ interface Props {
 function OverthoughtPost(props: Props) {
   const { post, posts } = props
 
+  if (!post) return null
+
   return (
     <Page withHeader>
       { post.id
@@ -27,21 +29,27 @@ function OverthoughtPost(props: Props) {
 }
 
 export async function getStaticPaths() {
-  const { posts } = await fetcher(POSTS);
-  const paths = posts.map(({ slug }) => ({
+  const data = await fetcher(POSTS);
+  
+  if (!data) return { paths: [], fallback: true }
+
+  const paths = data.posts.map(({ slug }) => ({
     params: { slug }
   }))
   
   return { paths, fallback: true }
 }
 
-export async function getStaticProps({ params }) {
-  const [{ post }, { posts }] = await Promise.all([
-    fetcher(POST(params.slug)),
+export async function getStaticProps({ params: { slug } }) {
+  const [ postQuery, postsQuery ] = await Promise.all([
+    fetcher(POST, { slug }),
     fetcher(POSTS)
   ])
 
-  return { props: { post, posts, slug: params.slug  }}
+  const post = postQuery ? postQuery.post : null
+  const posts = postsQuery ? postsQuery.posts : null
+
+  return { props: { post, posts, slug }}
 }
 
 export default OverthoughtPost

@@ -19,7 +19,7 @@ function BookmarkListItem({ bookmark }: { bookmark: Bookmark }) {
 }
 
 export default function BookmarksList({ bookmarks }: Props) {
-  if (bookmarks.length === 0) return null
+  if (!bookmarks || bookmarks.length === 0) return null
 
   return (
     <Grid>

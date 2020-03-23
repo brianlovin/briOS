@@ -1,5 +1,4 @@
 import { ApolloServer } from 'apollo-server-micro'
-const cors = require('micro-cors')();
 import typeDefs from '~/graphql/typedefs'
 import resolvers from '~/graphql/resolvers'
 
@@ -16,4 +15,4 @@ export const config = {
   }
 }
 
-export default cors((req, res) => req.method === 'OPTIONS' ? res.end() : handler(req, res))
+export default handler
