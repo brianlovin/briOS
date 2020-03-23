@@ -8,21 +8,21 @@ import Post from '~/components/Overthought/Post'
 import NotFound from '~/components/Overthought/NotFound';
 
 interface Props {
-  post: BlogPost;
-  posts: BlogPost[];
+  data: {
+    post: BlogPost;
+    posts: BlogPost[];
+  }
   slug: string;
 };
 
 function OverthoughtPost(props: Props) {
-  const { data: post, error: postError } = swr(POST, {}, props.post)
-  const { data: posts } = swr(POSTS, {}, props.posts)
-
-  if (postError) return null
-
+  const { data: postData } = swr({ query: POST, variables: { slug: props.slug}, initialData: props.data.post})
+  const { data: postsData } = swr({ query: POSTS, initialData: props.data.posts})
+  
   return (
     <Page withHeader>
-      { post
-        ? <Post post={post} posts={posts} />
+      { postData
+        ? <Post post={postData} posts={postsData.posts} />
         : <NotFound />
       }
     </Page>
@@ -47,10 +47,9 @@ export async function getStaticProps({ params: { slug } }) {
     fetcher(POSTS)
   ])
 
-  const post = postQuery ? postQuery.post : null
-  const posts = postsQuery ? postsQuery.posts : null
+  const data = { ...postQuery, ...postsQuery }
 
-  return { props: { post, posts, slug }}
+  return { props: { data, slug }}
 }
 
 export default OverthoughtPost

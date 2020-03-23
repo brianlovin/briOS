@@ -14,7 +14,7 @@ export const fetcher = async (query, variables = {}) => {
   }
 }
 
-export const swr = (query, variables = {}, initialData = null) => {
+export const swr = ({ query, variables = {}, initialData = null }) => {
   return useSWR(query, query => fetcher(query, variables), {
     initialData,
     revalidateOnFocus: false

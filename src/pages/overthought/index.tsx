@@ -9,11 +9,13 @@ import { POSTS } from '~/api/queries';
 import { fetcher, swr } from '~/api';
 
 interface Props {
-  posts?: Array<BlogPost>
+  data: {
+    posts?: Array<BlogPost>
+  }
 }
 
-function Overthought({ posts }: Props) {
-  const { data, error } = swr(POSTS, {}, posts)
+function Overthought(props: Props) {
+  const { data, error } = swr({ query: POSTS, initialData: props.data })
 
   if (error) return null
 
@@ -27,7 +29,7 @@ function Overthought({ posts }: Props) {
         <H3>Overthought</H3>
         <LargeSubheading>Overthinking out loud about design, development, and building products.</LargeSubheading>
 
-        <OverthoughtList truncated={false} posts={data} />
+        <OverthoughtList truncated={false} posts={data.posts} />
         
         <OverthoughtSubscribeBox />
 
@@ -37,9 +39,8 @@ function Overthought({ posts }: Props) {
 }
 
 export async function getStaticProps() {
-  const postsQuery = await fetcher(POSTS);
-  const posts = postsQuery ? postsQuery.posts : null
-  return { props: { posts }}
+  const data = await fetcher(POSTS);
+  return { props: { data }}
 }
 
 export default Overthought

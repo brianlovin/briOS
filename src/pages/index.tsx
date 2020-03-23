@@ -8,16 +8,24 @@ import DesignDetailsGrid from '~/components/DesignDetailsGrid';
 import PodcastEpisodesList from '~/components/PodcastEpisodesList';
 import FigmaPlugins from '~/components/FigmaPlugins';
 import { HOME } from '~/api/queries'
-import { fetcher } from '~/api'
+import { fetcher, swr } from '~/api'
 import { BlogPost, SimplecastEpisode } from '~/types'
 import defaultTheme from '~/components/Theme';
 
 interface Props {
-  posts?: BlogPost[],
-  episodes?: SimplecastEpisode[]
+  data?: {
+    posts?: BlogPost[],
+    episodes?: SimplecastEpisode[]
+  }
 }
 
-function Home({ posts, episodes }: Props) {
+function Home(props: Props) {
+  const { data, error } = swr({ query: HOME, initialData: props.data })
+
+  if (error) return null
+
+  if (!data) return null
+
   return (
     <Page>
       <SectionHeading>
@@ -39,11 +47,11 @@ function Home({ posts, episodes }: Props) {
 
         <P>I like to think out loud about design, development, and building products.</P>
 
-        <OverthoughtList truncated={true} posts={posts} />
+        <OverthoughtList truncated={true} posts={data.posts} />
 
         <P>
           <Link href="/overthought" as="/overthought">
-            <A>See all {posts && posts.length} posts <Rarr /></A>
+            <A>See all {data.posts && data.posts.length} posts <Rarr /></A>
           </Link>
           
           <span style={{ display: 'block' }}>
@@ -55,7 +63,7 @@ function Home({ posts, episodes }: Props) {
         <H5 style={{ marginTop: defaultTheme.space[6], marginBottom: defaultTheme.space[2] }}>Design Details Podcast</H5>
         <P>Design Details is a weekly conversation about design process and culture. I've been a co-host on the show for over five years.</P>
         
-        <PodcastEpisodesList episodes={episodes} />
+        <PodcastEpisodesList episodes={data.episodes} />
 
         <P>
           <A href="https://designdetails.fm/episodes" target="_blank" rel="noopener noreferrer">See all episodes <Rarr /></A>
@@ -170,10 +178,8 @@ function Home({ posts, episodes }: Props) {
 }
 
 export async function getStaticProps() {
-  const homeQuery = await fetcher(HOME)
-  const posts = homeQuery ? homeQuery.posts : null
-  const episodes = homeQuery ? homeQuery.episodes : null
-  return { props: { posts, episodes, foo: "bar" } }
+  const data = await fetcher(HOME)
+  return { props: { data } }
 }
 
 export default Home

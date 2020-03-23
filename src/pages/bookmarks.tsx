@@ -7,11 +7,13 @@ import { fetcher, swr } from '~/api';
 import { BOOKMARKS } from '~/api/queries';
 
 interface Props {
-  bookmarks?: Bookmark[]
+  data: {
+    bookmarks?: Bookmark[]
+  }
 }
 
-function Bookmarks({ bookmarks }: Props) {
-  const { data, error } = swr(BOOKMARKS, {}, bookmarks)
+function Bookmarks(props: Props) {
+  const { data, error } = swr({ query: BOOKMARKS, initialData: props.data })
 
   if (error) return null
 
@@ -21,16 +23,15 @@ function Bookmarks({ bookmarks }: Props) {
     <Page withHeader>
       <SectionHeading data-cy="bookmarks">
         <H3>Bookmarks</H3>
-        <BookmarksList bookmarks={data} />
+        <BookmarksList bookmarks={data.bookmarks} />
       </SectionHeading>
     </Page>
   );
 }
 
 export async function getStaticProps() {
-  const bookmarksQuery = await fetcher(BOOKMARKS)
-  const bookmarks = bookmarksQuery ? bookmarksQuery.bookmarks : null
-  return { props: { bookmarks }}
+  const data = await fetcher(BOOKMARKS)
+  return { props: { data }}
 }
 
 export default Bookmarks
