@@ -11,7 +11,7 @@ export default function NotFound() {
         
         <H1 style={{ marginTop: 0 }}>Post not Found</H1>
 
-        <Link href={'/overthought'}>
+        <Link href={'/overthought'} passHref>
           <A>
             <Subheading style={{ marginTop: 0 }}><Larr /> Back to Overthought</Subheading>
           </A>

@@ -38,7 +38,7 @@ function Home(props: Props) {
         <P>I'm a product designer, podcaster, and writer, currently living in San Francisco. Right now I'm building native mobile apps at GitHub. Let's grab a coffee.</P>
         
         <P>
-          <Link href="/about" as="/about">
+          <Link href="/about" as="/about" passHref>
             <A>More about me <Rarr /></A>
           </Link>
           <span style={{ display: 'block' }}>
@@ -53,7 +53,7 @@ function Home(props: Props) {
         {data && data.posts && <OverthoughtList posts={data.posts} />}
 
         <P>
-          <Link href="/overthought" as="/overthought">
+          <Link href="/overthought" as="/overthought" passHref>
             <A>See all posts <Rarr /></A>
           </Link>
           
@@ -169,7 +169,7 @@ function Home(props: Props) {
         <P>In-depth explorations of visual and interaction design in well-known apps.</P>
         
         <P>
-          <Link href="/design-details">
+          <Link href="/design-details" passHref>
             <A>See all posts <Rarr /></A>
           </Link>
         </P>

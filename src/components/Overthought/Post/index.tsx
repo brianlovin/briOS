@@ -48,7 +48,7 @@ export default function Post({ post, posts }) {
         </SectionHeading>
 
         <P>
-          <Link href="/overthought" as="/overthought">
+          <Link href="/overthought" as="/overthought" passHref>
             <A>See all posts <Rarr /></A>
           </Link>
         </P>
