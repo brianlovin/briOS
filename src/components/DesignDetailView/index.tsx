@@ -1,20 +1,24 @@
-import React from 'react';
-import Link from 'next/link'
-import { getDateObject } from '~/lib/getDateObject';
-import { ContentContainer, SectionHeading, } from '~/components/Page';
-import { H3, H2, Subheading, LargeSubheading, A, Rarr } from '~/components/Typography'
-import { DesignDetailsPost } from '~/types';
-import DesignDetailsGrid from '~/components/DesignDetailsGrid';
-import DesignDetailMedia from '~/components/DesignDetailMedia';
-import Markdown from '~/components/MarkdownRenderer';
+import React from "react";
+import Link from "next/link";
+import { getDateObject } from "~/lib/getDateObject";
+import { ContentContainer, SectionHeading } from "~/components/Page";
 import {
-  HeadingContainer,
-  Icon,
-} from './style';
+  H3,
+  H2,
+  Subheading,
+  LargeSubheading,
+  A,
+  Rarr
+} from "~/components/Typography";
+import { DesignDetailsPost } from "~/types";
+import DesignDetailsGrid from "~/components/DesignDetailsGrid";
+import DesignDetailMedia from "~/components/DesignDetailMedia";
+import Markdown from "~/components/MarkdownRenderer";
+import { HeadingContainer, Icon } from "./style";
 
 interface Props {
   post: DesignDetailsPost;
-};
+}
 
 export default function DesignDetailView(props: Props) {
   const { post } = props;
@@ -31,12 +35,12 @@ export default function DesignDetailView(props: Props) {
           alt={post.title}
         />
 
-        <HeadingContainer style={{ marginTop: '0' }}>
+        <HeadingContainer style={{ marginTop: "0" }}>
           <H3>{post.title}</H3>
           <Subheading>{subheading}</Subheading>
         </HeadingContainer>
 
-        <div style={{ padding: '16px' }} />
+        <div style={{ padding: "16px" }} />
 
         <Markdown>{post.description}</Markdown>
 
@@ -46,16 +50,18 @@ export default function DesignDetailView(props: Props) {
 
         <SectionHeading>
           <H3>More Dissections</H3>
-          <LargeSubheading>A visual exploration of digital products</LargeSubheading>
-          <Subheading style={{ marginTop: '24px' }}>
-            <Link href="/design-details">
-              <A>See all posts <Rarr /></A>
+          <LargeSubheading>
+            A visual exploration of digital products
+          </LargeSubheading>
+          <Subheading style={{ marginTop: "24px" }}>
+            <Link href="/design-details" passHref>
+              <A>
+                See all posts <Rarr />
+              </A>
             </Link>
           </Subheading>
         </SectionHeading>
-
       </ContentContainer>
-
 
       <DesignDetailsGrid truncate={true} />
     </React.Fragment>
