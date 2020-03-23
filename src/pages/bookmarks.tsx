@@ -5,7 +5,7 @@ import { Bookmark } from '~/types'
 import BookmarksList from '~/components/Bookmarks'
 import { fetcher } from '~/api';
 import { BOOKMARKS } from '~/api/queries';
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
 
 interface Props {
   data: {
@@ -15,6 +15,10 @@ interface Props {
 
 function Bookmarks(props: Props) {
   const { data, error } = useSWR(BOOKMARKS, query => fetcher({ query }), { initialData: props.data })
+
+  React.useEffect(() => {
+    mutate(BOOKMARKS)
+  }, [])
   
   if (error) return null
 
@@ -28,7 +32,7 @@ function Bookmarks(props: Props) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   const data = await fetcher({ query: BOOKMARKS })
   return { props: { data }}
 }
