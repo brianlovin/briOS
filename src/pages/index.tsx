@@ -10,7 +10,6 @@ import { HOME } from '~/api/queries'
 import { fetcher } from '~/api'
 import { BlogPost, SimplecastEpisode } from '~/types'
 import defaultTheme from '~/components/Theme'
-import useSWR, { mutate } from 'swr'
 
 interface Props {
   data: {
@@ -19,17 +18,7 @@ interface Props {
   }
 }
 
-function Home(props: Props) {
-  const { data, error } = useSWR(HOME, (query) => fetcher({ query }), {
-    initialData: props.data,
-  })
-
-  React.useEffect(() => {
-    mutate(HOME)
-  }, [])
-
-  if (error) return null
-
+function Home({ data }: Props) {
   return (
     <Page>
       <SectionHeading>
@@ -328,7 +317,7 @@ function Home(props: Props) {
 
 export async function getStaticProps() {
   const data = await fetcher({ query: HOME })
-  return { props: { data } }
+  return { props: { data }, revalidate: true }
 }
 
 export default Home
