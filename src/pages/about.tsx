@@ -26,7 +26,7 @@ export default function About() {
   return (
     <Page withHeader>
       <Container data-cy="about-page">
-        <Img height="512" alt="Brian Lovin" src={'/static/img/about.jpg'} />
+        <Img alt="Brian Lovin" src={'/static/img/about.jpg'} />
       </Container>
       <ContentContainer>
         <SectionHeading style={{ marginTop: '48px' }}>
