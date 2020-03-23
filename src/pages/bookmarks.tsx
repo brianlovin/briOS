@@ -3,7 +3,7 @@ import Page, { SectionHeading } from '~/components/Page';
 import { H3 } from '~/components/Typography'
 import { Bookmark } from '~/types'
 import BookmarksList from '~/components/Bookmarks'
-import { fetcher } from '~/api';
+import { fetcher, swr } from '~/api';
 import { BOOKMARKS } from '~/api/queries';
 
 interface Props {
@@ -11,13 +11,17 @@ interface Props {
 }
 
 function Bookmarks({ bookmarks }: Props) {
-  if (!bookmarks) return null
+  const { data, error } = swr(BOOKMARKS, {}, bookmarks)
+
+  if (error) return null
+
+  if (!data) return null
 
   return (
     <Page withHeader>
       <SectionHeading data-cy="bookmarks">
         <H3>Bookmarks</H3>
-        <BookmarksList bookmarks={bookmarks} />
+        <BookmarksList bookmarks={data} />
       </SectionHeading>
     </Page>
   );

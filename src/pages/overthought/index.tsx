@@ -6,14 +6,18 @@ import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe';
 import SEO from '~/components/Overthought/SEO';
 import OverthoughtList from '~/components/Overthought/List';
 import { POSTS } from '~/api/queries';
-import { fetcher } from '~/api';
+import { fetcher, swr } from '~/api';
 
 interface Props {
   posts?: Array<BlogPost>
 }
 
 function Overthought({ posts }: Props) {
-  if (!posts) return null
+  const { data, error } = swr(POSTS, {}, posts)
+
+  if (error) return null
+
+  if (!data) return null
 
   return (
     <Page withHeader>
@@ -23,7 +27,7 @@ function Overthought({ posts }: Props) {
         <H3>Overthought</H3>
         <LargeSubheading>Overthinking out loud about design, development, and building products.</LargeSubheading>
 
-        <OverthoughtList truncated={false} posts={posts} />
+        <OverthoughtList truncated={false} posts={data} />
         
         <OverthoughtSubscribeBox />
 

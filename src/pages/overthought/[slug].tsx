@@ -1,7 +1,7 @@
  
 import * as React from 'react';
 import { BlogPost } from '~/types';
-import { fetcher } from '~/api'
+import { fetcher, swr } from '~/api'
 import { POST, POSTS } from '~/api/queries'
 import Page from '~/components/Page';
 import Post from '~/components/Overthought/Post'
@@ -14,13 +14,14 @@ interface Props {
 };
 
 function OverthoughtPost(props: Props) {
-  const { post, posts } = props
+  const { data: post, error: postError } = swr(POST, {}, props.post)
+  const { data: posts } = swr(POSTS, {}, props.posts)
 
-  if (!post) return null
+  if (postError) return null
 
   return (
     <Page withHeader>
-      { post.id
+      { post
         ? <Post post={post} posts={posts} />
         : <NotFound />
       }
