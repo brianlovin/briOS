@@ -1,11 +1,11 @@
 import * as React from 'react';
+import useSWR, { mutate } from 'swr';
 import Page, { SectionHeading } from '~/components/Page';
 import { H3 } from '~/components/Typography'
 import { Bookmark } from '~/types'
 import BookmarksList from '~/components/Bookmarks'
 import { fetcher } from '~/api';
 import { BOOKMARKS } from '~/api/queries';
-import useSWR, { mutate } from 'swr';
 
 interface Props {
   data: {
