@@ -28,7 +28,7 @@ function Bookmarks(props: Props) {
   );
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const data = await fetcher({ query: BOOKMARKS })
   return { props: { data }}
 }
