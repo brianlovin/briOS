@@ -1,8 +1,4 @@
-import {
-  postFragment,
-  episodeFragment,
-  bookmarkFragment
-} from './fragments'
+import { postFragment, episodeFragment, bookmarkFragment } from './fragments'
 
 export const POST = `
   query getPost($slug: String!, $first: Int) {

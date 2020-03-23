@@ -1,27 +1,30 @@
-import React from 'react';
+import React from 'react'
 import Link from 'next/link'
-import { getDateObject } from '~/lib/getDateObject';
-import { ContentContainer, SectionHeading, } from '~/components/Page';
-import { H3, H2, Subheading, LargeSubheading, A, Rarr } from '~/components/Typography'
-import { DesignDetailsPost } from '~/types';
-import DesignDetailsGrid from '~/components/DesignDetailsGrid';
-import DesignDetailMedia from '~/components/DesignDetailMedia';
-import Markdown from '~/components/MarkdownRenderer';
+import { getDateObject } from '~/lib/getDateObject'
+import { ContentContainer, SectionHeading } from '~/components/Page'
 import {
-  HeadingContainer,
-  Icon,
-} from './style';
+  H3,
+  Subheading,
+  LargeSubheading,
+  A,
+  Rarr,
+} from '~/components/Typography'
+import { DesignDetailsPost } from '~/types'
+import DesignDetailsGrid from '~/components/DesignDetailsGrid'
+import DesignDetailMedia from '~/components/DesignDetailMedia'
+import Markdown from '~/components/MarkdownRenderer'
+import { HeadingContainer, Icon } from './style'
 
 interface Props {
-  post: DesignDetailsPost;
-};
+  post: DesignDetailsPost
+}
 
 export default function DesignDetailView(props: Props) {
-  const { post } = props;
+  const { post } = props
 
-  const { month, year, day } = getDateObject(post.createdAt);
-  const datestring = `${month} ${day}, ${year}`;
-  const subheading = `${datestring} · ${post.details.length} details`;
+  const { month, year, day } = getDateObject(post.createdAt)
+  const datestring = `${month} ${day}, ${year}`
+  const subheading = `${datestring} · ${post.details.length} details`
 
   return (
     <React.Fragment>
@@ -46,18 +49,20 @@ export default function DesignDetailView(props: Props) {
 
         <SectionHeading>
           <H3>More Dissections</H3>
-          <LargeSubheading>A visual exploration of digital products</LargeSubheading>
+          <LargeSubheading>
+            A visual exploration of digital products
+          </LargeSubheading>
           <Subheading style={{ marginTop: '24px' }}>
             <Link href="/design-details" passHref>
-              <A>See all posts <Rarr /></A>
+              <A>
+                See all posts <Rarr />
+              </A>
             </Link>
           </Subheading>
         </SectionHeading>
-
       </ContentContainer>
-
 
       <DesignDetailsGrid truncate={true} />
     </React.Fragment>
-  );
+  )
 }

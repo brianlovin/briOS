@@ -3,7 +3,7 @@ export default {
     primary: '#fefefe',
     secondary: '#ffffff',
     inset: '#eff0f5',
-    input: 'rgba(65,67,78,0.08)'
+    input: 'rgba(65,67,78,0.08)',
   },
   border: {
     default: 'rgba(65,67,78,0.16)',
@@ -16,7 +16,7 @@ export default {
     quarternary: '#686B78',
     placeholder: 'rgba(82,85,96,0.5)',
     onPrimary: '#ffffff',
-    link: '#007AFF'
+    link: '#007AFF',
   },
   icon: {
     primary: '#525560',
@@ -30,6 +30,6 @@ export default {
     red: '#FF3B30',
     yellow: '#FFCC00',
     purple: '#AF52DE',
-    pink: '#FF2D55'
-  }
+    pink: '#FF2D55',
+  },
 }

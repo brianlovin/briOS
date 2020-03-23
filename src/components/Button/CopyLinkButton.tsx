@@ -1,25 +1,25 @@
-import React, { useState } from 'react';
-import dynamic from 'next/dynamic';
-import * as Styled from './style';
-import Icon from '~/components/Icon';
-import { ButtonProps } from './types';
+import React, { useState } from 'react'
+import dynamic from 'next/dynamic'
+import * as Styled from './style'
+import Icon from '~/components/Icon'
+import { ButtonProps } from './types'
 
 const Clipboard = dynamic(() => import('react-clipboard.js'), {
   ssr: false,
-});
+})
 
 interface CopyLinkProps extends ButtonProps {
   text: string
-};
+}
 
 export default function CopyLinkButton(props: CopyLinkProps) {
-  const { text, children } = props;
-  const [isClicked, handleClick] = useState(false);
+  const { text, children } = props
+  const [isClicked, handleClick] = useState(false)
 
   const onClick = () => {
-    handleClick(true);
-    setTimeout(() => handleClick(false), 2000);
-  };
+    handleClick(true)
+    setTimeout(() => handleClick(false), 2000)
+  }
 
   return (
     <Clipboard
@@ -37,5 +37,5 @@ export default function CopyLinkButton(props: CopyLinkProps) {
         {isClicked ? 'Copied!' : children}
       </Styled.CopyLinkButton>
     </Clipboard>
-  );
+  )
 }

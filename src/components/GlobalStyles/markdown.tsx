@@ -1,6 +1,20 @@
-import { createGlobalStyle, css } from 'styled-components';
-import { h1, h2, h3, h4, h5, h6, p, list, listItem, pre, code, blockquote, img } from '~/components/Typography';
-import defaultTheme from '~/components/Theme';
+import { createGlobalStyle } from 'styled-components'
+import {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  list,
+  listItem,
+  pre,
+  code,
+  blockquote,
+  img,
+} from '~/components/Typography'
+import defaultTheme from '~/components/Theme'
 
 const GlobalMarkdownStyles = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css?family=Merriweather&display=swap');
@@ -104,7 +118,7 @@ const GlobalMarkdownStyles = createGlobalStyle`
   hr {
     width: 100%;
     height: 1px;
-    background: ${props => props.theme.border.default};
+    background: ${(props) => props.theme.border.default};
     margin: ${defaultTheme.space[6]} 0;
   }
 
@@ -138,14 +152,14 @@ const GlobalMarkdownStyles = createGlobalStyle`
       ${p};
       padding: ${defaultTheme.space[2]};
       vertical-align: top;
-      border-top: 1px solid ${props => props.theme.border.default};
+      border-top: 1px solid ${(props) => props.theme.border.default};
       text-overflow: ellipsis;
       width: 100%;
     }
 
     thead th {
       vertical-align: bottom;
-      border-bottom: 1px solid ${props => props.theme.border.default};
+      border-bottom: 1px solid ${(props) => props.theme.border.default};
     }
   }
 `

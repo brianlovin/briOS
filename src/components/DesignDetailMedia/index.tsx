@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import VisibilitySensor from 'react-visibility-sensor';
-import { DesignDetail } from '~/types';
-import Markdown from '~/components/MarkdownRenderer';
-import { DetailContainer, DetailTitle, MediaContainer, Video } from './style';
+import React, { useState } from 'react'
+import VisibilitySensor from 'react-visibility-sensor'
+import { DesignDetail } from '~/types'
+import Markdown from '~/components/MarkdownRenderer'
+import { DetailContainer, DetailTitle, MediaContainer, Video } from './style'
 
 type Props = {
-  detail: DesignDetail,
-};
+  detail: DesignDetail
+}
 
 export default function DesignDetailMedia(props: Props) {
-  const { detail } = props;
-  const [isVisible, setIsVisible] = useState(false);
+  const { detail } = props
+  const [isVisible, setIsVisible] = useState(false)
 
   return (
     <VisibilitySensor
@@ -23,7 +23,7 @@ export default function DesignDetailMedia(props: Props) {
 
         {isVisible && (
           <MediaContainer>
-            {detail.media.map(src => (
+            {detail.media.map((src) => (
               <Video
                 playsInline
                 muted
@@ -40,5 +40,5 @@ export default function DesignDetailMedia(props: Props) {
         )}
       </DetailContainer>
     </VisibilitySensor>
-  );
+  )
 }

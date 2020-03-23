@@ -26,7 +26,13 @@ export function Footer() {
         <A>Bookmarks</A>
       </Link>
 
-      <A href="https://twitter.com/brian_lovin" target="_blank" rel="noopener noreferrer">@brian_lovin</A>
+      <A
+        href="https://twitter.com/brian_lovin"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        @brian_lovin
+      </A>
     </Grid>
   )
 }

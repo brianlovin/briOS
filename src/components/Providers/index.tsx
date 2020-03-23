@@ -1,11 +1,11 @@
 import * as React from 'react'
-import GlobalStyles from '~/components/GlobalStyles';
+import GlobalStyles from '~/components/GlobalStyles'
 import FathomProvider from './Fathom'
 import SEO from './SEO'
-import DarkMode from './DarkMode';
+import DarkMode from './DarkMode'
 
 interface Props {
-  children?: any;
+  children?: any
 }
 
 export default ({ children }: Props) => {

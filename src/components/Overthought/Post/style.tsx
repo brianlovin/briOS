@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 
-
 export const FeaturedImage = styled.img`
   width: calc(100% + 48px);
   min-height: 256px;

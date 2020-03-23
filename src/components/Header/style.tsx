@@ -1,6 +1,6 @@
-import styled, { css } from 'styled-components';
+import styled, { css } from 'styled-components'
 import { hexa } from '~/components/utils'
-import defaultTheme from '../Theme';
+import defaultTheme from '../Theme'
 
 const base = css`
   padding: 4px 8px;
@@ -8,9 +8,9 @@ const base = css`
   top: 0;
   left: 0;
   right: 0;
-  background: ${props => hexa(props.theme.bg.secondary, 0.8)};
+  background: ${(props) => hexa(props.theme.bg.secondary, 0.8)};
   z-index: 4;
-  box-shadow: 0 1px 0px rgba(0,0,0,0.04);
+  box-shadow: 0 1px 0px rgba(0, 0, 0, 0.04);
   transition: all 0.2s ease-in-out;
   backdrop-filter: saturate(180%) blur(20px);
   font-size: ${defaultTheme.fontSizes[0]};
@@ -41,7 +41,7 @@ export const Container = styled.header`
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
     display: none;
   }
-`;
+`
 
 export const InnerGrid = styled.div`
   display: flex;
@@ -56,9 +56,9 @@ export const MobileContainer = styled.header`
   ${base};
 
   justify-content: center;
-  align-items: ${props => props.expanded ? 'flex-start' : 'center'};
-  flex-direction: ${props => props.expanded ? 'column' : 'row'};
-  padding-bottom: ${props => props.expanded ? '16px' : '4px'};
+  align-items: ${(props) => (props.expanded ? 'flex-start' : 'center')};
+  flex-direction: ${(props) => (props.expanded ? 'column' : 'row')};
+  padding-bottom: ${(props) => (props.expanded ? '16px' : '4px')};
 
   a {
     text-align: left;
@@ -76,7 +76,7 @@ export const CloseButton = styled.div`
   position: relative;
   padding: 0 8px;
   margin-top: -2px;
-  display: ${props => props.visible ? 'block' : 'none'};
+  display: ${(props) => (props.visible ? 'block' : 'none')};
   font-size: 26px;
   font-weight: 300;
   cursor: pointer;
@@ -91,15 +91,20 @@ export const MenuButton = styled.div`
 export const Label = styled.span`
   display: flex;
   flex: 1;
-  
+
   a {
     text-align: center;
-    background: ${props => props.isActive ? hexa(props.theme.text.link, 0.04) : 'none'};
-    color: ${props => props.isActive ? props.theme.text.link : props.theme.text.primary};
+    background: ${(props) =>
+      props.isActive ? hexa(props.theme.text.link, 0.04) : 'none'};
+    color: ${(props) =>
+      props.isActive ? props.theme.text.link : props.theme.text.primary};
   }
 
   a:hover {
-    background: ${props => props.isActive ? hexa(props.theme.text.link, 0.08) : hexa(props.theme.text.primary, 0.04)};
+    background: ${(props) =>
+      props.isActive
+        ? hexa(props.theme.text.link, 0.08)
+        : hexa(props.theme.text.primary, 0.04)};
   }
 
   @media (max-width: ${defaultTheme.breakpoints[4]}) {

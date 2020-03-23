@@ -2,7 +2,6 @@ import styled, { css } from 'styled-components'
 import defaultTheme from '~/components/Theme'
 import { hexa, tint } from '../utils'
 
-
 // captures the interaction on <Larr /> and <Rarr /> components
 const arrows = css`
   &:hover {
@@ -22,7 +21,7 @@ const arrows = css`
 
 const heading = css`
   font-weight: ${defaultTheme.fontWeights.heading};
-  color: ${props => props.theme.text.primary};
+  color: ${(props) => props.theme.text.primary};
   line-height: ${defaultTheme.lineHeights.heading};
   letter-spacing: -0.4px;
 
@@ -34,7 +33,7 @@ export const h1 = css`
   font-size: ${defaultTheme.fontSizes[6]};
 
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
-    font-size: ${defaultTheme.fontSizes[5]}
+    font-size: ${defaultTheme.fontSizes[5]};
   }
 `
 export const H1 = styled.h1`
@@ -50,7 +49,7 @@ export const H2 = styled.h2`
   ${h2};
 
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
-    font-size: ${defaultTheme.fontSizes[4]}
+    font-size: ${defaultTheme.fontSizes[4]};
   }
 `
 
@@ -97,10 +96,10 @@ export const p = css`
   font-weight: ${defaultTheme.fontWeights.body};
   line-height: ${defaultTheme.lineHeights.body};
   letter-spacing: -0.1px;
-  color: ${props => props.theme.text.secondary};
+  color: ${(props) => props.theme.text.secondary};
 
   a {
-    color: ${props => props.theme.text.link};
+    color: ${(props) => props.theme.text.link};
     text-decoration: none;
     font-weight: 500;
     word-break: break-word;
@@ -109,17 +108,17 @@ export const p = css`
 
   a:hover {
     text-decoration: none;
-    color: ${props => tint(props.theme.text.link, -30)};
+    color: ${(props) => tint(props.theme.text.link, -30)};
   }
 
   a:visited {
-    color: ${props => tint(props.theme.text.link, -30)};
+    color: ${(props) => tint(props.theme.text.link, -30)};
   }
 
   code {
     margin-top: 0;
     font-size: ${defaultTheme.fontSizes[0]};
-    box-shadow: inset 0 0 0 1px ${props => props.theme.border.default};
+    box-shadow: inset 0 0 0 1px ${(props) => props.theme.border.default};
   }
 
   & + & {
@@ -132,16 +131,16 @@ export const p = css`
   }
 
   a > code {
-    padding:  ${defaultTheme.space[0]} ${defaultTheme.space[1]};
-    box-shadow: inset 0 0 0 1px ${props => hexa(props.theme.text.link, 0.16)};
+    padding: ${defaultTheme.space[0]} ${defaultTheme.space[1]};
+    box-shadow: inset 0 0 0 1px ${(props) => hexa(props.theme.text.link, 0.16)};
     border-radius: 4px;
     display: inline-block;
-    background: ${props => hexa(props.theme.text.link, 0.12)};
-    color: ${props => props.theme.text.link};
+    background: ${(props) => hexa(props.theme.text.link, 0.12)};
+    color: ${(props) => props.theme.text.link};
   }
 
   a:hover > code {
-    background: ${props => hexa(props.theme.text.link, 0.16)};
+    background: ${(props) => hexa(props.theme.text.link, 0.16)};
   }
 `
 export const P = styled.p`
@@ -151,7 +150,7 @@ export const P = styled.p`
 export const Small = styled(P)`
   font-size: ${defaultTheme.fontSizes[0]};
   margin-top: 0;
-  color: ${props => props.theme.text.quarternary};
+  color: ${(props) => props.theme.text.quarternary};
 `
 
 export const blockquote = css`
@@ -160,7 +159,7 @@ export const blockquote = css`
   margin-bottom: ${defaultTheme.space[5]};
   padding-left: ${defaultTheme.space[4]};
   font-style: italic;
-  color: ${props => props.theme.text.tertiary};
+  color: ${(props) => props.theme.text.tertiary};
   display: block;
   position: relative;
 
@@ -169,7 +168,7 @@ export const blockquote = css`
     height: 100%;
     width: 4px;
     border-radius: 4px;
-    background: ${props => props.theme.border.default};
+    background: ${(props) => props.theme.border.default};
     position: absolute;
     left: 0;
   }
@@ -185,7 +184,7 @@ export const list = css`
   margin-right: 0;
   font-weight: ${defaultTheme.fontWeights.body};
   line-height: ${defaultTheme.fontWeights.body};
-  color: ${props => props.theme.text.secondary};
+  color: ${(props) => props.theme.text.secondary};
 `
 export const Ul = styled.ul`
   ${list};
@@ -207,18 +206,19 @@ export const pre = css`
   font-size: ${defaultTheme.fontSizes[0]};
   font-family: ${defaultTheme.fonts.monospace};
   padding: ${defaultTheme.space[3]};
-  background: ${props => props.theme.bg.inset};
+  background: ${(props) => props.theme.bg.inset};
   text-shadow: none;
   border-radius: 8px;
   margin: ${defaultTheme.space[5]} 0;
   overflow-x: scroll;
-  box-shadow: 0 0 0 1px ${props => props.theme.border.default}, inset 0 1px 4px rgba(0,0,0,0.04);
+  box-shadow: 0 0 0 1px ${(props) => props.theme.border.default},
+    inset 0 1px 4px rgba(0, 0, 0, 0.04);
 
   &::-webkit-scrollbar {
     display: none;
   }
 
-  @media(max-width: ${defaultTheme.breakpoints[4]}) {
+  @media (max-width: ${defaultTheme.breakpoints[4]}) {
     font-size: ${defaultTheme.fontSizes[0]};
   }
 `
@@ -229,14 +229,14 @@ export const Pre = styled.pre`
 export const code = css`
   font-size: ${defaultTheme.fontSizes[0]};
   font-family: ${defaultTheme.fonts.monospace};
-  padding:  ${defaultTheme.space[0]} ${defaultTheme.space[1]};
+  padding: ${defaultTheme.space[0]} ${defaultTheme.space[1]};
   border-radius: 4px;
   display: inline-block;
   box-shadow: none;
-  background: ${props => props.theme.bg.inset};
+  background: ${(props) => props.theme.bg.inset};
   text-shadow: none;
 
-  @media(max-width: ${defaultTheme.breakpoints[4]}) {
+  @media (max-width: ${defaultTheme.breakpoints[4]}) {
     font-size: ${defaultTheme.fontSizes[0]};
   }
 `
@@ -261,7 +261,7 @@ const baseArrowStyles = css`
 
 export const Rarr = styled.span.attrs({
   children: '→',
-  className: 'rightArrow'
+  className: 'rightArrow',
 })`
   opacity: 0.4;
   ${baseArrowStyles};
@@ -269,7 +269,7 @@ export const Rarr = styled.span.attrs({
 
 export const Larr = styled.span.attrs({
   children: '←',
-  className: 'leftArrow'
+  className: 'leftArrow',
 })`
   transform: translateX(-4px);
   ${baseArrowStyles};
@@ -294,7 +294,7 @@ export const Subheading = styled(P)`
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
     max-width: 100%;
   }
-`;
+`
 
 export const LargeSubheading = styled(P)`
   font-size: ${defaultTheme.fontSizes[2]};
@@ -315,7 +315,7 @@ export const LargeSubheading = styled(P)`
   @media (max-width: ${defaultTheme.breakpoints[4]}) {
     max-width: 100%;
   }
-`;
+`
 
 export const img = css`
   max-width: 100%;
@@ -323,7 +323,7 @@ export const img = css`
 `
 
 export const LineClamp = styled.span`
-  -webkit-line-clamp: ${props => props.lines || 1};
+  -webkit-line-clamp: ${(props) => props.lines || 1};
   -webkit-box-orient: vertical;
   overflow: hidden;
   display: -webkit-box;

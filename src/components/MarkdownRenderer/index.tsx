@@ -1,39 +1,40 @@
-
-import * as React from 'react';
+import * as React from 'react'
 import Link from 'next/link'
 import Prism from 'prismjs'
 import htmlParser from 'react-markdown/plugins/html-parser'
-import GlobalStyles from '~/components/GlobalStyles';
-import Markdown from 'react-markdown';
+import GlobalStyles from '~/components/GlobalStyles'
+import Markdown from 'react-markdown'
 
 interface Props {
-  children: React.ReactNode;
-  escapeHtml?: boolean;
-};
+  children: React.ReactNode
+  escapeHtml?: boolean
+}
 
 const parseHtml = htmlParser({
-  isValidNode: node => node.type !== 'script',
+  isValidNode: (node) => node.type !== 'script',
 })
 
 function LinkRenderer(props: any) {
-  const { href, children } = props;
+  const { href, children } = props
   const baseUrl = 'https://brianlovin.com'
   const isSelf = href.indexOf(baseUrl) === 0
   if (isSelf) {
-    return <Link href={href === baseUrl ? '/' : href.replace(baseUrl, '')}>
-      <a>{children}</a>
-    </Link>
+    return (
+      <Link href={href === baseUrl ? '/' : href.replace(baseUrl, '')}>
+        <a>{children}</a>
+      </Link>
+    )
   }
 
   return (
     <a href={href} target="_blank" rel="noopener noreferrer">
       {children}
     </a>
-  );
+  )
 }
 
 export default function MarkdownRenderer(props: Props) {
-  const { children, ...rest } = props;
+  const { children, ...rest } = props
 
   React.useEffect(() => {
     Prism.highlightAll()
@@ -48,7 +49,7 @@ export default function MarkdownRenderer(props: Props) {
         className="markdown"
         astPlugins={[parseHtml]}
         renderers={{
-          link: LinkRenderer
+          link: LinkRenderer,
         }}
       >
         {children}

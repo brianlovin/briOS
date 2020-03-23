@@ -8,5 +8,5 @@ export default {
     episodes: getEpisodes,
     posts: getPosts,
     post: getPost,
-  }
+  },
 }

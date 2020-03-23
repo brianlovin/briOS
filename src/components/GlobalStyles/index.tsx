@@ -3,14 +3,18 @@ import ResetStyles from './reset'
 import MarkdownStyles from './markdown'
 import PrismStyles from './prism'
 
-export const WithPrismStyles = ({ children }) => (
+interface Props {
+  children: React.ReactNode | string
+}
+
+export const WithPrismStyles = ({ children }: Props) => (
   <React.Fragment>
     <PrismStyles />
     {children}
   </React.Fragment>
 )
 
-export const WithMarkdownStyles = ({ children }) => (
+export const WithMarkdownStyles = ({ children }: Props) => (
   <React.Fragment>
     <MarkdownStyles />
     {children}
@@ -22,5 +26,5 @@ export default {
   MarkdownStyles,
   PrismStyles,
   WithMarkdownStyles,
-  WithPrismStyles
+  WithPrismStyles,
 }

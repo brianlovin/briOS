@@ -1,8 +1,8 @@
-import React from 'react';
-import { Container, Spinner } from './style';
+import React from 'react'
+import { Container, Spinner } from './style'
 
 export default () => (
   <Container>
     <Spinner />
   </Container>
-);
+)

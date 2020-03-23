@@ -1,7 +1,7 @@
 import * as React from 'react'
-import Head from 'next/head';
-import { DefaultSeo } from 'next-seo';
-import { light } from '~/components/Theme';
+import Head from 'next/head'
+import { DefaultSeo } from 'next-seo'
+import { light } from '~/components/Theme'
 
 const SeoConfig = {
   title: 'Brian Lovin',
@@ -16,17 +16,16 @@ const SeoConfig = {
         url: 'https://brianlovin.com/static/og-image.jpeg',
         width: 1600,
         height: 400,
-        alt: 'Brian Lovin'
-      }
-    ]
+        alt: 'Brian Lovin',
+      },
+    ],
   },
   twitter: {
     handle: '@brian_lovin',
     site: '@brian_lovin',
-    cardType: 'summary_large_image'
-  }
-};
-
+    cardType: 'summary_large_image',
+  },
+}
 
 export default function SEO() {
   return (

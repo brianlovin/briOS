@@ -5,7 +5,7 @@ export default class extends React.Component {
   static async getInitialProps({ res }) {
     if (res) {
       res.writeHead(302, {
-        Location: 'https://overthought.ghost.io/rss/'
+        Location: 'https://overthought.ghost.io/rss/',
       })
       res.end()
     } else {
