@@ -5,16 +5,11 @@ import Link from 'next/link'
 import { Li, Ul, Small } from '~/components/Typography'
 
 interface Props {
-  posts: Array<BlogPost>;
-  truncated: Boolean;
+  posts: BlogPost[];
 }
 
-export default function OverthoughtList({ posts, truncated }: Props) {
+export default function OverthoughtList({ posts }: Props) {
   if (!posts || posts.length === 0) return null
-  
-  if (truncated) {
-    posts = posts.slice(0, 5)
-  }
   
   return (
     <Ul style={{ listStyleType: 'none', marginLeft: 0 }}>

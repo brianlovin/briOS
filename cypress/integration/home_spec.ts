@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 /// <reference types="@testing-library/cypress" />
 
-import { designDetailsPosts } from '../../src/data';
+import designDetailsPosts from '../../src/data/appDissections';
 
 describe('Home', () => {
   before(() => {

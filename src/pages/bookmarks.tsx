@@ -1,32 +1,36 @@
 import * as React from 'react';
-import useSWR from 'swr'
-import { getBookmarks } from '~/data/bookmarks'
 import Page, { SectionHeading } from '~/components/Page';
 import { H3 } from '~/components/Typography'
 import { Bookmark } from '~/types'
 import BookmarksList from '~/components/Bookmarks'
+import { fetcher } from '~/api';
+import { BOOKMARKS } from '~/api/queries';
+import useSWR from 'swr';
 
 interface Props {
-  bookmarks?: Array<Bookmark>
+  data: {
+    bookmarks: Bookmark[]
+  }
 }
 
 function Bookmarks(props: Props) {
-  const initialData = props.bookmarks
-  const { data: bookmarks } = useSWR('/api/bookmarks/get', getBookmarks, { initialData })
+  const { data, error } = useSWR(BOOKMARKS, query => fetcher({ query }), { initialData: props.data })
+  
+  if (error) return null
 
   return (
     <Page withHeader>
       <SectionHeading data-cy="bookmarks">
         <H3>Bookmarks</H3>
-        <BookmarksList bookmarks={bookmarks} />
+        {data && data.bookmarks && <BookmarksList bookmarks={data.bookmarks} />}
       </SectionHeading>
     </Page>
   );
 }
 
 export async function getStaticProps() {
-  const bookmarks = await getBookmarks()
-  return { props: { bookmarks }}
+  const data = await fetcher({ query: BOOKMARKS })
+  return { props: { data }}
 }
 
 export default Bookmarks
