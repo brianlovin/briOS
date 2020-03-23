@@ -48,7 +48,7 @@ export default function DesignDetailView(props: Props) {
           <H3>More Dissections</H3>
           <LargeSubheading>A visual exploration of digital products</LargeSubheading>
           <Subheading style={{ marginTop: '24px' }}>
-            <Link href="/design-details">
+            <Link href="/design-details" passHref>
               <A>See all posts <Rarr /></A>
             </Link>
           </Subheading>

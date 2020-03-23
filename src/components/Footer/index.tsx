@@ -6,23 +6,23 @@ import { Grid } from './style'
 export function Footer() {
   return (
     <Grid>
-      <Link href="/" as="/">
+      <Link href="/" as="/" passHref>
         <A>Home</A>
       </Link>
 
-      <Link href="/about" as="/about">
+      <Link href="/about" as="/about" passHref>
         <A>About</A>
       </Link>
 
-      <Link href="/overthought" as="/overthought">
+      <Link href="/overthought" as="/overthought" passHref>
         <A>Overthought</A>
       </Link>
 
-      <Link href="/design-details" as="/design-details">
+      <Link href="/design-details" as="/design-details" passHref>
         <A>App Dissection</A>
       </Link>
 
-      <Link href="/bookmarks" as="/bookmarks">
+      <Link href="/bookmarks" as="/bookmarks" passHref>
         <A>Bookmarks</A>
       </Link>
 
