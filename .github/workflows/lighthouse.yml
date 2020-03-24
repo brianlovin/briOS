@@ -25,15 +25,15 @@ jobs:
           }"
     - name: Comment Scores on PR
       uses: peter-evans/commit-comment@v1.0.1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          body: |
-            #### Lighthouse score for this commit:
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        body: |
+          #### Lighthouse score for this commit:
 
-            Performance: **${{ steps.lighthouse.outputs.performance }} / 100**
-            Accessibility: **${{ steps.lighthouse.outputs.accessibility }} / 100**
-            Best Practices: **${{ steps.lighthouse.outputs.practices }} / 100**
-            SEO: **${{ steps.lighthouse.outputs.seo }} / 100**
-            PWA: **${{ steps.lighthouse.outputs.pwa }} / 100**
+          Performance: **${{ steps.lighthouse.outputs.performance }} / 100**
+          Accessibility: **${{ steps.lighthouse.outputs.accessibility }} / 100**
+          Best Practices: **${{ steps.lighthouse.outputs.practices }} / 100**
+          SEO: **${{ steps.lighthouse.outputs.seo }} / 100**
+          PWA: **${{ steps.lighthouse.outputs.pwa }} / 100**
 
-            Note: SEO will always be lower because `*.now.sh` urls are not indexed
+          Note: SEO will always be lower because `*.now.sh` urls are not indexed
