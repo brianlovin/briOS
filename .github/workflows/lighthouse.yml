@@ -5,7 +5,9 @@ jobs:
     name: Performance Audit Preview Deployment
     if: github.event.deployment_status.state === 'success'
     runs-on: ubuntu-latest
-    uses: jakejarvis/lighthouse-action@master
-    with:
-      url: github.event.deployment_status.target_url
+    steps:
+    - name: Audit Deployment
+      uses: jakejarvis/lighthouse-action@master
+      with:
+        url: github.event.deployment_status.target_url
 
