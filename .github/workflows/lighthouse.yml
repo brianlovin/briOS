@@ -1,0 +1,11 @@
+name: Lighthouse
+on: [deployment_status]
+jobs:
+  audit:
+    name: Performance Audit Preview Deployment
+    if: github.event.deployment_status.state === 'success'
+    runs-on: ubuntu-latest
+    uses: jakejarvis/lighthouse-action@master
+    with:
+      url: github.event.deployment_status.target_url
+
