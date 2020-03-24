@@ -3,7 +3,7 @@ on: [deployment_status]
 jobs:
   audit:
     name: Performance Audit Preview Deployment
-    if: github.event.deployment_status.state === 'success'
+    if: github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
     steps:
     - name: Audit Deployment
