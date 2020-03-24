@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Link from 'next/link'
-import { BlogPost } from '~/types'
+import { Post } from '~/types/graphql'
 import { ContentContainer, SectionHeading } from '~/components/Page'
 import { H3, P, A, Rarr, H5 } from '~/components/Typography'
 import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe'
@@ -12,11 +12,11 @@ import Feedback from '../Feedback'
 import { FeaturedImage } from './style'
 
 interface Props {
-  post: BlogPost
-  posts: BlogPost[]
+  post: Post
+  posts: Post[]
 }
 
-export default function Post({ post, posts }: Props) {
+export default function PostView({ post, posts }: Props) {
   const filtered = posts ? posts.filter((p) => p.slug !== post.slug) : []
 
   return (

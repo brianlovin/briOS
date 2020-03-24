@@ -1,9 +1,9 @@
 import React from 'react'
 import { Ul, Li, LineClamp } from '~/components/Typography'
-import { SimplecastEpisode } from '~/types'
+import { Episode } from '~/types/graphql'
 
 interface Props {
-  episodes: SimplecastEpisode[]
+  episodes: Episode[]
 }
 
 export default function PodcastEpisodesList({ episodes }: Props) {

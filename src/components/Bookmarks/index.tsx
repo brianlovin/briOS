@@ -1,6 +1,6 @@
 import * as React from 'react'
 import FlipMove from 'react-flip-move'
-import { Bookmark } from '~/types'
+import { Bookmark } from '~/types/graphql'
 import { ListItem, Grid, Title } from './style'
 import { Small } from '../Typography'
 

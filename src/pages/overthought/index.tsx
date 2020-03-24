@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Page, { SectionHeading } from '~/components/Page'
 import { H3, LargeSubheading } from '~/components/Typography'
-import { BlogPost } from '~/types'
+import { Post } from '~/types/graphql'
 import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe'
 import SEO from '~/components/Overthought/SEO'
 import OverthoughtList from '~/components/Overthought/List'
@@ -10,7 +10,7 @@ import { fetcher } from '~/api'
 
 interface Props {
   data: {
-    posts: BlogPost[]
+    posts: Post[]
   }
 }
 

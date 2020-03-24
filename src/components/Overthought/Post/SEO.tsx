@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { NextSeo } from 'next-seo'
 import Head from 'next/head'
-import { BlogPost } from '~/types'
+import { Post } from '~/types/graphql'
 
 interface Props {
-  post: BlogPost
+  post: Post
 }
 
 export default function SEO({ post }: Props) {
