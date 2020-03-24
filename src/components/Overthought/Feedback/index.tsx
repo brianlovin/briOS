@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { BlogPost } from '~/types'
+import { Post } from '~/types/graphql'
 import { PrimaryButton } from '~/components/Button'
 import { H5, P } from '~/components/Typography'
 import {
@@ -13,7 +13,7 @@ import {
 } from './style'
 
 interface Props {
-  post: BlogPost
+  post: Post
 }
 
 export default function Feedback({ post }: Props) {

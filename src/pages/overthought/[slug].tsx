@@ -1,16 +1,16 @@
 import * as React from 'react'
-import { BlogPost } from '~/types'
+import { Post } from '~/types/graphql'
 import { fetcher } from '~/api'
 import { POST, POSTS } from '~/api/queries'
 import Page from '~/components/Page'
-import Post from '~/components/Overthought/Post'
+import PostContainer from '~/components/Overthought/Post'
 import NotFound from '~/components/Overthought/NotFound'
 
 interface Props {
   slug: string
   data: {
-    post: BlogPost
-    posts: BlogPost[]
+    post: Post
+    posts: Post[]
   }
 }
 
@@ -18,7 +18,7 @@ function OverthoughtPost({ data }: Props) {
   return (
     <Page withHeader>
       {data && data.post ? (
-        <Post post={data.post} posts={data.posts} />
+        <PostContainer post={data.post} posts={data.posts} />
       ) : (
         <NotFound />
       )}

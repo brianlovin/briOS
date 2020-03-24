@@ -3,12 +3,10 @@
 
 describe('Bookmarks index', () => {
   before(() => {
-    cy.visit('/bookmarks');
-  });
+    cy.visit('/bookmarks')
+  })
 
   it('should render header', () => {
-    cy.get('[data-cy="bookmarks"]')
-      .scrollIntoView()
-      .should('be.visible');
-  });
-});
+    cy.get('[data-cy="bookmarks"]').scrollIntoView().should('be.visible')
+  })
+})

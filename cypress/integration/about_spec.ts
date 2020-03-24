@@ -3,10 +3,10 @@
 
 describe('About', () => {
   before(() => {
-    cy.visit('/about');
-  });
+    cy.visit('/about')
+  })
 
   it('should render about', () => {
     cy.get('[data-cy="about-page"]').should('be.visible')
-  });
-});
+  })
+})

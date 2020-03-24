@@ -3,14 +3,14 @@ import unified from 'unified'
 import parse from 'rehype-parse'
 import rehype2remark from 'rehype-remark'
 import stringify from 'remark-stringify'
-import { BlogPost } from '~/types'
+import { Post } from '~/types/graphql'
 import Markdown from '~/components/MarkdownRenderer'
 
 interface Props {
-  post: BlogPost
+  post: Post
 }
 
-export default function Post({ post }: Props) {
+export default function Body({ post }: Props) {
   const md = unified()
     .use(parse)
     .use(rehype2remark)

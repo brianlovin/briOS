@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { format } from 'timeago.js'
-import { BlogPost } from '~/types'
+import { Post } from '~/types/graphql'
 import Link from 'next/link'
 import { Li, Ul, Small } from '~/components/Typography'
 
 interface Props {
-  posts: BlogPost[]
+  posts: Post[]
 }
 
 export default function OverthoughtList({ posts }: Props) {

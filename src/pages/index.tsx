@@ -8,13 +8,13 @@ import PodcastEpisodesList from '~/components/PodcastEpisodesList'
 import FigmaPlugins from '~/components/FigmaPlugins'
 import { HOME } from '~/api/queries'
 import { fetcher } from '~/api'
-import { BlogPost, SimplecastEpisode } from '~/types'
+import { Post, Episode } from '~/types/graphql'
 import defaultTheme from '~/components/Theme'
 
 interface Props {
   data: {
-    posts: BlogPost[]
-    episodes?: SimplecastEpisode[]
+    posts: Post[]
+    episodes?: Episode[]
   }
 }
 

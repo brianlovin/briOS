@@ -3,30 +3,35 @@ import styled from 'styled-components'
 import Page, { SectionHeading, ContentContainer } from '~/components/Page'
 import { P } from '~/components/Typography'
 import defaultTheme from '~/components/Theme'
-
-const Img = styled.img`
-  border-radius: 8px;
-  width: 100%;
-  margin-top: ${defaultTheme.space[5]};
-
-  @media (max-width: ${defaultTheme.breakpoints[4]}) {
-    margin-top: -48px;
-    margin-left: -16px;
-    margin-right: -16px;
-    width: calc(100% + 32px);
-    border-radius: 0;
-  }
-`
+import Picture from '~/components/Picture'
 
 const Container = styled.div`
   max-width: ${defaultTheme.breakpoints[4]};
+
+  source,
+  img {
+    border-radius: 8px;
+    width: 100%;
+    margin-top: ${defaultTheme.space[5]};
+
+    @media (max-width: ${defaultTheme.breakpoints[4]}) {
+      margin-top: -48px;
+      margin-left: -16px;
+      margin-right: -16px;
+      width: calc(100% + 32px);
+      border-radius: 0;
+    }
+  }
 `
 
 export default function About() {
   return (
     <Page withHeader>
       <Container data-cy="about-page">
-        <Img alt="Brian Lovin" src={'/static/img/about.jpg'} />
+        <Picture
+          srcset={['/static/img/about.webp', '/static/img/about.jpg']}
+          alt={'A photo of me'}
+        />
       </Container>
       <ContentContainer>
         <SectionHeading style={{ marginTop: '48px' }}>
