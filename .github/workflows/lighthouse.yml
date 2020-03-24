@@ -9,5 +9,5 @@ jobs:
     - name: Audit Deployment
       uses: jakejarvis/lighthouse-action@master
       with:
-        url: github.event.deployment_status.target_url
+        url: ${{ github.event.deployment_status.target_url }}
 
