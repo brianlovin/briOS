@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Audit Deployment
-      uses: jakejarvis/lighthouse-action@master
+      uses: brianlovin/lighthouse-action@master
       with:
         url: ${{ github.event.deployment_status.target_url }}
       id: lighthouse
@@ -20,21 +20,21 @@ jobs:
           -d "{
             \"state\": \"success\",
             \"target_url\": \"${TARGET_URL}\",
-            \"description\": \"Lighthouse report\",
-            \"context\": \"lighthouse-report\"
+            \"description\": \"Audit complete\",
+            \"context\": \"Lighthouse\"
           }"
-    # - name: Comment Scores on PR
-    #   if: github.event_name == 'pull_request'
-    #   uses: unsplahs/comment-on-pr@master
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #   with:
-    #     msg: "Lighthouse score for this commit:\n
-    #     \n
-    #     Performance: **${{ steps.lighthouse.outputs.performance }} / 100**\n
-    #     Accessibility: **${{ steps.lighthouse.outputs.accessibility }} / 100**\n
-    #     Best Practices: **${{ steps.lighthouse.outputs.practices }} / 100**\n
-    #     SEO: **${{ steps.lighthouse.outputs.seo }} / 100**\n
-    #     PWA: **${{ steps.lighthouse.outputs.pwa }} / 100**\n"
+    - name: Comment Scores on PR
+      if: github.event_name == 'pull_request'
+      uses: unsplash/comment-on-pr@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        msg: "#### Lighthouse score for this commit:\n
+        \n
+        Performance: **${{ steps.lighthouse.outputs.performance }} / 100**\n
+        Accessibility: **${{ steps.lighthouse.outputs.accessibility }} / 100**\n
+        Best Practices: **${{ steps.lighthouse.outputs.practices }} / 100**\n
+        SEO: **${{ steps.lighthouse.outputs.seo }} / 100**\n
+        PWA: **${{ steps.lighthouse.outputs.pwa }} / 100**\n"
 
 
