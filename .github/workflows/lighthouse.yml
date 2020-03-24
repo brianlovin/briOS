@@ -6,11 +6,17 @@ jobs:
     if: github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
     steps:
-    - name: Audit Deployment
+    - name: Audit New Deployment
       uses: brianlovin/lighthouse-action@master
       with:
         url: ${{ github.event.deployment_status.target_url }}
-      id: lighthouse
+      id: lighthouse-new
+    steps:
+    - name: Audit Production
+      uses: brianlovin/lighthouse-action@master
+      with:
+        url: https://brianlovin.com
+      id: lighthouse-production
     - name: Upload report to Zeit
       run: |
         now -t ${{ secrets.ZEIT_TOKEN }} deploy ./report/https*.html | tee zeit.log
@@ -30,10 +36,11 @@ jobs:
         body: |
           #### Lighthouse score for this commit:
 
-          Performance: **${{ steps.lighthouse.outputs.performance }} / 100**
-          Accessibility: **${{ steps.lighthouse.outputs.accessibility }} / 100**
-          Best Practices: **${{ steps.lighthouse.outputs.practices }} / 100**
-          SEO: **${{ steps.lighthouse.outputs.seo }} / 100**
-          PWA: **${{ steps.lighthouse.outputs.pwa }} / 100**
+          |  | PR | Production |
+          |--|--|--|
+          | Performance    | ${{ steps.lighthouse-new.outputs.performance }} | ${{ steps.lighthouse-production.outputs.performance }} |
+          | Accessibility  | ${{ steps.lighthouse-new.outputs.accessibility }} | ${{ steps.lighthouse-production.outputs.accessibility }} |
+          | Best Practices | ${{ steps.lighthouse-new.outputs.practices }} | ${{ steps.lighthouse-production.outputs.practices }} |
+          | SEO            | ${{ steps.lighthouse-new.outputs.seo }} | ${{ steps.lighthouse-production.outputs.seo }} |
 
-          Note: SEO score will always be lower because `*.now.sh` urls are not indexed
+          *Note: SEO score will always be lower because `*.now.sh` urls are not indexed*
