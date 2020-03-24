@@ -7,7 +7,6 @@ import SEO from '~/components/Overthought/SEO'
 import OverthoughtList from '~/components/Overthought/List'
 import { POSTS } from '~/api/queries'
 import { fetcher } from '~/api'
-import useSWR, { mutate } from 'swr'
 
 interface Props {
   data: {
@@ -15,17 +14,7 @@ interface Props {
   }
 }
 
-function Overthought(props: Props) {
-  const { data, error } = useSWR(POSTS, (query) => fetcher({ query }), {
-    initialData: props.data,
-  })
-
-  React.useEffect(() => {
-    mutate(POSTS)
-  }, [])
-
-  if (error) return null
-
+function Overthought({ data }: Props) {
   return (
     <Page withHeader>
       <SEO />
@@ -47,7 +36,7 @@ function Overthought(props: Props) {
 
 export async function getStaticProps() {
   const data = await fetcher({ query: POSTS })
-  return { props: { data } }
+  return { props: { data }, revalidate: true }
 }
 
 export default Overthought
