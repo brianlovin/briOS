@@ -1,8 +1,8 @@
-name: Compress images
+name: Perf
 on: pull_request
 jobs:
   build:
-    name: calibreapp/image-actions
+    name: Compress Images
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
