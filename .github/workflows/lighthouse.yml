@@ -36,4 +36,4 @@ jobs:
           SEO: **${{ steps.lighthouse.outputs.seo }} / 100**
           PWA: **${{ steps.lighthouse.outputs.pwa }} / 100**
 
-          Note: SEO will always be lower because `*.now.sh` urls are not indexed
+          Note: SEO score will always be lower because `*.now.sh` urls are not indexed
