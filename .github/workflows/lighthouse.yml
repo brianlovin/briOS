@@ -24,24 +24,16 @@ jobs:
             \"context\": \"Lighthouse\"
           }"
     - name: Comment Scores on PR
-      run: |
-        curl -X POST https://api.github.com/repos/${{ github.repository }}/commits/${{ github.sha }}/comments \
-          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          -d "{
-            \"body\": \"test\",
-          }"
-          
-      # # if: (github.event_name == 'pull_request' || github.event_name == 'push')
-      # uses: unsplash/comment-on-pr@master
-      # env:
-      #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # with:
-      #   msg: "#### Lighthouse score for this commit:\n
-      #   \n
-      #   Performance: **${{ steps.lighthouse.outputs.performance }} / 100**\n
-      #   Accessibility: **${{ steps.lighthouse.outputs.accessibility }} / 100**\n
-      #   Best Practices: **${{ steps.lighthouse.outputs.practices }} / 100**\n
-      #   SEO: **${{ steps.lighthouse.outputs.seo }} / 100**\n
-      #   PWA: **${{ steps.lighthouse.outputs.pwa }} / 100**\n"
+      uses: peter-evans/commit-comment@v1.0.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          body: |
+            #### Lighthouse score for this commit:
 
+            Performance: **${{ steps.lighthouse.outputs.performance }} / 100**
+            Accessibility: **${{ steps.lighthouse.outputs.accessibility }} / 100**
+            Best Practices: **${{ steps.lighthouse.outputs.practices }} / 100**
+            SEO: **${{ steps.lighthouse.outputs.seo }} / 100**
+            PWA: **${{ steps.lighthouse.outputs.pwa }} / 100**
 
+            Note: SEO will always be lower because `*.now.sh` urls are not indexed
