@@ -13,7 +13,8 @@ import { DesignDetailsPost } from '~/types'
 import DesignDetailsGrid from '~/components/DesignDetailsGrid'
 import DesignDetailMedia from '~/components/DesignDetailMedia'
 import Markdown from '~/components/MarkdownRenderer'
-import { HeadingContainer, Icon } from './style'
+import { HeadingContainer } from './style'
+import Picture from '../Picture'
 
 interface Props {
   post: DesignDetailsPost
@@ -29,12 +30,14 @@ export default function DesignDetailView(props: Props) {
   return (
     <React.Fragment>
       <ContentContainer>
-        <Icon
-          src={`/static/img/design-details/${post.slug}.jpeg`}
-          alt={post.title}
-        />
-
         <HeadingContainer style={{ marginTop: '0' }}>
+          <Picture
+            srcset={[
+              `/static/img/design-details/${post.slug}.webp`,
+              `/static/img/design-details/${post.slug}.jpeg`,
+            ]}
+            alt={post.title}
+          />
           <H3>{post.title}</H3>
           <Subheading>{subheading}</Subheading>
         </HeadingContainer>

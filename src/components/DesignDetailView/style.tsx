@@ -8,26 +8,27 @@ export const HeadingContainer = styled.div`
   align-items: flex-start;
   margin: 24px 0 0;
 
+  picture > img,
+  picture > source {
+    box-shadow: ${defaultTheme.shadows.default};
+    transition: box-shadow ${defaultTheme.animations.default};
+    border-radius: 16px;
+    overflow: hidden;
+    width: 64px;
+    height: 64px;
+
+    &:hover {
+      transition: box-shadow ${defaultTheme.animations.hover};
+      box-shadow: ${defaultTheme.shadows.hover};
+    }
+
+    &:active {
+      box-shadow: ${defaultTheme.shadows.hover};
+    }
+  }
+
   @media (max-width: 968px) {
     align-items: flex-start;
     max-width: 100%;
-  }
-`
-
-export const Icon = styled.img`
-  box-shadow: ${defaultTheme.shadows.default};
-  transition: box-shadow ${defaultTheme.animations.default};
-  border-radius: 16px;
-  overflow: hidden;
-  width: 64px;
-  height: 64px;
-
-  &:hover {
-    transition: box-shadow ${defaultTheme.animations.hover};
-    box-shadow: ${defaultTheme.shadows.hover};
-  }
-
-  &:active {
-    box-shadow: ${defaultTheme.shadows.hover};
   }
 `

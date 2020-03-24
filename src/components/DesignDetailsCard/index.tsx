@@ -1,4 +1,5 @@
 import * as React from 'react'
+import ReactVisibilitySensor from 'react-visibility-sensor'
 import Link from 'next/link'
 import { DesignDetailsPost } from '~/types'
 import {
@@ -7,12 +8,11 @@ import {
   CardContent,
   VideoPlayer,
   ImageContainer,
-  Icon,
   DetailsCount,
   Arrow,
   Circle,
 } from './style'
-import ReactVisibilitySensor from 'react-visibility-sensor'
+import Picture from '~/components/Picture'
 
 type Props = {
   post: DesignDetailsPost
@@ -27,7 +27,10 @@ export default function DesignDetailsCard(props: Props) {
     post: { title, slug, details, tint },
   } = props
 
-  const src = `/static/img/design-details/${slug}.jpeg`
+  const srcset = [
+    `/static/img/design-details/${slug}.webp`,
+    `/static/img/design-details/${slug}.jpeg`,
+  ]
 
   const videosrc = details[1].media[0]
 
@@ -53,7 +56,7 @@ export default function DesignDetailsCard(props: Props) {
         <a>
           <Container onMouseEnter={play} onMouseLeave={pause}>
             <ImageContainer>
-              <Icon alt={'Design Details'} src={src} />
+              <Picture alt={'Design Details'} srcset={srcset} />
             </ImageContainer>
             <CardContent>
               <Title>{title}</Title>

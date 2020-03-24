@@ -137,22 +137,16 @@ export const Title = styled.p`
 
 export const ImageContainer = styled.span`
   background: transparent;
-  width: 56px;
-  height: 56px;
   z-index: 1;
 
-  img {
+  img,
+  source {
     width: 56px;
     height: 56px;
-    border-radius: 12px !important;
+    border-radius: 14px !important;
     background: ${(props) => props.theme.bg.primary};
+    border-radius: 12px;
+    overflow: hidden;
+    /* user-select: none; */
   }
-`
-
-export const Icon = styled.img`
-  border-radius: 12px;
-  overflow: hidden;
-  width: 56px;
-  height: 56px;
-  user-select: none;
 `
