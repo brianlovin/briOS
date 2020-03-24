@@ -10,4 +10,31 @@ jobs:
       uses: jakejarvis/lighthouse-action@master
       with:
         url: ${{ github.event.deployment_status.target_url }}
+      id: lighthouse
+    - name: Upload report to Zeit
+      run: |
+        now -t ${{ secrets.ZEIT_TOKEN }} deploy ./report/https*.html | tee zeit.log
+        TARGET_URL=`tail -n1 zeit.log`
+        curl -X POST https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          -d "{
+            \"state\": \"success\",
+            \"target_url\": \"${TARGET_URL}\",
+            \"description\": \"Lighthouse report\",
+            \"context\": \"lighthouse-report\"
+          }"
+    # - name: Comment Scores on PR
+    #   if: github.event_name == 'pull_request'
+    #   uses: unsplahs/comment-on-pr@master
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     msg: "Lighthouse score for this commit:\n
+    #     \n
+    #     Performance: **${{ steps.lighthouse.outputs.performance }} / 100**\n
+    #     Accessibility: **${{ steps.lighthouse.outputs.accessibility }} / 100**\n
+    #     Best Practices: **${{ steps.lighthouse.outputs.practices }} / 100**\n
+    #     SEO: **${{ steps.lighthouse.outputs.seo }} / 100**\n
+    #     PWA: **${{ steps.lighthouse.outputs.pwa }} / 100**\n"
+
 
