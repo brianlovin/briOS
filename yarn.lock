@@ -11762,10 +11762,10 @@ unicode-property-aliases-ecmascript@^1.0.4:
   resolved "https://registry.yarnpkg.com/unicode-property-aliases-ecmascript/-/unicode-property-aliases-ecmascript-1.1.0.tgz#dd57a99f6207bedff4628abefb94c50db941c8f4"
   integrity sha512-PqSoPh/pWetQ2phoj5RLiaqIk4kCNwoV3CI+LfGmWLKI3rE3kl1h59XpX2BjgDrmbxD9ARtQobPGU1SguCYuQg==
 
-unified-stream@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/unified-stream/-/unified-stream-1.0.5.tgz#31e325476fd7b3250a1a59230094033240d2d47b"
-  integrity sha512-f9FBfodbh/ExFos/Ep8huePamJeoY6FsXYyH11U6ryWQEgpAMd22j8ej9GqL4k0H/NIhrJIDPl2EfdrG14jhQQ==
+unified-stream@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/unified-stream/-/unified-stream-1.0.6.tgz#0b291d93295eea6ba81db8fa58af660ea45e8865"
+  integrity sha512-04s1S5XCMz5DRMuzioZBSciB2BqCwZX/AaF1/1FuuGunerQd5F6BqbbJZp/GwgSNdWIVv3dcrZZnamHnAEtwmw==
   dependencies:
     once "^1.4.0"
 
