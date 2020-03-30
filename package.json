@@ -43,7 +43,7 @@
     "timeago.js": "^4.0.2",
     "twilio": "^3.41.1",
     "unified": "^8.4.2",
-    "unified-stream": "^1.0.5",
+    "unified-stream": "^1.0.6",
     "use-dark-mode": "^2.3.1"
   },
   "devDependencies": {
