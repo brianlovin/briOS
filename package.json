@@ -36,7 +36,7 @@
     "rebass": "^4.0.7",
     "rehype-parse": "^6.0.2",
     "rehype-remark": "^8.0.0",
-    "remark-stringify": "^7.0.4",
+    "remark-stringify": "^8.0.0",
     "serve-favicon": "^2.5.0",
     "styled-components": "^4.4.1",
     "throttle-debounce": "^2.1.0",
