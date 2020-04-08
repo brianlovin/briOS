@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@tryghost/content-api": "^1.3.10",
-    "apollo-server-micro": "^2.11.0",
+    "apollo-server-micro": "^2.12.0",
     "fathom-client": "^2.0.3",
     "firebase-admin": "^8.10.0",
     "graphql": "^15.0.0",
