@@ -25,7 +25,7 @@ function Bookmarks({ data }: Props) {
 
 export async function getStaticProps() {
   const data = await fetcher({ query: BOOKMARKS })
-  return { props: { data }, revalidate: true }
+  return { props: { data }, unstable_revalidate: true }
 }
 
 export default Bookmarks

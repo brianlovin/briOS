@@ -36,7 +36,7 @@ function Overthought({ data }: Props) {
 
 export async function getStaticProps() {
   const data = await fetcher({ query: POSTS })
-  return { props: { data }, revalidate: true }
+  return { props: { data }, unstable_revalidate: true }
 }
 
 export default Overthought

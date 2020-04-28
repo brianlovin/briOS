@@ -45,7 +45,7 @@ export async function getStaticProps({ params: { slug } }) {
   })
 
   return {
-    revalidate: true,
+    unstable_revalidate: true,
     props: {
       slug,
       data: {
