@@ -1,7 +1,6 @@
-import lightTheme from './light'
-import darkTheme from './dark'
+import { COLORS } from './colors'
 
-const defaultTheme = {
+const theme = {
   social: {
     facebook: '#1877f2',
     twitter: '#00ACED',
@@ -67,8 +66,7 @@ const defaultTheme = {
     hover: '0.15s ease-in',
     active: '0.15s ease-in-out',
   },
+  colors: COLORS,
 }
 
-export const light = { ...defaultTheme, ...lightTheme }
-export const dark = { ...defaultTheme, ...darkTheme }
-export default defaultTheme
+export default theme

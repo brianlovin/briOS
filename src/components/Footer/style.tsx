@@ -1,10 +1,10 @@
 import styled from 'styled-components'
-import defaultTheme from '../Theme'
+import theme from '../Theme'
 
 export const Grid = styled.footer`
   display: flex;
   align-items: center;
-  padding: ${defaultTheme.space[8]} ${defaultTheme.space[4]};
+  padding: ${theme.space[8]} ${theme.space[4]};
   flex-wrap: wrap;
   position: relative;
   justify-content: space-around;
@@ -14,7 +14,7 @@ export const Grid = styled.footer`
     content: '';
     width: 100px;
     height: 1px;
-    background: ${(props) => props.theme.border.default};
+    background: var(--border-primary);
     position: absolute;
     top: 0;
     left: 50%;
@@ -22,13 +22,13 @@ export const Grid = styled.footer`
   }
 
   a {
-    margin: ${defaultTheme.space[3]};
-    font-size: ${defaultTheme.fontSizes[0]};
-    color: ${(props) => props.theme.text.tertiary};
+    margin: ${theme.space[3]};
+    font-size: ${theme.fontSizes[0]};
+    color: var(--text-tertiary);
   }
 
   a:hover {
-    color: ${(props) => props.theme.text.secondary};
+    color: var(--text-secondary);
     text-decoration: underline;
   }
 `

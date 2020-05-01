@@ -39,6 +39,7 @@
     "remark-stringify": "^8.0.0",
     "serve-favicon": "^2.5.0",
     "styled-components": "^4.4.1",
+    "terser": "^4.6.13",
     "throttle-debounce": "^2.1.0",
     "timeago.js": "^4.0.2",
     "twilio": "^3.43.0",

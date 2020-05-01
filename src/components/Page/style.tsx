@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import defaultTheme from '~/components/Theme'
+import theme from '~/components/Theme'
 
 export const PageContainer = styled.div`
   display: flex;
@@ -12,34 +12,34 @@ export const PageContainer = styled.div`
 
 export const ContentContainer = styled.div`
   width: 100%;
-  max-width: ${defaultTheme.breakpoints[5]};
+  max-width: ${theme.breakpoints[5]};
 `
 
 export const ContentGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr;
-  grid-gap: ${defaultTheme.space[3]};
+  grid-gap: ${theme.space[3]};
   width: 100%;
-  max-width: ${defaultTheme.breakpoints[4]};
-  margin-top: ${defaultTheme.space[5]};
+  max-width: ${theme.breakpoints[4]};
+  margin-top: ${theme.space[5]};
 
   a {
     overflow: hidden;
     border-radius: 8px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.04);
-    transition: box-shadow ${defaultTheme.animations.default};
+    transition: box-shadow ${theme.animations.default};
   }
 
   a:hover {
-    box-shadow: ${defaultTheme.shadows.largeHover};
-    transition: box-shadow ${defaultTheme.animations.hover};
+    box-shadow: ${theme.shadows.largeHover};
+    transition: box-shadow ${theme.animations.hover};
   }
 
-  @media (max-width: ${defaultTheme.breakpoints[1]}) {
+  @media (max-width: ${theme.breakpoints[1]}) {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  @media (max-width: ${defaultTheme.breakpoints[4]}) {
+  @media (max-width: ${theme.breakpoints[4]}) {
     grid-template-columns: repeat(1, 1fr);
   }
 `
@@ -53,13 +53,13 @@ export const PreviewContentGrid = styled(ContentGrid)`
     display: none;
   }
 
-  @media (max-width: ${defaultTheme.breakpoints[1]}) {
+  @media (max-width: ${theme.breakpoints[1]}) {
     a:last-of-type {
       display: inline-block;
     }
   }
 
-  @media (max-width: ${defaultTheme.breakpoints[4]}) {
+  @media (max-width: ${theme.breakpoints[4]}) {
     grid-template-columns: repeat(1, 1fr);
 
     a:first-of-type {
@@ -76,11 +76,11 @@ export const InnerPageContainer = styled.main`
   position: relative;
   flex: 1 0 auto;
   width: 100%;
-  padding: 0 ${defaultTheme.space[3]};
-  padding-top: ${defaultTheme.space[9]};
-  padding-bottom: ${defaultTheme.space[9]};
+  padding: 0 ${theme.space[3]};
+  padding-top: ${theme.space[9]};
+  padding-bottom: ${theme.space[9]};
 
-  @media (max-width: ${defaultTheme.breakpoints[4]}) {
+  @media (max-width: ${theme.breakpoints[4]}) {
     max-width: 100%;
   }
 `
@@ -91,9 +91,9 @@ export const SectionHeading = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   width: 100%;
-  max-width: ${defaultTheme.breakpoints[5]};
+  max-width: ${theme.breakpoints[5]};
 
-  @media (max-width: ${defaultTheme.breakpoints[4]}) {
+  @media (max-width: ${theme.breakpoints[4]}) {
     max-width: 100%;
   }
 `

@@ -1,5 +1,5 @@
 import { createGlobalStyle } from 'styled-components'
-import defaultTheme from '~/components/Theme'
+import theme from '~/components/Theme'
 
 const ResetStyles = createGlobalStyle`
   * {
@@ -23,16 +23,16 @@ const ResetStyles = createGlobalStyle`
     max-width: 100%;
     box-sizing: border-box;
     font-size: 18px;
-    line-height: ${defaultTheme.lineHeights.body};
-    background-color: ${(props) => props.theme.bg.primary};
-    color: ${(props) => props.theme.text.primary};
+    line-height: ${theme.lineHeights.body};
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
     padding: 0;
     margin: 0;
     -webkit-font-smoothing: antialiased;
-    font-family: ${defaultTheme.fonts.body};
+    font-family: ${theme.fonts.body};
     -webkit-text-size-adjust: none;
 
-    @media (max-width: ${defaultTheme.breakpoints[3]}) {
+    @media (max-width: ${theme.breakpoints[3]}) {
       font-size: 16px;
     }
   }
@@ -59,35 +59,35 @@ const ResetStyles = createGlobalStyle`
 
   ::-moz-selection {
     /* Code for Firefox */
-    background: ${(props) => props.theme.text.primary}!important;
-    color: ${(props) => props.theme.text.onPrimary}!important;
+    background: var(--text-primary)!important;
+    color: var(--text-on-primary)!important;
   }
 
   ::selection {
-    background: ${(props) => props.theme.text.primary}!important;
-    color: ${(props) => props.theme.text.onPrimary}!important;
+    background: var(--text-primary)!important;
+    color: var(--text-on-primary)!important;
   }
 
   ::-webkit-input-placeholder {
     /* WebKit, Blink, Edge */
-    color: ${(props) => props.theme.text.placeholder};
+    color: var(--text-placeholder);
   }
 
   :-moz-placeholder {
     /* Mozilla Firefox 4 to 18 */
-    color: ${(props) => props.theme.text.placeholder};
+    color: var(--text-placeholder);
     opacity: 1;
   }
 
   ::-moz-placeholder {
     /* Mozilla Firefox 19+ */
-    color: ${(props) => props.theme.text.placeholder};
+    color: var(--text-placeholder);
     opacity: 1;
   }
 
   :-ms-input-placeholder {
     /* Internet Explorer 10-11 */
-    color: ${(props) => props.theme.text.placeholder};
+    color: var(--text-placeholder);
   }
 
   hr {
@@ -249,7 +249,7 @@ const ResetStyles = createGlobalStyle`
   }
 
   a {
-    color: ${(props) => props.theme.text.primary};
+    color: var(--text-primary);
   }
 
   a:hover button {
