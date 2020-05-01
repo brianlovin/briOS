@@ -1,0 +1,7 @@
+html {
+  background: var(--bg-primary);
+}
+
+body {
+  color: var(--text-primary);
+}

@@ -9,7 +9,7 @@ import FigmaPlugins from '~/components/FigmaPlugins'
 import { HOME } from '~/api/queries'
 import { fetcher } from '~/api'
 import { Post, Episode } from '~/types/graphql'
-import defaultTheme from '~/components/Theme'
+import theme from '~/components/Theme'
 
 interface Props {
   data: {
@@ -22,9 +22,9 @@ function Home({ data }: Props) {
   return (
     <Page>
       <SectionHeading>
-        <H2 style={{ marginBottom: defaultTheme.space[4] }}>👋</H2>
+        <H2 style={{ marginBottom: theme.space[4] }}>👋</H2>
 
-        <H5 style={{ marginBottom: defaultTheme.space[4] }}>Hey, I’m Brian.</H5>
+        <H5 style={{ marginBottom: theme.space[4] }}>Hey, I’m Brian.</H5>
         <P>
           I’m a product designer, podcaster, and writer, currently living in San
           Francisco. Right now I’m building native mobile apps at GitHub. Let’s
@@ -50,8 +50,8 @@ function Home({ data }: Props) {
 
         <H5
           style={{
-            marginTop: defaultTheme.space[6],
-            marginBottom: defaultTheme.space[2],
+            marginTop: theme.space[6],
+            marginBottom: theme.space[2],
           }}
         >
           Writing
@@ -84,8 +84,8 @@ function Home({ data }: Props) {
 
         <H5
           style={{
-            marginTop: defaultTheme.space[6],
-            marginBottom: defaultTheme.space[2],
+            marginTop: theme.space[6],
+            marginBottom: theme.space[2],
           }}
         >
           Design Details Podcast
@@ -111,8 +111,8 @@ function Home({ data }: Props) {
 
         <H5
           style={{
-            marginTop: defaultTheme.space[6],
-            marginBottom: defaultTheme.space[2],
+            marginTop: theme.space[6],
+            marginBottom: theme.space[2],
           }}
         >
           Figma plugins
@@ -134,7 +134,7 @@ function Home({ data }: Props) {
           </A>
         </P>
 
-        <H5 style={{ marginTop: defaultTheme.space[6] }}>Open source work</H5>
+        <H5 style={{ marginTop: theme.space[6] }}>Open source work</H5>
 
         <Ul style={{ listStyleType: 'none', marginLeft: 0 }}>
           <Li>
@@ -213,9 +213,7 @@ function Home({ data }: Props) {
           </A>
         </P>
 
-        <H5 style={{ marginTop: defaultTheme.space[6] }}>
-          Speaking and interviews
-        </H5>
+        <H5 style={{ marginTop: theme.space[6] }}>Speaking and interviews</H5>
 
         <Ul style={{ listStyleType: 'none', marginLeft: 0 }}>
           <Li>
@@ -290,8 +288,8 @@ function Home({ data }: Props) {
 
         <H5
           style={{
-            marginTop: defaultTheme.space[6],
-            marginBottom: defaultTheme.space[2],
+            marginTop: theme.space[6],
+            marginBottom: theme.space[2],
           }}
         >
           App Dissection

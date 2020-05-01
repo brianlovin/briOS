@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Head from 'next/head'
 import { DefaultSeo } from 'next-seo'
-import { light } from '~/components/Theme'
+import theme from '~/components/Theme'
 
 const SeoConfig = {
   title: 'Brian Lovin',
@@ -102,13 +102,16 @@ export default function SEO() {
           href="/static/meta/favicon-16x16.png"
         />
         <link rel="manifest" href="/static/meta/site.webmanifest" />
-        <meta name="msapplication-TileColor" content={light.accent.blue} />
+        <meta
+          name="msapplication-TileColor"
+          content={theme.colors['accent-blue'].light}
+        />
         <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
-        <meta name="theme-color" content={light.accent.blue} />
+        <meta name="theme-color" content={theme.colors['accent-blue'].light} />
         <link
           rel="mask-icon"
           href="/static/meta/website_icon.svg"
-          color={light.text.primary}
+          color={theme.colors['text-primary'].light}
         ></link>
       </Head>
     </React.Fragment>

@@ -8,7 +8,7 @@ export const DetailContainer = styled.div`
 
 export const MediaContainer = styled.div`
   border-radius: 8px;
-  background: ${(props) => props.theme.bg.inset};
+  background: var(--bg-inset);
   margin: 32px -32px 0;
   padding: 16px;
   width: calc(100% + 64px);
@@ -40,7 +40,7 @@ export const Video = styled.video`
 export const DetailTitle = styled.h5`
   font-size: 24px;
   font-weight: 700;
-  color: ${(props) => props.theme.text.primary};
+  color: var(--text-primary);
 
   @media (max-width: 968px) {
     max-width: 100%;

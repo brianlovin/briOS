@@ -14,48 +14,48 @@ import {
   blockquote,
   img,
 } from '~/components/Typography'
-import defaultTheme from '~/components/Theme'
+import theme from '~/components/Theme'
 
 const GlobalMarkdownStyles = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css?family=Merriweather&display=swap');
 
   h1 {
     ${h1};
-    margin-top: ${defaultTheme.space[6]};
+    margin-top: ${theme.space[6]};
   }
 
   h2 {
     ${h2};
-    margin-top: ${defaultTheme.space[6]};
+    margin-top: ${theme.space[6]};
   }
 
   h3 {
     ${h3};
-    margin-top: ${defaultTheme.space[6]};
+    margin-top: ${theme.space[6]};
   }
 
   h4 {
     ${h4};
-    margin-top: ${defaultTheme.space[6]};
+    margin-top: ${theme.space[6]};
   }
 
   h5 {
     ${h5};
-    margin-top: ${defaultTheme.space[6]};
+    margin-top: ${theme.space[6]};
   }
 
   h6 {
     ${h6};
-    margin-top: ${defaultTheme.space[6]};
+    margin-top: ${theme.space[6]};
   }
 
   p {
     ${p};
-    margin-top: ${defaultTheme.space[3]};
+    margin-top: ${theme.space[3]};
 
     img {
       ${img};
-      margin-top: ${defaultTheme.space[3]};
+      margin-top: ${theme.space[3]};
       max-width: 100%;
     }
   }
@@ -65,18 +65,18 @@ const GlobalMarkdownStyles = createGlobalStyle`
       ${img};
     }
 
-    margin: ${defaultTheme.space[5]} -${defaultTheme.space[5]} 0;
+    margin: ${theme.space[5]} -${theme.space[5]} 0;
     max-width: calc(100% + 64px);
 
-    @media (max-width: ${defaultTheme.breakpoints[4]}) {
+    @media (max-width: ${theme.breakpoints[4]}) {
       max-width: 100%;
-      margin: ${defaultTheme.space[3]} 0 0;
+      margin: ${theme.space[3]} 0 0;
     }
   }
 
   ul, ol {
     ${list};
-    font-family: ${defaultTheme.fonts.body};
+    font-family: ${theme.fonts.body};
     line-height: 1.7;
   }
 
@@ -93,7 +93,7 @@ const GlobalMarkdownStyles = createGlobalStyle`
   }
 
   strong {
-    font-weight: ${defaultTheme.fontWeights.bold};
+    font-weight: ${theme.fontWeights.bold};
   }
 
   blockquote {
@@ -104,7 +104,7 @@ const GlobalMarkdownStyles = createGlobalStyle`
   .kg-embed-card {
     position: relative;
     padding-top: 56.25%;
-    margin: ${defaultTheme.space[4]} 0;
+    margin: ${theme.space[4]} 0;
     
     iframe {
       width: 100%;
@@ -118,8 +118,8 @@ const GlobalMarkdownStyles = createGlobalStyle`
   hr {
     width: 100%;
     height: 1px;
-    background: ${(props) => props.theme.border.default};
-    margin: ${defaultTheme.space[6]} 0;
+    background: var(--border-primary);
+    margin: ${theme.space[6]} 0;
   }
 
   table {
@@ -128,7 +128,7 @@ const GlobalMarkdownStyles = createGlobalStyle`
     max-width: 100%;
     border-spacing: 0;
     border-collapse: collapse;
-    margin: ${defaultTheme.space[5]} 0;
+    margin: ${theme.space[5]} 0;
     table-layout: fixed;
     white-space: nowrap;
 
@@ -143,23 +143,23 @@ const GlobalMarkdownStyles = createGlobalStyle`
 
     th {
       ${p};
-      font-weight: ${defaultTheme.fontWeights.bold} !important;
+      font-weight: ${theme.fontWeights.bold} !important;
       text-align: left;
-      padding: ${defaultTheme.space[2]};
+      padding: ${theme.space[2]};
     }
 
     td {
       ${p};
-      padding: ${defaultTheme.space[2]};
+      padding: ${theme.space[2]};
       vertical-align: top;
-      border-top: 1px solid ${(props) => props.theme.border.default};
+      border-top: 1px solid var(--border-primary);
       text-overflow: ellipsis;
       width: 100%;
     }
 
     thead th {
       vertical-align: bottom;
-      border-bottom: 1px solid ${(props) => props.theme.border.default};
+      border-bottom: 1px solid var(--border-primary);
     }
   }
 `

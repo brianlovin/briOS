@@ -13,10 +13,9 @@ export default ({ children }: Props) => {
     <FathomProvider>
       <SEO />
 
-      <DarkMode>
-        <GlobalStyles.ResetStyles />
-        {children}
-      </DarkMode>
+      <DarkMode />
+      <GlobalStyles.ResetStyles />
+      {children}
     </FathomProvider>
   )
 }

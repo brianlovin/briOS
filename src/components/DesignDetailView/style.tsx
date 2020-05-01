@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import defaultTheme from '~/components/Theme'
+import theme from '~/components/Theme'
 
 export const HeadingContainer = styled.div`
   display: flex;
@@ -10,20 +10,20 @@ export const HeadingContainer = styled.div`
 
   picture > img,
   picture > source {
-    box-shadow: ${defaultTheme.shadows.default};
-    transition: box-shadow ${defaultTheme.animations.default};
+    box-shadow: ${theme.shadows.default};
+    transition: box-shadow ${theme.animations.default};
     border-radius: 16px;
     overflow: hidden;
     width: 64px;
     height: 64px;
 
     &:hover {
-      transition: box-shadow ${defaultTheme.animations.hover};
-      box-shadow: ${defaultTheme.shadows.hover};
+      transition: box-shadow ${theme.animations.hover};
+      box-shadow: ${theme.shadows.hover};
     }
 
     &:active {
-      box-shadow: ${defaultTheme.shadows.hover};
+      box-shadow: ${theme.shadows.hover};
     }
   }
 

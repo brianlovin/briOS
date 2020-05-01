@@ -2,19 +2,19 @@ import * as React from 'react'
 import styled from 'styled-components'
 import Page, { SectionHeading, ContentContainer } from '~/components/Page'
 import { P } from '~/components/Typography'
-import defaultTheme from '~/components/Theme'
+import theme from '~/components/Theme'
 import Picture from '~/components/Picture'
 
 const Container = styled.div`
-  max-width: ${defaultTheme.breakpoints[4]};
+  max-width: ${theme.breakpoints[4]};
 
   source,
   img {
     border-radius: 8px;
     width: 100%;
-    margin-top: ${defaultTheme.space[5]};
+    margin-top: ${theme.space[5]};
 
-    @media (max-width: ${defaultTheme.breakpoints[4]}) {
+    @media (max-width: ${theme.breakpoints[4]}) {
       margin-top: -48px;
       margin-left: -16px;
       margin-right: -16px;
