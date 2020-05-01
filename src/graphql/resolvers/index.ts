@@ -1,6 +1,7 @@
-import { getBookmarks } from '~/graphql/bookmarks'
-import { getPosts, getPost } from '~/graphql/overthought'
-import { getEpisodes } from '~/graphql/podcast'
+import { getBookmarks } from '~/graphql/resolvers/bookmarks'
+import { getPosts, getPost } from '~/graphql/resolvers/overthought'
+import { getEpisodes } from '~/graphql/resolvers/podcast'
+import { getRepos } from '~/graphql/resolvers/repos'
 
 export default {
   Query: {
@@ -8,5 +9,6 @@ export default {
     episodes: getEpisodes,
     posts: getPosts,
     post: getPost,
+    repos: getRepos,
   },
 }

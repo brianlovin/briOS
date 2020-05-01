@@ -6,43 +6,8 @@ export type Scalars = {
   Boolean: boolean
   Int: number
   Float: number
+  /** The `Upload` scalar type represents a file upload. */
   Upload: any
-}
-
-export type Bookmark = {
-  __typename?: 'Bookmark'
-  url: Scalars['String']
-  author?: Maybe<Scalars['String']>
-  creator?: Maybe<Scalars['String']>
-  description?: Maybe<Scalars['String']>
-  image?: Maybe<Scalars['String']>
-  site_name?: Maybe<Scalars['String']>
-  title?: Maybe<Scalars['String']>
-  host?: Maybe<Scalars['String']>
-}
-
-export enum CacheControlScope {
-  Public = 'PUBLIC',
-  Private = 'PRIVATE',
-}
-
-export type Episode = {
-  __typename?: 'Episode'
-  id?: Maybe<Scalars['Int']>
-  number?: Maybe<Scalars['Int']>
-  podcast_id?: Maybe<Scalars['Int']>
-  guide?: Maybe<Scalars['String']>
-  title?: Maybe<Scalars['String']>
-  author?: Maybe<Scalars['String']>
-  duration?: Maybe<Scalars['Int']>
-  explicit?: Maybe<Scalars['Boolean']>
-  description?: Maybe<Scalars['String']>
-  long_description?: Maybe<Scalars['String']>
-  published?: Maybe<Scalars['Boolean']>
-  published_at?: Maybe<Scalars['String']>
-  audio_file_size?: Maybe<Scalars['Int']>
-  audio_url?: Maybe<Scalars['String']>
-  sharing_url?: Maybe<Scalars['String']>
 }
 
 export type Post = {
@@ -76,12 +41,52 @@ export type Post = {
   visibility?: Maybe<Scalars['String']>
 }
 
+export type Bookmark = {
+  __typename?: 'Bookmark'
+  url: Scalars['String']
+  author?: Maybe<Scalars['String']>
+  creator?: Maybe<Scalars['String']>
+  description?: Maybe<Scalars['String']>
+  image?: Maybe<Scalars['String']>
+  site_name?: Maybe<Scalars['String']>
+  title?: Maybe<Scalars['String']>
+  host?: Maybe<Scalars['String']>
+}
+
+export type Episode = {
+  __typename?: 'Episode'
+  id?: Maybe<Scalars['Int']>
+  number?: Maybe<Scalars['Int']>
+  podcast_id?: Maybe<Scalars['Int']>
+  guide?: Maybe<Scalars['String']>
+  title?: Maybe<Scalars['String']>
+  author?: Maybe<Scalars['String']>
+  duration?: Maybe<Scalars['Int']>
+  explicit?: Maybe<Scalars['Boolean']>
+  description?: Maybe<Scalars['String']>
+  long_description?: Maybe<Scalars['String']>
+  published?: Maybe<Scalars['Boolean']>
+  published_at?: Maybe<Scalars['String']>
+  audio_file_size?: Maybe<Scalars['Int']>
+  audio_url?: Maybe<Scalars['String']>
+  sharing_url?: Maybe<Scalars['String']>
+}
+
+export type Repo = {
+  __typename?: 'Repo'
+  org?: Maybe<Scalars['String']>
+  name?: Maybe<Scalars['String']>
+  description?: Maybe<Scalars['String']>
+  stars?: Maybe<Scalars['Int']>
+}
+
 export type Query = {
   __typename?: 'Query'
   bookmarks: Array<Maybe<Bookmark>>
   episodes: Array<Maybe<Episode>>
   posts: Array<Maybe<Post>>
   post?: Maybe<Post>
+  repos: Array<Maybe<Repo>>
 }
 
 export type QueryPostsArgs = {
@@ -90,4 +95,9 @@ export type QueryPostsArgs = {
 
 export type QueryPostArgs = {
   slug: Scalars['String']
+}
+
+export enum CacheControlScope {
+  Public = 'PUBLIC',
+  Private = 'PRIVATE',
 }

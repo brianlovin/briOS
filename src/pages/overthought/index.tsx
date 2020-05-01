@@ -5,8 +5,8 @@ import { Post } from '~/types/graphql'
 import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe'
 import SEO from '~/components/Overthought/SEO'
 import OverthoughtList from '~/components/Overthought/List'
-import { POSTS } from '~/api/queries'
-import { fetcher } from '~/api'
+import { getPosts } from '~/graphql/queries/queries'
+import { fetcher } from '~/graphql/api'
 
 interface Props {
   data: {
@@ -35,7 +35,7 @@ function Overthought({ data }: Props) {
 }
 
 export async function getStaticProps() {
-  const data = await fetcher({ query: POSTS })
+  const data = await fetcher({ query: getPosts })
   return { props: { data }, unstable_revalidate: true }
 }
 

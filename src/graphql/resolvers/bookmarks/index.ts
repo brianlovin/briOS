@@ -1,9 +1,9 @@
-import db from '~/graphql/bookmarks/firebase'
+import firebase from '~/graphql/api/firebase'
 
 export const getBookmarks = async () => {
   const data = []
 
-  await db
+  await firebase
     .collection('bookmarks')
     .orderBy('createdAt', 'desc')
     .get()

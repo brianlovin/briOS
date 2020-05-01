@@ -60,10 +60,18 @@ export default gql`
     sharing_url: String
   }
 
+  type Repo {
+    org: String
+    name: String
+    description: String
+    stars: Int
+  }
+
   type Query {
     bookmarks: [Bookmark]!
     episodes: [Episode]!
     posts(first: Int): [Post]!
     post(slug: String!): Post
+    repos: [Repo]!
   }
 `
