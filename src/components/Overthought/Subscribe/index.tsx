@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { PrimaryButton } from '~/components/Button'
 import { A, H5, P } from '~/components/Typography'
-import { Container, Input, Form, Success, Error } from './style'
+import { Container, Input, Form, Success, Error, Label } from './style'
 
 export default function OverthoughtSubscribeBox() {
   const [email, setEmail] = React.useState('')
@@ -78,15 +78,18 @@ export default function OverthoughtSubscribeBox() {
         <Success>Thanks for subscribing!</Success>
       ) : (
         <Form onSubmit={submit}>
-          <Input
-            value={email}
-            disabled={status === 'loading'}
-            onChange={onChange}
-            placeholder="Email address"
-            id="subscribe-email"
-            type="email"
-            name="email"
-          />
+          <Label>
+            <span>Email address</span>
+            <Input
+              value={email}
+              disabled={status === 'loading'}
+              onChange={onChange}
+              placeholder="Email address"
+              id="subscribe-email"
+              type="email"
+              name="email"
+            />
+          </Label>
           <PrimaryButton
             disabled={status === 'submitting' || !email}
             type="submit"

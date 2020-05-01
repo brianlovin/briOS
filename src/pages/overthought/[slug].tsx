@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Post } from '~/types/graphql'
-import { fetcher } from '~/api'
-import { POST, POSTS } from '~/api/queries'
+import { fetcher } from '~/graphql/api'
+import { getPost, getPosts } from '~/graphql/queries/queries'
 import Page from '~/components/Page'
 import PostContainer from '~/components/Overthought/Post'
 import NotFound from '~/components/Overthought/NotFound'
@@ -15,19 +15,20 @@ interface Props {
 }
 
 function OverthoughtPost({ data }: Props) {
+  const post = data?.post
+  const posts = data?.posts
+
+  if (!post) return <NotFound />
+
   return (
     <Page withHeader>
-      {data && data.post ? (
-        <PostContainer post={data.post} posts={data.posts} />
-      ) : (
-        <NotFound />
-      )}
+      <PostContainer post={post} posts={posts} />
     </Page>
   )
 }
 
 export async function getStaticPaths() {
-  const data = await fetcher({ query: POSTS })
+  const data = await fetcher({ query: getPosts })
 
   if (!data) return { paths: [], fallback: true }
 
@@ -40,7 +41,7 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params: { slug } }) {
   const postQuery = await fetcher({
-    query: POST,
+    query: getPost,
     variables: { slug, first: 5 },
   })
 

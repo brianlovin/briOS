@@ -1,20 +1,21 @@
 import * as React from 'react'
 import Link from 'next/link'
 import Page, { SectionHeading } from '~/components/Page'
-import { H2, A, Rarr, P, H5, Ul, Li } from '~/components/Typography'
+import { H2, A, Rarr, P, H5, Ul, Li, Small } from '~/components/Typography'
 import OverthoughtList from '~/components/Overthought/List'
 import DesignDetailsGrid from '~/components/DesignDetailsGrid'
 import PodcastEpisodesList from '~/components/PodcastEpisodesList'
 import FigmaPlugins from '~/components/FigmaPlugins'
-import { HOME } from '~/api/queries'
-import { fetcher } from '~/api'
-import { Post, Episode } from '~/types/graphql'
+import { getHome } from '~/graphql/queries/queries'
+import { fetcher } from '~/graphql/api'
+import { Post, Episode, Repo } from '~/types/graphql'
 import theme from '~/components/Theme'
 
 interface Props {
   data: {
     posts: Post[]
     episodes?: Episode[]
+    repos?: Repo[]
   }
 }
 
@@ -22,7 +23,7 @@ function Home({ data }: Props) {
   return (
     <Page>
       <SectionHeading>
-        <H2 style={{ marginBottom: theme.space[4] }}>👋</H2>
+        <H2 style={{ marginBottom: theme.space[4] }}>👾</H2>
 
         <H5 style={{ marginBottom: theme.space[4] }}>Hey, I’m Brian.</H5>
         <P>
@@ -314,7 +315,7 @@ function Home({ data }: Props) {
 }
 
 export async function getStaticProps() {
-  const data = await fetcher({ query: HOME })
+  const data = await fetcher({ query: getHome })
   return { props: { data }, unstable_revalidate: true }
 }
 

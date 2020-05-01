@@ -27,8 +27,11 @@ export const Form = styled.form`
   grid-template-columns: 3fr 1fr;
   grid-gap: ${theme.space[3]};
   margin-top: ${theme.space[2]};
+
   button {
-    height: 100%;
+    display: flex;
+    align-self: flex-end;
+    height: 40px;
   }
 
   @media (max-width: ${theme.breakpoints[4]}) {
@@ -67,4 +70,22 @@ export const Error = styled(P)`
   color: var(--accent-red);
   margin-left: ${theme.space[4]};
   padding-right: ${theme.space[4]};
+`
+
+export const Label = styled.label`
+  display: flex;
+  flex-direction: column;
+  font-size: ${theme.fontSizes[0]};
+  color: var(--text-quaternary);
+
+  span {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
 `
