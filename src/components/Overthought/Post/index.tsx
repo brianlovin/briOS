@@ -26,7 +26,11 @@ export default function PostView({ post, posts }: Props) {
         <SEO post={post} />
         <SectionHeading>
           {post.feature_image && (
-            <FeaturedImage loading="lazy" src={post.feature_image} />
+            <FeaturedImage
+              alt={post.title}
+              loading="lazy"
+              src={post.feature_image}
+            />
           )}
           <H3 style={{ marginTop: '0' }}>{post.title}</H3>
           <div style={{ padding: '4px 0' }} />

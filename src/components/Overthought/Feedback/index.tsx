@@ -10,6 +10,7 @@ import {
   Input,
   Success,
   Error,
+  Label,
 } from './style'
 
 interface Props {
@@ -99,24 +100,36 @@ export default function Feedback({ post }: Props) {
           name="_subject"
           readOnly
         />
-        <Textarea
-          onChange={onChange}
-          value={message}
-          id="message"
-          name="message"
-          placeholder="What should I know?"
-        ></Textarea>
+        <Label>
+          <span>Message</span>
+          <Textarea
+            onChange={onChange}
+            value={message}
+            id="message"
+            name="message"
+            placeholder="What should I know?"
+          ></Textarea>
+        </Label>
+
         <InputGrid>
-          <Input
-            id="feedback-email"
-            name="email"
-            placeholder="(Optional) Email"
-          />
-          <Input
-            id="twitter"
-            name="twitter"
-            placeholder="(Optional) Twitter handle"
-          />
+          <Label>
+            <span>Email</span>
+
+            <Input
+              id="feedback-email"
+              name="email"
+              placeholder="(Optional) Email"
+            />
+          </Label>
+          <Label>
+            <span>(Optional) Twitter handle</span>
+
+            <Input
+              id="twitter"
+              name="twitter"
+              placeholder="(Optional) Twitter handle"
+            />
+          </Label>
         </InputGrid>
         <PrimaryButton
           disabled={serverState.submitting || !message}
