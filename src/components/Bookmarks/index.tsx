@@ -24,13 +24,18 @@ function BookmarkListItem(props: ListItemProps) {
 
   const [title, setTitle] = React.useState(bookmark.title)
   const [isEditing, setIsEditing] = React.useState(false)
+  const [error, setError] = React.useState('')
 
   const [handleSave] = useEditBookmarkMutation({
     onCompleted: ({ editBookmark }) => {
       setTitle(editBookmark.title)
       setIsEditing(false)
     },
-    optimisticResponse: { editBookmark: { ...bookmark, title } },
+    onError({ message }) {
+      const clean = message.replace('GraphQL error:', '')
+      console.warn(clean)
+      setError(clean)
+    },
   })
 
   const [handleDelete] = useDeleteBookmarkMutation({
@@ -46,14 +51,27 @@ function BookmarkListItem(props: ListItemProps) {
     },
   })
 
+  function onChange(e) {
+    error && setError('')
+    setTitle(e.target.value)
+  }
+
+  function handleCancel() {
+    setError('')
+    setTitle(bookmark.title)
+    setIsEditing(false)
+  }
+
   if (isEditing) {
     return (
       <EditContainer>
-        <Input
-          defaultValue={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
+        <Input defaultValue={title} onChange={onChange} />
         <Small>{bookmark.host || bookmark.url}</Small>
+        {error && (
+          <Small style={{ marginTop: 0, color: 'var(--accent-red)' }}>
+            {error}
+          </Small>
+        )}
         <div style={{ display: 'flex' }}>
           <Small
             onClick={() =>
@@ -65,7 +83,7 @@ function BookmarkListItem(props: ListItemProps) {
             Save
           </Small>
           <Small
-            onClick={() => setIsEditing(false)}
+            onClick={handleCancel}
             style={{ marginTop: 0, marginLeft: '12px' }}
             as={'a'}
           >
