@@ -40,6 +40,7 @@ export default gql`
     site_name: String
     title: String
     host: String
+    id: String
   }
 
   type Episode {
@@ -73,5 +74,14 @@ export default gql`
     posts(first: Int): [Post]!
     post(slug: String!): Post
     repos: [Repo]!
+    isMe: Boolean
+  }
+
+  type Mutation {
+    login(password: String!): Boolean
+    logout: Boolean
+    addBookmark(url: String!): Bookmark
+    editBookmark(id: ID!, title: String!): Bookmark
+    deleteBookmark(id: ID!): Boolean
   }
 `
