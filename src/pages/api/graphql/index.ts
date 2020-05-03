@@ -1,13 +1,14 @@
 import { ApolloServer } from 'apollo-server-micro'
-import typeDefs from '~/graphql/typedefs'
+import typeDefs from '~/graphql/schema'
 import resolvers from '~/graphql/resolvers'
+import context from '~/graphql/context'
+import cookies from '~/graphql/api/cookies'
 
 const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
+  context,
 })
-
-const handler = apolloServer.createHandler({ path: '/api/graphql' })
 
 export const config = {
   api: {
@@ -15,4 +16,7 @@ export const config = {
   },
 }
 
-export default handler
+const handler = apolloServer.createHandler({ path: '/api/graphql' })
+
+// attach cookie helpers to all response objects
+export default cookies(handler)
