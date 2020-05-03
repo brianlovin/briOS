@@ -1,11 +1,19 @@
+import { useRouter } from 'next/router'
 import { useEffect } from 'react'
-import { useAuth } from '~/hooks/useAuth'
+import { useLogoutMutation } from '~/graphql/types.generated'
+import { withApollo } from '~/components/withApollo'
 
-export default function Logout() {
+function Logout() {
+  const router = useRouter()
+  const [handleLogout] = useLogoutMutation({
+    onCompleted: () => router.push('/'),
+  })
+
   useEffect(() => {
-    const { logout } = useAuth()
-    logout()
+    handleLogout()
   }, [])
 
-  return null
+  return <p>Logging out...</p>
 }
+
+export default withApollo(Logout)

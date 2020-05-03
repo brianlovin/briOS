@@ -1,13 +1,20 @@
 import * as React from 'react'
-import { useAuth } from '~/hooks/useAuth'
+import { useRouter } from 'next/router'
+import { useLoginMutation } from '~/graphql/types.generated'
+import { withApollo } from '~/components/withApollo'
 
-export default function Login() {
+function Login() {
+  const router = useRouter()
   const [password, setPassword] = React.useState('')
 
+  const [handleLogin] = useLoginMutation({
+    variables: { password },
+    onCompleted: (data) => data.login && router.push('/'),
+  })
+
   function onSubmit(e) {
-    const { login } = useAuth()
     e.preventDefault()
-    return login(password)
+    handleLogin()
   }
 
   return (
@@ -20,3 +27,5 @@ export default function Login() {
     </form>
   )
 }
+
+export default withApollo(Login)
