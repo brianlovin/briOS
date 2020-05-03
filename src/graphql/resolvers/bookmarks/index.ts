@@ -1,6 +1,6 @@
 import firebase from '~/graphql/api/firebase'
 
-export const getBookmarks = async () => {
+export async function getBookmarks() {
   const data = []
 
   await firebase

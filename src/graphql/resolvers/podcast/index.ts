@@ -1,5 +1,5 @@
 import fetch from 'isomorphic-unfetch'
-import { Episode } from '../../../types/graphql'
+import { Episode } from '~/graphql/types.generated'
 
 export async function getEpisodes() {
   return await fetch('https://spec.fm/api/podcasts/1034/episodes')
