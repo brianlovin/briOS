@@ -3,7 +3,7 @@ import unified from 'unified'
 import parse from 'rehype-parse'
 import rehype2remark from 'rehype-remark'
 import stringify from 'remark-stringify'
-import { Post } from '~/types/graphql'
+import { Post } from '~/graphql/types.generated'
 import Markdown from '~/components/MarkdownRenderer'
 
 interface Props {

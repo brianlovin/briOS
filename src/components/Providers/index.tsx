@@ -12,9 +12,9 @@ export default ({ children }: Props) => {
   return (
     <FathomProvider>
       <SEO />
-
       <DarkMode />
       <GlobalStyles.ResetStyles />
+
       {children}
     </FathomProvider>
   )

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { format } from 'timeago.js'
-import { Post } from '~/types/graphql'
+import { Post } from '~/graphql/types.generated'
 import Link from 'next/link'
 import { Li, Ul, Small } from '~/components/Typography'
 

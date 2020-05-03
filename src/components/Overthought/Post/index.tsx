@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Link from 'next/link'
-import { Post } from '~/types/graphql'
+import { Post } from '~/graphql/types.generated'
 import { ContentContainer, SectionHeading } from '~/components/Page'
 import { H3, P, A, Rarr, H5 } from '~/components/Typography'
 import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe'
