@@ -6,7 +6,7 @@ import OverthoughtList from '~/components/Overthought/List'
 import DesignDetailsGrid from '~/components/DesignDetailsGrid'
 import PodcastEpisodesList from '~/components/PodcastEpisodesList'
 import FigmaPlugins from '~/components/FigmaPlugins'
-import { getHome } from '~/graphql/queries'
+import { GET_HOME } from '~/graphql/queries'
 import { Post, Episode, Repo } from '~/graphql/types.generated'
 import theme from '~/components/Theme'
 import { getStaticApolloClient } from '~/graphql/api'
@@ -316,7 +316,7 @@ function Home({ data }: Props) {
 
 export async function getStaticProps() {
   const client = await getStaticApolloClient()
-  const { data } = await client.query({ query: getHome })
+  const { data } = await client.query({ query: GET_HOME })
   return {
     props: {
       data,

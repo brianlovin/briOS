@@ -11,7 +11,7 @@ function Login() {
 
   const [handleLogin] = useLoginMutation({
     variables: { password },
-    onCompleted: (data) => data.login && router.push('/'),
+    onCompleted: (data) => data.login && router.push('/bookmarks'),
   })
 
   function onSubmit(e) {
@@ -41,4 +41,8 @@ function Login() {
   )
 }
 
+/*
+  withApollo is needed to automatically wrap this page in an ApolloProvider,
+  allowing for the use of mutationHooks on the client.
+*/
 export default withApollo(Login)

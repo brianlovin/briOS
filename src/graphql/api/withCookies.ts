@@ -20,9 +20,9 @@ const cookie = (res, name, value, options = {}) => {
 /**
  * Adds `cookie` function on `res.cookie` to set cookies for response
  */
-const cookies = (handler) => (req, res) => {
+const withCookies = (handler) => (req, res) => {
   res.cookie = (name, value, options) => cookie(res, name, value, options)
   return handler(req, res)
 }
 
-export default cookies
+export default withCookies

@@ -6,6 +6,7 @@ import FullscreenLoading from '~/components/FullscreenLoading'
 
 function Logout() {
   const router = useRouter()
+
   const [handleLogout] = useLogoutMutation({
     onCompleted: () => router.push('/'),
   })
@@ -17,4 +18,8 @@ function Logout() {
   return <FullscreenLoading />
 }
 
+/*
+  withApollo is needed to automatically wrap this page in an ApolloProvider,
+  allowing for the use of mutationHooks on the client.
+*/
 export default withApollo(Logout)

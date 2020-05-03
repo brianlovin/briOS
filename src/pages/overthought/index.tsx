@@ -5,7 +5,7 @@ import { Post } from '~/graphql/types.generated'
 import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe'
 import SEO from '~/components/Overthought/SEO'
 import OverthoughtList from '~/components/Overthought/List'
-import { getPosts } from '~/graphql/queries'
+import { GET_POSTS } from '~/graphql/queries'
 import { getStaticApolloClient } from '~/graphql/api'
 
 interface Props {
@@ -36,11 +36,10 @@ function Overthought({ data }: Props) {
 
 export async function getStaticProps() {
   const client = await getStaticApolloClient()
-  const { data } = await client.query({ query: getPosts })
+  const { data } = await client.query({ query: GET_POSTS })
   return {
     props: {
       data,
-      apolloStaticCache: client.cache.extract(),
     },
   }
 }

@@ -11,6 +11,8 @@ import { getStaticApolloClient } from '~/graphql/api'
 import { withApollo } from '~/components/withApollo'
 
 function Bookmarks() {
+  // pre-populate bookmarks from the cache, but check for any new ones after
+  // the page loads
   const { data } = useGetBookmarksQuery({ fetchPolicy: 'cache-and-network' })
   const { bookmarks } = data
   const { isMe } = useAuth()
@@ -30,6 +32,16 @@ function Bookmarks() {
 export async function getStaticProps() {
   const client = await getStaticApolloClient()
   await client.query({ query: GET_BOOKMARKS })
+  /*
+    Because this is using withApollo, the data from this query will be
+    pre-populated in the Apollo cache at build time. When the user first
+    visits this page, we can retreive the data from the cache like this:
+
+    const { data } = useGetBookmarksQuery({ fetchPolicy: 'cache-and-network' })
+
+    This preserves the ability for the page to render all bookmarks instantly,
+    then get progressively updated if any new bookmarks come in over the wire.
+  */
   return {
     props: {
       apolloStaticCache: client.cache.extract(),

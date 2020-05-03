@@ -1,7 +1,7 @@
-import { BookmarkInfoFragment } from './bookmarkFragment'
-import { EpisodeInfoFragment } from './episodeFragment'
-import { PostInfoFragment } from './postFragment'
-import { RepoInfoFragment } from './repoFragment'
+import { BookmarkInfoFragment } from './bookmark'
+import { EpisodeInfoFragment } from './episode'
+import { PostInfoFragment } from './post'
+import { RepoInfoFragment } from './repo'
 
 export {
   BookmarkInfoFragment,

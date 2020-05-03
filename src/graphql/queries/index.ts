@@ -1,8 +1,7 @@
-import { GET_BOOKMARKS } from './getBookmarks'
-import { getEpisodes } from './getEpisodes'
-import { getHome } from './getHome'
-import { getPosts } from './getPosts'
-import { getPost } from './getPost'
+import { GET_BOOKMARKS } from './bookmarks'
+import { GET_EPISODES } from './episodes'
+import { GET_HOME } from './home'
+import { GET_POSTS, GET_POST } from './posts'
 import { IS_ME } from './isMe'
 
-export { GET_BOOKMARKS, getEpisodes, getHome, getPosts, getPost, IS_ME }
+export { GET_BOOKMARKS, GET_EPISODES, GET_HOME, GET_POSTS, GET_POST, IS_ME }

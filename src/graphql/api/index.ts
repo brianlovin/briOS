@@ -12,10 +12,7 @@ import { CLIENT_URL } from '../constants'
 // @ts-ignore
 global.fetch = require('node-fetch')
 
-export const endpoint =
-  process.env.NODE_ENV === 'production'
-    ? `${CLIENT_URL}/api/graphql`
-    : `${CLIENT_URL}/api/graphql`
+export const endpoint = `${CLIENT_URL}/api/graphql`
 
 const errorLink = onError(({ networkError, graphQLErrors }) => {
   if (graphQLErrors) {
