@@ -30,6 +30,14 @@ export async function addBookmark(_, { url }, { isMe }) {
   if (!isMe) throw new AuthenticationError('You must be logged in')
   if (!isValidUrl(url)) throw new UserInputError('URL was invalid')
 
+  const existingRef = await firebase
+    .collection('bookmarks')
+    .where('url', '==', url)
+    .get()
+    .then((snapshot) => !snapshot.empty)
+
+  if (existingRef) throw new UserInputError('URL already exists')
+
   const metadata = await getBookmarkMetaData(url)
 
   const id = await firebase
