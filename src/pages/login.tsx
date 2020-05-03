@@ -3,9 +3,9 @@ import { useAuth } from '~/hooks/useAuth'
 
 export default function Login() {
   const [password, setPassword] = React.useState('')
-  const { login } = useAuth()
 
   function onSubmit(e) {
+    const { login } = useAuth()
     e.preventDefault()
     return login(password)
   }
