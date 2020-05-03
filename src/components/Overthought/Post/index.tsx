@@ -17,7 +17,8 @@ interface Props {
 }
 
 export default function PostView({ post, posts }: Props) {
-  const filtered = posts ? posts.filter((p) => p.slug !== post.slug) : []
+  const filtered =
+    posts && posts.length > 0 ? posts.filter((p) => p.slug !== post.slug) : []
 
   return (
     <React.Fragment>
