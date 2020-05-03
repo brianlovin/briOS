@@ -31,7 +31,7 @@ function Login() {
           onSubmit={onSubmit}
         >
           <Input
-            type="text"
+            type="password"
             placeholder="password"
             onChange={(e) => setPassword(e.target.value)}
           />
