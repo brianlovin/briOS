@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.0.0-beta.44",
+    "@apollo/link-error": "^2.0.0-beta.3",
     "@apollo/link-schema": "^2.0.0-beta.3",
     "@tryghost/content-api": "^1.4.1",
     "apollo-server-micro": "^2.12.0",

@@ -71,6 +71,17 @@ function BookmarkListItem(props: ListItemProps) {
           >
             Cancel
           </Small>
+          <Small
+            onClick={handleDelete}
+            style={{
+              marginTop: 0,
+              marginLeft: '32px',
+              color: 'var(--accent-red)',
+            }}
+            as={'a'}
+          >
+            Delete
+          </Small>
         </div>
       </EditContainer>
     )
@@ -87,22 +98,13 @@ function BookmarkListItem(props: ListItemProps) {
         <Small>{bookmark.host || bookmark.url}</Small>
       </ListItem>
       {editable && (
-        <React.Fragment>
-          <Small
-            onClick={() => setIsEditing(true)}
-            style={{ marginTop: 0 }}
-            as={'a'}
-          >
-            Edit
-          </Small>
-          <Small
-            onClick={handleDelete}
-            style={{ marginTop: 0, marginLeft: '12px' }}
-            as={'a'}
-          >
-            Delete
-          </Small>
-        </React.Fragment>
+        <Small
+          onClick={() => setIsEditing(true)}
+          style={{ marginTop: 0 }}
+          as={'a'}
+        >
+          Edit
+        </Small>
       )}
     </div>
   )

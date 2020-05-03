@@ -1,30 +1,30 @@
 import * as React from 'react'
 import { useAddBookmarkMutation } from '~/graphql/types.generated'
 import { GET_BOOKMARKS } from '~/graphql/queries'
+import { Small } from '~/components/Typography'
+import { Input } from '~/components/Overthought/Feedback/style'
 
 export default function AddBookmark() {
   const [url, setUrl] = React.useState('')
+  const [error, setError] = React.useState('')
+  const query = GET_BOOKMARKS
 
   const [handleAddBookmark] = useAddBookmarkMutation({
     onCompleted: () => setUrl(''),
-    optimisticResponse: {
-      __typename: 'Mutation',
-      addBookmark: {
-        __typename: 'Bookmark',
-        id: `id-${url}`,
-        title: 'Saving...',
-        host: url,
-        url,
-      },
-    },
     update(cache, { data: { addBookmark } }) {
-      const { bookmarks } = cache.readQuery({ query: GET_BOOKMARKS })
+      const { bookmarks } = cache.readQuery({ query })
       cache.writeQuery({
-        query: GET_BOOKMARKS,
+        query,
         data: {
           bookmarks: [addBookmark, ...bookmarks],
         },
       })
+    },
+    onError({ message }) {
+      const clean = message.replace('GraphQL error:', '')
+      console.warn(clean)
+      setError(clean)
+      setUrl('')
     },
   })
 
@@ -33,14 +33,25 @@ export default function AddBookmark() {
     return handleAddBookmark({ variables: { url } })
   }
 
+  function onChange(e) {
+    error && setError('')
+    return setUrl(e.target.value)
+  }
+
   return (
-    <form onSubmit={onSubmit}>
-      <input
+    <form style={{ width: '100%', marginTop: '24px' }} onSubmit={onSubmit}>
+      <Input
         type="text"
         placeholder="Add a url..."
         value={url}
-        onChange={(e) => setUrl(e.target.value)}
+        onChange={onChange}
+        style={{ width: '100%' }}
       />
+      {error && (
+        <Small style={{ color: 'var(--accent-red)', marginTop: '4px' }}>
+          {error}
+        </Small>
+      )}
     </form>
   )
 }

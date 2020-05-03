@@ -8,6 +8,9 @@ const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
   context,
+  formatError({ message }) {
+    throw new Error(message)
+  },
 })
 
 export const config = {
@@ -18,5 +21,5 @@ export const config = {
 
 const handler = apolloServer.createHandler({ path: '/api/graphql' })
 
-// attach cookie helpers to all response objects
+// attach cookie helpers to all response
 export default cookies(handler)

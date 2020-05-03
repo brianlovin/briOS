@@ -18,10 +18,8 @@ interface Props {
 }
 
 function Bookmarks() {
-  const { data } = useGetBookmarksQuery({ fetchPolicy: 'cache-first' })
-
+  const { data } = useGetBookmarksQuery({ fetchPolicy: 'cache-and-network' })
   const { bookmarks } = data
-
   const { isMe } = useAuth()
 
   return (

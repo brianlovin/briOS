@@ -1,11 +1,8 @@
 import * as React from 'react'
-import {
-  ApolloClient,
-  HttpLink,
-  InMemoryCache,
-  ApolloProvider,
-} from '@apollo/client'
-import { endpoint } from '~/graphql/api'
+import { ApolloClient, ApolloProvider } from '@apollo/client'
+import { link, defaultOptions, cache } from '~/graphql/api'
+
+// ref https://github.com/zeit/next.js/discussions/11957#discussioncomment-7190 for this code
 
 // ensure that queries can run on the server during SSR and SSG
 // @ts-ignore
@@ -16,10 +13,9 @@ let globalApolloClient
 function initApolloClient(initialState) {
   if (!globalApolloClient) {
     globalApolloClient = new ApolloClient({
-      link: new HttpLink({
-        uri: endpoint,
-      }),
-      cache: new InMemoryCache().restore(initialState || {}),
+      link,
+      cache: cache.restore(initialState || {}),
+      defaultOptions,
     })
   }
   // client side page transition to an SSG page => update Apollo cache

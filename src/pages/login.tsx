@@ -2,6 +2,8 @@ import * as React from 'react'
 import { useRouter } from 'next/router'
 import { useLoginMutation } from '~/graphql/types.generated'
 import { withApollo } from '~/components/withApollo'
+import { FullscreenContainer, FullscreenContent } from '~/components/Page/style'
+import { Input } from '~/components/Overthought/Feedback/style'
 
 function Login() {
   const router = useRouter()
@@ -18,13 +20,24 @@ function Login() {
   }
 
   return (
-    <form onSubmit={onSubmit}>
-      <input
-        type="text"
-        placeholder="password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
-    </form>
+    <FullscreenContainer>
+      <FullscreenContent>
+        <form
+          style={{
+            background: 'var(--bg-inset)',
+            borderRadius: '12px',
+            padding: '32px',
+          }}
+          onSubmit={onSubmit}
+        >
+          <Input
+            type="text"
+            placeholder="password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </form>
+      </FullscreenContent>
+    </FullscreenContainer>
   )
 }
 

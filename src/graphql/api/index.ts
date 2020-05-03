@@ -1,5 +1,12 @@
+import { onError } from '@apollo/link-error'
+import {
+  ApolloClient,
+  InMemoryCache,
+  HttpLink,
+  ApolloLink,
+  DefaultOptions,
+} from '@apollo/client'
 import { CLIENT_URL } from '../constants'
-import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client'
 
 // ensure that queries can run on the server during SSR and SSG
 // @ts-ignore
@@ -10,11 +17,34 @@ export const endpoint =
     ? `${CLIENT_URL}/api/graphql`
     : `${CLIENT_URL}/api/graphql`
 
+const errorLink = onError(({ networkError, graphQLErrors }) => {
+  if (graphQLErrors) {
+    graphQLErrors.map(({ message }) => console.warn(message))
+  }
+  if (networkError) console.warn(networkError)
+})
+
+const httpLink = new HttpLink({
+  uri: endpoint,
+})
+
+export const link = ApolloLink.from([errorLink, httpLink])
+
+export const cache = new InMemoryCache()
+
+export const defaultOptions: DefaultOptions = {
+  query: {
+    fetchPolicy: 'cache-first',
+  },
+  mutate: {
+    errorPolicy: 'all',
+  },
+}
+
 export async function getStaticApolloClient() {
   return new ApolloClient({
-    link: new HttpLink({
-      uri: endpoint,
-    }),
-    cache: new InMemoryCache(),
+    link,
+    cache,
+    defaultOptions,
   })
 }
