@@ -14,7 +14,8 @@ function isValidUrl(string) {
 
 export async function editBookmark(_, { id, title }, { isMe }) {
   if (!isMe) throw new AuthenticationError('You must be logged in')
-  if (!title) throw new UserInputError('Bookmark must have a title')
+  if (!title || title.length === 0)
+    throw new UserInputError('Bookmark must have a title')
 
   await firebase.collection('bookmarks').doc(id).update({ title })
 
@@ -27,7 +28,6 @@ export async function editBookmark(_, { id, title }, { isMe }) {
 
 export async function addBookmark(_, { url }, { isMe }) {
   if (!isMe) throw new AuthenticationError('You must be logged in')
-  if (!url) throw new UserInputError('Bookmarks must contain a url')
   if (!isValidUrl(url)) throw new UserInputError('URL was invalid')
 
   const metadata = await getBookmarkMetaData(url)

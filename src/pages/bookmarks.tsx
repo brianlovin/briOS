@@ -2,20 +2,13 @@ import * as React from 'react'
 import Page, { SectionHeading } from '~/components/Page'
 import { H3 } from '~/components/Typography'
 import { NextSeo } from 'next-seo'
-import { Bookmark, useGetBookmarksQuery } from '~/graphql/types.generated'
+import { useGetBookmarksQuery } from '~/graphql/types.generated'
 import BookmarksList from '~/components/Bookmarks'
 import { GET_BOOKMARKS } from '~/graphql/queries'
 import { useAuth } from '~/hooks/useAuth'
 import AddBookmark from '~/components/Bookmarks/AddBookmark'
 import { getStaticApolloClient } from '~/graphql/api'
 import { withApollo } from '~/components/withApollo'
-
-interface Props {
-  apolloStaticCache: any
-  data: {
-    bookmarks: Bookmark[]
-  }
-}
 
 function Bookmarks() {
   const { data } = useGetBookmarksQuery({ fetchPolicy: 'cache-and-network' })
@@ -36,10 +29,9 @@ function Bookmarks() {
 
 export async function getStaticProps() {
   const client = await getStaticApolloClient()
-  const { data } = await client.query({ query: GET_BOOKMARKS })
+  await client.query({ query: GET_BOOKMARKS })
   return {
     props: {
-      data,
       apolloStaticCache: client.cache.extract(),
     },
   }
