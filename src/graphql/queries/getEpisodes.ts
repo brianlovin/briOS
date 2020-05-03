@@ -1,9 +1,11 @@
-import { episodeFragment } from '../fragments'
+import { EpisodeInfoFragment } from '../fragments'
+import { gql } from '@apollo/client'
 
-export const getEpisodes = `
-  {
+export const getEpisodes = gql`
+  query GetEpisodes {
     episodes {
-      ${episodeFragment}
+      ...EpisodeInfo
     }
   }
+  ${EpisodeInfoFragment}
 `

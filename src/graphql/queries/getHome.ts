@@ -1,15 +1,15 @@
-import { postFragment, episodeFragment, repoFragment } from '../fragments'
+import { PostInfoFragment, EpisodeInfoFragment } from '../fragments'
+import { gql } from '@apollo/client'
 
-export const getHome = `
-  {
+export const getHome = gql`
+  query GetHome {
     posts(first: 5) {
-      ${postFragment}
+      ...PostInfo
     }
     episodes {
-      ${episodeFragment}
-    }
-    repos {
-      ${repoFragment}
+      ...EpisodeInfo
     }
   }
+  ${PostInfoFragment}
+  ${EpisodeInfoFragment}
 `
