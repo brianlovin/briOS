@@ -1,6 +1,5 @@
 import { CLIENT_URL } from '../constants'
 import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client'
-import { request } from 'graphql-request'
 
 // ensure that queries can run on the server during SSR and SSG
 // @ts-ignore
@@ -18,13 +17,4 @@ export async function getStaticApolloClient() {
     }),
     cache: new InMemoryCache(),
   })
-}
-
-export const fetcher = async ({ query, variables = {} }) => {
-  try {
-    return await request(endpoint, query, variables)
-  } catch (error) {
-    console.error(JSON.stringify(error, undefined, 2))
-    return null
-  }
 }
