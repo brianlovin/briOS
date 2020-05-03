@@ -1,6 +1,11 @@
-import { bookmarkFragment } from './bookmarkFragment'
-import { episodeFragment } from './episodeFragment'
-import { postFragment } from './postFragment'
-import { repoFragment } from './repoFragment'
+import { BookmarkInfoFragment } from './bookmarkFragment'
+import { EpisodeInfoFragment } from './episodeFragment'
+import { PostInfoFragment } from './postFragment'
+import { RepoInfoFragment } from './repoFragment'
 
-export { bookmarkFragment, episodeFragment, postFragment, repoFragment }
+export {
+  BookmarkInfoFragment,
+  EpisodeInfoFragment,
+  PostInfoFragment,
+  RepoInfoFragment,
+}

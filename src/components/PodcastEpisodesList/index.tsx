@@ -1,6 +1,6 @@
 import React from 'react'
 import { Ul, Li, LineClamp } from '~/components/Typography'
-import { Episode } from '~/types/graphql'
+import { Episode } from '~/graphql/types.generated'
 
 interface Props {
   episodes: Episode[]

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Link from 'next/link'
-import { Post } from '~/types/graphql'
+import { Post } from '~/graphql/types.generated'
 import { ContentContainer, SectionHeading } from '~/components/Page'
 import { H3, P, A, Rarr, H5 } from '~/components/Typography'
 import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe'
@@ -17,7 +17,8 @@ interface Props {
 }
 
 export default function PostView({ post, posts }: Props) {
-  const filtered = posts ? posts.filter((p) => p.slug !== post.slug) : []
+  const filtered =
+    posts && posts.length > 0 ? posts.filter((p) => p.slug !== post.slug) : []
 
   return (
     <React.Fragment>

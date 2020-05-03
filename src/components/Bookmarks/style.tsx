@@ -9,6 +9,7 @@ export const Grid = styled.div`
   margin-top: ${theme.space[5]};
   grid-gap: ${theme.space[3]};
   grid-template-columns: 1fr;
+  position: relative;
 
   @media (max-width: ${theme.breakpoints[4]}) {
     grid-gap: ${theme.space[4]};
@@ -36,4 +37,10 @@ export const ListItem = styled.a`
   @media (max-width: ${theme.breakpoints[4]}) {
     grid-gap: ${theme.space[1]};
   }
+`
+
+export const EditContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: ${theme.space[1]};
 `

@@ -1,12 +1,14 @@
-import { postFragment } from '../fragments'
+import { PostInfoFragment } from '../fragments'
+import { gql } from '@apollo/client'
 
-export const getPost = `
-  query getPost($slug: String!, $first: Int) {
+export const getPost = gql`
+  query GetPost($slug: String!, $first: Int) {
     post(slug: $slug) {
-      ${postFragment}
+      ...PostInfo
     }
     posts(first: $first) {
-      ${postFragment}
+      ...PostInfo
     }
   }
+  ${PostInfoFragment}
 `

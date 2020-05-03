@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Post } from '~/types/graphql'
+import { Post } from '~/graphql/types.generated'
 import { PrimaryButton } from '~/components/Button'
 import { H5, P } from '~/components/Typography'
 import {
@@ -43,7 +43,11 @@ export default function Feedback({ post }: Props) {
       },
     }).then((response) => {
       if (response.ok) {
-        setServerState({ submitting: false, submitted: true, error: false })
+        setServerState({
+          submitting: false,
+          submitted: true,
+          error: false,
+        })
         form.reset()
         setMessage('')
       } else {

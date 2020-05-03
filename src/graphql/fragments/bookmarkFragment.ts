@@ -1,5 +1,10 @@
-export const bookmarkFragment = `
-  title
-  url
-  host
+import { gql } from '@apollo/client'
+
+export const BookmarkInfoFragment = gql`
+  fragment BookmarkInfo on Bookmark {
+    id
+    title
+    url
+    host
+  }
 `

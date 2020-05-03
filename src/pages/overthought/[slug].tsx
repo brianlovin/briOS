@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { Post } from '~/types/graphql'
-import { fetcher } from '~/graphql/api'
-import { getPost, getPosts } from '~/graphql/queries/queries'
+import { Post } from '~/graphql/types.generated'
+import { getPost, getPosts } from '~/graphql/queries'
 import Page from '~/components/Page'
 import PostContainer from '~/components/Overthought/Post'
 import NotFound from '~/components/Overthought/NotFound'
+import { getStaticApolloClient } from '~/graphql/api'
 
 interface Props {
   slug: string
@@ -28,7 +28,8 @@ function OverthoughtPost({ data }: Props) {
 }
 
 export async function getStaticPaths() {
-  const data = await fetcher({ query: getPosts })
+  const client = await getStaticApolloClient()
+  const { data } = await client.query({ query: getPosts })
 
   if (!data) return { paths: [], fallback: true }
 
@@ -40,18 +41,19 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params: { slug } }) {
-  const postQuery = await fetcher({
+  const client = await getStaticApolloClient()
+  const { data } = await client.query({
     query: getPost,
     variables: { slug, first: 5 },
   })
 
   return {
-    unstable_revalidate: true,
     props: {
       slug,
+      apolloStaticCache: client.cache.extract(),
       data: {
-        post: postQuery.post,
-        posts: postQuery.posts,
+        post: data.post,
+        posts: data.posts,
       },
     },
   }

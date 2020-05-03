@@ -74,6 +74,7 @@ export const Input = styled.input`
   &:focus {
     border: 1px solid var(--accent-blue);
     background: var(--bg-secondary);
+    outline: none;
   }
 `
 

@@ -1,15 +1,50 @@
-import { request } from 'graphql-request'
+import { onError } from '@apollo/link-error'
+import {
+  ApolloClient,
+  InMemoryCache,
+  HttpLink,
+  ApolloLink,
+  DefaultOptions,
+} from '@apollo/client'
+import { CLIENT_URL } from '../constants'
 
-const endpoint =
+// ensure that queries can run on the server during SSR and SSG
+// @ts-ignore
+global.fetch = require('node-fetch')
+
+export const endpoint =
   process.env.NODE_ENV === 'production'
-    ? 'https://brianlovin.com/api/graphql'
-    : 'http://localhost:3000/api/graphql'
+    ? `${CLIENT_URL}/api/graphql`
+    : `${CLIENT_URL}/api/graphql`
 
-export const fetcher = async ({ query, variables = {} }) => {
-  try {
-    return await request(endpoint, query, variables)
-  } catch (error) {
-    console.error(JSON.stringify(error, undefined, 2))
-    return null
+const errorLink = onError(({ networkError, graphQLErrors }) => {
+  if (graphQLErrors) {
+    graphQLErrors.map(({ message }) => console.warn(message))
   }
+  if (networkError) console.warn(networkError)
+})
+
+const httpLink = new HttpLink({
+  uri: endpoint,
+})
+
+export const link = ApolloLink.from([errorLink, httpLink])
+
+export const cache = new InMemoryCache()
+
+export const defaultOptions: DefaultOptions = {
+  query: {
+    fetchPolicy: 'cache-first',
+  },
+  mutate: {
+    errorPolicy: 'all',
+  },
+}
+
+export async function getStaticApolloClient() {
+  return new ApolloClient({
+    link,
+    cache,
+    defaultOptions,
+  })
 }

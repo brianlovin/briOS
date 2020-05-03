@@ -1,12 +1,12 @@
 import * as React from 'react'
 import Page, { SectionHeading } from '~/components/Page'
 import { H3, LargeSubheading } from '~/components/Typography'
-import { Post } from '~/types/graphql'
+import { Post } from '~/graphql/types.generated'
 import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe'
 import SEO from '~/components/Overthought/SEO'
 import OverthoughtList from '~/components/Overthought/List'
-import { getPosts } from '~/graphql/queries/queries'
-import { fetcher } from '~/graphql/api'
+import { getPosts } from '~/graphql/queries'
+import { getStaticApolloClient } from '~/graphql/api'
 
 interface Props {
   data: {
@@ -35,8 +35,14 @@ function Overthought({ data }: Props) {
 }
 
 export async function getStaticProps() {
-  const data = await fetcher({ query: getPosts })
-  return { props: { data }, unstable_revalidate: true }
+  const client = await getStaticApolloClient()
+  const { data } = await client.query({ query: getPosts })
+  return {
+    props: {
+      data,
+      apolloStaticCache: client.cache.extract(),
+    },
+  }
 }
 
 export default Overthought
