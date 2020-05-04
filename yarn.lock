@@ -1536,13 +1536,13 @@
     "@graphql-codegen/plugin-helpers" "1.13.5"
     tslib "~1.11.1"
 
-"@graphql-codegen/cli@^1.13.4":
-  version "1.13.4"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/cli/-/cli-1.13.4.tgz#e609ca3a11e7846cf3671acd0ca515209ece6505"
-  integrity sha512-zVRatL67AKLSI2piJbnpZGA8/fDYY1E7jqmVGmEua3TYmnws80uK9bue519Z0eLtcA1FE0Iyi8CxG4zLotK+/w==
+"@graphql-codegen/cli@^1.13.5":
+  version "1.13.5"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/cli/-/cli-1.13.5.tgz#578c96dcbee68190b0365634214a25dfe067f4c8"
+  integrity sha512-/A19GkD9NpFhRNSt6/sVepZ09hwwpQUhjgKthBea0cteH3jFXa/3h1Sgtk/0z90MLxRNRVaY9V85O7SUU21xBA==
   dependencies:
-    "@graphql-codegen/core" "1.13.4"
-    "@graphql-codegen/plugin-helpers" "1.13.4"
+    "@graphql-codegen/core" "1.13.5"
+    "@graphql-codegen/plugin-helpers" "1.13.5"
     "@graphql-toolkit/apollo-engine-loader" "~0.10.4"
     "@graphql-toolkit/code-file-loader" "~0.10.4"
     "@graphql-toolkit/common" "~0.10.4"
@@ -1584,31 +1584,15 @@
     valid-url "1.0.9"
     wrap-ansi "7.0.0"
 
-"@graphql-codegen/core@1.13.4":
-  version "1.13.4"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/core/-/core-1.13.4.tgz#1514b33573f209dc63db626f23b166065eafa5ac"
-  integrity sha512-LHBlYfQdsfPHNJ9DvFwH8sonFI3d6ze+wejQKA+Uo2IU8a6Q0s56mVFlwSAfPg39HNDBT8RRMsmbrHnYPgSRpw==
+"@graphql-codegen/core@1.13.5":
+  version "1.13.5"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/core/-/core-1.13.5.tgz#82cdc80757281bd84573ea52ddbf94cb4e893dcc"
+  integrity sha512-RKkzvCXWfXaNeleHRpp5qWmiwnNCxsc6cVlLmSiZMQad363yOjU2m95oqy4a7WwL6pE/x0NqxtxCFLP7fD+LMQ==
   dependencies:
-    "@graphql-codegen/plugin-helpers" "1.13.4"
+    "@graphql-codegen/plugin-helpers" "1.13.5"
     "@graphql-toolkit/common" "~0.10.4"
     "@graphql-toolkit/schema-merging" "~0.10.4"
     tslib "~1.11.1"
-
-"@graphql-codegen/plugin-helpers@1.13.4":
-  version "1.13.4"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/plugin-helpers/-/plugin-helpers-1.13.4.tgz#bb750f22d723403c76e079ce58fe1f9345ae9ef4"
-  integrity sha512-nMuzxW/HpE1XtJagvakbdvuQkp0ttMCSB30Kh71DBx8Yoi2SizvQBeWm0FiqJJDDrjJDQdE0i4KN/rRvpPkWHw==
-  dependencies:
-    "@graphql-toolkit/common" "~0.10.4"
-    camel-case "4.1.1"
-    common-tags "1.8.0"
-    constant-case "3.0.3"
-    import-from "3.0.0"
-    lower-case "2.0.1"
-    param-case "3.0.3"
-    pascal-case "3.1.1"
-    tslib "~1.11.1"
-    upper-case "2.0.1"
 
 "@graphql-codegen/plugin-helpers@1.13.5":
   version "1.13.5"
