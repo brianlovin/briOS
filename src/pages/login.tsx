@@ -31,6 +31,7 @@ function Login() {
           onSubmit={onSubmit}
         >
           <Input
+            autoFocus
             type="password"
             placeholder="password"
             onChange={(e) => setPassword(e.target.value)}
