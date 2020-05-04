@@ -8,6 +8,7 @@ import {
   MenuButton,
   CloseButton,
   Label,
+  Background,
 } from './style'
 
 interface Props {
@@ -76,6 +77,7 @@ export default function Header() {
   return (
     <React.Fragment>
       <MobileContainer expanded={isExpanded} data-cy="header">
+        <Background />
         {isExpanded ? (
           <React.Fragment>
             <CloseButton
@@ -115,6 +117,7 @@ export default function Header() {
         <InnerGrid>
           <NavLinks activeRoute={activeRoute} />
         </InnerGrid>
+        <Background />
       </Container>
     </React.Fragment>
   )

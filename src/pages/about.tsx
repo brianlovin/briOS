@@ -8,17 +8,26 @@ import Picture from '~/components/Picture'
 const Container = styled.div`
   max-width: ${theme.breakpoints[4]};
 
-  source,
-  img {
-    border-radius: 8px;
+  picture {
     width: 100%;
     margin-top: ${theme.space[5]};
+    object-fit: cover;
+    display: block;
 
     @media (max-width: ${theme.breakpoints[4]}) {
-      margin-top: -48px;
+      margin-top: -78px;
       margin-left: -16px;
       margin-right: -16px;
       width: calc(100% + 32px);
+    }
+  }
+
+  source,
+  img {
+    width: 100%;
+    border-radius: 8px;
+
+    @media (max-width: ${theme.breakpoints[4]}) {
       border-radius: 0;
     }
   }

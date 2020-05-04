@@ -3,6 +3,10 @@ export const COLORS = {
     light: '#fefefe',
     dark: '#050505',
   },
+  'bg-primary-rgb': {
+    light: '254,254,254',
+    dark: '5,5,5',
+  },
   'bg-secondary': {
     light: '#ffffff',
     dark: '#151617',
