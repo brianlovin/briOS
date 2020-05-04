@@ -41,6 +41,7 @@ export default function AddBookmark() {
   return (
     <form style={{ width: '100%', marginTop: '24px' }} onSubmit={onSubmit}>
       <Input
+        autoFocus
         type="text"
         placeholder="Add a url..."
         value={url}
