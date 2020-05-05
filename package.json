@@ -23,7 +23,7 @@
     "@apollo/link-error": "^2.0.0-beta.3",
     "@apollo/link-schema": "^2.0.0-beta.3",
     "@tryghost/content-api": "^1.4.1",
-    "apollo-server-micro": "^2.12.0",
+    "apollo-server-micro": "^2.13.0",
     "cheerio": "^1.0.0-rc.3",
     "cookie": "^0.4.1",
     "cryptr": "^6.0.2",
