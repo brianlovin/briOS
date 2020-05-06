@@ -6,7 +6,6 @@ export const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   grid-gap: ${theme.space[3]};
-  margin: ${theme.space[5]} 0 ${theme.space[3]};
   padding: ${theme.space[4]};
   background: var(--bg-inset);
   width: 100%;
@@ -26,7 +25,6 @@ export const Form = styled.form`
   display: grid;
   grid-template-columns: 1fr;
   grid-gap: ${theme.space[3]};
-  margin-top: ${theme.space[2]};
 
   button {
     height: 100%;
@@ -79,7 +77,6 @@ export const Input = styled.input`
 `
 
 export const Success = styled.div`
-  margin-top: ${theme.space[2]};
   padding: ${theme.space[2]} ${theme.space[4]};
   border: 1px solid var(--accent-green);
   color: var(--text-on-primary);

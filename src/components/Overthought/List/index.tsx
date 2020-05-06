@@ -2,7 +2,8 @@ import * as React from 'react'
 import { format } from 'timeago.js'
 import { Post } from '~/graphql/types.generated'
 import Link from 'next/link'
-import { Li, Ul, Small } from '~/components/Typography'
+import { A, Small, LineClamp } from '~/components/Typography'
+import Grid from '~/components/Grid'
 
 interface Props {
   posts: Post[]
@@ -10,18 +11,21 @@ interface Props {
 
 export default function OverthoughtList({ posts }: Props) {
   if (!posts || posts.length === 0) return null
-
   return (
-    <Ul style={{ listStyleType: 'none', marginLeft: 0 }}>
+    <Grid gap={16}>
       {posts.map((post) => (
-        <Li key={post.id}>
-          <Link href="/overthought/[slug]" as={`/overthought/${post.slug}`}>
-            <a>{post.title}</a>
+        <Grid key={post.id}>
+          <Link
+            href="/overthought/[slug]"
+            as={`/overthought/${post.slug}`}
+            passHref
+          >
+            <A>{post.title}</A>
           </Link>
-          {post.excerpt && <div>{post.excerpt}</div>}
-          <Small as={'span'}>Updated {format(post.updated_at)}</Small>
-        </Li>
+          {post.excerpt && <LineClamp lines={2}>{post.excerpt}</LineClamp>}
+          <Small>Updated {format(post.updated_at)}</Small>
+        </Grid>
       ))}
-    </Ul>
+    </Grid>
   )
 }

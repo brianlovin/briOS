@@ -64,7 +64,7 @@ export default function Feedback({ post }: Props) {
 
   return (
     <Container>
-      <H5 style={{ marginTop: 0, display: 'flex', alignItems: 'center' }}>
+      <H5 style={{ display: 'flex', alignItems: 'center' }}>
         <span
           style={{
             display: 'flex',
@@ -90,7 +90,7 @@ export default function Feedback({ post }: Props) {
         </span>
         A small favor
       </H5>
-      <P style={{ marginTop: 0 }}>
+      <P>
         Was anything I wrote confusing, outdated, or incorrect? Please let me
         know! Just write a few words below and I’ll be sure to amend this post
         with your suggestions.

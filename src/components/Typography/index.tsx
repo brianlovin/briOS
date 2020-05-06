@@ -117,18 +117,8 @@ export const p = css`
   }
 
   code {
-    margin-top: 0;
     font-size: ${theme.fontSizes[0]};
     box-shadow: inset 0 0 0 1px var(--border-primary);
-  }
-
-  & + & {
-    margin-top: ${theme.space[4]};
-  }
-
-  code {
-    margin-top: 0;
-    font-size: ${theme.fontSizes[0]};
   }
 
   a > code {
@@ -151,14 +141,11 @@ export const P = styled.p`
 
 export const Small = styled(P)`
   font-size: ${theme.fontSizes[0]};
-  margin-top: 0;
   color: var(--text-quaternary);
 `
 
 export const blockquote = css`
   ${p};
-  margin-top: ${theme.space[4]};
-  margin-bottom: ${theme.space[5]};
   padding-left: ${theme.space[4]};
   font-style: italic;
   color: var(--text-tertiary);
@@ -181,9 +168,6 @@ export const Blockquote = styled.blockquote`
 
 export const list = css`
   ${p};
-  margin: ${theme.space[3]};
-  margin-left: ${theme.space[4]};
-  margin-right: 0;
   font-weight: ${theme.fontWeights.body};
   line-height: ${theme.fontWeights.body};
   color: var(--text-secondary);
@@ -198,7 +182,6 @@ export const Ol = styled.ol`
 
 export const listItem = css`
   line-height: ${theme.lineHeights.body};
-  padding: ${theme.space[2]} ${theme.space[0]};
 `
 export const Li = styled.li`
   ${listItem}
@@ -211,7 +194,6 @@ export const pre = css`
   background: var(--bg-inset);
   text-shadow: none;
   border-radius: 8px;
-  margin: ${theme.space[5]} 0;
   overflow-x: scroll;
   box-shadow: 0 0 0 1px var(--border-primary),
     inset 0 1px 4px rgba(0, 0, 0, 0.04);
@@ -250,6 +232,8 @@ export const Hr = styled.hr``
 
 export const A = styled.a`
   ${arrows}
+  color: var(--text-link);
+  font-weight: 500;
   display: inline-block;
 `
 
@@ -280,17 +264,12 @@ export const Larr = styled.span.attrs({
 export const Subheading = styled(P)`
   font-size: ${theme.fontSizes[1]};
   font-weight: ${theme.fontWeights.subheading};
-  margin-top: ${theme.space[3]};
   line-height: 1.4;
   max-width: ${theme.breakpoints[4]};
   ${arrows}
 
   a {
     display: inline-block;
-  }
-
-  & + & {
-    margin-top: ${theme.space[3]};
   }
 
   @media (max-width: ${theme.breakpoints[4]}) {
@@ -301,17 +280,12 @@ export const Subheading = styled(P)`
 export const LargeSubheading = styled(P)`
   font-size: ${theme.fontSizes[2]};
   font-weight: ${theme.fontWeights.subheading};
-  margin-top: ${theme.space[3]};
   line-height: 1.4;
   max-width: ${theme.breakpoints[4]};
   ${arrows}
 
   a {
     display: inline-block;
-  }
-
-  & + & {
-    margin-top: ${theme.space[3]};
   }
 
   @media (max-width: ${theme.breakpoints[4]}) {

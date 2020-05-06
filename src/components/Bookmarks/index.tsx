@@ -4,11 +4,12 @@ import {
   useDeleteBookmarkMutation,
   useEditBookmarkMutation,
 } from '~/graphql/types.generated'
-import { ListItem, Grid, Title, EditContainer } from './style'
+import { ListItem, Title } from './style'
 import { Small } from '../Typography'
 import { useAuth } from '~/hooks/useAuth'
 import { GET_BOOKMARKS } from '~/graphql/queries'
 import { Input } from '../Overthought/Feedback/style'
+import Grid from '~/components/Grid'
 
 interface Props {
   bookmarks?: Array<Bookmark>
@@ -64,35 +65,25 @@ function BookmarkListItem(props: ListItemProps) {
 
   if (isEditing) {
     return (
-      <EditContainer>
+      <Grid gap={4}>
         <Input defaultValue={title} onChange={onChange} />
         <Small>{bookmark.host || bookmark.url}</Small>
-        {error && (
-          <Small style={{ marginTop: 0, color: 'var(--accent-red)' }}>
-            {error}
-          </Small>
-        )}
+        {error && <Small style={{ color: 'var(--accent-red)' }}>{error}</Small>}
         <div style={{ display: 'flex' }}>
           <Small
             onClick={() =>
               handleSave({ variables: { title, id: bookmark.id } })
             }
-            style={{ marginTop: 0 }}
             as={'a'}
           >
             Save
           </Small>
-          <Small
-            onClick={handleCancel}
-            style={{ marginTop: 0, marginLeft: '12px' }}
-            as={'a'}
-          >
+          <Small onClick={handleCancel} style={{ marginLeft: '12px' }} as={'a'}>
             Cancel
           </Small>
           <Small
             onClick={handleDelete}
             style={{
-              marginTop: 0,
               marginLeft: '32px',
               color: 'var(--accent-red)',
             }}
@@ -101,30 +92,27 @@ function BookmarkListItem(props: ListItemProps) {
             Delete
           </Small>
         </div>
-      </EditContainer>
+      </Grid>
     )
   }
 
   return (
-    <div>
-      <ListItem
+    <Grid>
+      <Grid
+        as={ListItem}
         href={`${bookmark.url}?ref=brianlovin.com`}
         target="_blank"
         rel="noopener noreferrer"
       >
         <Title>{bookmark.title || bookmark.url}</Title>
         <Small>{bookmark.host || bookmark.url}</Small>
-      </ListItem>
+      </Grid>
       {editable && (
-        <Small
-          onClick={() => setIsEditing(true)}
-          style={{ marginTop: 0 }}
-          as={'a'}
-        >
+        <Small onClick={() => setIsEditing(true)} as={'a'}>
           Edit
         </Small>
       )}
-    </div>
+    </Grid>
   )
 }
 
@@ -133,7 +121,7 @@ export default function BookmarksList({ bookmarks }: Props) {
   const { isMe } = useAuth()
 
   return (
-    <Grid>
+    <Grid gap={16}>
       {bookmarks.map((bookmark) => (
         <BookmarkListItem
           editable={isMe}

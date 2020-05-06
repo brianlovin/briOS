@@ -12,7 +12,6 @@ export const FeaturedImage = styled.img`
     width: 100%;
     min-height: 0;
     margin: 0;
-    margin-top: -24px;
     margin-bottom: 24px;
   }
 `

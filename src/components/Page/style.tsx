@@ -21,7 +21,6 @@ export const ContentGrid = styled.div`
   grid-gap: ${theme.space[3]};
   width: 100%;
   max-width: ${theme.breakpoints[4]};
-  margin-top: ${theme.space[5]};
 
   a {
     overflow: hidden;
@@ -114,6 +113,5 @@ export const FullscreenContent = styled.div`
   align-items: center;
   justify-content: center;
   justify-items: center;
-  margin-top: -72px;
   gap: ${theme.space[3]};
 `

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import Page, { SectionHeading } from '~/components/Page'
+import Page from '~/components/Page'
 import { H3 } from '~/components/Typography'
 import { NextSeo } from 'next-seo'
 import { useGetBookmarksQuery } from '~/graphql/types.generated'
@@ -9,6 +9,7 @@ import { useAuth } from '~/hooks/useAuth'
 import AddBookmark from '~/components/Bookmarks/AddBookmark'
 import { getStaticApolloClient } from '~/graphql/api'
 import { withApollo } from '~/components/withApollo'
+import Grid from '~/components/Grid'
 
 function Bookmarks() {
   // pre-populate bookmarks from the cache, but check for any new ones after
@@ -20,11 +21,17 @@ function Bookmarks() {
   return (
     <Page withHeader>
       <NextSeo title={'Bookmarks'} />
-      <SectionHeading data-cy="bookmarks">
-        <H3>Bookmarks</H3>
-        {isMe && <AddBookmark />}
-        {bookmarks && <BookmarksList bookmarks={bookmarks} />}
-      </SectionHeading>
+      <Grid
+        columns={'fit-content(640px)'}
+        style={{ justifyContent: 'center' }}
+        data-cy="bookmarks"
+      >
+        <Grid gap={32}>
+          <H3>Bookmarks</H3>
+          {isMe && <AddBookmark />}
+          {bookmarks && <BookmarksList bookmarks={bookmarks} />}
+        </Grid>
+      </Grid>
     </Page>
   )
 }

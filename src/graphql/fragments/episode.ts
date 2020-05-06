@@ -5,5 +5,6 @@ export const EpisodeInfoFragment = gql`
     id
     title
     description
+    published_at
   }
 `
