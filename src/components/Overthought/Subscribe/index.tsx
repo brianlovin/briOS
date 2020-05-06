@@ -36,7 +36,7 @@ export default function OverthoughtSubscribeBox() {
 
   return (
     <Container data-cy="overthought-subscribe-box">
-      <H5 style={{ marginTop: 0, display: 'flex', alignItems: 'center' }}>
+      <H5 style={{ display: 'flex', alignItems: 'center' }}>
         <span
           style={{
             display: 'flex',
@@ -62,7 +62,7 @@ export default function OverthoughtSubscribeBox() {
         </span>
         Follow along
       </H5>
-      <P style={{ marginTop: 0 }}>
+      <P>
         If you want to know about new posts, add your email below.
         Alternatively, you can{' '}
         <A

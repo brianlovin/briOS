@@ -3,9 +3,10 @@ import * as React from 'react'
 interface Props {
   srcset: string[]
   alt: string
+  style?: object
 }
 
-export default function Picture({ srcset, alt }: Props) {
+export default function Picture({ srcset, alt, style = {} }: Props) {
   const assets = []
 
   srcset.map((src, i) => {
@@ -20,7 +21,7 @@ export default function Picture({ srcset, alt }: Props) {
 
   const fallback = srcset.find((src) => !src.endsWith('webp'))
 
-  assets.push(<img src={fallback} key={fallback} alt={alt} />)
+  assets.push(<img style={style} src={fallback} key={fallback} alt={alt} />)
 
   return <picture>{assets}</picture>
 }

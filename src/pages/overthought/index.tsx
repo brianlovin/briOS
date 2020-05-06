@@ -1,5 +1,5 @@
 import * as React from 'react'
-import Page, { SectionHeading } from '~/components/Page'
+import Page from '~/components/Page'
 import { H3, LargeSubheading } from '~/components/Typography'
 import { Post } from '~/graphql/types.generated'
 import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe'
@@ -7,6 +7,7 @@ import SEO from '~/components/Overthought/SEO'
 import OverthoughtList from '~/components/Overthought/List'
 import { GET_POSTS } from '~/graphql/queries'
 import { getStaticApolloClient } from '~/graphql/api'
+import Grid from '~/components/Grid'
 
 interface Props {
   data: {
@@ -19,17 +20,23 @@ function Overthought({ data }: Props) {
     <Page withHeader>
       <SEO />
 
-      <SectionHeading data-cy="overthought">
-        <H3>Overthought</H3>
-        <LargeSubheading>
-          Overthinking out loud about design, development, and building
-          products.
-        </LargeSubheading>
+      <Grid
+        columns={'fit-content(640px)'}
+        gap={32}
+        style={{ justifyContent: 'center' }}
+      >
+        <Grid gap={16} data-cy="overthought">
+          <H3>Overthought</H3>
+          <LargeSubheading>
+            Overthinking out loud about design, development, and building
+            products.
+          </LargeSubheading>
+        </Grid>
 
         {data && data.posts && <OverthoughtList posts={data.posts} />}
 
         <OverthoughtSubscribeBox />
-      </SectionHeading>
+      </Grid>
     </Page>
   )
 }

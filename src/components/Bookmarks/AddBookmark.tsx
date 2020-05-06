@@ -3,6 +3,7 @@ import { useAddBookmarkMutation } from '~/graphql/types.generated'
 import { GET_BOOKMARKS } from '~/graphql/queries'
 import { Small } from '~/components/Typography'
 import { Input } from '~/components/Overthought/Feedback/style'
+import Grid from '../Grid'
 
 export default function AddBookmark() {
   const [url, setUrl] = React.useState('')
@@ -39,7 +40,7 @@ export default function AddBookmark() {
   }
 
   return (
-    <form style={{ width: '100%', marginTop: '24px' }} onSubmit={onSubmit}>
+    <Grid gap={12} as={'form'} onSubmit={onSubmit}>
       <Input
         autoFocus
         type="text"
@@ -48,11 +49,7 @@ export default function AddBookmark() {
         onChange={onChange}
         style={{ width: '100%' }}
       />
-      {error && (
-        <Small style={{ color: 'var(--accent-red)', marginTop: '4px' }}>
-          {error}
-        </Small>
-      )}
-    </form>
+      {error && <Small style={{ color: 'var(--accent-red)' }}>{error}</Small>}
+    </Grid>
   )
 }

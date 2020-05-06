@@ -1,8 +1,9 @@
 import * as React from 'react'
 import { NextSeo } from 'next-seo'
-import Page, { SectionHeading } from '~/components/Page'
+import Page from '~/components/Page'
 import { H3, Subheading } from '~/components/Typography'
 import DesignDetailsGrid from '~/components/DesignDetailsGrid'
+import Grid from '~/components/Grid'
 
 export default function DesignDetails() {
   return (
@@ -24,17 +25,23 @@ export default function DesignDetails() {
         }}
       />
 
-      <SectionHeading>
-        <H3>App Dissection</H3>
-        <Subheading style={{ marginTop: '24px' }}>
-          This collection of posts explores some of the best interaction
-          patterns, visual styles, and design decisions of well-known apps. Each
-          detail features a video and my commentary on the functionality and
-          effectiveness of the interface.
-        </Subheading>
-      </SectionHeading>
+      <Grid
+        columns={'fit-content(640px)'}
+        style={{ justifyContent: 'center' }}
+        gap={32}
+      >
+        <Grid gap={24}>
+          <H3>App Dissection</H3>
+          <Subheading>
+            This collection of posts explores some of the best interaction
+            patterns, visual styles, and design decisions of well-known apps.
+            Each detail features a video and my commentary on the functionality
+            and effectiveness of the interface.
+          </Subheading>
+        </Grid>
 
-      <DesignDetailsGrid truncate={false} />
+        <DesignDetailsGrid truncate={false} />
+      </Grid>
     </Page>
   )
 }
