@@ -5840,10 +5840,10 @@ find-versions@^3.2.0:
   dependencies:
     semver-regex "^2.0.0"
 
-firebase-admin@^8.11.0:
-  version "8.11.0"
-  resolved "https://registry.yarnpkg.com/firebase-admin/-/firebase-admin-8.11.0.tgz#6292474c1270731655bc7c54a16499d54012fd0b"
-  integrity sha512-DapjZBeilXIDJShlWIvcgPkX6HhOHCs5C9972ZDNpfm0aSSgWuwgVQz9vs9iTk0u+oQuqRjxcHveZki0qaHJ2w==
+firebase-admin@^8.12.0:
+  version "8.12.0"
+  resolved "https://registry.yarnpkg.com/firebase-admin/-/firebase-admin-8.12.0.tgz#b453b1d42b21367d1989da4f81336cad9a166740"
+  integrity sha512-gBbKa4J+tOXIhg7x/ePhHrKtsMedyD1pzysZ1h66FFF1WjcPR0wTxTksmzcydwVswyIfYyYB6oMr8eK0NjrBRA==
   dependencies:
     "@firebase/database" "^0.6.0"
     "@types/node" "^8.10.59"
