@@ -9,6 +9,7 @@ import {
   editBookmark,
   deleteBookmark,
 } from '~/graphql/resolvers/mutations/bookmarks'
+import { requiresMe } from '~/graphql/authorization'
 
 export default {
   Query: {
@@ -22,8 +23,8 @@ export default {
   Mutation: {
     login: login,
     logout: logout,
-    addBookmark,
-    editBookmark,
-    deleteBookmark,
+    addBookmark: requiresMe(addBookmark),
+    editBookmark: requiresMe(editBookmark),
+    deleteBookmark: requiresMe(deleteBookmark),
   },
 }
