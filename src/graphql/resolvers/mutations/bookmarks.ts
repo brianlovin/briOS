@@ -1,5 +1,5 @@
 import { URL } from 'url'
-import { AuthenticationError, UserInputError } from 'apollo-server-micro'
+import { UserInputError } from 'apollo-server-micro'
 import firebase from '~/graphql/api/firebase'
 import getBookmarkMetaData from './getBookmarkMetaData'
 
@@ -12,8 +12,7 @@ function isValidUrl(string) {
   }
 }
 
-export async function editBookmark(_, { id, title }, { isMe }) {
-  if (!isMe) throw new AuthenticationError('You must be logged in')
+export async function editBookmark(_, { id, title }) {
   if (!title || title.length === 0)
     throw new UserInputError('Bookmark must have a title')
 
@@ -26,8 +25,7 @@ export async function editBookmark(_, { id, title }, { isMe }) {
     .then((doc) => doc.data())
 }
 
-export async function addBookmark(_, { url }, { isMe }) {
-  if (!isMe) throw new AuthenticationError('You must be logged in')
+export async function addBookmark(_, { url }) {
   if (!isValidUrl(url)) throw new UserInputError('URL was invalid')
 
   const existingRef = await firebase
@@ -56,9 +54,7 @@ export async function addBookmark(_, { url }, { isMe }) {
     .then((res) => ({ ...res, id }))
 }
 
-export async function deleteBookmark(_, { id }, { isMe }) {
-  if (!isMe) throw new AuthenticationError('You must be logged in')
-
+export async function deleteBookmark(_, { id }) {
   return await firebase
     .collection('bookmarks')
     .doc(id)
