@@ -12,6 +12,8 @@ jobs:
     name: Integration
     env:
       GHOST_API_KEY: ${{ secrets.GHOST_API_KEY }}
+      FATHOM_SITE_ID: ${{ secrets.FATHOM_SITE_ID }}
+      FATHOM_CUSTOM_URL: ${{ secrets.FATHOM_CUSTOM_URL }}
       FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
       FIREBASE_TYPE: ${{ secrets.FIREBASE_TYPE }}
       FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
