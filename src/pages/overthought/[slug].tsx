@@ -48,6 +48,8 @@ export async function getStaticProps({ params: { slug } }) {
   })
 
   return {
+    // because this data is slightly more dynamic, update it every hour
+    unstable_revalidate: 60 * 60,
     props: {
       slug,
       data: {
