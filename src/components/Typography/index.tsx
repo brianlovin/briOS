@@ -106,14 +106,11 @@ export const p = css`
   }
 
   a:hover {
-    text-decoration: none;
-    color: var(--text-link);
-    opacity: 0.7;
+    text-decoration: underline;
   }
 
   a:visited {
-    color: var(--text-link);
-    opacity: 0.7;
+    color: var(--text-link-visited);
   }
 
   code {
@@ -235,6 +232,10 @@ export const A = styled.a`
   color: var(--text-link);
   font-weight: 500;
   display: inline-block;
+
+  &:visited {
+    color: var(--text-link-visited);
+  }
 `
 
 const baseArrowStyles = css`

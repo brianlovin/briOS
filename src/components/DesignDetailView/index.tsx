@@ -1,7 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
 import { getDateObject } from '~/lib/getDateObject'
-import { ContentContainer, SectionHeading } from '~/components/Page'
 import {
   H3,
   Subheading,
@@ -13,7 +12,6 @@ import { DesignDetailsPost } from '~/types'
 import DesignDetailsGrid from '~/components/DesignDetailsGrid'
 import DesignDetailMedia from '~/components/DesignDetailMedia'
 import Markdown from '~/components/MarkdownRenderer'
-import { HeadingContainer } from './style'
 import Picture from '../Picture'
 import Grid from '../Grid'
 
