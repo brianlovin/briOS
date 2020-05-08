@@ -32,6 +32,7 @@ export default gql`
   }
 
   type Bookmark {
+    id: String
     url: String!
     author: String
     creator: String
@@ -40,7 +41,7 @@ export default gql`
     site_name: String
     title: String
     host: String
-    id: String
+    reactions: Int
   }
 
   type Episode {
@@ -83,5 +84,6 @@ export default gql`
     addBookmark(url: String!): Bookmark
     editBookmark(id: ID!, title: String!): Bookmark
     deleteBookmark(id: ID!): Boolean
+    addBookmarkReaction(id: ID!): Bookmark
   }
 `
