@@ -7,7 +7,7 @@ import BookmarksList from '~/components/Bookmarks'
 import { GET_BOOKMARKS } from '~/graphql/queries'
 import { useAuth } from '~/hooks/useAuth'
 import AddBookmark from '~/components/Bookmarks/AddBookmark'
-import { getStaticApolloClient } from '~/graphql/api'
+import { initApolloClient } from '~/graphql/api'
 import { withApollo } from '~/components/withApollo'
 import Grid from '~/components/Grid'
 
@@ -37,7 +37,7 @@ function Bookmarks() {
 }
 
 export async function getStaticProps() {
-  const client = await getStaticApolloClient()
+  const client = await initApolloClient({})
   await client.query({ query: GET_BOOKMARKS })
   /*
     Because this is using withApollo, the data from this query will be
@@ -49,9 +49,10 @@ export async function getStaticProps() {
     This preserves the ability for the page to render all bookmarks instantly,
     then get progressively updated if any new bookmarks come in over the wire.
   */
+  const apolloStaticCache = client.cache.extract()
   return {
     props: {
-      apolloStaticCache: client.cache.extract(),
+      apolloStaticCache,
     },
   }
 }

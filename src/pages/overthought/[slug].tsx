@@ -4,7 +4,7 @@ import { GET_POST, GET_POSTS } from '~/graphql/queries'
 import Page from '~/components/Page'
 import PostContainer from '~/components/Overthought/Post'
 import NotFound from '~/components/Overthought/NotFound'
-import { getStaticApolloClient } from '~/graphql/api'
+import { initApolloClient } from '~/graphql/api'
 
 interface Props {
   slug: string
@@ -28,7 +28,7 @@ function OverthoughtPost({ data }: Props) {
 }
 
 export async function getStaticPaths() {
-  const client = await getStaticApolloClient()
+  const client = await initApolloClient({})
   const { data } = await client.query({ query: GET_POSTS })
 
   if (!data) return { paths: [], fallback: true }
@@ -41,7 +41,7 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params: { slug } }) {
-  const client = await getStaticApolloClient()
+  const client = await initApolloClient({})
   const { data } = await client.query({
     query: GET_POST,
     variables: { slug, first: 5 },

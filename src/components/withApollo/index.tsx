@@ -1,40 +1,21 @@
 import * as React from 'react'
-import { ApolloClient, ApolloProvider } from '@apollo/client'
-import { link, defaultOptions, cache } from '~/graphql/api'
+import { ApolloProvider } from '@apollo/client'
+import { initApolloClient } from '~/graphql/api'
 
-// ref https://github.com/zeit/next.js/discussions/11957#discussioncomment-7190 for this code
+/*
+  This wrapper helps to provide Apollo functionality during SSR, while rehydrating
+  on the client with a pre-populated cache of the query results.
 
-// ensure that queries can run on the server during SSR and SSG
-// @ts-ignore
-global.fetch = require('node-fetch')
-
-let globalApolloClient
-
-function initApolloClient(initialState) {
-  if (!globalApolloClient) {
-    globalApolloClient = new ApolloClient({
-      link,
-      cache: cache.restore(initialState || {}),
-      defaultOptions,
-    })
-  }
-  // client side page transition to an SSG page => update Apollo cache
-  else if (initialState) {
-    globalApolloClient.cache.restore({
-      ...globalApolloClient.cache.extract(),
-      ...initialState,
-    })
-  }
-
-  return globalApolloClient
-}
+  Refer to https://github.com/zeit/next.js/blob/canary/examples/api-routes-apollo-server-and-client/apollo/client.js
+  for more source.
+*/
 
 export function withApollo(PageComponent) {
   // eslint-disable-next-line
   const WithApollo = ({ apolloStaticCache, ...pageProps }) => {
-    // HERE WE USE THE PASSED CACHE
+    // apolloStaticCache prop gets set in getStaticProps on page views
     const client = initApolloClient(apolloStaticCache)
-    // and here we have the initialized client 🙂
+
     return (
       <ApolloProvider client={client}>
         <PageComponent {...pageProps} />

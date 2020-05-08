@@ -6,7 +6,7 @@ import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe'
 import SEO from '~/components/Overthought/SEO'
 import OverthoughtList from '~/components/Overthought/List'
 import { GET_POSTS } from '~/graphql/queries'
-import { getStaticApolloClient } from '~/graphql/api'
+import { initApolloClient } from '~/graphql/api'
 import Grid from '~/components/Grid'
 
 interface Props {
@@ -42,7 +42,7 @@ function Overthought({ data }: Props) {
 }
 
 export async function getStaticProps() {
-  const client = await getStaticApolloClient()
+  const client = await initApolloClient({})
   const { data } = await client.query({ query: GET_POSTS })
   return {
     props: {
