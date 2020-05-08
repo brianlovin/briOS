@@ -1,8 +1,30 @@
 import * as React from 'react'
-import { ConfigPodcast } from '~/types'
 import { SubscriptionsContainer, SubscriptionAvatar } from './style'
 
-type Props = {
+interface ConfigPodcast {
+  id: number
+  name: string
+  slug: string
+  description: string
+  simplecastId: number
+  artworkUrl: string
+  iTunesUrl: string
+  overcastUrl: string
+  pocketCastsUrl: string
+  rssFeedUrl: string
+  googlePodcastsUrl: string
+  castroUrl: string
+  breakerUrl: string
+  spotifyUrl: string
+  applePodcastId: string
+  twitterUsername: string
+  colors: {
+    text: string
+    button: string
+  }
+}
+
+interface Props {
   podcast: ConfigPodcast
 }
 

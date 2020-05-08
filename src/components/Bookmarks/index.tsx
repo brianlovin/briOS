@@ -34,7 +34,6 @@ function BookmarkListItem(props: ListItemProps) {
     },
     onError({ message }) {
       const clean = message.replace('GraphQL error:', '')
-      console.warn(clean)
       setError(clean)
     },
   })

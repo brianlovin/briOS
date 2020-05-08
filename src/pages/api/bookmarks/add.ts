@@ -2,7 +2,7 @@ import twilio from 'twilio'
 const MessagingResponse = twilio.twiml.MessagingResponse
 import { URL } from 'url'
 
-import db from '~/graphql/api/firebase'
+import db from '~/graphql/services/firebase'
 
 const stringIsAValidUrl = (s) => {
   try {

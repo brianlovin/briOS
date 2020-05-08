@@ -1,6 +1,6 @@
 import { URL } from 'url'
 import { UserInputError } from 'apollo-server-micro'
-import firebase from '~/graphql/api/firebase'
+import firebase from '~/graphql/services/firebase'
 import getBookmarkMetaData from './getBookmarkMetaData'
 
 function isValidUrl(string) {

@@ -7,7 +7,7 @@ import BookmarksList from '~/components/Bookmarks'
 import { GET_BOOKMARKS } from '~/graphql/queries'
 import { useAuth } from '~/hooks/useAuth'
 import AddBookmark from '~/components/Bookmarks/AddBookmark'
-import { initApolloClient } from '~/graphql/api'
+import { initApolloClient } from '~/graphql/services/apollo'
 import { withApollo } from '~/components/withApollo'
 import Grid from '~/components/Grid'
 
@@ -51,6 +51,8 @@ export async function getStaticProps() {
   */
   const apolloStaticCache = client.cache.extract()
   return {
+    // because this data is slightly more dynamic, update it every hour
+    unstable_revalidate: 60 * 60,
     props: {
       apolloStaticCache,
     },

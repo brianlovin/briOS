@@ -8,7 +8,7 @@ import PodcastEpisodesList from '~/components/PodcastEpisodesList'
 import FigmaPlugins from '~/components/FigmaPlugins'
 import { GET_HOME } from '~/graphql/queries'
 import { Post, Episode, Repo } from '~/graphql/types.generated'
-import { initApolloClient } from '~/graphql/api'
+import { initApolloClient } from '~/graphql/services/apollo'
 import Grid from '~/components/Grid'
 
 interface Props {
@@ -278,6 +278,8 @@ export async function getStaticProps() {
   const client = await initApolloClient({})
   const { data } = await client.query({ query: GET_HOME })
   return {
+    // because this data is slightly more dynamic, update it every hour
+    unstable_revalidate: 60 * 60,
     props: {
       data,
       apolloStaticCache: client.cache.extract(),

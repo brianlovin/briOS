@@ -1,4 +1,4 @@
-import firebase from '~/graphql/api/firebase'
+import firebase from '~/graphql/services/firebase'
 
 export async function getBookmarks() {
   const data = []

@@ -2,7 +2,7 @@ import { ApolloServer } from 'apollo-server-micro'
 import typeDefs from '~/graphql/typeDefs'
 import resolvers from '~/graphql/resolvers'
 import context from '~/graphql/context'
-import withCookies from '~/graphql/api/withCookies'
+import withCookies from '~/graphql/helpers/withCookies'
 
 const apolloServer = new ApolloServer({
   typeDefs,

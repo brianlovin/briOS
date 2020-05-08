@@ -6,7 +6,7 @@ import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe'
 import SEO from '~/components/Overthought/SEO'
 import OverthoughtList from '~/components/Overthought/List'
 import { GET_POSTS } from '~/graphql/queries'
-import { initApolloClient } from '~/graphql/api'
+import { initApolloClient } from '~/graphql/services/apollo'
 import Grid from '~/components/Grid'
 
 interface Props {
@@ -45,6 +45,8 @@ export async function getStaticProps() {
   const client = await initApolloClient({})
   const { data } = await client.query({ query: GET_POSTS })
   return {
+    // because this data is slightly more dynamic, update it every hour
+    unstable_revalidate: 60 * 60,
     props: {
       data,
     },

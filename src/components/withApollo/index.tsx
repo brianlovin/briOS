@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { ApolloProvider } from '@apollo/client'
-import { initApolloClient } from '~/graphql/api'
+import { initApolloClient } from '~/graphql/services/apollo'
 
 /*
   This wrapper helps to provide Apollo functionality during SSR, while rehydrating

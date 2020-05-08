@@ -4,7 +4,7 @@ import { GET_POST, GET_POSTS } from '~/graphql/queries'
 import Page from '~/components/Page'
 import PostContainer from '~/components/Overthought/Post'
 import NotFound from '~/components/Overthought/NotFound'
-import { initApolloClient } from '~/graphql/api'
+import { initApolloClient } from '~/graphql/services/apollo'
 
 interface Props {
   slug: string
@@ -48,6 +48,8 @@ export async function getStaticProps({ params: { slug } }) {
   })
 
   return {
+    // because this data is slightly more dynamic, update it every hour
+    unstable_revalidate: 60 * 60,
     props: {
       slug,
       data: {
