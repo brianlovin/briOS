@@ -23,7 +23,6 @@ export default function AddBookmark() {
     },
     onError({ message }) {
       const clean = message.replace('GraphQL error:', '')
-      console.warn(clean)
       setError(clean)
       setUrl('')
     },
