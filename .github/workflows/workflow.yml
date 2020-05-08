@@ -12,6 +12,7 @@ jobs:
     name: Integration
     env:
       GHOST_API_KEY: ${{ secrets.GHOST_API_KEY }}
+      FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v1
