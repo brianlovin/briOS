@@ -4,7 +4,7 @@ import { GET_POST, GET_POSTS } from '~/graphql/queries'
 import Page from '~/components/Page'
 import PostContainer from '~/components/Overthought/Post'
 import NotFound from '~/components/Overthought/NotFound'
-import { initApolloClient } from '~/graphql/api'
+import { initApolloClient } from '~/graphql/services/apollo'
 
 interface Props {
   slug: string

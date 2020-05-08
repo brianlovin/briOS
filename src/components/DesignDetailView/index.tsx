@@ -1,6 +1,5 @@
 import React from 'react'
 import Link from 'next/link'
-import { getDateObject } from '~/lib/getDateObject'
 import {
   H3,
   Subheading,
@@ -8,12 +7,13 @@ import {
   A,
   Rarr,
 } from '~/components/Typography'
-import { DesignDetailsPost } from '~/types'
 import DesignDetailsGrid from '~/components/DesignDetailsGrid'
 import DesignDetailMedia from '~/components/DesignDetailMedia'
 import Markdown from '~/components/MarkdownRenderer'
 import Picture from '../Picture'
 import Grid from '../Grid'
+import { format } from 'timeago.js'
+import { DesignDetailsPost } from '~/pages/design-details/[slug]'
 
 interface Props {
   post: DesignDetailsPost
@@ -22,9 +22,9 @@ interface Props {
 export default function DesignDetailView(props: Props) {
   const { post } = props
 
-  const { month, year, day } = getDateObject(post.createdAt)
-  const datestring = `${month} ${day}, ${year}`
-  const subheading = `${datestring} · ${post.details.length} details`
+  const subheading = `Posted ${format(post.createdAt)} · ${
+    post.details.length
+  } details`
 
   return (
     <Grid

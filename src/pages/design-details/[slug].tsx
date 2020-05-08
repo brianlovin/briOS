@@ -4,11 +4,20 @@ import { NextSeo } from 'next-seo'
 import Page, { SectionHeading } from '~/components/Page'
 import { H1, Subheading } from '~/components/Typography'
 import designDetailsPosts from '~/data/appDissections'
-import { DesignDetailsPost } from '~/types'
 import DesignDetailView from '~/components/DesignDetailView'
 import DesignDetailsGrid from '~/components/DesignDetailsGrid'
+import { DesignDetail as PostType } from '~/components/DesignDetailMedia'
 
-type Props = {
+export interface DesignDetailsPost {
+  slug: string
+  title: string
+  description: string
+  createdAt: string
+  details: Array<PostType>
+  tint: string
+}
+
+interface Props {
   post: DesignDetailsPost
 }
 

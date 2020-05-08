@@ -1,4 +1,4 @@
-import { ghost } from '~/graphql/api/ghost'
+import { ghost } from '~/graphql/services/ghost'
 
 export async function getPosts(_, { first = 'all' }) {
   return await ghost.posts

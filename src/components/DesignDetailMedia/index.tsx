@@ -1,10 +1,16 @@
 import React, { useState } from 'react'
 import VisibilitySensor from 'react-visibility-sensor'
-import { DesignDetail } from '~/types'
 import Markdown from '~/components/MarkdownRenderer'
 import { DetailContainer, DetailTitle, MediaContainer, Video } from './style'
 
-type Props = {
+export interface DesignDetail {
+  title: string
+  description: string
+  media: Array<string>
+  orientation?: 'landscape'
+}
+
+interface Props {
   detail: DesignDetail
 }
 

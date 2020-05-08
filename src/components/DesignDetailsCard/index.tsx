@@ -1,7 +1,6 @@
 import * as React from 'react'
 import ReactVisibilitySensor from 'react-visibility-sensor'
 import Link from 'next/link'
-import { DesignDetailsPost } from '~/types'
 import {
   Title,
   Container,
@@ -13,8 +12,9 @@ import {
   Circle,
 } from './style'
 import Picture from '~/components/Picture'
+import { DesignDetailsPost } from '~/pages/design-details/[slug]'
 
-type Props = {
+interface Props {
   post: DesignDetailsPost
 }
 
