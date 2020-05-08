@@ -10,13 +10,13 @@ interface Props {
 
 export default ({ children }: Props) => {
   return (
-    <>
+    <React.Fragment>
       <SEO />
       <DarkMode />
       <Fathom />
       <GlobalStyles.ResetStyles />
 
       {children}
-    </>
+    </React.Fragment>
   )
 }
