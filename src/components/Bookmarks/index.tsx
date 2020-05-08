@@ -158,12 +158,12 @@ function BookmarkListItem(props: ListItemProps) {
           <Small>{bookmark.host || bookmark.url}</Small>
         </A>
         {editable && (
-          <>
+          <React.Fragment>
             <Small style={{ color: 'var(--text-placeholder)' }}>/</Small>
             <Small onClick={() => setIsEditing(true)} as={'a'}>
               Edit
             </Small>
-          </>
+          </React.Fragment>
         )}
       </Grid>
     </Grid>

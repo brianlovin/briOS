@@ -1,28 +1,17 @@
 import * as React from 'react'
-import { trackPageview, setSiteId, load } from 'fathom-client'
-import Router from 'next/router'
 
-interface Props {
-  children?: any
-}
-
-Router.events.on('routeChangeComplete', () => {
-  if (process.env.NODE_ENV === 'production') {
-    trackPageview()
-  }
-})
-
-function FathomProvider(props) {
+export default function Fathom() {
   React.useEffect(() => {
-    if (process.env.NODE_ENV === 'production') {
-      load()
-      setSiteId(process.env.FATHOM_SITE_ID)
-      trackPageview()
-    }
+    const tracker = window.document.createElement('script')
+    const firstScript = window.document.getElementsByTagName('script')[0]
+    tracker.defer = true
+    tracker.setAttribute('site', process.env.FATHOM_SITE_ID)
+    tracker.setAttribute('spa', 'auto')
+    tracker.setAttribute('excluded-domains', 'localhost')
+    tracker.setAttribute('included-domains', 'brianlovin.com')
+    tracker.src = process.env.FATHOM_CUSTOM_URL
+    firstScript.parentNode.insertBefore(tracker, firstScript)
   }, [])
-  return <span {...props} />
-}
 
-export default ({ children }: Props) => {
-  return <FathomProvider>{children}</FathomProvider>
+  return null
 }
