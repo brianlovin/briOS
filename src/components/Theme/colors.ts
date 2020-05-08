@@ -47,10 +47,6 @@ export const COLORS = {
     light: '#007AFF',
     dark: '#FF9500',
   },
-  'text-link-visited': {
-    light: '#4A6E96',
-    dark: '#AD8245',
-  },
   'text-link-rgb': {
     light: '0,122,255',
     dark: '255,149,0',

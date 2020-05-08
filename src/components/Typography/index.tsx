@@ -109,10 +109,6 @@ export const p = css`
     text-decoration: underline;
   }
 
-  a:visited {
-    color: var(--text-link-visited);
-  }
-
   code {
     font-size: ${theme.fontSizes[0]};
     box-shadow: inset 0 0 0 1px var(--border-primary);
@@ -232,10 +228,6 @@ export const A = styled.a`
   color: var(--text-link);
   font-weight: 500;
   display: inline-block;
-
-  &:visited {
-    color: var(--text-link-visited);
-  }
 `
 
 const baseArrowStyles = css`
