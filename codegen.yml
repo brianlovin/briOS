@@ -1,5 +1,5 @@
 overwrite: true
-schema: src/graphql/schema/index.ts
+schema: src/graphql/typeDefs/index.ts
 documents: './src/**/*.{tsx,ts}'
 hooks:
   afterOneFileWrite:

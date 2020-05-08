@@ -8,6 +8,7 @@ import {
   addBookmark,
   editBookmark,
   deleteBookmark,
+  addBookmarkReaction,
 } from '~/graphql/resolvers/mutations/bookmarks'
 import { requiresMe } from '~/graphql/authorization'
 
@@ -26,5 +27,6 @@ export default {
     addBookmark: requiresMe(addBookmark),
     editBookmark: requiresMe(editBookmark),
     deleteBookmark: requiresMe(deleteBookmark),
+    addBookmarkReaction: addBookmarkReaction,
   },
 }

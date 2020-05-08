@@ -49,6 +49,7 @@ export type Post = {
 
 export type Bookmark = {
   __typename?: 'Bookmark'
+  id?: Maybe<Scalars['String']>
   url: Scalars['String']
   author?: Maybe<Scalars['String']>
   creator?: Maybe<Scalars['String']>
@@ -57,7 +58,7 @@ export type Bookmark = {
   site_name?: Maybe<Scalars['String']>
   title?: Maybe<Scalars['String']>
   host?: Maybe<Scalars['String']>
-  id?: Maybe<Scalars['String']>
+  reactions?: Maybe<Scalars['Int']>
 }
 
 export type Episode = {
@@ -112,6 +113,7 @@ export type Mutation = {
   addBookmark?: Maybe<Bookmark>
   editBookmark?: Maybe<Bookmark>
   deleteBookmark?: Maybe<Scalars['Boolean']>
+  addBookmarkReaction?: Maybe<Bookmark>
 }
 
 export type MutationLoginArgs = {
@@ -131,12 +133,17 @@ export type MutationDeleteBookmarkArgs = {
   id: Scalars['ID']
 }
 
+export type MutationAddBookmarkReactionArgs = {
+  id: Scalars['ID']
+}
+
 export type BookmarkInfoFragment = {
   __typename?: 'Bookmark'
   id?: Maybe<string>
   title?: Maybe<string>
   url: string
   host?: Maybe<string>
+  reactions?: Maybe<number>
 }
 
 export type EpisodeInfoFragment = {
@@ -144,6 +151,7 @@ export type EpisodeInfoFragment = {
   id?: Maybe<number>
   title?: Maybe<string>
   description?: Maybe<string>
+  published_at?: Maybe<string>
 }
 
 export type PostInfoFragment = {
@@ -206,6 +214,17 @@ export type AddBookmarkMutation = {
   addBookmark?: Maybe<{ __typename?: 'Bookmark' } & BookmarkInfoFragment>
 }
 
+export type AddBookmarkReactionMutationVariables = {
+  id: Scalars['ID']
+}
+
+export type AddBookmarkReactionMutation = {
+  __typename?: 'Mutation'
+  addBookmarkReaction?: Maybe<
+    { __typename?: 'Bookmark' } & BookmarkInfoFragment
+  >
+}
+
 export type GetBookmarksQueryVariables = {}
 
 export type GetBookmarksQuery = {
@@ -228,6 +247,17 @@ export type GetHomeQuery = {
   episodes: Array<Maybe<{ __typename?: 'Episode' } & EpisodeInfoFragment>>
 }
 
+export type IsMeQueryVariables = {}
+
+export type IsMeQuery = { __typename?: 'Query'; isMe?: Maybe<boolean> }
+
+export type GetPostsQueryVariables = {}
+
+export type GetPostsQuery = {
+  __typename?: 'Query'
+  posts: Array<Maybe<{ __typename?: 'Post' } & PostInfoFragment>>
+}
+
 export type GetPostQueryVariables = {
   slug: Scalars['String']
   first?: Maybe<Scalars['Int']>
@@ -239,23 +269,13 @@ export type GetPostQuery = {
   posts: Array<Maybe<{ __typename?: 'Post' } & PostInfoFragment>>
 }
 
-export type GetPostsQueryVariables = {}
-
-export type GetPostsQuery = {
-  __typename?: 'Query'
-  posts: Array<Maybe<{ __typename?: 'Post' } & PostInfoFragment>>
-}
-
-export type IsMeQueryVariables = {}
-
-export type IsMeQuery = { __typename?: 'Query'; isMe?: Maybe<boolean> }
-
 export const BookmarkInfoFragmentDoc = gql`
   fragment BookmarkInfo on Bookmark {
     id
     title
     url
     host
+    reactions
   }
 `
 export const EpisodeInfoFragmentDoc = gql`
@@ -263,6 +283,7 @@ export const EpisodeInfoFragmentDoc = gql`
     id
     title
     description
+    published_at
   }
 `
 export const PostInfoFragmentDoc = gql`
@@ -526,6 +547,57 @@ export type AddBookmarkMutationOptions = ApolloReactCommon.BaseMutationOptions<
   AddBookmarkMutation,
   AddBookmarkMutationVariables
 >
+export const AddBookmarkReactionDocument = gql`
+  mutation addBookmarkReaction($id: ID!) {
+    addBookmarkReaction(id: $id) {
+      ...BookmarkInfo
+    }
+  }
+  ${BookmarkInfoFragmentDoc}
+`
+export type AddBookmarkReactionMutationFn = ApolloReactCommon.MutationFunction<
+  AddBookmarkReactionMutation,
+  AddBookmarkReactionMutationVariables
+>
+
+/**
+ * __useAddBookmarkReactionMutation__
+ *
+ * To run a mutation, you first call `useAddBookmarkReactionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddBookmarkReactionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addBookmarkReactionMutation, { data, loading, error }] = useAddBookmarkReactionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useAddBookmarkReactionMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    AddBookmarkReactionMutation,
+    AddBookmarkReactionMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<
+    AddBookmarkReactionMutation,
+    AddBookmarkReactionMutationVariables
+  >(AddBookmarkReactionDocument, baseOptions)
+}
+export type AddBookmarkReactionMutationHookResult = ReturnType<
+  typeof useAddBookmarkReactionMutation
+>
+export type AddBookmarkReactionMutationResult = ApolloReactCommon.MutationResult<
+  AddBookmarkReactionMutation
+>
+export type AddBookmarkReactionMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  AddBookmarkReactionMutation,
+  AddBookmarkReactionMutationVariables
+>
 export const GetBookmarksDocument = gql`
   query GetBookmarks {
     bookmarks {
@@ -692,6 +764,106 @@ export type GetHomeQueryResult = ApolloReactCommon.QueryResult<
   GetHomeQuery,
   GetHomeQueryVariables
 >
+export const IsMeDocument = gql`
+  query IsMe {
+    isMe
+  }
+`
+
+/**
+ * __useIsMeQuery__
+ *
+ * To run a query within a React component, call `useIsMeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useIsMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useIsMeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useIsMeQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<IsMeQuery, IsMeQueryVariables>
+) {
+  return ApolloReactHooks.useQuery<IsMeQuery, IsMeQueryVariables>(
+    IsMeDocument,
+    baseOptions
+  )
+}
+export function useIsMeLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    IsMeQuery,
+    IsMeQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<IsMeQuery, IsMeQueryVariables>(
+    IsMeDocument,
+    baseOptions
+  )
+}
+export type IsMeQueryHookResult = ReturnType<typeof useIsMeQuery>
+export type IsMeLazyQueryHookResult = ReturnType<typeof useIsMeLazyQuery>
+export type IsMeQueryResult = ApolloReactCommon.QueryResult<
+  IsMeQuery,
+  IsMeQueryVariables
+>
+export const GetPostsDocument = gql`
+  query GetPosts {
+    posts {
+      ...PostInfo
+    }
+  }
+  ${PostInfoFragmentDoc}
+`
+
+/**
+ * __useGetPostsQuery__
+ *
+ * To run a query within a React component, call `useGetPostsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPostsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetPostsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetPostsQuery,
+    GetPostsQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<GetPostsQuery, GetPostsQueryVariables>(
+    GetPostsDocument,
+    baseOptions
+  )
+}
+export function useGetPostsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetPostsQuery,
+    GetPostsQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<GetPostsQuery, GetPostsQueryVariables>(
+    GetPostsDocument,
+    baseOptions
+  )
+}
+export type GetPostsQueryHookResult = ReturnType<typeof useGetPostsQuery>
+export type GetPostsLazyQueryHookResult = ReturnType<
+  typeof useGetPostsLazyQuery
+>
+export type GetPostsQueryResult = ApolloReactCommon.QueryResult<
+  GetPostsQuery,
+  GetPostsQueryVariables
+>
 export const GetPostDocument = gql`
   query GetPost($slug: String!, $first: Int) {
     post(slug: $slug) {
@@ -748,104 +920,4 @@ export type GetPostLazyQueryHookResult = ReturnType<typeof useGetPostLazyQuery>
 export type GetPostQueryResult = ApolloReactCommon.QueryResult<
   GetPostQuery,
   GetPostQueryVariables
->
-export const GetPostsDocument = gql`
-  query GetPosts {
-    posts {
-      ...PostInfo
-    }
-  }
-  ${PostInfoFragmentDoc}
-`
-
-/**
- * __useGetPostsQuery__
- *
- * To run a query within a React component, call `useGetPostsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetPostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetPostsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetPostsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetPostsQuery,
-    GetPostsQueryVariables
-  >
-) {
-  return ApolloReactHooks.useQuery<GetPostsQuery, GetPostsQueryVariables>(
-    GetPostsDocument,
-    baseOptions
-  )
-}
-export function useGetPostsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetPostsQuery,
-    GetPostsQueryVariables
-  >
-) {
-  return ApolloReactHooks.useLazyQuery<GetPostsQuery, GetPostsQueryVariables>(
-    GetPostsDocument,
-    baseOptions
-  )
-}
-export type GetPostsQueryHookResult = ReturnType<typeof useGetPostsQuery>
-export type GetPostsLazyQueryHookResult = ReturnType<
-  typeof useGetPostsLazyQuery
->
-export type GetPostsQueryResult = ApolloReactCommon.QueryResult<
-  GetPostsQuery,
-  GetPostsQueryVariables
->
-export const IsMeDocument = gql`
-  query IsMe {
-    isMe
-  }
-`
-
-/**
- * __useIsMeQuery__
- *
- * To run a query within a React component, call `useIsMeQuery` and pass it any options that fit your needs.
- * When your component renders, `useIsMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useIsMeQuery({
- *   variables: {
- *   },
- * });
- */
-export function useIsMeQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<IsMeQuery, IsMeQueryVariables>
-) {
-  return ApolloReactHooks.useQuery<IsMeQuery, IsMeQueryVariables>(
-    IsMeDocument,
-    baseOptions
-  )
-}
-export function useIsMeLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    IsMeQuery,
-    IsMeQueryVariables
-  >
-) {
-  return ApolloReactHooks.useLazyQuery<IsMeQuery, IsMeQueryVariables>(
-    IsMeDocument,
-    baseOptions
-  )
-}
-export type IsMeQueryHookResult = ReturnType<typeof useIsMeQuery>
-export type IsMeLazyQueryHookResult = ReturnType<typeof useIsMeLazyQuery>
-export type IsMeQueryResult = ApolloReactCommon.QueryResult<
-  IsMeQuery,
-  IsMeQueryVariables
 >

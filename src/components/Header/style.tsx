@@ -33,7 +33,7 @@ export const Background = styled.div`
   top: 0;
   z-index: -1;
   background: rgba(var(--bg-primary-rgb), 0.76);
-  box-shadow: 0 1px 0px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 0px rgba(0, 0, 0, 0.06);
   backdrop-filter: saturate(180%) blur(20px);
 `
 
@@ -109,16 +109,17 @@ export const Label = styled.span`
   a {
     text-align: center;
     background: ${(props) =>
-      props.isActive ? 'rgba(var(--text-link-rgb), 0.04)' : 'none'};
+      props.isActive ? 'rgba(var(--text-link-rgb), 0.06)' : 'none'};
     color: ${(props) =>
       props.isActive ? 'var(--text-link)' : 'var(--text-primary)'};
   }
 
   a:hover {
+    color: var(--text-link);
     background: ${(props) =>
       props.isActive
-        ? 'rgba(var(--text-link-rgb), 0.04)'
-        : 'rgba(var(--text-link-rgb), 0.04)'};
+        ? 'rgba(var(--text-link-rgb), 0.06)'
+        : 'rgba(var(--text-link-rgb), 0.06)'};
   }
 
   @media (max-width: ${theme.breakpoints[4]}) {

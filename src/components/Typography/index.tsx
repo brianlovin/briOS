@@ -106,14 +106,7 @@ export const p = css`
   }
 
   a:hover {
-    text-decoration: none;
-    color: var(--text-link);
-    opacity: 0.7;
-  }
-
-  a:visited {
-    color: var(--text-link);
-    opacity: 0.7;
+    text-decoration: underline;
   }
 
   code {

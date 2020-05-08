@@ -8,7 +8,7 @@ import PodcastEpisodesList from '~/components/PodcastEpisodesList'
 import FigmaPlugins from '~/components/FigmaPlugins'
 import { GET_HOME } from '~/graphql/queries'
 import { Post, Episode, Repo } from '~/graphql/types.generated'
-import { getStaticApolloClient } from '~/graphql/api'
+import { initApolloClient } from '~/graphql/api'
 import Grid from '~/components/Grid'
 
 interface Props {
@@ -275,7 +275,7 @@ function Home({ data }: Props) {
 }
 
 export async function getStaticProps() {
-  const client = await getStaticApolloClient()
+  const client = await initApolloClient({})
   const { data } = await client.query({ query: GET_HOME })
   return {
     props: {

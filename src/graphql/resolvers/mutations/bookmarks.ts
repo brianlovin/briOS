@@ -61,3 +61,16 @@ export async function deleteBookmark(_, { id }) {
     .delete()
     .then(() => true)
 }
+
+export async function addBookmarkReaction(_, { id }) {
+  const docRef = firebase.collection('bookmarks').doc(id)
+  const doc = await docRef.get().then((doc) => doc.data())
+  const count = doc.reactions ? doc.reactions + 1 : 1
+
+  await docRef.update({
+    reactions: count,
+  })
+
+  const res = await docRef.get().then((doc) => doc.data())
+  return { ...res, id }
+}

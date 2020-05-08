@@ -13,6 +13,7 @@ export async function getBookmarks() {
         const id = doc.id
         data.push({
           ...d,
+          reactions: d.reactions || 0,
           id,
         })
       })

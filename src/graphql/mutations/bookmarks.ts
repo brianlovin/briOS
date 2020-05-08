@@ -24,3 +24,12 @@ export const ADD_BOOKMARK = gql`
   }
   ${BookmarkInfoFragment}
 `
+
+export const ADD_BOOKMARK_REACTION = gql`
+  mutation addBookmarkReaction($id: ID!) {
+    addBookmarkReaction(id: $id) {
+      ...BookmarkInfo
+    }
+  }
+  ${BookmarkInfoFragment}
+`
