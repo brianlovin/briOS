@@ -7,6 +7,7 @@ import {
 import { Small } from '~/components/Typography'
 import { GET_BOOKMARKS } from '~/graphql/queries'
 import Input from '~/components/Input'
+import Textarea from '~/components/Textarea'
 import Grid from '~/components/Grid'
 
 interface Props {
@@ -20,14 +21,21 @@ export default function EditingBookmarkListItem(props: Props) {
   const initialState = {
     error: '',
     title: bookmark.title,
+    notes: bookmark.notes || '',
   }
 
   function reducer(state, action) {
     switch (action.type) {
-      case 'edit': {
+      case 'edit-title': {
         return {
           error: '',
           title: action.value,
+        }
+      }
+      case 'edit-notes': {
+        return {
+          ...state,
+          notes: action.value,
         }
       }
       case 'error': {
@@ -43,14 +51,15 @@ export default function EditingBookmarkListItem(props: Props) {
 
   const [state, dispatch] = React.useReducer(reducer, initialState)
 
-  const [saveBookmark] = useEditBookmarkMutation({
-    variables: { title: state.title, id: bookmark.id },
+  const [editBookmark] = useEditBookmarkMutation({
+    variables: { title: state.title, id: bookmark.id, notes: state.notes },
     optimisticResponse: {
       __typename: 'Mutation',
       editBookmark: {
         __typename: 'Bookmark',
         ...bookmark,
         title: state.title,
+        notes: state.notes,
       },
     },
     onError({ message }) {
@@ -75,8 +84,12 @@ export default function EditingBookmarkListItem(props: Props) {
     },
   })
 
-  function onChange(e) {
-    dispatch({ type: 'edit', value: e.target.value })
+  function onTitleChange(e) {
+    dispatch({ type: 'edit-title', value: e.target.value })
+  }
+
+  function onNotesChange(e) {
+    dispatch({ type: 'edit-notes', value: e.target.value })
   }
 
   function handleSave(e) {
@@ -86,14 +99,23 @@ export default function EditingBookmarkListItem(props: Props) {
       return dispatch({ type: 'error', value: 'Bookmark must have a title' })
     }
 
-    saveBookmark()
+    editBookmark()
     return onDone()
   }
 
   return (
     <Grid gap={12} as={'form'} onSubmit={handleSave}>
-      <Input value={state.title} onChange={onChange} />
-
+      <Input
+        autoFocus
+        placeholder="Title"
+        value={state.title}
+        onChange={onTitleChange}
+      />
+      <Textarea
+        placeholder="Notes..."
+        value={state.notes}
+        onChange={onNotesChange}
+      />
       {state.error && (
         <Small style={{ color: 'var(--accent-red)' }}>{state.error}</Small>
       )}

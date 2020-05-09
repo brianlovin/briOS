@@ -36,21 +36,6 @@ export const Form = styled.form`
   }
 `
 
-export const Textarea = styled.textarea`
-  padding: ${theme.space[3]};
-  border: 1px solid var(--border-primary);
-  color: var(--text-primary);
-  border-radius: ${theme.space[2]};
-  font-size: 16px;
-  background: var(--bg-primary);
-  resize: vertical;
-
-  &:focus {
-    border: 1px solid var(--accent-blue);
-    background: var(--bg-secondary);
-  }
-`
-
 export const InputGrid = styled.div`
   display: grid;
   grid-gap: ${theme.space[3]};

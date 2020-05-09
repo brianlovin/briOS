@@ -7,5 +7,6 @@ export const BookmarkInfoFragment = gql`
     url
     host
     reactions
+    notes
   }
 `

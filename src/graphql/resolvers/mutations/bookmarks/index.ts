@@ -12,11 +12,11 @@ function isValidUrl(string) {
   }
 }
 
-export async function editBookmark(_, { id, title }) {
+export async function editBookmark(_, { id, title, notes }) {
   if (!title || title.length === 0)
     throw new UserInputError('Bookmark must have a title')
 
-  await firebase.collection('bookmarks').doc(id).update({ title })
+  await firebase.collection('bookmarks').doc(id).update({ title, notes })
 
   return await firebase
     .collection('bookmarks')
@@ -25,7 +25,7 @@ export async function editBookmark(_, { id, title }) {
     .then((doc) => doc.data())
 }
 
-export async function addBookmark(_, { url }) {
+export async function addBookmark(_, { url, notes }) {
   if (!isValidUrl(url)) throw new UserInputError('URL was invalid')
 
   const existingRef = await firebase
@@ -43,6 +43,7 @@ export async function addBookmark(_, { url }) {
     .add({
       createdAt: new Date(),
       ...metadata,
+      notes,
       reactions: 0,
     })
     .then(({ id }) => id)

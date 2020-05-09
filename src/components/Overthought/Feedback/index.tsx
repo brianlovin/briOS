@@ -3,15 +3,8 @@ import { Post } from '~/graphql/types.generated'
 import { PrimaryButton } from '~/components/Button'
 import { H5, P } from '~/components/Typography'
 import Input from '~/components/Input'
-import {
-  InputGrid,
-  Container,
-  Form,
-  Textarea,
-  Success,
-  Error,
-  Label,
-} from './style'
+import Textarea from '~/components/Textarea'
+import { InputGrid, Container, Form, Success, Error, Label } from './style'
 
 interface Props {
   post: Post

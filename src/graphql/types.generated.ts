@@ -59,6 +59,7 @@ export type Bookmark = {
   title?: Maybe<Scalars['String']>
   host?: Maybe<Scalars['String']>
   reactions?: Maybe<Scalars['Int']>
+  notes?: Maybe<Scalars['String']>
 }
 
 export type Episode = {
@@ -122,11 +123,13 @@ export type MutationLoginArgs = {
 
 export type MutationAddBookmarkArgs = {
   url: Scalars['String']
+  notes?: Maybe<Scalars['String']>
 }
 
 export type MutationEditBookmarkArgs = {
   id: Scalars['ID']
   title: Scalars['String']
+  notes?: Maybe<Scalars['String']>
 }
 
 export type MutationDeleteBookmarkArgs = {
@@ -144,6 +147,7 @@ export type BookmarkInfoFragment = {
   url: string
   host?: Maybe<string>
   reactions?: Maybe<number>
+  notes?: Maybe<string>
 }
 
 export type EpisodeInfoFragment = {
@@ -189,6 +193,7 @@ export type LogoutMutation = {
 export type EditBookmarkMutationVariables = {
   id: Scalars['ID']
   title: Scalars['String']
+  notes?: Maybe<Scalars['String']>
 }
 
 export type EditBookmarkMutation = {
@@ -207,6 +212,7 @@ export type DeleteBookmarkMutation = {
 
 export type AddBookmarkMutationVariables = {
   url: Scalars['String']
+  notes?: Maybe<Scalars['String']>
 }
 
 export type AddBookmarkMutation = {
@@ -276,6 +282,7 @@ export const BookmarkInfoFragmentDoc = gql`
     url
     host
     reactions
+    notes
   }
 `
 export const EpisodeInfoFragmentDoc = gql`
@@ -397,8 +404,8 @@ export type LogoutMutationOptions = ApolloReactCommon.BaseMutationOptions<
   LogoutMutationVariables
 >
 export const EditBookmarkDocument = gql`
-  mutation editBookmark($id: ID!, $title: String!) {
-    editBookmark(id: $id, title: $title) {
+  mutation editBookmark($id: ID!, $title: String!, $notes: String) {
+    editBookmark(id: $id, title: $title, notes: $notes) {
       ...BookmarkInfo
     }
   }
@@ -424,6 +431,7 @@ export type EditBookmarkMutationFn = ApolloReactCommon.MutationFunction<
  *   variables: {
  *      id: // value for 'id'
  *      title: // value for 'title'
+ *      notes: // value for 'notes'
  *   },
  * });
  */
@@ -497,8 +505,8 @@ export type DeleteBookmarkMutationOptions = ApolloReactCommon.BaseMutationOption
   DeleteBookmarkMutationVariables
 >
 export const AddBookmarkDocument = gql`
-  mutation addBookmark($url: String!) {
-    addBookmark(url: $url) {
+  mutation addBookmark($url: String!, $notes: String) {
+    addBookmark(url: $url, notes: $notes) {
       ...BookmarkInfo
     }
   }
@@ -523,6 +531,7 @@ export type AddBookmarkMutationFn = ApolloReactCommon.MutationFunction<
  * const [addBookmarkMutation, { data, loading, error }] = useAddBookmarkMutation({
  *   variables: {
  *      url: // value for 'url'
+ *      notes: // value for 'notes'
  *   },
  * });
  */

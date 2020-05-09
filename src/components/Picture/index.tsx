@@ -4,24 +4,26 @@ interface Props {
   srcset: string[]
   alt: string
   style?: object
+  width: string
+  height: string
 }
 
-export default function Picture({ srcset, alt, style = {} }: Props) {
+export default function Picture({ srcset, alt, ...rest }: Props) {
   const assets = []
 
   srcset.map((src, i) => {
     const key = `${src}-${i}`
     if (src.endsWith('webp'))
-      assets.push(<source type="image/webp" srcSet={src} key={key} />)
+      assets.push(<source type="image/webp" srcSet={src} key={key} {...rest} />)
     if (src.endsWith('jpg') || src.endsWith('jpeg'))
-      assets.push(<source type="image/jpeg" srcSet={src} key={key} />)
+      assets.push(<source type="image/jpeg" srcSet={src} key={key} {...rest} />)
     if (src.endsWith('png'))
-      assets.push(<source type="image/png" srcSet={src} key={key} />)
+      assets.push(<source type="image/png" srcSet={src} key={key} {...rest} />)
   })
 
   const fallback = srcset.find((src) => !src.endsWith('webp'))
 
-  assets.push(<img style={style} src={fallback} key={fallback} alt={alt} />)
+  assets.push(<img src={fallback} key={fallback} alt={alt} {...rest} />)
 
   return <picture>{assets}</picture>
 }
