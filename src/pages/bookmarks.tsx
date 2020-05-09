@@ -20,7 +20,21 @@ function Bookmarks() {
 
   return (
     <Page withHeader>
-      <NextSeo title={'Bookmarks'} />
+      <NextSeo
+        title={'Bookmarks'}
+        description={'Internet things, saved for later.'}
+        openGraph={{
+          url: 'https://brianlovin.com/bookmarks',
+          title: 'Bookmarks',
+          description: 'Internet things, saved for later.',
+          images: [
+            {
+              url: 'https://brianlovin.com/static/meta/bookmarks.png',
+              alt: 'Bookmarks',
+            },
+          ],
+        }}
+      />
       <Grid
         columns={'fit-content(640px)'}
         style={{ justifyContent: 'center' }}
