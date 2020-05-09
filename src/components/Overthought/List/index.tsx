@@ -14,7 +14,7 @@ export default function OverthoughtList({ posts }: Props) {
   return (
     <Grid gap={16}>
       {posts.map((post) => (
-        <Grid key={post.id}>
+        <Grid gap={4} key={post.id}>
           <Link
             href="/overthought/[slug]"
             as={`/overthought/${post.slug}`}

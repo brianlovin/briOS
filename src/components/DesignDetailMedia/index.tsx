@@ -25,6 +25,7 @@ export default function DesignDetailMedia(props: Props) {
     >
       <DetailContainer data-cy="detail-media-container">
         <DetailTitle>{detail.title}</DetailTitle>
+        <div style={{ padding: '8px' }} />
         <Markdown>{detail.description}</Markdown>
 
         {isVisible && (
