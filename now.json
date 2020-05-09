@@ -21,7 +21,8 @@
     "FATHOM_CUSTOM_URL": "@fathom-custom-url",
     "GHOST_API_KEY": "@ghost-api-key",
     "PASSWORD": "@password",
-    "PASSWORD_TOKEN": "@password-token"
+    "PASSWORD_TOKEN": "@password-token",
+    "POSTMARK_CLIENT_ID": "@postmark-client-id"
   },
   "build": {
     "env": {
@@ -45,7 +46,8 @@
       "FATHOM_CUSTOM_URL": "@fathom-custom-url",
       "GHOST_API_KEY": "@ghost-api-key",
       "PASSWORD": "@password",
-      "PASSWORD_TOKEN": "@password-token"
+      "PASSWORD_TOKEN": "@password-token",
+      "POSTMARK_CLIENT_ID": "@postmark-client-id"
     }
   }
 }
