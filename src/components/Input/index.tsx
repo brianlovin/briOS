@@ -7,7 +7,7 @@ export default styled.input`
   color: var(--text-primary);
   border-radius: 4px;
   font-size: 16px;
-  background: var(--bg-secondary);
+  background: var(--bg-primary);
   width: 100%;
 
   &:focus {
