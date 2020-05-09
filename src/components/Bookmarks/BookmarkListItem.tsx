@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { Bookmark } from '~/graphql/types.generated'
 import { Small, A } from '~/components/Typography'
-
 import Grid from '~/components/Grid'
 import EditingBookmarkListItem from './EditingBookmarkListItem'
 import BookmarkReaction from './BookmarkReaction'
@@ -25,7 +24,7 @@ export default function BookmarkListItem(props: Props) {
   }
 
   return (
-    <Grid gap={4}>
+    <Grid gap={bookmark.notes ? 8 : 4}>
       <A
         href={`${bookmark.url}?ref=brianlovin.com`}
         target="_blank"
@@ -33,6 +32,18 @@ export default function BookmarkListItem(props: Props) {
       >
         {bookmark.title || bookmark.url}
       </A>
+      {bookmark.notes && (
+        <Grid style={{ alignItems: 'start' }} columns={'1fr'}>
+          <Small
+            style={{
+              borderLeft: '2px solid var(--border-primary)',
+              paddingLeft: '12px',
+            }}
+          >
+            {bookmark.notes}
+          </Small>
+        </Grid>
+      )}
       <Grid columns={`repeat(5, min-content)`} gap={16}>
         <BookmarkReaction bookmark={bookmark} />
 
