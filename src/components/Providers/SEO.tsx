@@ -13,9 +13,7 @@ const SeoConfig = {
     site_name: 'Brian Lovin',
     images: [
       {
-        url: 'https://brianlovin.com/static/og-image.jpeg',
-        width: 1600,
-        height: 400,
+        url: 'https://brianlovin.com/static/meta/og-image.png',
         alt: 'Brian Lovin',
       },
     ],

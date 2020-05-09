@@ -30,13 +30,13 @@ export default function DesignDetail() {
     return (
       <Page withHeader>
         <NextSeo
-          title={`Design Details · ${post.title}`}
+          title={`${post.title} · App Dissection`}
           description={post.description}
           openGraph={{
             url: `https://brianlovin.com/design-details/${post.slug}`,
             title: post.title,
             description: post.description,
-            site_name: 'Design Details',
+            site_name: 'App Dissection',
           }}
         />
         <DesignDetailView post={post} />
@@ -49,7 +49,7 @@ export default function DesignDetail() {
     <Page withHeader>
       <SectionHeading>
         <H1>Design Details</H1>
-        <Subheading>A visual exploration of digital products</Subheading>
+        <Subheading>In-depth design explorations.</Subheading>
       </SectionHeading>
 
       <DesignDetailsGrid truncate={false} />

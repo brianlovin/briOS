@@ -57,10 +57,7 @@ export default function DesignDetailView(props: Props) {
       </Grid>
 
       <Grid gap={16}>
-        <H3>More Dissections</H3>
-        <LargeSubheading>
-          A visual exploration of digital products
-        </LargeSubheading>
+        <H3>App Dissection</H3>
         <Link href="/design-details" passHref>
           <A>
             See all posts <Rarr />

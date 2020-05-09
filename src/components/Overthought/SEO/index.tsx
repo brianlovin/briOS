@@ -26,7 +26,7 @@ export default function OverthoughtSEO() {
           site_name: 'Overthought',
           images: [
             {
-              url: 'https://brianlovin.com/static/overthought-og.png',
+              url: 'https://brianlovin.com/static/meta/overthought.png',
               alt: 'Overthought',
             },
           ],

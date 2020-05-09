@@ -10,15 +10,15 @@ export default function DesignDetails() {
     <Page withHeader>
       <NextSeo
         title={'App Dissection'}
-        description={'A visual exploration of digital products'}
+        description={'In-depth design explorations.'}
         openGraph={{
           url: 'https://brianlovin.com/design-details',
           title: 'App Dissection',
-          description: 'A visual exploration of digital products',
+          description: 'In-depth design explorations.',
           site_name: 'App Dissection',
           images: [
             {
-              url: 'https://brianlovin.com/static/og-image.jpeg',
+              url: 'https://brianlovin.com/static/meta/app-dissection.jpeg',
               alt: 'App Dissection',
             },
           ],
