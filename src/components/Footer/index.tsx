@@ -22,6 +22,10 @@ export function Footer() {
         <A>App Dissection</A>
       </Link>
 
+      <Link href="/ama" as="/ama" passHref>
+        <A>AMA</A>
+      </Link>
+
       <Link href="/bookmarks" as="/bookmarks" passHref>
         <A>Bookmarks</A>
       </Link>

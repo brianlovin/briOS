@@ -7,21 +7,17 @@ const base = css`
   top: 0;
   left: 0;
   right: 0;
-  z-index: 2;
-  font-size: ${theme.fontSizes[0]};
+  z-index: 4;
+  font-size: 14px;
   font-weight: 600;
   margin: 0;
 
   a {
-    padding: 8px;
+    padding: 8px 32px;
     border-radius: 4px;
     width: 100%;
     text-align: center;
     margin: 0 2px;
-  }
-
-  @media (max-width: ${theme.breakpoints[4]}) {
-    font-size: ${theme.fontSizes[1]};
   }
 `
 
@@ -50,19 +46,21 @@ export const Container = styled.header`
 `
 
 export const InnerGrid = styled.div`
-  display: flex;
-  justify-content: space-around;
+  display: grid;
+  justify-content: center;
   width: 100%;
   justify-self: center;
   max-width: ${theme.breakpoints[3]};
-  grid-gap: ${theme.space[3]};
+  grid-gap: 4px;
   position: relative;
+  grid-template-columns: repeat(6, max-content);
   z-index: 3;
 `
 
 export const MobileContainer = styled.header`
   ${base};
 
+  font-size: 16px;
   justify-content: center;
   align-items: ${(props) => (props.expanded ? 'flex-start' : 'center')};
   flex-direction: ${(props) => (props.expanded ? 'column' : 'row')};
@@ -70,6 +68,7 @@ export const MobileContainer = styled.header`
 
   a {
     text-align: left;
+    padding: 12px;
   }
 
   @media (min-width: ${theme.breakpoints[4]}) {

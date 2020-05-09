@@ -12,14 +12,16 @@ function isValidUrl(string) {
   }
 }
 
+const COLLECTION = 'bookmarks'
+
 export async function editBookmark(_, { id, title, notes }) {
   if (!title || title.length === 0)
     throw new UserInputError('Bookmark must have a title')
 
-  await firebase.collection('bookmarks').doc(id).update({ title, notes })
+  await firebase.collection(COLLECTION).doc(id).update({ title, notes })
 
   return await firebase
-    .collection('bookmarks')
+    .collection(COLLECTION)
     .doc(id)
     .get()
     .then((doc) => doc.data())
@@ -29,7 +31,7 @@ export async function addBookmark(_, { url, notes }) {
   if (!isValidUrl(url)) throw new UserInputError('URL was invalid')
 
   const existingRef = await firebase
-    .collection('bookmarks')
+    .collection(COLLECTION)
     .where('url', '==', url)
     .get()
     .then((snapshot) => !snapshot.empty)
@@ -39,7 +41,7 @@ export async function addBookmark(_, { url, notes }) {
   const metadata = await getBookmarkMetaData(url)
 
   const id = await firebase
-    .collection('bookmarks')
+    .collection(COLLECTION)
     .add({
       createdAt: new Date(),
       ...metadata,
@@ -49,7 +51,7 @@ export async function addBookmark(_, { url, notes }) {
     .then(({ id }) => id)
 
   return await firebase
-    .collection('bookmarks')
+    .collection(COLLECTION)
     .doc(id)
     .get()
     .then((doc) => doc.data())
@@ -58,14 +60,14 @@ export async function addBookmark(_, { url, notes }) {
 
 export async function deleteBookmark(_, { id }) {
   return await firebase
-    .collection('bookmarks')
+    .collection(COLLECTION)
     .doc(id)
     .delete()
     .then(() => true)
 }
 
 export async function addBookmarkReaction(_, { id }) {
-  const docRef = firebase.collection('bookmarks').doc(id)
+  const docRef = firebase.collection(COLLECTION).doc(id)
   const doc = await docRef.get().then((doc) => doc.data())
   const count = doc.reactions ? doc.reactions + 1 : 1
 

@@ -32,7 +32,7 @@ export default gql`
   }
 
   type Bookmark {
-    id: String
+    id: ID!
     url: String!
     author: String
     creator: String
@@ -70,11 +70,27 @@ export default gql`
     stars: Int
   }
 
+  enum AMAStatus {
+    PENDING
+    ANSWERED
+  }
+
+  type AMA {
+    id: String!
+    question: String!
+    status: AMAStatus
+    answer: String
+    createdAt: String
+    updatedAt: String
+    reactions: Int
+  }
+
   type Query {
     bookmarks: [Bookmark]!
     episodes: [Episode]!
     posts(first: Int): [Post]!
     post(slug: String!): Post
+    amaQuestions: [AMA]!
     repos: [Repo]!
     isMe: Boolean
   }
@@ -86,5 +102,14 @@ export default gql`
     editBookmark(id: ID!, title: String!, notes: String): Bookmark
     deleteBookmark(id: ID!): Boolean
     addBookmarkReaction(id: ID!): Bookmark
+    addAMAQuestion(question: String!): Boolean
+    deleteAMAQuestion(id: ID!): Boolean
+    editAMAQuestion(
+      id: ID!
+      answer: String
+      question: String
+      status: AMAStatus
+    ): AMA
+    addAMAReaction(id: ID!): AMA
   }
 `
