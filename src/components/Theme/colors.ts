@@ -1,6 +1,6 @@
 export const COLORS = {
   'bg-primary': {
-    light: '#fefefe',
+    light: '#fcfcfc',
     dark: '#050505',
   },
   'bg-primary-rgb': {

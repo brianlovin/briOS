@@ -62,9 +62,9 @@ const theme = {
       '0 4px 4.1px rgba(0, 0, 0, 0.012),0 4.9px 5.8px rgba(0, 0, 0, 0.018),0 6.3px 8.4px rgba(0, 0, 0, 0.029),0 8.8px 12.9px rgba(0, 0, 0, 0.05),0 15px 23px rgba(0, 0, 0, 0.11)',
   },
   animations: {
-    default: '0.15s ease-out',
-    hover: '0.15s ease-in',
-    active: '0.15s ease-in-out',
+    default: '0.35s cubic-bezier(0.165, 0.84, 0.44, 1)',
+    hover: '0.35s cubic-bezier(0.165, 0.84, 0.44, 1)',
+    active: '0.35s cubic-bezier(0.165, 0.84, 0.44, 1)',
   },
   colors: COLORS,
 }

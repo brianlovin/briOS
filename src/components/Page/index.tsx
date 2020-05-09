@@ -5,12 +5,10 @@ import {
   InnerPageContainer,
   SectionHeading,
   ContentContainer,
-  ContentGrid,
-  PreviewContentGrid,
 } from './style'
 import { Footer } from '../Footer'
 
-export { SectionHeading, ContentContainer, ContentGrid, PreviewContentGrid }
+export { SectionHeading, ContentContainer }
 
 interface Props {
   children: React.ReactNode

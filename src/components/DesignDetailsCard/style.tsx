@@ -103,7 +103,7 @@ export const VideoPlayer = styled.video`
   opacity: 0.2;
   min-width: 327px;
   min-height: 600px;
-  border-radius: 4px;
+  border-radius: 8px;
   clip-path: padding-box;
   right: -3%;
 

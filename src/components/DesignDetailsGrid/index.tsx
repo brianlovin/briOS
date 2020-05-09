@@ -1,7 +1,7 @@
 import * as React from 'react'
 import designDetailsPosts from '~/data/appDissections'
 import DesignDetailsCard from '~/components/DesignDetailsCard'
-import { ContentGrid, PreviewContentGrid } from '../Page'
+import Grid from '~/components/Grid'
 
 interface Props {
   truncate: boolean
@@ -9,14 +9,11 @@ interface Props {
 
 export default function DesignDetailsGrid({ truncate }: Props) {
   const posts = truncate ? designDetailsPosts.slice(0, 4) : designDetailsPosts
-  const Grid = truncate ? PreviewContentGrid : ContentGrid
   return (
-    <React.Fragment>
-      <Grid>
-        {posts.map((post) => (
-          <DesignDetailsCard key={post.slug} post={post} />
-        ))}
-      </Grid>
-    </React.Fragment>
+    <Grid gap={16}>
+      {posts.map((post) => (
+        <DesignDetailsCard key={post.slug} post={post} />
+      ))}
+    </Grid>
   )
 }
