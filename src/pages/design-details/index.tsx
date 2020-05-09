@@ -18,7 +18,7 @@ export default function DesignDetails() {
           site_name: 'App Dissection',
           images: [
             {
-              url: 'https://brianlovin.com/static/meta/app-dissection.jpeg',
+              url: 'https://brianlovin.com/static/meta/app-dissection.png',
               alt: 'App Dissection',
             },
           ],
