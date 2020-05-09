@@ -26,9 +26,11 @@ export default function SEO({ post }: Props) {
           title: post.title,
           url: `https://brianlovin.com/overthought/${post.slug}`,
           description: post.custom_excerpt || post.excerpt,
-          images: post.feature_image && [
+          images: [
             {
-              url: post.feature_image,
+              url: post.feature_image
+                ? post.feature_image
+                : 'https://brianlovin.com/static/meta/overthought.png',
               alt: post.title,
             },
           ],
