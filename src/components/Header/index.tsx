@@ -42,6 +42,12 @@ const NavLinks = ({ activeRoute }: Props) => {
         </Link>
       </Label>
 
+      <Label isActive={activeRoute === 'Ask Me Anything'}>
+        <Link href="/ama">
+          <a>AMA</a>
+        </Link>
+      </Label>
+
       <Label isActive={activeRoute === 'Bookmarks'}>
         <Link href="/bookmarks">
           <a>Bookmarks</a>
@@ -72,6 +78,10 @@ export default function Header() {
   if (router.pathname.includes('/overthought')) {
     activeRoute = 'Overthought'
     activePath = '/overthought'
+  }
+  if (router.pathname.includes('/ama')) {
+    activeRoute = 'Ask Me Anything'
+    activePath = '/ama'
   }
 
   return (
