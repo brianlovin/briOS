@@ -10,13 +10,19 @@ import AddBookmark from '~/components/Bookmarks/AddBookmark'
 import { initApolloClient } from '~/graphql/services/apollo'
 import { withApollo } from '~/components/withApollo'
 import Grid from '~/components/Grid'
+import FullscreenLoading from '~/components/FullscreenLoading'
 
 function Bookmarks() {
   // pre-populate bookmarks from the cache, but check for any new ones after
   // the page loads
   const { data } = useGetBookmarksQuery({ fetchPolicy: 'cache-and-network' })
-  const { bookmarks } = data
   const { isMe } = useAuth()
+
+  // this can happen if the route is navigated to from the client or if the
+  // cache fails to populate for whatever reason
+  if (!data || !data.bookmarks) return <FullscreenLoading />
+
+  const { bookmarks } = data
 
   return (
     <Page withHeader>

@@ -18,6 +18,7 @@
     "FIREBASE_AUTH_PROVIDER_X509_CERT_URL": "@firebase-auth-provider-x509-cert-url",
     "FIREBASE_CLIENT_X509_CERT_URL": "@firebase-client-x509-cert-url",
     "FATHOM_SITE_ID": "@fathom-site-id",
+    "FATHOM_CUSTOM_URL": "@fathom-custom-url",
     "GHOST_API_KEY": "@ghost-api-key",
     "PASSWORD": "@password",
     "PASSWORD_TOKEN": "@password-token"

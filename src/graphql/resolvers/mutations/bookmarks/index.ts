@@ -43,6 +43,7 @@ export async function addBookmark(_, { url }) {
     .add({
       createdAt: new Date(),
       ...metadata,
+      reactions: 0,
     })
     .then(({ id }) => id)
 

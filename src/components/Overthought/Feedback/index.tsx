@@ -2,12 +2,12 @@ import * as React from 'react'
 import { Post } from '~/graphql/types.generated'
 import { PrimaryButton } from '~/components/Button'
 import { H5, P } from '~/components/Typography'
+import Input from '~/components/Input'
 import {
   InputGrid,
   Container,
   Form,
   Textarea,
-  Input,
   Success,
   Error,
   Label,

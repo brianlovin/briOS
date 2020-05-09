@@ -61,21 +61,6 @@ export const InputGrid = styled.div`
   }
 `
 
-export const Input = styled.input`
-  padding: 10px ${theme.space[3]};
-  border: 1px solid var(--border-primary);
-  color: var(--text-primary);
-  border-radius: ${theme.space[2]};
-  font-size: 16px;
-  background: var(--bg-primary);
-
-  &:focus {
-    border: 1px solid var(--accent-blue);
-    background: var(--bg-secondary);
-    outline: none;
-  }
-`
-
 export const Success = styled.div`
   padding: ${theme.space[2]} ${theme.space[4]};
   border: 1px solid var(--accent-green);

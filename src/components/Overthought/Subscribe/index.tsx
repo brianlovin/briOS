@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { PrimaryButton } from '~/components/Button'
 import { A, H5, P } from '~/components/Typography'
-import { Container, Input, Form, Success, Error, Label } from './style'
+import Input from '~/components/Input'
+import { Container, Form, Success, Error, Label } from './style'
 
 export default function OverthoughtSubscribeBox() {
   const [email, setEmail] = React.useState('')

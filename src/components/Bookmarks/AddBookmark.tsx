@@ -2,7 +2,7 @@ import * as React from 'react'
 import { useAddBookmarkMutation } from '~/graphql/types.generated'
 import { GET_BOOKMARKS } from '~/graphql/queries'
 import { Small } from '~/components/Typography'
-import { Input } from '~/components/Overthought/Feedback/style'
+import Input from '~/components/Input'
 import Grid from '../Grid'
 
 export default function AddBookmark() {
@@ -11,6 +11,17 @@ export default function AddBookmark() {
   const query = GET_BOOKMARKS
 
   const [handleAddBookmark] = useAddBookmarkMutation({
+    optimisticResponse: {
+      __typename: 'Mutation',
+      addBookmark: {
+        __typename: 'Bookmark',
+        id: url,
+        title: 'Saving...',
+        url,
+        host: url,
+        reactions: 0,
+      },
+    },
     onCompleted: () => setUrl(''),
     update(cache, { data: { addBookmark } }) {
       const { bookmarks } = cache.readQuery({ query })

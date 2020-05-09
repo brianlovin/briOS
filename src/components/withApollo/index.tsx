@@ -15,7 +15,6 @@ export function withApollo(PageComponent) {
   const WithApollo = ({ apolloStaticCache, ...pageProps }) => {
     // apolloStaticCache prop gets set in getStaticProps on page views
     const client = initApolloClient(apolloStaticCache)
-
     return (
       <ApolloProvider client={client}>
         <PageComponent {...pageProps} />
