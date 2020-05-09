@@ -44,7 +44,7 @@ export default function BookmarkListItem(props: Props) {
           </Small>
         </Grid>
       )}
-      <Grid columns={`repeat(5, min-content)`} gap={16}>
+      <Grid columns={`repeat(5, min-content)`} gap={12}>
         <BookmarkReaction bookmark={bookmark} />
 
         <Small style={{ color: 'var(--text-placeholder)' }}>/</Small>
