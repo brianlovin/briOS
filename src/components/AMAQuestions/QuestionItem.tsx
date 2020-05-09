@@ -29,10 +29,20 @@ export default function QuestionItem(props: Props) {
   }
 
   return (
-    <Grid gap={question.answer ? 8 : 4}>
+    <Grid gap={8}>
       <P style={{ fontWeight: '500' }}>{question.question}</P>
       {question.answer && (
-        <Grid style={{ alignItems: 'start' }} columns={'1fr'}>
+        <Grid style={{ alignItems: 'start' }} columns={'16px 1fr'} gap={12}>
+          <img
+            src={'/static/img/avatar.jpeg'}
+            alt={'Brian Lovin'}
+            style={{
+              marginTop: '3px',
+              width: '16px',
+              height: '16px',
+              borderRadius: '16px',
+            }}
+          />
           <P>{question.answer}</P>
         </Grid>
       )}

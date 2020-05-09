@@ -9,6 +9,7 @@ import { useGetAmaQuestionsQuery } from '~/graphql/types.generated'
 import FullscreenLoading from '~/components/FullscreenLoading'
 import AMAQuestions from '~/components/AMAQuestions'
 import { CenteredColumn } from '~/components/Layouts'
+import { NextSeo } from 'next-seo'
 
 function About() {
   // pre-populate data from the cache, but check for any new ones after
@@ -23,6 +24,21 @@ function About() {
 
   return (
     <Page withHeader>
+      <NextSeo
+        title={'Ask Me Anything'}
+        description={'Answering questions, just for fun.'}
+        openGraph={{
+          url: 'https://brianlovin.com/ama',
+          title: 'Ask Me Anything',
+          description: 'Answering questions, just for fun.',
+          images: [
+            {
+              url: 'https://brianlovin.com/static/meta/ama.png',
+              alt: 'Ask Me Anything',
+            },
+          ],
+        }}
+      />
       <CenteredColumn>
         <Grid gap={16}>
           <H3>Ask Me Anything</H3>
@@ -50,7 +66,7 @@ export async function getStaticProps() {
   const apolloStaticCache = client.cache.extract()
   return {
     // because this data is slightly more dynamic, update it every hour
-    unstable_revalidate: 60 * 60,
+    unstable_revalidate: 60,
     props: {
       apolloStaticCache,
     },
