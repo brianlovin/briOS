@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { useLoginMutation } from '~/graphql/types.generated'
 import { withApollo } from '~/components/withApollo'
 import { FullscreenContainer, FullscreenContent } from '~/components/Page/style'
-import { Input } from '~/components/Overthought/Feedback/style'
+import Input from '~/components/Input'
 
 function Login() {
   const router = useRouter()
@@ -34,6 +34,7 @@ function Login() {
             autoFocus
             type="password"
             placeholder="password"
+            autoComplete="current-password"
             onChange={(e) => setPassword(e.target.value)}
           />
         </form>

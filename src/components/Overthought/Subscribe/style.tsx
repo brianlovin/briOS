@@ -37,20 +37,6 @@ export const Form = styled.form`
   }
 `
 
-export const Input = styled.input`
-  padding: 10px ${theme.space[3]};
-  border: 1px solid var(--bg-primary);
-  color: var(--text-primary);
-  border-radius: 8px;
-  font-size: 16px;
-  background: var(--bg-primary);
-
-  &:focus {
-    border: 1px solid var(--accent-blue);
-    background: var(--bg-secondary);
-  }
-`
-
 export const Success = styled.div`
   padding: ${theme.space[2]} ${theme.space[4]};
   border: 1px solid var(--accent-green);
