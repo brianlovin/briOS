@@ -36,7 +36,6 @@ export default function AddBookmark() {
   return (
     <Grid gap={12} as={'form'} onSubmit={onSubmit}>
       <Textarea
-        autoFocus
         value={question}
         placeholder="Ask me anything..."
         onChange={onQuestionChange}
