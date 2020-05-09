@@ -29,6 +29,7 @@ const Container = styled.div`
   img {
     width: 100%;
     border-radius: 8px;
+    aspect-ratio: attr(width) / attr(height);
 
     @media (max-width: ${theme.breakpoints[4]}) {
       border-radius: 0;
@@ -45,6 +46,8 @@ export default function About() {
             <Picture
               srcset={['/static/img/about.webp', '/static/img/about.jpg']}
               alt={'A photo of me'}
+              width={'640px'}
+              height={'auto'}
             />
           </Container>
           <ContentContainer>

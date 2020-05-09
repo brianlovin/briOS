@@ -34,11 +34,11 @@ export default function DesignDetailView(props: Props) {
     >
       <Grid gap={32}>
         <Picture
+          width={'64px'}
+          height={'64px'}
           style={{
             borderRadius: '16px',
             overflow: 'hidden',
-            width: '64px',
-            height: '64px',
           }}
           srcset={[
             `/static/img/design-details/${post.slug}.webp`,

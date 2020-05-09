@@ -56,7 +56,12 @@ export default function DesignDetailsCard(props: Props) {
         <a>
           <Container onMouseEnter={play} onMouseLeave={pause}>
             <ImageContainer>
-              <Picture alt={'Design Details'} srcset={srcset} />
+              <Picture
+                width={'56px'}
+                height={'56px'}
+                alt={'Design Details'}
+                srcset={srcset}
+              />
             </ImageContainer>
             <CardContent>
               <Title>{title}</Title>
