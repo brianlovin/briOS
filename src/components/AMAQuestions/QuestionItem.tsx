@@ -1,10 +1,12 @@
 import * as React from 'react'
-import { Ama, AmaStatus } from '~/graphql/types.generated'
+import { Ama } from '~/graphql/types.generated'
 import { Small, P } from '~/components/Typography'
 import Grid from '~/components/Grid'
 import { format } from 'timeago.js'
 import QuestionReaction from './QuestionReaction'
 import EditQuestion from './EditQuestion'
+import GlobalMarkdownStyles from '../GlobalStyles/markdown'
+import MarkdownRenderer from '../MarkdownRenderer'
 
 interface Props {
   editable: boolean
@@ -30,20 +32,13 @@ export default function QuestionItem(props: Props) {
 
   return (
     <Grid gap={8}>
-      <P style={{ fontWeight: '500' }}>{question.question}</P>
+      <GlobalMarkdownStyles />
+      <P style={{ fontWeight: '600' }}>{question.question}</P>
       {question.answer && (
-        <Grid style={{ alignItems: 'start' }} columns={'16px 1fr'} gap={12}>
-          <img
-            src={'/static/img/avatar.jpeg'}
-            alt={'Brian Lovin'}
-            style={{
-              marginTop: '3px',
-              width: '16px',
-              height: '16px',
-              borderRadius: '16px',
-            }}
-          />
-          <P>{question.answer}</P>
+        <Grid style={{ alignItems: 'start' }}>
+          <Grid className={'markdown'}>
+            <MarkdownRenderer>{question.answer}</MarkdownRenderer>
+          </Grid>
         </Grid>
       )}
 

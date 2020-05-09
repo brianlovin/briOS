@@ -46,6 +46,7 @@ export default function PostView({ post, posts }: Props) {
         </Grid>
 
         <div
+          style={{ marginTop: '16px' }}
           className="markdown"
           dangerouslySetInnerHTML={{ __html: post.html }}
         />

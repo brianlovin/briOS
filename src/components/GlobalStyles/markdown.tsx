@@ -52,6 +52,10 @@ const GlobalMarkdownStyles = createGlobalStyle`
       ${p};
       margin-top: ${theme.space[3]};
 
+      &:first-of-type {
+        margin-top: 0;
+      }
+
       img {
         ${img};
         margin-top: ${theme.space[3]};
