@@ -35,6 +35,7 @@ export default function QuestionItem(props: Props) {
         <Grid style={{ alignItems: 'start' }} columns={'16px 1fr'} gap={12}>
           <img
             src={'/static/img/avatar.jpeg'}
+            alt={'Brian Lovin'}
             style={{
               marginTop: '3px',
               width: '16px',
