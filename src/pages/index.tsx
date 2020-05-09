@@ -113,7 +113,7 @@ function Home({ data }: Props) {
 
           <Grid gap={16}>
             <H5>Open source work</H5>
-            <Grid>
+            <Grid gap={4}>
               <A
                 href="https://github.com/specfm/design-details"
                 target="_blank"
@@ -124,7 +124,7 @@ function Home({ data }: Props) {
               <P>The code that powers designdetails.fm.</P>
             </Grid>
 
-            <Grid>
+            <Grid gap={4}>
               <A
                 href="https://github.com/brianlovin/brian-lovin-next"
                 target="_blank"
@@ -135,7 +135,7 @@ function Home({ data }: Props) {
               <P>The code that powers this website you’re looking at.</P>
             </Grid>
 
-            <Grid>
+            <Grid gap={4}>
               <A
                 href="https://github.com/brianlovin/security-checklist"
                 target="_blank"
@@ -146,7 +146,7 @@ function Home({ data }: Props) {
               <P>A checklist for staying safe on the internet.</P>
             </Grid>
 
-            <Grid>
+            <Grid gap={4}>
               <A
                 href="https://github.com/withspectrum/spectrum"
                 target="_blank"
@@ -157,7 +157,7 @@ function Home({ data }: Props) {
               <P>Simple, powerful online communities.</P>
             </Grid>
 
-            <Grid>
+            <Grid gap={4}>
               <A
                 href="https://github.com/specfm/spec-next"
                 target="_blank"
@@ -182,7 +182,7 @@ function Home({ data }: Props) {
           <Grid gap={16}>
             <H5>Speaking and interviews</H5>
             <Grid gap={16}>
-              <Grid>
+              <Grid Grid gap={4}>
                 <A
                   href="https://www.swiftbysundell.com/podcast/67/"
                   target="_blank"
@@ -196,7 +196,7 @@ function Home({ data }: Props) {
                 </P>
               </Grid>
 
-              <Grid>
+              <Grid Grid gap={4}>
                 <A
                   href="https://www.youtube.com/watch?v=SyS3h3kmBnY"
                   target="_blank"
@@ -210,7 +210,7 @@ function Home({ data }: Props) {
                 </P>
               </Grid>
 
-              <Grid>
+              <Grid Grid gap={4}>
                 <A
                   href="https://www.youtube.com/watch?v=6MBBTdu8v6E"
                   target="_blank"
@@ -224,7 +224,7 @@ function Home({ data }: Props) {
                 </P>
               </Grid>
 
-              <Grid>
+              <Grid Grid gap={4}>
                 <A
                   href="https://interfacelovers.com/interviews/brian-lovin"
                   target="_blank"
@@ -238,7 +238,7 @@ function Home({ data }: Props) {
                 </P>
               </Grid>
 
-              <Grid>
+              <Grid Grid gap={4}>
                 <A
                   href="https://spec.fm/podcasts/design-details/79352"
                   target="_blank"

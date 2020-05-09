@@ -12,7 +12,7 @@ export default function PodcastEpisodesList({ episodes }: Props) {
   return (
     <Grid gap={16}>
       {episodes.map((ep) => (
-        <Grid key={ep.id}>
+        <Grid gap={4} key={ep.id}>
           <A
             target="_blank"
             rel="noopener noreferrer"

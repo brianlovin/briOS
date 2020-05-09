@@ -5,7 +5,7 @@ import Grid from '~/components/Grid'
 export default function FigmaPlugins() {
   return (
     <Grid gap={16}>
-      <Grid>
+      <Grid gap={4}>
         <A
           href="https://www.figma.com/c/plugin/744725347356614754/Dominant-Color-Toolkit-🎨"
           target="_blank"
