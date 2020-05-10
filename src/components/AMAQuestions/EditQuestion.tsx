@@ -7,7 +7,6 @@ import {
 } from '~/graphql/types.generated'
 import { Small } from '~/components/Typography'
 import { GET_AMA_QUESTIONS } from '~/graphql/queries'
-import Input from '~/components/Input'
 import Textarea from '~/components/Textarea'
 import Grid from '~/components/Grid'
 
@@ -69,7 +68,7 @@ export default function EditQuestion(props: Props) {
       question: state.question,
       id: question.id,
       answer: state.answer,
-      status: AmaStatus.Answered,
+      status: state.answer.length > 0 ? AmaStatus.Answered : AmaStatus.Pending,
     },
     optimisticResponse: {
       __typename: 'Mutation',
@@ -78,6 +77,8 @@ export default function EditQuestion(props: Props) {
         ...question,
         question: state.question,
         answer: state.answer,
+        status:
+          state.answer.length > 0 ? AmaStatus.Answered : AmaStatus.Pending,
         updatedAt: `${new Date().getTime()}`,
       },
     },
@@ -123,7 +124,7 @@ export default function EditQuestion(props: Props) {
 
   return (
     <Grid gap={12} as={'form'} onSubmit={handleSave}>
-      <Input
+      <Textarea
         placeholder="Question"
         value={state.question}
         onChange={onQuestionChange}

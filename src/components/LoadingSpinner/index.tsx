@@ -1,8 +1,15 @@
 import React from 'react'
 import { Container, Spinner } from './style'
 
-export default () => (
-  <Container>
-    <Spinner />
-  </Container>
-)
+interface Props {
+  size?: number
+}
+
+export default (props: Props) => {
+  const { size = 32 } = props
+  return (
+    <Container>
+      <Spinner size={size} />
+    </Container>
+  )
+}

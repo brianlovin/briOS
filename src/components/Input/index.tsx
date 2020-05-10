@@ -9,6 +9,7 @@ export default styled.input`
   font-size: 16px;
   background: var(--bg-primary);
   width: 100%;
+  line-height: 1.4;
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.04);
 
   &:focus {

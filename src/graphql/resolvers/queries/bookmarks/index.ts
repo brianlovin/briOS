@@ -1,11 +1,14 @@
 import firebase from '~/graphql/services/firebase'
+import { PAGINATION_AMOUNT } from '~/graphql/constants'
 
-export async function getBookmarks() {
+export async function getBookmarks(_, { skip = 0 }) {
   const data = []
 
   await firebase
     .collection('bookmarks')
     .orderBy('createdAt', 'desc')
+    .limit(PAGINATION_AMOUNT)
+    .offset(skip)
     .get()
     .then((snapshot) => {
       snapshot.forEach((doc) => {

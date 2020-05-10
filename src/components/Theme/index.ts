@@ -57,7 +57,7 @@ const theme = {
     default: '0 4px 8px rgba(0,0,0,0.08)',
     hover: '0 8px 24px rgba(0,0,0,0.10)',
     active: '0 6px 20px rgba(0,0,0,0.09)',
-    button: '0 4px 12px rgba(0,0,0,0.08)',
+    button: '0 2px 4px rgba(0,0,0,0.08)',
     largeHover:
       '0 4px 4.1px rgba(0, 0, 0, 0.012),0 4.9px 5.8px rgba(0, 0, 0, 0.018),0 6.3px 8.4px rgba(0, 0, 0, 0.029),0 8.8px 12.9px rgba(0, 0, 0, 0.05),0 15px 23px rgba(0, 0, 0, 0.11)',
   },

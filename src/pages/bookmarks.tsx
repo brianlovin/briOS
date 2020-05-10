@@ -2,7 +2,6 @@ import * as React from 'react'
 import Page from '~/components/Page'
 import { H3 } from '~/components/Typography'
 import { NextSeo } from 'next-seo'
-import { useGetBookmarksQuery } from '~/graphql/types.generated'
 import BookmarksList from '~/components/Bookmarks'
 import { GET_BOOKMARKS } from '~/graphql/queries'
 import { useAuth } from '~/hooks/useAuth'
@@ -10,19 +9,10 @@ import AddBookmark from '~/components/Bookmarks/AddBookmark'
 import { initApolloClient } from '~/graphql/services/apollo'
 import { withApollo } from '~/components/withApollo'
 import Grid from '~/components/Grid'
-import FullscreenLoading from '~/components/FullscreenLoading'
+import { CenteredColumn } from '~/components/Layouts'
 
 function Bookmarks() {
-  // pre-populate bookmarks from the cache, but check for any new ones after
-  // the page loads
-  const { data } = useGetBookmarksQuery({ fetchPolicy: 'cache-and-network' })
   const { isMe } = useAuth()
-
-  // this can happen if the route is navigated to from the client or if the
-  // cache fails to populate for whatever reason
-  if (!data || !data.bookmarks) return <FullscreenLoading />
-
-  const { bookmarks } = data
 
   return (
     <Page withHeader>
@@ -41,17 +31,13 @@ function Bookmarks() {
           ],
         }}
       />
-      <Grid
-        columns={'fit-content(640px)'}
-        style={{ justifyContent: 'center' }}
-        data-cy="bookmarks"
-      >
+      <CenteredColumn data-cy="bookmarks">
         <Grid gap={32}>
           <H3>Bookmarks</H3>
           {isMe && <AddBookmark />}
-          {bookmarks && <BookmarksList bookmarks={bookmarks} />}
+          <BookmarksList />
         </Grid>
-      </Grid>
+      </CenteredColumn>
     </Page>
   )
 }

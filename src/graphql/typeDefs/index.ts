@@ -86,11 +86,11 @@ export default gql`
   }
 
   type Query {
-    bookmarks: [Bookmark]!
+    bookmarks(skip: Int): [Bookmark]!
     episodes: [Episode]!
     posts(first: Int): [Post]!
     post(slug: String!): Post
-    amaQuestions: [AMA]!
+    amaQuestions(skip: Int, status: AMAStatus): [AMA]!
     repos: [Repo]!
     isMe: Boolean
   }

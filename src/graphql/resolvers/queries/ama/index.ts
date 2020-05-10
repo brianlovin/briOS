@@ -1,12 +1,20 @@
 import db from '~/graphql/services/firebase'
 import { Ama } from '~/graphql/types.generated'
+import { PAGINATION_AMOUNT } from '~/graphql/constants'
 
-export async function getAMAQuestions(_, __, { isMe }) {
+export async function getAMAQuestions(_, args, { isMe }) {
+  const COLLECTION = 'questions'
+  const { skip = 0, status = 'ANSWERED' } = args
   const data = []
 
+  if (status === 'PENDING' && !isMe) return []
+
   await db
-    .collection('questions')
+    .collection(COLLECTION)
+    .where('status', '==', status)
     .orderBy('updatedAt', 'desc')
+    .limit(PAGINATION_AMOUNT)
+    .offset(skip)
     .get()
     .then((snapshot) => {
       snapshot.forEach((doc) => {
@@ -16,11 +24,7 @@ export async function getAMAQuestions(_, __, { isMe }) {
         const updatedAt = d.updatedAt.toDate()
         const record = { ...d, id, createdAt, updatedAt } as Ama
 
-        if (record.status === 'ANSWERED') {
-          data.push(record)
-        } else if (isMe) {
-          data.push(record)
-        }
+        data.push(record)
       })
     })
 

@@ -8,8 +8,6 @@ import Grid from '~/components/Grid'
 import { withApollo } from '~/components/withApollo'
 import { initApolloClient } from '~/graphql/services/apollo'
 import { GET_AMA_QUESTIONS } from '~/graphql/queries/ama'
-import { useGetAmaQuestionsQuery } from '~/graphql/types.generated'
-import FullscreenLoading from '~/components/FullscreenLoading'
 import AMAQuestions from '~/components/AMAQuestions'
 
 const Container = styled.div`
@@ -44,16 +42,6 @@ const Container = styled.div`
 `
 
 function About() {
-  // pre-populate data from the cache, but check for any new ones after
-  // the page loads
-  const { data } = useGetAmaQuestionsQuery({ fetchPolicy: 'cache-and-network' })
-
-  // this can happen if the route is navigated to from the client or if the
-  // cache fails to populate for whatever reason
-  if (!data || !data.amaQuestions) return <FullscreenLoading />
-
-  const { amaQuestions } = data
-
   return (
     <Page withHeader>
       <Grid columns={'fit-content(640px)'} style={{ justifyContent: 'center' }}>
@@ -177,7 +165,7 @@ function About() {
           <Grid gap={16}>
             <H5>Ask Me Anything</H5>
             <P>Just for fun! Questions will be visible after I’ve answered.</P>
-            <AMAQuestions questions={amaQuestions} />
+            <AMAQuestions />
           </Grid>
         </Grid>
       </Grid>
@@ -187,7 +175,10 @@ function About() {
 
 export async function getStaticProps() {
   const client = await initApolloClient({})
-  await client.query({ query: GET_AMA_QUESTIONS })
+  await client.query({
+    query: GET_AMA_QUESTIONS,
+    variables: { status: 'ANSWERED' },
+  })
   /*
     Because this is using withApollo, the data from this query will be
     pre-populated in the Apollo cache at build time. When the user first

@@ -13,7 +13,7 @@ interface Props {
   question: Ama
 }
 
-export default function QuestionItem(props: Props) {
+export const QuestionItem = React.memo((props: Props) => {
   const { question, editable } = props
   // set in state otherwise when we format() this value, it can differ between
   // the server and client
@@ -33,7 +33,7 @@ export default function QuestionItem(props: Props) {
   return (
     <Grid gap={8}>
       <GlobalMarkdownStyles />
-      <P style={{ fontWeight: '600' }}>{question.question}</P>
+      <P style={{ fontWeight: '700' }}>{question.question}</P>
       {question.answer && (
         <Grid style={{ alignItems: 'start' }}>
           <Grid className={'markdown'}>
@@ -65,4 +65,4 @@ export default function QuestionItem(props: Props) {
       </Grid>
     </Grid>
   )
-}
+})
