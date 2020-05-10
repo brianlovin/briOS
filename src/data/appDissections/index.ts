@@ -21,7 +21,7 @@ import stripeDashboard from './stripeDashboard'
 import shorts from './shorts'
 import neubible from './neubible'
 
-export default [
+const allPosts = [
   twitter,
   paper,
   secret,
@@ -45,3 +45,17 @@ export default [
   shorts,
   neubible,
 ].reverse()
+
+function extractSummary({ title, slug, tint, details }) {
+  return {
+    title,
+    slug,
+    tint,
+    firstDetail: details[1],
+    detailsCount: details.length,
+  }
+}
+
+export const summaries = allPosts.map(extractSummary)
+
+export default allPosts

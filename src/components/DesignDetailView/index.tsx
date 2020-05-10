@@ -1,13 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import {
-  H3,
-  Subheading,
-  LargeSubheading,
-  A,
-  Rarr,
-} from '~/components/Typography'
-import DesignDetailsGrid from '~/components/DesignDetailsGrid'
+import { H3, Subheading, A, Rarr } from '~/components/Typography'
 import DesignDetailMedia from '~/components/DesignDetailMedia'
 import Markdown from '~/components/MarkdownRenderer'
 import Picture from '../Picture'
@@ -64,8 +57,6 @@ export default function DesignDetailView(props: Props) {
           </A>
         </Link>
       </Grid>
-
-      <DesignDetailsGrid truncate={true} />
     </Grid>
   )
 }
