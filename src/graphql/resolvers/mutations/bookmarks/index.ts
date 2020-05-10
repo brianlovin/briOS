@@ -14,7 +14,7 @@ function isValidUrl(string) {
 
 const COLLECTION = 'bookmarks'
 
-export async function editBookmark(_, { id, title, notes }) {
+export async function editBookmark(_, { id, title, notes = '' }) {
   if (!title || title.length === 0)
     throw new UserInputError('Bookmark must have a title')
 
@@ -25,6 +25,7 @@ export async function editBookmark(_, { id, title, notes }) {
     .doc(id)
     .get()
     .then((doc) => doc.data())
+    .then((res) => ({ ...res, id }))
 }
 
 export async function addBookmark(_, { url, notes }) {
