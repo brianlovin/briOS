@@ -50,6 +50,7 @@ const GlobalMarkdownStyles = createGlobalStyle`
 
     p {
       ${p};
+      line-height: 1.6;
       margin-top: ${theme.space[3]};
 
       &:first-of-type {
