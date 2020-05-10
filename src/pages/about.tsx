@@ -187,7 +187,10 @@ function About() {
 
 export async function getStaticProps() {
   const client = await initApolloClient({})
-  await client.query({ query: GET_AMA_QUESTIONS })
+  await client.query({
+    query: GET_AMA_QUESTIONS,
+    variables: { status: 'ANSWERED' },
+  })
   /*
     Because this is using withApollo, the data from this query will be
     pre-populated in the Apollo cache at build time. When the user first

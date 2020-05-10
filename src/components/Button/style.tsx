@@ -39,7 +39,7 @@ const base = css`
   justify-content: center;
   border-radius: 8px;
   font-size: ${(props) => getFontSize(props.size)};
-  font-weight: 700;
+  font-weight: 600;
   white-space: nowrap;
   word-break: keep-all;
   transition: all 0.2s ease-in-out;
@@ -54,12 +54,6 @@ const base = css`
 
   &:disabled {
     cursor: not-allowed;
-  }
-
-  &:hover {
-    transition: all 0.2s ease-in-out;
-    box-shadow: ${(props) =>
-      props.disabled ? 'none' : `${theme.shadows.button}`};
   }
 `
 

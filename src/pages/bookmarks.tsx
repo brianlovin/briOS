@@ -15,7 +15,9 @@ import FullscreenLoading from '~/components/FullscreenLoading'
 function Bookmarks() {
   // pre-populate bookmarks from the cache, but check for any new ones after
   // the page loads
-  const { data } = useGetBookmarksQuery({ fetchPolicy: 'cache-and-network' })
+  const { data, fetchMore } = useGetBookmarksQuery({
+    fetchPolicy: 'cache-and-network',
+  })
   const { isMe } = useAuth()
 
   // this can happen if the route is navigated to from the client or if the
@@ -49,7 +51,9 @@ function Bookmarks() {
         <Grid gap={32}>
           <H3>Bookmarks</H3>
           {isMe && <AddBookmark />}
-          {bookmarks && <BookmarksList bookmarks={bookmarks} />}
+          {bookmarks && (
+            <BookmarksList fetchMore={fetchMore} bookmarks={bookmarks} />
+          )}
         </Grid>
       </Grid>
     </Page>

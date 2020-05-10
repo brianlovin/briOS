@@ -10,7 +10,7 @@ interface Props {
   bookmark: Bookmark
 }
 
-export default function BookmarkListItem(props: Props) {
+export const BookmarkListItem = React.memo((props: Props) => {
   const { bookmark, editable } = props
   const [isEditing, setIsEditing] = React.useState(false)
 
@@ -72,4 +72,4 @@ export default function BookmarkListItem(props: Props) {
       </Grid>
     </Grid>
   )
-}
+})

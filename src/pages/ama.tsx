@@ -14,7 +14,9 @@ import { NextSeo } from 'next-seo'
 function About() {
   // pre-populate data from the cache, but check for any new ones after
   // the page loads
-  const { data } = useGetAmaQuestionsQuery({ fetchPolicy: 'cache-and-network' })
+  const { data, fetchMore } = useGetAmaQuestionsQuery({
+    fetchPolicy: 'cache-and-network',
+  })
 
   // this can happen if the route is navigated to from the client or if the
   // cache fails to populate for whatever reason
@@ -43,7 +45,7 @@ function About() {
         <Grid gap={16}>
           <H3>Ask Me Anything</H3>
           <P>Just for fun! Questions will be visible after I’ve answered.</P>
-          <AMAQuestions questions={amaQuestions} />
+          <AMAQuestions fetchMore={fetchMore} questions={amaQuestions} />
         </Grid>
       </CenteredColumn>
     </Page>
@@ -52,7 +54,10 @@ function About() {
 
 export async function getStaticProps() {
   const client = await initApolloClient({})
-  await client.query({ query: GET_AMA_QUESTIONS })
+  await client.query({
+    query: GET_AMA_QUESTIONS,
+    variables: { status: 'ANSWERED' },
+  })
   /*
     Because this is using withApollo, the data from this query will be
     pre-populated in the Apollo cache at build time. When the user first
@@ -66,7 +71,7 @@ export async function getStaticProps() {
   const apolloStaticCache = client.cache.extract()
   return {
     // because this data is slightly more dynamic, update it every hour
-    unstable_revalidate: 60,
+    unstable_revalidate: 60 * 60,
     props: {
       apolloStaticCache,
     },

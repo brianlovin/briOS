@@ -12,11 +12,11 @@ const animation = () =>
 
 export const Spinner = styled.div`
   animation: ${animation} 0.8s linear infinite;
-  border: 4px solid var(--border-primary);
+  border: ${(props) => props.size / 8}px solid var(--border-primary);
   border-left-color: var(--text-primary);
   border-radius: 50%;
-  height: 30px;
-  width: 30px;
+  height: ${(props) => props.size}px;
+  width: ${(props) => props.size}px;
 `
 
 export const Container = styled.div`
