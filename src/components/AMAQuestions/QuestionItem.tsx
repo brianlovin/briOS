@@ -47,7 +47,13 @@ export const QuestionItem = React.memo((props: Props) => {
 
         <Small style={{ color: 'var(--text-placeholder)' }}>/</Small>
 
-        <Small>
+        <Small
+          style={{
+            color: `var(--${
+              question.answer ? 'text-quaternary' : 'accent-orange'
+            })`,
+          }}
+        >
           {question.answer ? 'Updated' : 'Asked'} {format(updatedAt)}
         </Small>
 

@@ -114,6 +114,7 @@ export default function EditingBookmarkListItem(props: Props) {
       <Textarea
         placeholder="Notes..."
         value={state.notes}
+        rows={7}
         onChange={onNotesChange}
       />
       {state.error && (

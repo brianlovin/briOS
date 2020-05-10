@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Bookmark } from '~/graphql/types.generated'
 import { Small, A } from '~/components/Typography'
 import Grid from '~/components/Grid'
+import Linkify from '~/components/Linkify'
 import EditingBookmarkListItem from './EditingBookmarkListItem'
 import BookmarkReaction from './BookmarkReaction'
 
@@ -40,7 +41,7 @@ export const BookmarkListItem = React.memo((props: Props) => {
               paddingLeft: '12px',
             }}
           >
-            {bookmark.notes}
+            <Linkify>{bookmark.notes}</Linkify>
           </Small>
         </Grid>
       )}
