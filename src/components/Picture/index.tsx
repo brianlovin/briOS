@@ -6,9 +6,10 @@ interface Props {
   style?: object
   width: string
   height: string
+  lazy?: boolean
 }
 
-export default function Picture({ srcset, alt, ...rest }: Props) {
+export default function Picture({ srcset, alt, lazy = true, ...rest }: Props) {
   const assets = []
 
   srcset.map((src, i) => {
@@ -24,7 +25,13 @@ export default function Picture({ srcset, alt, ...rest }: Props) {
   const fallback = srcset.find((src) => !src.endsWith('webp'))
 
   assets.push(
-    <img loading="lazy" src={fallback} key={fallback} alt={alt} {...rest} />
+    <img
+      loading={lazy ? 'lazy' : 'eager'}
+      src={fallback}
+      key={fallback}
+      alt={alt}
+      {...rest}
+    />
   )
 
   return <picture>{assets}</picture>

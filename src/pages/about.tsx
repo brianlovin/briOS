@@ -52,6 +52,7 @@ function About() {
               alt={'A photo of me'}
               width={'640px'}
               height={'auto'}
+              lazy={false}
             />
           </Container>
           <Grid gap={16}>
