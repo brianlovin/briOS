@@ -39,7 +39,7 @@ const base = css`
   justify-content: center;
   border-radius: 4px;
   font-size: ${(props) => getFontSize(props.size)};
-  font-weight: 600;
+  font-weight: 500;
   white-space: nowrap;
   word-break: keep-all;
   transition: all 0.2s ease-in-out;
