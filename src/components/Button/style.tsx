@@ -37,7 +37,7 @@ const base = css`
   align-self: center;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
+  border-radius: 4px;
   font-size: ${(props) => getFontSize(props.size)};
   font-weight: 600;
   white-space: nowrap;
