@@ -54,6 +54,8 @@ export default function DesignDetail({ post }: Props) {
       </Page>
     )
   }
+
+  return null
 }
 
 export async function getStaticPaths() {
