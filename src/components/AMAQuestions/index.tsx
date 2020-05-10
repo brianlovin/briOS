@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Ama } from '~/graphql/types.generated'
+import { useGetAmaQuestionsQuery } from '~/graphql/types.generated'
 import { useAuth } from '~/hooks/useAuth'
 import Grid from '~/components/Grid'
 import { Small } from '~/components/Typography'
@@ -10,16 +10,25 @@ import { PAGINATION_AMOUNT } from '~/graphql/constants'
 import { QuestionItem } from './QuestionItem'
 import AskQuestion from './AskQuestion'
 import PendingQuestions from './PendingQuestions'
+import FullscreenLoading from '../FullscreenLoading'
 
-interface Props {
-  questions?: Array<Ama>
-  fetchMore: Function
-}
-
-export default function QuestionsList({ questions, fetchMore }: Props) {
+export default function QuestionsList() {
   const { isMe } = useAuth()
   const [showLoadMore, setShowLoadMore] = React.useState(true)
   const [loading, setLoading] = React.useState(false)
+
+  // pre-populate data from the cache, but check for any new ones after
+  // the page loads
+  const { data, fetchMore, error } = useGetAmaQuestionsQuery({
+    fetchPolicy: 'cache-and-network',
+  })
+
+  // this can happen if the route is navigated to from the client or if the
+  // cache fails to populate for whatever reason
+  if (!data || !data.amaQuestions) return <FullscreenLoading />
+  if (error) return null
+
+  const { amaQuestions: questions } = data
 
   function handleLoadMore() {
     setLoading(true)

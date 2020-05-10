@@ -5,25 +5,11 @@ import Grid from '~/components/Grid'
 import { withApollo } from '~/components/withApollo'
 import { initApolloClient } from '~/graphql/services/apollo'
 import { GET_AMA_QUESTIONS } from '~/graphql/queries/ama'
-import { useGetAmaQuestionsQuery } from '~/graphql/types.generated'
-import FullscreenLoading from '~/components/FullscreenLoading'
 import AMAQuestions from '~/components/AMAQuestions'
 import { CenteredColumn } from '~/components/Layouts'
 import { NextSeo } from 'next-seo'
 
 function About() {
-  // pre-populate data from the cache, but check for any new ones after
-  // the page loads
-  const { data, fetchMore } = useGetAmaQuestionsQuery({
-    fetchPolicy: 'cache-and-network',
-  })
-
-  // this can happen if the route is navigated to from the client or if the
-  // cache fails to populate for whatever reason
-  if (!data || !data.amaQuestions) return <FullscreenLoading />
-
-  const { amaQuestions } = data
-
   return (
     <Page withHeader>
       <NextSeo
@@ -45,7 +31,7 @@ function About() {
         <Grid gap={16}>
           <H3>Ask Me Anything</H3>
           <P>Just for fun! Questions will be visible after I’ve answered.</P>
-          <AMAQuestions fetchMore={fetchMore} questions={amaQuestions} />
+          <AMAQuestions />
         </Grid>
       </CenteredColumn>
     </Page>

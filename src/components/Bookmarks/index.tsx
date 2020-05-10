@@ -1,22 +1,30 @@
 import * as React from 'react'
-import { Bookmark } from '~/graphql/types.generated'
+import { useGetBookmarksQuery } from '~/graphql/types.generated'
 import { useAuth } from '~/hooks/useAuth'
 import Grid from '~/components/Grid'
 import { BookmarkListItem } from './BookmarkListItem'
 import { PAGINATION_AMOUNT } from '~/graphql/constants'
 import { Button } from '../Button'
 import LoadingSpinner from '../LoadingSpinner'
+import FullscreenLoading from '../FullscreenLoading'
 
-interface Props {
-  bookmarks?: Array<Bookmark>
-  fetchMore: Function
-}
-
-export default function BookmarksList(props: Props) {
-  const { fetchMore, bookmarks } = props
+export default function BookmarksList() {
   const { isMe } = useAuth()
   const [showLoadMore, setShowLoadMore] = React.useState(true)
   const [loading, setLoading] = React.useState(false)
+
+  // pre-populate bookmarks from the cache, but check for any new ones after
+  // the page loads
+  const { data, fetchMore, error } = useGetBookmarksQuery({
+    fetchPolicy: 'cache-and-network',
+  })
+
+  // this can happen if the route is navigated to from the client or if the
+  // cache fails to populate for whatever reason
+  if (!data || !data.bookmarks) return <FullscreenLoading />
+  if (error) return null
+
+  const { bookmarks } = data
 
   function handleLoadMore() {
     setLoading(true)
@@ -45,8 +53,6 @@ export default function BookmarksList(props: Props) {
       setLoading(false)
     }
   }
-
-  if (!bookmarks || bookmarks.length === 0) return null
 
   return (
     <Grid gap={24}>
