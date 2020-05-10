@@ -135,6 +135,7 @@ export default function EditQuestion(props: Props) {
         placeholder="Answer..."
         value={state.answer}
         onChange={onAnswerChange}
+        rows={5}
       />
 
       {state.error && (
