@@ -1,30 +1,24 @@
 import * as React from 'react'
-import { useRouter } from 'next/router'
 import { NextSeo } from 'next-seo'
-import Page, { SectionHeading } from '~/components/Page'
-import { H1, Subheading } from '~/components/Typography'
+import Page from '~/components/Page'
 import designDetailsPosts from '~/data/appDissections'
 import DesignDetailView from '~/components/DesignDetailView'
-import DesignDetailsGrid from '~/components/DesignDetailsGrid'
-import { DesignDetail as PostType } from '~/components/DesignDetailMedia'
-
-export interface DesignDetailsPost {
-  slug: string
-  title: string
-  description: string
-  createdAt: string
-  details: Array<PostType>
-  tint: string
-}
+import { DesignDetailsPost } from '~/data/appDissections'
+import { useRouter } from 'next/router'
 
 interface Props {
   post: DesignDetailsPost
 }
 
-export default function DesignDetail() {
+export default function DesignDetail({ post }: Props) {
   const router = useRouter()
-  const { slug } = router.query
-  const post = designDetailsPosts.find((post) => post.slug === slug)
+
+  React.useEffect(() => {
+    // handle bad slug
+    if (!post) {
+      router.push('/design-details')
+    }
+  }, [])
 
   if (post) {
     return (
@@ -44,15 +38,21 @@ export default function DesignDetail() {
     )
   }
 
-  // bad slug
-  return (
-    <Page withHeader>
-      <SectionHeading>
-        <H1>Design Details</H1>
-        <Subheading>In-depth design explorations.</Subheading>
-      </SectionHeading>
+  return null
+}
 
-      <DesignDetailsGrid truncate={false} />
-    </Page>
-  )
+export async function getStaticPaths() {
+  const paths = designDetailsPosts.map(({ slug }) => ({
+    params: { slug },
+  }))
+
+  return { paths, fallback: true }
+}
+
+export async function getStaticProps({ params: { slug } }) {
+  return {
+    props: {
+      post: designDetailsPosts.find((post) => post.slug === slug),
+    },
+  }
 }

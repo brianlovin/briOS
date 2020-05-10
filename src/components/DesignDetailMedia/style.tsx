@@ -9,7 +9,7 @@ export const DetailContainer = styled.div`
 export const MediaContainer = styled.div`
   border-radius: 8px;
   background: var(--bg-inset);
-  margin: 32px -32px 0;
+  margin: 32px -32px 16px;
   padding: 16px;
   width: calc(100% + 64px);
   display: flex;

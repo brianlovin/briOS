@@ -4,6 +4,7 @@ import Page from '~/components/Page'
 import { H3, Subheading } from '~/components/Typography'
 import DesignDetailsGrid from '~/components/DesignDetailsGrid'
 import Grid from '~/components/Grid'
+import { summaries } from '~/data/appDissections'
 
 export default function DesignDetails() {
   return (
@@ -40,7 +41,7 @@ export default function DesignDetails() {
           </Subheading>
         </Grid>
 
-        <DesignDetailsGrid truncate={false} />
+        <DesignDetailsGrid summaries={summaries} />
       </Grid>
     </Page>
   )

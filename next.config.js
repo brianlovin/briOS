@@ -1,6 +1,9 @@
 const path = require('path')
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+})
 
-module.exports = {
+module.exports = withBundleAnalyzer({
   env: {
     FATHOM_SITE_ID: process.env.FATHOM_SITE_ID,
     FATHOM_CUSTOM_URL: process.env.FATHOM_CUSTOM_URL,
@@ -10,4 +13,4 @@ module.exports = {
     config.resolve.alias['~'] = path.resolve('./src')
     return config
   },
-}
+})

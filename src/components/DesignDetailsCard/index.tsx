@@ -12,11 +12,11 @@ import {
   Circle,
 } from './style'
 import Picture from '~/components/Picture'
-import { DesignDetailsPost } from '~/pages/design-details/[slug]'
-import Card from '../Card'
+import Card from '~/components/Card'
+import { DesignDetailsPostSummary } from '~/data/appDissections'
 
 interface Props {
-  post: DesignDetailsPost
+  summary: DesignDetailsPostSummary
 }
 
 export default function DesignDetailsCard(props: Props) {
@@ -24,8 +24,9 @@ export default function DesignDetailsCard(props: Props) {
   const [isVisible, setIsVisible] = React.useState(false)
   const [isMounted, setIsMounted] = React.useState(false)
   const [isMobile, setIsMobile] = React.useState(false)
+
   const {
-    post: { title, slug, details, tint },
+    summary: { title, slug, firstDetail, tint, detailsCount },
   } = props
 
   const srcset = [
@@ -33,7 +34,7 @@ export default function DesignDetailsCard(props: Props) {
     `/static/img/design-details/${slug}.jpeg`,
   ]
 
-  const videosrc = details[1].media[0]
+  const videosrc = firstDetail.media[0]
 
   const pause = () => {
     videoEl.current && videoEl.current.pause()
@@ -67,7 +68,7 @@ export default function DesignDetailsCard(props: Props) {
               </ImageContainer>
               <CardContent>
                 <Title>{title}</Title>
-                <DetailsCount>{details.length} details</DetailsCount>
+                <DetailsCount>{detailsCount} details</DetailsCount>
               </CardContent>
               <Circle color={tint} />
               <Arrow>

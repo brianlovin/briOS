@@ -10,6 +10,8 @@ import { GET_HOME } from '~/graphql/queries'
 import { Post, Episode, Repo } from '~/graphql/types.generated'
 import { initApolloClient } from '~/graphql/services/apollo'
 import Grid from '~/components/Grid'
+import { summaries } from '~/data/appDissections'
+import { DesignDetailsPostSummary } from '~/data/appDissections'
 
 interface Props {
   data: {
@@ -17,9 +19,10 @@ interface Props {
     episodes?: Episode[]
     repos?: Repo[]
   }
+  summaries: DesignDetailsPostSummary[]
 }
 
-function Home({ data }: Props) {
+function Home({ data, summaries }: Props) {
   return (
     <Page>
       <Grid columns={'fit-content(640px)'} style={{ justifyContent: 'center' }}>
@@ -266,7 +269,7 @@ function Home({ data }: Props) {
                 </A>
               </Link>
             </Grid>
-            <DesignDetailsGrid truncate={true} />
+            <DesignDetailsGrid summaries={summaries} />
           </Grid>
         </Grid>
       </Grid>
@@ -283,6 +286,7 @@ export async function getStaticProps() {
     props: {
       data,
       apolloStaticCache: client.cache.extract(),
+      summaries: summaries.slice(0, 4),
     },
   }
 }
