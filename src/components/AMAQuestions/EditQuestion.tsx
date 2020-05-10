@@ -82,6 +82,31 @@ export default function EditQuestion(props: Props) {
         updatedAt: `${new Date().getTime()}`,
       },
     },
+    refetchQueries: [
+      {
+        query: GET_AMA_QUESTIONS,
+        variables: {
+          status: AmaStatus.Answered,
+        },
+      },
+    ],
+    update(cache) {
+      const { amaQuestions } = cache.readQuery({
+        query: GET_AMA_QUESTIONS,
+        variables: {
+          status: AmaStatus.Pending,
+        },
+      })
+      cache.writeQuery({
+        query: GET_AMA_QUESTIONS,
+        variables: {
+          status: AmaStatus.Pending,
+        },
+        data: {
+          amaQuestions: amaQuestions.filter((o) => o.id !== question.id),
+        },
+      })
+    },
     onError({ message }) {
       const value = message.replace('GraphQL error:', '')
       dispatch({ type: 'error', value })
