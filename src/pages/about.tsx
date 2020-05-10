@@ -46,7 +46,9 @@ const Container = styled.div`
 function About() {
   // pre-populate data from the cache, but check for any new ones after
   // the page loads
-  const { data } = useGetAmaQuestionsQuery({ fetchPolicy: 'cache-and-network' })
+  const { data, fetchMore } = useGetAmaQuestionsQuery({
+    fetchPolicy: 'cache-and-network',
+  })
 
   // this can happen if the route is navigated to from the client or if the
   // cache fails to populate for whatever reason
@@ -177,7 +179,7 @@ function About() {
           <Grid gap={16}>
             <H5>Ask Me Anything</H5>
             <P>Just for fun! Questions will be visible after I’ve answered.</P>
-            <AMAQuestions questions={amaQuestions} />
+            <AMAQuestions questions={amaQuestions} fetchMore={fetchMore} />
           </Grid>
         </Grid>
       </Grid>

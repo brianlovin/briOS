@@ -13,7 +13,7 @@ import PendingQuestions from './PendingQuestions'
 
 interface Props {
   questions?: Array<Ama>
-  fetchMore?: Function
+  fetchMore: Function
 }
 
 export default function QuestionsList({ questions, fetchMore }: Props) {
