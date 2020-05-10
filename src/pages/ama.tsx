@@ -8,6 +8,7 @@ import { GET_AMA_QUESTIONS } from '~/graphql/queries/ama'
 import AMAQuestions from '~/components/AMAQuestions'
 import { CenteredColumn } from '~/components/Layouts'
 import { NextSeo } from 'next-seo'
+import { AmaStatus } from '~/graphql/types.generated'
 
 function About() {
   return (
@@ -42,7 +43,7 @@ export async function getStaticProps() {
   const client = await initApolloClient({})
   await client.query({
     query: GET_AMA_QUESTIONS,
-    variables: { status: 'ANSWERED' },
+    variables: { status: AmaStatus.Answered },
   })
   /*
     Because this is using withApollo, the data from this query will be

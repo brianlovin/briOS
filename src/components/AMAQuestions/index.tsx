@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useGetAmaQuestionsQuery } from '~/graphql/types.generated'
+import { useGetAmaQuestionsQuery, AmaStatus } from '~/graphql/types.generated'
 import { useAuth } from '~/hooks/useAuth'
 import Grid from '~/components/Grid'
 import { Small } from '~/components/Typography'
@@ -20,6 +20,7 @@ export default function QuestionsList() {
   // pre-populate data from the cache, but check for any new ones after
   // the page loads
   const { data, fetchMore, error } = useGetAmaQuestionsQuery({
+    variables: { status: AmaStatus.Answered },
     fetchPolicy: 'cache-and-network',
   })
 
