@@ -39,6 +39,7 @@ export const BookmarkListItem = React.memo((props: Props) => {
             style={{
               borderLeft: '2px solid var(--border-primary)',
               paddingLeft: '12px',
+              whiteSpace: 'pre-wrap',
             }}
           >
             <Linkify>{bookmark.notes}</Linkify>
