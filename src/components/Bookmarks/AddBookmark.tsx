@@ -56,6 +56,12 @@ export default function AddBookmark() {
     return setNotes(e.target.value)
   }
 
+  function onKeyDown(e) {
+    if (e.keyCode === 13 && e.metaKey) {
+      return onSubmit(e)
+    }
+  }
+
   return (
     <Grid gap={12} as={'form'} onSubmit={onSubmit}>
       <Input
@@ -64,11 +70,16 @@ export default function AddBookmark() {
         placeholder="Add a url..."
         value={url}
         onChange={onUrlChange}
+        onKeyDown={onKeyDown}
         style={{ width: '100%' }}
       />
       {url.length > 0 && (
         <React.Fragment>
-          <Textarea placeholder="Notes..." onChange={onNotesChange} />
+          <Textarea
+            placeholder="Notes..."
+            onChange={onNotesChange}
+            onKeyDown={onKeyDown}
+          />
           <Small style={{ cursor: 'pointer' }} onClick={onSubmit}>
             Save
           </Small>
