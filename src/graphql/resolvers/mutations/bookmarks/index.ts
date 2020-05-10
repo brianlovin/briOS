@@ -25,7 +25,7 @@ export async function editBookmark(_, { id, title, notes = '' }) {
     .doc(id)
     .get()
     .then((doc) => doc.data())
-    .then((res) => ({ ...res, id }))
+    .then((res) => ({ ...res, reactions: res.reactions || 0, id }))
 }
 
 export async function addBookmark(_, { url, notes }) {
