@@ -11,7 +11,7 @@ import { Post, Episode, Repo } from '~/graphql/types.generated'
 import { initApolloClient } from '~/graphql/services/apollo'
 import Grid from '~/components/Grid'
 import { summaries } from '~/data/appDissections'
-import { DesignDetailsPostSummary } from './design-details/[slug]'
+import { DesignDetailsPostSummary } from '~/data/appDissections'
 
 interface Props {
   data: {

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import DesignDetailsCard from '~/components/DesignDetailsCard'
 import Grid from '~/components/Grid'
-import { DesignDetailsPostSummary } from '~/pages/design-details/[slug]'
+import { DesignDetailsPostSummary } from '~/data/appDissections'
 
 interface Props {
   summaries: DesignDetailsPostSummary[]

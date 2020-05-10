@@ -12,8 +12,8 @@ import {
   Circle,
 } from './style'
 import Picture from '~/components/Picture'
-import { DesignDetailsPostSummary } from '~/pages/design-details/[slug]'
-import Card from '../Card'
+import Card from '~/components/Card'
+import { DesignDetailsPostSummary } from '~/data/appDissections'
 
 interface Props {
   summary: DesignDetailsPostSummary

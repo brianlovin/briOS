@@ -6,7 +6,7 @@ import Markdown from '~/components/MarkdownRenderer'
 import Picture from '../Picture'
 import Grid from '../Grid'
 import { format } from 'timeago.js'
-import { DesignDetailsPost } from '~/pages/design-details/[slug]'
+import { DesignDetailsPost } from '~/data/appDissections'
 
 interface Props {
   post: DesignDetailsPost

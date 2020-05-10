@@ -46,11 +46,3 @@ export default function DesignDetails() {
     </Page>
   )
 }
-
-export async function getStaticProps() {
-  return {
-    props: {
-      summaries,
-    },
-  }
-}

@@ -3,25 +3,8 @@ import { NextSeo } from 'next-seo'
 import Page from '~/components/Page'
 import designDetailsPosts from '~/data/appDissections'
 import DesignDetailView from '~/components/DesignDetailView'
-import { DesignDetail as PostType } from '~/components/DesignDetailMedia'
+import { DesignDetailsPost } from '~/data/appDissections'
 import { useRouter } from 'next/router'
-
-export interface DesignDetailsPost {
-  slug: string
-  title: string
-  description: string
-  createdAt: string
-  details: Array<PostType>
-  tint: string
-}
-
-export interface DesignDetailsPostSummary {
-  slug: string
-  title: string
-  tint: string
-  firstDetail: PostType
-  detailsCount: number
-}
 
 interface Props {
   post: DesignDetailsPost

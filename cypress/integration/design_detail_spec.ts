@@ -22,11 +22,4 @@ describe('Design Detail Post', () => {
       expect($p).to.have.length(detail.details.length)
     })
   })
-
-  it('should render design details more to read', () => {
-    designDetailsPosts.slice(0, 4).map((detail) => {
-      cy.contains(detail.title)
-      cy.contains(`${detail.details.length} details`)
-    })
-  })
 })
