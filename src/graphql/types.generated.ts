@@ -116,12 +116,21 @@ export type Query = {
   isMe?: Maybe<Scalars['Boolean']>
 }
 
+export type QueryBookmarksArgs = {
+  skip?: Maybe<Scalars['Int']>
+}
+
 export type QueryPostsArgs = {
   first?: Maybe<Scalars['Int']>
 }
 
 export type QueryPostArgs = {
   slug: Scalars['String']
+}
+
+export type QueryAmaQuestionsArgs = {
+  skip?: Maybe<Scalars['Int']>
+  status?: Maybe<AmaStatus>
 }
 
 export type Mutation = {
@@ -321,14 +330,19 @@ export type AddBookmarkReactionMutation = {
   >
 }
 
-export type GetAmaQuestionsQueryVariables = {}
+export type GetAmaQuestionsQueryVariables = {
+  skip?: Maybe<Scalars['Int']>
+  status?: Maybe<AmaStatus>
+}
 
 export type GetAmaQuestionsQuery = {
   __typename?: 'Query'
   amaQuestions: Array<Maybe<{ __typename?: 'AMA' } & AmaInfoFragment>>
 }
 
-export type GetBookmarksQueryVariables = {}
+export type GetBookmarksQueryVariables = {
+  skip?: Maybe<Scalars['Int']>
+}
 
 export type GetBookmarksQuery = {
   __typename?: 'Query'
@@ -927,8 +941,8 @@ export type AddBookmarkReactionMutationOptions = ApolloReactCommon.BaseMutationO
   AddBookmarkReactionMutationVariables
 >
 export const GetAmaQuestionsDocument = gql`
-  query GetAMAQuestions {
-    amaQuestions {
+  query GetAMAQuestions($skip: Int, $status: AMAStatus) {
+    amaQuestions(skip: $skip, status: $status) {
       ...AMAInfo
     }
   }
@@ -947,6 +961,8 @@ export const GetAmaQuestionsDocument = gql`
  * @example
  * const { data, loading, error } = useGetAmaQuestionsQuery({
  *   variables: {
+ *      skip: // value for 'skip'
+ *      status: // value for 'status'
  *   },
  * });
  */
@@ -983,8 +999,8 @@ export type GetAmaQuestionsQueryResult = ApolloReactCommon.QueryResult<
   GetAmaQuestionsQueryVariables
 >
 export const GetBookmarksDocument = gql`
-  query GetBookmarks {
-    bookmarks {
+  query GetBookmarks($skip: Int) {
+    bookmarks(skip: $skip) {
       ...BookmarkInfo
     }
   }
@@ -1003,6 +1019,7 @@ export const GetBookmarksDocument = gql`
  * @example
  * const { data, loading, error } = useGetBookmarksQuery({
  *   variables: {
+ *      skip: // value for 'skip'
  *   },
  * });
  */
