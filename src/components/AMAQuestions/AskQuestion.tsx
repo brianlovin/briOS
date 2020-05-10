@@ -33,12 +33,19 @@ export default function AddBookmark() {
     return setQuestion(e.target.value)
   }
 
+  function onKeyDown(e) {
+    if (e.keyCode === 13 && e.metaKey) {
+      return onSubmit(e)
+    }
+  }
+
   return (
     <Grid gap={12} as={'form'} onSubmit={onSubmit}>
       <Textarea
         value={question}
         placeholder="Ask me anything..."
         onChange={onQuestionChange}
+        onKeyDown={onKeyDown}
       />
       {question.length > 0 && (
         <PrimaryButton onClick={onSubmit}>Ask away!</PrimaryButton>

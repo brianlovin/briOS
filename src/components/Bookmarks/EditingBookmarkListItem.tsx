@@ -84,14 +84,6 @@ export default function EditingBookmarkListItem(props: Props) {
     },
   })
 
-  function onTitleChange(e) {
-    dispatch({ type: 'edit-title', value: e.target.value })
-  }
-
-  function onNotesChange(e) {
-    dispatch({ type: 'edit-notes', value: e.target.value })
-  }
-
   function handleSave(e) {
     e.preventDefault()
 
@@ -103,6 +95,20 @@ export default function EditingBookmarkListItem(props: Props) {
     return onDone()
   }
 
+  function onTitleChange(e) {
+    return dispatch({ type: 'edit-title', value: e.target.value })
+  }
+
+  function onNotesChange(e) {
+    return dispatch({ type: 'edit-notes', value: e.target.value })
+  }
+
+  function onKeyDown(e) {
+    if (e.keyCode === 13 && e.metaKey) {
+      return handleSave(e)
+    }
+  }
+
   return (
     <Grid gap={12} as={'form'} onSubmit={handleSave}>
       <Input
@@ -110,12 +116,14 @@ export default function EditingBookmarkListItem(props: Props) {
         placeholder="Title"
         value={state.title}
         onChange={onTitleChange}
+        onKeyDown={onKeyDown}
       />
       <Textarea
         placeholder="Notes..."
         value={state.notes}
         rows={7}
         onChange={onNotesChange}
+        onKeyDown={onKeyDown}
       />
       {state.error && (
         <Small style={{ color: 'var(--accent-red)' }}>{state.error}</Small>

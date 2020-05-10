@@ -140,19 +140,25 @@ export default function EditQuestion(props: Props) {
     },
   })
 
-  function onQuestionChange(e) {
-    dispatch({ type: 'edit-question', value: e.target.value })
-  }
-
-  function onAnswerChange(e) {
-    dispatch({ type: 'edit-answer', value: e.target.value })
-  }
-
   function handleSave(e) {
     e.preventDefault()
 
     editQuestion()
     return onDone()
+  }
+
+  function onQuestionChange(e) {
+    return dispatch({ type: 'edit-question', value: e.target.value })
+  }
+
+  function onAnswerChange(e) {
+    return dispatch({ type: 'edit-answer', value: e.target.value })
+  }
+
+  function onKeyDown(e) {
+    if (e.keyCode === 13 && e.metaKey) {
+      return editQuestion()
+    }
   }
 
   return (
@@ -161,6 +167,7 @@ export default function EditQuestion(props: Props) {
         placeholder="Question"
         value={state.question}
         onChange={onQuestionChange}
+        onKeyDown={onKeyDown}
       />
 
       <Textarea
@@ -168,6 +175,7 @@ export default function EditQuestion(props: Props) {
         placeholder="Answer..."
         value={state.answer}
         onChange={onAnswerChange}
+        onKeyDown={onKeyDown}
         rows={5}
       />
 
