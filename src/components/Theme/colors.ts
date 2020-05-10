@@ -25,7 +25,7 @@ export const COLORS = {
   },
   'text-secondary': {
     light: '#2f3037',
-    dark: '#e3e4e8',
+    dark: '#DEDFE5',
   },
   'text-tertiary': {
     light: '#525560',
