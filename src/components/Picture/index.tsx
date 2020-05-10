@@ -23,7 +23,9 @@ export default function Picture({ srcset, alt, ...rest }: Props) {
 
   const fallback = srcset.find((src) => !src.endsWith('webp'))
 
-  assets.push(<img src={fallback} key={fallback} alt={alt} {...rest} />)
+  assets.push(
+    <img loading="lazy" src={fallback} key={fallback} alt={alt} {...rest} />
+  )
 
   return <picture>{assets}</picture>
 }
