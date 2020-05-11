@@ -5,7 +5,6 @@ import Grid from '~/components/Grid'
 import { format } from 'timeago.js'
 import QuestionReaction from './QuestionReaction'
 import EditQuestion from './EditQuestion'
-import GlobalMarkdownStyles from '../GlobalStyles/markdown'
 import MarkdownRenderer from '../MarkdownRenderer'
 
 interface Props {
@@ -32,7 +31,6 @@ export const QuestionItem = React.memo((props: Props) => {
 
   return (
     <Grid gap={8}>
-      <GlobalMarkdownStyles />
       <P style={{ fontWeight: '700' }}>{question.question}</P>
       {question.answer && (
         <Grid style={{ alignItems: 'start' }}>
