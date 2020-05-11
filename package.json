@@ -29,7 +29,7 @@
     "cookie": "^0.4.1",
     "cryptr": "^6.0.2",
     "fathom-client": "^2.0.3",
-    "firebase-admin": "^8.12.0",
+    "firebase-admin": "^8.12.1",
     "graphql": "^15.0.0",
     "graphql-tools": "^5.0.0",
     "graphql-tools-fork": "^9.0.1",
