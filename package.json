@@ -75,7 +75,7 @@
     "@types/mocha": "^7.0.2",
     "@types/node": "^13.13.5",
     "@types/react": "^16.9.35",
-    "@typescript-eslint/eslint-plugin": "^2.31.0",
+    "@typescript-eslint/eslint-plugin": "^2.32.0",
     "@typescript-eslint/parser": "^2.31.0",
     "babel-eslint": "^10.1.0",
     "babel-plugin-styled-components": "^1.10.7",
