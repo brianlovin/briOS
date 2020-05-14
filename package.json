@@ -55,7 +55,7 @@
     "terser": "^4.6.13",
     "throttle-debounce": "^2.1.0",
     "timeago.js": "^4.0.2",
-    "twilio": "^3.43.0",
+    "twilio": "^3.43.1",
     "unified": "^9.0.0",
     "unified-stream": "^1.0.6",
     "use-dark-mode": "^2.3.1"
