@@ -52,6 +52,7 @@ const GlobalMarkdownStyles = createGlobalStyle`
       ${p};
       line-height: 1.6;
       margin-top: ${theme.space[3]};
+      word-break: break-word;
 
       &:first-of-type {
         margin-top: 0;

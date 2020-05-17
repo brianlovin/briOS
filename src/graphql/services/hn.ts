@@ -12,8 +12,6 @@ export async function getPostIds(sort) {
 }
 
 export async function getPostById(id, includeComments = false) {
-  console.log({ id })
-
   const data = await fetch(`${ITEM_BASE_URL}/item/${id}.json`).then((res) => {
     return res.json()
   })

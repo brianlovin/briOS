@@ -38,9 +38,17 @@ export default function Comment(props: Props) {
           position: 'relative',
         }}
       >
-        <LeftDivider onClick={() => setCollapsed(!collapsed)} />
+        {level > 0 && (
+          <LeftDivider level={level} onClick={() => setCollapsed(!collapsed)} />
+        )}
 
-        <Grid gap={4}>
+        <Grid gap={4} style={{ position: 'relative' }}>
+          {level === 0 && (
+            <LeftDivider
+              level={level}
+              onClick={() => setCollapsed(!collapsed)}
+            />
+          )}
           <Grid columns={'max-content'}>
             <Small>{`${comment.time_ago} by ${comment.user}`}</Small>
           </Grid>
@@ -57,9 +65,15 @@ export default function Comment(props: Props) {
         position: 'relative',
       }}
     >
-      {level > 0 && <LeftDivider onClick={() => setCollapsed(!collapsed)} />}
+      {level > 0 && (
+        <LeftDivider level={level} onClick={() => setCollapsed(!collapsed)} />
+      )}
 
-      <Grid gap={8}>
+      <Grid gap={8} style={{ position: 'relative' }}>
+        {level === 0 && (
+          <LeftDivider level={level} onClick={() => setCollapsed(!collapsed)} />
+        )}
+
         <ConditionalWrapper
           condition={level === 0}
           wrapper={(children) => (
@@ -74,7 +88,9 @@ export default function Comment(props: Props) {
         </ConditionalWrapper>
         <Grid className={'markdown'}>
           <div
-            style={{ maxWidth: `calc(640px - ${level * 20}px)` }}
+            style={{
+              display: 'grid',
+            }}
             dangerouslySetInnerHTML={{ __html: comment.content }}
           />
         </Grid>
