@@ -18,7 +18,7 @@ export default function Byline(props: Props) {
       </Small>
 
       <Small>
-        <Link href={`/hn/${post.id}`}>
+        <Link href={`/hn/[id]`} as={`/hn/${post.id}`}>
           <a>{`${post.comments_count} comments`}</a>
         </Link>
       </Small>
