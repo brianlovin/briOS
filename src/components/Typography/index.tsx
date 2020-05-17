@@ -135,6 +135,19 @@ export const P = styled.p`
 export const Small = styled(P)`
   font-size: ${theme.fontSizes[0]};
   color: var(--text-quaternary);
+
+  a {
+    font-weight: 400;
+    color: var(--text-quaternary);
+  }
+
+  a:hover {
+    color: var(--text-secondary);
+  }
+
+  a:visited {
+    color: var(--text-quaternary);
+  }
 `
 
 export const blockquote = css`
@@ -188,6 +201,7 @@ export const pre = css`
   text-shadow: none;
   border-radius: 8px;
   overflow-x: scroll;
+  overflow-wrap: break-word;
   box-shadow: 0 0 0 1px var(--border-primary),
     inset 0 1px 4px rgba(0, 0, 0, 0.04);
 

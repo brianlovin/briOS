@@ -61,9 +61,9 @@ export default function Header() {
   const [isExpanded, setExpanded] = React.useState(false)
   const router = useRouter()
 
-  let activeRoute = 'Home'
-  let activePath = '/'
-  if (router.pathname.includes('/about')) {
+  let activeRoute = ''
+  let activePath = ''
+  if (router.pathname.startsWith('/about')) {
     activeRoute = 'About'
     activePath = '/about'
   }
@@ -82,6 +82,10 @@ export default function Header() {
   if (router.pathname.includes('/ama')) {
     activeRoute = 'Ask Me Anything'
     activePath = '/ama'
+  }
+  if (router.pathname.includes('/hn')) {
+    activeRoute = 'Hacker News'
+    activePath = '/hn'
   }
 
   return (
