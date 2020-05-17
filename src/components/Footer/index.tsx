@@ -30,6 +30,10 @@ export function Footer() {
         <A>Bookmarks</A>
       </Link>
 
+      <Link href="/hn" as="/hn" passHref>
+        <A>Hacker News</A>
+      </Link>
+
       <A
         href="https://twitter.com/brian_lovin"
         target="_blank"

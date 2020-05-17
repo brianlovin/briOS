@@ -3,6 +3,7 @@ import { EpisodeInfoFragment } from './episode'
 import { PostInfoFragment } from './post'
 import { RepoInfoFragment } from './repo'
 import { AMAInfoFragment } from './ama'
+import { HNPostFragment } from './hn'
 
 export {
   BookmarkInfoFragment,
@@ -10,4 +11,5 @@ export {
   PostInfoFragment,
   RepoInfoFragment,
   AMAInfoFragment,
+  HNPostFragment,
 }

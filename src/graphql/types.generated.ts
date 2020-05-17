@@ -105,6 +105,19 @@ export type Ama = {
   reactions?: Maybe<Scalars['Int']>
 }
 
+export type HnPost = {
+  __typename?: 'HNPost'
+  id: Scalars['ID']
+  title?: Maybe<Scalars['String']>
+  points?: Maybe<Scalars['Int']>
+  user?: Maybe<Scalars['String']>
+  time_ago?: Maybe<Scalars['String']>
+  comments?: Maybe<Scalars['String']>
+  comments_count?: Maybe<Scalars['Int']>
+  url?: Maybe<Scalars['String']>
+  domain?: Maybe<Scalars['String']>
+}
+
 export type Query = {
   __typename?: 'Query'
   bookmarks: Array<Maybe<Bookmark>>
@@ -112,6 +125,8 @@ export type Query = {
   posts: Array<Maybe<Post>>
   post?: Maybe<Post>
   amaQuestions: Array<Maybe<Ama>>
+  hnPosts?: Maybe<Array<Maybe<HnPost>>>
+  hnPost?: Maybe<HnPost>
   repos: Array<Maybe<Repo>>
   isMe?: Maybe<Scalars['Boolean']>
 }
@@ -131,6 +146,15 @@ export type QueryPostArgs = {
 export type QueryAmaQuestionsArgs = {
   skip?: Maybe<Scalars['Int']>
   status?: Maybe<AmaStatus>
+}
+
+export type QueryHnPostsArgs = {
+  first?: Maybe<Scalars['Int']>
+  sort?: Maybe<Scalars['String']>
+}
+
+export type QueryHnPostArgs = {
+  id: Scalars['ID']
 }
 
 export type Mutation = {
@@ -216,6 +240,18 @@ export type EpisodeInfoFragment = {
   title?: Maybe<string>
   description?: Maybe<string>
   published_at?: Maybe<string>
+}
+
+export type HnPostInfoFragment = {
+  __typename?: 'HNPost'
+  id: string
+  title?: Maybe<string>
+  points?: Maybe<number>
+  user?: Maybe<string>
+  time_ago?: Maybe<string>
+  comments_count?: Maybe<number>
+  url?: Maybe<string>
+  domain?: Maybe<string>
 }
 
 export type PostInfoFragment = {
@@ -356,6 +392,26 @@ export type GetEpisodesQuery = {
   episodes: Array<Maybe<{ __typename?: 'Episode' } & EpisodeInfoFragment>>
 }
 
+export type GetTopHnPostsQueryVariables = {
+  sort?: Maybe<Scalars['String']>
+}
+
+export type GetTopHnPostsQuery = {
+  __typename?: 'Query'
+  hnPosts?: Maybe<Array<Maybe<{ __typename?: 'HNPost' } & HnPostInfoFragment>>>
+}
+
+export type GetHnPostQueryVariables = {
+  id: Scalars['ID']
+}
+
+export type GetHnPostQuery = {
+  __typename?: 'Query'
+  hnPost?: Maybe<
+    { __typename?: 'HNPost'; comments?: Maybe<string> } & HnPostInfoFragment
+  >
+}
+
 export type GetHomeQueryVariables = {}
 
 export type GetHomeQuery = {
@@ -413,6 +469,18 @@ export const EpisodeInfoFragmentDoc = gql`
     title
     description
     published_at
+  }
+`
+export const HnPostInfoFragmentDoc = gql`
+  fragment HNPostInfo on HNPost {
+    id
+    title
+    points
+    user
+    time_ago
+    comments_count
+    url
+    domain
   }
 `
 export const PostInfoFragmentDoc = gql`
@@ -1108,6 +1176,119 @@ export type GetEpisodesLazyQueryHookResult = ReturnType<
 export type GetEpisodesQueryResult = ApolloReactCommon.QueryResult<
   GetEpisodesQuery,
   GetEpisodesQueryVariables
+>
+export const GetTopHnPostsDocument = gql`
+  query GetTopHNPosts($sort: String) {
+    hnPosts(sort: $sort) {
+      ...HNPostInfo
+    }
+  }
+  ${HnPostInfoFragmentDoc}
+`
+
+/**
+ * __useGetTopHnPostsQuery__
+ *
+ * To run a query within a React component, call `useGetTopHnPostsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTopHnPostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTopHnPostsQuery({
+ *   variables: {
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function useGetTopHnPostsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetTopHnPostsQuery,
+    GetTopHnPostsQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<
+    GetTopHnPostsQuery,
+    GetTopHnPostsQueryVariables
+  >(GetTopHnPostsDocument, baseOptions)
+}
+export function useGetTopHnPostsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetTopHnPostsQuery,
+    GetTopHnPostsQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetTopHnPostsQuery,
+    GetTopHnPostsQueryVariables
+  >(GetTopHnPostsDocument, baseOptions)
+}
+export type GetTopHnPostsQueryHookResult = ReturnType<
+  typeof useGetTopHnPostsQuery
+>
+export type GetTopHnPostsLazyQueryHookResult = ReturnType<
+  typeof useGetTopHnPostsLazyQuery
+>
+export type GetTopHnPostsQueryResult = ApolloReactCommon.QueryResult<
+  GetTopHnPostsQuery,
+  GetTopHnPostsQueryVariables
+>
+export const GetHnPostDocument = gql`
+  query GetHNPost($id: ID!) {
+    hnPost(id: $id) {
+      ...HNPostInfo
+      comments
+    }
+  }
+  ${HnPostInfoFragmentDoc}
+`
+
+/**
+ * __useGetHnPostQuery__
+ *
+ * To run a query within a React component, call `useGetHnPostQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetHnPostQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetHnPostQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetHnPostQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetHnPostQuery,
+    GetHnPostQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<GetHnPostQuery, GetHnPostQueryVariables>(
+    GetHnPostDocument,
+    baseOptions
+  )
+}
+export function useGetHnPostLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetHnPostQuery,
+    GetHnPostQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<GetHnPostQuery, GetHnPostQueryVariables>(
+    GetHnPostDocument,
+    baseOptions
+  )
+}
+export type GetHnPostQueryHookResult = ReturnType<typeof useGetHnPostQuery>
+export type GetHnPostLazyQueryHookResult = ReturnType<
+  typeof useGetHnPostLazyQuery
+>
+export type GetHnPostQueryResult = ApolloReactCommon.QueryResult<
+  GetHnPostQuery,
+  GetHnPostQueryVariables
 >
 export const GetHomeDocument = gql`
   query GetHome {

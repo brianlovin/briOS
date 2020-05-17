@@ -85,12 +85,26 @@ export default gql`
     reactions: Int
   }
 
+  type HNPost {
+    id: ID!
+    title: String
+    points: Int
+    user: String
+    time_ago: String
+    comments: String
+    comments_count: Int
+    url: String
+    domain: String
+  }
+
   type Query {
     bookmarks(skip: Int): [Bookmark]!
     episodes: [Episode]!
     posts(first: Int): [Post]!
     post(slug: String!): Post
     amaQuestions(skip: Int, status: AMAStatus): [AMA]!
+    hnPosts(first: Int, sort: String): [HNPost]
+    hnPost(id: ID!): HNPost
     repos: [Repo]!
     isMe: Boolean
   }
