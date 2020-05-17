@@ -57,6 +57,16 @@ const ResetStyles = createGlobalStyle`
     cursor: pointer;
   }
 
+  a:hover button {
+    text-decoration: none !important;
+  }
+
+  main {
+    a:visited {
+      color: var(--accent-purple);
+    }
+  }
+
   ::-moz-selection {
     /* Code for Firefox */
     background: var(--text-primary)!important;
@@ -246,14 +256,6 @@ const ResetStyles = createGlobalStyle`
     display: block;
     margin-top: 16px;
     width: 100%;
-  }
-
-  a {
-    color: var(--text-primary);
-  }
-
-  a:hover button {
-    text-decoration: none !important;
   }
 `
 
