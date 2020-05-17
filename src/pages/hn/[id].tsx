@@ -1,20 +1,19 @@
 import * as React from 'react'
 import Page from '~/components/Page'
 import { NextSeo } from 'next-seo'
-import { GET_TOP_HN_POSTS, GET_HN_POST } from '~/graphql/queries'
-import { initApolloClient } from '~/graphql/services/apollo'
-import { withApollo } from '~/components/withApollo'
 import { CenteredColumn } from '~/components/Layouts'
-import HNPost from '~/components/HNPost'
+import { HNPost } from '~/components/HNPost'
 import { useRouter } from 'next/router'
 import FullscreenLoading from '~/components/FullscreenLoading'
+import { getPostById, getPostIds } from '~/graphql/services/hn'
+import { HNPost as HNPostType } from '.'
 
 interface Props {
-  id: string
+  post: HNPostType
 }
 
-function HNPostView(props: Props) {
-  const { id } = props
+export default function HNPostView(props: Props) {
+  const { post } = props
 
   const router = useRouter()
 
@@ -40,48 +39,34 @@ function HNPostView(props: Props) {
       />
 
       <CenteredColumn data-cy="hn">
-        <HNPost id={id} />
+        <HNPost post={post} />
       </CenteredColumn>
     </Page>
   )
 }
 
 export async function getStaticPaths() {
-  const client = await initApolloClient({})
+  const [topPostIds, bestPostsIds] = await Promise.all([
+    getPostIds('top'),
+    getPostIds('best'),
+  ])
 
-  const { data: topPosts } = await client.query({
-    query: GET_TOP_HN_POSTS,
-    variables: { sort: 'top' },
-  })
+  const postIds = [...topPostIds, ...bestPostsIds]
 
-  const { data: bestPosts } = await client.query({
-    query: GET_TOP_HN_POSTS,
-    variables: { sort: 'best' },
-  })
-
-  if (!topPosts && !bestPosts) return { paths: [], fallback: true }
-
-  const posts = [...topPosts.hnPosts, ...bestPosts.hnPosts]
-
-  const paths = posts.map(({ id }) => ({
-    params: { id },
+  const paths = postIds.map((id) => ({
+    params: { id: id.toString() },
   }))
 
   return { paths, fallback: true }
 }
 
 export async function getStaticProps({ params: { id } }) {
-  const client = await initApolloClient({})
-
-  await client.query({ query: GET_HN_POST, variables: { id } })
+  const post = await getPostById(id, true)
 
   return {
-    // because this data is slightly more dynamic, update it every hour
     unstable_revalidate: 60 * 60,
     props: {
-      id: id,
+      post,
     },
   }
 }
-
-export default withApollo(HNPostView)

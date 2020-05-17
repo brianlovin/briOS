@@ -2,30 +2,22 @@ import * as React from 'react'
 import Link from 'next/link'
 import { H3, Small } from '~/components/Typography'
 import Grid from '~/components/Grid'
-import { useGetHnPostQuery } from '~/graphql/types.generated'
 import Comment from './Comment'
 import GlobalMarkdownStyles from '../GlobalStyles/markdown'
 import Divider from '../Divider'
 import { CenteredColumn } from '../Layouts'
 import Byline from './Byline'
+import { HNPost as HNPostType } from '~/pages/hn'
 
 interface Props {
-  id: string
+  post: HNPostType
 }
 
-export default function HNPost(props: Props) {
-  const { id } = props
-
-  const { data, error } = useGetHnPostQuery({
-    variables: { id },
-  })
-
-  if (!data || error) return null
-
-  const { hnPost: post } = data
+export function HNPost(props: Props) {
+  const { post } = props
 
   // trim things down to a readable amount
-  const comments = JSON.parse(post.comments).slice(0, 8)
+  const comments = post.comments.slice(0, 8)
 
   return (
     <React.Fragment>

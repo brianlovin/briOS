@@ -3,31 +3,31 @@ import Grid from '~/components/Grid'
 import { Small } from '../Typography'
 import { LeftDivider } from './style'
 
-interface Comment {
+export interface HNComment {
   id: string
   user: string
   comments_count: number
-  comments: [Comment]
+  comments: [HNComment]
   time_ago: string
   level: number
   content: string
 }
 
 interface Props {
-  comment: Comment
+  comment: HNComment
 }
 
 const ConditionalWrapper = ({ condition, wrapper, children }) =>
   condition ? wrapper(children) : children
 
-export const Comment = React.memo((props: Props) => {
+export default function Comment(props: Props) {
   const [collapsed, setCollapsed] = React.useState(false)
 
   const { comment } = props
-  const { level } = comment
 
-  // I don't care about comment threads going this deep
-  if (!comment || level > 3) return null
+  if (!comment) return null
+
+  const { level } = comment
 
   if (collapsed) {
     return (
@@ -38,7 +38,7 @@ export const Comment = React.memo((props: Props) => {
           position: 'relative',
         }}
       >
-        {level > 0 && <LeftDivider onClick={() => setCollapsed(!collapsed)} />}
+        <LeftDivider onClick={() => setCollapsed(!collapsed)} />
 
         <Grid gap={4}>
           <Grid columns={'max-content'}>
@@ -57,7 +57,7 @@ export const Comment = React.memo((props: Props) => {
         position: 'relative',
       }}
     >
-      {level > 0 && <LeftDivider onClick={() => setCollapsed(!collapsed)} />}
+      {level > 0 && <LeftDivider />}
 
       <Grid gap={8}>
         <ConditionalWrapper
@@ -80,11 +80,10 @@ export const Comment = React.memo((props: Props) => {
         </Grid>
       </Grid>
 
-      {comment.comments.slice(0, 8).map((comment) => (
-        <Comment comment={comment} key={comment.id} />
-      ))}
+      {comment.comments.length > 0 &&
+        comment.comments.map((comment) => (
+          <Comment comment={comment} key={comment.id} />
+        ))}
     </Grid>
   )
-})
-
-export default Comment
+}

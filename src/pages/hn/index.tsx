@@ -1,16 +1,32 @@
 import * as React from 'react'
 import Page from '~/components/Page'
 import { NextSeo } from 'next-seo'
-import { GET_TOP_HN_POSTS } from '~/graphql/queries'
-import { initApolloClient } from '~/graphql/services/apollo'
-import { withApollo } from '~/components/withApollo'
 import { CenteredColumn } from '~/components/Layouts'
 import HNPosts from '~/components/HNPosts'
+import { HNComment } from '~/components/HNPost/Comment'
 import Grid from '~/components/Grid'
 import { H3 } from '~/components/Typography'
 import Navigation from '~/components/HNPosts/Navigation'
+import { getPostIds, getPostById } from '~/graphql/services/hn'
 
-function HNTop() {
+export interface HNPost {
+  id: string
+  title: string
+  user: string
+  time_ago: string
+  comments: HNComment[]
+  comments_count: string
+  url: string
+  domain: string
+}
+
+interface Props {
+  posts: HNPost[]
+}
+
+export default function HNTop(props: Props) {
+  const { posts } = props
+
   return (
     <Page withHeader>
       <NextSeo
@@ -33,7 +49,7 @@ function HNTop() {
         <Grid gap={32}>
           <H3>Hacker News</H3>
           <Navigation active={'top'} />
-          <HNPosts sort={'top'} />
+          <HNPosts posts={posts} />
         </Grid>
       </CenteredColumn>
     </Page>
@@ -41,25 +57,16 @@ function HNTop() {
 }
 
 export async function getStaticProps() {
-  const client = await initApolloClient({})
-  await client.query({ query: GET_TOP_HN_POSTS, variables: { sort: 'top' } })
-  /*
-    Because this is using withApollo, the data from this query will be
-    pre-populated in the Apollo cache at build time. When the user first
-    visits this page, we can retreive the data from the cache like this:
+  const topPostIds = await getPostIds('top')
+  const postPromises = topPostIds.map(
+    async (id) => await getPostById(id, false)
+  )
+  const posts = await Promise.all([...postPromises])
 
-    const { data } = useGetTopHNPostsQuery({ fetchPolicy: 'cache-and-network' })
-
-    This preserves the ability for the page to render all posts instantly,
-    then get progressively updated if any new posts come in over the wire.
-  */
-  const apolloStaticCache = client.cache.extract()
   return {
     unstable_revalidate: 60 * 60 * 4,
     props: {
-      apolloStaticCache,
+      posts,
     },
   }
 }
-
-export default withApollo(HNTop)
