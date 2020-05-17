@@ -57,7 +57,7 @@ export default function Comment(props: Props) {
         position: 'relative',
       }}
     >
-      {level > 0 && <LeftDivider />}
+      {level > 0 && <LeftDivider onClick={() => setCollapsed(!collapsed)} />}
 
       <Grid gap={8}>
         <ConditionalWrapper
