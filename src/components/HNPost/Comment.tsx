@@ -31,45 +31,44 @@ export const Comment = React.memo((props: Props) => {
 
   if (collapsed) {
     return (
-      <Grid
-        gap={20}
+      <div
         style={{
           paddingLeft: level > 0 ? '20px' : 0,
           position: 'relative',
+          marginBottom: '20px',
         }}
       >
         {level > 0 && (
           <LeftDivider level={level} onClick={() => setCollapsed(!collapsed)} />
         )}
 
-        <Grid gap={4} style={{ position: 'relative' }}>
+        <div style={{ position: 'relative', marginBottom: '4px' }}>
           {level === 0 && (
             <LeftDivider
               level={level}
               onClick={() => setCollapsed(!collapsed)}
             />
           )}
-          <Grid columns={'max-content'}>
-            <Small>{`${comment.time_ago} by ${comment.user}`}</Small>
-          </Grid>
-        </Grid>
-      </Grid>
+          <Small>{`${comment.time_ago} by ${comment.user}`}</Small>
+        </div>
+      </div>
     )
   }
 
   return (
-    <Grid
-      gap={20}
+    <div
       style={{
         paddingLeft: level > 0 ? '20px' : 0,
         position: 'relative',
+        marginBottom: '20px',
+        display: 'block',
       }}
     >
       {level > 0 && (
         <LeftDivider level={level} onClick={() => setCollapsed(!collapsed)} />
       )}
 
-      <Grid gap={8} style={{ position: 'relative' }}>
+      <div style={{ marginBottom: '16px', position: 'relative' }}>
         {level === 0 && (
           <LeftDivider level={level} onClick={() => setCollapsed(!collapsed)} />
         )}
@@ -82,24 +81,23 @@ export const Comment = React.memo((props: Props) => {
             </a>
           )}
         >
-          <Grid columns={`max-content`}>
-            <Small>{`${comment.time_ago} by ${comment.user}`}</Small>
-          </Grid>
+          <Small
+            style={{ marginBottom: '8px' }}
+          >{`${comment.time_ago} by ${comment.user}`}</Small>
         </ConditionalWrapper>
-        <Grid className={'markdown'}>
-          <div
-            style={{
-              display: 'grid',
-            }}
-            dangerouslySetInnerHTML={{ __html: comment.content }}
-          />
-        </Grid>
-      </Grid>
+        <div
+          className={'markdown'}
+          style={{
+            display: 'grid',
+          }}
+          dangerouslySetInnerHTML={{ __html: comment.content }}
+        />
+      </div>
 
       {comment.comments.length > 0 &&
         comment.comments.map((comment) => (
           <Comment comment={comment} key={comment.id} />
         ))}
-    </Grid>
+    </div>
   )
 })

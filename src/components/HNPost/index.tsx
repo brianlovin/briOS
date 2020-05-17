@@ -37,11 +37,11 @@ export function HNPost(props: Props) {
 
         <Divider />
 
-        <Grid gap={32}>
+        <div>
           {comments.map((comment) => (
             <Comment key={comment.id} comment={comment} />
           ))}
-        </Grid>
+        </div>
       </CenteredColumn>
     </React.Fragment>
   )
