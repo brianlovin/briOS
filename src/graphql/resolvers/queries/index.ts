@@ -4,7 +4,6 @@ import { getEpisodes } from '~/graphql/resolvers/queries/podcast'
 import { getRepos } from '~/graphql/resolvers/queries/repos'
 import { isMe } from '~/graphql/resolvers/queries/isMe'
 import { getAMAQuestions } from '~/graphql/resolvers/queries/ama'
-import { getTopHNPosts, getHNPost } from '~/graphql/resolvers/queries/hn'
 
 export default {
   bookmarks: getBookmarks,
@@ -14,6 +13,4 @@ export default {
   repos: getRepos,
   isMe: isMe,
   amaQuestions: getAMAQuestions,
-  hnPosts: getTopHNPosts,
-  hnPost: getHNPost,
 }

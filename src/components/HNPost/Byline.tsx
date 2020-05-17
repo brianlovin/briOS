@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { Small } from '~/components/Typography'
-import { HnPost } from '~/graphql/types.generated'
 import Link from 'next/link'
+import { HNPost } from '~/pages/hn'
 
 interface Props {
-  post: HnPost
+  post: HNPost
 }
 
 export default function Byline(props: Props) {

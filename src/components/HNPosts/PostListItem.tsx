@@ -1,11 +1,11 @@
 import * as React from 'react'
-import { HnPost } from '~/graphql/types.generated'
 import { A } from '~/components/Typography'
 import Grid from '~/components/Grid'
 import Byline from '../HNPost/Byline'
+import { HNPost } from '~/pages/hn'
 
 interface Props {
-  post: HnPost
+  post: HNPost
 }
 
 export const PostListItem = React.memo((props: Props) => {
