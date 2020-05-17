@@ -20,7 +20,7 @@ interface Props {
 const ConditionalWrapper = ({ condition, wrapper, children }) =>
   condition ? wrapper(children) : children
 
-export default function Comment(props: Props) {
+export const Comment = React.memo((props: Props) => {
   const [collapsed, setCollapsed] = React.useState(false)
 
   const { comment } = props
@@ -102,4 +102,4 @@ export default function Comment(props: Props) {
         ))}
     </Grid>
   )
-}
+})
