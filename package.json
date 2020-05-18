@@ -22,7 +22,7 @@
     "@apollo/client": "^3.0.0-beta.48",
     "@apollo/link-error": "^2.0.0-beta.3",
     "@apollo/link-schema": "^2.0.0-beta.3",
-    "@next/bundle-analyzer": "^9.4.0",
+    "@next/bundle-analyzer": "^9.4.1",
     "@tryghost/content-api": "^1.4.1",
     "apollo-server-micro": "^2.13.1",
     "cheerio": "^1.0.0-rc.3",
