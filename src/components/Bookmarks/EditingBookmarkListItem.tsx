@@ -20,7 +20,7 @@ export default function EditingBookmarkListItem(props: Props) {
 
   const initialState = {
     error: '',
-    title: bookmark.title,
+    title: bookmark.title || bookmark.url,
     notes: bookmark.notes || '',
   }
 
@@ -28,6 +28,7 @@ export default function EditingBookmarkListItem(props: Props) {
     switch (action.type) {
       case 'edit-title': {
         return {
+          ...state,
           error: '',
           title: action.value,
         }

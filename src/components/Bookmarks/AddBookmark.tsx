@@ -25,7 +25,10 @@ export default function AddBookmark() {
         reactions: 0,
       },
     },
-    onCompleted: () => setUrl(''),
+    onCompleted: () => {
+      setUrl('')
+      setNotes('')
+    },
     update(cache, { data: { addBookmark } }) {
       const { bookmarks } = cache.readQuery({ query })
       cache.writeQuery({
