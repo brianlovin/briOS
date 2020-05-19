@@ -1506,13 +1506,13 @@
     through2 "^3.0.0"
     xdg-basedir "^4.0.0"
 
-"@graphql-codegen/add@^1.13.5":
-  version "1.13.5"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/add/-/add-1.13.5.tgz#14041a5a7a8765dc885b249d6fadfd23ec97353b"
-  integrity sha512-zxkqrqYR3cQyrzbX1SMdQQhlyESvvfwZgpSzzui8s8rH90ylzxB9oM3uY6agcYSBUQqigKNaO+1SFtGYMWzYvQ==
+"@graphql-codegen/add@^1.14.0":
+  version "1.14.0"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/add/-/add-1.14.0.tgz#350c20624551c647f9b1e385953422fa4555f7ba"
+  integrity sha512-/H66a/H/vOPzhS9Wbx7U7Kx785XQxfI+HM2zGhSvAxVFf2HmucBQNOU9PEgLTUvWCEo7t23PzymlTqoh4d9wfA==
   dependencies:
-    "@graphql-codegen/plugin-helpers" "1.13.5"
-    tslib "~1.11.1"
+    "@graphql-codegen/plugin-helpers" "1.14.0"
+    tslib "~2.0.0"
 
 "@graphql-codegen/cli@^1.13.5":
   version "1.13.5"
@@ -1586,6 +1586,22 @@
     param-case "3.0.3"
     pascal-case "3.1.1"
     tslib "~1.11.1"
+    upper-case "2.0.1"
+
+"@graphql-codegen/plugin-helpers@1.14.0":
+  version "1.14.0"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/plugin-helpers/-/plugin-helpers-1.14.0.tgz#93c1cc90e2779943b6a6ec53ab6599d997e107f0"
+  integrity sha512-VV74wsEVrzsEXUREQi2ZetO+EkQWj2C+DzjxKmRiFak/RpCasoVPkO/DxspZsljyHi6htIGX5r9m5x8uhfphmg==
+  dependencies:
+    "@graphql-toolkit/common" "~0.10.4"
+    camel-case "4.1.1"
+    common-tags "1.8.0"
+    constant-case "3.0.3"
+    import-from "3.0.0"
+    lower-case "2.0.1"
+    param-case "3.0.3"
+    pascal-case "3.1.1"
+    tslib "~2.0.0"
     upper-case "2.0.1"
 
 "@graphql-codegen/typescript-operations@^1.13.5":
@@ -11684,6 +11700,11 @@ tslib@1.11.1, tslib@^1.10.0, tslib@^1.11.1, tslib@^1.8.1, tslib@^1.9.0, tslib@^1
   version "1.11.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.11.1.tgz#eb15d128827fbee2841549e171f45ed338ac7e35"
   integrity sha512-aZW88SY8kQbU7gpV19lN24LtXh/yD4ZZg6qieAJDDg+YBsJcSmLGK9QpnUjAKVG/xefmvJGd1WUmfpT/g6AJGA==
+
+tslib@~2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.0.0.tgz#18d13fc2dce04051e20f074cc8387fd8089ce4f3"
+  integrity sha512-lTqkx847PI7xEDYJntxZH89L2/aXInsyF2luSafe/+0fHOMjlBNXdH6th7f70qxLDhul7KZK0zC8V5ZIyHl0/g==
 
 tsutils@^3.17.1:
   version "3.17.1"
