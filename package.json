@@ -52,7 +52,7 @@
     "serve-favicon": "^2.5.0",
     "string-replace-to-array": "^1.0.3",
     "styled-components": "^4.4.1",
-    "terser": "^4.6.13",
+    "terser": "^4.7.0",
     "throttle-debounce": "^2.1.0",
     "timeago.js": "^4.0.2",
     "twilio": "^3.43.1",
