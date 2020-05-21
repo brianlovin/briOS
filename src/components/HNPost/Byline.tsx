@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Small } from '~/components/Typography'
 import Link from 'next/link'
+import { format } from 'timeago.js'
 import { HNPost } from '~/pages/hn'
 
 interface Props {
@@ -9,9 +10,20 @@ interface Props {
 
 export default function Byline(props: Props) {
   const { post } = props
+
+  // the timestamp for the post will always be stale becuse we are statically
+  // generating the hn pages. we can recalculate the time ago text whenever
+  // the component mounts, so that the data loads instantly but the user won't
+  // be misled about the published date
+  const [timeAgo, setTimeAgo] = React.useState(format(post.time * 1000))
+
+  React.useEffect(() => {
+    setTimeAgo(format(post.time * 1000))
+  }, [])
+
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-      <Small>Posted {post.time_ago}</Small>
+      <Small>Posted {timeAgo}</Small>
 
       <Small style={{ padding: '0 8px', color: 'var(--text-placeholder)' }}>
         /

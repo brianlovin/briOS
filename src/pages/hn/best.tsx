@@ -6,7 +6,7 @@ import HNPosts from '~/components/HNPosts'
 import Grid from '~/components/Grid'
 import { H3 } from '~/components/Typography'
 import Navigation from '~/components/HNPosts/Navigation'
-import { getPostIds, getPostById } from '~/graphql/services/hn'
+import { getHNPosts } from '~/graphql/services/hn'
 import { HNPost } from '.'
 
 interface Props {
@@ -45,11 +45,7 @@ export default function HNBest(props: Props) {
 }
 
 export async function getStaticProps() {
-  const topPostIds = await getPostIds('best')
-  const postPromises = topPostIds.map(
-    async (id) => await getPostById(id, false)
-  )
-  const posts = await Promise.all([...postPromises])
+  const posts = await getHNPosts('best')
 
   return {
     unstable_revalidate: 60 * 60 * 24,
