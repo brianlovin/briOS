@@ -23,7 +23,6 @@ export async function getPostById(id, includeComments = false) {
 
     return Object.assign(comment, {
       ...comment,
-      time: null,
       comments: comment.comments.slice(0, 4).map(trimComments).filter(Boolean),
     })
   }
@@ -35,9 +34,17 @@ export async function getPostById(id, includeComments = false) {
 
   const post = Object.assign(data, {
     ...data,
-    time: null,
     comments: includeComments ? shortComments : null,
   })
 
   return post
+}
+
+export async function getHNPosts(sort) {
+  const topPostIds = await getPostIds(sort)
+  const postPromises = topPostIds.map(
+    async (id) => await getPostById(id, false)
+  )
+
+  return await Promise.all([...postPromises])
 }

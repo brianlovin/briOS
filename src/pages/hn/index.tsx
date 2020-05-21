@@ -7,12 +7,13 @@ import { HNComment } from '~/components/HNPost/Comment'
 import Grid from '~/components/Grid'
 import { H3 } from '~/components/Typography'
 import Navigation from '~/components/HNPosts/Navigation'
-import { getPostIds, getPostById } from '~/graphql/services/hn'
+import { getHNPosts } from '~/graphql/services/hn'
 
 export interface HNPost {
   id: string
   title: string
   user: string
+  time: number
   time_ago: string
   comments: HNComment[]
   comments_count: string
@@ -57,11 +58,7 @@ export default function HNTop(props: Props) {
 }
 
 export async function getStaticProps() {
-  const topPostIds = await getPostIds('top')
-  const postPromises = topPostIds.map(
-    async (id) => await getPostById(id, false)
-  )
-  const posts = await Promise.all([...postPromises])
+  const posts = await getHNPosts('top')
 
   return {
     unstable_revalidate: 60 * 60 * 4,
