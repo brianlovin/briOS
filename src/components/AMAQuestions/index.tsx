@@ -22,6 +22,7 @@ export default function QuestionsList() {
   // the page loads
   const { data, fetchMore, error } = useGetAmaQuestionsQuery({
     variables: { status: AmaStatus.Answered },
+    fetchPolicy: 'cache-and-network',
   })
 
   // this can happen if the route is navigated to from the client or if the
