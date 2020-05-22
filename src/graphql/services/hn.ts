@@ -32,8 +32,13 @@ export async function getPostById(id, includeComments = false) {
     .map(trimComments)
     .filter(Boolean)
 
+  const cleanUrl = data.domain
+    ? `${data.url}?ref=brianlovin.com`
+    : `/hn/${data.id}`
+
   const post = Object.assign(data, {
     ...data,
+    url: cleanUrl,
     comments: includeComments ? shortComments : null,
   })
 
