@@ -2,7 +2,7 @@ name: send daily digest
 
 on:
   schedule:
-    - cron:  '13 * * * *'
+    - cron:  '18 * * * *'
 
 jobs:
   curl:
