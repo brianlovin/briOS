@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { Ama } from '~/graphql/types.generated'
 import { Small, P } from '~/components/Typography'
-import Grid from '~/components/Grid'
 import { format } from 'timeago.js'
 import QuestionReaction from './QuestionReaction'
 import EditQuestion from './EditQuestion'
 import MarkdownRenderer from '../MarkdownRenderer'
+import Flex from '../Flex'
 
 interface Props {
   editable: boolean
@@ -30,17 +30,15 @@ export const QuestionItem = React.memo((props: Props) => {
   }
 
   return (
-    <Grid gap={8}>
+    <Flex flexDirection="column" gap={question.answer ? 8 : 4}>
       <P style={{ fontWeight: '700' }}>{question.question}</P>
       {question.answer && (
-        <Grid style={{ alignItems: 'start' }}>
-          <Grid className={'markdown'}>
-            <MarkdownRenderer>{question.answer}</MarkdownRenderer>
-          </Grid>
-        </Grid>
+        <Flex className={'markdown'}>
+          <MarkdownRenderer>{question.answer}</MarkdownRenderer>
+        </Flex>
       )}
 
-      <Grid columns={'repeat(5, max-content)'} gap={12}>
+      <Flex gap={12} alignItems="center">
         <QuestionReaction question={question} />
 
         <Small style={{ color: 'var(--text-placeholder)' }}>/</Small>
@@ -56,7 +54,7 @@ export const QuestionItem = React.memo((props: Props) => {
         </Small>
 
         {editable && (
-          <React.Fragment>
+          <Flex gap={8}>
             <Small style={{ color: 'var(--text-placeholder)' }}>/</Small>
             <Small
               style={{ cursor: 'pointer' }}
@@ -64,9 +62,9 @@ export const QuestionItem = React.memo((props: Props) => {
             >
               Edit
             </Small>
-          </React.Fragment>
+          </Flex>
         )}
-      </Grid>
-    </Grid>
+      </Flex>
+    </Flex>
   )
 })

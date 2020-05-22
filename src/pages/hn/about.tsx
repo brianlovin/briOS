@@ -2,11 +2,11 @@ import * as React from 'react'
 import Page from '~/components/Page'
 import { NextSeo } from 'next-seo'
 import { CenteredColumn } from '~/components/Layouts'
-import Grid from '~/components/Grid'
 import { H3, P, H5 } from '~/components/Typography'
 import Navigation from '~/components/HNPosts/Navigation'
 import GlobalMarkdownStyles from '~/components/GlobalStyles/markdown'
 import HNSubscribeBox from '~/components/HNSubscribe'
+import Flex from '~/components/Flex'
 
 export default function HNAbout() {
   return (
@@ -30,11 +30,11 @@ export default function HNAbout() {
       />
 
       <CenteredColumn data-cy="hn">
-        <Grid gap={32}>
+        <Flex flexDirection="column" gap={32}>
           <H3>Hacker News</H3>
           <Navigation active={'about'} />
 
-          <Grid className={'markdown'}>
+          <Flex flexDirection="column" className={'markdown'}>
             <P>
               <a href="https://news.ycombinator.com">Hacker News</a> is a
               fantastic way to stay up to date on technology and software news.
@@ -125,8 +125,8 @@ export default function HNAbout() {
               incrementally. But I don’t plan to add support for other content
               types like polls or jobs, which I never visit on HN anyways.
             </P>
-          </Grid>
-        </Grid>
+          </Flex>
+        </Flex>
         <HNSubscribeBox />
       </CenteredColumn>
     </Page>

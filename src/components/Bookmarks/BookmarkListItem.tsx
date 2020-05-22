@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { Bookmark } from '~/graphql/types.generated'
 import { Small, A } from '~/components/Typography'
-import Grid from '~/components/Grid'
 import Linkify from '~/components/Linkify'
 import EditingBookmarkListItem from './EditingBookmarkListItem'
 import BookmarkReaction from './BookmarkReaction'
+import Flex from '../Flex'
 
 interface Props {
   editable: boolean
@@ -25,7 +25,7 @@ export const BookmarkListItem = React.memo((props: Props) => {
   }
 
   return (
-    <Grid gap={bookmark.notes ? 8 : 4}>
+    <Flex flexDirection="column" gap={bookmark.notes ? 8 : 4}>
       <A
         href={`${bookmark.url}?ref=brianlovin.com`}
         target="_blank"
@@ -34,19 +34,17 @@ export const BookmarkListItem = React.memo((props: Props) => {
         {bookmark.title || bookmark.url}
       </A>
       {bookmark.notes && (
-        <Grid style={{ alignItems: 'start' }} columns={'1fr'}>
-          <Small
-            style={{
-              borderLeft: '2px solid var(--border-primary)',
-              paddingLeft: '12px',
-              whiteSpace: 'pre-wrap',
-            }}
-          >
-            <Linkify>{bookmark.notes}</Linkify>
-          </Small>
-        </Grid>
+        <Small
+          style={{
+            borderLeft: '2px solid var(--border-primary)',
+            paddingLeft: '12px',
+            whiteSpace: 'pre-wrap',
+          }}
+        >
+          <Linkify>{bookmark.notes}</Linkify>
+        </Small>
       )}
-      <Grid columns={`repeat(5, min-content)`} gap={12}>
+      <Flex gap={12} alignItems="center">
         <BookmarkReaction bookmark={bookmark} />
 
         <Small style={{ color: 'var(--text-placeholder)' }}>/</Small>
@@ -60,7 +58,7 @@ export const BookmarkListItem = React.memo((props: Props) => {
         </A>
 
         {editable && (
-          <React.Fragment>
+          <Flex gap={8} alignItems="center">
             <Small style={{ color: 'var(--text-placeholder)' }}>/</Small>
 
             <Small
@@ -69,9 +67,9 @@ export const BookmarkListItem = React.memo((props: Props) => {
             >
               Edit
             </Small>
-          </React.Fragment>
+          </Flex>
         )}
-      </Grid>
-    </Grid>
+      </Flex>
+    </Flex>
   )
 })

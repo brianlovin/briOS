@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Ama, useAddAmaReactionMutation } from '~/graphql/types.generated'
 import { Small } from '~/components/Typography'
-import Grid from '~/components/Grid'
+import Flex from '../Flex'
 
 interface Props {
   question: Ama
@@ -29,11 +29,10 @@ export default function QuestionReaction(props: Props) {
   }
 
   return (
-    <Grid
+    <Flex
       onClick={handleReaction}
       style={{ alignItems: 'center', cursor: 'pointer' }}
-      gap={2}
-      columns={'16px auto'}
+      gap={8}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -54,6 +53,6 @@ export default function QuestionReaction(props: Props) {
         ></path>
       </svg>
       <Small>{question.reactions.toLocaleString()}</Small>
-    </Grid>
+    </Flex>
   )
 }

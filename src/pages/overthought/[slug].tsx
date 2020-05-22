@@ -10,19 +10,17 @@ interface Props {
   slug: string
   data: {
     post: Post
-    posts: Post[]
   }
 }
 
 function OverthoughtPost({ data }: Props) {
   const post = data?.post
-  const posts = data?.posts
 
   if (!post) return <NotFound />
 
   return (
     <Page withHeader>
-      <PostContainer post={post} posts={posts} />
+      <PostContainer post={post} />
     </Page>
   )
 }
@@ -54,7 +52,6 @@ export async function getStaticProps({ params: { slug } }) {
       slug,
       data: {
         post: data.post,
-        posts: data.posts,
       },
     },
   }

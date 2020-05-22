@@ -8,8 +8,8 @@ import { useAuth } from '~/hooks/useAuth'
 import AddBookmark from '~/components/Bookmarks/AddBookmark'
 import { initApolloClient } from '~/graphql/services/apollo'
 import { withApollo } from '~/components/withApollo'
-import Grid from '~/components/Grid'
 import { CenteredColumn } from '~/components/Layouts'
+import Flex from '~/components/Flex'
 
 function Bookmarks() {
   const { isMe } = useAuth()
@@ -32,11 +32,11 @@ function Bookmarks() {
         }}
       />
       <CenteredColumn data-cy="bookmarks">
-        <Grid gap={32}>
+        <Flex flexDirection="column" gap={32}>
           <H3>Bookmarks</H3>
           {isMe && <AddBookmark />}
           <BookmarksList />
-        </Grid>
+        </Flex>
       </CenteredColumn>
     </Page>
   )

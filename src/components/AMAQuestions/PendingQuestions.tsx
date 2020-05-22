@@ -3,6 +3,7 @@ import Divider from '../Divider'
 import { QuestionItem } from './QuestionItem'
 import { useGetAmaQuestionsQuery, AmaStatus } from '~/graphql/types.generated'
 import LoadingSpinner from '../LoadingSpinner'
+import Flex from '../Flex'
 
 export default function PendingQuestion() {
   const { data, loading } = useGetAmaQuestionsQuery({
@@ -18,12 +19,12 @@ export default function PendingQuestion() {
   if (!data || !data.amaQuestions) return null
 
   return (
-    <React.Fragment>
+    <Flex flexDirection="column" gap={32}>
       {data.amaQuestions.map((question) => (
         <QuestionItem editable={true} key={question.id} question={question} />
       ))}
 
       <Divider />
-    </React.Fragment>
+    </Flex>
   )
 }

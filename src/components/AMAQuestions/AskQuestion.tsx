@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { useAddAmaQuestionMutation } from '~/graphql/types.generated'
 import { Small } from '~/components/Typography'
-import Grid from '../Grid'
 import Textarea from '../Textarea'
 import { PrimaryButton } from '../Button'
+import Flex from '../Flex'
 
 export default function AddBookmark() {
   const [question, setQuestion] = React.useState('')
@@ -40,7 +40,7 @@ export default function AddBookmark() {
   }
 
   return (
-    <Grid gap={12} as={'form'} onSubmit={onSubmit}>
+    <Flex flexDirection="column" gap={12} as={'form'} onSubmit={onSubmit}>
       <Textarea
         value={question}
         placeholder="Ask me anything..."
@@ -56,6 +56,6 @@ export default function AddBookmark() {
           Thanks for asking! I’ll reply soon, so feel free to check back 👋
         </Small>
       )}
-    </Grid>
+    </Flex>
   )
 }
