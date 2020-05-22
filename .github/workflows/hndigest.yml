@@ -1,0 +1,14 @@
+name: send daily digest
+
+on:
+  schedule:
+    - cron:  '15 * * * *'
+
+jobs:
+  curl:
+    runs-on: ubuntu-latest
+    steps:
+    - name: curl
+      uses: wei/curl@v1
+      with:
+        args: -X POST https://brianlovin.com/api/hn/send?token=${{ secrets.HN_TOKEN }}
