@@ -2,7 +2,7 @@ name: send daily digest
 
 on:
   schedule:
-    - cron:  '0 * * * *'
+    - cron:  '13 * * * *'
 
 jobs:
   curl:
@@ -11,4 +11,4 @@ jobs:
     - name: curl
       uses: wei/curl@v1
       with:
-        args: https://brianlovin.com/api/hn/send?token=${{secrets.HN_TOKEN}}
+        args: 'https://brianlovin.com/api/hn/send?token=${{secrets.HN_TOKEN}}'
