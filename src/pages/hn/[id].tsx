@@ -51,7 +51,7 @@ export async function getStaticPaths() {
     getPostIds('best'),
   ])
 
-  const postIds = [...topPostIds, ...bestPostsIds]
+  const postIds = [...topPostIds.slice(0, 16), ...bestPostsIds.slice(0, 16)]
 
   const paths = postIds.map((id) => ({
     params: { id: id.toString() },
