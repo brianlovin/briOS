@@ -2,7 +2,7 @@ import * as React from 'react'
 import { A } from '~/components/Typography'
 import Byline from '../HNPost/Byline'
 import { HNPost } from '~/pages/hn'
-import Flex from '../Flex'
+import Flex from '~/components/Flex'
 
 interface Props {
   post: HNPost

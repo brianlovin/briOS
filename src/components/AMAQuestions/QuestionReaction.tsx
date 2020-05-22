@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Ama, useAddAmaReactionMutation } from '~/graphql/types.generated'
 import { Small } from '~/components/Typography'
-import Flex from '../Flex'
+import Flex from '~/components/Flex'
 
 interface Props {
   question: Ama

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Link from 'next/link'
 import { StyledA } from './style'
-import Flex from '../Flex'
+import Flex from '~/components/Flex'
 
 interface Props {
   active: string

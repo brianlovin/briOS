@@ -5,7 +5,7 @@ import { format } from 'timeago.js'
 import QuestionReaction from './QuestionReaction'
 import EditQuestion from './EditQuestion'
 import MarkdownRenderer from '../MarkdownRenderer'
-import Flex from '../Flex'
+import Flex from '~/components/Flex'
 
 interface Props {
   editable: boolean

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { A, P } from '~/components/Typography'
-import Flex from '../Flex'
+import Flex from '~/components/Flex'
 
 export default function FigmaPlugins() {
   return (

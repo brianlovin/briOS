@@ -3,7 +3,7 @@ import { useAddAmaQuestionMutation } from '~/graphql/types.generated'
 import { Small } from '~/components/Typography'
 import Textarea from '../Textarea'
 import { PrimaryButton } from '../Button'
-import Flex from '../Flex'
+import Flex from '~/components/Flex'
 
 export default function AddBookmark() {
   const [question, setQuestion] = React.useState('')

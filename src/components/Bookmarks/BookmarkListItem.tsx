@@ -4,7 +4,7 @@ import { Small, A } from '~/components/Typography'
 import Linkify from '~/components/Linkify'
 import EditingBookmarkListItem from './EditingBookmarkListItem'
 import BookmarkReaction from './BookmarkReaction'
-import Flex from '../Flex'
+import Flex from '~/components/Flex'
 
 interface Props {
   editable: boolean

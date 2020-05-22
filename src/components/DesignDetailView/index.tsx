@@ -7,7 +7,7 @@ import Picture from '../Picture'
 import { format } from 'timeago.js'
 import { DesignDetailsPost } from '~/data/appDissections'
 import { CenteredColumn } from '../Layouts'
-import Flex from '../Flex'
+import Flex from '~/components/Flex'
 
 interface Props {
   post: DesignDetailsPost

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { PostListItem } from './PostListItem'
 import { HNPost } from '~/pages/hn'
-import Flex from '../Flex'
+import Flex from '~/components/Flex'
 
 interface Props {
   posts: HNPost[]

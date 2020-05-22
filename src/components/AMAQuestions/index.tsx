@@ -10,7 +10,7 @@ import { QuestionItem } from './QuestionItem'
 import AskQuestion from './AskQuestion'
 import PendingQuestions from './PendingQuestions'
 import FullscreenLoading from '../FullscreenLoading'
-import Flex from '../Flex'
+import Flex from '~/components/Flex'
 
 export default function QuestionsList() {
   const { isMe } = useAuth()

@@ -3,7 +3,7 @@ import Divider from '../Divider'
 import { QuestionItem } from './QuestionItem'
 import { useGetAmaQuestionsQuery, AmaStatus } from '~/graphql/types.generated'
 import LoadingSpinner from '../LoadingSpinner'
-import Flex from '../Flex'
+import Flex from '~/components/Flex'
 
 export default function PendingQuestion() {
   const { data, loading } = useGetAmaQuestionsQuery({

@@ -4,7 +4,7 @@ import { GET_BOOKMARKS } from '~/graphql/queries'
 import { Small } from '~/components/Typography'
 import Input from '~/components/Input'
 import Textarea from '../Textarea'
-import Flex from '../Flex'
+import Flex from '~/components/Flex'
 
 export default function AddBookmark() {
   const [url, setUrl] = React.useState('')

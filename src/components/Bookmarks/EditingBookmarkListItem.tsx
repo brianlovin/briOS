@@ -8,7 +8,7 @@ import { Small } from '~/components/Typography'
 import { GET_BOOKMARKS } from '~/graphql/queries'
 import Input from '~/components/Input'
 import Textarea from '~/components/Textarea'
-import Flex from '../Flex'
+import Flex from '~/components/Flex'
 
 interface Props {
   bookmark: Bookmark

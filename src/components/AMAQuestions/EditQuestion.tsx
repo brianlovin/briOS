@@ -8,7 +8,7 @@ import {
 import { Small } from '~/components/Typography'
 import { GET_AMA_QUESTIONS } from '~/graphql/queries'
 import Textarea from '~/components/Textarea'
-import Flex from '../Flex'
+import Flex from '~/components/Flex'
 
 interface Props {
   question: Ama

@@ -6,7 +6,7 @@ import { PAGINATION_AMOUNT } from '~/graphql/constants'
 import { Button } from '../Button'
 import LoadingSpinner from '../LoadingSpinner'
 import FullscreenLoading from '../FullscreenLoading'
-import Flex from '../Flex'
+import Flex from '~/components/Flex'
 
 export default function BookmarksList() {
   const { isMe } = useAuth()

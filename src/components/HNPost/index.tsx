@@ -8,7 +8,7 @@ import { CenteredColumn } from '../Layouts'
 import Byline from './Byline'
 import { HNPost as HNPostType } from '~/pages/hn'
 import HNSubscribeBox from '../HNSubscribe'
-import Flex from '../Flex'
+import Flex from '~/components/Flex'
 
 interface Props {
   post: HNPostType

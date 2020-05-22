@@ -1,7 +1,7 @@
 import * as React from 'react'
 import DesignDetailsCard from '~/components/DesignDetailsCard'
 import { DesignDetailsPostSummary } from '~/data/appDissections'
-import Flex from '../Flex'
+import Flex from '~/components/Flex'
 
 interface Props {
   summaries: DesignDetailsPostSummary[]

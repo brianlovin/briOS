@@ -2,7 +2,7 @@ import React from 'react'
 import { A, LineClamp, Small } from '~/components/Typography'
 import { Episode } from '~/graphql/types.generated'
 import { format } from 'timeago.js'
-import Flex from '../Flex'
+import Flex from '~/components/Flex'
 
 interface Props {
   episodes: Episode[]
