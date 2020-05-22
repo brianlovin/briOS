@@ -34,7 +34,7 @@ export async function getPostById(id, includeComments = false) {
 
   const cleanUrl = data.domain
     ? `${data.url}?ref=brianlovin.com`
-    : `/hn/${data.id}`
+    : `https://brianlovin.com/hn/${data.id}`
 
   const post = Object.assign(data, {
     ...data,
