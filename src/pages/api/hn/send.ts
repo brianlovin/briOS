@@ -14,7 +14,7 @@ export default async (req: NowRequest, res: NowResponse) => {
   const { token } = req.query
 
   if (!token || token !== secret) {
-    return res.status(500).send({ error: 'Invalid token' })
+    return res.status(500).json({ error: 'Invalid token' })
   }
 
   await db
