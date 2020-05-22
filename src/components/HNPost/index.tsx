@@ -8,6 +8,7 @@ import Divider from '../Divider'
 import { CenteredColumn } from '../Layouts'
 import Byline from './Byline'
 import { HNPost as HNPostType } from '~/pages/hn'
+import HNSubscribeBox from '../HNSubscribe'
 
 interface Props {
   post: HNPostType
@@ -48,6 +49,8 @@ export function HNPost(props: Props) {
             <Comment key={comment.id} comment={comment} />
           ))}
         </div>
+
+        <HNSubscribeBox />
       </CenteredColumn>
     </React.Fragment>
   )

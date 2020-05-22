@@ -2,6 +2,7 @@ import * as React from 'react'
 import Grid from '~/components/Grid'
 import { PostListItem } from './PostListItem'
 import { HNPost } from '~/pages/hn'
+import HNSubscribeBox from '../HNSubscribe'
 
 interface Props {
   posts: HNPost[]
@@ -15,6 +16,7 @@ const PostList = React.memo((props: Props) => {
       {posts.map((post) => (
         <PostListItem key={post.id} post={post} />
       ))}
+      <HNSubscribeBox />
     </Grid>
   )
 })
