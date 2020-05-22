@@ -4,7 +4,7 @@ import {
   useAddBookmarkReactionMutation,
 } from '~/graphql/types.generated'
 import { Small } from '~/components/Typography'
-import Grid from '~/components/Grid'
+import Flex from '~/components/Flex'
 
 interface Props {
   bookmark: Bookmark
@@ -32,11 +32,11 @@ export default function BookmarkReaction(props: Props) {
   }
 
   return (
-    <Grid
+    <Flex
       onClick={handleReaction}
       style={{ alignItems: 'center', cursor: 'pointer' }}
-      gap={2}
-      columns={'16px auto'}
+      gap={8}
+      alignItems="center"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -57,6 +57,6 @@ export default function BookmarkReaction(props: Props) {
         ></path>
       </svg>
       <Small>{bookmark.reactions.toLocaleString()}</Small>
-    </Grid>
+    </Flex>
   )
 }

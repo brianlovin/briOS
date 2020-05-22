@@ -6,7 +6,6 @@ export const FeaturedImage = styled.img`
   margin-left: -24px;
   margin-right: -24px;
   border-radius: 8px;
-  margin-bottom: 32px;
 
   @media (max-width: 768px) {
     width: 100%;

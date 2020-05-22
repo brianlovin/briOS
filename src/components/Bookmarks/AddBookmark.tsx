@@ -3,8 +3,8 @@ import { useAddBookmarkMutation } from '~/graphql/types.generated'
 import { GET_BOOKMARKS } from '~/graphql/queries'
 import { Small } from '~/components/Typography'
 import Input from '~/components/Input'
-import Grid from '../Grid'
 import Textarea from '../Textarea'
+import Flex from '~/components/Flex'
 
 export default function AddBookmark() {
   const [url, setUrl] = React.useState('')
@@ -66,7 +66,7 @@ export default function AddBookmark() {
   }
 
   return (
-    <Grid gap={12} as={'form'} onSubmit={onSubmit}>
+    <Flex flexDirection="column" gap={12} as={'form'} onSubmit={onSubmit}>
       <Input
         autoFocus
         type="text"
@@ -89,6 +89,6 @@ export default function AddBookmark() {
         </React.Fragment>
       )}
       {error && <Small style={{ color: 'var(--accent-red)' }}>{error}</Small>}
-    </Grid>
+    </Flex>
   )
 }

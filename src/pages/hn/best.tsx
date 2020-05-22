@@ -3,12 +3,12 @@ import Page from '~/components/Page'
 import { NextSeo } from 'next-seo'
 import { CenteredColumn } from '~/components/Layouts'
 import HNPosts from '~/components/HNPosts'
-import Grid from '~/components/Grid'
 import { H3 } from '~/components/Typography'
 import Navigation from '~/components/HNPosts/Navigation'
 import { getHNPosts } from '~/graphql/services/hn'
 import { HNPost } from '.'
 import HNSubscribeBox from '~/components/HNSubscribe'
+import Flex from '~/components/Flex'
 
 interface Props {
   posts: HNPost[]
@@ -35,12 +35,12 @@ export default function HNBest(props: Props) {
       />
 
       <CenteredColumn data-cy="hn">
-        <Grid gap={32}>
+        <Flex flexDirection="column" gap={32}>
           <H3>Hacker News</H3>
           <Navigation active={'best'} />
           <HNPosts posts={posts} />
           <HNSubscribeBox />
-        </Grid>
+        </Flex>
       </CenteredColumn>
     </Page>
   )

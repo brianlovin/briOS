@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { useGetAmaQuestionsQuery, AmaStatus } from '~/graphql/types.generated'
 import { useAuth } from '~/hooks/useAuth'
-import Grid from '~/components/Grid'
 import { Small } from '~/components/Typography'
 import Divider from '~/components/Divider'
 import { Button } from '~/components/Button'
@@ -11,7 +10,7 @@ import { QuestionItem } from './QuestionItem'
 import AskQuestion from './AskQuestion'
 import PendingQuestions from './PendingQuestions'
 import FullscreenLoading from '../FullscreenLoading'
-import GlobalMarkdownStyles from '../GlobalStyles/markdown'
+import Flex from '~/components/Flex'
 
 export default function QuestionsList() {
   const { isMe } = useAuth()
@@ -66,9 +65,7 @@ export default function QuestionsList() {
   }
 
   return (
-    <Grid gap={32}>
-      <GlobalMarkdownStyles />
-
+    <Flex flexDirection="column" gap={32}>
       <AskQuestion />
 
       <Divider />
@@ -86,6 +83,6 @@ export default function QuestionsList() {
           {loading ? <LoadingSpinner size={16} /> : 'Show me more'}
         </Button>
       )}
-    </Grid>
+    </Flex>
   )
 }

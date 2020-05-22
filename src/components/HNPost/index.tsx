@@ -1,7 +1,6 @@
 import * as React from 'react'
 import Link from 'next/link'
 import { H3, Small } from '~/components/Typography'
-import Grid from '~/components/Grid'
 import { Comment } from './Comment'
 import GlobalMarkdownStyles from '../GlobalStyles/markdown'
 import Divider from '../Divider'
@@ -9,6 +8,7 @@ import { CenteredColumn } from '../Layouts'
 import Byline from './Byline'
 import { HNPost as HNPostType } from '~/pages/hn'
 import HNSubscribeBox from '../HNSubscribe'
+import Flex from '~/components/Flex'
 
 interface Props {
   post: HNPostType
@@ -28,8 +28,8 @@ export function HNPost(props: Props) {
     <React.Fragment>
       <GlobalMarkdownStyles />
       <CenteredColumn gap={32} data-cy="bookmarks">
-        <Grid gap={32}>
-          <Grid gap={16}>
+        <Flex flexDirection="column" gap={32}>
+          <Flex flexDirection="column" gap={16}>
             <Link href={'/hn'}>
               <a>
                 <Small>&larr; Back</Small>
@@ -39,8 +39,8 @@ export function HNPost(props: Props) {
               <H3>{post.title}</H3>
             </a>
             <Byline post={post} />
-          </Grid>
-        </Grid>
+          </Flex>
+        </Flex>
 
         <Divider />
 

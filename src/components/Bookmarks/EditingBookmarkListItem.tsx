@@ -8,7 +8,7 @@ import { Small } from '~/components/Typography'
 import { GET_BOOKMARKS } from '~/graphql/queries'
 import Input from '~/components/Input'
 import Textarea from '~/components/Textarea'
-import Grid from '~/components/Grid'
+import Flex from '~/components/Flex'
 
 interface Props {
   bookmark: Bookmark
@@ -111,7 +111,7 @@ export default function EditingBookmarkListItem(props: Props) {
   }
 
   return (
-    <Grid gap={12} as={'form'} onSubmit={handleSave}>
+    <Flex flexDirection="column" gap={12} as={'form'} onSubmit={handleSave}>
       <Input
         autoFocus
         placeholder="Title"
@@ -130,13 +130,15 @@ export default function EditingBookmarkListItem(props: Props) {
         <Small style={{ color: 'var(--accent-red)' }}>{state.error}</Small>
       )}
 
-      <Grid gap={12} columns={'min-content 1fr min-content'}>
-        <Small style={{ cursor: 'pointer' }} onClick={handleSave}>
-          Save
-        </Small>
-        <Small style={{ cursor: 'pointer' }} onClick={onDone}>
-          Cancel
-        </Small>
+      <Flex justifyContent="space-between">
+        <Flex gap={12}>
+          <Small style={{ cursor: 'pointer' }} onClick={handleSave}>
+            Save
+          </Small>
+          <Small style={{ cursor: 'pointer' }} onClick={onDone}>
+            Cancel
+          </Small>
+        </Flex>
         <Small
           onClick={handleDelete}
           style={{
@@ -146,7 +148,7 @@ export default function EditingBookmarkListItem(props: Props) {
         >
           Delete
         </Small>
-      </Grid>
-    </Grid>
+      </Flex>
+    </Flex>
   )
 }

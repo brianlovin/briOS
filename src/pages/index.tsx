@@ -9,9 +9,10 @@ import FigmaPlugins from '~/components/FigmaPlugins'
 import { GET_HOME } from '~/graphql/queries'
 import { Post, Episode, Repo } from '~/graphql/types.generated'
 import { initApolloClient } from '~/graphql/services/apollo'
-import Grid from '~/components/Grid'
 import { summaries } from '~/data/appDissections'
 import { DesignDetailsPostSummary } from '~/data/appDissections'
+import { CenteredColumn } from '~/components/Layouts'
+import Flex from '~/components/Flex'
 
 interface Props {
   data: {
@@ -25,9 +26,9 @@ interface Props {
 function Home({ data, summaries }: Props) {
   return (
     <Page>
-      <Grid columns={'fit-content(640px)'} style={{ justifyContent: 'center' }}>
-        <Grid gap={56}>
-          <Grid gap={16}>
+      <CenteredColumn>
+        <Flex flexDirection="column" gap={56}>
+          <Flex flexDirection="column" gap={16}>
             <H2>👾</H2>
             <H5>Hey, I’m Brian.</H5>
             <P>
@@ -36,7 +37,7 @@ function Home({ data, summaries }: Props) {
               GitHub. Let’s grab a coffee.
             </P>
 
-            <Grid gap={4}>
+            <Flex flexDirection="column" gap={4}>
               <Link href="/about" as="/about" passHref>
                 <A>
                   More about me <Rarr />
@@ -49,10 +50,10 @@ function Home({ data, summaries }: Props) {
               >
                 @brian_lovin on Twitter <Rarr />
               </A>
-            </Grid>
-          </Grid>
+            </Flex>
+          </Flex>
 
-          <Grid gap={16}>
+          <Flex flexDirection="column" gap={16}>
             <H5>Writing</H5>
 
             <P>
@@ -62,7 +63,7 @@ function Home({ data, summaries }: Props) {
 
             {data && data.posts && <OverthoughtList posts={data.posts} />}
 
-            <Grid gap={4}>
+            <Flex flexDirection="column" gap={4}>
               <Link href="/overthought" as="/overthought" passHref>
                 <A>
                   See all posts <Rarr />
@@ -76,10 +77,10 @@ function Home({ data, summaries }: Props) {
               >
                 Subscribe via RSS <Rarr />
               </A>
-            </Grid>
-          </Grid>
+            </Flex>
+          </Flex>
 
-          <Grid gap={16}>
+          <Flex flexDirection="column" gap={16}>
             <H5>Design Details Podcast</H5>
             <P>
               Design Details is a weekly conversation about design process and
@@ -95,9 +96,9 @@ function Home({ data, summaries }: Props) {
             >
               See all episodes <Rarr />
             </A>
-          </Grid>
+          </Flex>
 
-          <Grid gap={16}>
+          <Flex flexDirection="column" gap={16}>
             <H5>Figma plugins</H5>
             <P>
               There’s a lot of work in the design process that is boring,
@@ -112,11 +113,11 @@ function Home({ data, summaries }: Props) {
             >
               See my Figma profile <Rarr />
             </A>
-          </Grid>
+          </Flex>
 
-          <Grid gap={16}>
+          <Flex flexDirection="column" gap={16}>
             <H5>Open source work</H5>
-            <Grid gap={4}>
+            <Flex flexDirection="column" gap={4}>
               <A
                 href="https://github.com/specfm/design-details"
                 target="_blank"
@@ -125,9 +126,9 @@ function Home({ data, summaries }: Props) {
                 specfm / design-details
               </A>
               <P>The code that powers designdetails.fm.</P>
-            </Grid>
+            </Flex>
 
-            <Grid gap={4}>
+            <Flex flexDirection="column" gap={4}>
               <A
                 href="https://github.com/brianlovin/brian-lovin-next"
                 target="_blank"
@@ -136,9 +137,9 @@ function Home({ data, summaries }: Props) {
                 brian-lovin-next
               </A>
               <P>The code that powers this website you’re looking at.</P>
-            </Grid>
+            </Flex>
 
-            <Grid gap={4}>
+            <Flex flexDirection="column" gap={4}>
               <A
                 href="https://github.com/brianlovin/security-checklist"
                 target="_blank"
@@ -147,9 +148,9 @@ function Home({ data, summaries }: Props) {
                 security-checklist
               </A>
               <P>A checklist for staying safe on the internet.</P>
-            </Grid>
+            </Flex>
 
-            <Grid gap={4}>
+            <Flex flexDirection="column" gap={4}>
               <A
                 href="https://github.com/withspectrum/spectrum"
                 target="_blank"
@@ -158,9 +159,9 @@ function Home({ data, summaries }: Props) {
                 withspectrum / spectrum
               </A>
               <P>Simple, powerful online communities.</P>
-            </Grid>
+            </Flex>
 
-            <Grid gap={4}>
+            <Flex flexDirection="column" gap={4}>
               <A
                 href="https://github.com/specfm/spec-next"
                 target="_blank"
@@ -171,7 +172,7 @@ function Home({ data, summaries }: Props) {
               <P>
                 A podcast network to help designers and developers level up.
               </P>
-            </Grid>
+            </Flex>
 
             <A
               href="https://github.com/brianlovin"
@@ -180,12 +181,12 @@ function Home({ data, summaries }: Props) {
             >
               Follow me on GitHub <Rarr />
             </A>
-          </Grid>
+          </Flex>
 
-          <Grid gap={16}>
+          <Flex flexDirection="column" gap={16}>
             <H5>Speaking and interviews</H5>
-            <Grid gap={16}>
-              <Grid Grid gap={4}>
+            <Flex flexDirection="column" gap={16}>
+              <Flex flexDirection="column" gap={4}>
                 <A
                   href="https://www.swiftbysundell.com/podcast/67/"
                   target="_blank"
@@ -197,9 +198,9 @@ function Home({ data, summaries }: Props) {
                   Ryan Nystrom and I talk about designing and building the
                   mobile apps at GitHub.
                 </P>
-              </Grid>
+              </Flex>
 
-              <Grid Grid gap={4}>
+              <Flex flexDirection="column" gap={4}>
                 <A
                   href="https://www.youtube.com/watch?v=SyS3h3kmBnY"
                   target="_blank"
@@ -211,9 +212,9 @@ function Home({ data, summaries }: Props) {
                   An exploration into the plugins I built to automate the
                   tedious parts of designing mobile apps at GitHub.
                 </P>
-              </Grid>
+              </Flex>
 
-              <Grid Grid gap={4}>
+              <Flex flexDirection="column" gap={4}>
                 <A
                   href="https://www.youtube.com/watch?v=6MBBTdu8v6E"
                   target="_blank"
@@ -225,9 +226,9 @@ function Home({ data, summaries }: Props) {
                   Exploring the possibilities that open up when designers and
                   developers can speak the same language.
                 </P>
-              </Grid>
+              </Flex>
 
-              <Grid Grid gap={4}>
+              <Flex flexDirection="column" gap={4}>
                 <A
                   href="https://interfacelovers.com/interviews/brian-lovin"
                   target="_blank"
@@ -239,9 +240,9 @@ function Home({ data, summaries }: Props) {
                   An interview about how I got into design, my process, and past
                   work.
                 </P>
-              </Grid>
+              </Flex>
 
-              <Grid Grid gap={4}>
+              <Flex flexDirection="column" gap={4}>
                 <A
                   href="https://spec.fm/podcasts/design-details/79352"
                   target="_blank"
@@ -252,12 +253,12 @@ function Home({ data, summaries }: Props) {
                 <P>
                   Bryn Jackson and I interviewed each other. Totally humble.
                 </P>
-              </Grid>
-            </Grid>
-          </Grid>
+              </Flex>
+            </Flex>
+          </Flex>
 
-          <Grid gap={24}>
-            <Grid gap={16}>
+          <Flex flexDirection="column" gap={24}>
+            <Flex flexDirection="column" gap={16}>
               <H5>App Dissection</H5>
               <P>
                 In-depth explorations of visual and interaction design in
@@ -268,11 +269,11 @@ function Home({ data, summaries }: Props) {
                   See all posts <Rarr />
                 </A>
               </Link>
-            </Grid>
+            </Flex>
             <DesignDetailsGrid summaries={summaries} />
-          </Grid>
-        </Grid>
-      </Grid>
+          </Flex>
+        </Flex>
+      </CenteredColumn>
     </Page>
   )
 }

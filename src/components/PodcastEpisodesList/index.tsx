@@ -1,8 +1,8 @@
 import React from 'react'
 import { A, LineClamp, Small } from '~/components/Typography'
 import { Episode } from '~/graphql/types.generated'
-import Grid from '../Grid'
 import { format } from 'timeago.js'
+import Flex from '~/components/Flex'
 
 interface Props {
   episodes: Episode[]
@@ -10,9 +10,9 @@ interface Props {
 
 export default function PodcastEpisodesList({ episodes }: Props) {
   return (
-    <Grid gap={16}>
+    <Flex flexDirection="column" gap={16}>
       {episodes.map((ep) => (
-        <Grid gap={4} key={ep.id}>
+        <Flex flexDirection="column" gap={4} key={ep.id}>
           <A
             target="_blank"
             rel="noopener noreferrer"
@@ -22,8 +22,8 @@ export default function PodcastEpisodesList({ episodes }: Props) {
           </A>
           <LineClamp lines={2}>{ep.description}</LineClamp>
           <Small>Released {format(ep.published_at)}</Small>
-        </Grid>
+        </Flex>
       ))}
-    </Grid>
+    </Flex>
   )
 }

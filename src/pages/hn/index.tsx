@@ -4,11 +4,11 @@ import { NextSeo } from 'next-seo'
 import { CenteredColumn } from '~/components/Layouts'
 import HNPosts from '~/components/HNPosts'
 import { HNComment } from '~/components/HNPost/Comment'
-import Grid from '~/components/Grid'
 import { H3 } from '~/components/Typography'
 import Navigation from '~/components/HNPosts/Navigation'
 import { getHNPosts } from '~/graphql/services/hn'
 import HNSubscribeBox from '~/components/HNSubscribe'
+import Flex from '~/components/Flex'
 
 export interface HNPost {
   id: string
@@ -48,12 +48,12 @@ export default function HNTop(props: Props) {
       />
 
       <CenteredColumn data-cy="hn">
-        <Grid gap={32}>
+        <Flex flexDirection="column" gap={32}>
           <H3>Hacker News</H3>
           <Navigation active={'top'} />
           <HNPosts posts={posts} />
           <HNSubscribeBox />
-        </Grid>
+        </Flex>
       </CenteredColumn>
     </Page>
   )

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Link from 'next/link'
-import Grid from '~/components/Grid'
 import { StyledA } from './style'
+import Flex from '~/components/Flex'
 
 interface Props {
   active: string
@@ -11,7 +11,7 @@ export default function Navigation(props: Props) {
   const { active } = props
 
   return (
-    <Grid gap={8} columns={'repeat(3, max-content)'}>
+    <Flex gap={8} columns={'repeat(3, max-content)'}>
       <Link href="/hn">
         <StyledA active={active === 'top'}>Top</StyledA>
       </Link>
@@ -21,6 +21,6 @@ export default function Navigation(props: Props) {
       <Link href="/hn/about">
         <StyledA active={active === 'about'}>About</StyledA>
       </Link>
-    </Grid>
+    </Flex>
   )
 }

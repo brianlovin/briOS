@@ -1,5 +1,4 @@
 import * as React from 'react'
-import Grid from '~/components/Grid'
 import { Small } from '../Typography'
 import { LeftDivider } from './style'
 

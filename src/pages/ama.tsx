@@ -1,7 +1,6 @@
 import * as React from 'react'
 import Page from '~/components/Page'
 import { P, H3 } from '~/components/Typography'
-import Grid from '~/components/Grid'
 import { withApollo } from '~/components/withApollo'
 import { initApolloClient } from '~/graphql/services/apollo'
 import { GET_AMA_QUESTIONS } from '~/graphql/queries/ama'
@@ -9,10 +8,13 @@ import AMAQuestions from '~/components/AMAQuestions'
 import { CenteredColumn } from '~/components/Layouts'
 import { NextSeo } from 'next-seo'
 import { AmaStatus } from '~/graphql/types.generated'
+import GlobalMarkdownStyles from '~/components/GlobalStyles/markdown'
+import Flex from '~/components/Flex'
 
 function About() {
   return (
     <Page withHeader>
+      <GlobalMarkdownStyles />
       <NextSeo
         title={'Ask Me Anything'}
         description={'Answering questions, just for fun.'}
@@ -29,11 +31,11 @@ function About() {
         }}
       />
       <CenteredColumn>
-        <Grid gap={16}>
+        <Flex flexDirection="column" gap={16}>
           <H3>Ask Me Anything</H3>
           <P>Just for fun! Questions will be visible after I’ve answered.</P>
           <AMAQuestions />
-        </Grid>
+        </Flex>
       </CenteredColumn>
     </Page>
   )

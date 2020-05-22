@@ -15,9 +15,6 @@ export const GET_POST = gql`
     post(slug: $slug) {
       ...PostInfo
     }
-    posts(first: $first) {
-      ...PostInfo
-    }
   }
   ${PostInfoFragment}
 `

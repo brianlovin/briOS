@@ -3,8 +3,9 @@ import { NextSeo } from 'next-seo'
 import Page from '~/components/Page'
 import { H3, Subheading } from '~/components/Typography'
 import DesignDetailsGrid from '~/components/DesignDetailsGrid'
-import Grid from '~/components/Grid'
 import { summaries } from '~/data/appDissections'
+import { CenteredColumn } from '~/components/Layouts'
+import Flex from '~/components/Flex'
 
 export default function DesignDetails() {
   return (
@@ -26,23 +27,21 @@ export default function DesignDetails() {
         }}
       />
 
-      <Grid
-        columns={'fit-content(640px)'}
-        style={{ justifyContent: 'center' }}
-        gap={32}
-      >
-        <Grid gap={24}>
-          <H3>App Dissection</H3>
-          <Subheading>
-            This collection of posts explores some of the best interaction
-            patterns, visual styles, and design decisions of well-known apps.
-            Each detail features a video and my commentary on the functionality
-            and effectiveness of the interface.
-          </Subheading>
-        </Grid>
+      <CenteredColumn>
+        <Flex flexDirection="column" gap={32}>
+          <Flex flexDirection="column" gap={24}>
+            <H3>App Dissection</H3>
+            <Subheading>
+              This collection of posts explores some of the best interaction
+              patterns, visual styles, and design decisions of well-known apps.
+              Each detail features a video and my commentary on the
+              functionality and effectiveness of the interface.
+            </Subheading>
+          </Flex>
 
-        <DesignDetailsGrid summaries={summaries} />
-      </Grid>
+          <DesignDetailsGrid summaries={summaries} />
+        </Flex>
+      </CenteredColumn>
     </Page>
   )
 }

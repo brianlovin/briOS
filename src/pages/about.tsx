@@ -4,11 +4,13 @@ import Page from '~/components/Page'
 import { P, H5 } from '~/components/Typography'
 import theme from '~/components/Theme'
 import Picture from '~/components/Picture'
-import Grid from '~/components/Grid'
 import { withApollo } from '~/components/withApollo'
 import { initApolloClient } from '~/graphql/services/apollo'
 import { GET_AMA_QUESTIONS } from '~/graphql/queries/ama'
 import AMAQuestions from '~/components/AMAQuestions'
+import Flex from '~/components/Flex'
+import { CenteredColumn } from '~/components/Layouts'
+import GlobalMarkdownStyles from '~/components/GlobalStyles/markdown'
 
 const Container = styled.div`
   width: calc(100% + 32px);
@@ -44,8 +46,9 @@ const Container = styled.div`
 function About() {
   return (
     <Page withHeader>
-      <Grid columns={'fit-content(640px)'} style={{ justifyContent: 'center' }}>
-        <Grid gap={48}>
+      <GlobalMarkdownStyles />
+      <CenteredColumn>
+        <Flex flexDirection="column" gap={48}>
           <Container data-cy="about-page">
             <Picture
               srcset={['/static/img/about.webp', '/static/img/about.jpg']}
@@ -55,7 +58,7 @@ function About() {
               lazy={false}
             />
           </Container>
-          <Grid gap={16}>
+          <Flex flexDirection="column" gap={16}>
             <P>
               👋 I’m a product designer, podcaster, and writer, currently living
               in San Francisco. Let’s grab a coffee.
@@ -162,14 +165,14 @@ function About() {
                 </a>
               </em>
             </P>
-          </Grid>
-          <Grid gap={16}>
+          </Flex>
+          <Flex flexDirection="column" gap={16}>
             <H5>Ask Me Anything</H5>
             <P>Just for fun! Questions will be visible after I’ve answered.</P>
             <AMAQuestions />
-          </Grid>
-        </Grid>
-      </Grid>
+          </Flex>
+        </Flex>
+      </CenteredColumn>
     </Page>
   )
 }

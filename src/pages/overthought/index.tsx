@@ -7,7 +7,8 @@ import SEO from '~/components/Overthought/SEO'
 import OverthoughtList from '~/components/Overthought/List'
 import { GET_POSTS } from '~/graphql/queries'
 import { initApolloClient } from '~/graphql/services/apollo'
-import Grid from '~/components/Grid'
+import { CenteredColumn } from '~/components/Layouts'
+import Flex from '~/components/Flex'
 
 interface Props {
   data: {
@@ -20,23 +21,21 @@ function Overthought({ data }: Props) {
     <Page withHeader>
       <SEO />
 
-      <Grid
-        columns={'fit-content(640px)'}
-        gap={32}
-        style={{ justifyContent: 'center' }}
-      >
-        <Grid gap={16} data-cy="overthought">
-          <H3>Overthought</H3>
-          <LargeSubheading>
-            Overthinking out loud about design, development, and building
-            products.
-          </LargeSubheading>
-        </Grid>
+      <CenteredColumn>
+        <Flex flexDirection="column" gap={32}>
+          <Flex flexDirection="column" gap={16} data-cy="overthought">
+            <H3>Overthought</H3>
+            <LargeSubheading>
+              Overthinking out loud about design, development, and building
+              products.
+            </LargeSubheading>
+          </Flex>
 
-        {data && data.posts && <OverthoughtList posts={data.posts} />}
+          {data && data.posts && <OverthoughtList posts={data.posts} />}
 
-        <OverthoughtSubscribeBox />
-      </Grid>
+          <OverthoughtSubscribeBox />
+        </Flex>
+      </CenteredColumn>
     </Page>
   )
 }

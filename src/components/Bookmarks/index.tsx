@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { useGetBookmarksQuery } from '~/graphql/types.generated'
 import { useAuth } from '~/hooks/useAuth'
-import Grid from '~/components/Grid'
 import { BookmarkListItem } from './BookmarkListItem'
 import { PAGINATION_AMOUNT } from '~/graphql/constants'
 import { Button } from '../Button'
 import LoadingSpinner from '../LoadingSpinner'
 import FullscreenLoading from '../FullscreenLoading'
+import Flex from '~/components/Flex'
 
 export default function BookmarksList() {
   const { isMe } = useAuth()
@@ -57,7 +57,7 @@ export default function BookmarksList() {
   }
 
   return (
-    <Grid gap={24}>
+    <Flex flexDirection="column" gap={24}>
       {bookmarks.map((bookmark, index) => (
         <BookmarkListItem
           editable={isMe}
@@ -71,6 +71,6 @@ export default function BookmarksList() {
           {loading ? <LoadingSpinner size={16} /> : 'Show me more'}
         </Button>
       )}
-    </Grid>
+    </Flex>
   )
 }
