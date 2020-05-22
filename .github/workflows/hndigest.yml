@@ -11,4 +11,4 @@ jobs:
     - name: curl
       uses: wei/curl@v1
       with:
-        args: -X POST https://brianlovin.com/api/hn/send?token=${{ secrets.HN_TOKEN }}
+        args: https://brianlovin.com/api/hn/send?token=${{secrets.HN_TOKEN}}
