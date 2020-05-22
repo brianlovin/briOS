@@ -8,7 +8,7 @@ export async function getPostIds(sort) {
     res.json()
   )
 
-  return data.slice(0, 16)
+  return data
 }
 
 export async function getPostById(id, includeComments = false) {
@@ -42,9 +42,23 @@ export async function getPostById(id, includeComments = false) {
 
 export async function getHNPosts(sort) {
   const topPostIds = await getPostIds(sort)
+  const postPromises = topPostIds
+    .slice(0, 16)
+    .map(async (id) => await getPostById(id, false))
+
+  return await Promise.all([...postPromises])
+}
+
+export async function getHNPostsForDigest(sort) {
+  const topPostIds = await getPostIds(sort)
   const postPromises = topPostIds.map(
     async (id) => await getPostById(id, false)
   )
 
-  return await Promise.all([...postPromises])
+  const posts = await Promise.all([...postPromises])
+  const now = new Date().getTime() / 1000
+  const dayAgo = now - 60 * 60 * 24
+  const withinLastDay = posts.filter((post) => post.time > dayAgo)
+  const sorted = withinLastDay.sort((a, b) => b.points - a.points)
+  return sorted.slice(0, 16)
 }
