@@ -8,6 +8,7 @@ import Grid from '~/components/Grid'
 import { H3 } from '~/components/Typography'
 import Navigation from '~/components/HNPosts/Navigation'
 import { getHNPosts } from '~/graphql/services/hn'
+import HNSubscribeBox from '~/components/HNSubscribe'
 
 export interface HNPost {
   id: string
@@ -51,6 +52,7 @@ export default function HNTop(props: Props) {
           <H3>Hacker News</H3>
           <Navigation active={'top'} />
           <HNPosts posts={posts} />
+          <HNSubscribeBox />
         </Grid>
       </CenteredColumn>
     </Page>

@@ -6,6 +6,7 @@ import Grid from '~/components/Grid'
 import { H3, P, H5 } from '~/components/Typography'
 import Navigation from '~/components/HNPosts/Navigation'
 import GlobalMarkdownStyles from '~/components/GlobalStyles/markdown'
+import HNSubscribeBox from '~/components/HNSubscribe'
 
 export default function HNAbout() {
   return (
@@ -126,6 +127,7 @@ export default function HNAbout() {
             </P>
           </Grid>
         </Grid>
+        <HNSubscribeBox />
       </CenteredColumn>
     </Page>
   )

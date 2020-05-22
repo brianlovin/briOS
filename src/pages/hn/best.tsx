@@ -8,6 +8,7 @@ import { H3 } from '~/components/Typography'
 import Navigation from '~/components/HNPosts/Navigation'
 import { getHNPosts } from '~/graphql/services/hn'
 import { HNPost } from '.'
+import HNSubscribeBox from '~/components/HNSubscribe'
 
 interface Props {
   posts: HNPost[]
@@ -38,6 +39,7 @@ export default function HNBest(props: Props) {
           <H3>Hacker News</H3>
           <Navigation active={'best'} />
           <HNPosts posts={posts} />
+          <HNSubscribeBox />
         </Grid>
       </CenteredColumn>
     </Page>
