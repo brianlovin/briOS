@@ -56,14 +56,19 @@ export async function getHNPosts(sort) {
 
 export async function getHNPostsForDigest(sort) {
   const topPostIds = await getPostIds(sort)
-  const postPromises = topPostIds.map(
-    async (id) => await getPostById(id, false)
-  )
-
+  // topPostIds returns 500 by default. this can block the API route from
+  // responding for a long time while each one is fetched individually.
+  // it's much more likely that the most recent 200 (by decrementing id) are
+  // the top posts within the last 24 hours
+  const filtered = topPostIds.sort((a, b) => b - a).slice(0, 200)
+  const postPromises = filtered.map(async (id) => await getPostById(id, false))
   const posts = await Promise.all([...postPromises])
   const now = new Date().getTime() / 1000
   const dayAgo = now - 60 * 60 * 24
-  const withinLastDay = posts.filter((post) => post.time > dayAgo)
+
+  // don't return jobs or polls
+  const links = posts.filter((post) => post.type === 'link')
+  const withinLastDay = links.filter((post) => post.time > dayAgo)
   const sorted = withinLastDay.sort((a, b) => b.points - a.points)
   return sorted.slice(0, 16)
 }
