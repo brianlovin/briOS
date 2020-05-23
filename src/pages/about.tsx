@@ -13,25 +13,20 @@ import { CenteredColumn } from '~/components/Layouts'
 import GlobalMarkdownStyles from '~/components/GlobalStyles/markdown'
 
 const Container = styled.div`
-  width: calc(100% + 32px);
-  margin-left: -16px;
-  margin-right: -16px;
-
   picture {
-    width: 100%;
     margin-top: ${theme.space[5]};
+    margin-bottom: 32px;
     object-fit: cover;
     display: block;
+    margin-left: -16px;
+    margin-right: -16px;
+    width: calc(100% + 32px);
 
     @media (max-width: ${theme.breakpoints[4]}) {
       margin-top: -78px;
-      margin-left: -16px;
-      margin-right: -16px;
-      width: calc(100% + 32px);
     }
   }
 
-  source,
   img {
     width: 100%;
     border-radius: 8px;
@@ -48,16 +43,16 @@ function About() {
     <Page withHeader>
       <GlobalMarkdownStyles />
       <CenteredColumn>
+        <Container data-cy="about-page">
+          <Picture
+            srcset={['/static/img/about.webp', '/static/img/about.jpg']}
+            alt={'A photo of me'}
+            width={'640px'}
+            height={'auto'}
+            lazy={false}
+          />
+        </Container>
         <Flex flexDirection="column" gap={48}>
-          <Container data-cy="about-page">
-            <Picture
-              srcset={['/static/img/about.webp', '/static/img/about.jpg']}
-              alt={'A photo of me'}
-              width={'640px'}
-              height={'auto'}
-              lazy={false}
-            />
-          </Container>
           <Flex flexDirection="column" gap={16}>
             <P>
               👋 I’m a product designer, podcaster, and writer, currently living
