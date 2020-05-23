@@ -383,7 +383,6 @@ export type GetPostQueryVariables = {
 export type GetPostQuery = {
   __typename?: 'Query'
   post?: Maybe<{ __typename?: 'Post' } & PostInfoFragment>
-  posts: Array<Maybe<{ __typename?: 'Post' } & PostInfoFragment>>
 }
 
 export const AmaInfoFragmentDoc = gql`
@@ -1268,9 +1267,6 @@ export type GetPostsQueryResult = ApolloReactCommon.QueryResult<
 export const GetPostDocument = gql`
   query GetPost($slug: String!, $first: Int) {
     post(slug: $slug) {
-      ...PostInfo
-    }
-    posts(first: $first) {
       ...PostInfo
     }
   }

@@ -15,9 +15,7 @@ export default function BookmarksList() {
 
   // pre-populate bookmarks from the cache, but check for any new ones after
   // the page loads
-  const { data, fetchMore, error } = useGetBookmarksQuery({
-    fetchPolicy: 'cache-and-network',
-  })
+  const { data, fetchMore, error } = useGetBookmarksQuery()
 
   // this can happen if the route is navigated to from the client or if the
   // cache fails to populate for whatever reason
@@ -26,18 +24,26 @@ export default function BookmarksList() {
 
   const { bookmarks } = data
 
+  console.log({ bookmarks, length: bookmarks.length })
+
   function handleLoadMore() {
+    console.log('handle load more', fetchMore)
     if (loading) return
+    console.log('got past loading')
 
     setLoading(true)
 
     try {
+      console.log('trying to fetch more')
       fetchMore({
         variables: {
           skip: bookmarks.length,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
+          console.log('update query')
           setLoading(false)
+
+          console.log({ fetchMoreResult })
 
           if (!fetchMoreResult) return prev
 
@@ -52,6 +58,7 @@ export default function BookmarksList() {
         },
       })
     } catch (err) {
+      console.log({ err })
       setLoading(false)
     }
   }

@@ -40,15 +40,6 @@ const errorLink = onError(({ networkError, graphQLErrors }) => {
 
 const link = ApolloLink.from([errorLink, createIsomorphLink()])
 
-const defaultOptions: DefaultOptions = {
-  query: {
-    fetchPolicy: 'cache-first',
-  },
-  mutate: {
-    errorPolicy: 'all',
-  },
-}
-
 export function createApolloClient(initialState = {}) {
   const ssrMode = typeof window === 'undefined'
   const cache = new InMemoryCache().restore(initialState)
@@ -57,7 +48,6 @@ export function createApolloClient(initialState = {}) {
     ssrMode,
     link,
     cache,
-    defaultOptions,
   })
 }
 
