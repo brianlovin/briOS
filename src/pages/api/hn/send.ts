@@ -41,7 +41,7 @@ export default async (req: NowRequest, res: NowResponse) => {
 
   let count = 0
   await ref.get().then((snapshot) => {
-    snapshot.forEach((doc) => {
+    return snapshot.forEach((doc) => {
       const user = doc.data()
       count = count + 1
 
@@ -49,13 +49,15 @@ export default async (req: NowRequest, res: NowResponse) => {
         const unsubscribeToken = cryptr.encrypt(user.email)
         const unsubscribe_url = `https://brianlovin.com/api/hn/unsubscribe?token=${unsubscribeToken}`
 
-        sendHNDigest({
+        return sendHNDigest({
           email: user.email,
           date,
           posts,
           unsubscribe_url,
         })
       }
+
+      return
     })
   })
 
