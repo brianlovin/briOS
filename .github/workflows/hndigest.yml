@@ -11,7 +11,7 @@ jobs:
     - name: warm up function
       uses: wei/curl@v1
       with:
-        args: 'https://brianlovin.com/api/hn/send'
+        args: 'https://brianlovin.com/api/hn/send?warmup=true'
     - name: send digests
       uses: wei/curl@v1
       with:

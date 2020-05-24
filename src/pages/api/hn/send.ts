@@ -7,18 +7,27 @@ import { NowRequest, NowResponse } from '@now/node'
 import { validEmail } from './unsubscribe'
 
 export default async (req: NowRequest, res: NowResponse) => {
-  console.time('digest')
-  console.timeLog('digest')
-  const posts = await getHNPostsForDigest('top')
-  console.timeLog('digest')
-  const date = format(new Date(), 'LLLL do, yyyy')
+  const { token, test, warmup } = req.query
+
+  /*
+    This API route is triggered from a GitHub action. Sometimes the function
+    can take a while to warm up though, and will time out. If it times out,
+    the action fails. So instead, in the action we actually send 2 requests - 
+    the first warms up the route, the second actually processes the digest.
+  */
+  if (warmup) {
+    return res.status(200).json({ status: 'Warmed up!' })
+  }
+
   const secret = process.env.HN_TOKEN
   const cryptr = new Cryptr(secret)
-  const { token, test } = req.query
 
   if (!token || token !== secret) {
     return res.status(500).json({ error: 'Invalid token' })
   }
+
+  const posts = await getHNPostsForDigest('top')
+  const date = format(new Date(), 'LLLL do, yyyy')
 
   /* 
     Allow a &test=true query parameter to be sent in order to only trigger emails
@@ -50,6 +59,5 @@ export default async (req: NowRequest, res: NowResponse) => {
     })
   })
 
-  console.timeEnd('digest')
   return res.status(200).json({ status: 'done', emailsSent: count })
 }
