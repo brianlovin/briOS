@@ -20,6 +20,7 @@ export interface HNPost {
   comments_count: string
   url: string
   domain: string
+  content: string
 }
 
 interface Props {

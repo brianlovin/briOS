@@ -17,12 +17,10 @@ interface Props {
 export function HNPost(props: Props) {
   const { post } = props
 
+  console.log({ post })
+
   // trim things down to a readable amount
   const comments = post.comments.slice(0, 8)
-
-  const cleanUrl = post.domain
-    ? `${post.url}?ref=brianlovin.com`
-    : `/hn/${post.url.split('=')[1]}`
 
   return (
     <React.Fragment>
@@ -35,10 +33,19 @@ export function HNPost(props: Props) {
                 <Small>&larr; Back</Small>
               </a>
             </Link>
-            <a href={cleanUrl} target="blank" rel="noopener noreferrer">
+            <a href={post.url} target="blank" rel="noopener noreferrer">
               <H3>{post.title}</H3>
             </a>
             <Byline post={post} />
+            {post.content && (
+              <div
+                className={'markdown'}
+                style={{
+                  display: 'grid',
+                }}
+                dangerouslySetInnerHTML={{ __html: post.content }}
+              />
+            )}
           </Flex>
         </Flex>
 

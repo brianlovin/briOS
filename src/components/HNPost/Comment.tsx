@@ -34,7 +34,7 @@ export const Comment = React.memo((props: Props) => {
         style={{
           paddingLeft: level > 0 ? '20px' : 0,
           position: 'relative',
-          marginBottom: '20px',
+          marginBottom: '24px',
         }}
       >
         {level > 0 && (
@@ -49,6 +49,12 @@ export const Comment = React.memo((props: Props) => {
             />
           )}
           <Small>{`${comment.time_ago} by ${comment.user}`}</Small>
+          <Small
+            style={{ cursor: 'pointer', marginTop: '4px' }}
+            onClick={() => setCollapsed(!collapsed)}
+          >
+            Expand
+          </Small>
         </div>
       </div>
     )
@@ -59,7 +65,7 @@ export const Comment = React.memo((props: Props) => {
       style={{
         paddingLeft: level > 0 ? '20px' : 0,
         position: 'relative',
-        marginBottom: '20px',
+        marginBottom: '24px',
         display: 'block',
       }}
     >
@@ -67,7 +73,7 @@ export const Comment = React.memo((props: Props) => {
         <LeftDivider level={level} onClick={() => setCollapsed(!collapsed)} />
       )}
 
-      <div style={{ marginBottom: '16px', position: 'relative' }}>
+      <div style={{ marginBottom: '24px', position: 'relative' }}>
         {level === 0 && (
           <LeftDivider level={level} onClick={() => setCollapsed(!collapsed)} />
         )}
