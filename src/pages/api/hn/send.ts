@@ -27,9 +27,11 @@ export default async (req: NowRequest, res: NowResponse) => {
       ? db.collection('hnsubscribers').where('email', '==', 'hi@brianlovin.com')
       : db.collection('hnsubscribers')
 
+  let count = 0
   await ref.get().then((snapshot) => {
     return snapshot.forEach((doc) => {
       const user = doc.data()
+      count = count++
 
       if (validEmail(user.email)) {
         const unsubscribeToken = cryptr.encrypt(user.email)
@@ -47,5 +49,5 @@ export default async (req: NowRequest, res: NowResponse) => {
     })
   })
 
-  return res.status(200).json({ status: 'done' })
+  return res.status(200).json({ status: 'done', emailsSent: count })
 }
