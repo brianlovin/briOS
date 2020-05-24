@@ -7,7 +7,10 @@ import { NowRequest, NowResponse } from '@now/node'
 import { validEmail } from './unsubscribe'
 
 export default async (req: NowRequest, res: NowResponse) => {
+  console.time('digest')
+  console.timeLog('digest')
   const posts = await getHNPostsForDigest('top')
+  console.timeLog('digest')
   const date = format(new Date(), 'LLLL do, yyyy')
   const secret = process.env.HN_TOKEN
   const cryptr = new Cryptr(secret)
@@ -29,25 +32,24 @@ export default async (req: NowRequest, res: NowResponse) => {
 
   let count = 0
   await ref.get().then((snapshot) => {
-    return snapshot.forEach((doc) => {
+    snapshot.forEach((doc) => {
       const user = doc.data()
-      count = count++
+      count = count + 1
 
       if (validEmail(user.email)) {
         const unsubscribeToken = cryptr.encrypt(user.email)
         const unsubscribe_url = `https://brianlovin.com/api/hn/unsubscribe?token=${unsubscribeToken}`
 
-        return sendHNDigest({
+        sendHNDigest({
           email: user.email,
           date,
           posts,
           unsubscribe_url,
         })
       }
-
-      return
     })
   })
 
+  console.timeEnd('digest')
   return res.status(200).json({ status: 'done', emailsSent: count })
 }
