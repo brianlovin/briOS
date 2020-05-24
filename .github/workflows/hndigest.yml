@@ -8,7 +8,11 @@ jobs:
   curl:
     runs-on: ubuntu-latest
     steps:
-    - name: curl
+    - name: warm up function
+      uses: wei/curl@v1
+      with:
+        args: 'https://brianlovin.com/api/hn/send'
+    - name: send digests
       uses: wei/curl@v1
       with:
         args: 'https://brianlovin.com/api/hn/send?token=${{secrets.HN_TOKEN}}'
