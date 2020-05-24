@@ -17,8 +17,6 @@ interface Props {
 export function HNPost(props: Props) {
   const { post } = props
 
-  console.log({ post })
-
   // trim things down to a readable amount
   const comments = post.comments.slice(0, 8)
 

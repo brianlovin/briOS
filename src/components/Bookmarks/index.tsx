@@ -24,26 +24,18 @@ export default function BookmarksList() {
 
   const { bookmarks } = data
 
-  console.log({ bookmarks, length: bookmarks.length })
-
   function handleLoadMore() {
-    console.log('handle load more', fetchMore)
     if (loading) return
-    console.log('got past loading')
 
     setLoading(true)
 
     try {
-      console.log('trying to fetch more')
       fetchMore({
         variables: {
           skip: bookmarks.length,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
-          console.log('update query')
           setLoading(false)
-
-          console.log({ fetchMoreResult })
 
           if (!fetchMoreResult) return prev
 
@@ -58,7 +50,6 @@ export default function BookmarksList() {
         },
       })
     } catch (err) {
-      console.log({ err })
       setLoading(false)
     }
   }
