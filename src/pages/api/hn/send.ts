@@ -40,26 +40,24 @@ export default async (req: NowRequest, res: NowResponse) => {
       : db.collection('hnsubscribers')
 
   let count = 0
-  await ref.get().then((snapshot) => {
-    return snapshot.forEach((doc) => {
-      const user = doc.data()
+  const usersSnapshot = await ref.get()
+
+  for await (const doc of usersSnapshot.docs) {
+    const user = doc.data()
+
+    if (validEmail(user.email)) {
+      const unsubscribeToken = cryptr.encrypt(user.email)
+      const unsubscribe_url = `https://brianlovin.com/api/hn/unsubscribe?token=${unsubscribeToken}`
+
       count = count + 1
-
-      if (validEmail(user.email)) {
-        const unsubscribeToken = cryptr.encrypt(user.email)
-        const unsubscribe_url = `https://brianlovin.com/api/hn/unsubscribe?token=${unsubscribeToken}`
-
-        return sendHNDigest({
-          email: user.email,
-          date,
-          posts,
-          unsubscribe_url,
-        })
-      }
-
-      return
-    })
-  })
+      sendHNDigest({
+        email: user.email,
+        date,
+        posts,
+        unsubscribe_url,
+      })
+    }
+  }
 
   return res.status(200).json({ status: 'done', emailsSent: count })
 }
