@@ -60,7 +60,7 @@ export async function getHNPostsForDigest(sort) {
   // responding for a long time while each one is fetched individually.
   // it's much more likely that the most recent 200 (by decrementing id) are
   // the top posts within the last 24 hours
-  const filtered = topPostIds.sort((a, b) => b - a).slice(0, 200)
+  const filtered = topPostIds.sort((a, b) => b - a).slice(0, 100)
   const postPromises = filtered.map(async (id) => await getPostById(id, false))
   const posts = await Promise.all([...postPromises])
   const now = new Date().getTime() / 1000
