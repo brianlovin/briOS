@@ -50,7 +50,7 @@ export default async (req: NowRequest, res: NowResponse) => {
       const unsubscribe_url = `https://brianlovin.com/api/hn/unsubscribe?token=${unsubscribeToken}`
 
       count = count + 1
-      sendHNDigest({
+      await sendHNDigest({
         email: user.email,
         date,
         posts,

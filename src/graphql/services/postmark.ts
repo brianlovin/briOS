@@ -10,9 +10,9 @@ interface HNDigestProps {
   unsubscribe_url: string
 }
 
-export function sendHNDigest(props: HNDigestProps) {
+export async function sendHNDigest(props: HNDigestProps) {
   const { email, ...rest } = props
-  return client.sendEmailWithTemplate({
+  return await client.sendEmailWithTemplate({
     From: 'hi@brianlovin.com',
     To: email,
     TemplateId: 18037634,
