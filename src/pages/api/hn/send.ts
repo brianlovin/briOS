@@ -1,7 +1,7 @@
 import format from 'date-fns/format'
 import Cryptr from 'cryptr'
 import { getHNPostsForDigest } from '~/graphql/services/hn'
-import { sendHNDigest } from '~/graphql/services/postmark'
+import { client as postmark } from '~/graphql/services/postmark'
 import db from '~/graphql/services/firebase'
 import { NowRequest, NowResponse } from '@now/node'
 import { validEmail } from './unsubscribe'
@@ -42,7 +42,7 @@ export default async (req: NowRequest, res: NowResponse) => {
   let count = 0
   const usersSnapshot = await ref.get()
 
-  for await (const doc of usersSnapshot.docs) {
+  for (const doc of usersSnapshot.docs) {
     const user = doc.data()
 
     if (validEmail(user.email)) {
@@ -50,11 +50,15 @@ export default async (req: NowRequest, res: NowResponse) => {
       const unsubscribe_url = `https://brianlovin.com/api/hn/unsubscribe?token=${unsubscribeToken}`
 
       count = count + 1
-      await sendHNDigest({
-        email: user.email,
-        date,
-        posts,
-        unsubscribe_url,
+      postmark.sendEmailWithTemplate({
+        From: 'hi@brianlovin.com',
+        To: user.email,
+        TemplateId: 18037634,
+        TemplateModel: {
+          date,
+          posts,
+          unsubscribe_url,
+        },
       })
     }
   }

@@ -1,25 +1,13 @@
 import * as postmark from 'postmark'
 import { HNPost } from '~/pages/hn'
 
-const client = new postmark.ServerClient(process.env.POSTMARK_CLIENT_ID)
+export const client = new postmark.ServerClient(process.env.POSTMARK_CLIENT_ID)
 
 interface HNDigestProps {
   email: string
   date: string
   posts: HNPost[]
   unsubscribe_url: string
-}
-
-export async function sendHNDigest(props: HNDigestProps) {
-  const { email, ...rest } = props
-  return await client.sendEmailWithTemplate({
-    From: 'hi@brianlovin.com',
-    To: email,
-    TemplateId: 18037634,
-    TemplateModel: {
-      ...rest,
-    },
-  })
 }
 
 interface EmailMeProps {
