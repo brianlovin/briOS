@@ -5,7 +5,7 @@ on:
     - cron:  '0 23 * * *'
 
 jobs:
-  send hacker news digest:
+  send-hacker-news-digest:
     runs-on: ubuntu-latest
     steps:
     - name: warm up function
