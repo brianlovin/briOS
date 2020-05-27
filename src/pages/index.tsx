@@ -34,7 +34,7 @@ function Home({ data, summaries }: Props) {
             <P>
               I’m a product designer, podcaster, and writer, currently living in
               San Francisco. Right now I’m building native mobile apps at
-              GitHub. Let’s grab a coffee.
+              GitHub.
             </P>
 
             <Flex flexDirection="column" gap={4}>
@@ -77,6 +77,25 @@ function Home({ data, summaries }: Props) {
               >
                 Subscribe via RSS <Rarr />
               </A>
+            </Flex>
+          </Flex>
+
+          <Flex flexDirection="column" gap={16}>
+            <H5>Fun Projects</H5>
+            <P>Little weekend hacks for fun and learning.</P>
+            <Flex flexDirection="column" gap={4}>
+              <A href="/bookmarks">Bookmarks</A>
+              <P>Internet things, saved for later.</P>
+            </Flex>
+
+            <Flex flexDirection="column" gap={4}>
+              <A href="/ama">AMA</A>
+              <P>Ask me anything.</P>
+            </Flex>
+
+            <Flex flexDirection="column" gap={4}>
+              <A href="/hn">Hacker News</A>
+              <P>A better Hacker News.</P>
             </Flex>
           </Flex>
 

@@ -56,7 +56,7 @@ function About() {
           <Flex flexDirection="column" gap={16}>
             <P>
               👋 I’m a product designer, podcaster, and writer, currently living
-              in San Francisco. Let’s grab a coffee.
+              in San Francisco.
             </P>
             <P>
               Right now I’m designing{' '}
