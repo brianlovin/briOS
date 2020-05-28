@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Input from '~/components/Input'
 
-interface Props {
+interface Props extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   style?: object
 }
 
