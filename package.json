@@ -25,7 +25,7 @@
     "@next/bundle-analyzer": "^9.4.4",
     "@now/node": "^1.6.1",
     "@tryghost/content-api": "^1.4.1",
-    "apollo-server-micro": "^2.14.0",
+    "apollo-server-micro": "^2.14.1",
     "cheerio": "^1.0.0-rc.3",
     "cookie": "^0.4.1",
     "cryptr": "^6.0.2",
