@@ -2254,7 +2254,7 @@
     "@sentry/utils" "5.15.5"
     tslib "^1.9.3"
 
-"@sentry/browser@5.15.5":
+"@sentry/browser@5.15.5", "@sentry/browser@^5.15.5":
   version "5.15.5"
   resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-5.15.5.tgz#d9a51f1388581067b50d30ed9b1aed2cbb333a36"
   integrity sha512-rqDvjk/EvogfdbZ4TiEpxM/lwpPKmq23z9YKEO4q81+1SwJNua53H60dOk9HpRU8nOJ1g84TMKT2Ov8H7sqDWA==
@@ -3060,6 +3060,11 @@
   version "4.2.2"
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
+
+"@zeit/next-source-maps@0.0.4-canary.1":
+  version "0.0.4-canary.1"
+  resolved "https://registry.yarnpkg.com/@zeit/next-source-maps/-/next-source-maps-0.0.4-canary.1.tgz#5051ff8425e5f615da2d21dd08a99284fbb63d7d"
+  integrity sha512-SPQCLs7ToaqzQnqXqGSCoL7KTlnOAao+1F5hy7Hkuq85TjHsUC3eeLsmVrBIraIhXG/ARHmZ0JHOesPDtBfpzw==
 
 abort-controller@^3.0.0:
   version "3.0.0"
@@ -12678,7 +12683,7 @@ webpack-sources@1.4.3, webpack-sources@^1.1.0, webpack-sources@^1.4.0, webpack-s
     source-list-map "^2.0.0"
     source-map "~0.6.1"
 
-webpack@4.43.0:
+webpack@4.43.0, webpack@^4.43.0:
   version "4.43.0"
   resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.43.0.tgz#c48547b11d563224c561dad1172c8aa0b8a678e6"
   integrity sha512-GW1LjnPipFW2Y78OOab8NJlCflB7EFskMih2AHdvjbpKMeDJqEgSx24cXXXiPS65+WSwVyxtDsJH6jGX2czy+g==
