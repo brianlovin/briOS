@@ -24,6 +24,7 @@
     "@apollo/link-schema": "^2.0.0-beta.3",
     "@next/bundle-analyzer": "^9.4.4",
     "@now/node": "^1.6.1",
+    "@sentry/node": "^5.15.5",
     "@tryghost/content-api": "^1.4.1",
     "apollo-server-micro": "^2.14.1",
     "cheerio": "^1.0.0-rc.3",
