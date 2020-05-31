@@ -24,8 +24,10 @@
     "@apollo/link-schema": "^2.0.0-beta.3",
     "@next/bundle-analyzer": "^9.4.4",
     "@now/node": "^1.6.1",
+    "@sentry/browser": "^5.15.5",
     "@sentry/node": "^5.15.5",
     "@tryghost/content-api": "^1.4.1",
+    "@zeit/next-source-maps": "0.0.4-canary.1",
     "apollo-server-micro": "^2.14.1",
     "cheerio": "^1.0.0-rc.3",
     "cookie": "^0.4.1",
@@ -96,7 +98,8 @@
     "prettier": "^2.0.5",
     "prettier-eslint": "^10.1.1",
     "typescript": "^3.9.3",
-    "typescript-eslint-parser": "^22.0.0"
+    "typescript-eslint-parser": "^22.0.0",
+    "webpack": "^4.43.0"
   },
   "lint-staged": {
     "*.+(ts|tsx)": [

@@ -1,16 +1,12 @@
 import React from 'react'
-import Router from 'next/router'
+import { useRouter } from 'next/router'
+import FullscreenLoading from '~/components/FullscreenLoading'
 
-export default class extends React.Component {
-  static async getInitialProps({ res }) {
-    if (res) {
-      res.writeHead(301, {
-        Location: 'https://brianlovin.com/overthought',
-      })
-      res.end()
-    } else {
-      Router.push('/overthought')
-    }
-    return {}
-  }
+export default function Journal() {
+  const router = useRouter()
+  React.useEffect(() => {
+    router.push('/overthought')
+  }, [])
+
+  return <FullscreenLoading />
 }

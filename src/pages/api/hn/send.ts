@@ -58,7 +58,7 @@ export default sentryAPIHandler(
         const unsubscribe_url = `https://brianlovin.com/api/hn/unsubscribe?token=${unsubscribeToken}`
 
         count = count + 1
-        postmark.sendEmailWithTemplate({
+        await postmark.sendEmailWithTemplate({
           From: 'hi@brianlovin.com',
           To: user.email,
           TemplateId: 18037634,

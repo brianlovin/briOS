@@ -4,9 +4,9 @@ import {
   InMemoryCache,
   ApolloLink,
   HttpLink,
-  DefaultOptions,
 } from '@apollo/client'
-import { CLIENT_URL } from '../constants'
+import { CLIENT_URL } from '~/graphql/constants'
+import Sentry from '~/sentry'
 
 // ensure that queries can run on the server during SSR and SSG
 // @ts-ignore
@@ -33,9 +33,15 @@ function createIsomorphLink() {
 
 const errorLink = onError(({ networkError, graphQLErrors }) => {
   if (graphQLErrors) {
-    graphQLErrors.map(({ message }) => console.warn(message))
+    graphQLErrors.map((err) => {
+      Sentry.captureException(err)
+      console.warn(err.message)
+    })
   }
-  if (networkError) console.warn(networkError)
+  if (networkError) {
+    Sentry.captureException(networkError)
+    console.warn(networkError)
+  }
 })
 
 const link = ApolloLink.from([errorLink, createIsomorphLink()])

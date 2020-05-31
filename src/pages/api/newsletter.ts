@@ -1,13 +1,15 @@
 import fetch from 'isomorphic-unfetch'
+import { sentryAPIHandler } from '~/graphql/services/sentry'
+import { NextApiRequest, NextApiResponse } from 'next'
 
-export default async (req, res) => {
-  const { email } = req.body
+export default sentryAPIHandler(
+  async (req: NextApiRequest, res: NextApiResponse) => {
+    const { email } = req.body
 
-  if (!email) {
-    return res.status(400).json({ error: 'Email is required' })
-  }
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' })
+    }
 
-  try {
     const LIST_ID = process.env.MAILCHIMP_LIST_ID
     const API_KEY = process.env.MAILCHIMP_API_KEY
     const DATACENTER = API_KEY.split('-')[1]
@@ -37,7 +39,5 @@ export default async (req, res) => {
     }
 
     return res.status(201).json({ error: '' })
-  } catch (error) {
-    return res.status(500).json({ error: error.message || error.toString() })
   }
-}
+)

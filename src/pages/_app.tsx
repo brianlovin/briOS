@@ -1,12 +1,41 @@
 import * as React from 'react'
-import { AppProps } from 'next/app'
+import App from 'next/app'
+import Sentry from '~/sentry'
 import Providers from '~/components/Providers'
 import '~/components/GlobalStyles/theme.css'
 
-export default function App({ Component, pageProps }: AppProps) {
-  return (
-    <Providers>
-      <Component {...pageProps} />
-    </Providers>
-  )
+class MyApp extends App {
+  static async getInitialProps({ Component, ctx }) {
+    let pageProps = {}
+
+    if (Component.getInitialProps) {
+      pageProps = await Component.getInitialProps(ctx)
+    }
+
+    return { pageProps }
+  }
+
+  componentDidCatch(error, errorInfo) {
+    Sentry.withScope((scope) => {
+      Object.keys(errorInfo).forEach((key) => {
+        scope.setExtra(key, errorInfo[key])
+      })
+
+      Sentry.captureException(error)
+    })
+
+    super.componentDidCatch(error, errorInfo)
+  }
+
+  render() {
+    const { Component, pageProps } = this.props
+
+    return (
+      <Providers>
+        <Component {...pageProps} />
+      </Providers>
+    )
+  }
 }
+
+export default MyApp
