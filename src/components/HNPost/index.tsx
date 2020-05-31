@@ -1,5 +1,6 @@
 import * as React from 'react'
 import Link from 'next/link'
+import { NextSeo } from 'next-seo'
 import { H3, Small } from '~/components/Typography'
 import { Comment } from './Comment'
 import GlobalMarkdownStyles from '../GlobalStyles/markdown'
@@ -23,6 +24,22 @@ export function HNPost(props: Props) {
   return (
     <React.Fragment>
       <GlobalMarkdownStyles />
+      <NextSeo
+        title={post.title}
+        description={
+          post.content || `${post.comments_count} comments · ${post.domain}`
+        }
+        openGraph={{
+          title: post.title,
+          url: `https://brianlovin.com/hn/${post.id}`,
+          description:
+            post.content || `${post.comments_count} comments · ${post.domain}`,
+          site_name: 'Hacker News',
+        }}
+        twitter={{
+          cardType: 'summary_large_image',
+        }}
+      />
       <CenteredColumn gap={32} data-cy="bookmarks">
         <Flex flexDirection="column" gap={32}>
           <Flex flexDirection="column" gap={16}>
