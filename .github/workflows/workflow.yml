@@ -25,6 +25,7 @@ jobs:
       FIREBASE_AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.FIREBASE_AUTH_PROVIDER_X509_CERT_URL }}
       FIREBASE_CLIENT_X509_CERT_URL: ${{ secrets.FIREBASE_CLIENT_X509_CERT_URL }}
       POSTMARK_CLIENT_ID: ${{ secrets.POSTMARK_CLIENT_ID }}
+      SIMPLECAST_V2_API_KEY: ${{ secrets.SIMPLECAST_V2_API_KEY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v1

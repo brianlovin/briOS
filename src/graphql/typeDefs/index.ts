@@ -46,21 +46,14 @@ export default gql`
   }
 
   type Episode {
-    id: Int
-    number: Int
-    podcast_id: Int
-    guide: String
-    title: String
-    author: String
-    duration: Int
-    explicit: Boolean
+    id: String
     description: String
+    legacy_id: String
     long_description: String
-    published: Boolean
     published_at: String
-    audio_file_size: Int
-    audio_url: String
-    sharing_url: String
+    status: String
+    title: String
+    token: String
   }
 
   type Repo {
