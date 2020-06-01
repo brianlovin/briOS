@@ -16,7 +16,9 @@ export default function PodcastEpisodesList({ episodes }: Props) {
           <A
             target="_blank"
             rel="noopener noreferrer"
-            href={`https://spec.fm/podcasts/design-details/${ep.id}`}
+            href={`https://designdetails.fm/episodes/${
+              ep.legacy_id || ep.token
+            }`}
           >
             {ep.title}
           </A>

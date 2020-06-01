@@ -64,21 +64,14 @@ export type Bookmark = {
 
 export type Episode = {
   __typename?: 'Episode'
-  id?: Maybe<Scalars['Int']>
-  number?: Maybe<Scalars['Int']>
-  podcast_id?: Maybe<Scalars['Int']>
-  guide?: Maybe<Scalars['String']>
-  title?: Maybe<Scalars['String']>
-  author?: Maybe<Scalars['String']>
-  duration?: Maybe<Scalars['Int']>
-  explicit?: Maybe<Scalars['Boolean']>
+  id?: Maybe<Scalars['String']>
   description?: Maybe<Scalars['String']>
+  legacy_id?: Maybe<Scalars['String']>
   long_description?: Maybe<Scalars['String']>
-  published?: Maybe<Scalars['Boolean']>
   published_at?: Maybe<Scalars['String']>
-  audio_file_size?: Maybe<Scalars['Int']>
-  audio_url?: Maybe<Scalars['String']>
-  sharing_url?: Maybe<Scalars['String']>
+  status?: Maybe<Scalars['String']>
+  title?: Maybe<Scalars['String']>
+  token?: Maybe<Scalars['String']>
 }
 
 export type Repo = {
@@ -212,10 +205,14 @@ export type BookmarkInfoFragment = {
 
 export type EpisodeInfoFragment = {
   __typename?: 'Episode'
-  id?: Maybe<number>
-  title?: Maybe<string>
+  id?: Maybe<string>
   description?: Maybe<string>
+  legacy_id?: Maybe<string>
+  long_description?: Maybe<string>
   published_at?: Maybe<string>
+  status?: Maybe<string>
+  title?: Maybe<string>
+  token?: Maybe<string>
 }
 
 export type PostInfoFragment = {
@@ -409,9 +406,13 @@ export const BookmarkInfoFragmentDoc = gql`
 export const EpisodeInfoFragmentDoc = gql`
   fragment EpisodeInfo on Episode {
     id
-    title
     description
+    legacy_id
+    long_description
     published_at
+    status
+    title
+    token
   }
 `
 export const PostInfoFragmentDoc = gql`
