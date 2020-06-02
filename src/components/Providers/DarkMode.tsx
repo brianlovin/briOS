@@ -13,7 +13,7 @@ export default function DarkMode() {
   React.useEffect(() => {
     const mql = window.matchMedia('(prefers-color-scheme: dark)')
     const prefersDarkFromMQ = mql.matches
-    const colorMode = prefersDarkFromMQ ? 'dark' : 'light'
+    const colorMode = 'dark'
 
     const root = document.documentElement
 

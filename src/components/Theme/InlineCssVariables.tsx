@@ -13,7 +13,7 @@ export function setColorsByTheme() {
 
   const mql = window.matchMedia('(prefers-color-scheme: dark)')
   const prefersDarkFromMQ = mql.matches
-  const colorMode = prefersDarkFromMQ ? 'dark' : 'light'
+  const colorMode = 'dark'
 
   const root = document.documentElement
 
