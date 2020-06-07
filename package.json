@@ -33,7 +33,6 @@
     "cookie": "^0.4.1",
     "cryptr": "^6.0.2",
     "date-fns": "^2.14.0",
-    "fathom-client": "^2.0.3",
     "firebase-admin": "^8.12.1",
     "graphql": "^15.0.0",
     "graphql-tools": "^6.0.5",
