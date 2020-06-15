@@ -1569,12 +1569,12 @@
     through2 "^3.0.0"
     xdg-basedir "^4.0.0"
 
-"@graphql-codegen/add@^1.15.2":
-  version "1.15.2"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/add/-/add-1.15.2.tgz#4aba88f251346e6c04da99539af476b099e1f170"
-  integrity sha512-dtF+NzlrNvCVej3eN++khOvQIqHOxJcL5on9EKIWyU8tmzw8xxiReY0UepSm4L7kYTGi6epq7yS/bYoZBIPmyQ==
+"@graphql-codegen/add@^1.15.3":
+  version "1.15.3"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/add/-/add-1.15.3.tgz#932d74e6c302f5642b814091fbe7992f5b7c9d2d"
+  integrity sha512-3aFxP7V19KNclxWGbVSJEBMfKaI3k6+Xbf+UcglE+Ml2UT4U83U2pJ91c7O7Dh4yC4JndBeN9Hok+TcGMa4AaQ==
   dependencies:
-    "@graphql-codegen/plugin-helpers" "1.15.2"
+    "@graphql-codegen/plugin-helpers" "1.15.3"
     tslib "~2.0.0"
 
 "@graphql-codegen/cli@^1.15.3":
@@ -1635,22 +1635,6 @@
     "@graphql-tools/merge" "^6.0.0"
     "@graphql-tools/utils" "^6.0.0"
     tslib "~2.0.0"
-
-"@graphql-codegen/plugin-helpers@1.15.2":
-  version "1.15.2"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/plugin-helpers/-/plugin-helpers-1.15.2.tgz#102d93094858f10537911bd3c788f730f0f74974"
-  integrity sha512-5bvgNrLEtXj0tmyGj0I2JfxbjL1wkOKcjTubGDFfmbOR4aGOCCJPCgTtoCyCX8qbazW4LOsVInWieKEoEGUzYg==
-  dependencies:
-    "@graphql-tools/utils" "^6.0.0"
-    camel-case "4.1.1"
-    common-tags "1.8.0"
-    constant-case "3.0.3"
-    import-from "3.0.0"
-    lower-case "2.0.1"
-    param-case "3.0.3"
-    pascal-case "3.1.1"
-    tslib "~2.0.0"
-    upper-case "2.0.1"
 
 "@graphql-codegen/plugin-helpers@1.15.3":
   version "1.15.3"
