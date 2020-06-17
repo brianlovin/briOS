@@ -92,7 +92,7 @@
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.20.0",
     "husky": "^4.2.5",
-    "lint-staged": "^10.2.10",
+    "lint-staged": "^10.2.11",
     "now-env": "^3.2.0",
     "prettier": "^2.0.5",
     "prettier-eslint": "^11.0.0",
