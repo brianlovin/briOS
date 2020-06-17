@@ -57,7 +57,7 @@
     "serve-favicon": "^2.5.0",
     "string-replace-to-array": "^1.0.3",
     "styled-components": "^4.4.1",
-    "terser": "^4.7.0",
+    "terser": "^4.8.0",
     "theme-ui": "^0.3.1",
     "throttle-debounce": "^2.2.1",
     "timeago.js": "^4.0.2",
