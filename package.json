@@ -51,7 +51,7 @@
     "react-visibility-sensor": "^5.1.1",
     "rebass": "^4.0.7",
     "reflexbox": "^4.0.6",
-    "rehype-parse": "^7.0.0",
+    "rehype-parse": "^7.0.1",
     "rehype-remark": "^8.0.0",
     "remark-stringify": "^8.1.0",
     "serve-favicon": "^2.5.0",
