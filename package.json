@@ -90,7 +90,7 @@
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-cypress": "^2.11.1",
     "eslint-plugin-prettier": "^3.1.4",
-    "eslint-plugin-react": "^7.20.1",
+    "eslint-plugin-react": "^7.20.2",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.11",
     "now-env": "^3.2.0",
