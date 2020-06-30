@@ -1590,12 +1590,12 @@
     through2 "^3.0.0"
     xdg-basedir "^4.0.0"
 
-"@graphql-codegen/add@^1.15.4":
-  version "1.15.4"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/add/-/add-1.15.4.tgz#82d0d4580f0033f8b676494a37a94a031022b9db"
-  integrity sha512-UP8g9yVWcwbGss52OFXcb5ZLFwRJ7sCtg84SHA6ev/Ko6YDEtlVg0HUFtgvhE2HPWBa2iIN8aE9Imk+g8ckl7A==
+"@graphql-codegen/add@^1.16.0":
+  version "1.16.0"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/add/-/add-1.16.0.tgz#588f69612266c6ee05d2946af129d356bffc3f58"
+  integrity sha512-MxguUHGNO6FpG20hiGvuNrbCA2YFSfE/xXqn97JUhkFhp/RWHe7/KqfS+clRUb0iM1Hj458gzcsY7JmiezXg4g==
   dependencies:
-    "@graphql-codegen/plugin-helpers" "1.15.4"
+    "@graphql-codegen/plugin-helpers" "1.16.0"
     tslib "~2.0.0"
 
 "@graphql-codegen/cli@^1.16.0":
