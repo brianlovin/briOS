@@ -8975,10 +8975,10 @@ neo-async@2.6.1, neo-async@^2.5.0, neo-async@^2.6.1:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.1.tgz#ac27ada66167fa8849a6addd837f6b189ad2081c"
   integrity sha512-iyam8fBuCUpWeKPGpaNMetEocMt364qkCsfL9JuhjXX6dRnguRVOfk2GZaDpPjcOKiiXCPINZC1GczQ7iTq3Zw==
 
-next-seo@^4.6.0:
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/next-seo/-/next-seo-4.6.0.tgz#c22a8f49ae8272460962e065159551605257f088"
-  integrity sha512-j7Ju/+0TBArH4402SsCm5ZkFQSDY7mX+jyUn+NcE4nZAOuMbBQsvA3Cm4n2ls1/LZwwjY18v4uYukyhyqtE8cQ==
+next-seo@^4.7.1:
+  version "4.7.1"
+  resolved "https://registry.yarnpkg.com/next-seo/-/next-seo-4.7.1.tgz#881c88fb685b070ac49e77482d5ec785c39a03c8"
+  integrity sha512-gsNoxmqWLBh5IT9qQLNJoIo4iDiw+ptsFSGca5STVBhHYeJ2yKzaiWSZ9Ovp4opJvCXQQI7M3o2pM7lqQQxA8g==
 
 next-tick@~1.0.0:
   version "1.0.0"
