@@ -74,7 +74,7 @@
     "@graphql-codegen/cli": "^1.16.0",
     "@graphql-codegen/typescript": "^1.15.3",
     "@graphql-codegen/typescript-operations": "^1.16.0",
-    "@graphql-codegen/typescript-react-apollo": "^1.15.4",
+    "@graphql-codegen/typescript-react-apollo": "^1.16.0",
     "@testing-library/cypress": "^6.0.0",
     "@types/chai": "^4.2.11",
     "@types/jest": "^26.0.3",
