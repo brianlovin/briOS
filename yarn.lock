@@ -1651,22 +1651,6 @@
     "@graphql-tools/utils" "^6.0.0"
     tslib "~2.0.0"
 
-"@graphql-codegen/plugin-helpers@1.16.2":
-  version "1.16.2"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/plugin-helpers/-/plugin-helpers-1.16.2.tgz#6b1219c986e3eaebef4c314e3c535202991bc61e"
-  integrity sha512-OH5NWbWeA/lkjquizwP66MEtwbys5LaMbhVIBshLZP934VPlBGJl4Rwd5lZEKJgR0LWIJ29Fg0fn5++DtGKxOg==
-  dependencies:
-    "@graphql-tools/utils" "^6.0.0"
-    camel-case "4.1.1"
-    common-tags "1.8.0"
-    constant-case "3.0.3"
-    import-from "3.0.0"
-    lower-case "2.0.1"
-    param-case "3.0.3"
-    pascal-case "3.1.1"
-    tslib "~2.0.0"
-    upper-case "2.0.1"
-
 "@graphql-codegen/plugin-helpers@1.16.3":
   version "1.16.3"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/plugin-helpers/-/plugin-helpers-1.16.3.tgz#84ce27449d454eeeb90f0040d6c8d2fd3fad967b"
@@ -1714,21 +1698,6 @@
     "@graphql-codegen/plugin-helpers" "1.16.3"
     "@graphql-codegen/visitor-plugin-common" "1.16.3"
     auto-bind "~4.0.0"
-    tslib "~2.0.0"
-
-"@graphql-codegen/visitor-plugin-common@1.16.2":
-  version "1.16.2"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/visitor-plugin-common/-/visitor-plugin-common-1.16.2.tgz#d035dd0afa368f41b34495e047149a6f1ddc132b"
-  integrity sha512-RpkeC4RkbTlYZ25UVMlhRmp3QEYBD1CflSQOnVa4Jm0nXRF6jeZi/b62HPimvqaBC2K6JAHqhrwSagxn1lB4nA==
-  dependencies:
-    "@graphql-codegen/plugin-helpers" "1.16.2"
-    "@graphql-tools/relay-operation-optimizer" "6.0.12"
-    array.prototype.flatmap "1.2.3"
-    auto-bind "~4.0.0"
-    dependency-graph "0.9.0"
-    graphql-tag "2.10.3"
-    parse-filepath "1.0.2"
-    pascal-case "3.1.1"
     tslib "~2.0.0"
 
 "@graphql-codegen/visitor-plugin-common@1.16.3":
@@ -2713,10 +2682,10 @@
     "@types/node" "*"
     form-data "^3.0.0"
 
-"@types/node@*", "@types/node@^14.0.18":
-  version "14.0.18"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.0.18.tgz#5111b2285659442f9f95697386a2b42b875bd7e9"
-  integrity sha512-0Z3nS5acM0cIV4JPzrj9g/GH0Et5vmADWtip3YOXOp1NpOLU8V3KoZDc8ny9c1pe/YSYYzQkAWob6dyV/EWg4g==
+"@types/node@*", "@types/node@^14.0.19":
+  version "14.0.19"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.0.19.tgz#994d99708822bca643a2364f8aeed04a16e0f5a1"
+  integrity sha512-yf3BP/NIXF37BjrK5klu//asUWitOEoUP5xE1mhSUjazotwJ/eJDgEmMQNlOeWOVv72j24QQ+3bqXHE++CFGag==
 
 "@types/node@^10.1.0":
   version "10.17.17"
