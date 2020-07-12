@@ -273,6 +273,20 @@ function Home({ data, summaries }: Props) {
                   Bryn Jackson and I interviewed each other. Totally humble.
                 </P>
               </Flex>
+
+              <Flex flexDirection="column" gap={4}>
+                <A
+                  href="https://avocode.com/blog/brian-lovin-product-designer-github-interview"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Avocode Interview
+                </A>
+                <P>
+                  An interview where we dig into my work at Buffer, Facebook,
+                  Spectrum, and what’s in the works at GitHub.
+                </P>
+              </Flex>
             </Flex>
           </Flex>
 
