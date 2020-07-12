@@ -17,7 +17,7 @@ const base = css`
     border-radius: 4px;
     width: 100%;
     text-align: center;
-    margin: 0 2px;
+    margin: 0 1px;
   }
 `
 
@@ -51,7 +51,6 @@ export const InnerGrid = styled.div`
   width: 100%;
   justify-self: center;
   max-width: ${theme.breakpoints[3]};
-  grid-gap: 4px;
   position: relative;
   grid-template-columns: repeat(6, max-content);
   z-index: 3;
