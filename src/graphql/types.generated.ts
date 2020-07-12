@@ -6,6 +6,7 @@ import gql from 'graphql-tag'
 import * as ApolloReactCommon from '@apollo/client'
 import * as ApolloReactHooks from '@apollo/client'
 export type Maybe<T> = T | null
+export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] }
 
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -234,91 +235,91 @@ export type RepoInfoFragment = {
   stars?: Maybe<number>
 }
 
-export type EditAmaQuestionMutationVariables = {
+export type EditAmaQuestionMutationVariables = Exact<{
   id: Scalars['ID']
   question: Scalars['String']
   answer: Scalars['String']
   status: AmaStatus
-}
+}>
 
 export type EditAmaQuestionMutation = {
   __typename?: 'Mutation'
   editAMAQuestion?: Maybe<{ __typename?: 'AMA' } & AmaInfoFragment>
 }
 
-export type DeleteAmaQuestionMutationVariables = {
+export type DeleteAmaQuestionMutationVariables = Exact<{
   id: Scalars['ID']
-}
+}>
 
 export type DeleteAmaQuestionMutation = {
   __typename?: 'Mutation'
   deleteAMAQuestion?: Maybe<boolean>
 }
 
-export type AddAmaQuestionMutationVariables = {
+export type AddAmaQuestionMutationVariables = Exact<{
   question: Scalars['String']
-}
+}>
 
 export type AddAmaQuestionMutation = {
   __typename?: 'Mutation'
   addAMAQuestion?: Maybe<boolean>
 }
 
-export type AddAmaReactionMutationVariables = {
+export type AddAmaReactionMutationVariables = Exact<{
   id: Scalars['ID']
-}
+}>
 
 export type AddAmaReactionMutation = {
   __typename?: 'Mutation'
   addAMAReaction?: Maybe<{ __typename?: 'AMA' } & AmaInfoFragment>
 }
 
-export type LoginMutationVariables = {
+export type LoginMutationVariables = Exact<{
   password: Scalars['String']
-}
+}>
 
 export type LoginMutation = { __typename?: 'Mutation'; login?: Maybe<boolean> }
 
-export type LogoutMutationVariables = {}
+export type LogoutMutationVariables = Exact<{ [key: string]: never }>
 
 export type LogoutMutation = {
   __typename?: 'Mutation'
   logout?: Maybe<boolean>
 }
 
-export type EditBookmarkMutationVariables = {
+export type EditBookmarkMutationVariables = Exact<{
   id: Scalars['ID']
   title: Scalars['String']
   notes?: Maybe<Scalars['String']>
-}
+}>
 
 export type EditBookmarkMutation = {
   __typename?: 'Mutation'
   editBookmark?: Maybe<{ __typename?: 'Bookmark' } & BookmarkInfoFragment>
 }
 
-export type DeleteBookmarkMutationVariables = {
+export type DeleteBookmarkMutationVariables = Exact<{
   id: Scalars['ID']
-}
+}>
 
 export type DeleteBookmarkMutation = {
   __typename?: 'Mutation'
   deleteBookmark?: Maybe<boolean>
 }
 
-export type AddBookmarkMutationVariables = {
+export type AddBookmarkMutationVariables = Exact<{
   url: Scalars['String']
   notes?: Maybe<Scalars['String']>
-}
+}>
 
 export type AddBookmarkMutation = {
   __typename?: 'Mutation'
   addBookmark?: Maybe<{ __typename?: 'Bookmark' } & BookmarkInfoFragment>
 }
 
-export type AddBookmarkReactionMutationVariables = {
+export type AddBookmarkReactionMutationVariables = Exact<{
   id: Scalars['ID']
-}
+}>
 
 export type AddBookmarkReactionMutation = {
   __typename?: 'Mutation'
@@ -327,33 +328,33 @@ export type AddBookmarkReactionMutation = {
   >
 }
 
-export type GetAmaQuestionsQueryVariables = {
+export type GetAmaQuestionsQueryVariables = Exact<{
   skip?: Maybe<Scalars['Int']>
   status?: Maybe<AmaStatus>
-}
+}>
 
 export type GetAmaQuestionsQuery = {
   __typename?: 'Query'
   amaQuestions: Array<Maybe<{ __typename?: 'AMA' } & AmaInfoFragment>>
 }
 
-export type GetBookmarksQueryVariables = {
+export type GetBookmarksQueryVariables = Exact<{
   skip?: Maybe<Scalars['Int']>
-}
+}>
 
 export type GetBookmarksQuery = {
   __typename?: 'Query'
   bookmarks: Array<Maybe<{ __typename?: 'Bookmark' } & BookmarkInfoFragment>>
 }
 
-export type GetEpisodesQueryVariables = {}
+export type GetEpisodesQueryVariables = Exact<{ [key: string]: never }>
 
 export type GetEpisodesQuery = {
   __typename?: 'Query'
   episodes: Array<Maybe<{ __typename?: 'Episode' } & EpisodeInfoFragment>>
 }
 
-export type GetHomeQueryVariables = {}
+export type GetHomeQueryVariables = Exact<{ [key: string]: never }>
 
 export type GetHomeQuery = {
   __typename?: 'Query'
@@ -361,21 +362,21 @@ export type GetHomeQuery = {
   episodes: Array<Maybe<{ __typename?: 'Episode' } & EpisodeInfoFragment>>
 }
 
-export type IsMeQueryVariables = {}
+export type IsMeQueryVariables = Exact<{ [key: string]: never }>
 
 export type IsMeQuery = { __typename?: 'Query'; isMe?: Maybe<boolean> }
 
-export type GetPostsQueryVariables = {}
+export type GetPostsQueryVariables = Exact<{ [key: string]: never }>
 
 export type GetPostsQuery = {
   __typename?: 'Query'
   posts: Array<Maybe<{ __typename?: 'Post' } & PostInfoFragment>>
 }
 
-export type GetPostQueryVariables = {
+export type GetPostQueryVariables = Exact<{
   slug: Scalars['String']
   first?: Maybe<Scalars['Int']>
-}
+}>
 
 export type GetPostQuery = {
   __typename?: 'Query'

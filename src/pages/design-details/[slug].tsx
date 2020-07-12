@@ -5,6 +5,7 @@ import designDetailsPosts from '~/data/appDissections'
 import DesignDetailView from '~/components/DesignDetailView'
 import { DesignDetailsPost } from '~/data/appDissections'
 import { useRouter } from 'next/router'
+import removeMd from 'remove-markdown'
 
 interface Props {
   post: DesignDetailsPost
@@ -29,8 +30,14 @@ export default function DesignDetail({ post }: Props) {
           openGraph={{
             url: `https://brianlovin.com/design-details/${post.slug}`,
             title: post.title,
-            description: post.description,
+            description: removeMd(post.description),
             site_name: 'App Dissection',
+            images: [
+              {
+                url: 'https://brianlovin.com/static/meta/app-dissection.png',
+                alt: 'App Dissection',
+              },
+            ],
           }}
         />
         <DesignDetailView post={post} />
