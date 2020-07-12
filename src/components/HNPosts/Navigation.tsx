@@ -15,9 +15,6 @@ export default function Navigation(props: Props) {
       <Link href="/hn">
         <StyledA active={active === 'top'}>Top</StyledA>
       </Link>
-      <Link href="/hn/best">
-        <StyledA active={active === 'best'}>Best</StyledA>
-      </Link>
       <Link href="/hn/about">
         <StyledA active={active === 'about'}>About</StyledA>
       </Link>

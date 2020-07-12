@@ -108,10 +108,9 @@ export default function HNAbout() {
             </P>
             <P>
               To combat this, I’ve done two things. First, my version updates
-              infrequently. The Top list updates once every four hours, and the
-              Best list updates once per day. Second, I’ve hard-coded the volume
-              of content. Only a handful of threads load at a time, and comments
-              only render three levels deep.
+              infrequently. The Top list updates once every four hours. Second,
+              I’ve hard-coded the volume of content. Only a handful of threads
+              load at a time, and comments only render three levels deep.
             </P>
 
             <H5>Won’t fix</H5>

@@ -46,12 +46,9 @@ export default function HNPostView(props: Props) {
 }
 
 export async function getStaticPaths() {
-  const [topPostIds, bestPostsIds] = await Promise.all([
-    getPostIds('top'),
-    getPostIds('best'),
-  ])
+  const topPostIds = await getPostIds('top')
 
-  const postIds = [...topPostIds.slice(0, 16), ...bestPostsIds.slice(0, 16)]
+  const postIds = topPostIds.slice(0, 16)
 
   const paths = postIds.map((id) => ({
     params: { id: id.toString() },
