@@ -23,7 +23,7 @@ export default function DesignDetail({ post }: Props) {
 
   if (post) {
     return (
-      <Page withHeader>
+      <Page>
         <NextSeo
           title={`${post.title} · App Dissection`}
           description={post.description}

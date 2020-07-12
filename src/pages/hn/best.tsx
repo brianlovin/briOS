@@ -17,7 +17,7 @@ interface Props {
 export default function HNBest(props: Props) {
   const { posts } = props
   return (
-    <Page withHeader>
+    <Page>
       <NextSeo
         title={'Hacker News · Best'}
         description={'My personal Hacker News reader.'}

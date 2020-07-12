@@ -19,7 +19,7 @@ function OverthoughtPost({ data }: Props) {
   if (!post) return <NotFound />
 
   return (
-    <Page withHeader>
+    <Page>
       <PostContainer post={post} />
     </Page>
   )

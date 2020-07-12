@@ -63,6 +63,10 @@ export default function Header() {
 
   let activeRoute = ''
   let activePath = ''
+  if (router.pathname === '/') {
+    activeRoute = 'Home'
+    activePath = '/'
+  }
   if (router.pathname.startsWith('/about')) {
     activeRoute = 'About'
     activePath = '/about'

@@ -9,7 +9,7 @@ import Flex from '~/components/Flex'
 
 export default function DesignDetails() {
   return (
-    <Page withHeader>
+    <Page>
       <NextSeo
         title={'App Dissection'}
         description={'In-depth design explorations.'}

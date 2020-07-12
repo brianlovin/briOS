@@ -40,7 +40,7 @@ const Container = styled.div`
 
 function About() {
   return (
-    <Page withHeader>
+    <Page>
       <GlobalMarkdownStyles />
       <CenteredColumn>
         <Container data-cy="about-page">

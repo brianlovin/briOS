@@ -12,14 +12,13 @@ export { SectionHeading, ContentContainer }
 
 interface Props {
   children: React.ReactNode
-  withHeader?: boolean
 }
 
 export default function Page(props: Props) {
-  const { children, withHeader = false } = props
+  const { children } = props
   return (
     <PageContainer>
-      {withHeader && <Header />}
+      <Header />
       <InnerPageContainer role="main">{children}</InnerPageContainer>
       <Footer />
     </PageContainer>

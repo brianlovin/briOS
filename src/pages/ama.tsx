@@ -13,7 +13,7 @@ import Flex from '~/components/Flex'
 
 function About() {
   return (
-    <Page withHeader>
+    <Page>
       <GlobalMarkdownStyles />
       <NextSeo
         title={'Ask Me Anything'}

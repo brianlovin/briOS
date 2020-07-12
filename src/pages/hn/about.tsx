@@ -10,7 +10,7 @@ import Flex from '~/components/Flex'
 
 export default function HNAbout() {
   return (
-    <Page withHeader>
+    <Page>
       <GlobalMarkdownStyles />
 
       <NextSeo

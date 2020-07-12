@@ -18,7 +18,7 @@ interface Props {
 
 function Overthought({ data }: Props) {
   return (
-    <Page withHeader>
+    <Page>
       <SEO />
 
       <CenteredColumn>

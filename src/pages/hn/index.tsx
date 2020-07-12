@@ -31,7 +31,7 @@ export default function HNTop(props: Props) {
   const { posts } = props
 
   return (
-    <Page withHeader>
+    <Page>
       <NextSeo
         title={'Hacker News · Top'}
         description={'My personal Hacker News reader.'}

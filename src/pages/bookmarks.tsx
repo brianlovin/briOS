@@ -15,7 +15,7 @@ function Bookmarks() {
   const { isMe } = useAuth()
 
   return (
-    <Page withHeader>
+    <Page>
       <NextSeo
         title={'Bookmarks'}
         description={'Internet things, saved for later.'}

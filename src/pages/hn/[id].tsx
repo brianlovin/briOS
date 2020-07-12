@@ -22,7 +22,7 @@ export default function HNPostView(props: Props) {
   }
 
   return (
-    <Page withHeader>
+    <Page>
       <NextSeo
         title={'Hacker News'}
         description={'My personal Hacker News reader.'}
