@@ -33,7 +33,7 @@
     "cookie": "^0.4.1",
     "cryptr": "^6.0.2",
     "date-fns": "^2.14.0",
-    "firebase-admin": "^8.13.0",
+    "firebase-admin": "^9.0.0",
     "graphql": "^15.3.0",
     "graphql-tools": "^6.0.13",
     "graphql-tools-fork": "^9.0.1",
