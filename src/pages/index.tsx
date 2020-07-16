@@ -287,6 +287,19 @@ function Home({ data, summaries }: Props) {
                   Spectrum, and what’s in the works at GitHub.
                 </P>
               </Flex>
+              
+              <Flex flexDirection="column" gap={4}>
+                <A
+                  href="https://softwareengineeringdaily.com/2020/07/15/github-mobile-with-brian-lovin-and-ryan-nystrom/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Software Engineering Daily: GitHub Mobile
+                </A>
+                <P>
+                  Ryan and I discuss how we designed and built the first version of GitHub's mobile apps.
+                </P>
+              </Flex>
             </Flex>
           </Flex>
 
