@@ -99,7 +99,7 @@
     "prettier-eslint": "^11.0.0",
     "typescript": "^3.9.7",
     "typescript-eslint-parser": "^22.0.0",
-    "webpack": "^4.43.0"
+    "webpack": "^4.44.0"
   },
   "lint-staged": {
     "*.+(ts|tsx)": [
