@@ -191,7 +191,7 @@ export async function getStaticProps() {
   const apolloStaticCache = client.cache.extract()
   return {
     // because this data is slightly more dynamic, update it every hour
-    unstable_revalidate: 60 * 60,
+    revalidate: 60 * 60,
     props: {
       apolloStaticCache,
     },

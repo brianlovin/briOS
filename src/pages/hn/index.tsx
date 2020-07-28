@@ -64,7 +64,7 @@ export async function getStaticProps() {
   const posts = await getHNPosts('top')
 
   return {
-    unstable_revalidate: 60 * 60 * 4,
+    revalidate: 60 * 60 * 4,
     props: {
       posts,
     },

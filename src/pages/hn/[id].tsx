@@ -61,7 +61,7 @@ export async function getStaticProps({ params: { id } }) {
   const post = await getPostById(id, true)
 
   return {
-    unstable_revalidate: 1,
+    revalidate: 1,
     props: {
       post,
     },
