@@ -45,7 +45,7 @@ export async function getStaticProps() {
   const { data } = await client.query({ query: GET_POSTS })
   return {
     // because this data is slightly more dynamic, update it every hour
-    unstable_revalidate: 60 * 60,
+    revalidate: 60 * 60,
     props: {
       data,
     },

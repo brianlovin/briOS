@@ -8,7 +8,7 @@ interface Props {
   children?: any
 }
 
-export default ({ children }: Props) => {
+export default function Providers({ children }: Props) {
   return (
     <React.Fragment>
       <SEO />

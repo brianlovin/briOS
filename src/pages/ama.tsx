@@ -59,7 +59,7 @@ export async function getStaticProps() {
   */
   const apolloStaticCache = client.cache.extract()
   return {
-    unstable_revalidate: 1,
+    revalidate: 1,
     props: {
       apolloStaticCache,
     },
