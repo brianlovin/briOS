@@ -1715,13 +1715,13 @@
     auto-bind "~4.0.0"
     tslib "~2.0.0"
 
-"@graphql-codegen/typescript-react-apollo@^1.17.6":
-  version "1.17.6"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-react-apollo/-/typescript-react-apollo-1.17.6.tgz#1730c5d8e9152646e8402f513010107414033ded"
-  integrity sha512-laoMMq+mt6mACqyw5JEU72lYuiETtqhJZ2RzjAqQk+1glvrYNBhTF5/r4SzUwvAcB938lNrIY5MkE1NKtHXR4Q==
+"@graphql-codegen/typescript-react-apollo@^1.17.7":
+  version "1.17.7"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-react-apollo/-/typescript-react-apollo-1.17.7.tgz#b1d1ad1150c07097566f46c208ca54d42a8ad4f5"
+  integrity sha512-Yoc7XwruETJ1Aoi5UBLF+AVsyReGPxI9jEpsNWv/Xm5zzGGk8iVwKIwos9hBjzkDO0sQooZZa0UXBKXNQa7j0w==
   dependencies:
-    "@graphql-codegen/plugin-helpers" "1.17.6"
-    "@graphql-codegen/visitor-plugin-common" "1.17.6"
+    "@graphql-codegen/plugin-helpers" "1.17.7"
+    "@graphql-codegen/visitor-plugin-common" "1.17.7"
     auto-bind "~4.0.0"
     camel-case "4.1.1"
     pascal-case "3.1.1"
@@ -1735,21 +1735,6 @@
     "@graphql-codegen/plugin-helpers" "1.17.7"
     "@graphql-codegen/visitor-plugin-common" "1.17.7"
     auto-bind "~4.0.0"
-    tslib "~2.0.0"
-
-"@graphql-codegen/visitor-plugin-common@1.17.6":
-  version "1.17.6"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/visitor-plugin-common/-/visitor-plugin-common-1.17.6.tgz#d66ab05efb36f6966b7bef688e9c115aa122482a"
-  integrity sha512-1TNOf0VncmOESeh7oZbFXSAst8GpEpiHuOdgUjGCPHYqahlehRi5tMeoKPNht9h7oHhVa93/dDhx6gM4iy+Y/Q==
-  dependencies:
-    "@graphql-codegen/plugin-helpers" "1.17.6"
-    "@graphql-tools/relay-operation-optimizer" "6.0.15"
-    array.prototype.flatmap "1.2.3"
-    auto-bind "~4.0.0"
-    dependency-graph "0.9.0"
-    graphql-tag "2.10.4"
-    parse-filepath "1.0.2"
-    pascal-case "3.1.1"
     tslib "~2.0.0"
 
 "@graphql-codegen/visitor-plugin-common@1.17.7":
@@ -6821,15 +6806,15 @@ graphql-request@^1.5.0:
   dependencies:
     cross-fetch "2.2.2"
 
-graphql-tag@2.10.4, graphql-tag@^2.10.4, graphql-tag@^2.9.2:
-  version "2.10.4"
-  resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.10.4.tgz#2f301a98219be8b178a6453bb7e33b79b66d8f83"
-  integrity sha512-O7vG5BT3w6Sotc26ybcvLKNTdfr4GfsIVMD+LdYqXCeJIYPRyp8BIsDOUtxw7S1PYvRw5vH3278J2EDezR6mfA==
-
 graphql-tag@2.11.0:
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.11.0.tgz#1deb53a01c46a7eb401d6cb59dec86fa1cccbffd"
   integrity sha512-VmsD5pJqWJnQZMUeRwrDhfgoyqcfwEkvtpANqcoUG8/tOLkwNgU9mzub/Mc78OJMhHjx7gfAMTxzdG43VGg3bA==
+
+graphql-tag@^2.10.4, graphql-tag@^2.9.2:
+  version "2.10.4"
+  resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.10.4.tgz#2f301a98219be8b178a6453bb7e33b79b66d8f83"
+  integrity sha512-O7vG5BT3w6Sotc26ybcvLKNTdfr4GfsIVMD+LdYqXCeJIYPRyp8BIsDOUtxw7S1PYvRw5vH3278J2EDezR6mfA==
 
 graphql-tools-fork@^9.0.1:
   version "9.0.1"
