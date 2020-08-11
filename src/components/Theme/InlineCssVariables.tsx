@@ -6,6 +6,7 @@ rendered.
 */
 
 import Terser from 'terser'
+import * as React from 'react'
 import { COLORS } from './colors'
 
 export function setColorsByTheme() {
@@ -30,9 +31,20 @@ export function MagicScriptTag() {
     JSON.stringify(COLORS)
   )
 
+  let minified
   let calledFunction = `(${boundFn})()`
 
-  calledFunction = Terser.minify(calledFunction).code
+  React.useEffect(() => {
+    async function minify() {
+      minified = await Terser.minify(calledFunction)
+    }
+
+    minify()
+  }, [])
+
+  if (!minified) return null
+
+  calledFunction = minified.code
 
   // eslint-disable-next-line react/no-danger
   return <script dangerouslySetInnerHTML={{ __html: calledFunction }} />
