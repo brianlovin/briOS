@@ -72,7 +72,7 @@
     "@bahmutov/add-typescript-to-cypress": "^2.1.2",
     "@cypress/webpack-preprocessor": "^4.1.5",
     "@graphql-codegen/add": "^1.17.6",
-    "@graphql-codegen/cli": "^1.17.6",
+    "@graphql-codegen/cli": "^1.17.7",
     "@graphql-codegen/typescript": "^1.17.6",
     "@graphql-codegen/typescript-operations": "^1.17.7",
     "@graphql-codegen/typescript-react-apollo": "^2.0.5",
