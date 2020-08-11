@@ -9489,10 +9489,10 @@ postcss@7.0.32, postcss@^7.0.14, postcss@^7.0.16, postcss@^7.0.26, postcss@^7.0.
     source-map "^0.6.1"
     supports-color "^6.1.0"
 
-postmark@^2.5.4:
-  version "2.5.4"
-  resolved "https://registry.yarnpkg.com/postmark/-/postmark-2.5.4.tgz#91f648f3f9763bbf7c4acf3aae4e42b1ac576618"
-  integrity sha512-oQ8IZdTaw8r3OVtTHi+t/Wi295EeV6mmYpTxOznQsH5b6lFCc82eUmCIxS1o/j4AndCpHS9jTnJP+8ZTYX8s7w==
+postmark@^2.5.5:
+  version "2.5.5"
+  resolved "https://registry.yarnpkg.com/postmark/-/postmark-2.5.5.tgz#a0f21086b1f9962cc2fcde7a76b4464a5a065a5f"
+  integrity sha512-OT8zVorJsFIqO0xsvK9ePmUWXeDD5urX6I1BqFLx3USefVhL9JXsUDzoypqW748rPqI6rQ/QQZ7W+fB1VWIBtA==
   dependencies:
     axios "^0.19.2"
 
