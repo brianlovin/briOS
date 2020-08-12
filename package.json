@@ -60,7 +60,7 @@
     "styled-components": "^4.4.1",
     "terser": "^5.0.0",
     "theme-ui": "^0.3.1",
-    "throttle-debounce": "^2.2.1",
+    "throttle-debounce": "^2.3.0",
     "timeago.js": "^4.0.2",
     "twilio": "^3.48.2",
     "unified": "^9.1.0",
