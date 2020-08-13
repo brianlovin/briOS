@@ -26,7 +26,7 @@
     "@now/node": "^1.7.4",
     "@sentry/browser": "^5.20.1",
     "@sentry/node": "^5.20.1",
-    "@tryghost/content-api": "^1.4.3",
+    "@tryghost/content-api": "^1.4.4",
     "@zeit/next-source-maps": "0.0.4-canary.1",
     "apollo-server-micro": "^2.16.1",
     "cheerio": "^1.0.0-rc.3",
