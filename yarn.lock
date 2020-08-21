@@ -1683,20 +1683,20 @@
     pascal-case "^3.1.1"
     tslib "~2.0.0"
 
-"@graphql-codegen/typescript@^1.17.6", "@graphql-codegen/typescript@^1.17.8":
-  version "1.17.8"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript/-/typescript-1.17.8.tgz#08477e532d8342c8a74f75f46f97c85831418e23"
-  integrity sha512-OQCD4CbnKfHG63u1Sh+UsSKdzkoRHI8NmqnV0Z5ECO4Mm3mrm6fGoYZkKmHbA2tgWIFEsQLevDW+CfduyMd9BA==
+"@graphql-codegen/typescript@^1.17.8", "@graphql-codegen/typescript@^1.17.9":
+  version "1.17.9"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript/-/typescript-1.17.9.tgz#9f96f39c3b59c13f52db8955fff3aa5889bb7827"
+  integrity sha512-r6bPSJIeQoMicMEru2pxwAtw5DaY4KCnCd8R2xoQ8aZpkpxqhzd5fmdhh8oXLE4CAZhUCuV0Uad7Ps17Lr5jaw==
   dependencies:
     "@graphql-codegen/plugin-helpers" "^1.17.8"
-    "@graphql-codegen/visitor-plugin-common" "^1.17.13"
+    "@graphql-codegen/visitor-plugin-common" "^1.17.14"
     auto-bind "~4.0.0"
-    tslib "~2.0.0"
+    tslib "~2.0.1"
 
-"@graphql-codegen/visitor-plugin-common@^1.17.13":
-  version "1.17.13"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/visitor-plugin-common/-/visitor-plugin-common-1.17.13.tgz#88dfd8b266aab140a36018807449a1162612e393"
-  integrity sha512-RWL5VcUQh1mcNb+nr7pDnfoMZ9cn2MurDcZMYGTblIXox+FT33y9Cg4erRjzkVuTvxSf7xXc2TSrSkt9MeZRCw==
+"@graphql-codegen/visitor-plugin-common@^1.17.13", "@graphql-codegen/visitor-plugin-common@^1.17.14":
+  version "1.17.14"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/visitor-plugin-common/-/visitor-plugin-common-1.17.14.tgz#dfd15932a2d9f2a0be3ce945206a173609908769"
+  integrity sha512-tHVkMqQcWuq5xuXm7q8JKcKUVdEYaT61Hnz1OZNgYCBQIOCKUljZcmPuy3F8aJU29XHyZ2vwF2hNG6q4CE3fcQ==
   dependencies:
     "@graphql-codegen/plugin-helpers" "^1.17.8"
     "@graphql-tools/relay-operation-optimizer" "^6.0.18"
@@ -1706,7 +1706,7 @@
     graphql-tag "^2.11.0"
     parse-filepath "^1.0.2"
     pascal-case "^3.1.1"
-    tslib "~2.0.0"
+    tslib "~2.0.1"
 
 "@graphql-tools/apollo-engine-loader@^6.0.18":
   version "6.0.18"
@@ -11074,7 +11074,7 @@ tslib@^1.10.0, tslib@^1.11.1, tslib@^1.8.1, tslib@^1.9.0, tslib@^1.9.3:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.13.0.tgz#c881e13cc7015894ed914862d276436fa9a47043"
   integrity sha512-i/6DQjL8Xf3be4K/E6Wgpekn5Qasl1usyw++dAA35Ue5orEn65VIxOA+YvNNl9HV3qv70T7CNwjODHZrLwvd1Q==
 
-tslib@^2.0.0, tslib@~2.0.0:
+tslib@^2.0.0, tslib@~2.0.0, tslib@~2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.0.1.tgz#410eb0d113e5b6356490eec749603725b021b43e"
   integrity sha512-SgIkNheinmEBgx1IUNirK0TUD4X9yjjBRTqqjggWCU3pUEqIk3/Uwl3yRixYKT6WjQuGiwDv4NomL3wqRCj+CQ==
