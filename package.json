@@ -24,7 +24,7 @@
     "@apollo/link-schema": "^2.0.0-beta.3",
     "@next/bundle-analyzer": "^9.5.2",
     "@now/node": "^1.8.1",
-    "@sentry/browser": "^5.22.0",
+    "@sentry/browser": "^5.22.3",
     "@sentry/node": "^5.22.3",
     "@tryghost/content-api": "^1.4.4",
     "@zeit/next-source-maps": "0.0.4-canary.1",
