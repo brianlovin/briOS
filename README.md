@@ -12,7 +12,7 @@ Install dependencies:
 `yarn`
 
 Start the client:
-`yarn run dev`
+`yarn dev`
 
 Open the site:
 `localhost:3000`
