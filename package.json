@@ -19,7 +19,7 @@
     }
   },
   "dependencies": {
-    "@apollo/client": "^3.1.5",
+    "@apollo/client": "^3.2.0",
     "@apollo/link-error": "^2.0.0-beta.3",
     "@apollo/link-schema": "^2.0.0-beta.3",
     "@next/bundle-analyzer": "^9.5.3",
