@@ -76,7 +76,7 @@
     "@graphql-codegen/typescript": "^1.17.9",
     "@graphql-codegen/typescript-operations": "^1.17.8",
     "@graphql-codegen/typescript-react-apollo": "^2.0.6",
-    "@testing-library/cypress": "^7.0.0",
+    "@testing-library/cypress": "^7.0.1",
     "@types/chai": "^4.2.12",
     "@types/jest": "^26.0.14",
     "@types/mocha": "^8.0.3",
