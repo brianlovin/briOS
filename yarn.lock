@@ -2050,10 +2050,10 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
-"@now/node@^1.8.3":
-  version "1.8.3"
-  resolved "https://registry.yarnpkg.com/@now/node/-/node-1.8.3.tgz#a22e5dac9319b15b15ddc503b3e56291f070692b"
-  integrity sha512-C4IdJrMudk5kaefpqGciovY3GATfh7w8+0EsYTRlJ0J3dupLUw5oGVV5imYemcB+0WGh4SAJt6Hgxtg1TEzyWw==
+"@now/node@^1.8.4":
+  version "1.8.4"
+  resolved "https://registry.yarnpkg.com/@now/node/-/node-1.8.4.tgz#05d05ef9e37f2ed07402af5d541df547cefbf4a4"
+  integrity sha512-OVsE/PFl10hTOAounUgX23ri2IvCLpL7JfmIrGfiInWCyC4eQqaFGTbsP+HiSiCfhPBnFiEzfstM1/pvMnSbaA==
   dependencies:
     "@types/node" "*"
     ts-node "8.9.1"
