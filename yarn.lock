@@ -2414,10 +2414,10 @@
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"
   integrity sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==
 
-"@tryghost/content-api@^1.4.5":
-  version "1.4.5"
-  resolved "https://registry.yarnpkg.com/@tryghost/content-api/-/content-api-1.4.5.tgz#f3ed3a769ac10ef65529d53851a87d262f0bb0c7"
-  integrity sha512-MpVwpTIHbFMwRqJIbuZVQusVid1dExH0Bn4/6tkQhNbKxwLQ0nrl+nuYLNgcD5pC1rEYafdeX+3K9V5y/Wqy8A==
+"@tryghost/content-api@^1.4.6":
+  version "1.4.6"
+  resolved "https://registry.yarnpkg.com/@tryghost/content-api/-/content-api-1.4.6.tgz#65a8141f56988ad2ec093d121630d2f30e07e942"
+  integrity sha512-V5HgdJjG4s+R97RVgmqhGLxnOurPv3YlmwTpWRB+5L1by1GvMpIcumECTRwL4ZVxNxgITBiOQZr9B7XerA1ynQ==
   dependencies:
     axios "0.20.0"
 
