@@ -53,7 +53,7 @@
     "reflexbox": "^4.0.6",
     "rehype-parse": "^7.0.1",
     "rehype-remark": "^8.0.0",
-    "remark-stringify": "^8.1.1",
+    "remark-stringify": "^9.0.0",
     "remove-markdown": "^0.3.0",
     "serve-favicon": "^2.5.0",
     "string-replace-to-array": "^1.0.3",
