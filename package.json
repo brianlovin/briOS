@@ -44,7 +44,7 @@
     "prismjs": "^1.22.0",
     "react": "^16.14.0",
     "react-clipboard.js": "^2.0.16",
-    "react-dom": "^16.13.0",
+    "react-dom": "^16.14.0",
     "react-flip-move": "^3.0.4",
     "react-linkify": "^1.0.0-alpha",
     "react-markdown": "^4.3.1",
