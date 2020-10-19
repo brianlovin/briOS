@@ -73,7 +73,7 @@
     "@cypress/webpack-preprocessor": "^4.1.5",
     "@graphql-codegen/add": "^2.0.1",
     "@graphql-codegen/cli": "^1.18.0",
-    "@graphql-codegen/typescript": "^1.17.10",
+    "@graphql-codegen/typescript": "^1.17.11",
     "@graphql-codegen/typescript-operations": "^1.17.8",
     "@graphql-codegen/typescript-react-apollo": "^2.0.7",
     "@testing-library/cypress": "^7.0.1",
