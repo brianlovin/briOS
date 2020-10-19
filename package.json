@@ -26,7 +26,7 @@
     "@next/bundle-analyzer": "^9.5.5",
     "@sentry/browser": "^5.26.0",
     "@sentry/node": "^5.26.0",
-    "@tryghost/content-api": "^1.4.6",
+    "@tryghost/content-api": "^1.4.7",
     "@zeit/next-source-maps": "0.0.4-canary.1",
     "apollo-server-micro": "^2.18.2",
     "cheerio": "^1.0.0-rc.3",
