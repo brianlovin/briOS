@@ -47,7 +47,7 @@
     "react-dom": "^16.14.0",
     "react-flip-move": "^3.0.4",
     "react-linkify": "^1.0.0-alpha",
-    "react-markdown": "^4.3.1",
+    "react-markdown": "^5.0.1",
     "react-visibility-sensor": "^5.1.1",
     "rebass": "^4.0.7",
     "reflexbox": "^4.0.6",
