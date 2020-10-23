@@ -6,7 +6,7 @@ import GlobalStyles from '~/components/GlobalStyles'
 import Markdown from 'react-markdown'
 
 interface Props {
-  children: React.ReactNode
+  children: string
   escapeHtml?: boolean
 }
 
