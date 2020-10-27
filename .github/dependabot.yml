@@ -3,8 +3,7 @@ updates:
 - package-ecosystem: npm
   directory: "/"
   schedule:
-    interval: daily
-    time: "13:00"
+    interval: weekly
   open-pull-requests-limit: 10
   assignees:
   - brianlovin
