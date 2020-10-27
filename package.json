@@ -34,7 +34,7 @@
     "cryptr": "^6.0.2",
     "date-fns": "^2.16.1",
     "firebase-admin": "^9.3.0",
-    "graphql": "^15.3.0",
+    "graphql": "^15.4.0",
     "graphql-tools": "^7.0.1",
     "graphql-tools-fork": "^9.0.1",
     "isomorphic-unfetch": "^3.1.0",
