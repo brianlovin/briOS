@@ -11075,10 +11075,10 @@ theme-ui@^0.3.1:
     "@theme-ui/mdx" "^0.3.0"
     "@theme-ui/theme-provider" "^0.3.1"
 
-throttle-debounce@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/throttle-debounce/-/throttle-debounce-2.3.0.tgz#fd31865e66502071e411817e241465b3e9c372e2"
-  integrity sha512-H7oLPV0P7+jgvrk+6mwwwBDmxTaxnu9HMXmloNLXwnNO0ZxZ31Orah2n8lU1eMPvsaowP2CX+USCgyovXfdOFQ==
+throttle-debounce@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/throttle-debounce/-/throttle-debounce-3.0.0.tgz#8d7fd809e123599b17c8d3cf0ee4c4106ab099f8"
+  integrity sha512-2B0b5wmu8Hpmtsh9Q+1Lk7Eq0dd1u1XQAifrZr0EMshB80MthC1K7BK3FHG27VQ7g1GuW7fFThiobIjCTCIBTw==
 
 throttleit@^1.0.0:
   version "1.0.0"
