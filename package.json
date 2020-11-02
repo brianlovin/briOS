@@ -28,7 +28,7 @@
     "@sentry/node": "^5.27.1",
     "@tryghost/content-api": "^1.4.7",
     "@zeit/next-source-maps": "0.0.4-canary.1",
-    "apollo-server-micro": "^2.18.2",
+    "apollo-server-micro": "^2.19.0",
     "cheerio": "^1.0.0-rc.3",
     "cookie": "^0.4.1",
     "cryptr": "^6.0.2",
