@@ -22,7 +22,7 @@
     "@apollo/client": "^3.2.5",
     "@apollo/link-error": "^2.0.0-beta.3",
     "@apollo/link-schema": "^2.0.0-beta.3",
-    "@next/bundle-analyzer": "^10.0.0",
+    "@next/bundle-analyzer": "^10.0.1",
     "@now/node": "^1.8.4",
     "@sentry/browser": "^5.27.2",
     "@sentry/node": "^5.27.2",
