@@ -62,7 +62,7 @@
     "theme-ui": "^0.3.3",
     "throttle-debounce": "^3.0.0",
     "timeago.js": "^4.0.2",
-    "twilio": "^3.50.0",
+    "twilio": "^3.51.0",
     "unified": "^9.2.0",
     "unified-stream": "^1.0.6",
     "use-dark-mode": "^2.3.1"
