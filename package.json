@@ -23,7 +23,7 @@
     "@apollo/link-error": "^2.0.0-beta.3",
     "@apollo/link-schema": "^2.0.0-beta.3",
     "@next/bundle-analyzer": "^10.0.1",
-    "@now/node": "^1.8.4",
+    "@now/node": "^1.8.5",
     "@sentry/browser": "^5.27.2",
     "@sentry/node": "^5.27.3",
     "@tryghost/content-api": "^1.4.9",
