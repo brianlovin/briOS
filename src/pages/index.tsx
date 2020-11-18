@@ -91,15 +91,7 @@ function Home({ data, summaries }: Props) {
 
           <Flex flexDirection="column" gap={24}>
             <H5>Products</H5>
-            <Card
-              contentClickable
-              style={{
-                width: '640px',
-                height: '698px',
-                cursor: 'pointer',
-                borderRadius: '8px',
-              }}
-            >
+            <div style={{ borderRadius: '8px', overflow: 'hidden' }}>
               <a
                 target="_blank"
                 rel="noopener noreferrer"
@@ -110,10 +102,11 @@ function Home({ data, summaries }: Props) {
                   src="/static/img/waves/thumbnail.png"
                   width="640px"
                   height="698px"
+                  layout="responsive"
                   alt="preview of waves, a custom made set of phone wallpapers"
                 />
               </a>
-            </Card>
+            </div>
             <Flex flexDirection="column" gap={8}>
               <H5 style={{ fontSize: '1.1em' }}>Waves</H5>
               <P>
