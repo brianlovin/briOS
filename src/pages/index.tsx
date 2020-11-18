@@ -1,18 +1,21 @@
 import * as React from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import Page from '~/components/Page'
-import { H2, A, Rarr, P, H5 } from '~/components/Typography'
+import { H2, A, Rarr, P, H5, H6 } from '~/components/Typography'
 import OverthoughtList from '~/components/Overthought/List'
 import DesignDetailsGrid from '~/components/DesignDetailsGrid'
 import PodcastEpisodesList from '~/components/PodcastEpisodesList'
 import FigmaPlugins from '~/components/FigmaPlugins'
-import { GET_HOME } from '~/graphql/queries'
 import { Post, Episode, Repo } from '~/graphql/types.generated'
-import { initApolloClient } from '~/graphql/services/apollo'
-import { summaries } from '~/data/appDissections'
-import { DesignDetailsPostSummary } from '~/data/appDissections'
+import { DesignDetailsPostSummary, summaries } from '~/data/appDissections'
 import { CenteredColumn } from '~/components/Layouts'
 import Flex from '~/components/Flex'
+import Head from 'next/head'
+import Card from '~/components/Card'
+import { initApolloClient } from '~/graphql/services/apollo'
+import { GET_HOME } from '~/graphql/queries'
+import { PrimaryButton } from '~/components/Button'
 
 interface Props {
   data: {
@@ -26,6 +29,12 @@ interface Props {
 function Home({ data, summaries }: Props) {
   return (
     <Page>
+      <Head>
+        <script
+          type="text/javascript"
+          src="https://gumroad.com/js/gumroad.js"
+        ></script>
+      </Head>
       <CenteredColumn>
         <Flex flexDirection="column" gap={56}>
           <Flex flexDirection="column" gap={16}>
@@ -77,6 +86,49 @@ function Home({ data, summaries }: Props) {
               >
                 Subscribe via RSS <Rarr />
               </A>
+            </Flex>
+          </Flex>
+
+          <Flex flexDirection="column" gap={24}>
+            <H5>Products</H5>
+            <Card
+              contentClickable
+              style={{
+                width: '640px',
+                height: '698px',
+                cursor: 'pointer',
+                borderRadius: '8px',
+              }}
+            >
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href="https://gumroad.com/l/waves-premium-phone-wallpapers"
+                style={{ borderRadius: '8px', overflow: 'hidden' }}
+              >
+                <Image
+                  src="/static/img/waves/thumbnail.png"
+                  width="640px"
+                  height="698px"
+                />
+              </a>
+            </Card>
+            <Flex flexDirection="column" gap={8}>
+              <H5 style={{ fontSize: '1.1em' }}>Waves</H5>
+              <P>
+                A custom-made set of 10 phone wallpapers, each with a unique
+                color palette and design. I spent hours tweaking colors and
+                curves to get everything just right on my device. I think
+                they’re beautiful – I hope you like them, too!
+              </P>
+              <span />
+              <a
+                href="https://gumroad.com/l/waves-premium-phone-wallpapers"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <PrimaryButton>View the collection</PrimaryButton>
+              </a>
             </Flex>
           </Flex>
 
