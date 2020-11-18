@@ -110,6 +110,7 @@ function Home({ data, summaries }: Props) {
                   src="/static/img/waves/thumbnail.png"
                   width="640px"
                   height="698px"
+                  alt="preview of waves, a custom made set of phone wallpapers"
                 />
               </a>
             </Card>
