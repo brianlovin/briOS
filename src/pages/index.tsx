@@ -11,8 +11,6 @@ import { Post, Episode, Repo } from '~/graphql/types.generated'
 import { DesignDetailsPostSummary, summaries } from '~/data/appDissections'
 import { CenteredColumn } from '~/components/Layouts'
 import Flex from '~/components/Flex'
-import Head from 'next/head'
-import Card from '~/components/Card'
 import { initApolloClient } from '~/graphql/services/apollo'
 import { GET_HOME } from '~/graphql/queries'
 import { PrimaryButton } from '~/components/Button'
@@ -29,12 +27,6 @@ interface Props {
 function Home({ data, summaries }: Props) {
   return (
     <Page>
-      <Head>
-        <script
-          type="text/javascript"
-          src="https://gumroad.com/js/gumroad.js"
-        ></script>
-      </Head>
       <CenteredColumn>
         <Flex flexDirection="column" gap={56}>
           <Flex flexDirection="column" gap={16}>

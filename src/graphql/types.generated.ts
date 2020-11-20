@@ -1274,7 +1274,7 @@ export const GetPostDocument = gql`
  * });
  */
 export function useGetPostQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetPostQuery, GetPostQueryVariables>
+  baseOptions: Apollo.QueryHookOptions<GetPostQuery, GetPostQueryVariables>
 ) {
   return Apollo.useQuery<GetPostQuery, GetPostQueryVariables>(
     GetPostDocument,
