@@ -1,8 +1,6 @@
 import React from 'react'
-import { A, LineClamp, Small } from '~/components/Typography'
 import { Episode } from '~/graphql/types.generated'
 import { format } from 'timeago.js'
-import Flex from '~/components/Flex'
 
 interface Props {
   episodes: Episode[]
@@ -10,10 +8,10 @@ interface Props {
 
 export default function PodcastEpisodesList({ episodes }: Props) {
   return (
-    <Flex flexDirection="column" gap={16}>
+    <div className="flex flex-col space-y-4">
       {episodes.map((ep) => (
-        <Flex flexDirection="column" gap={4} key={ep.id}>
-          <A
+        <div className="flex flex-col space-y-1" key={ep.id}>
+          <a
             target="_blank"
             rel="noopener noreferrer"
             href={`https://designdetails.fm/episodes/${
@@ -21,11 +19,11 @@ export default function PodcastEpisodesList({ episodes }: Props) {
             }`}
           >
             {ep.title}
-          </A>
-          <LineClamp lines={2}>{ep.description}</LineClamp>
-          <Small>Released {format(ep.published_at)}</Small>
-        </Flex>
+          </a>
+          <p className="clamp-2">{ep.description}</p>
+          <p className="p-small">Released {format(ep.published_at)}</p>
+        </div>
       ))}
-    </Flex>
+    </div>
   )
 }

@@ -1,46 +1,46 @@
 import React from 'react'
 import Link from 'next/link'
-import { A } from '~/components/Typography'
 import { Grid } from './style'
 
 export function Footer() {
   return (
     <Grid>
       <Link href="/" as="/" passHref>
-        <A>Home</A>
+        <a className="black-link">Home</a>
       </Link>
 
       <Link href="/about" as="/about" passHref>
-        <A>About</A>
+        <a className="black-link">About</a>
       </Link>
 
       <Link href="/overthought" as="/overthought" passHref>
-        <A>Overthought</A>
+        <a className="black-link">Overthought</a>
       </Link>
 
       <Link href="/design-details" as="/design-details" passHref>
-        <A>App Dissection</A>
+        <a className="black-link">App Dissection</a>
       </Link>
 
       <Link href="/ama" as="/ama" passHref>
-        <A>AMA</A>
+        <a className="black-link">AMA</a>
       </Link>
 
       <Link href="/bookmarks" as="/bookmarks" passHref>
-        <A>Bookmarks</A>
+        <a className="black-link">Bookmarks</a>
       </Link>
 
       <Link href="/hn" as="/hn" passHref>
-        <A>Hacker News</A>
+        <a className="black-link">Hacker News</a>
       </Link>
 
-      <A
+      <a
         href="https://twitter.com/brian_lovin"
         target="_blank"
         rel="noopener noreferrer"
+        className="black-link"
       >
         @brian_lovin
-      </A>
+      </a>
     </Grid>
   )
 }

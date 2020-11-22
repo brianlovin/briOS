@@ -1,10 +1,7 @@
 import * as React from 'react'
 import { Post } from '~/graphql/types.generated'
 import { PrimaryButton } from '~/components/Button'
-import { H5, P } from '~/components/Typography'
-import Input from '~/components/Input'
-import Textarea from '~/components/Textarea'
-import { InputGrid, Container, Form, Success, Error, Label } from './style'
+import { Input, Textarea } from '~/components/Input'
 
 interface Props {
   post: Post
@@ -56,8 +53,8 @@ export default function Feedback({ post }: Props) {
   }
 
   return (
-    <Container>
-      <H5 style={{ display: 'flex', alignItems: 'center' }}>
+    <div className="bg-gray-100 dark:bg-gray-900 rounded-lg p-6 flex flex-col space-y-2">
+      <h5 className="flex items-center">
         <span
           style={{
             display: 'flex',
@@ -82,14 +79,14 @@ export default function Feedback({ post }: Props) {
           </svg>
         </span>
         A small favor
-      </H5>
-      <P>
+      </h5>
+      <p>
         Was anything I wrote confusing, outdated, or incorrect? Please let me
         know! Just write a few words below and I’ll be sure to amend this post
         with your suggestions.
-      </P>
+      </p>
 
-      <Form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 space-y-4">
         <input
           type="hidden"
           value={`New comment on ${post.title}`}
@@ -97,8 +94,8 @@ export default function Feedback({ post }: Props) {
           name="_subject"
           readOnly
         />
-        <Label>
-          <span>Message</span>
+        <label>
+          <span className="sr-only">Message</span>
           <Textarea
             onChange={onChange}
             value={message}
@@ -106,41 +103,48 @@ export default function Feedback({ post }: Props) {
             name="message"
             placeholder="What should I know?"
           ></Textarea>
-        </Label>
+        </label>
 
-        <InputGrid>
-          <Label>
-            <span>Email</span>
+        <div className="grid grid-cols-2 gap-3">
+          <label>
+            <span className="sr-only">Email</span>
 
             <Input
               id="feedback-email"
               name="email"
               placeholder="(Optional) Email"
             />
-          </Label>
-          <Label>
-            <span>(Optional) Twitter handle</span>
+          </label>
+          <label>
+            <span className="sr-only">(Optional) Twitter handle</span>
 
             <Input
               id="twitter"
               name="twitter"
               placeholder="(Optional) Twitter handle"
             />
-          </Label>
-        </InputGrid>
-        <PrimaryButton
-          disabled={serverState.submitting || !message}
-          type="submit"
-        >
-          Send
-        </PrimaryButton>
+          </label>
+        </div>
+        <div className="flex justify-end">
+          <PrimaryButton
+            onClick={handleSubmit}
+            disabled={serverState.submitting || !message}
+            type="submit"
+          >
+            Send feedback
+          </PrimaryButton>
+        </div>
         {serverState.submitted &&
           (serverState.error ? (
-            <Error>{serverState.error}</Error>
+            <p className="text-white rounded bg-red-500 p-3">
+              {serverState.error}
+            </p>
           ) : (
-            <Success>Thanks for taking the time to leave a note!</Success>
+            <p className="text-white rounded bg-green-500 p-3 text-center">
+              Thanks for taking the time to leave a note!
+            </p>
           ))}
-      </Form>
-    </Container>
+      </form>
+    </div>
   )
 }

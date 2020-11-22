@@ -1,9 +1,7 @@
 import * as React from 'react'
 import { useAddAmaQuestionMutation } from '~/graphql/types.generated'
-import { Small } from '~/components/Typography'
-import Textarea from '../Textarea'
+import { Textarea } from '~/components/Input'
 import { PrimaryButton } from '../Button'
-import Flex from '~/components/Flex'
 
 export default function AddBookmark() {
   const [question, setQuestion] = React.useState('')
@@ -40,7 +38,7 @@ export default function AddBookmark() {
   }
 
   return (
-    <Flex flexDirection="column" gap={12} as={'form'} onSubmit={onSubmit}>
+    <form className="flex flex-col space-y-4 items-stretch" onSubmit={onSubmit}>
       <Textarea
         value={question}
         placeholder="Ask me anything..."
@@ -48,14 +46,16 @@ export default function AddBookmark() {
         onKeyDown={onKeyDown}
       />
       {question.length > 0 && (
-        <PrimaryButton onClick={onSubmit}>Ask away!</PrimaryButton>
+        <div className="flex self-end">
+          <PrimaryButton onClick={onSubmit}>Ask away!</PrimaryButton>
+        </div>
       )}
-      {error && <Small style={{ color: 'var(--accent-red)' }}>{error}</Small>}
+      {error && <p className="text-red-500">{error}</p>}
       {success && (
-        <Small style={{ color: 'var(--accent-green)' }}>
+        <p className="text-green-500">
           Thanks for asking! I’ll reply soon, so feel free to check back 👋
-        </Small>
+        </p>
       )}
-    </Flex>
+    </form>
   )
 }

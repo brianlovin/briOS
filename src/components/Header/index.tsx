@@ -125,7 +125,9 @@ export default function Header() {
               </svg>
             </MenuButton>
             <Link href={activePath}>
-              <a>{activeRoute}</a>
+              <a>
+                <span className="text-primary">{activeRoute}</span>
+              </a>
             </Link>
           </React.Fragment>
         )}
@@ -135,7 +137,7 @@ export default function Header() {
         <InnerGrid>
           <NavLinks activeRoute={activeRoute} />
         </InnerGrid>
-        <Background />
+        <Background className="bg-white bg-opacity-75 dark:bg-gray-1000" />
       </Container>
     </React.Fragment>
   )

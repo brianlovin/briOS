@@ -1,10 +1,8 @@
 import * as React from 'react'
 import { Bookmark } from '~/graphql/types.generated'
-import { Small, A } from '~/components/Typography'
 import Linkify from '~/components/Linkify'
 import EditingBookmarkListItem from './EditingBookmarkListItem'
 import BookmarkReaction from './BookmarkReaction'
-import Flex from '~/components/Flex'
 
 interface Props {
   editable: boolean
@@ -25,51 +23,49 @@ export const BookmarkListItem = React.memo((props: Props) => {
   }
 
   return (
-    <Flex flexDirection="column" gap={bookmark.notes ? 8 : 4}>
-      <A
+    <div
+      className={`flex flex-col ${bookmark.notes ? 'space-y-2' : 'space-y-1'}`}
+    >
+      <a
         href={`${bookmark.url}?ref=brianlovin.com`}
         target="_blank"
         rel="noopener noreferrer"
       >
         {bookmark.title || bookmark.url}
-      </A>
+      </a>
       {bookmark.notes && (
-        <Small
-          style={{
-            borderLeft: '2px solid var(--border-primary)',
-            paddingLeft: '12px',
-            whiteSpace: 'pre-wrap',
-          }}
-        >
+        <p className="p-small pl-3 whitespace-pre-wrap border-l-2 border-gray-300 dark:border-gray-700">
           <Linkify>{bookmark.notes}</Linkify>
-        </Small>
+        </p>
       )}
-      <Flex gap={12} alignItems="center">
+      <div className="flex space-x-3 items-center">
         <BookmarkReaction bookmark={bookmark} />
 
-        <Small style={{ color: 'var(--text-placeholder)' }}>/</Small>
+        <p className="divider-gray">/</p>
 
-        <A
+        <a
           href={`https://${bookmark.host}`}
           target="_blank"
           rel="noopener noreferrer"
         >
-          <Small>{bookmark.host || bookmark.url}</Small>
-        </A>
+          <p className="p-small font-normal black-link">
+            {bookmark.host || bookmark.url}
+          </p>
+        </a>
 
         {editable && (
-          <Flex gap={8} alignItems="center">
-            <Small style={{ color: 'var(--text-placeholder)' }}>/</Small>
+          <div className="flex space-x-2 items-center">
+            <p className="divider-gray">/</p>
 
-            <Small
-              style={{ cursor: 'pointer' }}
+            <button
+              className="p-small black-link"
               onClick={() => setIsEditing(true)}
             >
               Edit
-            </Small>
-          </Flex>
+            </button>
+          </div>
         )}
-      </Flex>
-    </Flex>
+      </div>
+    </div>
   )
 })

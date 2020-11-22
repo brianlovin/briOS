@@ -1,10 +1,7 @@
 import * as React from 'react'
 import { useAddBookmarkMutation } from '~/graphql/types.generated'
 import { GET_BOOKMARKS } from '~/graphql/queries'
-import { Small } from '~/components/Typography'
-import Input from '~/components/Input'
-import Textarea from '../Textarea'
-import Flex from '~/components/Flex'
+import { Input, Textarea } from '~/components/Input'
 
 export default function AddBookmark() {
   const [url, setUrl] = React.useState('')
@@ -66,7 +63,7 @@ export default function AddBookmark() {
   }
 
   return (
-    <Flex flexDirection="column" gap={12} as={'form'} onSubmit={onSubmit}>
+    <form className="flex flex-col space-y-3" onSubmit={onSubmit}>
       <Input
         autoFocus
         type="text"
@@ -83,12 +80,12 @@ export default function AddBookmark() {
             onChange={onNotesChange}
             onKeyDown={onKeyDown}
           />
-          <Small style={{ cursor: 'pointer' }} onClick={onSubmit}>
+          <p style={{ cursor: 'pointer' }} onClick={onSubmit}>
             Save
-          </Small>
+          </p>
         </React.Fragment>
       )}
-      {error && <Small style={{ color: 'var(--accent-red)' }}>{error}</Small>}
-    </Flex>
+      {error && <p className="text-red-500">{error}</p>}
+    </form>
   )
 }

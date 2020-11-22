@@ -3,7 +3,6 @@ import { createGlobalStyle } from 'styled-components'
 const GlobalPrismStyles = createGlobalStyle`
   code[class*="language-"],
   pre[class*="language-"] {
-    color: var(--text-primary);
     text-align: left;
     white-space: pre;
     word-spacing: normal;
@@ -56,63 +55,8 @@ const GlobalPrismStyles = createGlobalStyle`
     white-space: normal;
   }
 
-  .token.comment,
-  .token.prolog,
-  .token.doctype,
-  .token.cdata {
-    color: var(--text-quaternary);
-  }
-
-  .token.punctuation {
-    color: var(--text-quaternary);
-  }
-
   .namespace {
     opacity: .7;
-  }
-
-  .token.property,
-  .token.tag,
-  .token.boolean,
-  .token.number,
-  .token.constant,
-  .token.symbol,
-  .token.deleted {
-    color: var(--accent-green);
-  }
-
-  .token.selector,
-  .token.attr-name,
-  .token.string,
-  .token.char,
-  .token.builtin,
-  .token.inserted {
-    color: var(--accent-purple);
-  }
-
-  .token.operator,
-  .token.entity,
-  .token.url,
-  .language-css .token.string,
-  .style .token.string {
-    color: #9a6e3a;
-  }
-
-  .token.atrule,
-  .token.attr-value,
-  .token.keyword {
-    color: var(--accent-blue);
-  }
-
-  .token.function,
-  .token.class-name {
-    color: var(--accent-pink);
-  }
-
-  .token.regex,
-  .token.important,
-  .token.variable {
-    color: var(--accent-yellow);
   }
 
   .token.important,

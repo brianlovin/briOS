@@ -4,15 +4,12 @@ import {
   useDeleteBookmarkMutation,
   useEditBookmarkMutation,
 } from '~/graphql/types.generated'
-import { Small } from '~/components/Typography'
 import { GET_BOOKMARKS } from '~/graphql/queries'
-import Input from '~/components/Input'
-import Textarea from '~/components/Textarea'
-import Flex from '~/components/Flex'
+import { Input, Textarea } from '~/components/Input'
 
 interface Props {
   bookmark: Bookmark
-  onDone: Function
+  onDone: any
 }
 
 export default function EditingBookmarkListItem(props: Props) {
@@ -111,7 +108,7 @@ export default function EditingBookmarkListItem(props: Props) {
   }
 
   return (
-    <Flex flexDirection="column" gap={12} as={'form'} onSubmit={handleSave}>
+    <form className="flex flex-col space-y-3" onSubmit={handleSave}>
       <Input
         autoFocus
         placeholder="Title"
@@ -126,29 +123,21 @@ export default function EditingBookmarkListItem(props: Props) {
         onChange={onNotesChange}
         onKeyDown={onKeyDown}
       />
-      {state.error && (
-        <Small style={{ color: 'var(--accent-red)' }}>{state.error}</Small>
-      )}
+      {state.error && <p className="text-red-500">{state.error}</p>}
 
-      <Flex justifyContent="space-between">
-        <Flex gap={12}>
-          <Small style={{ cursor: 'pointer' }} onClick={handleSave}>
+      <div className="flex justify-between">
+        <div className="flex space-x-3">
+          <button className="black-link" onClick={handleSave}>
             Save
-          </Small>
-          <Small style={{ cursor: 'pointer' }} onClick={onDone}>
+          </button>
+          <button className="black-link" onClick={onDone}>
             Cancel
-          </Small>
-        </Flex>
-        <Small
-          onClick={handleDelete}
-          style={{
-            cursor: 'pointer',
-            color: 'var(--accent-red)',
-          }}
-        >
+          </button>
+        </div>
+        <button className="text-red-500" onClick={() => handleDelete()}>
           Delete
-        </Small>
-      </Flex>
-    </Flex>
+        </button>
+      </div>
+    </form>
   )
 }

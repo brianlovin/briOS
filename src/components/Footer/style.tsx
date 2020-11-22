@@ -9,12 +9,13 @@ export const Grid = styled.footer`
   position: relative;
   justify-content: space-around;
   align-content: center;
+  max-width: 768px;
+  margin: 0 auto;
 
   &:before {
     content: '';
     width: 100px;
     height: 1px;
-    background: var(--border-primary);
     position: absolute;
     top: 0;
     left: 50%;
@@ -24,11 +25,9 @@ export const Grid = styled.footer`
   a {
     margin: ${theme.space[3]};
     font-size: ${theme.fontSizes[0]};
-    color: var(--text-tertiary);
   }
 
   a:hover {
-    color: var(--text-secondary);
     text-decoration: underline;
   }
 `

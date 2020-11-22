@@ -1,6 +1,5 @@
 import * as React from 'react'
 import Page from '~/components/Page'
-import { H3, LargeSubheading } from '~/components/Typography'
 import { Post } from '~/graphql/types.generated'
 import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe'
 import SEO from '~/components/Overthought/SEO'
@@ -8,7 +7,6 @@ import OverthoughtList from '~/components/Overthought/List'
 import { GET_POSTS } from '~/graphql/queries'
 import { initApolloClient } from '~/graphql/services/apollo'
 import { CenteredColumn } from '~/components/Layouts'
-import Flex from '~/components/Flex'
 
 interface Props {
   data: {
@@ -22,19 +20,19 @@ function Overthought({ data }: Props) {
       <SEO />
 
       <CenteredColumn>
-        <Flex flexDirection="column" gap={32}>
-          <Flex flexDirection="column" gap={16} data-cy="overthought">
-            <H3>Overthought</H3>
-            <LargeSubheading>
+        <div className="flex flex-col space-y-8">
+          <div className="flex flex-col space-y-4" data-cy="overthought">
+            <h1>Overthought</h1>
+            <p className="page-subtitle">
               Overthinking out loud about design, development, and building
               products.
-            </LargeSubheading>
-          </Flex>
+            </p>
+          </div>
 
           {data && data.posts && <OverthoughtList posts={data.posts} />}
 
           <OverthoughtSubscribeBox />
-        </Flex>
+        </div>
       </CenteredColumn>
     </Page>
   )

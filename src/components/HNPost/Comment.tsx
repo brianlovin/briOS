@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { Small } from '../Typography'
 import { LeftDivider } from './style'
 
 export interface HNComment {
@@ -48,13 +47,13 @@ export const Comment = React.memo((props: Props) => {
               onClick={() => setCollapsed(!collapsed)}
             />
           )}
-          <Small>{`${comment.time_ago} by ${comment.user}`}</Small>
-          <Small
+          <small>{`${comment.time_ago} by ${comment.user}`}</small>
+          <small
             style={{ cursor: 'pointer', marginTop: '4px' }}
             onClick={() => setCollapsed(!collapsed)}
           >
             Expand
-          </Small>
+          </small>
         </div>
       </div>
     )
@@ -81,17 +80,19 @@ export const Comment = React.memo((props: Props) => {
         <ConditionalWrapper
           condition={level === 0}
           wrapper={(children) => (
-            <a id={comment.id} href={`#${comment.id}`}>
+            <a
+              className="font-normal black-link"
+              id={comment.id}
+              href={`#${comment.id}`}
+            >
               {children}
             </a>
           )}
         >
-          <Small
-            style={{ marginBottom: '8px' }}
-          >{`${comment.time_ago} by ${comment.user}`}</Small>
+          <small className="text-tertiary">{`${comment.time_ago} by ${comment.user}`}</small>
         </ConditionalWrapper>
         <div
-          className={'markdown'}
+          className={'prose lg:prose-lg'}
           style={{
             display: 'grid',
           }}

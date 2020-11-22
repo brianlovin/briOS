@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { PostListItem } from './PostListItem'
 import { HNPost } from '~/pages/hn'
-import Flex from '~/components/Flex'
 
 interface Props {
   posts: HNPost[]
@@ -11,11 +10,11 @@ const PostList = React.memo((props: Props) => {
   const { posts } = props
 
   return (
-    <Flex flexDirection="column" gap={24}>
+    <div className="flex flex-col space-y-6">
       {posts.map((post) => (
         <PostListItem key={post.id} post={post} />
       ))}
-    </Flex>
+    </div>
   )
 })
 

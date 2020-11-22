@@ -1,16 +1,13 @@
 import * as React from 'react'
 import { Post } from '~/graphql/types.generated'
-import { ContentContainer } from '~/components/Page'
-import { H3, Small } from '~/components/Typography'
 import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe'
 import SyntaxHighlighter from '~/components/SyntaxHighlighter'
 import SEO from './SEO'
 import Feedback from '../Feedback'
 import { FeaturedImage } from './style'
 import GlobalPrismStyles from '~/components/GlobalStyles/prism'
-import GlobalMarkdownStyles from '~/components/GlobalStyles/markdown'
 import { format } from 'timeago.js'
-import Flex from '~/components/Flex'
+import { CenteredColumn } from '~/components/Layouts'
 
 interface Props {
   post: Post
@@ -21,11 +18,10 @@ export default function PostView({ post }: Props) {
     <React.Fragment>
       <SyntaxHighlighter data={post} />
       <GlobalPrismStyles />
-      <GlobalMarkdownStyles />
       <SEO post={post} />
 
-      <ContentContainer data-cy="overthought-post">
-        <Flex flexDirection="column" gap={32}>
+      <CenteredColumn data-cy="overthought-post">
+        <div className="flex flex-col space-y-8">
           {post.feature_image && (
             <FeaturedImage
               alt={post.title}
@@ -33,25 +29,25 @@ export default function PostView({ post }: Props) {
               src={post.feature_image}
             />
           )}
-          <Flex flexDirection="column" gap={16}>
-            <H3>{post.title}</H3>
-            <Small>Updated {format(post.updated_at)}</Small>
-          </Flex>
-        </Flex>
+          <div className="flex flex-col space-y-4">
+            <h1>{post.title}</h1>
+            <p className="p-small">Updated {format(post.updated_at)}</p>
+          </div>
+        </div>
 
         <div
           style={{ marginTop: '16px' }}
-          className="markdown"
+          className="prose lg:prose-lg prose-blue"
           dangerouslySetInnerHTML={{ __html: post.html }}
         />
 
-        <Flex flexDirection="column" gap={32}>
+        <div className="flex flex-col space-y-8">
           <div />
           <div />
           <Feedback post={post} />
           <OverthoughtSubscribeBox />
-        </Flex>
-      </ContentContainer>
+        </div>
+      </CenteredColumn>
     </React.Fragment>
   )
 }

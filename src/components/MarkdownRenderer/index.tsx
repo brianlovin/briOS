@@ -42,11 +42,10 @@ export default function MarkdownRenderer(props: Props) {
 
   return (
     <React.Fragment>
-      <GlobalStyles.MarkdownStyles />
       <GlobalStyles.PrismStyles />
       <Markdown
         {...rest}
-        className="markdown"
+        className="prose lg:prose-lg"
         astPlugins={[parseHtml]}
         renderers={{
           link: LinkRenderer,

@@ -1,8 +1,6 @@
 import * as React from 'react'
 import { PrimaryButton } from '~/components/Button'
-import { A, H5, P } from '~/components/Typography'
-import Input from '~/components/Input'
-import { Container, Form, Success, Error, Label } from './style'
+import { Input } from '~/components/Input'
 
 export default function OverthoughtSubscribeBox() {
   const [email, setEmail] = React.useState('')
@@ -36,8 +34,11 @@ export default function OverthoughtSubscribeBox() {
   }
 
   return (
-    <Container data-cy="overthought-subscribe-box">
-      <H5 style={{ display: 'flex', alignItems: 'center' }}>
+    <div
+      className="bg-gray-100 dark:bg-gray-900 rounded-lg p-6 flex flex-col space-y-3"
+      data-cy="overthought-subscribe-box"
+    >
+      <h5 className="flex items-center">
         <span
           style={{
             display: 'flex',
@@ -62,25 +63,27 @@ export default function OverthoughtSubscribeBox() {
           </svg>
         </span>
         Follow along
-      </H5>
-      <P>
+      </h5>
+      <p>
         If you want to know about new posts, add your email below.
         Alternatively, you can{' '}
-        <A
+        <a
           href="https://overthought.ghost.io/rss/"
           target="_blank"
           rel="noopener noreferrer"
         >
           subscribe with RSS
-        </A>
+        </a>
         .
-      </P>
+      </p>
       {status === 'succeeded' ? (
-        <Success>Thanks for subscribing!</Success>
+        <p className="text-white rounded bg-green-500 p-3 text-center">
+          Thanks for subscribing!
+        </p>
       ) : (
-        <Form onSubmit={submit}>
-          <Label>
-            <span>Email address</span>
+        <form onSubmit={submit} className="flex space-x-3">
+          <label className="flex flex-1">
+            <span className="sr-only">Email address</span>
             <Input
               value={email}
               disabled={status === 'loading'}
@@ -90,16 +93,21 @@ export default function OverthoughtSubscribeBox() {
               type="email"
               name="email"
             />
-          </Label>
+          </label>
           <PrimaryButton
+            onClick={submit}
             disabled={status === 'submitting' || !email}
             type="submit"
           >
             Subscribe
           </PrimaryButton>
-        </Form>
+        </form>
       )}
-      {status === 'error' && <Error>{errorMessage}</Error>}
-    </Container>
+      {status === 'error' && (
+        <p className="text-white rounded bg-red-500 p-3 text-center">
+          {errorMessage}
+        </p>
+      )}
+    </div>
   )
 }

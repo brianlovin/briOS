@@ -2,7 +2,7 @@ import * as React from 'react'
 import App from 'next/app'
 import Sentry from '~/sentry'
 import Providers from '~/components/Providers'
-import '~/components/GlobalStyles/theme.css'
+import '~/styles/tailwind.css'
 
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {

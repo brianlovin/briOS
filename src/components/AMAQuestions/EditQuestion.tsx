@@ -5,14 +5,12 @@ import {
   AmaStatus,
   useDeleteAmaQuestionMutation,
 } from '~/graphql/types.generated'
-import { Small } from '~/components/Typography'
 import { GET_AMA_QUESTIONS } from '~/graphql/queries'
-import Textarea from '~/components/Textarea'
-import Flex from '~/components/Flex'
+import { Textarea } from '~/components/Input'
 
 interface Props {
   question: Ama
-  onDone: Function
+  onDone: any
 }
 
 interface State {
@@ -162,7 +160,7 @@ export default function EditQuestion(props: Props) {
   }
 
   return (
-    <Flex flexDirection="column" gap={12} as={'form'} onSubmit={handleSave}>
+    <form className="flex flex-col space-y-4" onSubmit={handleSave}>
       <Textarea
         placeholder="Question"
         value={state.question}
@@ -179,29 +177,21 @@ export default function EditQuestion(props: Props) {
         rows={5}
       />
 
-      {state.error && (
-        <Small style={{ color: 'var(--accent-red)' }}>{state.error}</Small>
-      )}
+      {state.error && <p className="text-red-500">{state.error}</p>}
 
-      <Flex justifyContent="space-between">
-        <Flex gap={12}>
-          <Small style={{ cursor: 'pointer' }} onClick={handleSave}>
+      <div className="flex space-between justify-between">
+        <div className="flex space-x-3">
+          <button className="text-blue-500" onClick={handleSave}>
             Save
-          </Small>
-          <Small style={{ cursor: 'pointer' }} onClick={onDone}>
+          </button>
+          <button className="black-link" onClick={onDone}>
             Cancel
-          </Small>
-        </Flex>
-        <Small
-          onClick={handleDelete}
-          style={{
-            cursor: 'pointer',
-            color: 'var(--accent-red)',
-          }}
-        >
+          </button>
+        </div>
+        <button className="text-red-500" onClick={() => handleDelete()}>
           Delete
-        </Small>
-      </Flex>
-    </Flex>
+        </button>
+      </div>
+    </form>
   )
 }

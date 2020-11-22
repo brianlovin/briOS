@@ -1,13 +1,10 @@
 import React from 'react'
-import Link from 'next/link'
-import { H3, Subheading, A, Rarr } from '~/components/Typography'
 import DesignDetailMedia from '~/components/DesignDetailMedia'
 import Markdown from '~/components/MarkdownRenderer'
 import Picture from '../Picture'
 import { format } from 'timeago.js'
 import { DesignDetailsPost } from '~/data/appDissections'
 import { CenteredColumn } from '../Layouts'
-import Flex from '~/components/Flex'
 
 interface Props {
   post: DesignDetailsPost
@@ -22,8 +19,8 @@ export default function DesignDetailView(props: Props) {
 
   return (
     <CenteredColumn>
-      <Flex flexDirection="column" gap={48}>
-        <Flex flexDirection="column" gap={32}>
+      <div className="flex flex-col space-y-12">
+        <div className="flex flex-col space-y-8">
           <Picture
             width={'64px'}
             height={'64px'}
@@ -37,25 +34,16 @@ export default function DesignDetailView(props: Props) {
             ]}
             alt={post.title}
           />
-          <Flex flexDirection="column" gap={16}>
-            <H3>{post.title}</H3>
-            <Subheading>{subheading}</Subheading>
-          </Flex>
+          <div className="flex flex-col space-y-4">
+            <h3>{post.title}</h3>
+            <p className="p-small">{subheading}</p>
+          </div>
           <Markdown>{post.description}</Markdown>
           {post.details.map((detail, i) => (
             <DesignDetailMedia detail={detail} key={`${detail.title}-${i}`} />
           ))}
-        </Flex>
-
-        <Flex flexDirection="column" gap={16}>
-          <H3>App Dissection</H3>
-          <Link href="/design-details" passHref>
-            <A>
-              See all posts <Rarr />
-            </A>
-          </Link>
-        </Flex>
-      </Flex>
+        </div>
+      </div>
     </CenteredColumn>
   )
 }

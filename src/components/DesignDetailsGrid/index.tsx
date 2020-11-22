@@ -1,7 +1,6 @@
 import * as React from 'react'
 import DesignDetailsCard from '~/components/DesignDetailsCard'
 import { DesignDetailsPostSummary } from '~/data/appDissections'
-import Flex from '~/components/Flex'
 
 interface Props {
   summaries: DesignDetailsPostSummary[]
@@ -9,10 +8,10 @@ interface Props {
 
 export default function DesignDetailsGrid({ summaries }: Props) {
   return (
-    <Flex flexDirection="column" gap={16}>
+    <div className="flex flex-col space-y-4">
       {summaries.map((summary) => (
         <DesignDetailsCard key={summary.slug} summary={summary} />
       ))}
-    </Flex>
+    </div>
   )
 }

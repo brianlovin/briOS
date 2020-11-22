@@ -1,11 +1,9 @@
 import * as React from 'react'
 import { NextSeo } from 'next-seo'
 import Page from '~/components/Page'
-import { H3, Subheading } from '~/components/Typography'
 import DesignDetailsGrid from '~/components/DesignDetailsGrid'
 import { summaries } from '~/data/appDissections'
 import { CenteredColumn } from '~/components/Layouts'
-import Flex from '~/components/Flex'
 
 export default function DesignDetails() {
   return (
@@ -28,19 +26,17 @@ export default function DesignDetails() {
       />
 
       <CenteredColumn>
-        <Flex flexDirection="column" gap={32}>
-          <Flex flexDirection="column" gap={24}>
-            <H3>App Dissection</H3>
-            <Subheading>
-              This collection of posts explores some of the best interaction
-              patterns, visual styles, and design decisions of well-known apps.
-              Each detail features a video and my commentary on the
-              functionality and effectiveness of the interface.
-            </Subheading>
-          </Flex>
+        <div className="flex flex-col space-y-8">
+          <div className="flex flex-col space-y-6">
+            <h1>App Dissection</h1>
+            <p className="page-subtitle">
+              Exploring the best interaction patterns, visual styles, and design
+              decisions of well-known apps.
+            </p>
+          </div>
 
           <DesignDetailsGrid summaries={summaries} />
-        </Flex>
+        </div>
       </CenteredColumn>
     </Page>
   )

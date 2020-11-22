@@ -28,7 +28,6 @@ export const Background = styled.div`
   left: 0;
   top: 0;
   z-index: -1;
-  background: rgba(var(--bg-primary-rgb), 0.76);
   box-shadow: 0 1px 0px rgba(0, 0, 0, 0.06);
   backdrop-filter: saturate(180%) blur(20px);
 `
@@ -92,13 +91,14 @@ export const CloseButton = styled.div`
 
 export const MenuButton = styled.div`
   padding: 0 8px;
-  padding-top: 4px;
   cursor: pointer;
   z-index: 3;
   position: relative;
 `
 
-export const Label = styled.span`
+export const Label = styled.span.attrs(({ isActive }) => ({
+  className: `nav-label ${isActive && 'active'}`,
+}))`
   display: flex;
   flex: 1;
   z-index: 3;
@@ -106,18 +106,6 @@ export const Label = styled.span`
 
   a {
     text-align: center;
-    background: ${(props) =>
-      props.isActive ? 'rgba(var(--text-link-rgb), 0.06)' : 'none'};
-    color: ${(props) =>
-      props.isActive ? 'var(--text-link)' : 'var(--text-primary)'};
-  }
-
-  a:hover {
-    color: var(--text-link);
-    background: ${(props) =>
-      props.isActive
-        ? 'rgba(var(--text-link-rgb), 0.06)'
-        : 'rgba(var(--text-link-rgb), 0.06)'};
   }
 
   @media (max-width: ${theme.breakpoints[4]}) {

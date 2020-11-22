@@ -26,7 +26,6 @@ export const SubscriptionAvatar = styled.img`
   width: 32px;
   height: 32px;
   border-radius: 16px;
-  background-color: var(--bg-secondary);
   transform: scale(1);
   transition: transform 0.2s ease-in-out;
 
