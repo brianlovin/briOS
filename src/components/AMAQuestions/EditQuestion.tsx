@@ -6,7 +6,7 @@ import {
   useDeleteAmaQuestionMutation,
 } from '~/graphql/types.generated'
 import { GET_AMA_QUESTIONS } from '~/graphql/queries'
-import Textarea from '~/components/Textarea'
+import { Textarea } from '~/components/Input'
 
 interface Props {
   question: Ama

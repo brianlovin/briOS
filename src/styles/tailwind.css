@@ -1,14 +1,13 @@
+/* purgecss start ignore */
 @tailwind base;
+@tailwind components;
+/* purgecss end ignore */
 
 /* Write your own custom base styles here */
 
 html {
-  @apply bg-gray-50 dark:bg-gray-1000;
+  @apply bg-gray-50 dark:bg-gray-1000 text-base;
 }
-
-/* Start purging... */
-@tailwind components;
-/* Stop purging. */
 
 /* Write your own custom component styles here */
 @layer components {
@@ -45,9 +44,7 @@ html {
   }
 }
 
-/* Start purging... */
 @tailwind utilities;
-/* Stop purging. */
 
 /* Your own custom utilities */
 @layer utilities {

@@ -117,7 +117,7 @@ function Home({ data, summaries }: Props) {
                     they’re beautiful – I hope you like them, too!
                   </p>
                   <span />
-                  <div className="p3 inline-flex text-white bg-blue-500 hover:bg-blue-600 dark:hover:bg-blue-400">
+                  <div className="p-2 rounded text-center w-full text-white bg-blue-500 hover:bg-blue-600 dark:hover:bg-blue-400">
                     View the collection
                   </div>
                 </div>

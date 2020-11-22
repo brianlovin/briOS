@@ -77,7 +77,7 @@ export default function QuestionsList() {
 
       {showLoadMore && (
         <Button onClick={handleLoadMore}>
-          {loading ? <LoadingSpinner /> : 'Show me more'}
+          {!loading ? <LoadingSpinner /> : 'Show me more'}
         </Button>
       )}
     </div>

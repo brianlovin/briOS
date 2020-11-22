@@ -6,6 +6,7 @@ import { initApolloClient } from '~/graphql/services/apollo'
 import { GET_AMA_QUESTIONS } from '~/graphql/queries/ama'
 import AMAQuestions from '~/components/AMAQuestions'
 import { CenteredColumn } from '~/components/Layouts'
+import Divider from '~/components/Divider'
 
 function About() {
   return (
@@ -132,8 +133,9 @@ function About() {
                 </em>
               </p>
             </div>
+            <Divider />
             <div className="flex flex-col space-y-4">
-              <h5>Ask Me Anything</h5>
+              <h3>Ask Me Anything</h3>
               <p>
                 Just for fun! Questions will be visible after I’ve answered.
               </p>

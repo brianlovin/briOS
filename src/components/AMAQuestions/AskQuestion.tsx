@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useAddAmaQuestionMutation } from '~/graphql/types.generated'
-import Textarea from '../Textarea'
+import { Textarea } from '~/components/Input'
 import { PrimaryButton } from '../Button'
 
 export default function AddBookmark() {
