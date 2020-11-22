@@ -6,7 +6,6 @@ import { PAGINATION_AMOUNT } from '~/graphql/constants'
 import { Button } from '../Button'
 import LoadingSpinner from '../LoadingSpinner'
 import FullscreenLoading from '../FullscreenLoading'
-import Flex from '~/components/Flex'
 
 export default function BookmarksList() {
   const { isMe } = useAuth()
@@ -55,7 +54,7 @@ export default function BookmarksList() {
   }
 
   return (
-    <Flex flexDirection="column" gap={24}>
+    <div className="flex flex-col space-y-6">
       {bookmarks.map((bookmark, index) => (
         <BookmarkListItem
           editable={isMe}
@@ -66,9 +65,9 @@ export default function BookmarksList() {
 
       {showLoadMore && (
         <Button style={{ width: '100%' }} onClick={handleLoadMore}>
-          {loading ? <LoadingSpinner size={16} /> : 'Show me more'}
+          {loading ? <LoadingSpinner /> : 'Show me more'}
         </Button>
       )}
-    </Flex>
+    </div>
   )
 }

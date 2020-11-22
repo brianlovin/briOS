@@ -1,6 +1,17 @@
-import Button from './Button'
-import GhostButton from './GhostButton'
-import OutlineButton from './OutlineButton'
-import PrimaryButton from './PrimaryButton'
+import * as React from 'react'
 
-export { Button, GhostButton, OutlineButton, PrimaryButton }
+export function Button({ children }) {
+  return (
+    <button className="border dark:border-gray-800 transition-shadow items-center px-4 py-2 rounded text-sm font-medium  dark:bg-gray-800 shadow-sm dark:hover:bg-gray-700 focus:outline-none  bg-white  text-primary">
+      {children}
+    </button>
+  )
+}
+
+export function PrimaryButton({ children }) {
+  return (
+    <button className="items-center justify-center px-4 py-2 rounded shadow-sm text-sm font-medium text-white bg-blue-500  hover:bg-blue-600 dark:hover:bg-blue-400 focus:outline-none ">
+      {children}
+    </button>
+  )
+}

@@ -23,7 +23,7 @@ export default function DesignDetailMedia(props: Props) {
         <Markdown>{detail.description}</Markdown>
 
         {isVisible && (
-          <MediaContainer>
+          <MediaContainer className="bg-gray-100 dark:bg-gray-900">
             {detail.media.map((src) => (
               <Video
                 playsInline

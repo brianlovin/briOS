@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { useGetAmaQuestionsQuery, AmaStatus } from '~/graphql/types.generated'
 import { useAuth } from '~/hooks/useAuth'
-import { Small } from '~/components/Typography'
 import Divider from '~/components/Divider'
 import { Button } from '~/components/Button'
 import LoadingSpinner from '~/components/LoadingSpinner'
@@ -10,7 +9,6 @@ import { QuestionItem } from './QuestionItem'
 import AskQuestion from './AskQuestion'
 import PendingQuestions from './PendingQuestions'
 import FullscreenLoading from '../FullscreenLoading'
-import Flex from '~/components/Flex'
 
 export default function QuestionsList() {
   const { isMe } = useAuth()
@@ -64,7 +62,7 @@ export default function QuestionsList() {
   }
 
   return (
-    <Flex flexDirection="column" gap={32}>
+    <div className="flex flex-col space-y-8">
       <AskQuestion />
 
       <Divider />
@@ -75,13 +73,13 @@ export default function QuestionsList() {
         <QuestionItem editable={isMe} key={question.id} question={question} />
       ))}
 
-      {questions.length === 0 && <Small>No questions yet!</Small>}
+      {questions.length === 0 && <p>No questions yet!</p>}
 
       {showLoadMore && (
         <Button style={{ width: '100%' }} onClick={handleLoadMore}>
-          {loading ? <LoadingSpinner size={16} /> : 'Show me more'}
+          {loading ? <LoadingSpinner /> : 'Show me more'}
         </Button>
       )}
-    </Flex>
+    </div>
   )
 }

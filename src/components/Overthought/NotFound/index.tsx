@@ -1,20 +1,14 @@
 import * as React from 'react'
 import Link from 'next/link'
-import { ContentContainer, SectionHeading } from '~/components/Page'
-import { H1, Larr, A } from '~/components/Typography'
 
 export default function NotFound() {
   return (
-    <ContentContainer data-cy="overthought-not-found">
-      <SectionHeading>
-        <H1>Post not Found</H1>
+    <div data-cy="overthought-not-found">
+      <h1>Post not Found</h1>
 
-        <Link href={'/overthought'} passHref>
-          <A>
-            <Larr /> Back to Overthought
-          </A>
-        </Link>
-      </SectionHeading>
-    </ContentContainer>
+      <Link href={'/overthought'} passHref>
+        <a>&larr; Back to Overthought</a>
+      </Link>
+    </div>
   )
 }

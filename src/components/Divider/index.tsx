@@ -1,11 +1,5 @@
 export default function Divider() {
   return (
-    <div
-      style={{
-        width: '100%',
-        height: '1px',
-        background: 'var(--border-primary)',
-      }}
-    />
+    <div className="w-full border-t border-gray-200 dark:border-gray-800" />
   )
 }

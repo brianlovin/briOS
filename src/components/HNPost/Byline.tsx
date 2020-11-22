@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { Small } from '~/components/Typography'
 import Link from 'next/link'
 import { format } from 'timeago.js'
 import { HNPost } from '~/pages/hn'
@@ -22,25 +21,21 @@ export default function Byline(props: Props) {
   }, [])
 
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-      <Small>Posted {timeAgo}</Small>
+    <div className="flex space-x-2 p-small">
+      <span>Posted {timeAgo}</span>
 
-      <Small style={{ padding: '0 8px', color: 'var(--text-placeholder)' }}>
-        /
-      </Small>
+      <span className="divider-gray">/</span>
 
-      <Small>
+      <span>
         <Link href={`/hn/[id]`} as={`/hn/${post.id}`}>
-          <a>{`${post.comments_count} comments`}</a>
+          <a className="black-link font-normal">{`${post.comments_count} comments`}</a>
         </Link>
-      </Small>
+      </span>
 
       {post.domain && (
         <React.Fragment>
-          <Small style={{ padding: '0 8px', color: 'var(--text-placeholder)' }}>
-            /
-          </Small>
-          <Small>{post.domain}</Small>
+          <span className="divider-gray">/</span>
+          <span>{post.domain}</span>
         </React.Fragment>
       )}
     </div>

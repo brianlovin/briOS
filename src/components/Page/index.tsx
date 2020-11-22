@@ -1,14 +1,6 @@
 import React from 'react'
 import Header from '~/components/Header'
-import {
-  PageContainer,
-  InnerPageContainer,
-  SectionHeading,
-  ContentContainer,
-} from './style'
 import { Footer } from '../Footer'
-
-export { SectionHeading, ContentContainer }
 
 interface Props {
   children: React.ReactNode
@@ -17,10 +9,10 @@ interface Props {
 export default function Page(props: Props) {
   const { children } = props
   return (
-    <PageContainer>
+    <>
       <Header />
-      <InnerPageContainer role="main">{children}</InnerPageContainer>
+      <div className="lg:px-0 px-4 py-32">{children}</div>
       <Footer />
-    </PageContainer>
+    </>
   )
 }

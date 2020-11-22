@@ -3,7 +3,6 @@ import Divider from '../Divider'
 import { QuestionItem } from './QuestionItem'
 import { useGetAmaQuestionsQuery, AmaStatus } from '~/graphql/types.generated'
 import LoadingSpinner from '../LoadingSpinner'
-import Flex from '~/components/Flex'
 
 export default function PendingQuestion() {
   const { data, loading } = useGetAmaQuestionsQuery({
@@ -13,18 +12,22 @@ export default function PendingQuestion() {
   })
 
   if (loading) {
-    return <LoadingSpinner />
+    return (
+      <div className="w-full flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    )
   }
 
   if (!data || !data.amaQuestions) return null
 
   return (
-    <Flex flexDirection="column" gap={32}>
+    <div className="flex flex-col space-y-8">
       {data.amaQuestions.map((question) => (
         <QuestionItem editable={true} key={question.id} question={question} />
       ))}
 
       <Divider />
-    </Flex>
+    </div>
   )
 }

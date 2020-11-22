@@ -54,7 +54,7 @@ export default function DesignDetailsCard(props: Props) {
       partialVisibility
       onChange={(visible) => visible && setIsVisible(true)}
     >
-      <Card contentClickable>
+      <Card className="lg:-mx-8" contentClickable>
         <Link href="/design-details/[slug]" as={`/design-details/${slug}`}>
           <a>
             <Container onMouseEnter={play} onMouseLeave={pause}>

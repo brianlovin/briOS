@@ -1,14 +1,9 @@
-import styled from 'styled-components'
-import Grid from '~/components/Grid'
+import * as React from 'react'
 
-export const CenteredColumn = styled(Grid)`
-  grid-template-columns: 1fr;
-  justify-content: center;
-  width: 100%;
-  max-width: 640px;
-
-  @media (max-width: 640px) {
-    min-width: 100%;
-    max-width: 100%;
-  }
-`
+export function CenteredColumn({ children }) {
+  return (
+    <div className="flex flex-col mx-auto justify-content max-w-screen-sm">
+      {children}
+    </div>
+  )
+}

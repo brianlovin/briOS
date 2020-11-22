@@ -1,8 +1,6 @@
 import * as React from 'react'
 import { PrimaryButton } from '~/components/Button'
-import { A, H5, P } from '~/components/Typography'
-import Input from '~/components/Input'
-import { Container, Form, Success, Error, Label } from './style'
+import { Input } from '~/components/Input'
 
 export default function HNSubscribeBox() {
   const [email, setEmail] = React.useState('')
@@ -36,15 +34,12 @@ export default function HNSubscribeBox() {
   }
 
   return (
-    <Container data-cy="hn-subscribe-box">
-      <H5 style={{ display: 'flex', alignItems: 'center' }}>
-        <span
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            paddingRight: '16px',
-          }}
-        >
+    <div
+      className="bg-gray-100 dark:bg-gray-900 p-6 rounded-lg flex flex-col space-y-4"
+      data-cy="hn-subscribe-box"
+    >
+      <h5 className="flex items-center m-0">
+        <span className="flex items-center pr-4">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="20"
@@ -62,36 +57,33 @@ export default function HNSubscribeBox() {
           </svg>
         </span>
         Daily Digest
-      </H5>
-      <P>
+      </h5>
+      <p>
         Get a daily email with the the top stories from Hacker News. No spam,
         unsubscribe at any time.
-      </P>
+      </p>
       {status === 'succeeded' ? (
-        <Success>Subscribed!</Success>
+        <p className="text-green-500">Subscribed!</p>
       ) : (
-        <Form onSubmit={submit}>
-          <Label>
-            <span>Email address</span>
-            <Input
-              value={email}
-              disabled={status === 'loading'}
-              onChange={onChange}
-              placeholder="Email address"
-              id="subscribe-email"
-              type="email"
-              name="email"
-            />
-          </Label>
+        <form className="flex space-x-3" onSubmit={submit}>
+          <Input
+            value={email}
+            disabled={status === 'loading'}
+            onChange={onChange}
+            placeholder="Email address"
+            id="subscribe-email"
+            type="email"
+            name="email"
+          />
           <PrimaryButton
             disabled={status === 'submitting' || !email}
             type="submit"
           >
             Subscribe
           </PrimaryButton>
-        </Form>
+        </form>
       )}
-      {status === 'error' && <Error>{errorMessage}</Error>}
-    </Container>
+      {status === 'error' && <p className="text-red-500">{errorMessage}</p>}
+    </div>
   )
 }

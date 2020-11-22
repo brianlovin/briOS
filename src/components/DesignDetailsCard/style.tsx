@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 import theme from '~/components/Theme'
-import { H6 } from '../Typography'
 
 export const Arrow = styled.div`
   position: absolute;
@@ -27,7 +26,6 @@ export const Circle = styled.div`
 `
 
 export const Container = styled.div`
-  background: var(--bg-secondary);
   display: flex;
   position: relative;
   padding: 24px;
@@ -121,17 +119,16 @@ export const CardContent = styled.div`
   z-index: 3;
 `
 
-export const DetailsCount = styled(H6)`
-  color: var(--text-quaternary);
-  margin-top: ${theme.space[1]};
+export const DetailsCount = styled.h6`
+  margin-top: ${theme.space[0]};
   font-weight: ${theme.fontWeights.link};
 `
 
 export const Title = styled.p`
   font-size: 18px;
-  color: var(--text-primary);
   font-weight: 700;
   margin: 0;
+  margin-top: 2px;
   line-height: 1.3;
 `
 
@@ -144,7 +141,6 @@ export const ImageContainer = styled.span`
     width: 56px;
     height: 56px;
     border-radius: 14px !important;
-    background: var(--bg-primary);
     border-radius: 12px;
     overflow: hidden;
     /* user-select: none; */

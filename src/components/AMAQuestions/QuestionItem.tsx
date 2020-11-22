@@ -1,11 +1,9 @@
 import * as React from 'react'
 import { Ama } from '~/graphql/types.generated'
-import { Small, P } from '~/components/Typography'
 import { format } from 'timeago.js'
 import QuestionReaction from './QuestionReaction'
 import EditQuestion from './EditQuestion'
 import MarkdownRenderer from '../MarkdownRenderer'
-import Flex from '~/components/Flex'
 
 interface Props {
   editable: boolean
@@ -30,41 +28,39 @@ export const QuestionItem = React.memo((props: Props) => {
   }
 
   return (
-    <Flex flexDirection="column" gap={question.answer ? 8 : 4}>
-      <P style={{ fontWeight: '700' }}>{question.question}</P>
+    <div className="flex flex-col space-y-2">
+      <p className="font-bold">{question.question}</p>
       {question.answer && (
-        <Flex className={'markdown'}>
+        <div className="prose lg:prose-lg flex flex-col">
           <MarkdownRenderer>{question.answer}</MarkdownRenderer>
-        </Flex>
+        </div>
       )}
 
-      <Flex gap={12} alignItems="center">
+      <div className="flex items-center space-x-3">
         <QuestionReaction question={question} />
 
-        <Small style={{ color: 'var(--text-placeholder)' }}>/</Small>
+        <span className="divider-gray">/</span>
 
-        <Small
-          style={{
-            color: `var(--${
-              question.answer ? 'text-quaternary' : 'accent-orange'
-            })`,
-          }}
+        <p
+          className={`p-small ${
+            question.answer ? 'text-gray-700' : 'text-yellow-500'
+          }`}
         >
           {question.answer ? 'Updated' : 'Asked'} {format(updatedAt)}
-        </Small>
+        </p>
 
         {editable && (
-          <Flex gap={8}>
-            <Small style={{ color: 'var(--text-placeholder)' }}>/</Small>
-            <Small
-              style={{ cursor: 'pointer' }}
+          <div className="flex space-x-2">
+            <span className="divider-gray">/</span>
+            <button
+              className="p-small black-link"
               onClick={() => setIsEditing(true)}
             >
               Edit
-            </Small>
-          </Flex>
+            </button>
+          </div>
         )}
-      </Flex>
-    </Flex>
+      </div>
+    </div>
   )
 })

@@ -1,6 +1,5 @@
 import * as React from 'react'
 import Page from '~/components/Page'
-import { H3 } from '~/components/Typography'
 import { NextSeo } from 'next-seo'
 import BookmarksList from '~/components/Bookmarks'
 import { GET_BOOKMARKS } from '~/graphql/queries'
@@ -9,7 +8,6 @@ import AddBookmark from '~/components/Bookmarks/AddBookmark'
 import { initApolloClient } from '~/graphql/services/apollo'
 import { withApollo } from '~/components/withApollo'
 import { CenteredColumn } from '~/components/Layouts'
-import Flex from '~/components/Flex'
 
 function Bookmarks() {
   const { isMe } = useAuth()
@@ -32,11 +30,11 @@ function Bookmarks() {
         }}
       />
       <CenteredColumn data-cy="bookmarks">
-        <Flex flexDirection="column" gap={32}>
-          <H3>Bookmarks</H3>
+        <div className="flex flex-col space-y-8">
+          <h1>Bookmarks</h1>
           {isMe && <AddBookmark />}
           <BookmarksList />
-        </Flex>
+        </div>
       </CenteredColumn>
     </Page>
   )

@@ -2,7 +2,6 @@ import * as React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import Page from '~/components/Page'
-import { H2, A, Rarr, P, H5, H6 } from '~/components/Typography'
 import OverthoughtList from '~/components/Overthought/List'
 import DesignDetailsGrid from '~/components/DesignDetailsGrid'
 import PodcastEpisodesList from '~/components/PodcastEpisodesList'
@@ -10,7 +9,6 @@ import FigmaPlugins from '~/components/FigmaPlugins'
 import { Post, Episode, Repo } from '~/graphql/types.generated'
 import { DesignDetailsPostSummary, summaries } from '~/data/appDissections'
 import { CenteredColumn } from '~/components/Layouts'
-import Flex from '~/components/Flex'
 import { initApolloClient } from '~/graphql/services/apollo'
 import { GET_HOME } from '~/graphql/queries'
 import { PrimaryButton } from '~/components/Button'
@@ -28,336 +26,337 @@ function Home({ data, summaries }: Props) {
   return (
     <Page>
       <CenteredColumn>
-        <Flex flexDirection="column" gap={56}>
-          <Flex flexDirection="column" gap={16}>
-            <H2>👾</H2>
-            <H5>Hey, I’m Brian.</H5>
-            <P>
-              I’m a product designer, podcaster, and writer, currently living in
-              San Francisco. Right now I’m building native mobile apps at
-              GitHub.
-            </P>
+        <div className="flex flex-col space-y-14">
+          <div className="flex flex-col space-y-4">
+            <p className="text-4xl">👾</p>
+            <div className="flex flex-col space-y-1">
+              <h4>Hey, I’m Brian.</h4>
+              <p className="text-lg">
+                I’m a product designer, podcaster, and writer, currently living
+                in San Francisco. Right now I’m building native mobile apps at
+                GitHub.
+              </p>
+            </div>
 
-            <Flex flexDirection="column" gap={4}>
+            <div className="flex flex-col space-y-1">
               <Link href="/about" as="/about" passHref>
-                <A>
-                  More about me <Rarr />
-                </A>
+                <a>More about me &rarr;</a>
               </Link>
-              <A
+              <a
                 href="https://twitter.com/brian_lovin"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                @brian_lovin on Twitter <Rarr />
-              </A>
-            </Flex>
-          </Flex>
+                @brian_lovin on Twitter &rarr;
+              </a>
+            </div>
+          </div>
 
-          <Flex flexDirection="column" gap={16}>
-            <H5>Writing</H5>
+          <div className="flex flex-col space-y-4">
+            <div className="flex flex-col space-y-1">
+              <h4>Writing</h4>
 
-            <P>
-              I like to think out loud about design, development, and building
-              products.
-            </P>
+              <p className="text-lg">
+                I like to think out loud about design, development, and building
+                products.
+              </p>
+            </div>
 
             {data && data.posts && <OverthoughtList posts={data.posts} />}
 
-            <Flex flexDirection="column" gap={4}>
+            <div className="flex flex-col space-y-1">
               <Link href="/overthought" as="/overthought" passHref>
-                <A>
-                  See all posts <Rarr />
-                </A>
+                <a>See all posts &rarr;</a>
               </Link>
 
-              <A
+              <a
                 href="https://overthought.ghost.io/rss/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Subscribe via RSS <Rarr />
-              </A>
-            </Flex>
-          </Flex>
-
-          <Flex flexDirection="column" gap={24}>
-            <H5>Products</H5>
-            <div style={{ borderRadius: '8px', overflow: 'hidden' }}>
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href="https://gumroad.com/l/waves-premium-phone-wallpapers"
-                style={{ borderRadius: '8px', overflow: 'hidden' }}
-              >
-                <Image
-                  src="/static/img/waves/thumbnail.png"
-                  width="640px"
-                  height="698px"
-                  layout="responsive"
-                  alt="preview of waves, a custom made set of phone wallpapers"
-                />
+                Subscribe via RSS &rarr;
               </a>
             </div>
-            <Flex flexDirection="column" gap={8}>
-              <H5 style={{ fontSize: '1.1em' }}>Waves</H5>
-              <P>
-                A custom-made set of 10 phone wallpapers, each with a unique
-                color palette and design. I spent hours tweaking colors and
-                curves to get everything just right on my device. I think
-                they’re beautiful – I hope you like them, too!
-              </P>
-              <span />
-              <a
-                href="https://gumroad.com/l/waves-premium-phone-wallpapers"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <PrimaryButton>View the collection</PrimaryButton>
-              </a>
-            </Flex>
-          </Flex>
+          </div>
 
-          <Flex flexDirection="column" gap={16}>
-            <H5>Fun Projects</H5>
-            <P>Little weekend hacks for fun and learning.</P>
-            <Flex flexDirection="column" gap={4}>
-              <A href="/bookmarks">Bookmarks</A>
-              <P>Internet things, saved for later.</P>
-            </Flex>
+          <div className="flex flex-col space-y-4">
+            <div className="flex flex-col space-y-1">
+              <h4>Fun Projects</h4>
+              <p className="text-lg">
+                Little weekend hacks for fun and learning.
+              </p>
+            </div>
 
-            <Flex flexDirection="column" gap={4}>
-              <A href="/ama">AMA</A>
-              <P>Ask me anything.</P>
-            </Flex>
+            <div className="flex flex-col space-y-1">
+              <a href="/bookmarks">Bookmarks</a>
+              <p>Internet things, saved for later.</p>
+            </div>
+            <div className="flex flex-col space-y-1">
+              <a href="/ama">AMA</a>
+              <p>Ask me anything.</p>
+            </div>
+            <div className="flex flex-col space-y-1">
+              <a href="/hn">Hacker News</a>
+              <p>A better Hacker News.</p>
+            </div>
 
-            <Flex flexDirection="column" gap={4}>
-              <A href="/hn">Hacker News</A>
-              <P>A better Hacker News.</P>
-            </Flex>
-          </Flex>
+            <div />
 
-          <Flex flexDirection="column" gap={16}>
-            <H5>Design Details Podcast</H5>
-            <P>
-              Design Details is a weekly conversation about design process and
-              culture. I’ve been a co-host on the show for over five years.
-            </P>
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://gumroad.com/l/waves-premium-phone-wallpapers"
+            >
+              <div className="flex md:-mx-8 flex-col overflow-hidden md:flex-row bg-white dark:bg-gray-900 rounded-lg shadow hover:shadow-cardHover transition-shadow">
+                <div className="flex md:w-1/2 flex-col justify-start px-6 py-6 space-y-2">
+                  <h5>Waves</h5>
+                  <p className="font-normal flex-1">
+                    A custom-made set of 10 phone wallpapers, each with a unique
+                    color palette and design. I spent hours tweaking colors and
+                    curves to get everything just right on my device. I think
+                    they’re beautiful – I hope you like them, too!
+                  </p>
+                  <span />
+                  <PrimaryButton>View the collection</PrimaryButton>
+                </div>
+                <div className="w-full md:w-1/2">
+                  <Image
+                    width="auto"
+                    height="auto"
+                    layout="responsive"
+                    src="/static/img/waves/thumbnail.png"
+                    alt="preview of waves, a custom made set of phone wallpapers"
+                  />
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <div className="flex flex-col space-y-4">
+            <div className="flex flex-col space-y-1">
+              <h4>Design Details Podcast</h4>
+              <p className="text-lg">
+                Design Details is a weekly conversation about design process and
+                culture. I’ve been a co-host on the show for over five years.
+              </p>
+            </div>
             {data && data.episodes && (
               <PodcastEpisodesList episodes={data.episodes} />
             )}
-            <A
+            <a
               href="https://designdetails.fm/episodes"
               target="_blank"
               rel="noopener noreferrer"
             >
-              See all episodes <Rarr />
-            </A>
-          </Flex>
+              See all episodes &rarr;
+            </a>
+          </div>
 
-          <Flex flexDirection="column" gap={16}>
-            <H5>Figma plugins</H5>
-            <P>
-              There’s a lot of work in the design process that is boring,
-              tedious, and repetitive. I like to make plugins to help automate
-              it away.
-            </P>
+          <div className="flex flex-col space-y-4">
+            <div className="flex flex-col space-y-1">
+              <h4>Figma plugins</h4>
+              <p className="text-lg">
+                There’s a lot of work in the design process that is boring,
+                tedious, and repetitive. I like to make plugins to help automate
+                it away.
+              </p>
+            </div>
             <FigmaPlugins />
-            <A
+            <a
               href="https://figma.com/@brian"
               target="_blank"
               rel="noopener noreferrer"
             >
-              See my Figma profile <Rarr />
-            </A>
-          </Flex>
+              See my Figma profile &rarr;
+            </a>
+          </div>
 
-          <Flex flexDirection="column" gap={16}>
-            <H5>Open source work</H5>
-            <Flex flexDirection="column" gap={4}>
-              <A
+          <div className="flex flex-col space-y-4">
+            <h4>Open source work</h4>
+            <div className="flex flex-col space-y-1">
+              <a
                 href="https://github.com/specfm/design-details"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 specfm / design-details
-              </A>
-              <P>The code that powers designdetails.fm.</P>
-            </Flex>
+              </a>
+              <p>The code that powers designdetails.fm.</p>
+            </div>
 
-            <Flex flexDirection="column" gap={4}>
-              <A
+            <div className="flex flex-col space-y-1">
+              <a
                 href="https://github.com/brianlovin/brian-lovin-next"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 brian-lovin-next
-              </A>
-              <P>The code that powers this website you’re looking at.</P>
-            </Flex>
+              </a>
+              <p>The code that powers this website you’re looking at.</p>
+            </div>
 
-            <Flex flexDirection="column" gap={4}>
-              <A
+            <div className="flex flex-col space-y-1">
+              <a
                 href="https://github.com/brianlovin/security-checklist"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 security-checklist
-              </A>
-              <P>A checklist for staying safe on the internet.</P>
-            </Flex>
+              </a>
+              <p>A checklist for staying safe on the internet.</p>
+            </div>
 
-            <Flex flexDirection="column" gap={4}>
-              <A
+            <div className="flex flex-col space-y-1">
+              <a
                 href="https://github.com/withspectrum/spectrum"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 withspectrum / spectrum
-              </A>
-              <P>Simple, powerful online communities.</P>
-            </Flex>
+              </a>
+              <p>Simple, powerful online communities.</p>
+            </div>
 
-            <Flex flexDirection="column" gap={4}>
-              <A
+            <div className="flex flex-col space-y-1">
+              <a
                 href="https://github.com/specfm/spec-next"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 specfm / spec-next
-              </A>
-              <P>
+              </a>
+              <p>
                 A podcast network to help designers and developers level up.
-              </P>
-            </Flex>
+              </p>
+            </div>
 
-            <A
+            <a
               href="https://github.com/brianlovin"
               target="_blank"
               rel="noopener noreferrer"
             >
-              Follow me on GitHub <Rarr />
-            </A>
-          </Flex>
+              Follow me on GitHub &rarr;
+            </a>
+          </div>
 
-          <Flex flexDirection="column" gap={16}>
-            <H5>Speaking and interviews</H5>
-            <Flex flexDirection="column" gap={16}>
-              <Flex flexDirection="column" gap={4}>
-                <A
+          <div className="flex flex-col space-y-4">
+            <h4>Speaking and interviews</h4>
+            <div className="flex flex-col space-y-4">
+              <div className="flex flex-col space-y-1">
+                <a
                   href="https://www.swiftbysundell.com/podcast/67/"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   Building for open source
-                </A>
-                <P>
+                </a>
+                <p>
                   Ryan Nystrom and I talk about designing and building the
                   mobile apps at GitHub.
-                </P>
-              </Flex>
+                </p>
+              </div>
 
-              <Flex flexDirection="column" gap={4}>
-                <A
+              <div className="flex flex-col space-y-1">
+                <a
                   href="https://www.youtube.com/watch?v=SyS3h3kmBnY"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   Extend what’s possible with Figma Plugins - Figma Config
-                </A>
-                <P>
+                </a>
+                <p>
                   An exploration into the plugins I built to automate the
                   tedious parts of designing mobile apps at GitHub.
-                </P>
-              </Flex>
+                </p>
+              </div>
 
-              <Flex flexDirection="column" gap={4}>
-                <A
+              <div className="flex flex-col space-y-1">
+                <a
                   href="https://www.youtube.com/watch?v=6MBBTdu8v6E"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   Designing with GraphQL - GraphQL Summit
-                </A>
-                <P>
+                </a>
+                <p>
                   Exploring the possibilities that open up when designers and
                   developers can speak the same language.
-                </P>
-              </Flex>
+                </p>
+              </div>
 
-              <Flex flexDirection="column" gap={4}>
-                <A
+              <div className="flex flex-col space-y-1">
+                <a
                   href="https://interfacelovers.com/interviews/brian-lovin"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   Interface Lovers Interview
-                </A>
-                <P>
+                </a>
+                <p>
                   An interview about how I got into design, my process, and past
                   work.
-                </P>
-              </Flex>
+                </p>
+              </div>
 
-              <Flex flexDirection="column" gap={4}>
-                <A
+              <div className="flex flex-col space-y-1">
+                <a
                   href="https://spec.fm/podcasts/design-details/79352"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   Charmander++ – Interviewing ourselves on Design Details
-                </A>
-                <P>
+                </a>
+                <p>
                   Bryn Jackson and I interviewed each other. Totally humble.
-                </P>
-              </Flex>
+                </p>
+              </div>
 
-              <Flex flexDirection="column" gap={4}>
-                <A
+              <div className="flex flex-col space-y-1">
+                <a
                   href="https://avocode.com/blog/brian-lovin-product-designer-github-interview"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   Avocode Interview
-                </A>
-                <P>
+                </a>
+                <p>
                   An interview where we dig into my work at Buffer, Facebook,
                   Spectrum, and what’s in the works at GitHub.
-                </P>
-              </Flex>
+                </p>
+              </div>
 
-              <Flex flexDirection="column" gap={4}>
-                <A
+              <div className="flex flex-col space-y-1">
+                <a
                   href="https://softwareengineeringdaily.com/2020/07/15/github-mobile-with-brian-lovin-and-ryan-nystrom/"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   Software Engineering Daily: GitHub Mobile
-                </A>
-                <P>
+                </a>
+                <p>
                   Ryan and I discuss how we designed and built the first version
                   of GitHub’s mobile apps.
-                </P>
-              </Flex>
-            </Flex>
-          </Flex>
+                </p>
+              </div>
+            </div>
+          </div>
 
-          <Flex flexDirection="column" gap={24}>
-            <Flex flexDirection="column" gap={16}>
-              <H5>App Dissection</H5>
-              <P>
-                In-depth explorations of visual and interaction design in
-                well-known apps.
-              </P>
+          <div className="flex flex-col space-y-6">
+            <div className="flex flex-col space-y-4">
+              <div className="flex flex-col space-y-1">
+                <h4>App Dissection</h4>
+                <p className="text-lg">
+                  In-depth explorations of visual and interaction design in
+                  well-known apps.
+                </p>
+              </div>
               <Link href="/design-details" passHref>
-                <A>
-                  See all posts <Rarr />
-                </A>
+                <a>See all posts &rarr;</a>
               </Link>
-            </Flex>
+            </div>
             <DesignDetailsGrid summaries={summaries} />
-          </Flex>
-        </Flex>
+          </div>
+        </div>
       </CenteredColumn>
     </Page>
   )
