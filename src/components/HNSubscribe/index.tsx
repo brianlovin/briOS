@@ -76,6 +76,7 @@ export default function HNSubscribeBox() {
             name="email"
           />
           <PrimaryButton
+            onClick={submit}
             disabled={status === 'submitting' || !email}
             type="submit"
           >

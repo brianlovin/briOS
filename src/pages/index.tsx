@@ -117,7 +117,9 @@ function Home({ data, summaries }: Props) {
                     they’re beautiful – I hope you like them, too!
                   </p>
                   <span />
-                  <PrimaryButton>View the collection</PrimaryButton>
+                  <div className="p3 inline-flex text-white bg-blue-500 hover:bg-blue-600 dark:hover:bg-blue-400">
+                    View the collection
+                  </div>
                 </div>
                 <div className="w-full md:w-1/2">
                   <Image

@@ -127,6 +127,7 @@ export default function Feedback({ post }: Props) {
         </div>
         <div className="flex justify-end">
           <PrimaryButton
+            onClick={handleSubmit}
             disabled={serverState.submitting || !message}
             type="submit"
           >

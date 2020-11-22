@@ -188,7 +188,7 @@ export default function EditQuestion(props: Props) {
             Cancel
           </button>
         </div>
-        <button className="text-red-500" onClick={handleDelete}>
+        <button className="text-red-500" onClick={() => handleDelete()}>
           Delete
         </button>
       </div>

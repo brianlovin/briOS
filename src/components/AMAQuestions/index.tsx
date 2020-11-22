@@ -76,7 +76,7 @@ export default function QuestionsList() {
       {questions.length === 0 && <p>No questions yet!</p>}
 
       {showLoadMore && (
-        <Button style={{ width: '100%' }} onClick={handleLoadMore}>
+        <Button onClick={handleLoadMore}>
           {loading ? <LoadingSpinner /> : 'Show me more'}
         </Button>
       )}

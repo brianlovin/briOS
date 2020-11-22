@@ -95,6 +95,7 @@ export default function OverthoughtSubscribeBox() {
             />
           </label>
           <PrimaryButton
+            onClick={submit}
             disabled={status === 'submitting' || !email}
             type="submit"
           >

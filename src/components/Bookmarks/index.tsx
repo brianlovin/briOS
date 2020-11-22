@@ -64,7 +64,7 @@ export default function BookmarksList() {
       ))}
 
       {showLoadMore && (
-        <Button style={{ width: '100%' }} onClick={handleLoadMore}>
+        <Button onClick={handleLoadMore}>
           {loading ? <LoadingSpinner /> : 'Show me more'}
         </Button>
       )}
