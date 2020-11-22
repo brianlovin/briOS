@@ -13,7 +13,7 @@ export default function PendingQuestion() {
 
   if (loading) {
     return (
-      <div className="w-full flex items-center justify-center">
+      <div className="flex items-center justify-center w-full">
         <LoadingSpinner />
       </div>
     )
