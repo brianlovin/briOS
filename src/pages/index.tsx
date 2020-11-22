@@ -107,24 +107,24 @@ function Home({ data, summaries }: Props) {
               rel="noopener noreferrer"
               href="https://gumroad.com/l/waves-premium-phone-wallpapers"
             >
-              <div className="flex md:-mx-8 flex-col overflow-hidden md:flex-row bg-white dark:bg-gray-900 rounded-lg shadow hover:shadow-cardHover transition-shadow">
-                <div className="flex md:w-1/2 flex-col justify-start px-6 py-6 space-y-2">
+              <div className="flex flex-col overflow-hidden transition-shadow bg-white rounded-lg shadow md:-mx-8 md:flex-row dark:bg-gray-900 hover:shadow-cardHover">
+                <div className="flex flex-col justify-start px-6 py-6 space-y-2 md:w-1/2">
                   <h5>Waves</h5>
-                  <p className="font-normal flex-1">
+                  <p className="flex-1 font-normal">
                     A custom-made set of 10 phone wallpapers, each with a unique
                     color palette and design. I spent hours tweaking colors and
                     curves to get everything just right on my device. I think
                     they’re beautiful – I hope you like them, too!
                   </p>
                   <span />
-                  <div className="p-2 rounded text-center w-full text-white bg-blue-500 hover:bg-blue-600 dark:hover:bg-blue-400">
+                  <div className="w-full p-2 text-center text-white bg-blue-500 rounded hover:bg-blue-600 dark:hover:bg-blue-400">
                     View the collection
                   </div>
                 </div>
                 <div className="w-full md:w-1/2">
                   <Image
-                    width="auto"
-                    height="auto"
+                    width="640"
+                    height="698"
                     layout="responsive"
                     src="/static/img/waves/thumbnail.png"
                     alt="preview of waves, a custom made set of phone wallpapers"
