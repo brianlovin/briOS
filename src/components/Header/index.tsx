@@ -99,6 +99,7 @@ export default function Header() {
         {isExpanded ? (
           <React.Fragment>
             <CloseButton
+              className="p-3 text-primary"
               onClick={() => setExpanded(false)}
               visible={isExpanded}
             >
@@ -108,7 +109,10 @@ export default function Header() {
           </React.Fragment>
         ) : (
           <React.Fragment>
-            <MenuButton onClick={() => setExpanded(true)}>
+            <MenuButton
+              className="text-primary"
+              onClick={() => setExpanded(true)}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="currentColor"

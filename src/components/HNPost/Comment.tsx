@@ -92,7 +92,7 @@ export const Comment = React.memo((props: Props) => {
           <small className="text-tertiary">{`${comment.time_ago} by ${comment.user}`}</small>
         </ConditionalWrapper>
         <div
-          className={'prose lg:prose-lg'}
+          className={'prose prose-sm md:prose lg:prose-lg'}
           style={{
             display: 'grid',
           }}
