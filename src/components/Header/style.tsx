@@ -79,8 +79,6 @@ export const MobileContainer = styled.header`
 
 export const CloseButton = styled.div`
   position: relative;
-  padding: 0 8px;
-  top: -2px;
   display: ${(props) => (props.visible ? 'block' : 'none')};
   font-size: 26px;
   font-weight: 300;
