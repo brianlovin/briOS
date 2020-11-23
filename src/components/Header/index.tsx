@@ -95,7 +95,7 @@ export default function Header() {
   return (
     <React.Fragment>
       <MobileContainer expanded={isExpanded} data-cy="header">
-        <Background />
+        <Background className="bg-white bg-opacity-80 dark:bg-gray-1000" />
         {isExpanded ? (
           <React.Fragment>
             <CloseButton
@@ -137,7 +137,7 @@ export default function Header() {
         <InnerGrid>
           <NavLinks activeRoute={activeRoute} />
         </InnerGrid>
-        <Background className="bg-white bg-opacity-75 dark:bg-gray-1000" />
+        <Background className="bg-white bg-opacity-80 dark:bg-gray-1000" />
       </Container>
     </React.Fragment>
   )

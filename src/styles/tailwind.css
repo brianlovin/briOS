@@ -6,7 +6,7 @@
 /* Write your own custom base styles here */
 
 html {
-  @apply bg-gray-50 dark:bg-gray-1000 text-base;
+  @apply text-base bg-gray-50 dark:bg-gray-1000;
 }
 
 /* Write your own custom component styles here */
@@ -16,31 +16,39 @@ html {
   }
   
   a {
-    @apply text-blue-600 dark:text-blue-500 dark:hover:text-blue-400 hover:text-blue-800 visited:text-blue-800 dark:visited:text-blue-500 font-semibold;
+    @apply font-semibold text-blue-600 dark:text-blue-500 dark:hover:text-blue-400 hover:text-blue-800 visited:text-blue-800 dark:visited:text-blue-500;
   }
   
   h6 {
-    @apply text-gray-1000 dark:text-gray-50 text-base font-bold;
+    @apply text-base font-bold text-gray-1000 dark:text-gray-50;
   }
   
   h5 {
-    @apply text-gray-1000 dark:text-gray-50 text-lg font-bold;
+    @apply text-lg font-bold text-gray-1000 dark:text-gray-50;
   }
   
   h4 {
-    @apply text-gray-1000 dark:text-gray-50 text-xl font-bold;
+    @apply text-xl font-bold text-gray-1000 dark:text-gray-50;
   }
   
   h3 {
-    @apply text-gray-1000 dark:text-gray-50 text-2xl font-bold;
+    @apply text-2xl font-bold text-gray-1000 dark:text-gray-50;
   }
   
   h2 {
-    @apply text-gray-1000 dark:text-gray-50 text-3xl font-extrabold;
+    @apply text-3xl font-extrabold text-gray-1000 dark:text-gray-50;
   }
   
   h1 {
-    @apply text-gray-1000 dark:text-gray-50 text-4xl font-extrabold;
+    @apply text-4xl font-extrabold text-gray-1000 dark:text-gray-50;
+  }
+
+  .btn {
+    @apply px-4 py-3 font-medium text-white bg-blue-500 rounded-md hover:text-white visited:text-white hover:bg-blue-600 dark:hover:bg-blue-400;
+  }
+
+  .btn-black {
+    @apply text-white bg-gray-900 dark:bg-white hover:bg-gray-1000 hover:text-white dark:hover:text-gray-1000 dark:hover:bg-gray-50 dark:text-gray-1000;
   }
 }
 
@@ -68,10 +76,26 @@ html {
     @apply text-xl;
   }
 
+  .timeline-container > timeline-item:last-of-type .timeline-stroke {
+    @apply invisible;
+  }
+
   .p-small {
     @apply text-sm text-gray-600 dark:text-gray-400;
   }
 
+  .black-link {
+    @apply text-gray-1000 dark:text-gray-100 hover:underline visited:text-gray-1000 dark:hover:text-gray-50 dark:visited:text-gray-100;
+  }
+
+  .nav-label a {
+    @apply text-gray-1000 dark:text-gray-50 hover:text-blue-500 hover:bg-blue-500 hover:bg-opacity-10;
+  }
+
+  .nav-label.active a {
+    @apply text-blue-500 bg-blue-500 bg-opacity-10;
+  }
+  
   .prose blockquote {
     @apply text-gray-1000 dark:text-gray-50;
   }
@@ -92,17 +116,6 @@ html {
     @apply text-gray-800 dark:text-gray-200 px-1 py-0.5 border border-gray-100 dark:border-gray-800 rounded-md bg-gray-100 dark:bg-gray-900;
   }
 
-  .black-link {
-    @apply text-gray-1000 dark:text-gray-100 hover:underline visited:text-gray-1000 dark:hover:text-gray-50 dark:visited:text-gray-100;
-  }
-
-  .nav-label a {
-    @apply text-gray-1000 dark:text-gray-50 hover:text-blue-500 hover:bg-blue-500 hover:bg-opacity-10;
-  }
-
-  .nav-label.active a {
-    @apply bg-blue-500 bg-opacity-10  text-blue-500;
-  }
 
   .token.comment,
   .token.prolog,
