@@ -36,7 +36,11 @@ export function Notes({ children }) {
 }
 
 export function ButtonSet({ children }) {
-  return <div className="flex space-x-3 timeline-inset">{children}</div>
+  return (
+    <div className="flex flex-col space-y-3 md:space-x-3 md:space-y-0 timeline-inset md:flex-row">
+      {children}
+    </div>
+  )
 }
 
 export function TimelineEntry({

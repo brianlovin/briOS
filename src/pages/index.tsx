@@ -19,7 +19,7 @@ function Home() {
               </p>
             </div>
 
-            <div className="flex space-x-4 md:items-center md:justify-center">
+            <div className="flex flex-col space-y-2 md:space-x-4 md:flex-row md:space-y-0 md:items-center md:justify-center">
               <Link href="/about" passHref>
                 <a>
                   <button className="btn btn-primary btn-large">
