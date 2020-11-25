@@ -187,6 +187,7 @@ export function November() {
               height="300"
               layout="responsive"
               className="rounded"
+              alt="Photo of Yosemite valley"
             />
             <Image
               src="https://pbs.twimg.com/media/EmZqzgZVkAAsZTN?format=jpg&name=small"
@@ -194,6 +195,7 @@ export function November() {
               height="300"
               layout="responsive"
               className="rounded"
+              alt="Photo of Yosemite valley"
             />
             <Image
               src="https://pbs.twimg.com/media/EmZqzgaU8AEeFFc?format=jpg&name=small"
@@ -201,6 +203,7 @@ export function November() {
               height="300"
               layout="responsive"
               className="rounded"
+              alt="Photo of Yosemite valley"
             />
             <Image
               src="https://pbs.twimg.com/media/EmZqzgtVkAAnW6H?format=jpg&name=small"
@@ -208,6 +211,7 @@ export function November() {
               height="300"
               layout="responsive"
               className="rounded"
+              alt="Photo of Yosemite valley"
             />
           </div>
         </a>
