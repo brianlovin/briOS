@@ -53,6 +53,12 @@ const NavLinks = ({ activeRoute }: Props) => {
           <a>Bookmarks</a>
         </Link>
       </Label>
+
+      {/* <Label isActive={activeRoute === 'Security Checklist'}>
+        <Link href="/security">
+          <a>Security Checklist</a>
+        </Link>
+      </Label> */}
     </React.Fragment>
   )
 }
@@ -90,6 +96,10 @@ export default function Header() {
   if (router.pathname.includes('/hn')) {
     activeRoute = 'Hacker News'
     activePath = '/hn'
+  }
+  if (router.pathname.includes('/security')) {
+    activeRoute = 'Security Checklist'
+    activePath = '/security'
   }
 
   return (
