@@ -3,7 +3,6 @@ import { useGetBookmarksQuery } from '~/graphql/types.generated'
 import { useAuth } from '~/hooks/useAuth'
 import { BookmarkListItem } from './BookmarkListItem'
 import { PAGINATION_AMOUNT } from '~/graphql/constants'
-import { Button } from '../Button'
 import LoadingSpinner from '../LoadingSpinner'
 import FullscreenLoading from '../FullscreenLoading'
 
@@ -64,9 +63,9 @@ export default function BookmarksList() {
       ))}
 
       {showLoadMore && (
-        <Button onClick={handleLoadMore}>
+        <button className="btn" onClick={handleLoadMore}>
           {loading ? <LoadingSpinner /> : 'Show me more'}
-        </Button>
+        </button>
       )}
     </div>
   )

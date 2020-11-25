@@ -2,7 +2,6 @@ import * as React from 'react'
 import { useGetAmaQuestionsQuery, AmaStatus } from '~/graphql/types.generated'
 import { useAuth } from '~/hooks/useAuth'
 import Divider from '~/components/Divider'
-import { Button } from '~/components/Button'
 import LoadingSpinner from '~/components/LoadingSpinner'
 import { PAGINATION_AMOUNT } from '~/graphql/constants'
 import { QuestionItem } from './QuestionItem'
@@ -76,9 +75,9 @@ export default function QuestionsList() {
       {questions.length === 0 && <p>No questions yet!</p>}
 
       {showLoadMore && (
-        <Button onClick={handleLoadMore}>
+        <button className="btn" onClick={handleLoadMore}>
           {loading ? <LoadingSpinner /> : 'Show me more'}
-        </Button>
+        </button>
       )}
     </div>
   )

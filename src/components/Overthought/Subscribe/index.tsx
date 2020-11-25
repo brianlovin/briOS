@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { PrimaryButton } from '~/components/Button'
 import { Input } from '~/components/Input'
 
 export default function OverthoughtSubscribeBox() {
@@ -35,7 +34,7 @@ export default function OverthoughtSubscribeBox() {
 
   return (
     <div
-      className="bg-gray-100 dark:bg-gray-900 rounded-lg p-6 flex flex-col space-y-3"
+      className="flex flex-col p-6 space-y-3 bg-gray-100 rounded-lg dark:bg-gray-900"
       data-cy="overthought-subscribe-box"
     >
       <h5 className="flex items-center">
@@ -77,7 +76,7 @@ export default function OverthoughtSubscribeBox() {
         .
       </p>
       {status === 'succeeded' ? (
-        <p className="text-white rounded bg-green-500 p-3 text-center">
+        <p className="p-3 text-center text-white bg-green-500 rounded">
           Thanks for subscribing!
         </p>
       ) : (
@@ -94,17 +93,18 @@ export default function OverthoughtSubscribeBox() {
               name="email"
             />
           </label>
-          <PrimaryButton
+          <button
+            className="btn btn-primary"
             onClick={submit}
             disabled={status === 'submitting' || !email}
             type="submit"
           >
             Subscribe
-          </PrimaryButton>
+          </button>
         </form>
       )}
       {status === 'error' && (
-        <p className="text-white rounded bg-red-500 p-3 text-center">
+        <p className="p-3 text-center text-white bg-red-500 rounded">
           {errorMessage}
         </p>
       )}

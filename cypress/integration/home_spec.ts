@@ -3,7 +3,7 @@
 
 import designDetailsPosts from '../../src/data/appDissections'
 
-describe('Home', () => {
+describe.skip('Home', () => {
   before(() => {
     cy.visit('/')
   })
