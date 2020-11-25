@@ -53,7 +53,7 @@ export default function Feedback({ post }: Props) {
   }
 
   return (
-    <div className="bg-gray-100 dark:bg-gray-900 rounded-lg p-6 flex flex-col space-y-2">
+    <div className="flex flex-col p-6 space-y-2 bg-gray-100 rounded-lg dark:bg-gray-900">
       <h5 className="flex items-center">
         <span
           style={{
@@ -127,7 +127,6 @@ export default function Feedback({ post }: Props) {
         </div>
         <div className="flex justify-end">
           <PrimaryButton
-            onClick={handleSubmit}
             disabled={serverState.submitting || !message}
             type="submit"
           >
@@ -136,11 +135,11 @@ export default function Feedback({ post }: Props) {
         </div>
         {serverState.submitted &&
           (serverState.error ? (
-            <p className="text-white rounded bg-red-500 p-3">
+            <p className="p-3 text-white bg-red-500 rounded">
               {serverState.error}
             </p>
           ) : (
-            <p className="text-white rounded bg-green-500 p-3 text-center">
+            <p className="p-3 text-center text-white bg-green-500 rounded">
               Thanks for taking the time to leave a note!
             </p>
           ))}

@@ -33,6 +33,10 @@ export function Footer() {
         <a className="black-link">Hacker News</a>
       </Link>
 
+      <Link href="/security" as="/security" passHref>
+        <a className="black-link">Security Checklist</a>
+      </Link>
+
       <a
         href="https://twitter.com/brian_lovin"
         target="_blank"
