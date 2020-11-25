@@ -492,9 +492,7 @@ export function useEditAmaQuestionMutation(
 export type EditAmaQuestionMutationHookResult = ReturnType<
   typeof useEditAmaQuestionMutation
 >
-export type EditAmaQuestionMutationResult = Apollo.MutationResult<
-  EditAmaQuestionMutation
->
+export type EditAmaQuestionMutationResult = Apollo.MutationResult<EditAmaQuestionMutation>
 export type EditAmaQuestionMutationOptions = Apollo.BaseMutationOptions<
   EditAmaQuestionMutation,
   EditAmaQuestionMutationVariables
@@ -540,9 +538,7 @@ export function useDeleteAmaQuestionMutation(
 export type DeleteAmaQuestionMutationHookResult = ReturnType<
   typeof useDeleteAmaQuestionMutation
 >
-export type DeleteAmaQuestionMutationResult = Apollo.MutationResult<
-  DeleteAmaQuestionMutation
->
+export type DeleteAmaQuestionMutationResult = Apollo.MutationResult<DeleteAmaQuestionMutation>
 export type DeleteAmaQuestionMutationOptions = Apollo.BaseMutationOptions<
   DeleteAmaQuestionMutation,
   DeleteAmaQuestionMutationVariables
@@ -588,9 +584,7 @@ export function useAddAmaQuestionMutation(
 export type AddAmaQuestionMutationHookResult = ReturnType<
   typeof useAddAmaQuestionMutation
 >
-export type AddAmaQuestionMutationResult = Apollo.MutationResult<
-  AddAmaQuestionMutation
->
+export type AddAmaQuestionMutationResult = Apollo.MutationResult<AddAmaQuestionMutation>
 export type AddAmaQuestionMutationOptions = Apollo.BaseMutationOptions<
   AddAmaQuestionMutation,
   AddAmaQuestionMutationVariables
@@ -639,9 +633,7 @@ export function useAddAmaReactionMutation(
 export type AddAmaReactionMutationHookResult = ReturnType<
   typeof useAddAmaReactionMutation
 >
-export type AddAmaReactionMutationResult = Apollo.MutationResult<
-  AddAmaReactionMutation
->
+export type AddAmaReactionMutationResult = Apollo.MutationResult<AddAmaReactionMutation>
 export type AddAmaReactionMutationOptions = Apollo.BaseMutationOptions<
   AddAmaReactionMutation,
   AddAmaReactionMutationVariables
@@ -779,9 +771,7 @@ export function useEditBookmarkMutation(
 export type EditBookmarkMutationHookResult = ReturnType<
   typeof useEditBookmarkMutation
 >
-export type EditBookmarkMutationResult = Apollo.MutationResult<
-  EditBookmarkMutation
->
+export type EditBookmarkMutationResult = Apollo.MutationResult<EditBookmarkMutation>
 export type EditBookmarkMutationOptions = Apollo.BaseMutationOptions<
   EditBookmarkMutation,
   EditBookmarkMutationVariables
@@ -827,9 +817,7 @@ export function useDeleteBookmarkMutation(
 export type DeleteBookmarkMutationHookResult = ReturnType<
   typeof useDeleteBookmarkMutation
 >
-export type DeleteBookmarkMutationResult = Apollo.MutationResult<
-  DeleteBookmarkMutation
->
+export type DeleteBookmarkMutationResult = Apollo.MutationResult<DeleteBookmarkMutation>
 export type DeleteBookmarkMutationOptions = Apollo.BaseMutationOptions<
   DeleteBookmarkMutation,
   DeleteBookmarkMutationVariables
@@ -879,9 +867,7 @@ export function useAddBookmarkMutation(
 export type AddBookmarkMutationHookResult = ReturnType<
   typeof useAddBookmarkMutation
 >
-export type AddBookmarkMutationResult = Apollo.MutationResult<
-  AddBookmarkMutation
->
+export type AddBookmarkMutationResult = Apollo.MutationResult<AddBookmarkMutation>
 export type AddBookmarkMutationOptions = Apollo.BaseMutationOptions<
   AddBookmarkMutation,
   AddBookmarkMutationVariables
@@ -930,9 +916,7 @@ export function useAddBookmarkReactionMutation(
 export type AddBookmarkReactionMutationHookResult = ReturnType<
   typeof useAddBookmarkReactionMutation
 >
-export type AddBookmarkReactionMutationResult = Apollo.MutationResult<
-  AddBookmarkReactionMutation
->
+export type AddBookmarkReactionMutationResult = Apollo.MutationResult<AddBookmarkReactionMutation>
 export type AddBookmarkReactionMutationOptions = Apollo.BaseMutationOptions<
   AddBookmarkReactionMutation,
   AddBookmarkReactionMutationVariables

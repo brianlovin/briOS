@@ -29,18 +29,12 @@ export const Comment = React.memo((props: Props) => {
 
   if (collapsed) {
     return (
-      <div
-        style={{
-          paddingLeft: level > 0 ? '20px' : 0,
-          position: 'relative',
-          marginBottom: '24px',
-        }}
-      >
+      <div className={`${level > 0 ? 'pl-5' : 'pl-0'} relative mb-4`}>
         {level > 0 && (
           <LeftDivider level={level} onClick={() => setCollapsed(!collapsed)} />
         )}
 
-        <div style={{ position: 'relative', marginBottom: '4px' }}>
+        <div className="relative">
           {level === 0 && (
             <LeftDivider
               level={level}
@@ -60,19 +54,12 @@ export const Comment = React.memo((props: Props) => {
   }
 
   return (
-    <div
-      style={{
-        paddingLeft: level > 0 ? '20px' : 0,
-        position: 'relative',
-        marginBottom: '24px',
-        display: 'block',
-      }}
-    >
+    <div className={`${level > 0 ? 'pl-5' : 'pl-0'} relative block mb-4`}>
       {level > 0 && (
         <LeftDivider level={level} onClick={() => setCollapsed(!collapsed)} />
       )}
 
-      <div style={{ marginBottom: '24px', position: 'relative' }}>
+      <div className="relative mb-4">
         {level === 0 && (
           <LeftDivider level={level} onClick={() => setCollapsed(!collapsed)} />
         )}
@@ -93,9 +80,6 @@ export const Comment = React.memo((props: Props) => {
         </ConditionalWrapper>
         <div
           className={'prose prose-sm md:prose lg:prose-lg'}
-          style={{
-            display: 'grid',
-          }}
           dangerouslySetInnerHTML={{ __html: comment.content }}
         />
       </div>
