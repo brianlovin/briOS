@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { PrimaryButton } from '~/components/Button'
 import { Input } from '~/components/Input'
 
 export default function HNSubscribeBox() {
@@ -35,7 +34,7 @@ export default function HNSubscribeBox() {
 
   return (
     <div
-      className="bg-gray-100 dark:bg-gray-900 p-6 rounded-lg flex flex-col space-y-4"
+      className="flex flex-col p-6 space-y-4 bg-gray-100 rounded-lg dark:bg-gray-900"
       data-cy="hn-subscribe-box"
     >
       <h5 className="flex items-center m-0">
@@ -75,13 +74,14 @@ export default function HNSubscribeBox() {
             type="email"
             name="email"
           />
-          <PrimaryButton
+          <button
+            className="btn btn-primary"
             onClick={submit}
             disabled={status === 'submitting' || !email}
             type="submit"
           >
             Subscribe
-          </PrimaryButton>
+          </button>
         </form>
       )}
       {status === 'error' && <p className="text-red-500">{errorMessage}</p>}

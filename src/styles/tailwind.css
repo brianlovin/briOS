@@ -44,11 +44,19 @@ html {
   }
 
   .btn {
-    @apply px-4 py-3 font-medium text-white bg-blue-500 rounded-md hover:text-white visited:text-white hover:bg-blue-600 dark:hover:bg-blue-400;
+    @apply flex items-center justify-center px-4 py-2 space-x-2 text-sm font-medium transition-shadow bg-white border rounded shadow-sm hover:border-gray-300 dark:border-gray-800 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:border-gray-600 focus:outline-none text-primary;
   }
 
-  .btn-black {
-    @apply text-white bg-gray-900 dark:bg-white hover:bg-gray-1000 hover:text-white dark:hover:text-gray-1000 dark:hover:bg-gray-50 dark:text-gray-1000;
+  .btn-primary {
+    @apply text-white bg-blue-500 border-none hover:bg-blue-600 dark:hover:bg-blue-400;
+  }
+
+  .btn-outline {
+    @apply bg-opacity-0 hover:bg-opacity-10;
+  }
+
+  .btn-large {
+    @apply px-5 py-3 font-semibold rounded-md;
   }
 }
 
@@ -80,10 +88,6 @@ html {
     @apply text-xl;
   }
 
-  .timeline-container > timeline-item:last-of-type .timeline-stroke {
-    @apply invisible;
-  }
-
   .p-small {
     @apply text-sm text-gray-600 dark:text-gray-400;
   }
@@ -101,7 +105,7 @@ html {
   }
   
   .prose blockquote {
-    @apply text-gray-1000 dark:text-gray-50;
+    @apply border-l-2 border-gray-200 text-gray-1000 dark:text-gray-50 dark:border-gray-800;
   }
 
   .prose a {
@@ -144,18 +148,6 @@ html {
 
   .prose code {
     @apply text-gray-800 dark:text-gray-200 px-1 py-0.5 border border-gray-100 dark:border-gray-800 rounded-md bg-gray-100 dark:bg-gray-900;
-  }
-
-  .black-link {
-    @apply text-gray-1000 dark:text-gray-100 hover:underline visited:text-gray-1000 dark:hover:text-gray-50 dark:visited:text-gray-100;
-  }
-
-  .nav-label a {
-    @apply text-gray-1000 dark:text-gray-50 hover:text-blue-500 hover:bg-blue-500 hover:bg-opacity-10;
-  }
-
-  .nav-label.active a {
-    @apply text-blue-500 bg-blue-500 bg-opacity-10;
   }
 
   .token.comment,
@@ -216,5 +208,13 @@ html {
   code[class*="language-"],
   pre[class*="language-"] {
     @apply text-gray-1000 dark:text-gray-50;
+  }
+
+  .timeline-inset {
+    @apply ml-16 md:ml-0;
+  }
+
+  .timeline-full-width {
+    @apply -ml-16 md:ml-0;
   }
 }

@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { Post } from '~/graphql/types.generated'
-import { PrimaryButton } from '~/components/Button'
 import { Input, Textarea } from '~/components/Input'
 
 interface Props {
@@ -126,12 +125,13 @@ export default function Feedback({ post }: Props) {
           </label>
         </div>
         <div className="flex justify-end">
-          <PrimaryButton
+          <button
+            className="btn btn-primary"
             disabled={serverState.submitting || !message}
             type="submit"
           >
             Send feedback
-          </PrimaryButton>
+          </button>
         </div>
         {serverState.submitted &&
           (serverState.error ? (
