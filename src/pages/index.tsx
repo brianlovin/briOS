@@ -6,6 +6,9 @@ import { CenteredColumn } from '~/components/Layouts'
 import { TimelineContainer, TimelineItem } from '~/components/Timeline'
 import { Button } from '~/components/Button'
 import { GitMerge } from 'react-feather'
+import FetchUrl from '~/components/FetchUrl'
+import { withApollo } from '~/components/withApollo'
+import { initApolloClient } from '~/graphql/services/apollo'
 
 function Home() {
   return (
@@ -37,6 +40,42 @@ function Home() {
             </div>
 
             <TimelineContainer>
+              <TimelineItem
+                title="Moved Security Checklist to personal site"
+                timestamp="November 24, 2020"
+                icon="commit"
+              >
+                <div className="ml-16 prose md:ml-0 prose-md">
+                  <p>
+                    Over the years domains and side projects accumulate. It
+                    takes mental overhead to keep things updated, running, and
+                    paid for. I’m going to start slowly integrating personal
+                    projects like Security Checklist into this codebase as a
+                    more future-proof way to tinker.
+                  </p>
+                  <div className="flex space-x-3">
+                    <Link passHref href="/security">
+                      <a>
+                        <Button>
+                          <span>View Security Checklist</span>
+                        </Button>
+                      </a>
+                    </Link>
+                    <a
+                      href="https://github.com/brianlovin/brian-lovin-next/pull/1188"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Button>
+                        <>
+                          <GitMerge size={16} />
+                          <span>View pull request</span>
+                        </>
+                      </Button>
+                    </a>
+                  </div>
+                </div>
+              </TimelineItem>
               <TimelineItem
                 title="Rebuilt site with Tailwind.css"
                 timestamp="November 22, 2020"
@@ -80,17 +119,42 @@ function Home() {
                 icon="edit"
                 timestamp="November 16, 2020"
               >
-                <Link href="https://brianlovin.com/overthought/design-to-save-people-from-themselves">
-                  <a className="transition-shadow rounded-lg shadow hover:shadow-cardHover">
-                    <Image
-                      src="/static/img/overthought/design-to-save-people-from-themselves.png"
-                      width="1012"
-                      height="506"
-                      layout="responsive"
-                      className="rounded-lg"
-                    />
-                  </a>
-                </Link>
+                <>
+                  <Link href="https://brianlovin.com/overthought/design-to-save-people-from-themselves">
+                    <a className="transition-shadow rounded-lg shadow hover:shadow-cardHover">
+                      <Image
+                        src="/static/img/overthought/design-to-save-people-from-themselves.png"
+                        width="1012"
+                        height="506"
+                        layout="responsive"
+                        className="rounded-lg"
+                      />
+                    </a>
+                  </Link>
+                  <div className="ml-16 prose md:ml-0 prose-md">
+                    <div className="flex space-x-3">
+                      <Link passHref href="/security">
+                        <a>
+                          <Button>
+                            <span>View Security Checklist</span>
+                          </Button>
+                        </a>
+                      </Link>
+                      <a
+                        href="https://github.com/brianlovin/brian-lovin-next/pull/1188"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Button>
+                          <>
+                            <GitMerge size={16} />
+                            <span>View pull request</span>
+                          </>
+                        </Button>
+                      </a>
+                    </div>
+                  </div>
+                </>
               </TimelineItem>
 
               <TimelineItem
@@ -147,6 +211,8 @@ function Home() {
                   </ul>
                 </div>
               </TimelineItem>
+
+              <FetchUrl url="https://github.com/brianlovin/brian-lovin-next/pull/1188" />
             </TimelineContainer>
           </div>
         </div>
@@ -155,4 +221,25 @@ function Home() {
   )
 }
 
-export default Home
+export async function getStaticProps() {
+  const client = await initApolloClient({})
+  /*
+    Because this is using withApollo, the data from this query will be
+    pre-populated in the Apollo cache at build time. When the user first
+    visits this page, we can retreive the data from the cache like this:
+
+    const { data } = useGetBookmarksQuery({ fetchPolicy: 'cache-and-network' })
+
+    This preserves the ability for the page to render all bookmarks instantly,
+    then get progressively updated if any new bookmarks come in over the wire.
+  */
+  const apolloStaticCache = client.cache.extract()
+  return {
+    revalidate: 1,
+    props: {
+      apolloStaticCache,
+    },
+  }
+}
+
+export default withApollo(Home)

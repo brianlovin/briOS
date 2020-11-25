@@ -20,6 +20,7 @@ interface TimelineItemProps {
 function getIcon(name: string) {
   switch (name) {
     case 'git-commit':
+    case 'commit':
       return <GitCommit size={16} />
     case 'feather':
       return <Feather size={16} />
@@ -66,7 +67,7 @@ export function TimelineItem({
   tint = 'gray',
 }: TimelineItemProps) {
   return (
-    <div className="flex mb-12 md:mb-6 timeline-item">
+    <div className="flex mb-12 md:mb-8 timeline-item">
       <div className="flex flex-col items-center">
         <div
           className={`flex justify-center p-3 rounded-full align-center border-4 border-gray-50 dark:border-gray-1000 ${getTint(
@@ -75,7 +76,7 @@ export function TimelineItem({
         >
           {getIcon(icon)}
         </div>
-        <div className="flex-1 w-px -mb-12 bg-gray-200 md:-mb-6 dark:bg-gray-800 timeline-stroke"></div>
+        <div className="flex-1 w-px -mb-12 bg-gray-200 md:-mb-8 dark:bg-gray-800 timeline-stroke" />
       </div>
       <div className="flex flex-col flex-1 ml-4 space-y-4">
         <div className="flex flex-col pt-1 contents-center">
