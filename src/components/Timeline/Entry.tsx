@@ -4,7 +4,7 @@ interface TimelineEntryProps {
   children?: React.ReactChild | React.ReactChild[]
   title: string
   timestamp?: string
-  Icon: React.ReactNode
+  Icon: React.ReactType
   tint?: string
   divider?: boolean
 }

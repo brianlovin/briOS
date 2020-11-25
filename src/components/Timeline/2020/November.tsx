@@ -1,16 +1,7 @@
 import * as React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import {
-  Edit2,
-  GitCommit,
-  GitMerge,
-  Zap,
-  Wind,
-  Meh,
-  Twitter,
-  Camera,
-} from 'react-feather'
+import { GitCommit, GitMerge, Zap, Wind, Twitter, Camera } from 'react-feather'
 import { ButtonSet, Notes, TimelineEntry } from '../Entry'
 import { BlogPost } from '../BlogPost'
 
