@@ -155,8 +155,8 @@ function About({ data, summaries }: Props) {
                 <h4>Writing</h4>
 
                 <p className="text-lg">
-                  I like to think out loud about design, development, and
-                  building products.
+                  Thinking out loud about design, development, and building
+                  software.
                 </p>
               </div>
 
@@ -179,67 +179,64 @@ function About({ data, summaries }: Props) {
 
             <div className="flex flex-col space-y-4">
               <div className="flex flex-col space-y-1">
-                <h4>Fun Projects</h4>
-                <p className="text-lg">
-                  Little weekend hacks for fun and learning.
-                </p>
+                <h4>Projects</h4>
+                <p className="text-lg">Weekend hacks for fun and learning.</p>
               </div>
 
               <div className="flex flex-col space-y-1">
-                <a href="/bookmarks">Bookmarks</a>
+                <Link passHref href="/design-details">
+                  <a>App Dissection</a>
+                </Link>
+                <p>
+                  In-depth explorations of visual and interaction design in
+                  well-known apps.
+                </p>
+              </div>
+              <div className="flex flex-col space-y-1">
+                <Link passHref href="/bookmarks">
+                  <a>Bookmarks</a>
+                </Link>
                 <p>Internet things, saved for later.</p>
               </div>
               <div className="flex flex-col space-y-1">
-                <a href="/ama">AMA</a>
+                <Link passHref href="/ama">
+                  <a>AMA</a>
+                </Link>
                 <p>Ask me anything.</p>
               </div>
               <div className="flex flex-col space-y-1">
-                <a href="/hn">Hacker News</a>
+                <Link passHref href="/hn">
+                  <a>Hacker News</a>
+                </Link>
                 <p>A better Hacker News.</p>
               </div>
-
+              <div className="flex flex-col space-y-1">
+                <Link passHref href="/security">
+                  <a>Security Checklist</a>
+                </Link>
+                <p>Tools and resources for staying safe on the internet.</p>
+              </div>
+              <div className="flex flex-col space-y-1">
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://gumroad.com/l/waves-premium-phone-wallpapers"
+                >
+                  Waves Phone Wallpapers
+                </a>
+                <p>
+                  A custom-made set of 10 phone wallpapers, each with a unique
+                  color palette and design.
+                </p>
+              </div>
               <div />
-
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href="https://gumroad.com/l/waves-premium-phone-wallpapers"
-              >
-                <div className="flex flex-col overflow-hidden transition-shadow bg-white rounded-lg shadow md:-mx-8 md:flex-row dark:bg-gray-900 hover:shadow-cardHover">
-                  <div className="flex flex-col justify-start px-6 py-6 space-y-2 md:w-1/2">
-                    <h5>Waves</h5>
-                    <p className="flex-1 font-normal">
-                      A custom-made set of 10 phone wallpapers, each with a
-                      unique color palette and design. I spent hours tweaking
-                      colors and curves to get everything just right on my
-                      device. I think they’re beautiful – I hope you like them,
-                      too!
-                    </p>
-                    <span />
-                    <div className="w-full p-2 text-center text-white bg-blue-500 rounded hover:bg-blue-600 dark:hover:bg-blue-400">
-                      View the collection
-                    </div>
-                  </div>
-                  <div className="w-full md:w-1/2">
-                    <Image
-                      width="640"
-                      height="698"
-                      layout="responsive"
-                      src="/static/img/waves/thumbnail.png"
-                      alt="preview of waves, a custom made set of phone wallpapers"
-                    />
-                  </div>
-                </div>
-              </a>
             </div>
 
             <div className="flex flex-col space-y-4">
               <div className="flex flex-col space-y-1">
                 <h4>Design Details Podcast</h4>
                 <p className="text-lg">
-                  Design Details is a weekly conversation about design process
-                  and culture. I’ve been a co-host on the show for over five
-                  years.
+                  A weekly conversation about design process and culture.
                 </p>
               </div>
               {data && data.episodes && (
@@ -258,9 +255,7 @@ function About({ data, summaries }: Props) {
               <div className="flex flex-col space-y-1">
                 <h4>Figma plugins</h4>
                 <p className="text-lg">
-                  There’s a lot of work in the design process that is boring,
-                  tedious, and repetitive. I like to make plugins to help
-                  automate it away.
+                  Making the design process less tedious.
                 </p>
               </div>
               <FigmaPlugins />
@@ -277,13 +272,13 @@ function About({ data, summaries }: Props) {
               <h4>Open source work</h4>
               <div className="flex flex-col space-y-1">
                 <a
-                  href="https://github.com/specfm/design-details"
+                  href="https://github.com/designdetails/designdetails"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  specfm / design-details
+                  designdetails / designdetails
                 </a>
-                <p>The code that powers designdetails.fm.</p>
+                <p>The code that powers Design Details.</p>
               </div>
 
               <div className="flex flex-col space-y-1">
@@ -295,17 +290,6 @@ function About({ data, summaries }: Props) {
                   brian-lovin-next
                 </a>
                 <p>The code that powers this website you’re looking at.</p>
-              </div>
-
-              <div className="flex flex-col space-y-1">
-                <a
-                  href="https://github.com/brianlovin/security-checklist"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  security-checklist
-                </a>
-                <p>A checklist for staying safe on the internet.</p>
               </div>
 
               <div className="flex flex-col space-y-1">

@@ -38,27 +38,25 @@ export function HNPost(props: Props) {
       />
       <CenteredColumn data-cy="bookmarks">
         <div className="flex flex-col space-y-8">
-          <div className="flex flex-col space-y-12">
-            <div className="flex flex-col space-y-4">
-              <Link href={'/hn'}>
-                <a className="black-link">
-                  <small>&larr; Back</small>
-                </a>
-              </Link>
-              <a href={post.url} target="blank" rel="noopener noreferrer">
-                <h3>{post.title}</h3>
+          <div className="flex flex-col space-y-4">
+            <Link href={'/hn'}>
+              <a className="black-link">
+                <small>&larr; Back</small>
               </a>
-              <Byline post={post} />
-              {post.content && (
-                <div
-                  className={'prose lg:prose-lg'}
-                  style={{
-                    display: 'grid',
-                  }}
-                  dangerouslySetInnerHTML={{ __html: post.content }}
-                />
-              )}
-            </div>
+            </Link>
+            <a href={post.url} target="blank" rel="noopener noreferrer">
+              <h3>{post.title}</h3>
+            </a>
+            <Byline post={post} />
+            {post.content && (
+              <div
+                className={'prose lg:prose-lg'}
+                style={{
+                  display: 'grid',
+                }}
+                dangerouslySetInnerHTML={{ __html: post.content }}
+              />
+            )}
           </div>
 
           <Divider />
@@ -68,9 +66,9 @@ export function HNPost(props: Props) {
               <Comment key={comment.id} comment={comment} />
             ))}
           </div>
-        </div>
 
-        <HNSubscribeBox />
+          <HNSubscribeBox />
+        </div>
       </CenteredColumn>
     </React.Fragment>
   )

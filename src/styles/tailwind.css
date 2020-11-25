@@ -69,7 +69,11 @@ html {
   }
 
   .divider-gray {
-    @apply text-gray-300 dark:text-gray-700
+    @apply text-gray-300 dark:text-gray-700;
+  }
+
+  .bg-divider-gray {
+    @apply bg-gray-300 dark:bg-gray-700;
   }
 
   .page-subtitle {
@@ -104,8 +108,34 @@ html {
     @apply dark:text-yellow-500;
   }
 
+  /* the kg-embed-card gets applied to iframes sent from Ghost. this preserves a good video aspect ratio */
+  .prose .kg-embed-card {
+    @apply my-4;
+    position: relative;
+    padding-top: 56.25%;
+  }
+
+  .prose .kg-embed-card iframe {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .prose strong,
+  .prose b {
+    @apply text-gray-1000 dark:text-gray-50;
+  }
+
   .prose pre {
     @apply bg-gray-100 border border-gray-200 dark:border-gray-700 dark:bg-gray-800;
+  }
+
+  /* this is needed to avoid HN comments from overflowing off the right edge of the screen */
+  .prose p {
+    @apply break-words;
+    word-break: break-word;
   }
 
   .prose p + p {
@@ -116,6 +146,17 @@ html {
     @apply text-gray-800 dark:text-gray-200 px-1 py-0.5 border border-gray-100 dark:border-gray-800 rounded-md bg-gray-100 dark:bg-gray-900;
   }
 
+  .black-link {
+    @apply text-gray-1000 dark:text-gray-100 hover:underline visited:text-gray-1000 dark:hover:text-gray-50 dark:visited:text-gray-100;
+  }
+
+  .nav-label a {
+    @apply text-gray-1000 dark:text-gray-50 hover:text-blue-500 hover:bg-blue-500 hover:bg-opacity-10;
+  }
+
+  .nav-label.active a {
+    @apply text-blue-500 bg-blue-500 bg-opacity-10;
+  }
 
   .token.comment,
   .token.prolog,
