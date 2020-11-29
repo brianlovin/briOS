@@ -1,7 +1,7 @@
 const colors = require('tailwindcss/colors')
 
 module.exports = {
-  purge: ["./src/**/*.tsx"],
+  purge: ['./src/**/*.tsx'],
   darkMode: 'media', // 'media' or 'class'
   theme: {
     colors: {
@@ -62,6 +62,7 @@ module.exports = {
   },
   plugins: [
     require('@tailwindcss/typography'),
+    require('@tailwindcss/forms'),
     require('tailwindcss-line-clamp'),
   ],
 }
