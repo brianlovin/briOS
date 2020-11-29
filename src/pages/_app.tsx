@@ -3,6 +3,8 @@ import App from 'next/app'
 import Sentry from '~/sentry'
 import Providers from '~/components/Providers'
 import '~/styles/tailwind.css'
+import '~/styles/index.css'
+import '~/styles/tailwind-utils.css'
 
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {
