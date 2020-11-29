@@ -8,7 +8,7 @@ function Home() {
   return (
     <Page>
       <CenteredColumn>
-        <div className="flex flex-col space-y-14">
+        <div className="flex flex-col space-y-24">
           <div className="flex flex-col space-y-8 md:items-center">
             <p className="text-4xl">👾</p>
             <div className="flex flex-col space-y-4 md:items-center md:text-center">
@@ -37,9 +37,9 @@ function Home() {
                 </button>
               </a>
             </div>
-
-            <Timeline />
           </div>
+
+          <Timeline />
         </div>
       </CenteredColumn>
     </Page>
