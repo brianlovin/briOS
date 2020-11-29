@@ -2,9 +2,9 @@ import styled, { css } from 'styled-components'
 import theme from '../Theme'
 
 const base = css`
-  padding: 4px 8px;
+  padding: 5px 8px 4px;
   position: fixed;
-  top: 0;
+  top: -1px;
   left: 0;
   right: 0;
   z-index: 4;
