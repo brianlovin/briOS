@@ -276,6 +276,16 @@ export function November() {
             />
           </div>
         </a>
+        <ButtonSet>
+          <a
+            href="https://unsplash.com/@brianlovin"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn"
+          >
+            Download on Unsplash
+          </a>
+        </ButtonSet>
       </TimelineEntry>
 
       <BlogPost
@@ -283,6 +293,7 @@ export function November() {
         slug="writing-better-self-reviews"
         title="Writing Better Self Reviews"
         description="My tips and strategies for writing effective self reviews."
+        divider={false}
       />
     </>
   )
