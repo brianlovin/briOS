@@ -61,7 +61,7 @@ export async function getStaticProps({ params: { id } }) {
   const post = await getPostById(id, true)
 
   return {
-    revalidate: 1,
+    revalidate: 60 * 60,
     props: {
       post,
     },

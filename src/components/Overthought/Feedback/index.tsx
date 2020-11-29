@@ -52,7 +52,7 @@ export default function Feedback({ post }: Props) {
   }
 
   return (
-    <div className="flex flex-col p-6 space-y-2 bg-gray-100 rounded-lg dark:bg-gray-900">
+    <div className="flex flex-col p-4 space-y-2 bg-gray-100 rounded-lg dark:bg-gray-900">
       <h5 className="flex items-center">
         <span
           style={{
@@ -104,7 +104,7 @@ export default function Feedback({ post }: Props) {
           ></Textarea>
         </label>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <label>
             <span className="sr-only">Email</span>
 

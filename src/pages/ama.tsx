@@ -29,7 +29,7 @@ function About() {
       <CenteredColumn>
         <div className="flex flex-col space-y-4">
           <h1>Ask Me Anything</h1>
-          <p className="page-subtitle mb-2">
+          <p className="mb-2 page-subtitle">
             Just for fun! Questions will be visible after I’ve answered.
           </p>
           <AMAQuestions />
@@ -57,7 +57,7 @@ export async function getStaticProps() {
   */
   const apolloStaticCache = client.cache.extract()
   return {
-    revalidate: 1,
+    revalidate: 60 * 60,
     props: {
       apolloStaticCache,
     },

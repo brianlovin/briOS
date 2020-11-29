@@ -34,7 +34,7 @@ export default function OverthoughtSubscribeBox() {
 
   return (
     <div
-      className="flex flex-col p-6 space-y-3 bg-gray-100 rounded-lg dark:bg-gray-900"
+      className="flex flex-col p-4 space-y-3 bg-gray-100 rounded-lg dark:bg-gray-900"
       data-cy="overthought-subscribe-box"
     >
       <h5 className="flex items-center">
@@ -80,7 +80,10 @@ export default function OverthoughtSubscribeBox() {
           Thanks for subscribing!
         </p>
       ) : (
-        <form onSubmit={submit} className="flex space-x-3">
+        <form
+          onSubmit={submit}
+          className="flex flex-col space-y-3 md:flex-row md:space-x-3 md:space-y-0"
+        >
           <label className="flex flex-1">
             <span className="sr-only">Email address</span>
             <Input

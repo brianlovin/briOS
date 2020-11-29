@@ -34,7 +34,7 @@ export default function HNSubscribeBox() {
 
   return (
     <div
-      className="flex flex-col p-6 space-y-4 bg-gray-100 rounded-lg dark:bg-gray-900"
+      className="flex flex-col p-4 space-y-4 bg-gray-100 rounded-lg dark:bg-gray-900"
       data-cy="hn-subscribe-box"
     >
       <h5 className="flex items-center m-0">
@@ -64,7 +64,10 @@ export default function HNSubscribeBox() {
       {status === 'succeeded' ? (
         <p className="text-green-500">Subscribed!</p>
       ) : (
-        <form className="flex space-x-3" onSubmit={submit}>
+        <form
+          className="flex flex-col space-y-3 md:flex-row md:space-y-0 md:space-x-3"
+          onSubmit={submit}
+        >
           <Input
             value={email}
             disabled={status === 'loading'}

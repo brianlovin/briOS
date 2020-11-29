@@ -6,6 +6,8 @@ import { Input, Textarea } from '~/components/Input'
 export default function AddBookmark() {
   const [url, setUrl] = React.useState('')
   const [notes, setNotes] = React.useState('')
+  const [twitterHandle, setTwitterHandle] = React.useState('')
+  const [category, setCategory] = React.useState('reading')
   const [error, setError] = React.useState('')
   const query = GET_BOOKMARKS
 
@@ -18,6 +20,8 @@ export default function AddBookmark() {
         title: 'Saving...',
         url,
         notes,
+        twitterHandle,
+        category,
         host: url,
         reactions: 0,
       },
@@ -25,6 +29,7 @@ export default function AddBookmark() {
     onCompleted: () => {
       setUrl('')
       setNotes('')
+      setTwitterHandle('')
     },
     update(cache, { data: { addBookmark } }) {
       const { bookmarks } = cache.readQuery({ query })
@@ -44,7 +49,9 @@ export default function AddBookmark() {
 
   function onSubmit(e) {
     e.preventDefault()
-    return handleAddBookmark({ variables: { url, notes } })
+    return handleAddBookmark({
+      variables: { url, notes, category, twitterHandle },
+    })
   }
 
   function onUrlChange(e) {
@@ -54,6 +61,14 @@ export default function AddBookmark() {
 
   function onNotesChange(e) {
     return setNotes(e.target.value)
+  }
+
+  function onCategoryChange(e) {
+    return setCategory(e.target.value)
+  }
+
+  function onTwitterHandleChange(e) {
+    return setTwitterHandle(e.target.value)
   }
 
   function onKeyDown(e) {
@@ -71,7 +86,6 @@ export default function AddBookmark() {
         value={url}
         onChange={onUrlChange}
         onKeyDown={onKeyDown}
-        style={{ width: '100%' }}
       />
       {url.length > 0 && (
         <React.Fragment>
@@ -80,9 +94,29 @@ export default function AddBookmark() {
             onChange={onNotesChange}
             onKeyDown={onKeyDown}
           />
-          <p style={{ cursor: 'pointer' }} onClick={onSubmit}>
+          <div className="grid grid-cols-2 gap-3">
+            <Input
+              type="text"
+              placeholder="@handle"
+              value={twitterHandle}
+              onChange={onTwitterHandleChange}
+              onKeyDown={onKeyDown}
+            />
+
+            <select
+              name="category"
+              id="category"
+              value={category}
+              onChange={onCategoryChange}
+            >
+              <option value="reading">Reading</option>
+              <option value="portfolio">Portfolio</option>
+              <option value="website">Personal Site / Blog</option>
+            </select>
+          </div>
+          <button className="self-end btn btn-primary" onClick={onSubmit}>
             Save
-          </p>
+          </button>
         </React.Fragment>
       )}
       {error && <p className="text-red-500">{error}</p>}

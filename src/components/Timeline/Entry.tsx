@@ -32,12 +32,12 @@ function getTint(color: string) {
 }
 
 export function Notes({ children }) {
-  return <div className="prose timeline-inset prose-md">{children}</div>
+  return <div className="-mt-2 prose timeline-inset prose-md">{children}</div>
 }
 
 export function ButtonSet({ children }) {
   return (
-    <div className="flex flex-col space-y-3 md:space-x-3 md:space-y-0 timeline-inset md:flex-row">
+    <div className="flex flex-wrap space-y-3 md:space-y-0 md:space-x-3 timeline-inset ">
       {children}
     </div>
   )

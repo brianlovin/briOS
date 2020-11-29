@@ -14,11 +14,17 @@ function isValidUrl(string) {
 
 const COLLECTION = 'bookmarks'
 
-export async function editBookmark(_, { id, title, notes = '' }) {
+export async function editBookmark(
+  _,
+  { id, title, notes = '', category, twitterHandle }
+) {
   if (!title || title.length === 0)
     throw new UserInputError('Bookmark must have a title')
 
-  await firebase.collection(COLLECTION).doc(id).update({ title, notes })
+  await firebase
+    .collection(COLLECTION)
+    .doc(id)
+    .update({ title, notes, category, twitterHandle })
 
   return await firebase
     .collection(COLLECTION)
@@ -28,7 +34,7 @@ export async function editBookmark(_, { id, title, notes = '' }) {
     .then((res) => ({ ...res, reactions: res.reactions || 0, id }))
 }
 
-export async function addBookmark(_, { url, notes }) {
+export async function addBookmark(_, { url, notes, category, twitterHandle }) {
   if (!isValidUrl(url)) throw new UserInputError('URL was invalid')
 
   const existingRef = await firebase
@@ -47,6 +53,8 @@ export async function addBookmark(_, { url, notes }) {
       createdAt: new Date(),
       ...metadata,
       notes,
+      category,
+      twitterHandle,
       reactions: 0,
     })
     .then(({ id }) => id)

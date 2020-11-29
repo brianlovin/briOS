@@ -61,6 +61,8 @@ export type Bookmark = {
   host?: Maybe<Scalars['String']>
   reactions?: Maybe<Scalars['Int']>
   notes?: Maybe<Scalars['String']>
+  category?: Maybe<Scalars['String']>
+  twitterHandle?: Maybe<Scalars['String']>
 }
 
 export type Episode = {
@@ -112,6 +114,7 @@ export type Query = {
 
 export type QueryBookmarksArgs = {
   skip?: Maybe<Scalars['Int']>
+  category?: Maybe<Scalars['String']>
 }
 
 export type QueryPostsArgs = {
@@ -148,12 +151,16 @@ export type MutationLoginArgs = {
 export type MutationAddBookmarkArgs = {
   url: Scalars['String']
   notes?: Maybe<Scalars['String']>
+  category?: Maybe<Scalars['String']>
+  twitterHandle?: Maybe<Scalars['String']>
 }
 
 export type MutationEditBookmarkArgs = {
   id: Scalars['ID']
   title: Scalars['String']
   notes?: Maybe<Scalars['String']>
+  category?: Maybe<Scalars['String']>
+  twitterHandle?: Maybe<Scalars['String']>
 }
 
 export type MutationDeleteBookmarkArgs = {
@@ -202,6 +209,8 @@ export type BookmarkInfoFragment = {
   host?: Maybe<string>
   reactions?: Maybe<number>
   notes?: Maybe<string>
+  category?: Maybe<string>
+  twitterHandle?: Maybe<string>
 }
 
 export type EpisodeInfoFragment = {
@@ -291,6 +300,8 @@ export type EditBookmarkMutationVariables = Exact<{
   id: Scalars['ID']
   title: Scalars['String']
   notes?: Maybe<Scalars['String']>
+  category?: Maybe<Scalars['String']>
+  twitterHandle?: Maybe<Scalars['String']>
 }>
 
 export type EditBookmarkMutation = {
@@ -310,6 +321,8 @@ export type DeleteBookmarkMutation = {
 export type AddBookmarkMutationVariables = Exact<{
   url: Scalars['String']
   notes?: Maybe<Scalars['String']>
+  category?: Maybe<Scalars['String']>
+  twitterHandle?: Maybe<Scalars['String']>
 }>
 
 export type AddBookmarkMutation = {
@@ -340,6 +353,7 @@ export type GetAmaQuestionsQuery = {
 
 export type GetBookmarksQueryVariables = Exact<{
   skip?: Maybe<Scalars['Int']>
+  category?: Maybe<Scalars['String']>
 }>
 
 export type GetBookmarksQuery = {
@@ -402,6 +416,8 @@ export const BookmarkInfoFragmentDoc = gql`
     host
     reactions
     notes
+    category
+    twitterHandle
   }
 `
 export const EpisodeInfoFragmentDoc = gql`
@@ -726,8 +742,20 @@ export type LogoutMutationOptions = Apollo.BaseMutationOptions<
   LogoutMutationVariables
 >
 export const EditBookmarkDocument = gql`
-  mutation editBookmark($id: ID!, $title: String!, $notes: String) {
-    editBookmark(id: $id, title: $title, notes: $notes) {
+  mutation editBookmark(
+    $id: ID!
+    $title: String!
+    $notes: String
+    $category: String
+    $twitterHandle: String
+  ) {
+    editBookmark(
+      id: $id
+      title: $title
+      notes: $notes
+      category: $category
+      twitterHandle: $twitterHandle
+    ) {
       ...BookmarkInfo
     }
   }
@@ -754,6 +782,8 @@ export type EditBookmarkMutationFn = Apollo.MutationFunction<
  *      id: // value for 'id'
  *      title: // value for 'title'
  *      notes: // value for 'notes'
+ *      category: // value for 'category'
+ *      twitterHandle: // value for 'twitterHandle'
  *   },
  * });
  */
@@ -823,8 +853,18 @@ export type DeleteBookmarkMutationOptions = Apollo.BaseMutationOptions<
   DeleteBookmarkMutationVariables
 >
 export const AddBookmarkDocument = gql`
-  mutation addBookmark($url: String!, $notes: String) {
-    addBookmark(url: $url, notes: $notes) {
+  mutation addBookmark(
+    $url: String!
+    $notes: String
+    $category: String
+    $twitterHandle: String
+  ) {
+    addBookmark(
+      url: $url
+      notes: $notes
+      category: $category
+      twitterHandle: $twitterHandle
+    ) {
       ...BookmarkInfo
     }
   }
@@ -850,6 +890,8 @@ export type AddBookmarkMutationFn = Apollo.MutationFunction<
  *   variables: {
  *      url: // value for 'url'
  *      notes: // value for 'notes'
+ *      category: // value for 'category'
+ *      twitterHandle: // value for 'twitterHandle'
  *   },
  * });
  */
@@ -980,8 +1022,8 @@ export type GetAmaQuestionsQueryResult = Apollo.QueryResult<
   GetAmaQuestionsQueryVariables
 >
 export const GetBookmarksDocument = gql`
-  query GetBookmarks($skip: Int) {
-    bookmarks(skip: $skip) {
+  query GetBookmarks($skip: Int, $category: String) {
+    bookmarks(skip: $skip, category: $category) {
       ...BookmarkInfo
     }
   }
@@ -1001,6 +1043,7 @@ export const GetBookmarksDocument = gql`
  * const { data, loading, error } = useGetBookmarksQuery({
  *   variables: {
  *      skip: // value for 'skip'
+ *      category: // value for 'category'
  *   },
  * });
  */
