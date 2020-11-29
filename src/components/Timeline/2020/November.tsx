@@ -23,7 +23,7 @@ export function November() {
         </Notes>
         <ButtonSet>
           <Link passHref href="/security">
-            <a>
+            <a className="w-full">
               <button className="btn">
                 <span>View Security Checklist</span>
               </button>
@@ -33,8 +33,9 @@ export function November() {
             href="https://github.com/brianlovin/brian-lovin-next/pull/1188"
             target="_blank"
             rel="noopener noreferrer"
+            className="w-full"
           >
-            <button className="btn">
+            <button className="w-full btn">
               <>
                 <GitMerge size={16} />
                 <span>View pull request</span>
@@ -61,15 +62,17 @@ export function November() {
             href="https://tailwindcss.com"
             target="_blank"
             rel="noopener noreferrer"
+            className="w-full"
           >
-            <button className="btn">Tailwind.css</button>
+            <button className="w-full btn">Tailwind.css</button>
           </a>
           <a
             href="https://github.com/brianlovin/brian-lovin-next/pull/1175"
             target="_blank"
             rel="noopener noreferrer"
+            className="w-full"
           >
-            <button className="btn">
+            <button className="w-full btn">
               <>
                 <GitMerge size={16} />
                 <span>View pull request</span>
@@ -145,8 +148,9 @@ export function November() {
             href="https://twitter.com/brian_lovin/status/1327734503142354945?s=21"
             target="_blank"
             rel="noopener noreferrer"
+            className="w-full"
           >
-            <button className="btn">
+            <button className="w-full btn">
               <span>View tweet</span>
             </button>
           </a>

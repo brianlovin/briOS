@@ -19,6 +19,8 @@ export default function EditingBookmarkListItem(props: Props) {
     error: '',
     title: bookmark.title || bookmark.url,
     notes: bookmark.notes || '',
+    twitterHandle: bookmark.twitterHandle || '',
+    category: bookmark.category || 'reading',
   }
 
   function reducer(state, action) {
@@ -36,6 +38,18 @@ export default function EditingBookmarkListItem(props: Props) {
           notes: action.value,
         }
       }
+      case 'edit-twitter-handle': {
+        return {
+          ...state,
+          twitterHandle: action.value,
+        }
+      }
+      case 'edit-category': {
+        return {
+          ...state,
+          category: action.value,
+        }
+      }
       case 'error': {
         return {
           ...state,
@@ -50,7 +64,13 @@ export default function EditingBookmarkListItem(props: Props) {
   const [state, dispatch] = React.useReducer(reducer, initialState)
 
   const [editBookmark] = useEditBookmarkMutation({
-    variables: { title: state.title, id: bookmark.id, notes: state.notes },
+    variables: {
+      title: state.title,
+      id: bookmark.id,
+      notes: state.notes,
+      twitterHandle: state.twitterHandle,
+      category: state.category,
+    },
     optimisticResponse: {
       __typename: 'Mutation',
       editBookmark: {
@@ -58,6 +78,8 @@ export default function EditingBookmarkListItem(props: Props) {
         ...bookmark,
         title: state.title,
         notes: state.notes,
+        twitterHandle: state.twitterHandle,
+        category: state.category,
       },
     },
     onError({ message }) {
@@ -101,6 +123,14 @@ export default function EditingBookmarkListItem(props: Props) {
     return dispatch({ type: 'edit-notes', value: e.target.value })
   }
 
+  function onTwitterHandleChange(e) {
+    return dispatch({ type: 'edit-twitter-handle', value: e.target.value })
+  }
+
+  function onCategoryChange(e) {
+    return dispatch({ type: 'edit-category', value: e.target.value })
+  }
+
   function onKeyDown(e) {
     if (e.keyCode === 13 && e.metaKey) {
       return handleSave(e)
@@ -108,7 +138,7 @@ export default function EditingBookmarkListItem(props: Props) {
   }
 
   return (
-    <form className="flex flex-col space-y-3" onSubmit={handleSave}>
+    <form className="flex flex-col mb-4 space-y-3" onSubmit={handleSave}>
       <Input
         autoFocus
         placeholder="Title"
@@ -123,20 +153,38 @@ export default function EditingBookmarkListItem(props: Props) {
         onChange={onNotesChange}
         onKeyDown={onKeyDown}
       />
+      <div className="grid grid-cols-2 gap-3">
+        <Input
+          placeholder="@handle"
+          value={state.twitterHandle}
+          onChange={onTwitterHandleChange}
+          onKeyDown={onKeyDown}
+        />
+        <select
+          name="category"
+          id="category"
+          value={state.category}
+          onChange={onCategoryChange}
+        >
+          <option value="reading">Reading</option>
+          <option value="portfolio">Portfolio</option>
+          <option value="website">Personal Site / Blog</option>
+        </select>
+      </div>
       {state.error && <p className="text-red-500">{state.error}</p>}
 
       <div className="flex justify-between">
-        <div className="flex space-x-3">
-          <button className="black-link" onClick={handleSave}>
-            Save
-          </button>
-          <button className="black-link" onClick={onDone}>
-            Cancel
-          </button>
-        </div>
         <button className="text-red-500" onClick={() => handleDelete()}>
           Delete
         </button>
+        <div className="flex space-x-3">
+          <button className="btn" onClick={onDone}>
+            Cancel
+          </button>
+          <button className="btn btn-primary" onClick={handleSave}>
+            Save
+          </button>
+        </div>
       </div>
     </form>
   )

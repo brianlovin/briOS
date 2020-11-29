@@ -27,6 +27,7 @@
     "@sentry/browser": "^5.27.4",
     "@sentry/node": "^5.27.4",
     "@tailwindcss/typography": "^0.3.1",
+    "@tippy.js/react": "^3.1.1",
     "@tryghost/content-api": "^1.4.10",
     "@zeit/next-source-maps": "0.0.4-canary.1",
     "apollo-server-micro": "^2.19.0",

@@ -43,6 +43,8 @@ export default gql`
     host: String
     reactions: Int
     notes: String
+    category: String
+    twitterHandle: String
   }
 
   type Episode {
@@ -79,7 +81,7 @@ export default gql`
   }
 
   type Query {
-    bookmarks(skip: Int): [Bookmark]!
+    bookmarks(skip: Int, category: String): [Bookmark]!
     episodes: [Episode]!
     posts(first: Int): [Post]!
     post(slug: String!): Post
@@ -91,8 +93,19 @@ export default gql`
   type Mutation {
     login(password: String!): Boolean
     logout: Boolean
-    addBookmark(url: String!, notes: String): Bookmark
-    editBookmark(id: ID!, title: String!, notes: String): Bookmark
+    addBookmark(
+      url: String!
+      notes: String
+      category: String
+      twitterHandle: String
+    ): Bookmark
+    editBookmark(
+      id: ID!
+      title: String!
+      notes: String
+      category: String
+      twitterHandle: String
+    ): Bookmark
     deleteBookmark(id: ID!): Boolean
     addBookmarkReaction(id: ID!): Bookmark
     addAMAQuestion(question: String!): Boolean

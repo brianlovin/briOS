@@ -21,14 +21,14 @@ export default function Byline(props: Props) {
   }, [])
 
   return (
-    <div className="flex space-x-2 p-small">
-      <span>Posted {timeAgo}</span>
+    <div className="space-x-2 p-small">
+      <span>{timeAgo}</span>
 
       <span className="divider-gray">/</span>
 
       <span>
         <Link href={`/hn/[id]`} as={`/hn/${post.id}`}>
-          <a className="black-link font-normal">{`${post.comments_count} comments`}</a>
+          <a className="font-normal black-link">{`${post.comments_count} comments`}</a>
         </Link>
       </span>
 
