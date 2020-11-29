@@ -10,8 +10,6 @@ function Home() {
       <CenteredColumn>
         <div className="flex flex-col space-y-24">
           <div className="flex flex-col space-y-8 md:items-center">
-            <p className="text-4xl">👾</p>
-
             <PageHeader
               title="Hey, I’m Brian"
               subtitle="I’m a product designer, podcaster, and writer, living in San

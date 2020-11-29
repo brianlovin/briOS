@@ -16,10 +16,14 @@ export function November() {
       >
         <Notes>
           <p>
-            I’ve been using my Bookmarks list to keep track of interesting
-            things I’ve found on the internet. The lack of organization made it
-            hard to decide what I should share and made it hard to quickly get
-            navigate to a category of content. Now Bookmarks are organized by
+            My{' '}
+            <Link href="/bookmarks" passHref>
+              <a> Bookmarks</a>
+            </Link>{' '}
+            list keeps track of interesting things I’ve found on the internet.
+            The lack of organization made it hard to decide what I should share
+            and made it hard to quickly navigate to a category of content. Now
+            Bookmarks are organized by
             <Link
               href="/bookmarks/[category]"
               as={`/bookmarks/reading`}
