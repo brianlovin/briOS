@@ -9,6 +9,67 @@ export function November() {
   return (
     <>
       <TimelineEntry
+        title="Added new bookmark types"
+        timestamp="November 28, 2020"
+        Icon={GitCommit}
+      >
+        <Notes>
+          <p>
+            I’ve been using my Bookmarks list to keep track of interesting
+            things I’ve found on the internet. The lack of organization made it
+            hard to decide what I should share and made it hard to quickly get
+            navigate to a category of content. Now Bookmarks are organized by
+            <Link
+              href="/bookmarks/[category]"
+              as={`/bookmarks/reading`}
+              passHref
+            >
+              <a> Reading</a>
+            </Link>
+            ,{' '}
+            <Link
+              href="/bookmarks/[category]"
+              as={`/bookmarks/portfolio`}
+              passHref
+            >
+              <a> Portfolios</a>
+            </Link>
+            , and{' '}
+            <Link
+              href="/bookmarks/[category]"
+              as={`/bookmarks/website`}
+              passHref
+            >
+              <a>Personal Sites</a>
+            </Link>
+            .
+          </p>
+        </Notes>
+        <ButtonSet>
+          <Link passHref href="/bookmarks">
+            <a className="w-full md:w-auto">
+              <button className="w-full md:w-auto btn">
+                <span>Go to Bookmarks</span>
+              </button>
+            </a>
+          </Link>
+          <a
+            href="https://github.com/brianlovin/brian-lovin-next/pull/1190"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full md:w-auto"
+          >
+            <button className="w-full md:w-auto btn">
+              <>
+                <GitMerge size={16} />
+                <span>View pull request</span>
+              </>
+            </button>
+          </a>
+        </ButtonSet>
+      </TimelineEntry>
+
+      <TimelineEntry
         title="Moved Security Checklist to personal site"
         timestamp="November 24, 2020"
         Icon={GitCommit}
