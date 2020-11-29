@@ -288,7 +288,7 @@ export function November() {
             href="https://unsplash.com/@brianlovin"
             target="_blank"
             rel="noopener noreferrer"
-            className="btn"
+            className="w-full md:w-auto btn"
           >
             Download on Unsplash
           </a>
