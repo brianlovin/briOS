@@ -22,7 +22,7 @@ function Home() {
             <div className="flex flex-col space-y-2 md:space-x-4 md:flex-row md:space-y-0 md:items-center md:justify-center">
               <Link href="/about" passHref>
                 <a>
-                  <button className="w-full btn btn-primary btn-large">
+                  <button className="w-full text-lg btn btn-primary btn-large">
                     More about me
                   </button>
                 </a>
@@ -32,7 +32,7 @@ function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <button className="w-full btn btn-large">
+                <button className="w-full text-lg btn btn-large">
                   Follow me on Twitter
                 </button>
               </a>

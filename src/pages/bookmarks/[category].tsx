@@ -12,7 +12,7 @@ function Bookmarks() {
 }
 
 export async function getStaticPaths() {
-  const categories = ['reading', 'portfolios', 'websites']
+  const categories = ['reading', 'portfolio', 'website']
   const paths = categories.map((category) => ({
     params: { category },
   }))
