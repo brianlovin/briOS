@@ -6,6 +6,7 @@ import {
 } from '~/graphql/types.generated'
 import { GET_BOOKMARKS } from '~/graphql/queries'
 import { Input, Textarea } from '~/components/Input'
+import { useRouter } from 'next/router'
 
 interface Props {
   bookmark: Bookmark
@@ -14,6 +15,7 @@ interface Props {
 
 export default function EditingBookmarkListItem(props: Props) {
   const { bookmark, onDone } = props
+  const router = useRouter()
 
   const initialState = {
     error: '',
@@ -88,15 +90,20 @@ export default function EditingBookmarkListItem(props: Props) {
     },
   })
 
+  const { category } = router.query
   const [handleDelete] = useDeleteBookmarkMutation({
     variables: { id: bookmark.id },
     optimisticResponse: {
       __typename: 'Mutation',
     },
     update(cache) {
-      const { bookmarks } = cache.readQuery({ query: GET_BOOKMARKS })
+      const { bookmarks } = cache.readQuery({
+        query: GET_BOOKMARKS,
+        variables: { category },
+      })
       cache.writeQuery({
         query: GET_BOOKMARKS,
+        variables: { category },
         data: {
           bookmarks: bookmarks.filter((o) => o.id !== bookmark.id),
         },

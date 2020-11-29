@@ -6,10 +6,14 @@ import { PAGINATION_AMOUNT } from '~/graphql/constants'
 import LoadingSpinner from '../LoadingSpinner'
 import FullscreenLoading from '../FullscreenLoading'
 
-export default function BookmarksList({ category }) {
+export default function BookmarksList({ category = undefined }) {
   const { isMe } = useAuth()
   const [showLoadMore, setShowLoadMore] = React.useState(true)
   const [loading, setLoading] = React.useState(false)
+
+  React.useEffect(() => {
+    setShowLoadMore(true)
+  }, [category])
 
   // pre-populate bookmarks from the cache, but check for any new ones after
   // the page loads

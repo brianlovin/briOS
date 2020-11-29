@@ -202,7 +202,7 @@ export type AmaInfoFragment = {
 }
 
 export type BookmarkInfoFragment = {
-  __typename?: 'Bookmark'
+  __typename: 'Bookmark'
   id: string
   title?: Maybe<string>
   url: string
@@ -410,6 +410,7 @@ export const AmaInfoFragmentDoc = gql`
 `
 export const BookmarkInfoFragmentDoc = gql`
   fragment BookmarkInfo on Bookmark {
+    __typename
     id
     title
     url

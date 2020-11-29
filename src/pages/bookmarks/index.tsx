@@ -5,12 +5,15 @@ import { withApollo } from '~/components/withApollo'
 import BookmarksPage from '~/components/Bookmarks/Page'
 
 function Bookmarks() {
-  return <BookmarksPage category={null} />
+  return <BookmarksPage category={undefined} />
 }
 
 export async function getStaticProps() {
   const client = await initApolloClient({})
-  await client.query({ query: GET_BOOKMARKS })
+  await client.query({
+    query: GET_BOOKMARKS,
+    variables: { category: undefined },
+  })
   /*
     Because this is using withApollo, the data from this query will be
     pre-populated in the Apollo cache at build time. When the user first

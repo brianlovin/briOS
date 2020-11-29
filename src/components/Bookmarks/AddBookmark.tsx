@@ -2,14 +2,26 @@ import * as React from 'react'
 import { useAddBookmarkMutation } from '~/graphql/types.generated'
 import { GET_BOOKMARKS } from '~/graphql/queries'
 import { Input, Textarea } from '~/components/Input'
+import { useRouter } from 'next/router'
 
 export default function AddBookmark() {
+  const router = useRouter()
   const [url, setUrl] = React.useState('')
   const [notes, setNotes] = React.useState('')
   const [twitterHandle, setTwitterHandle] = React.useState('')
-  const [category, setCategory] = React.useState('reading')
+  const [category, setCategory] = React.useState(
+    typeof router.query.category === 'string'
+      ? router.query.category
+      : 'reading'
+  )
   const [error, setError] = React.useState('')
   const query = GET_BOOKMARKS
+
+  React.useEffect(() => {
+    if (typeof router.query.category === 'string') {
+      setCategory(router.query.category)
+    }
+  }, [router.query.category])
 
   const [handleAddBookmark] = useAddBookmarkMutation({
     optimisticResponse: {
@@ -32,9 +44,13 @@ export default function AddBookmark() {
       setTwitterHandle('')
     },
     update(cache, { data: { addBookmark } }) {
-      const { bookmarks } = cache.readQuery({ query })
+      const { bookmarks } = cache.readQuery({
+        query,
+        variables: { category: router.query.category },
+      })
       cache.writeQuery({
         query,
+        variables: { category: router.query.category },
         data: {
           bookmarks: [addBookmark, ...bookmarks],
         },
