@@ -56,7 +56,7 @@ html {
   }
 
   .btn-large {
-    @apply px-5 py-3 font-semibold rounded-md;
+    @apply px-6 py-3 font-semibold rounded-md;
   }
 
   .tabbed-navigation::-webkit-scrollbar {
