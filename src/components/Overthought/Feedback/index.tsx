@@ -112,6 +112,7 @@ export default function Feedback({ post }: Props) {
               id="feedback-email"
               name="email"
               placeholder="(Optional) Email"
+              type="email"
             />
           </label>
           <label>
@@ -121,6 +122,7 @@ export default function Feedback({ post }: Props) {
               id="twitter"
               name="twitter"
               placeholder="(Optional) Twitter handle"
+              type="text"
             />
           </label>
         </div>
