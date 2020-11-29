@@ -1,5 +1,5 @@
 import * as React from 'react'
-import Page from '~/components/Page'
+import Page, { PageHeader } from '~/components/Page'
 import { NextSeo } from 'next-seo'
 import { CenteredColumn } from '~/components/Layouts'
 import HNPosts from '~/components/HNPosts'
@@ -31,11 +31,11 @@ export default function HNTop(props: Props) {
   return (
     <Page>
       <NextSeo
-        title={'Hacker News · Top'}
+        title={'Hacker News'}
         description={'My personal Hacker News reader.'}
         openGraph={{
           url: 'https://brianlovin.com/hn',
-          title: 'Hacker News · Top',
+          title: 'Hacker News',
           description: 'My personal Hacker News reader.',
           images: [
             {
@@ -48,8 +48,11 @@ export default function HNTop(props: Props) {
 
       <CenteredColumn data-cy="hn">
         <div className="flex flex-col space-y-8">
-          <h3>Hacker News</h3>
-          <Navigation active={'top'} />
+          <PageHeader title="Hacker News" />
+          <div className="flex md:justify-center">
+            <Navigation active={'top'} />
+          </div>
+          <div className="h-px bg-gray-200 dark:bg-gray-800 timeline-stroke" />
           <HNPosts posts={posts} />
           <HNSubscribeBox />
         </div>

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import Page from '~/components/Page'
+import Page, { PageHeader } from '~/components/Page'
 import { Post } from '~/graphql/types.generated'
 import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe'
 import SEO from '~/components/Overthought/SEO'
@@ -16,22 +16,19 @@ interface Props {
 
 function Overthought({ data }: Props) {
   return (
-    <Page>
+    <Page data-cy="overthought">
       <SEO />
 
       <CenteredColumn>
-        <div className="flex flex-col space-y-8">
-          <div className="flex flex-col space-y-4" data-cy="overthought">
-            <h1>Overthought</h1>
-            <p className="page-subtitle">
-              Overthinking out loud about design, development, and building
-              products.
-            </p>
-          </div>
-
-          {data && data.posts && <OverthoughtList posts={data.posts} />}
+        <div className="flex flex-col space-y-14">
+          <PageHeader
+            title="Overthought"
+            subtitle="Thinking out loud about design, development, and building
+              excellent software."
+          />
 
           <OverthoughtSubscribeBox />
+          {data && data.posts && <OverthoughtList posts={data.posts} />}
         </div>
       </CenteredColumn>
     </Page>

@@ -61,7 +61,7 @@ export default function QuestionsList() {
   }
 
   return (
-    <div className="flex flex-col space-y-8">
+    <div className="flex flex-col mt-8 space-y-8">
       <AskQuestion />
 
       <Divider />

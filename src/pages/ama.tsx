@@ -1,5 +1,5 @@
 import * as React from 'react'
-import Page from '~/components/Page'
+import Page, { PageHeader } from '~/components/Page'
 import { withApollo } from '~/components/withApollo'
 import { initApolloClient } from '~/graphql/services/apollo'
 import { GET_AMA_QUESTIONS } from '~/graphql/queries/ama'
@@ -27,13 +27,11 @@ function About() {
         }}
       />
       <CenteredColumn>
-        <div className="flex flex-col space-y-4">
-          <h1>Ask Me Anything</h1>
-          <p className="mb-2 page-subtitle">
-            Just for fun! Questions will be visible after I’ve answered.
-          </p>
-          <AMAQuestions />
-        </div>
+        <PageHeader
+          title="Ask Me Anything"
+          subtitle="Just for fun! Questions will be visible after I’ve answered."
+        />
+        <AMAQuestions />
       </CenteredColumn>
     </Page>
   )

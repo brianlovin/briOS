@@ -1,5 +1,5 @@
 import * as React from 'react'
-import Page from '~/components/Page'
+import Page, { PageHeader } from '~/components/Page'
 import { NextSeo } from 'next-seo'
 import { CenteredColumn } from '~/components/Layouts'
 import Navigation from '~/components/HNPosts/Navigation'
@@ -26,8 +26,11 @@ export default function HNAbout() {
 
       <CenteredColumn data-cy="hn">
         <div className="flex flex-col space-y-8">
-          <h3>Hacker News</h3>
-          <Navigation active={'about'} />
+          <PageHeader title="Hacker News" />
+          <div className="flex md:justify-center">
+            <Navigation active={'about'} />
+          </div>
+          <div className="h-px bg-gray-200 dark:bg-gray-800 timeline-stroke" />
 
           <div className="flex flex-col prose lg:prose-lg">
             <p>

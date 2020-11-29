@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { NextSeo } from 'next-seo'
-import Page from '~/components/Page'
+import Page, { PageHeader } from '~/components/Page'
 import { CenteredColumn } from '~/components/Layouts'
 import SecurityChecklist from '~/components/SecurityChecklist'
 
@@ -26,16 +26,14 @@ export default function Security() {
 
       <CenteredColumn>
         <div className="flex flex-col space-y-8">
-          <div className="flex flex-col space-y-6">
-            <h1>Security Checklist</h1>
-            <p className="page-subtitle">
-              Tools and resources designed to improve your online privacy,
-              safety, and security.
-            </p>
-          </div>
-        </div>
+          <PageHeader
+            title="Security Checklist"
+            subtitle="Tools and resources designed to improve your online privacy,
+              safety, and security."
+          />
 
-        <SecurityChecklist />
+          <SecurityChecklist />
+        </div>
       </CenteredColumn>
     </Page>
   )

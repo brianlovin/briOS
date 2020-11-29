@@ -1,5 +1,5 @@
 import * as React from 'react'
-import Page from '~/components/Page'
+import Page, { PageHeader } from '~/components/Page'
 import { NextSeo } from 'next-seo'
 import BookmarksList from '~/components/Bookmarks'
 import { useAuth } from '~/hooks/useAuth'
@@ -29,10 +29,10 @@ export default function BookmarksPage({ category }) {
       />
       <CenteredColumn data-cy="bookmarks">
         <div className="flex flex-col space-y-8">
-          <div className="flex flex-col space-y-2">
-            <h1>Bookmarks</h1>
-            <p className="page-subtitle">Internet things, saved for later.</p>
-          </div>
+          <PageHeader
+            title="Bookmarks"
+            subtitle="Internet things, saved for later."
+          />
           <BookmarksNavigation />
           {isMe && <AddBookmark />}
           <BookmarksList category={category} />
