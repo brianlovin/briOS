@@ -11,7 +11,12 @@ export const PostListItem = React.memo((props: Props) => {
 
   return (
     <div className="flex flex-col space-y-1">
-      <a href={post.url} target="_blank" rel="noopener noreferrer">
+      <a
+        className="text-blue-600 dark:text-blue-500"
+        href={post.url}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         {post.title}
       </a>
 
