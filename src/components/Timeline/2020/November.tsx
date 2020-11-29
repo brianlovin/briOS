@@ -9,6 +9,13 @@ export function November() {
   return (
     <>
       <DateEntry title="November, 2020" />
+      <BlogPost
+        timestamp="November 29, 2020"
+        slug="tailwind-css-first-impressions"
+        title="Tailwind CSS First Impressions"
+        description="My pros and cons for the Tailwind CSS framework after one week."
+      />
+
       <TimelineEntry
         title="Added new bookmark types"
         timestamp="November 28, 2020"
