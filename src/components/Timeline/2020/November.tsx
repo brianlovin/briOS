@@ -2,12 +2,13 @@ import * as React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { GitCommit, GitMerge, Zap, Wind, Twitter, Camera } from 'react-feather'
-import { ButtonSet, Notes, TimelineEntry } from '../Entry'
+import { ButtonSet, DateEntry, Notes, TimelineEntry } from '../Entry'
 import { BlogPost } from '../BlogPost'
 
 export function November() {
   return (
     <>
+      <DateEntry title="November, 2020" />
       <TimelineEntry
         title="Added new bookmark types"
         timestamp="November 28, 2020"
