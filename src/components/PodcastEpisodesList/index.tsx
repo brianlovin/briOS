@@ -12,6 +12,7 @@ export default function PodcastEpisodesList({ episodes }: Props) {
       {episodes.map((ep) => (
         <div className="flex flex-col space-y-1" key={ep.id}>
           <a
+            className="text-blue-600 dark:text-blue-500"
             target="_blank"
             rel="noopener noreferrer"
             href={`https://designdetails.fm/episodes/${

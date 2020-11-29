@@ -5,6 +5,7 @@ export default function FigmaPlugins() {
     <div className="flex flex-col space-y-4">
       <div className="flex flex-col space-y-1">
         <a
+          className="text-blue-600 dark:text-blue-500"
           href="https://www.figma.com/c/plugin/744725347356614754/Dominant-Color-Toolkit-🎨"
           target="_blank"
           rel="noopener noreferrer"
@@ -18,6 +19,7 @@ export default function FigmaPlugins() {
 
       <div className="flex flex-col">
         <a
+          className="text-blue-600 dark:text-blue-500"
           href="https://www.figma.com/c/plugin/743654854885744527/Responsify-⚡%EF%B8%8F"
           target="_blank"
           rel="noopener noreferrer"
@@ -29,6 +31,7 @@ export default function FigmaPlugins() {
 
       <div className="flex flex-col">
         <a
+          className="text-blue-600 dark:text-blue-500"
           href="https://www.figma.com/c/plugin/747172434405306948/iOS-Export-Settings"
           target="_blank"
           rel="noopener noreferrer"
@@ -43,6 +46,7 @@ export default function FigmaPlugins() {
 
       <div className="flex flex-col">
         <a
+          className="text-blue-600 dark:text-blue-500"
           href="https://www.figma.com/c/plugin/747228167548695118/Export-.zip"
           target="_blank"
           rel="noopener noreferrer"
@@ -54,6 +58,7 @@ export default function FigmaPlugins() {
 
       <div className="flex flex-col">
         <a
+          className="text-blue-600 dark:text-blue-500"
           href="https://github.com/brianlovin/figma-github-data"
           target="_blank"
           rel="noopener noreferrer"

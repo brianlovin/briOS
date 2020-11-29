@@ -91,7 +91,7 @@ export const BookmarkListItem = React.memo((props: Props) => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <span className="font-medium text-blue-500 hover:text-blue-600 dark:hover:text-blue-400">
+              <span className="text-blue-600 dark:text-blue-500">
                 {bookmark.title}
               </span>
             </a>

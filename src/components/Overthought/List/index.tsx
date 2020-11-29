@@ -18,7 +18,7 @@ export default function OverthoughtList({ posts }: Props) {
             as={`/overthought/${post.slug}`}
             passHref
           >
-            <a>{post.title}</a>
+            <a className="text-blue-600 dark:text-blue-500">{post.title}</a>
           </Link>
           {post.excerpt && <p className="clamp-2">{post.excerpt}</p>}
           <p className="p-small">Updated {format(post.updated_at)}</p>

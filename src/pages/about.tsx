@@ -164,13 +164,16 @@ function About({ data, summaries }: Props) {
 
               <div className="flex flex-col space-y-1">
                 <Link href="/overthought" as="/overthought" passHref>
-                  <a>See all posts &rarr;</a>
+                  <a className="text-blue-600 dark:text-blue-500">
+                    See all posts &rarr;
+                  </a>
                 </Link>
 
                 <a
                   href="https://overthought.ghost.io/rss/"
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="text-blue-600 dark:text-blue-500"
                 >
                   Subscribe via RSS &rarr;
                 </a>
@@ -185,7 +188,9 @@ function About({ data, summaries }: Props) {
 
               <div className="flex flex-col space-y-1">
                 <Link passHref href="/design-details">
-                  <a>App Dissection</a>
+                  <a className="text-blue-600 dark:text-blue-500">
+                    App Dissection
+                  </a>
                 </Link>
                 <p>
                   In-depth explorations of visual and interaction design in
@@ -194,25 +199,29 @@ function About({ data, summaries }: Props) {
               </div>
               <div className="flex flex-col space-y-1">
                 <Link passHref href="/bookmarks">
-                  <a>Bookmarks</a>
+                  <a className="text-blue-600 dark:text-blue-500">Bookmarks</a>
                 </Link>
                 <p>Internet things, saved for later.</p>
               </div>
               <div className="flex flex-col space-y-1">
                 <Link passHref href="/ama">
-                  <a>AMA</a>
+                  <a className="text-blue-600 dark:text-blue-500">AMA</a>
                 </Link>
                 <p>Ask me anything.</p>
               </div>
               <div className="flex flex-col space-y-1">
                 <Link passHref href="/hn">
-                  <a>Hacker News</a>
+                  <a className="text-blue-600 dark:text-blue-500">
+                    Hacker News
+                  </a>
                 </Link>
                 <p>A better Hacker News.</p>
               </div>
               <div className="flex flex-col space-y-1">
                 <Link passHref href="/security">
-                  <a>Security Checklist</a>
+                  <a className="text-blue-600 dark:text-blue-500">
+                    Security Checklist
+                  </a>
                 </Link>
                 <p>Tools and resources for staying safe on the internet.</p>
               </div>
@@ -220,6 +229,7 @@ function About({ data, summaries }: Props) {
                 <a
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="text-blue-600 dark:text-blue-500"
                   href="https://gumroad.com/l/waves-premium-phone-wallpapers"
                 >
                   Waves Phone Wallpapers
@@ -246,6 +256,7 @@ function About({ data, summaries }: Props) {
                 href="https://designdetails.fm/episodes"
                 target="_blank"
                 rel="noopener noreferrer"
+                className="text-blue-600 dark:text-blue-500"
               >
                 See all episodes &rarr;
               </a>
@@ -260,6 +271,7 @@ function About({ data, summaries }: Props) {
               </div>
               <FigmaPlugins />
               <a
+                className="text-blue-600 dark:text-blue-500"
                 href="https://figma.com/@brian"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -272,6 +284,7 @@ function About({ data, summaries }: Props) {
               <h4>Open source work</h4>
               <div className="flex flex-col space-y-1">
                 <a
+                  className="text-blue-600 dark:text-blue-500"
                   href="https://github.com/designdetails/designdetails"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -286,6 +299,7 @@ function About({ data, summaries }: Props) {
                   href="https://github.com/brianlovin/brian-lovin-next"
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="text-blue-600 dark:text-blue-500"
                 >
                   brian-lovin-next
                 </a>
@@ -297,6 +311,7 @@ function About({ data, summaries }: Props) {
                   href="https://github.com/withspectrum/spectrum"
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="text-blue-600 dark:text-blue-500"
                 >
                   withspectrum / spectrum
                 </a>
@@ -308,6 +323,7 @@ function About({ data, summaries }: Props) {
                   href="https://github.com/specfm/spec-next"
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="text-blue-600 dark:text-blue-500"
                 >
                   specfm / spec-next
                 </a>
@@ -320,6 +336,7 @@ function About({ data, summaries }: Props) {
                 href="https://github.com/brianlovin"
                 target="_blank"
                 rel="noopener noreferrer"
+                className="text-blue-600 dark:text-blue-500"
               >
                 Follow me on GitHub &rarr;
               </a>
@@ -330,6 +347,7 @@ function About({ data, summaries }: Props) {
               <div className="flex flex-col space-y-4">
                 <div className="flex flex-col space-y-1">
                   <a
+                    className="text-blue-600 dark:text-blue-500"
                     href="https://www.swiftbysundell.com/podcast/67/"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -344,6 +362,7 @@ function About({ data, summaries }: Props) {
 
                 <div className="flex flex-col space-y-1">
                   <a
+                    className="text-blue-600 dark:text-blue-500"
                     href="https://www.youtube.com/watch?v=SyS3h3kmBnY"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -358,6 +377,7 @@ function About({ data, summaries }: Props) {
 
                 <div className="flex flex-col space-y-1">
                   <a
+                    className="text-blue-600 dark:text-blue-500"
                     href="https://www.youtube.com/watch?v=6MBBTdu8v6E"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -372,6 +392,7 @@ function About({ data, summaries }: Props) {
 
                 <div className="flex flex-col space-y-1">
                   <a
+                    className="text-blue-600 dark:text-blue-500"
                     href="https://interfacelovers.com/interviews/brian-lovin"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -386,6 +407,7 @@ function About({ data, summaries }: Props) {
 
                 <div className="flex flex-col space-y-1">
                   <a
+                    className="text-blue-600 dark:text-blue-500"
                     href="https://spec.fm/podcasts/design-details/79352"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -413,6 +435,7 @@ function About({ data, summaries }: Props) {
 
                 <div className="flex flex-col space-y-1">
                   <a
+                    className="text-blue-600 dark:text-blue-500"
                     href="https://softwareengineeringdaily.com/2020/07/15/github-mobile-with-brian-lovin-and-ryan-nystrom/"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -437,7 +460,9 @@ function About({ data, summaries }: Props) {
                   </p>
                 </div>
                 <Link href="/design-details" passHref>
-                  <a>See all posts &rarr;</a>
+                  <a className="text-blue-600 dark:text-blue-500">
+                    See all posts &rarr;
+                  </a>
                 </Link>
               </div>
               <DesignDetailsGrid summaries={summaries} />
