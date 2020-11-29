@@ -59,7 +59,7 @@ html {
   }
 
   .tab {
-    @apply flex flex-none flex-nowrap;
+    @apply flex flex-none md:justify-center md:flex-auto flex-nowrap;
   }
 
   .tab-active {
@@ -67,7 +67,7 @@ html {
   }
 
   .tab-inactive {
-    @apply text-gray-600 border-b-2 border-white dark:text-gray-400 dark:border-gray-1000 hover:text-gray-1000 dark:hover:text-gray-50;
+    @apply text-gray-600 border-b-2 border-gray-50 dark:text-gray-400 dark:border-gray-1000 hover:text-gray-1000 dark:hover:text-gray-50 hover:border-gray-300 dark:hover:border-gray-700;
   }
 }
 
