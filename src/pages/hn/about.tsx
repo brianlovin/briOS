@@ -123,8 +123,8 @@ export default function HNAbout() {
               types like polls or jobs, which I never visit on HN anyways.
             </p>
           </div>
+          <HNSubscribeBox />
         </div>
-        <HNSubscribeBox />
       </CenteredColumn>
     </Page>
   )
