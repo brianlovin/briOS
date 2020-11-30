@@ -1593,7 +1593,7 @@
     "@graphql-tools/utils" "^6.0.18"
     tslib "~2.0.0"
 
-"@graphql-codegen/plugin-helpers@^1.17.8", "@graphql-codegen/plugin-helpers@^1.17.9", "@graphql-codegen/plugin-helpers@^1.18.1", "@graphql-codegen/plugin-helpers@^1.18.2":
+"@graphql-codegen/plugin-helpers@^1.17.8", "@graphql-codegen/plugin-helpers@^1.18.1", "@graphql-codegen/plugin-helpers@^1.18.2":
   version "1.18.2"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/plugin-helpers/-/plugin-helpers-1.18.2.tgz#57011076cb8b8f5d04d37d226a5eda300c01be94"
   integrity sha512-SvX+Ryq2naLcoD6jJNxtzc/moWTgHJ+X0KRfvhGWTa+xtFTS02i+PWOR89YYPcD8+LF6GmyFBjx2FmLCx4JwMg==
@@ -1633,17 +1633,17 @@
     pascal-case "^3.1.1"
     tslib "~2.0.1"
 
-"@graphql-codegen/typescript@^1.17.11", "@graphql-codegen/typescript@^1.17.8":
-  version "1.17.11"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript/-/typescript-1.17.11.tgz#9bcc00580b36e8c98e7cc565dbccaf1b8b8ce85d"
-  integrity sha512-cZsuOWpPWWHX7IIv2xMbrI/AZOiv+wEzyGpoGFV8zU6vjs54C50gb7Chhj9XPjMbOhUQ+z3Pn01geTRvi1gDeA==
+"@graphql-codegen/typescript@^1.17.8", "@graphql-codegen/typescript@^1.19.0":
+  version "1.19.0"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript/-/typescript-1.19.0.tgz#05b1b4502b91dee53ec4f0ae39e9537eff004c5c"
+  integrity sha512-ThpMdtb6LmEKzLNxlotpk33eIMfX1i1aAlYDaqctIhFjZ2Rbvkgdb8q/5/my7yeH33BLnuqHDKrdkDsAAvCHcw==
   dependencies:
-    "@graphql-codegen/plugin-helpers" "^1.17.9"
-    "@graphql-codegen/visitor-plugin-common" "^1.17.16"
+    "@graphql-codegen/plugin-helpers" "^1.18.2"
+    "@graphql-codegen/visitor-plugin-common" "^1.17.21"
     auto-bind "~4.0.0"
     tslib "~2.0.1"
 
-"@graphql-codegen/visitor-plugin-common@^1.17.16", "@graphql-codegen/visitor-plugin-common@^1.17.18", "@graphql-codegen/visitor-plugin-common@^1.17.20":
+"@graphql-codegen/visitor-plugin-common@^1.17.18", "@graphql-codegen/visitor-plugin-common@^1.17.20", "@graphql-codegen/visitor-plugin-common@^1.17.21":
   version "1.17.21"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/visitor-plugin-common/-/visitor-plugin-common-1.17.21.tgz#e47a5623392bcdb89d5af2484798a2fd9a59df8c"
   integrity sha512-rhdJdj+4DAMgMSBlgkvfOMw65L46sAtYb7G/n9ucc9uJGUbiIcgvS/wpoQ/gxz2eUaNfcoFmjVLm+dkTM/XwqA==
