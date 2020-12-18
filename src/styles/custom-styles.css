@@ -226,4 +226,32 @@ html {
   .timeline-full-width {
     @apply -ml-16 md:ml-0;
   }
+
+  .blob {
+    @apply text-gray-1000 dark:text-white;
+  }
+
+  .blob-pink {
+    color: #FF007A;
+    fill-opacity: 0.7;
+  }
+
+  .blob-orange {
+    color: #FF8A00;
+    fill-opacity: 0.7;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .blob-pink {
+      fill-opacity: 0.9;
+    }
+  
+    .blob-orange {
+      fill-opacity: 0.9;
+    }
+  }
+  
+  .s-mark {
+    @apply text-white dark:text-gray-1000;
+  }
 }
