@@ -1,11 +1,18 @@
 import * as React from 'react'
 import { Zap } from 'react-feather'
+import { BlogPost } from '../BlogPost'
 import { DateEntry, TimelineEntry } from '../Entry'
 
 export function December() {
   return (
     <>
       <DateEntry title="December, 2020" />
+      <BlogPost
+        timestamp="December 20, 2020"
+        slug="reasons-you-arent-updating-your-personal-site"
+        title="Reasons You Aren't Updating Your Personal Site"
+        description="Tips and strategies to painlessly manage a personal website."
+      />
       <TimelineEntry
         title="Announced Staff.design"
         timestamp="December 6, 2020"
