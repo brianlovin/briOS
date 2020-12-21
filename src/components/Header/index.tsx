@@ -101,6 +101,10 @@ export default function Header() {
     activeRoute = 'Security Checklist'
     activePath = '/security'
   }
+  if (router.pathname.includes('/stack')) {
+    activeRoute = 'Stack'
+    activePath = '/stack'
+  }
 
   return (
     <React.Fragment>

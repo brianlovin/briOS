@@ -91,7 +91,6 @@ export default function OverthoughtSubscribeBox() {
               disabled={status === 'loading'}
               onChange={onChange}
               placeholder="Email address"
-              id="subscribe-email"
               type="email"
               name="email"
             />

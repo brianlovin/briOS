@@ -73,7 +73,6 @@ export default function HNSubscribeBox() {
             disabled={status === 'loading'}
             onChange={onChange}
             placeholder="Email address"
-            id="subscribe-email"
             type="email"
             name="email"
           />

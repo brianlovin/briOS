@@ -226,6 +226,12 @@ function About({ data, summaries }: Props) {
                 <p>Tools and resources for staying safe on the internet.</p>
               </div>
               <div className="flex flex-col space-y-1">
+                <Link passHref href="/stack">
+                  <a className="text-blue-600 dark:text-blue-500">My Stack</a>
+                </Link>
+                <p>A curated list of my favorite tools and software.</p>
+              </div>
+              <div className="flex flex-col space-y-1">
                 <a
                   target="_blank"
                   rel="noopener noreferrer"
@@ -459,11 +465,6 @@ function About({ data, summaries }: Props) {
                     well-known apps.
                   </p>
                 </div>
-                <Link href="/design-details" passHref>
-                  <a className="text-blue-600 dark:text-blue-500">
-                    See all posts &rarr;
-                  </a>
-                </Link>
               </div>
               <DesignDetailsGrid summaries={summaries} />
             </div>
@@ -483,7 +484,7 @@ export async function getStaticProps() {
     props: {
       data,
       apolloStaticCache: client.cache.extract(),
-      summaries: summaries.slice(0, 4),
+      summaries,
     },
   }
 }
