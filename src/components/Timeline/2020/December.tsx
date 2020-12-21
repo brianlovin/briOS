@@ -1,12 +1,31 @@
+import Link from 'next/link'
 import * as React from 'react'
-import { Zap } from 'react-feather'
+import { Layers, Zap } from 'react-feather'
 import { BlogPost } from '../BlogPost'
-import { DateEntry, TimelineEntry } from '../Entry'
+import { ButtonSet, DateEntry, Notes, TimelineEntry } from '../Entry'
 
 export function December() {
   return (
     <>
       <DateEntry title="December, 2020" />
+      <TimelineEntry
+        title="Published my stack"
+        timestamp="December 21, 2020"
+        Icon={Layers}
+      >
+        <>
+          <Notes>
+            Over the years, I’ve been curating my list of favorite tools, apps,
+            and independent software. Let me know what else I should try!
+          </Notes>
+          <ButtonSet>
+            <Link href="/stack" passHref>
+              <a className="btn">View my stack &nbsp; &rarr;</a>
+            </Link>
+          </ButtonSet>
+        </>
+      </TimelineEntry>
+
       <BlogPost
         timestamp="December 20, 2020"
         slug="reasons-you-arent-updating-your-personal-site"

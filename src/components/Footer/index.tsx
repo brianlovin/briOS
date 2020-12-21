@@ -47,6 +47,10 @@ export function Footer() {
             <a className="black-link">Hacker News</a>
           </Link>
 
+          <Link href="/stack" as="/stack" passHref>
+            <a className="black-link">My Stack</a>
+          </Link>
+
           <Link href="/security" as="/security" passHref>
             <a className="black-link">Security Checklist</a>
           </Link>

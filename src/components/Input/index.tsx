@@ -8,5 +8,5 @@ export function Input(props) {
 }
 
 export function Textarea(props) {
-  return <textarea className={styles} {...props} />
+  return <textarea className={`${styles} block`} {...props} />
 }
