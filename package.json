@@ -82,7 +82,7 @@
     "@graphql-codegen/typescript-react-apollo": "^2.2.1",
     "@testing-library/cypress": "^7.0.2",
     "@types/chai": "^4.2.14",
-    "@types/jest": "^26.0.15",
+    "@types/jest": "^26.0.19",
     "@types/mocha": "^8.0.4",
     "@types/node": "^14.14.14",
     "@types/react": "^17.0.0",
