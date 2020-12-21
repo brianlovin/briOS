@@ -143,7 +143,7 @@ export default function Header() {
               </svg>
             </MenuButton>
             <Link href={activePath}>
-              <a>
+              <a className="inline-block ml-15">
                 <span className="text-primary">{activeRoute}</span>
               </a>
             </Link>
