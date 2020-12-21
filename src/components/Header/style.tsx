@@ -66,7 +66,8 @@ export const MobileContainer = styled.header`
 
   a {
     text-align: left;
-    padding: 12px;
+    padding: 8px 0;
+    margin-left: 48px;
   }
 
   @media (min-width: ${theme.breakpoints[4]}) {
@@ -78,20 +79,29 @@ export const MobileContainer = styled.header`
 `
 
 export const CloseButton = styled.div`
-  position: relative;
-  display: ${(props) => (props.visible ? 'block' : 'none')};
+  display: ${(props) => (props.visible ? 'flex' : 'none')};
   font-size: 26px;
   font-weight: 300;
+  width: 40px;
+  height: 40px;
+  left: -4px;
+  top: -4px;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   z-index: 3;
-  position: relative;
 `
 
 export const MenuButton = styled.div`
-  padding: 0 8px;
+  position: absolute;
+  width: 56px;
+  height: 50px;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   z-index: 3;
-  position: relative;
 `
 
 export const Label = styled.span.attrs(({ isActive }) => ({
@@ -111,6 +121,8 @@ export const Label = styled.span.attrs(({ isActive }) => ({
 
     a {
       text-align: left;
+      padding: 8px 12px;
+      margin-left: 0;
     }
   }
 `
