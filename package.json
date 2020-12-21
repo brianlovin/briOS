@@ -24,7 +24,7 @@
     "@apollo/link-schema": "^2.0.0-beta.3",
     "@next/bundle-analyzer": "^10.0.3",
     "@now/node": "^1.8.5",
-    "@sentry/browser": "^5.29.0",
+    "@sentry/browser": "^5.29.2",
     "@sentry/node": "^5.27.4",
     "@tailwindcss/forms": "^0.2.1",
     "@tailwindcss/typography": "^0.3.1",
