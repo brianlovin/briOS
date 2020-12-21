@@ -26,6 +26,7 @@ export default function StackList() {
               width={64}
               height={64}
               layout="fixed"
+              alt={`${stack.name} icon`}
               className="border border-gray-100 dark:border-gray-900 rounded-xl flex-0"
             />
             <div className="flex flex-col justify-center flex-1 col-span-3 pl-5 space-y-2">
