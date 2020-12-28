@@ -106,7 +106,7 @@
     "prettier": "^2.2.1",
     "prettier-eslint": "^12.0.0",
     "stylelint-config-recommended": "^3.0.0",
-    "tailwindcss": "^2.0.1",
+    "tailwindcss": "^2.0.2",
     "tailwindcss-line-clamp": "^1.0.5",
     "typescript": "^4.1.3",
     "typescript-eslint-parser": "^22.0.0",
