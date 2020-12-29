@@ -32,7 +32,11 @@ function getTint(color: string) {
 }
 
 export function Notes({ children }) {
-  return <div className="-mt-2 prose timeline-inset prose-md">{children}</div>
+  return (
+    <div className="-mt-2 prose timeline-inset prose-md text-primary">
+      {children}
+    </div>
+  )
 }
 
 export function ButtonSet({ children }) {
