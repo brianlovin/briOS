@@ -10005,10 +10005,10 @@ postcss@^8.1.6, postcss@^8.2.1:
     nanoid "^3.1.20"
     source-map "^0.6.1"
 
-postmark@^2.6.0:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/postmark/-/postmark-2.6.0.tgz#8cfdc9a73e35deb19a0e6450a15bebe850bf175a"
-  integrity sha512-zL7y+jX4gkjn+EAWKOE0z2CNdR+51iBMYtycV75Ke2r58rFpNsU86pbuCEcNxVwH9J3da/UUMpxCgasBTm7xew==
+postmark@^2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/postmark/-/postmark-2.6.1.tgz#65db8dbfe240349b65e3a4cc3c2ef3a6d1e96866"
+  integrity sha512-qvLiznIT2cYl9GFxSE8SFJkmX/r6As7swQaOioxMmjSmg6Osvspq292ojpsKXpjltToruBlF46rbA5l125gd3A==
   dependencies:
     axios "^0.19.2"
 
