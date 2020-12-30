@@ -101,7 +101,7 @@
     "lint-staged": "^10.5.3",
     "now-env": "^3.2.0",
     "postcss": "^8.2.1",
-    "postcss-import": "^13.0.0",
+    "postcss-import": "^14.0.0",
     "postcss-preset-env": "^6.7.0",
     "prettier": "^2.2.1",
     "prettier-eslint": "^12.0.0",
