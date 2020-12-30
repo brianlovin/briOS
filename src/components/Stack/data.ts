@@ -294,7 +294,7 @@ export default [
     independent: true,
     oss: true,
     description:
-      'A gorgeous open source icon set made – easily grab SVGs, or integrate it directly into your React project.',
+      'A gorgeous open source icon set – easily grab SVGs, or integrate it directly into your React project.',
   },
   {
     name: 'Cypress',
