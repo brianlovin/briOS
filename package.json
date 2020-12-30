@@ -32,7 +32,7 @@
     "@tryghost/content-api": "^1.4.11",
     "@zeit/next-source-maps": "0.0.4-canary.1",
     "apollo-server-micro": "^2.19.1",
-    "cheerio": "^1.0.0-rc.3",
+    "cheerio": "^1.0.0-rc.5",
     "cookie": "^0.4.1",
     "cryptr": "^6.0.2",
     "date-fns": "^2.16.1",
