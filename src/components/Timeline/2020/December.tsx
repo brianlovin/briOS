@@ -87,6 +87,7 @@ export function December() {
         timestamp="December 6, 2020"
         Icon={Zap}
         tint={'purple'}
+        divider={false}
       >
         <a
           target="_blank"
