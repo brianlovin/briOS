@@ -16,6 +16,7 @@ import phishing from './phishing'
 import physicalPrivacy from './physicalPrivacy'
 import geotagging from './geotagging'
 import messagingApps from './messagingApps'
+import publicRecords from './publicRecords'
 
 export default {
   passwordManager,
@@ -36,4 +37,5 @@ export default {
   messagingApps,
   phishing,
   patching,
+  publicRecords,
 }
