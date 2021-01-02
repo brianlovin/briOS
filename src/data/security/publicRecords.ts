@@ -1,7 +1,7 @@
 export default {
   id: 'publicRecords',
   title: 'Remove your public record listings',
-  description: `Public record listing services such as Whitepages, Intelius, and BeenVerified make it easy for anyone to find information from your public records. This information can include your phone number, home address, direct relatives, and more.
+  description: `Public record listing services such as Whitepages, Intelius, and BeenVerified make it easy for anyone to find your information from public records. This information can include your phone number, home address, direct relatives, and more.
 
   \n\nSomeone with malicious intent could use this info to gain access to your online accounts or steal your identity, or create a physical threat by doxing or stalking. 
 
