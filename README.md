@@ -1,5 +1,5 @@
-# Brian Lovin Next
-The code that powers [brianlovin.com](https://brianlovin.com).
+# Paul Owe's personal platform
+The code that powers [paulowe.com](https://paulowe.com).
 
 ## Development
 Clone the repository:
