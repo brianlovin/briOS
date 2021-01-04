@@ -44,7 +44,7 @@
     "next": "^10.0.4",
     "next-seo": "^4.17.0",
     "postmark": "^2.6.1",
-    "prismjs": "^1.22.0",
+    "prismjs": "^1.23.0",
     "react": "^16.14.0",
     "react-clipboard.js": "^2.0.16",
     "react-dom": "^16.14.0",
