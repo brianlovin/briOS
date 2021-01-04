@@ -29,87 +29,75 @@ function About({ data, summaries }: Props) {
         <div className="flex flex-col space-y-12" data-cy="about-page">
           <div className="-mx-4 -mt-24 md:mt-0 md:-mx-8 ">
             <Image
-              src="/static/img/about.jpg"
+              src="/static/img/about.png"
               alt={'A photo of me'}
               layout="responsive"
-              width="672"
-              height="448"
+              width="1922"
+              height="1430"
               className="md:rounded-lg"
             />
           </div>
           <div className="flex flex-col space-y-12">
             <div className="flex flex-col prose lg:prose-lg">
               <p>
-                👋 I’m a product designer, podcaster, and writer, currently
-                living in San Francisco.
+                👋 I’m an artificial intelligence enthusiast, researcher, and
+                writer, currently living in Toronto and Dar es Salaam.
               </p>
               <p>
-                Right now I’m designing{' '}
+                I graduated from{' '}
                 <a
                   href="https://github.com/mobile"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  native mobile apps
+                  Lassonde School of Engineering
                 </a>{' '}
-                at{' '}
+                at York University where I studied Computer Science. I enjoy
+                working on innovative solutions in the field of data mining and
+                machine learning in efforts of making an impactful and novel
+                contribution that accelerates applications of{' '}
                 <a
-                  href="https://github.com/brianlovin"
+                  href="https://cci.mit.edu"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  GitHub
-                </a>
-                . Before GitHub, I co-founded{' '}
-                <a
-                  href="https://spectrum.chat"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Spectrum
-                </a>
-                , a platform for large-scale communities to have better public
-                conversations. Spectrum was acquired by GitHub in November,
-                2018.
-              </p>
-              <p>
-                Before Spectrum I designed payments experiences at Facebook,
-                working across Facebook, Messenger, WhatsApp, and Instagram. I
-                originally cut my teeth as the first product designer at{' '}
-                <a
-                  href="https://buffer.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Buffer
+                  collective intellgience
                 </a>
                 .
               </p>
               <p>
-                I also co-host the{' '}
+                My current role as Research Assistant is focused on the
+                automatic retrieval and archiving of{' '}
                 <a
-                  href="https://designdetails.fm"
+                  href="https://en.unesco.org/themes/building-knowledge-societies/oer"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Design Details Podcast
+                  open educational resources
                 </a>
-                , a weekly conversation about design process and culture. Design
-                Details is part of{' '}
+                , where I work with an interdisciplinary research team to
+                evaluate a large number of platforms, identify trends and
+                patterns from data, and develop best practice overviews.
+              </p>
+
+              <p>
+                I also co-founded{' '}
                 <a
-                  href="https://spec.fm"
+                  href="https://www.pharmassess.ca/about/"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Spec.fm
+                  PharmAssess Diagnostics Corp.
                 </a>
-                , a podcast network for designers and developers, which I
-                co-founded in 2015.
+                , where I developed algorithms and systems to mine massive
+                amounts of data, and created real-time inference engines that
+                are currently being used to provide better healthcare to
+                Canadians.
               </p>
               <p>
                 You can find me on{' '}
                 <a
-                  href="https://twitter.com/brian_lovin"
+                  href="https://twitter.com/1paulowe"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -117,7 +105,7 @@ function About({ data, summaries }: Props) {
                 </a>{' '}
                 where I talk about design and development, or on{' '}
                 <a
-                  href="https://github.com/brianlovin"
+                  href="https://github.com/paulowe"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -125,26 +113,13 @@ function About({ data, summaries }: Props) {
                 </a>{' '}
                 where I’m building in the open, or on{' '}
                 <a
-                  href="https://figma.com/@brian"
+                  href="https://www.linkedin.com/in/paulowe"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Figma
+                  LinkedIn
                 </a>{' '}
-                where I’m exploring how plugins can automate the tedious parts
-                of interface design.
-              </p>
-              <p>
-                <em>
-                  Photo by{' '}
-                  <a
-                    href="https://twitter.com/rxnjmmt"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    @rxnjmmt
-                  </a>
-                </em>
+                where I’m networking with professionals.
               </p>
             </div>
 
@@ -189,12 +164,12 @@ function About({ data, summaries }: Props) {
               <div className="flex flex-col space-y-1">
                 <Link passHref href="/design-details">
                   <a className="text-blue-600 dark:text-blue-500">
-                    App Dissection
+                    AI Research
                   </a>
                 </Link>
                 <p>
-                  In-depth explorations of visual and interaction design in
-                  well-known apps.
+                  In-depth explorations of functional, visual and interaction
+                  design in modern AI platforms.
                 </p>
               </div>
               <div className="flex flex-col space-y-1">

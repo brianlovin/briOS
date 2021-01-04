@@ -11,9 +11,8 @@ function Home() {
         <div className="flex flex-col space-y-24">
           <div className="flex flex-col space-y-8 md:items-center">
             <PageHeader
-              title="Hey, I’m Brian"
-              subtitle="I’m a product designer, podcaster, and writer, living in San
-                Francisco. I’m currently building native mobile apps at GitHub."
+              title="Paul Owe"
+              subtitle="Research Assistant at York University. Interested in data mining and machine learning."
             />
 
             <div className="flex flex-col space-y-2 md:space-x-4 md:flex-row md:space-y-0 md:items-center md:justify-center">
@@ -31,6 +30,15 @@ function Home() {
               >
                 <button className="w-full text-lg btn btn-large">
                   Follow me on Twitter
+                </button>
+              </a>
+              <a
+                href="https://github.com/paulowe"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <button className="w-full text-lg btn btn-large">
+                  Follow me on GitHub
                 </button>
               </a>
             </div>

@@ -17,12 +17,20 @@ export function Footer() {
           </Link>
 
           <a
-            href="https://twitter.com/brian_lovin"
+            href="https://twitter.com/1paulowe"
             target="_blank"
             rel="noopener noreferrer"
             className="black-link"
           >
-            @brian_lovin
+            @1paulowe
+          </a>
+          <a
+            href="https://twitter.com/0brainlab"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="black-link"
+          >
+            @0brainlab
           </a>
         </div>
 

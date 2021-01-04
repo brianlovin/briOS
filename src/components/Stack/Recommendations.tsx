@@ -56,8 +56,8 @@ export default function Recommendations() {
         </p>
       </div>
       <p className="font-normal text-gray-900 dark:text-gray-300">
-        My stack is a curated list of tools and software that I use daily. In
-        general, less is more. But I’m always interested in discovering great
+        My stack is a curated list of tools and software that I use regularly.
+        In general, less is more. But I’m always interested in discovering great
         new apps and tools – let me know what I should check out.
       </p>
 
