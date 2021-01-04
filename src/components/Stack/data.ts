@@ -169,7 +169,7 @@ export default [
   },
   {
     name: 'Glyph Finder',
-    url: 'https://www.glyphfinder.com',
+    url: 'https://gumroad.com/a/814871667/ZaEQz',
     image: 'glyphfinder.png',
     independent: true,
     description: 'Quit Googling for unicode characters!',
