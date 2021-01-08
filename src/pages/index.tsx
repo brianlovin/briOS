@@ -24,7 +24,7 @@ function Home() {
                 </a>
               </Link>
               <a
-                href="https://twitter.com/brian_lovin"
+                href="https://twitter.com/1paulowe"
                 target="_blank"
                 rel="noopener noreferrer"
               >

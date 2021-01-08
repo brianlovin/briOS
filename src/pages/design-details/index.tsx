@@ -9,17 +9,17 @@ export default function DesignDetails() {
   return (
     <Page>
       <NextSeo
-        title={'App Dissection'}
+        title={'Research'}
         description={'In-depth design explorations.'}
         openGraph={{
           url: 'https://brianlovin.com/design-details',
-          title: 'App Dissection',
+          title: 'Research',
           description: 'In-depth design explorations.',
-          site_name: 'App Dissection',
+          site_name: 'Research',
           images: [
             {
               url: 'https://brianlovin.com/static/meta/app-dissection.png',
-              alt: 'App Dissection',
+              alt: 'Research',
             },
           ],
         }}
@@ -28,9 +28,9 @@ export default function DesignDetails() {
       <CenteredColumn>
         <div className="flex flex-col space-y-8">
           <PageHeader
-            title="App Dissection"
+            title="Research"
             subtitle="Exploring the best interaction patterns, visual styles, and design
-            decisions of well-known apps."
+            decisions of intelligent software platforms."
           />
 
           <DesignDetailsGrid summaries={summaries} />
