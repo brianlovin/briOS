@@ -22,7 +22,7 @@ function Overthought({ data }: Props) {
       <CenteredColumn>
         <div className="flex flex-col space-y-14">
           <PageHeader
-            title=" Digital Thoughts"
+            title=" Digital Thoughts "
             subtitle="Thinking out loud about design, development, and building
               intelligent software."
           />
