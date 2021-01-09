@@ -9,70 +9,51 @@ export function January() {
   return (
     <>
       <DateEntry title="January, 2020" />
+
       <TimelineEntry
         title="Social Network Analysis"
         timestamp="January 29, 2020"
-        Icon={GitCommit}
+        Icon={Zap}
+        tint="purple"
       >
-        <Notes>
-          <p>
-            With over 500 million tweets per day, you can imagine how rich with
-            information the twitter platform is. I conducted a{' '}
+        <div className="flex flex-col overflow-hidden transition-shadow bg-white rounded-md shadow md:flex-row dark:bg-gray-900 hover:shadow-cardHover">
+          <div className="flex flex-col justify-start px-3 py-3 space-y-2 md:w-1/2">
+            <p className="flex-1 px-2 font-normal">
+              I conducted a social network analysis to understand the structural
+              properties of networks on twitter. I used tweepy to test and
+              integrate with twitter’s REST and Streaming APIs.
+            </p>
+            <span />
             <a
-              href="https://en.wikipedia.org/wiki/Social_network_analysis"
+              target="_blank"
               rel="noopener noreferrer"
+              href="https://towardsdatascience.com/mining-twitter-data-ba4e44e6aecc"
             >
-              social network analysis
-            </a>{' '}
-            to understand the structural properties of networks on twitter. I
-            used{' '}
-            <a
-              href="http://docs.tweepy.org/en/latest/"
-              rel="noopener noreferrer"
-            >
-              tweepy
-            </a>{' '}
-            to test and integrate twitter’s REST and Streaming APIs into my
-            application. I modelled twitter conversations and monitored how
-            users interact and communicate in an aggregate manner. Finally, I
-            created a dynamic map to visualize location of tweets and enhance
-            comprehensibility of my analysis{' '}
-            <a
-              href="https://python-visualization.github.io/folium/"
-              rel="noopener noreferrer"
-            >
-              Folium
-            </a>
-            .
-          </p>
-        </Notes>
-        <ButtonSet>
-          <a
-            href="https://towardsdatascience.com/mining-twitter-data-ba4e44e6aecc"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full md:w-auto"
-          >
-            <button className="w-full md:w-auto btn">
-              <>
+              <div className="btn">
                 <span>Read technical report</span>
-              </>
-            </button>
-          </a>
-          <a
-            href="https://github.com/paulowe/mining-twitter"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full md:w-auto"
-          >
-            <button className="w-full md:w-auto btn">
-              <>
+              </div>
+            </a>
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://github.com/paulowe/mining-twitter"
+            >
+              <div className="btn">
                 <GitMerge size={16} />
                 <span>View project on Github</span>
-              </>
-            </button>
-          </a>
-        </ButtonSet>
+              </div>
+            </a>
+          </div>
+          <div className="hidden w-full md:w-1/2 md:inline-block">
+            <Image
+              width="640"
+              height="698"
+              layout="responsive"
+              src="/static/img/project/twitter.png"
+              alt="preview of waves, a custom made set of phone wallpapers"
+            />
+          </div>
+        </div>
       </TimelineEntry>
     </>
   )
