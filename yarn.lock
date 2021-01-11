@@ -2400,12 +2400,12 @@
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"
   integrity sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==
 
-"@tryghost/content-api@^1.4.11":
-  version "1.4.11"
-  resolved "https://registry.yarnpkg.com/@tryghost/content-api/-/content-api-1.4.11.tgz#1b04d586a7cdad6dbcf273414478f0011fab776f"
-  integrity sha512-TpJ0LJPfHCC8nOzcGq8vEgzL2/YDT4KBEUCb6+KmkX+LEdxbFb7TZDFtMUt32U9Hd3JGasjNwlmlBfxYqgkvmQ==
+"@tryghost/content-api@^1.4.12":
+  version "1.4.12"
+  resolved "https://registry.yarnpkg.com/@tryghost/content-api/-/content-api-1.4.12.tgz#328a61e3748640c5c4ff71ea1cd77d99807f39de"
+  integrity sha512-g7g9g4nS9/ulASX7pxzUwZiVT7Ir9f22p1T61qq+gIdlqBAxm4owUyxih7MBJ9mr9MUzsd2gjBoovIN/4mBSZA==
   dependencies:
-    axios "0.21.0"
+    axios "0.21.1"
 
 "@types/accepts@*":
   version "1.3.5"
@@ -3636,10 +3636,10 @@ aws4@^1.8.0:
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.10.1.tgz#e1e82e4f3e999e2cfd61b161280d16a111f86428"
   integrity sha512-zg7Hz2k5lI8kb7U32998pRRFin7zJlkfezGJjUc2heaD4Pw2wObakCDVzkKztTm/Ln7eiVvYsjqak0Ed4LkMDA==
 
-axios@0.21.0:
-  version "0.21.0"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.0.tgz#26df088803a2350dff2c27f96fef99fe49442aca"
-  integrity sha512-fmkJBknJKoZwem3/IKSSLpkdNXZeBu5Q7GA/aRsr2btgrptmSCxi2oFjZHqGdK9DoTil9PIHlPIZw2EcRJXRvw==
+axios@0.21.1:
+  version "0.21.1"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.1.tgz#22563481962f4d6bde9a76d516ef0e5d3c09b2b8"
+  integrity sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==
   dependencies:
     follow-redirects "^1.10.0"
 
