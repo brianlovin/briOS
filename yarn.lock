@@ -3641,7 +3641,7 @@ aws4@^1.8.0:
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.10.1.tgz#e1e82e4f3e999e2cfd61b161280d16a111f86428"
   integrity sha512-zg7Hz2k5lI8kb7U32998pRRFin7zJlkfezGJjUc2heaD4Pw2wObakCDVzkKztTm/Ln7eiVvYsjqak0Ed4LkMDA==
 
-axios@0.21.1:
+axios@0.21.1, axios@^0.21.1:
   version "0.21.1"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.1.tgz#22563481962f4d6bde9a76d516ef0e5d3c09b2b8"
   integrity sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==
@@ -9801,12 +9801,12 @@ postcss@^8.1.6, postcss@^8.2.1, postcss@^8.2.4:
     nanoid "^3.1.20"
     source-map "^0.6.1"
 
-postmark@^2.6.1:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/postmark/-/postmark-2.6.1.tgz#65db8dbfe240349b65e3a4cc3c2ef3a6d1e96866"
-  integrity sha512-qvLiznIT2cYl9GFxSE8SFJkmX/r6As7swQaOioxMmjSmg6Osvspq292ojpsKXpjltToruBlF46rbA5l125gd3A==
+postmark@^2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/postmark/-/postmark-2.7.0.tgz#986516c5b5c6098883686f9244ce0e41f0935639"
+  integrity sha512-HrRW6x/4XBkWRB6hpI8B6efGG2LlzzC4cCUnhjsb/SfRNzmM+pv0zQd1Om4qA8E9ZEhFZmAsRQdxUIwm89svIg==
   dependencies:
-    axios "^0.19.2"
+    axios "^0.21.1"
 
 prebuild-install@^6.0.0:
   version "6.0.0"
