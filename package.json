@@ -29,7 +29,7 @@
     "@tailwindcss/forms": "^0.2.1",
     "@tailwindcss/typography": "^0.3.1",
     "@tippy.js/react": "^3.1.1",
-    "@tryghost/content-api": "^1.4.11",
+    "@tryghost/content-api": "^1.4.12",
     "@zeit/next-source-maps": "0.0.4-canary.1",
     "apollo-server-micro": "^2.19.1",
     "cheerio": "^1.0.0-rc.5",
