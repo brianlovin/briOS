@@ -38,12 +38,20 @@ export function Footer() {
           <Link href="/overthought" as="/overthought" passHref>
             <a className="black-link">Writing</a>
           </Link>
-          <Link href="/design-details" as="/design-details" passHref>
-            <a className="black-link">App Dissection</a>
-          </Link>
-          <Link href="/ama" as="/ama" passHref>
-            <a className="black-link">AMA</a>
-          </Link>
+
+          <a
+            href="https://www.paulowe.com/docs/cv-pcowe.pdf"
+            className="black-link"
+          >
+            CV
+          </a>
+
+          <a
+            href="https://www.paulowe.com/docs/pcowe.pdf"
+            className="black-link"
+          >
+            Resumé
+          </a>
         </div>
 
         <div className="flex flex-col space-y-4">

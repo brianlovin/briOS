@@ -50,9 +50,66 @@ export function January() {
               height="698"
               layout="responsive"
               src="/static/img/project/twitter.png"
-              alt="preview of waves, a custom made set of phone wallpapers"
+              alt="A preview of the twitter logo"
             />
           </div>
+        </div>
+      </TimelineEntry>
+      <TimelineEntry
+        title="BEST Startup of the Year Award"
+        timestamp="First week of January"
+        Icon={Camera}
+      >
+        <Notes>
+          <p>
+            I particiapted in the BEST Startup experience sponsored by Rogers,
+            IBM, and KPM Power, where my team emerged first place after we
+            demonstrated our plan to help students reach their full potential
+            and achieve better mental health through an intuitive app that acts
+            as a dashboard of students’ school, work and social needs.{' '}
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://www.bestlassonde.ca/2019/11/19/best-startup-experience/"
+            >
+              Read more about the competition
+            </a>
+            .{' '}
+          </p>
+        </Notes>
+        <div className="grid grid-cols-2 grid-rows-2 gap-2">
+          <Image
+            src="/static/photos/best-1.png"
+            width="1072"
+            height="1010"
+            layout="responsive"
+            className="rounded"
+            alt="Photo from the competition, Toronto"
+          />
+          <Image
+            src="/static/photos/best-2.png"
+            width="300"
+            height="300"
+            layout="responsive"
+            className="rounded"
+            alt="Photo from the competition, Toronto"
+          />
+          <Image
+            src="/static/photos/best-3.jpeg"
+            width="1458"
+            height="1944"
+            layout="responsive"
+            className="rounded"
+            alt="Photo from the competition, Toronto"
+          />
+          <Image
+            src="/static/photos/best-4.jpg"
+            width="3024"
+            height="4032"
+            layout="responsive"
+            className="rounded"
+            alt="Photo from the competition, Toronto"
+          />
         </div>
       </TimelineEntry>
     </>

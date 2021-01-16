@@ -12,7 +12,7 @@ function Home() {
           <div className="flex flex-col space-y-8 md:items-center">
             <PageHeader
               title="Paul Owe"
-              subtitle="Research Assistant at York University. Interested in data mining and machine learning."
+              subtitle="I am currently exploring cloud computing, data mining and machine learning technologies."
             />
 
             <div className="flex flex-col space-y-2 md:space-x-4 md:flex-row md:space-y-0 md:items-center md:justify-center">
@@ -23,15 +23,6 @@ function Home() {
                   </button>
                 </a>
               </Link>
-              <a
-                href="https://twitter.com/1paulowe"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <button className="w-full text-lg btn btn-large">
-                  Follow me on Twitter
-                </button>
-              </a>
               <a
                 href="https://github.com/paulowe"
                 target="_blank"

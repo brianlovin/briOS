@@ -40,13 +40,21 @@ function About({ data, summaries }: Props) {
           <div className="flex flex-col space-y-12">
             <div className="flex flex-col prose lg:prose-lg">
               <p>
-                👋 I’m an artificial intelligence enthusiast, researcher, and
-                writer, currently living in Toronto and Dar es Salaam.
+                👋 I’m a machine intelligence developer, researcher, and writer,
+                currently living in{' '}
+                <a
+                  href="http://www.dsm.go.tz"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Dar es Salaam
+                </a>
+                .
               </p>
               <p>
                 I graduated from{' '}
                 <a
-                  href="https://github.com/mobile"
+                  href="https://lassonde.yorku.ca"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -54,7 +62,7 @@ function About({ data, summaries }: Props) {
                 </a>{' '}
                 at York University where I studied Computer Science. I enjoy
                 working on innovative solutions in the field of data mining and
-                machine learning in efforts of making an impactful and novel
+                machine learning working towards an impactful and novel
                 contribution that accelerates applications of{' '}
                 <a
                   href="https://cci.mit.edu"
@@ -66,8 +74,9 @@ function About({ data, summaries }: Props) {
                 .
               </p>
               <p>
-                My current role as Research Assistant is focused on the
-                automatic retrieval and archiving of{' '}
+                I currently conduct research at York University. My role as
+                research assistant is focused on the automatic retrieval and
+                archiving of{' '}
                 <a
                   href="https://en.unesco.org/themes/building-knowledge-societies/oer"
                   target="_blank"
@@ -75,9 +84,9 @@ function About({ data, summaries }: Props) {
                 >
                   open educational resources
                 </a>
-                , where I work with an interdisciplinary research team to
-                evaluate a large number of platforms, identify trends and
-                patterns from data, and develop best practice overviews.
+                . I work with an interdisciplinary research team to evaluate a
+                large number of platforms, analyze trends and patterns from
+                data, and develop an open bilingual accelerator.
               </p>
 
               <p>
@@ -97,14 +106,6 @@ function About({ data, summaries }: Props) {
               <p>
                 You can find me on{' '}
                 <a
-                  href="https://twitter.com/1paulowe"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Twitter
-                </a>{' '}
-                where I talk about design and development, or on{' '}
-                <a
                   href="https://github.com/paulowe"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -119,7 +120,7 @@ function About({ data, summaries }: Props) {
                 >
                   LinkedIn
                 </a>{' '}
-                where I’m networking with professionals.
+                for professional networking.
               </p>
             </div>
 
@@ -131,7 +132,7 @@ function About({ data, summaries }: Props) {
 
                 <p className="text-lg">
                   Thinking out loud about design, development, and building
-                  software.
+                  intelligent software.
                 </p>
               </div>
 
