@@ -62,7 +62,7 @@ function About({ data, summaries }: Props) {
                 </a>{' '}
                 at York University where I studied Computer Science. I enjoy
                 working on innovative solutions in the field of data mining and
-                machine learning working towards an impactful and novel
+                machine learning, working towards an impactful and novel
                 contribution that accelerates applications of{' '}
                 <a
                   href="https://cci.mit.edu"
@@ -98,10 +98,9 @@ function About({ data, summaries }: Props) {
                 >
                   PharmAssess Diagnostics Corp.
                 </a>
-                , where I developed algorithms and systems to mine massive
-                amounts of data, and created real-time inference engines that
-                are currently being used to provide better healthcare to
-                Canadians.
+                , where I develop algorithms and systems to mine massive of
+                data, and create real-time inference engines that are being used
+                to provide better healthcare to Canadians.
               </p>
               <p>
                 You can find me on{' '}
@@ -161,30 +160,6 @@ function About({ data, summaries }: Props) {
                 <h4>Projects</h4>
                 <p className="text-lg">Weekend hacks for fun and learning.</p>
               </div>
-
-              <div className="flex flex-col space-y-1">
-                <Link passHref href="/design-details">
-                  <a className="text-blue-600 dark:text-blue-500">
-                    AI Research
-                  </a>
-                </Link>
-                <p>
-                  In-depth explorations of functional, visual and interaction
-                  design in modern AI platforms.
-                </p>
-              </div>
-              <div className="flex flex-col space-y-1">
-                <Link passHref href="/bookmarks">
-                  <a className="text-blue-600 dark:text-blue-500">Bookmarks</a>
-                </Link>
-                <p>Internet things, saved for later.</p>
-              </div>
-              <div className="flex flex-col space-y-1">
-                <Link passHref href="/ama">
-                  <a className="text-blue-600 dark:text-blue-500">AMA</a>
-                </Link>
-                <p>Ask me anything.</p>
-              </div>
               <div className="flex flex-col space-y-1">
                 <Link passHref href="/hn">
                   <a className="text-blue-600 dark:text-blue-500">
@@ -192,6 +167,12 @@ function About({ data, summaries }: Props) {
                   </a>
                 </Link>
                 <p>A better Hacker News.</p>
+              </div>
+              <div className="flex flex-col space-y-1">
+                <Link passHref href="/stack">
+                  <a className="text-blue-600 dark:text-blue-500">My Stack</a>
+                </Link>
+                <p>A curated list of my favorite tools and software.</p>
               </div>
               <div className="flex flex-col space-y-1">
                 <Link passHref href="/security">
@@ -202,68 +183,28 @@ function About({ data, summaries }: Props) {
                 <p>Tools and resources for staying safe on the internet.</p>
               </div>
               <div className="flex flex-col space-y-1">
-                <Link passHref href="/stack">
-                  <a className="text-blue-600 dark:text-blue-500">My Stack</a>
+                <Link passHref href="/bookmarks">
+                  <a className="text-blue-600 dark:text-blue-500">Bookmarks</a>
                 </Link>
-                <p>A curated list of my favorite tools and software.</p>
-              </div>
-              <div className="flex flex-col space-y-1">
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 dark:text-blue-500"
-                  href="https://gumroad.com/l/waves-premium-phone-wallpapers"
-                >
-                  Waves Phone Wallpapers
-                </a>
-                <p>
-                  A custom-made set of 10 phone wallpapers, each with a unique
-                  color palette and design.
-                </p>
+                <p>Internet things, saved for later.</p>
               </div>
               <div />
             </div>
 
             <div className="flex flex-col space-y-4">
-              <div className="flex flex-col space-y-1">
-                <h4>Design Details Podcast</h4>
-                <p className="text-lg">
-                  A weekly conversation about design process and culture.
-                </p>
-              </div>
-              {data && data.episodes && (
-                <PodcastEpisodesList episodes={data.episodes} />
-              )}
-              <a
-                href="https://designdetails.fm/episodes"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 dark:text-blue-500"
-              >
-                See all episodes &rarr;
-              </a>
-            </div>
-
-            <div className="flex flex-col space-y-4">
-              <div className="flex flex-col space-y-1">
-                <h4>Figma plugins</h4>
-                <p className="text-lg">
-                  Making the design process less tedious.
-                </p>
-              </div>
-              <FigmaPlugins />
-              <a
-                className="text-blue-600 dark:text-blue-500"
-                href="https://figma.com/@brian"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                See my Figma profile &rarr;
-              </a>
-            </div>
-
-            <div className="flex flex-col space-y-4">
               <h4>Open source work</h4>
+              <div className="flex flex-col space-y-1">
+                <a
+                  href="https://github.com/paulowe/paulowe"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 dark:text-blue-500"
+                >
+                  paulowe / paulowe
+                </a>
+                <p>The code that powers this website you’re looking at.</p>
+              </div>
+
               <div className="flex flex-col space-y-1">
                 <a
                   className="text-blue-600 dark:text-blue-500"
@@ -274,18 +215,6 @@ function About({ data, summaries }: Props) {
                   designdetails / designdetails
                 </a>
                 <p>The code that powers Design Details.</p>
-              </div>
-
-              <div className="flex flex-col space-y-1">
-                <a
-                  href="https://github.com/brianlovin/brian-lovin-next"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 dark:text-blue-500"
-                >
-                  brian-lovin-next
-                </a>
-                <p>The code that powers this website you’re looking at.</p>
               </div>
 
               <div className="flex flex-col space-y-1">
@@ -315,134 +244,13 @@ function About({ data, summaries }: Props) {
               </div>
 
               <a
-                href="https://github.com/brianlovin"
+                href="https://github.com/paulowe"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-600 dark:text-blue-500"
               >
                 Follow me on GitHub &rarr;
               </a>
-            </div>
-
-            <div className="flex flex-col space-y-4">
-              <h4>Speaking and interviews</h4>
-              <div className="flex flex-col space-y-4">
-                <div className="flex flex-col space-y-1">
-                  <a
-                    className="text-blue-600 dark:text-blue-500"
-                    href="https://www.swiftbysundell.com/podcast/67/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Building for open source
-                  </a>
-                  <p>
-                    Ryan Nystrom and I talk about designing and building the
-                    mobile apps at GitHub.
-                  </p>
-                </div>
-
-                <div className="flex flex-col space-y-1">
-                  <a
-                    className="text-blue-600 dark:text-blue-500"
-                    href="https://www.youtube.com/watch?v=SyS3h3kmBnY"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Extend what’s possible with Figma Plugins - Figma Config
-                  </a>
-                  <p>
-                    An exploration into the plugins I built to automate the
-                    tedious parts of designing mobile apps at GitHub.
-                  </p>
-                </div>
-
-                <div className="flex flex-col space-y-1">
-                  <a
-                    className="text-blue-600 dark:text-blue-500"
-                    href="https://www.youtube.com/watch?v=6MBBTdu8v6E"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Designing with GraphQL - GraphQL Summit
-                  </a>
-                  <p>
-                    Exploring the possibilities that open up when designers and
-                    developers can speak the same language.
-                  </p>
-                </div>
-
-                <div className="flex flex-col space-y-1">
-                  <a
-                    className="text-blue-600 dark:text-blue-500"
-                    href="https://interfacelovers.com/interviews/brian-lovin"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Interface Lovers Interview
-                  </a>
-                  <p>
-                    An interview about how I got into design, my process, and
-                    past work.
-                  </p>
-                </div>
-
-                <div className="flex flex-col space-y-1">
-                  <a
-                    className="text-blue-600 dark:text-blue-500"
-                    href="https://spec.fm/podcasts/design-details/79352"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Charmander++ – Interviewing ourselves on Design Details
-                  </a>
-                  <p>
-                    Bryn Jackson and I interviewed each other. Totally humble.
-                  </p>
-                </div>
-
-                <div className="flex flex-col space-y-1">
-                  <a
-                    href="https://avocode.com/blog/brian-lovin-product-designer-github-interview"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Avocode Interview
-                  </a>
-                  <p>
-                    An interview where we dig into my work at Buffer, Facebook,
-                    Spectrum, and what’s in the works at GitHub.
-                  </p>
-                </div>
-
-                <div className="flex flex-col space-y-1">
-                  <a
-                    className="text-blue-600 dark:text-blue-500"
-                    href="https://softwareengineeringdaily.com/2020/07/15/github-mobile-with-brian-lovin-and-ryan-nystrom/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Software Engineering Daily: GitHub Mobile
-                  </a>
-                  <p>
-                    Ryan and I discuss how we designed and built the first
-                    version of GitHub’s mobile apps.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-col space-y-6">
-              <div className="flex flex-col space-y-4">
-                <div className="flex flex-col space-y-1">
-                  <h4>App Dissection</h4>
-                  <p className="text-lg">
-                    In-depth explorations of visual and interaction design in
-                    well-known apps.
-                  </p>
-                </div>
-              </div>
-              <DesignDetailsGrid summaries={summaries} />
             </div>
           </div>
         </div>
