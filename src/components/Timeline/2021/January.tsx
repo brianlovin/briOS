@@ -8,6 +8,13 @@ export function January() {
       <DateEntry title="January, 2021" />
 
       <BlogPost
+        timestamp="January 17, 2021"
+        slug="becoming-a-better-interviewer"
+        title="Becoming a better interviewer"
+        description="What I've learned from studying the meta skills of great interviewers."
+      />
+
+      <BlogPost
         image="2020-in-review.jpg"
         timestamp="January 1, 2021"
         slug="2020-in-review"
