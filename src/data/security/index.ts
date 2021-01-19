@@ -1,8 +1,6 @@
 import passwordManager from './passwordManager'
 import strongDevicePasscode from './strongDevicePasscode'
 import twoFactor from './twoFactor'
-import carrierPin from './carrierPin'
-import creditFreeze from './creditFreeze'
 import encryptedHardware from './encryptedHardware'
 import dns from './dns'
 import vpn from './vpn'
@@ -22,9 +20,7 @@ export default {
   passwordManager,
   strongDevicePasscode,
   twoFactor,
-  carrierPin,
   encryptedHardware,
-  creditFreeze,
   dns,
   vpn,
   physicalPrivacy,
