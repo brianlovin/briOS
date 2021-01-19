@@ -1,4 +1,6 @@
-# paulowe / paulowe
+
+# Paul Owe's personal platform
+
 The code that powers [paulowe.com](https://paulowe.com).
 
 ## Development
