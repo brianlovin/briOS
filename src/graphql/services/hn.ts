@@ -33,8 +33,8 @@ export async function getPostById(id, includeComments = false) {
     .filter(Boolean)
 
   const cleanUrl = data.domain
-    ? `${data.url}?ref=brianlovin.com`
-    : `https://brianlovin.com/hn/${data.id}`
+    ? `${data.url}?ref=paulowe.com`
+    : `https://paulowe.com/hn/${data.id}`
 
   const post = Object.assign(data, {
     ...data,

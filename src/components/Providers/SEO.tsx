@@ -4,23 +4,24 @@ import { useRouter } from 'next/router'
 import { DefaultSeo } from 'next-seo'
 
 const SeoConfig = {
-  title: 'Brian Lovin',
-  description: 'Product designer',
+  title: 'Paul Owe',
+  description:
+    'Hello world! I am Paul Owe. I work as a machine learning developer, researcher and writer.',
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://brianlovin.com',
-    site_name: 'Brian Lovin',
+    url: 'https://paulowe.com',
+    site_name: 'Paul Owe',
     images: [
       {
-        url: 'https://brianlovin.com/static/meta/og-image.png',
-        alt: 'Brian Lovin',
+        url: 'https://paulowe.com/static/meta/og-image.png',
+        alt: 'Paul Owe',
       },
     ],
   },
   twitter: {
-    handle: '@brian_lovin',
-    site: '@brian_lovin',
+    handle: '@1paulowe',
+    site: '@1paulowe',
     cardType: 'summary_large_image',
   },
 }
@@ -30,8 +31,8 @@ export default function SEO() {
 
   let emoji = '👾'
   if (router.route.indexOf('/about') === 0) emoji = '👋'
-  if (router.route.indexOf('/overthought') === 0) emoji = '🤔'
-  if (router.route.indexOf('/design-details') === 0) emoji = '✨'
+  if (router.route.indexOf('/paulsmessage') === 0) emoji = '🤔'
+  if (router.route.indexOf('/design-details') === 0) emoji = '🧠'
   if (router.route.indexOf('/bookmarks') === 0) emoji = '📖'
 
   return (

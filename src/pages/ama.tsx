@@ -15,12 +15,12 @@ function About() {
         title={'Ask Me Anything'}
         description={'Answering questions, just for fun.'}
         openGraph={{
-          url: 'https://brianlovin.com/ama',
+          url: 'https://paulowe.com/ama',
           title: 'Ask Me Anything',
           description: 'Answering questions, just for fun.',
           images: [
             {
-              url: 'https://brianlovin.com/static/meta/ama.png',
+              url: 'https://paulowe.com/static/meta/ama.png',
               alt: 'Ask Me Anything',
             },
           ],

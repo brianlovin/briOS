@@ -11,13 +11,13 @@ export default function Security() {
         title={'Security Checklist'}
         description={'Tools and resources for staying safe on the internet'}
         openGraph={{
-          url: 'https://brianlovin.com/security',
+          url: 'https://paulowe.com/security',
           title: 'Security Checklist',
           description: 'Tools and resources for staying safe on the internet',
           site_name: 'Security Checklist',
           images: [
             {
-              url: 'https://brianlovin.com/static/meta/security.png',
+              url: 'https://paulowe.com/static/meta/security.png',
               alt: 'Security Checklist',
             },
           ],

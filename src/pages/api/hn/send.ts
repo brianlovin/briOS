@@ -44,7 +44,7 @@ export default sentryAPIHandler(
     */
     const ref =
       test || process.env.NODE_ENV !== 'production'
-        ? db.collection(COLLECTION).where('email', '==', 'hi@brianlovin.com')
+        ? db.collection(COLLECTION).where('email', '==', 'pcowe@my.yorku.ca')
         : db.collection(COLLECTION)
 
     let count = 0
@@ -55,11 +55,11 @@ export default sentryAPIHandler(
 
       if (validEmail(user.email)) {
         const unsubscribeToken = cryptr.encrypt(user.email)
-        const unsubscribe_url = `https://brianlovin.com/api/hn/unsubscribe?token=${unsubscribeToken}`
+        const unsubscribe_url = `https://paulowe.com/api/hn/unsubscribe?token=${unsubscribeToken}`
 
         count = count + 1
         await postmark.sendEmailWithTemplate({
-          From: 'hi@brianlovin.com',
+          From: 'pcowe@my.yorku.ca',
           To: user.email,
           TemplateId: 18037634,
           TemplateModel: {

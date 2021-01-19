@@ -17,25 +17,50 @@ export function Footer() {
           </Link>
 
           <a
-            href="https://twitter.com/brian_lovin"
+            href="https://twitter.com/1paulowe"
             target="_blank"
             rel="noopener noreferrer"
             className="black-link"
           >
-            @brian_lovin
+            @1paulowe
+          </a>
+          <a
+            href="https://twitter.com/0brainlab"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="black-link"
+          >
+            @0brainlab
           </a>
         </div>
 
         <div className="flex flex-col space-y-4">
-          <Link href="/overthought" as="/overthought" passHref>
+          <Link href="/paulsmessage" as="/paulsmessage" passHref>
             <a className="black-link">Writing</a>
           </Link>
-          <Link href="/design-details" as="/design-details" passHref>
-            <a className="black-link">App Dissection</a>
-          </Link>
-          <Link href="/ama" as="/ama" passHref>
-            <a className="black-link">AMA</a>
-          </Link>
+
+          <a
+            href="https://www.paulowe.com/docs/cv-pcowe.pdf"
+            rel="noopener noreferrer"
+            className="black-link"
+          >
+            CV
+          </a>
+
+          <a
+            href="https://www.paulowe.com/docs/pcowe.pdf"
+            rel="noopener noreferrer"
+            className="black-link"
+          >
+            Resumé
+          </a>
+          <a
+            href="https://paulsmessage.com"
+            rel="noopener noreferrer"
+            className="black-link"
+          >
+            Blog
+          </a>
         </div>
 
         <div className="flex flex-col space-y-4">

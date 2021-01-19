@@ -40,7 +40,7 @@ export default sentryAPIHandler(
     if (response.status >= 400) {
       return res.status(400).json({
         error:
-          'Hm, couldn’t add you to the newsletter - ping me directly at hi@brianlovin.com and I’ll add you to this list!',
+          'Hm, couldn’t add you to the newsletter - ping me directly at paul.owe@live.com and I’ll add you to this list!',
       })
     }
 
