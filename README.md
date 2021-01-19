@@ -1,9 +1,9 @@
-# Brian Lovin Next
-The code that powers [brianlovin.com](https://brianlovin.com).
+# paulowe / paulowe
+The code that powers [paulowe.com](https://paulowe.com).
 
 ## Development
 Clone the repository:
-`git clone git@github.com:brianlovin/brian-lovin-next.git`
+`git clone git@github.com:paulowe/paulowe.git`
 
 `cd` into the directory:
 `cd brian-lovin-next`
