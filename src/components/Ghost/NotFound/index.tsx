@@ -6,8 +6,8 @@ export default function NotFound() {
     <div data-cy="overthought-not-found">
       <h1>Post not Found</h1>
 
-      <Link href={'/overthought'} passHref>
-        <a>&larr; Back to Overthought</a>
+      <Link href={'/paulsmessage'} passHref>
+        <a>&larr; Back to Paul&apos;s Message</a>
       </Link>
     </div>
   )

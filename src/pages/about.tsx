@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Page from '~/components/Page'
 import { CenteredColumn } from '~/components/Layouts'
-import OverthoughtList from '~/components/Overthought/List'
+import OverthoughtList from '~/components/Ghost/List'
 import DesignDetailsGrid from '~/components/DesignDetailsGrid'
 import PodcastEpisodesList from '~/components/PodcastEpisodesList'
 import FigmaPlugins from '~/components/FigmaPlugins'
@@ -41,15 +41,7 @@ function About({ data, summaries }: Props) {
             <div className="flex flex-col prose lg:prose-lg">
               <p>
                 👋 I’m a machine intelligence developer, researcher, and writer,
-                currently living in{' '}
-                <a
-                  href="http://www.dsm.go.tz"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Dar es Salaam
-                </a>
-                .
+                currently living in Dar es Salaam.
               </p>
               <p>
                 I graduated from{' '}
@@ -129,23 +121,20 @@ function About({ data, summaries }: Props) {
               <div className="flex flex-col space-y-1">
                 <h4>Writing</h4>
 
-                <p className="text-lg">
-                  Thinking out loud about design, development, and building
-                  intelligent software.
-                </p>
+                <p className="text-lg">Thoughts, stories and ideas.</p>
               </div>
 
               {data && data.posts && <OverthoughtList posts={data.posts} />}
 
               <div className="flex flex-col space-y-1">
-                <Link href="/overthought" as="/overthought" passHref>
+                <Link href="/paulsmessage" as="/paulsmessage" passHref>
                   <a className="text-blue-600 dark:text-blue-500">
                     See all posts &rarr;
                   </a>
                 </Link>
 
                 <a
-                  href="https://overthought.ghost.io/rss/"
+                  href="https://paulsmessage.com/rss/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-600 dark:text-blue-500"
@@ -208,13 +197,13 @@ function About({ data, summaries }: Props) {
               <div className="flex flex-col space-y-1">
                 <a
                   className="text-blue-600 dark:text-blue-500"
-                  href="https://github.com/designdetails/designdetails"
+                  href="https://github.com/TryGhost/Ghost"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  designdetails / designdetails
+                  Ghost
                 </a>
-                <p>The code that powers Design Details.</p>
+                <p>The code that powers Paul&apos;s Message.</p>
               </div>
 
               <div className="flex flex-col space-y-1">

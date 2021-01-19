@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Post } from '~/graphql/types.generated'
-import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe'
+import OverthoughtSubscribeBox from '~/components/Ghost/Subscribe'
 import SyntaxHighlighter from '~/components/SyntaxHighlighter'
 import SEO from './SEO'
 import Feedback from '../Feedback'

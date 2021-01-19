@@ -8,7 +8,7 @@ function transform(repo) {
 }
 
 export async function getRepos() {
-  return await fetch('https://api.github.com/users/brianlovin/repos')
+  return await fetch('https://api.github.com/users/paulowe/repos')
     .then((res) => res.json())
     .then((res) => {
       return res

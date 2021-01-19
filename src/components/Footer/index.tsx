@@ -35,12 +35,13 @@ export function Footer() {
         </div>
 
         <div className="flex flex-col space-y-4">
-          <Link href="/overthought" as="/overthought" passHref>
+          <Link href="/paulsmessage" as="/paulsmessage" passHref>
             <a className="black-link">Writing</a>
           </Link>
 
           <a
             href="https://www.paulowe.com/docs/cv-pcowe.pdf"
+            rel="noopener noreferrer"
             className="black-link"
           >
             CV
@@ -48,9 +49,17 @@ export function Footer() {
 
           <a
             href="https://www.paulowe.com/docs/pcowe.pdf"
+            rel="noopener noreferrer"
             className="black-link"
           >
             Resumé
+          </a>
+          <a
+            href="https://paulsmessage.com"
+            rel="noopener noreferrer"
+            className="black-link"
+          >
+            Blog
           </a>
         </div>
 

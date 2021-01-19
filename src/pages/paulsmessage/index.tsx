@@ -1,9 +1,9 @@
 import * as React from 'react'
 import Page, { PageHeader } from '~/components/Page'
 import { Post } from '~/graphql/types.generated'
-import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe'
-import SEO from '~/components/Overthought/SEO'
-import OverthoughtList from '~/components/Overthought/List'
+import OverthoughtSubscribeBox from '~/components/Ghost/Subscribe'
+import SEO from '~/components/Ghost/SEO'
+import OverthoughtList from '~/components/Ghost/List'
 import { GET_POSTS } from '~/graphql/queries'
 import { initApolloClient } from '~/graphql/services/apollo'
 import { CenteredColumn } from '~/components/Layouts'
@@ -22,9 +22,8 @@ function Overthought({ data }: Props) {
       <CenteredColumn>
         <div className="flex flex-col space-y-14">
           <PageHeader
-            title=" Digital Thoughts "
-            subtitle="Thinking out loud about design, development, and building
-              intelligent software."
+            title=" Paul's Message "
+            subtitle="Thoughts, stories and ideas."
           />
 
           <OverthoughtSubscribeBox />

@@ -67,7 +67,7 @@ export default function OverthoughtSubscribeBox() {
         If you want to know about new posts, add your email below.
         Alternatively, you can{' '}
         <a
-          href="https://overthought.ghost.io/rss/"
+          href="https://paulsmessage.com/rss/"
           target="_blank"
           rel="noopener noreferrer"
         >

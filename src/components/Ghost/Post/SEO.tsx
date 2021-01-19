@@ -14,8 +14,8 @@ export default function SEO({ post }: Props) {
         <link
           rel="alternate"
           type="application/rss+xml"
-          title="RSS Feed for Overthought"
-          href="https://brianlovin.com/overthought/rss"
+          title="RSS Feed for Paul's Message"
+          href="https://paulowe.com/paulsmessage/rss"
         />
       </Head>
 
@@ -24,17 +24,17 @@ export default function SEO({ post }: Props) {
         description={post.custom_excerpt || post.excerpt}
         openGraph={{
           title: post.title,
-          url: `https://brianlovin.com/overthought/${post.slug}`,
+          url: `https://paulowe.com/paulsmessage/${post.slug}`,
           description: post.custom_excerpt || post.excerpt,
           images: [
             {
               url:
                 post.feature_image ||
-                `https://brianlovin.com/static/img/overthought/${post.slug}.png`,
+                `https://paulowe.com/static/img/paulsmessage/${post.slug}.png`,
               alt: post.title,
             },
           ],
-          site_name: 'Overthought',
+          site_name: "Paul's Message",
         }}
         twitter={{
           cardType: 'summary_large_image',

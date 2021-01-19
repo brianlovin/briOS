@@ -8,7 +8,7 @@ export default function Fathom() {
     tracker.setAttribute('site', process.env.FATHOM_SITE_ID)
     tracker.setAttribute('spa', 'auto')
     tracker.setAttribute('excluded-domains', 'localhost,now.sh')
-    tracker.setAttribute('included-domains', 'brianlovin.com')
+    tracker.setAttribute('included-domains', 'paulowe.com')
     tracker.src = process.env.FATHOM_CUSTOM_URL
     firstScript.parentNode.insertBefore(tracker, firstScript)
   }, [])

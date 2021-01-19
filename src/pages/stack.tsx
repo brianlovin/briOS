@@ -14,12 +14,12 @@ function Stack() {
         title={'Stack'}
         description={'My favorite tools and software.'}
         openGraph={{
-          url: 'https://brianlovin.com/stack',
+          url: 'https://paulowe.com/stack',
           title: 'Stack',
           description: 'My favorite tools and software.',
           images: [
             {
-              url: 'https://brianlovin.com/static/meta/stack.png',
+              url: 'https://paulowe.com/static/meta/stack.png',
               alt: 'My favorite tools and software.',
             },
           ],
@@ -45,14 +45,13 @@ function Stack() {
             excellent. Nobody is paying to be on this list.
           </p>
           <p className="font-normal text-yellow-900 dark:text-gray-300">
-            However, some of the links above are affiliate links. If you don’t
-            want to click them out of principle, I understand. Any affiliate
+            However, some of the links above are affiliate links. Any affiliate
             income earned goes straight back into powering this website and my
             other side projects: servers, storage, domain names, and other
-            operational costs do add up.
+            operational costs.
           </p>
           <p className="font-normal text-yellow-900 dark:text-gray-300">
-            ❤️ Brian
+            ❤️ Paul
           </p>
         </div>
         <Recommendations />

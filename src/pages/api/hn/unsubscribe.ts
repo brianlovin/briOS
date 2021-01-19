@@ -14,7 +14,7 @@ export default sentryAPIHandler(
     const { token } = req.query
 
     function done() {
-      res.writeHead(301, { Location: 'https://brianlovin.com/hn' })
+      res.writeHead(301, { Location: 'https://paulowe.com/hn' })
       res.end()
     }
 

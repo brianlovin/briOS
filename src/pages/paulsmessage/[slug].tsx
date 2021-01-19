@@ -2,8 +2,8 @@ import * as React from 'react'
 import { Post } from '~/graphql/types.generated'
 import { GET_POST, GET_POSTS } from '~/graphql/queries'
 import Page from '~/components/Page'
-import PostContainer from '~/components/Overthought/Post'
-import NotFound from '~/components/Overthought/NotFound'
+import PostContainer from '~/components/Ghost/Post'
+import NotFound from '~/components/Ghost/NotFound'
 import { initApolloClient } from '~/graphql/services/apollo'
 
 interface Props {

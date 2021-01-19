@@ -5,7 +5,8 @@ import { DefaultSeo } from 'next-seo'
 
 const SeoConfig = {
   title: 'Paul Owe',
-  description: 'AI Research',
+  description:
+    'Hello world! I am Paul Owe. I work as a machine learning developer, researcher and writer.',
   openGraph: {
     type: 'website',
     locale: 'en_US',
@@ -13,7 +14,7 @@ const SeoConfig = {
     site_name: 'Paul Owe',
     images: [
       {
-        url: 'https://brianlovin.com/static/meta/og-image.png',
+        url: 'https://paulowe.com/static/meta/og-image.png',
         alt: 'Paul Owe',
       },
     ],
@@ -30,7 +31,7 @@ export default function SEO() {
 
   let emoji = '👾'
   if (router.route.indexOf('/about') === 0) emoji = '👋'
-  if (router.route.indexOf('/overthought') === 0) emoji = '🤔'
+  if (router.route.indexOf('/paulsmessage') === 0) emoji = '🤔'
   if (router.route.indexOf('/design-details') === 0) emoji = '🧠'
   if (router.route.indexOf('/bookmarks') === 0) emoji = '📖'
 

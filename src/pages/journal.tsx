@@ -5,7 +5,7 @@ import FullscreenLoading from '~/components/FullscreenLoading'
 export default function Journal() {
   const router = useRouter()
   React.useEffect(() => {
-    router.push('/overthought')
+    router.push('/paulsmessage')
   }, [])
 
   return <FullscreenLoading />

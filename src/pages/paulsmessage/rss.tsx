@@ -5,11 +5,11 @@ export default class extends React.Component {
   static async getInitialProps({ res }) {
     if (res) {
       res.writeHead(302, {
-        Location: 'https://overthought.ghost.io/rss/',
+        Location: 'https://paulsmessage.com/rss/',
       })
       res.end()
     } else {
-      Router.push('/overthought/rss')
+      Router.push('/paulsmessage/rss')
     }
     return {}
   }
