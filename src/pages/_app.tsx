@@ -7,16 +7,6 @@ import 'tailwindcss/utilities.css'
 import '~/styles/custom-styles.css'
 
 class MyApp extends App {
-  static async getInitialProps({ Component, ctx }) {
-    let pageProps = {}
-
-    if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx)
-    }
-
-    return { pageProps }
-  }
-
   componentDidCatch(error, errorInfo) {
     Sentry.withScope((scope) => {
       Object.keys(errorInfo).forEach((key) => {
