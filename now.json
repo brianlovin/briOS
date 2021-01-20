@@ -24,7 +24,7 @@
     "PASSWORD_TOKEN": "@password-token",
     "POSTMARK_CLIENT_ID": "@postmark-client-id",
     "HN_TOKEN": "@hn-token",
-    "SENTRY_DSN": "@sentry-dsn",
+    "SENTRY_DSN": "@dsn-sentry",
     "SIMPLECAST_V2_API_KEY": "@simplecast-v2-api-key"
   },
   "build": {
@@ -52,7 +52,7 @@
       "PASSWORD_TOKEN": "@password-token",
       "POSTMARK_CLIENT_ID": "@postmark-client-id",
       "HN_TOKEN": "@hn-token",
-      "SENTRY_DSN": "@sentry-dsn",
+      "SENTRY_DSN": "@dsn-sentry",
       "SIMPLECAST_V2_API_KEY": "@simplecast-v2-api-key"
     }
   }
