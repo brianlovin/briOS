@@ -47,7 +47,7 @@ export function July() {
           </Notes>
           <ButtonSet>
             <a
-              href="https://www.paulowe.com/docs/aws-africa.pdf"
+              href="static/docs/aws-africa.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="btn"

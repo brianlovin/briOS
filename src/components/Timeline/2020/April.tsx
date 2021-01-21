@@ -12,22 +12,24 @@ export function April() {
 
       <TimelineEntry
         title="KPMG Virtual Internship"
-        timestamp="April 4, 2020"
+        timestamp="April 25, 2020"
         Icon={Zap}
         tint="blue"
       >
         <div className="flex flex-col overflow-hidden transition-shadow bg-white rounded-md shadow md:flex-row dark:bg-gray-900 hover:shadow-cardHover">
           <div className="flex flex-col justify-start px-3 py-3 space-y-2 md:w-1/2">
             <p className="flex-1 px-2 font-normal">
-              As part of the program at KPMG, I interacted with business clients
-              to complete data quality assessments, knowledge mining and
-              presentations.
+              I virtually completed my internship with KPMG&apos;s data
+              analytics consulting group. As part of the internship program, I
+              worked with a business client to complete data quality
+              assessments, conduct research in knowledge mining, prepare
+              visualization dashboards, and presentations.
             </p>
             <span />
             <a
               target="_blank"
               rel="noopener noreferrer"
-              href="https://www.paulowe.com/docs/kpmg.pdf"
+              href="static/docs/kpmg.pdf"
             >
               <div className="btn">
                 <span>View certificate</span>

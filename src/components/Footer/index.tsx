@@ -40,7 +40,7 @@ export function Footer() {
           </Link>
 
           <a
-            href="https://www.paulowe.com/docs/cv-pcowe.pdf"
+            href="static/docs/cv-pcowe.pdf"
             rel="noopener noreferrer"
             className="black-link"
           >
@@ -48,7 +48,7 @@ export function Footer() {
           </a>
 
           <a
-            href="https://www.paulowe.com/docs/pcowe.pdf"
+            href="static/docs/resume-pcowe.pdf"
             rel="noopener noreferrer"
             className="black-link"
           >

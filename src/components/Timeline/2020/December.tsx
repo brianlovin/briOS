@@ -29,7 +29,7 @@ export function December() {
             <a
               target="_blank"
               rel="noopener noreferrer"
-              href="https://www.paulowe.com/docs/create-dav.pdf"
+              href="static/docs/create-dav.pdf"
             >
               <div className="btn">
                 <span>View certificate</span>
@@ -41,7 +41,7 @@ export function December() {
               width="640"
               height="698"
               layout="responsive"
-              src="/static/img/project/createdav.png"
+              src="/static/img/project/bergeron.jpg"
               alt="A preview of the CreateDAV certificate"
             />
           </div>

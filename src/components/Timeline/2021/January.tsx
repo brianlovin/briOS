@@ -8,11 +8,11 @@ export function January() {
       <DateEntry title="January, 2021" />
 
       <BlogPost
-        image="2020-in-review.jpg"
-        timestamp="January 1, 2021"
-        slug="2020-in-review"
-        title="2020 in review"
-        description="Looking back on 2020 and setting goals for the next year."
+        image="sentiment-analysis-for-platform-design.jpg"
+        timestamp="January 21, 2021"
+        slug="sentiment-analysis-for-platform-design"
+        title="Data Science for Platform Design and User Engagement"
+        description="Part 1: The need for data driven insights to inform product design at PôleFLS"
         divider={false}
       />
     </>
