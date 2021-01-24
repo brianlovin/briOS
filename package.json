@@ -27,7 +27,7 @@
     "@sentry/browser": "^5.29.2",
     "@sentry/node": "^5.29.2",
     "@tailwindcss/forms": "^0.2.1",
-    "@tailwindcss/typography": "^0.3.1",
+    "@tailwindcss/typography": "^0.4.0",
     "@tippy.js/react": "^3.1.1",
     "@tryghost/content-api": "^1.4.12",
     "@zeit/next-source-maps": "0.0.4-canary.1",
