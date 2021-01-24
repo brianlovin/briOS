@@ -20,8 +20,8 @@ export default function PostView({ post }: Props) {
       <GlobalPrismStyles />
       <SEO post={post} />
 
-      <CenteredColumn data-cy="overthought-post">
-        <div className="flex flex-col space-y-8">
+      <CenteredColumn>
+        <div data-cy="overthought-post" className="flex flex-col space-y-8">
           {post.feature_image && (
             <FeaturedImage
               alt={post.title}

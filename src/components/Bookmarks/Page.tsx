@@ -27,8 +27,8 @@ export default function BookmarksPage({ category }) {
           ],
         }}
       />
-      <CenteredColumn data-cy="bookmarks">
-        <div className="flex flex-col space-y-8">
+      <CenteredColumn>
+        <div data-cy="bookmarks" className="flex flex-col space-y-8">
           <PageHeader
             title="Bookmarks"
             subtitle="Internet things, saved for later."

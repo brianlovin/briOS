@@ -16,11 +16,11 @@ interface Props {
 
 function Overthought({ data }: Props) {
   return (
-    <Page data-cy="overthought">
+    <Page>
       <SEO />
 
       <CenteredColumn>
-        <div className="flex flex-col space-y-14">
+        <div data-cy="overthought" className="flex flex-col space-y-14">
           <PageHeader
             title="Overthought"
             subtitle="Thinking out loud about design, development, and building
