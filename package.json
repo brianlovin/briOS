@@ -31,7 +31,7 @@
     "@tippy.js/react": "^3.1.1",
     "@tryghost/content-api": "^1.4.12",
     "@zeit/next-source-maps": "0.0.4-canary.1",
-    "apollo-server-micro": "^2.19.1",
+    "apollo-server-micro": "^2.19.2",
     "cheerio": "^1.0.0-rc.5",
     "cookie": "^0.4.1",
     "cryptr": "^6.0.2",
