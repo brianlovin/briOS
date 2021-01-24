@@ -94,8 +94,8 @@ export function December() {
           rel="noopener noreferrer"
           href="https://staff.design"
         >
-          <div className="flex flex-col overflow-hidden transition-shadow bg-white rounded-md shadow md:flex-row dark:bg-gray-900 hover:shadow-cardHover">
-            <div className="flex flex-col justify-center px-3 py-3 space-y-1 md:items-center">
+          <div className="relative flex flex-col overflow-hidden transition-shadow bg-white rounded-md shadow md:flex-row dark:bg-gray-900 hover:shadow-cardHover">
+            <div className="z-10 flex flex-col justify-center flex-auto px-3 pt-8 pb-8 space-y-1 md:items-center">
               <svg
                 width="128"
                 height="128"
@@ -139,16 +139,19 @@ export function December() {
                   </clipPath>
                 </defs>
               </svg>
-              <h5 className="px-2 pt-2">Staff Design</h5>
-              <p className="flex-1 px-2 font-normal md:text-center">
-                Conversations with high-impact individual contributors in
-                product design.
-              </p>
-              <p className="flex-1 px-2 py-4 text-xs font-normal tracking-wider text-gray-700 uppercase dark:text-gray-300 md:text-center">
-                Coming January, 2021.
+
+              <h1 className="px-2 pt-2">Staff Design</h1>
+              <p className="flex-1 px-2 pb-6 text-lg font-normal md:text-center">
+                Navigating the individual contributor career path
               </p>
               <span />
-              <div className="btn btn-primary">View the project</div>
+              <div className="px-6 py-4 font-mono text-sm text-center hover:bg-opacity-10 filter-saturate filter-blur bg-gray-1000 bg-opacity-5">
+                View the project
+              </div>
+            </div>
+            <div className="meta-wrap">
+              <div className="meta"></div>
+              <div className="meta"></div>
             </div>
           </div>
         </a>

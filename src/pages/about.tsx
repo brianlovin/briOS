@@ -38,7 +38,7 @@ function About({ data, summaries }: Props) {
             />
           </div>
           <div className="flex flex-col space-y-12">
-            <div className="flex flex-col prose lg:prose-lg">
+            <div className="flex flex-col leading-relaxed prose lg:prose-lg">
               <p>
                 👋 I’m a product designer, podcaster, and writer, currently
                 living in San Francisco.
@@ -354,6 +354,20 @@ function About({ data, summaries }: Props) {
                 <div className="flex flex-col space-y-1">
                   <a
                     className="text-blue-600 dark:text-blue-500"
+                    href="https://layout.fm/episodes/194/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Layout.fm: It Ran Into the Wall of Reality
+                  </a>
+                  <p>
+                    I spoke with Kevin and Rafa about the Staff Design project,
+                    career ladders, imposter syndrome, and Paul Rudd.
+                  </p>
+                </div>
+                <div className="flex flex-col space-y-1">
+                  <a
+                    className="text-blue-600 dark:text-blue-500"
                     href="https://www.swiftbysundell.com/podcast/67/"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -427,6 +441,7 @@ function About({ data, summaries }: Props) {
 
                 <div className="flex flex-col space-y-1">
                   <a
+                    className="text-blue-600 dark:text-blue-500"
                     href="https://avocode.com/blog/brian-lovin-product-designer-github-interview"
                     target="_blank"
                     rel="noopener noreferrer"
