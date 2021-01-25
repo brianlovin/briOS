@@ -9915,10 +9915,10 @@ postcss@^8.1.6, postcss@^8.2.1, postcss@^8.2.4:
     nanoid "^3.1.20"
     source-map "^0.6.1"
 
-postmark@^2.7.0:
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/postmark/-/postmark-2.7.0.tgz#986516c5b5c6098883686f9244ce0e41f0935639"
-  integrity sha512-HrRW6x/4XBkWRB6hpI8B6efGG2LlzzC4cCUnhjsb/SfRNzmM+pv0zQd1Om4qA8E9ZEhFZmAsRQdxUIwm89svIg==
+postmark@^2.7.1:
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/postmark/-/postmark-2.7.1.tgz#752ea78b90a50059fcd14da7a78a7d70105d15c2"
+  integrity sha512-mevTZY8mZ2+DqBQweoUVsjlcsY2wu/WotDKplsFMiOy4mG7euOzmD4pqkWFymMVjeKbU52NZWEkO2Et1X0tdFw==
   dependencies:
     axios "^0.21.1"
 
