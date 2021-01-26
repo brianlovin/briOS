@@ -19,7 +19,7 @@ function Stack() {
           description: 'My favorite tools and software.',
           images: [
             {
-              url: 'https://paulowe.com/static/meta/stack.png',
+              url: 'https://paulowe.com/static/meta/stack.jpeg',
               alt: 'My favorite tools and software.',
             },
           ],
@@ -41,7 +41,7 @@ function Stack() {
             </p>
           </div>
           <p className="font-normal text-yellow-900 dark:text-gray-300">
-            I only recommend apps and tools that I use every day and think are
+            I only recommend apps and tools that I use frequently and think are
             excellent. Nobody is paying to be on this list.
           </p>
           <p className="font-normal text-yellow-900 dark:text-gray-300">

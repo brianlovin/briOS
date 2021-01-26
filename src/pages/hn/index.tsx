@@ -34,12 +34,12 @@ export default function HNTop(props: Props) {
         title={'Hacker News'}
         description={'My personal Hacker News reader.'}
         openGraph={{
-          url: 'https://brianlovin.com/hn',
+          url: 'https://paulowe.com/hn',
           title: 'Hacker News',
           description: 'My personal Hacker News reader.',
           images: [
             {
-              url: 'https://brianlovin.com/static/meta/hn.png',
+              url: 'https://paulowe.com/static/meta/hn.jpeg',
               alt: 'Hacker News',
             },
           ],

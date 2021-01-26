@@ -20,7 +20,7 @@ function About() {
           description: 'Answering questions, just for fun.',
           images: [
             {
-              url: 'https://paulowe.com/static/meta/ama.png',
+              url: 'https://paulowe.com/static/meta/ama.jpeg',
               alt: 'Ask Me Anything',
             },
           ],

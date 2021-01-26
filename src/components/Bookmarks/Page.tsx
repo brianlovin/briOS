@@ -16,12 +16,12 @@ export default function BookmarksPage({ category }) {
         title={'Bookmarks'}
         description={'Internet things, saved for later.'}
         openGraph={{
-          url: 'https://brianlovin.com/bookmarks',
+          url: 'https://paulowe.com/bookmarks',
           title: 'Bookmarks',
           description: 'Internet things, saved for later.',
           images: [
             {
-              url: 'https://brianlovin.com/static/meta/bookmarks.png',
+              url: 'https://paulowe.com/static/meta/bookmarks.jpeg',
               alt: 'Bookmarks',
             },
           ],

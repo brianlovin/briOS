@@ -27,7 +27,7 @@ export function HNPost(props: Props) {
         }
         openGraph={{
           title: post.title,
-          url: `https://brianlovin.com/hn/${post.id}`,
+          url: `https://paulowe.com/hn/${post.id}`,
           description:
             post.content || `${post.comments_count} comments · ${post.domain}`,
           site_name: 'Hacker News',

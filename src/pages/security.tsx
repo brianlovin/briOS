@@ -17,7 +17,7 @@ export default function Security() {
           site_name: 'Security Checklist',
           images: [
             {
-              url: 'https://paulowe.com/static/meta/security.png',
+              url: 'https://paulowe.com/static/meta/security.jpeg',
               alt: 'Security Checklist',
             },
           ],

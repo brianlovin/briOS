@@ -31,7 +31,7 @@ export default function HNPostView(props: Props) {
           description: 'My personal Hacker News reader.',
           images: [
             {
-              url: 'https://brianlovin.com/static/meta/hn.png',
+              url: 'https://paulowe.com/static/meta/hn.jpeg',
               alt: 'Hacker News',
             },
           ],

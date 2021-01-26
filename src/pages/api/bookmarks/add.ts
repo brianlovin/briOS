@@ -17,7 +17,7 @@ export default async (req, res) => {
   if (process.env.NODE_ENV === 'production') {
     const twilioSignature = req.headers['x-twilio-signature']
     const params = req.body
-    const webhookUrl = 'https://brianlovin.com/api/bookmarks/add'
+    const webhookUrl = 'https://paulowe.com/api/bookmarks/add'
 
     const requestIsValid = twilio.validateRequest(
       process.env.TWILIO_AUTH_TOKEN,

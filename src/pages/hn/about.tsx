@@ -12,12 +12,12 @@ export default function HNAbout() {
         title={'Hacker News · About'}
         description={'About my personal Hacker News reader.'}
         openGraph={{
-          url: 'https://brianlovin.com/hn/about',
+          url: 'https://paulowe.com/hn/about',
           title: 'Hacker News · About',
           description: 'About my personal Hacker News reader.',
           images: [
             {
-              url: 'https://brianlovin.com/static/meta/hn.png',
+              url: 'https://paulowe.com/static/meta/hn.jpeg',
               alt: 'Hacker News',
             },
           ],
@@ -70,10 +70,11 @@ export default function HNAbout() {
 
             <h5>Dark mode</h5>
             <p>
-              HN doesn’t support a native dark mode. I have astigmatism and one
-              of the symptoms is light sensitivity. My personal site always
-              matches the system dark mode preference, which for me means I’ll
-              always be able to read comments in dark mode.
+              HN doesn’t support a native dark mode and I prefer low light
+              sensitivity. My personal site can match and adapt according to
+              your system preferences. For me, I am always in the dark mode
+              preference, which means I’ll always be able to read comments in
+              dark mode on my site&amp;s version of HN.
             </p>
 
             <h5>Conversations</h5>

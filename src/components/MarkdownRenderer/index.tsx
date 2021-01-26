@@ -16,7 +16,7 @@ const parseHtml = htmlParser({
 
 function LinkRenderer(props: any) {
   const { href, children } = props
-  const baseUrl = 'https://brianlovin.com'
+  const baseUrl = 'https://paulowe.com'
   const isSelf = href.indexOf(baseUrl) === 0
   if (isSelf) {
     return (

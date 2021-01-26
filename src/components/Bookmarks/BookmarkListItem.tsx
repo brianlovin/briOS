@@ -87,7 +87,7 @@ export const BookmarkListItem = React.memo((props: Props) => {
         <div className="flex flex-col pt-1 contents-center">
           <span className="flex items-center space-x-2">
             <a
-              href={`${bookmark.url}?ref=brianlovin.com`}
+              href={`${bookmark.url}?ref=paulowe.com`}
               target="_blank"
               rel="noopener noreferrer"
             >

@@ -16,7 +16,7 @@ export async function editAMAQuestion(_, { id, question, answer, status }) {
 export async function addAMAQuestion(_, { question }) {
   emailMe({
     subject: `AMA: ${question}`,
-    body: `${question}\n\nhttps://brianlovin.com/ama`,
+    body: `${question}\n\nhttps://paulowe.com/ama`,
   })
 
   return await db

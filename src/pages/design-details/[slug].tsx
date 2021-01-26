@@ -28,13 +28,13 @@ export default function DesignDetail({ post }: Props) {
           title={`${post.title} · App Dissection`}
           description={post.description}
           openGraph={{
-            url: `https://brianlovin.com/design-details/${post.slug}`,
+            url: `https://paulowe.com/design-details/${post.slug}`,
             title: post.title,
             description: removeMd(post.description),
             site_name: 'App Dissection',
             images: [
               {
-                url: 'https://brianlovin.com/static/meta/app-dissection.png',
+                url: 'https://paulowe.com/static/meta/app-dissection.png',
                 alt: 'App Dissection',
               },
             ],
