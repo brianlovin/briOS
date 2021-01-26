@@ -8,3 +8,4 @@ yarn-error.log
 .now
 .vercel
 *.pem
+secrets/stripe_backup_code.txt

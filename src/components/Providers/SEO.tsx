@@ -6,7 +6,7 @@ import { DefaultSeo } from 'next-seo'
 const SeoConfig = {
   title: 'Paul Owe',
   description:
-    'Hello world! I am Paul Owe. I work as a machine learning developer, researcher and writer.',
+    'Hello world! I am Paul Owe, follow along in my day-to-day life as a machine learning developer, researcher and writer.',
   openGraph: {
     type: 'website',
     locale: 'en_US',
@@ -14,7 +14,7 @@ const SeoConfig = {
     site_name: 'Paul Owe',
     images: [
       {
-        url: 'https://paulowe.com/static/meta/og-image.png',
+        url: 'https://paulowe.com/static/meta/og-image.jpeg',
         alt: 'Paul Owe',
       },
     ],
