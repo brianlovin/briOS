@@ -20,7 +20,10 @@ export function January() {
           href="https://staff.design"
         >
           <div className="relative flex flex-col overflow-hidden transition-shadow bg-white rounded-md shadow md:flex-row dark:bg-gray-900 hover:shadow-cardHover">
-            <div className="z-10 flex flex-col justify-center flex-auto px-3 pt-8 pb-8 space-y-1 md:items-center">
+            <div
+              style={{ zIndex: 2 }}
+              className="flex flex-col justify-center flex-auto px-3 pt-8 pb-8 space-y-1 md:items-center"
+            >
               <svg
                 width="128"
                 height="128"

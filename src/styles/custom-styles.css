@@ -266,7 +266,7 @@ html {
   }
   
   .meta-wrap {
-    background: inherit;
+    background: transparent;
     animation: 24s spin ease-in-out infinite;
     -webkit-filter: brightness(105%) saturate(200%) contrast(1);
     filter: brightness(105%) saturate(200%) contrast(1);
@@ -274,8 +274,8 @@ html {
     position: absolute;
     width: 100%;
     height: 140%;
-    z-index: 1;
     top:60%;
+    z-index: 1;
     transition: opacity 0.3s ease-in-out;
   }
   
