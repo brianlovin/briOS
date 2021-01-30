@@ -8,8 +8,15 @@ export function January() {
     <>
       <DateEntry title="January, 2021" />
 
+      <BlogPost
+        timestamp="January 30, 2021"
+        slug="my-playbook-for-shipping-side-projects"
+        title="My playbook for shipping side projects"
+        description="Tips and strategies to help get side projects shipped to the world and maximize their value."
+      />
+
       <TimelineEntry
-        timestamp="January 29, 2021"
+        timestamp="January 19, 2021"
         title="Launched Staff Design"
         Icon={Zap}
         tint="purple"
