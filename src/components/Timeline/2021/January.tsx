@@ -12,7 +12,7 @@ export function January() {
         timestamp="January 30, 2021"
         slug="my-playbook-for-shipping-side-projects"
         title="My playbook for shipping side projects"
-        description="Tips and strategies to help get side projects shipped to the world and maximize their value."
+        description="Tips and strategies for releasing and maximizing the value of a side project."
       />
 
       <TimelineEntry
