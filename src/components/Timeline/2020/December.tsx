@@ -95,7 +95,10 @@ export function December() {
           href="https://staff.design"
         >
           <div className="relative flex flex-col overflow-hidden transition-shadow bg-white rounded-md shadow md:flex-row dark:bg-gray-900 hover:shadow-cardHover">
-            <div className="flex flex-col justify-center flex-auto px-3 pt-8 pb-8 space-y-1  md:items-center">
+            <div
+              style={{ zIndex: 2 }}
+              className="flex flex-col justify-center flex-auto px-3 pt-8 pb-8 space-y-1 md:items-center"
+            >
               <svg
                 width="128"
                 height="128"
@@ -145,7 +148,7 @@ export function December() {
                 Navigating the individual contributor career path
               </p>
               <span />
-              <div className="px-6 py-4 font-mono text-sm text-center hover:bg-opacity-10 filter-saturate filter-blur bg-gray-1000 bg-opacity-5">
+              <div className="px-6 py-4 font-mono text-sm text-center hover:bg-opacity-10 filter-saturate filter-blur bg-gray-1000 bg-opacity-5 dark:bg-gray-50 text-primary">
                 View the project
               </div>
             </div>

@@ -80,7 +80,7 @@ export function January() {
                 Navigating the individual contributor career path
               </p>
               <span />
-              <div className="px-6 py-4 font-mono text-sm text-center hover:bg-opacity-10 filter-saturate filter-blur bg-gray-1000 bg-opacity-5">
+              <div className="px-6 py-4 font-mono text-sm text-center hover:bg-opacity-10 filter-saturate filter-blur bg-gray-1000 bg-opacity-5 dark:bg-gray-50 text-primary">
                 View the project
               </div>
             </div>
