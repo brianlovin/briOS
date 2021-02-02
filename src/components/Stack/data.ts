@@ -183,7 +183,7 @@ export default [
   },
   {
     name: 'PixelSnap 2',
-    url: 'https://getpixelsnap.com',
+    url: 'https://gumroad.com/a/641602675',
     image: 'pixelsnap-2.png',
     independent: true,
     description:
