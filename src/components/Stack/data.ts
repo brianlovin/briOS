@@ -303,4 +303,13 @@ export default [
     oss: true,
     description: 'Cypress makes it really easy to automate website testing.',
   },
+  {
+    name: 'Tempo',
+    url: 'https://www.yourtempo.co',
+    image: 'tempo.png',
+    oss: false,
+    independent: true,
+    description:
+      'This is my new default email client for macOS. I love the batches feature and minimal UI.',
+  },
 ]
