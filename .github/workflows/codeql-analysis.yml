@@ -13,6 +13,7 @@ on:
     branches: [main]
   schedule:
     - cron: '0 13 * * 3'
+    
 
 jobs:
   analyze:

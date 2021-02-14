@@ -40,45 +40,30 @@ function About({ data, summaries }: Props) {
           <div className="flex flex-col space-y-12">
             <div className="flex flex-col prose lg:prose-lg">
               <p>
-                👋 I’m a machine intelligence developer, researcher, and writer,
-                currently living in Dar es Salaam.
+                👋 I’m a software developer, researcher, and writer, currently
+                living in Dar es Salaam.
               </p>
               <p>
-                I graduated from{' '}
+                I currently conduct research at{' '}
                 <a
                   href="https://lassonde.yorku.ca"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Lassonde School of Engineering
+                  York University
                 </a>{' '}
-                at York University where I studied Computer Science. I enjoy
-                working on innovative solutions in the field of data mining and
-                machine learning, working towards an impactful and novel
-                contribution that accelerates applications of{' '}
-                <a
-                  href="https://cci.mit.edu"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  collective intellgience
-                </a>
-                .
-              </p>
-              <p>
-                I currently conduct research at York University. My role as
-                research assistant is focused on the automatic retrieval and
-                archiving of{' '}
+                where I work with an interdisciplinary team to develop an open
+                knowledge accelerator. My research is focused on building and
+                executing{' '}
                 <a
                   href="https://en.unesco.org/themes/building-knowledge-societies/oer"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  open educational resources
-                </a>
-                . I work with an interdisciplinary research team to evaluate a
-                large number of platforms, analyze trends and patterns from
-                data, and develop an open bilingual accelerator.
+                  open source intelligence
+                </a>{' '}
+                software for the purpose of studying our audience’s preferences
+                and engagement cues.
               </p>
 
               <p>
@@ -90,12 +75,23 @@ function About({ data, summaries }: Props) {
                 >
                   PharmAssess Diagnostics Corp.
                 </a>
-                , where I develop algorithms and systems to mine massive of
-                data, and create real-time inference engines that are being used
-                to provide better healthcare to Canadians.
+                , where I develop software to mine data from literature and
+                public databases, and create real-time inference engines that
+                are being used to provide better healthcare to Canadians.
               </p>
               <p>
-                You can find me on{' '}
+                I enjoy researching and working on problems in the field of data
+                mining and machine learning. Through creation of software, I
+                hope to make impactful and novel contributions that accelerate
+                the applications of{' '}
+                <a
+                  href="https://cci.mit.edu"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  collective intelligence
+                </a>
+                . You can find me on{' '}
                 <a
                   href="https://github.com/paulowe"
                   target="_blank"
@@ -201,21 +197,23 @@ function About({ data, summaries }: Props) {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Ghost
+                  TryGhost / Ghost
                 </a>
                 <p>The code that powers Paul&apos;s Message.</p>
               </div>
 
               <div className="flex flex-col space-y-1">
                 <a
-                  href="https://github.com/withspectrum/spectrum"
+                  href="https://github.com/paulowe/maps4resources"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-600 dark:text-blue-500"
                 >
-                  withspectrum / spectrum
+                  paulowe / maps4resources
                 </a>
-                <p>Simple, powerful online communities.</p>
+                <p>
+                  A flask application for visualizing spreadsheets on a map.
+                </p>
               </div>
 
               <div className="flex flex-col space-y-1">
@@ -225,10 +223,11 @@ function About({ data, summaries }: Props) {
                   rel="noopener noreferrer"
                   className="text-blue-600 dark:text-blue-500"
                 >
-                  specfm / spec-next
+                  paulowe / twint
                 </a>
                 <p>
-                  A podcast network to help designers and developers level up.
+                  An advanced Twitter scraping &amp; OSINT tool written in
+                  Python.
                 </p>
               </div>
 
