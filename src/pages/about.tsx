@@ -56,7 +56,7 @@ function About({ data, summaries }: Props) {
                 knowledge accelerator. My research is focused on building and
                 executing{' '}
                 <a
-                  href="https://en.unesco.org/themes/building-knowledge-societies/oer"
+                  href="https://en.wikipedia.org/wiki/Open-source_intelligence"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -218,7 +218,7 @@ function About({ data, summaries }: Props) {
 
               <div className="flex flex-col space-y-1">
                 <a
-                  href="https://github.com/specfm/spec-next"
+                  href="https://github.com/paulowe/twint"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-600 dark:text-blue-500"
