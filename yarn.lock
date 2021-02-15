@@ -53,17 +53,17 @@
   dependencies:
     cross-fetch "3.0.6"
 
-"@apollo/client@^3.0.0-beta.23", "@apollo/client@^3.1.5", "@apollo/client@^3.3.8":
-  version "3.3.8"
-  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.3.8.tgz#79e18978dbf2383e2d17eedf33bf905b89b4fb43"
-  integrity sha512-nYKoTfz2ivwzVee+uVHUSWS+xK166m4ycgxM7INq1kR1PD8o3WjBLmCmlajnqSx6KSZCFaTnH75PsfHvtUi1iA==
+"@apollo/client@^3.0.0-beta.23", "@apollo/client@^3.1.5", "@apollo/client@^3.3.10":
+  version "3.3.10"
+  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.3.10.tgz#4fbba049e6b92ac47638cb472db9e653462fa514"
+  integrity sha512-OL5y8q5evSbvsqMAHKZJgfgB/MS9PLGF7f0MtHEkGGCDvmcmA81lsjYwk0xpDm/3XdnrYp/duN2tYUu2LnpJmw==
   dependencies:
     "@graphql-typed-document-node/core" "^3.0.0"
     "@types/zen-observable" "^0.8.0"
     "@wry/context" "^0.5.2"
     "@wry/equality" "^0.3.0"
     fast-json-stable-stringify "^2.0.0"
-    graphql-tag "^2.11.0"
+    graphql-tag "^2.12.0"
     hoist-non-react-statics "^3.3.2"
     optimism "^0.14.0"
     prop-types "^15.7.2"
@@ -6580,10 +6580,12 @@ graphql-request@^3.1.0:
     extract-files "^9.0.0"
     form-data "^3.0.0"
 
-graphql-tag@^2.11.0:
-  version "2.11.0"
-  resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.11.0.tgz#1deb53a01c46a7eb401d6cb59dec86fa1cccbffd"
-  integrity sha512-VmsD5pJqWJnQZMUeRwrDhfgoyqcfwEkvtpANqcoUG8/tOLkwNgU9mzub/Mc78OJMhHjx7gfAMTxzdG43VGg3bA==
+graphql-tag@^2.11.0, graphql-tag@^2.12.0:
+  version "2.12.1"
+  resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.12.1.tgz#b065ef885e4800e4afd0842811b718a205f4aa58"
+  integrity sha512-LPewEE1vzGkHnCO8zdOGogKsHHBdtpGyihow1UuMwp6RnZa0lAS7NcbvltLOuo4pi5diQCPASAXZkQq44ffixA==
+  dependencies:
+    tslib "^1.14.1"
 
 graphql-tools-fork@^9.0.1:
   version "9.0.1"
