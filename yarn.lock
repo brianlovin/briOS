@@ -121,6 +121,19 @@
   dependencies:
     xss "^1.0.6"
 
+"@apollographql/graphql-upload-8-fork@^8.1.3":
+  version "8.1.3"
+  resolved "https://registry.yarnpkg.com/@apollographql/graphql-upload-8-fork/-/graphql-upload-8-fork-8.1.3.tgz#a0d4e0d5cec8e126d78bd915c264d6b90f5784bc"
+  integrity sha512-ssOPUT7euLqDXcdVv3Qs4LoL4BPtfermW1IOouaqEmj36TpHYDmYDIbKoSQxikd9vtMumFnP87OybH7sC9fJ6g==
+  dependencies:
+    "@types/express" "*"
+    "@types/fs-capacitor" "*"
+    "@types/koa" "*"
+    busboy "^0.3.1"
+    fs-capacitor "^2.0.4"
+    http-errors "^1.7.3"
+    object-path "^0.11.4"
+
 "@ardatan/aggregate-error@0.0.6":
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/@ardatan/aggregate-error/-/aggregate-error-0.0.6.tgz#fe6924771ea40fc98dc7a7045c2e872dc8527609"
@@ -2507,16 +2520,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/graphql-upload@^8.0.0":
-  version "8.0.3"
-  resolved "https://registry.yarnpkg.com/@types/graphql-upload/-/graphql-upload-8.0.3.tgz#b371edb5f305a2a1f7b7843a890a2a7adc55c3ec"
-  integrity sha512-hmLg9pCU/GmxBscg8GCr1vmSoEmbItNNxdD5YH2TJkXm//8atjwuprB+xJBK714JG1dkxbbhp5RHX+Pz1KsCMA==
-  dependencies:
-    "@types/express" "*"
-    "@types/fs-capacitor" "*"
-    "@types/koa" "*"
-    graphql "^14.5.3"
-
 "@types/http-assert@*":
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/@types/http-assert/-/http-assert-1.5.1.tgz#d775e93630c2469c2f980fc27e3143240335db3b"
@@ -3312,14 +3315,14 @@ apollo-server-caching@^0.5.3:
   dependencies:
     lru-cache "^6.0.0"
 
-apollo-server-core@^2.19.2:
-  version "2.19.2"
-  resolved "https://registry.yarnpkg.com/apollo-server-core/-/apollo-server-core-2.19.2.tgz#9a5651be233aceab6b062e82eef4c8072f6ac230"
-  integrity sha512-liLgLhTIGWZtdQbxuxo3/Yv8j+faKQcI60kOL+uwfByGhoKLZEQp5nqi2IdMK6JXt1VuyKwKu7lTzj02a9S3jA==
+apollo-server-core@^2.21.0:
+  version "2.21.0"
+  resolved "https://registry.yarnpkg.com/apollo-server-core/-/apollo-server-core-2.21.0.tgz#12ee11aee61fa124f11b1d73cae2e068112a3a53"
+  integrity sha512-GtIiq2F0dVDLzzIuO5+dK/pGq/sGxYlKCqAuQQqzYg0fvZ7fukyluXtcTe0tMI+FJZjU0j0WnKgiLsboCoAlPQ==
   dependencies:
     "@apollographql/apollo-tools" "^0.4.3"
     "@apollographql/graphql-playground-html" "1.6.26"
-    "@types/graphql-upload" "^8.0.0"
+    "@apollographql/graphql-upload-8-fork" "^8.1.3"
     "@types/ws" "^7.0.0"
     apollo-cache-control "^0.11.6"
     apollo-datasource "^0.7.3"
@@ -3335,8 +3338,7 @@ apollo-server-core@^2.19.2:
     fast-json-stable-stringify "^2.0.0"
     graphql-extensions "^0.12.8"
     graphql-tag "^2.11.0"
-    graphql-tools "^4.0.0"
-    graphql-upload "^8.0.2"
+    graphql-tools "^4.0.8"
     loglevel "^1.6.7"
     lru-cache "^6.0.0"
     sha.js "^2.4.11"
@@ -3357,14 +3359,14 @@ apollo-server-errors@^2.4.2:
   resolved "https://registry.yarnpkg.com/apollo-server-errors/-/apollo-server-errors-2.4.2.tgz#1128738a1d14da989f58420896d70524784eabe5"
   integrity sha512-FeGxW3Batn6sUtX3OVVUm7o56EgjxDlmgpTLNyWcLb0j6P8mw9oLNyAm3B+deHA4KNdNHO5BmHS2g1SJYjqPCQ==
 
-apollo-server-micro@^2.19.2:
-  version "2.19.2"
-  resolved "https://registry.yarnpkg.com/apollo-server-micro/-/apollo-server-micro-2.19.2.tgz#3c47eb3199d55977d88746fa075ff248247bedf8"
-  integrity sha512-tLFdqonWtgLJLa/KCOYvST7ktOVHMhhkmPQ2PLUROxBzvLjY4rF56bwOMkQLGZCljnUagAKYGtMFw6bpgHFRhQ==
+apollo-server-micro@^2.21.0:
+  version "2.21.0"
+  resolved "https://registry.yarnpkg.com/apollo-server-micro/-/apollo-server-micro-2.21.0.tgz#b0808fd8a7d4a51478c44dc0295d6e5cd9f4d3d4"
+  integrity sha512-u7rjKaekF/uEx/aBmaOUohDtdUHtAM2FPJKcvU82BW+cH/ab3kkZfJWclx6Gck+wT4lTO5t/tKXdonFQzxIJ/g==
   dependencies:
     "@apollographql/graphql-playground-html" "1.6.26"
     accept "^3.0.2"
-    apollo-server-core "^2.19.2"
+    apollo-server-core "^2.21.0"
     apollo-server-types "^0.6.3"
     micro "^9.3.2"
 
@@ -6599,7 +6601,7 @@ graphql-tools-fork@^9.0.1:
     node-fetch "^2.6.0"
     uuid "^7.0.2"
 
-graphql-tools@^4.0.0:
+graphql-tools@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/graphql-tools/-/graphql-tools-4.0.8.tgz#e7fb9f0d43408fb0878ba66b522ce871bafe9d30"
   integrity sha512-MW+ioleBrwhRjalKjYaLQbr+920pHBgy9vM/n47sswtns8+96sRn5M/G+J1eu7IMeKWiN/9p6tmwCHU7552VJg==
@@ -6640,23 +6642,6 @@ graphql-tools@^7.0.2:
     "@graphql-tools/utils" "^7.0.1"
     "@graphql-tools/wrap" "^7.0.0"
     tslib "~2.0.1"
-
-graphql-upload@^8.0.2:
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/graphql-upload/-/graphql-upload-8.1.0.tgz#6d0ab662db5677a68bfb1f2c870ab2544c14939a"
-  integrity sha512-U2OiDI5VxYmzRKw0Z2dmfk0zkqMRaecH9Smh1U277gVgVe9Qn+18xqf4skwr4YJszGIh7iQDZ57+5ygOK9sM/Q==
-  dependencies:
-    busboy "^0.3.1"
-    fs-capacitor "^2.0.4"
-    http-errors "^1.7.3"
-    object-path "^0.11.4"
-
-graphql@^14.5.3:
-  version "14.7.0"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-14.7.0.tgz#7fa79a80a69be4a31c27dda824dc04dac2035a72"
-  integrity sha512-l0xWZpoPKpppFzMfvVyFmp9vLN7w/ZZJPefUicMCepfJeQ8sMcztloGYY9DfjVPo6tIUDzU5Hw3MUbIjj9AVVA==
-  dependencies:
-    iterall "^1.2.2"
 
 graphql@^15.5.0:
   version "15.5.0"
@@ -7562,7 +7547,7 @@ isstream@~0.1.2:
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
   integrity sha1-R+Y/evVa+m+S4VAOaQ64uFKcCZo=
 
-iterall@^1.1.3, iterall@^1.2.1, iterall@^1.2.2, iterall@^1.3.0:
+iterall@^1.1.3, iterall@^1.2.1, iterall@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/iterall/-/iterall-1.3.0.tgz#afcb08492e2915cbd8a0884eb93a8c94d0d72fea"
   integrity sha512-QZ9qOMdF+QLHxy1QIpUHUU1D5pS2CG2P69LF6L6CPjPYA/XMOmKV3PZpawHoAjHNyB0swdVTRxdYT4tbBbxqwg==
