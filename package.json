@@ -77,7 +77,7 @@
     "@fullhuman/postcss-purgecss": "^4.0.0",
     "@graphql-codegen/add": "^2.0.2",
     "@graphql-codegen/cli": "^1.20.1",
-    "@graphql-codegen/typescript": "^1.20.0",
+    "@graphql-codegen/typescript": "^1.21.0",
     "@graphql-codegen/typescript-operations": "^1.17.14",
     "@graphql-codegen/typescript-react-apollo": "^2.2.1",
     "@testing-library/cypress": "^7.0.3",
