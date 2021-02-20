@@ -16,7 +16,7 @@ export function login(_, { password }, ctx) {
     path: '/',
     httpOnly: true,
     sameSite: 'strict',
-    maxAge: 60 * 60 * 24 * 7,
+    maxAge: 60 * 60 * 24 * 30,
   })
 
   return true
