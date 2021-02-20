@@ -4,12 +4,12 @@
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier/@typescript-eslint",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
+    "plugin:mdx/recommended"
   ],
   "plugins": [
     "react",
-    "@typescript-eslint",
-    "prettier"
+    "@typescript-eslint"
   ],
   "env": {
     "node": true,
