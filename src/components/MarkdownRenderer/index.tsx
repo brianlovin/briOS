@@ -4,6 +4,7 @@ import Prism from 'prismjs'
 import htmlParser from 'react-markdown/plugins/html-parser'
 import GlobalStyles from '~/components/GlobalStyles'
 import Markdown from 'react-markdown'
+import { baseUrl } from '~/config/seo'
 
 interface Props {
   children: string
@@ -16,7 +17,6 @@ const parseHtml = htmlParser({
 
 function LinkRenderer(props: any) {
   const { href, children } = props
-  const baseUrl = 'https://brianlovin.com'
   const isSelf = href.indexOf(baseUrl) === 0
   if (isSelf) {
     return (

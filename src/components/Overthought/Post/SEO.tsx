@@ -2,6 +2,7 @@ import * as React from 'react'
 import { NextSeo } from 'next-seo'
 import Head from 'next/head'
 import { Post } from '~/graphql/types.generated'
+import { baseUrl } from '~/config/seo'
 
 interface Props {
   post: Post
@@ -15,7 +16,7 @@ export default function SEO({ post }: Props) {
           rel="alternate"
           type="application/rss+xml"
           title="RSS Feed for Overthought"
-          href="https://brianlovin.com/overthought/rss"
+          href={`${baseUrl}/writing/rss`}
         />
       </Head>
 
@@ -24,13 +25,13 @@ export default function SEO({ post }: Props) {
         description={post.custom_excerpt || post.excerpt}
         openGraph={{
           title: post.title,
-          url: `https://brianlovin.com/overthought/${post.slug}`,
+          url: `${baseUrl}/writing/${post.slug}`,
           description: post.custom_excerpt || post.excerpt,
           images: [
             {
               url:
                 post.feature_image ||
-                `https://brianlovin.com/static/img/overthought/${post.slug}.png`,
+                `${baseUrl}/static/img/writing/${post.slug}.png`,
               alt: post.title,
             },
           ],

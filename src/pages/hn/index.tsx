@@ -7,6 +7,7 @@ import { HNComment } from '~/components/HNPost/Comment'
 import Navigation from '~/components/HNPosts/Navigation'
 import { getHNPosts } from '~/graphql/services/hn'
 import HNSubscribeBox from '~/components/HNSubscribe'
+import routes from '~/config/routes'
 
 export interface HNPost {
   id: string
@@ -31,19 +32,9 @@ export default function HNTop(props: Props) {
   return (
     <Page>
       <NextSeo
-        title={'Hacker News'}
-        description={'My personal Hacker News reader.'}
-        openGraph={{
-          url: 'https://brianlovin.com/hn',
-          title: 'Hacker News',
-          description: 'My personal Hacker News reader.',
-          images: [
-            {
-              url: 'https://brianlovin.com/static/meta/hn.png',
-              alt: 'Hacker News',
-            },
-          ],
-        }}
+        title={routes.hn.seo.title}
+        description={routes.hn.seo.description}
+        openGraph={routes.hn.seo.openGraph}
       />
 
       <CenteredColumn data-cy="hn">

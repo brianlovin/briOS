@@ -4,25 +4,15 @@ import Page, { PageHeader } from '~/components/Page'
 import DesignDetailsGrid from '~/components/DesignDetailsGrid'
 import { summaries } from '~/data/appDissections'
 import { CenteredColumn } from '~/components/Layouts'
+import routes from '~/config/routes'
 
 export default function DesignDetails() {
   return (
     <Page>
       <NextSeo
-        title={'App Dissection'}
-        description={'In-depth design explorations.'}
-        openGraph={{
-          url: 'https://brianlovin.com/design-details',
-          title: 'App Dissection',
-          description: 'In-depth design explorations.',
-          site_name: 'App Dissection',
-          images: [
-            {
-              url: 'https://brianlovin.com/static/meta/app-dissection.png',
-              alt: 'App Dissection',
-            },
-          ],
-        }}
+        title={routes.appDissection.seo.title}
+        description={routes.appDissection.seo.description}
+        openGraph={routes.appDissection.seo.openGraph}
       />
 
       <CenteredColumn>

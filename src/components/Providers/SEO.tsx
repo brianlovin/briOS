@@ -2,28 +2,7 @@ import * as React from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { DefaultSeo } from 'next-seo'
-
-const SeoConfig = {
-  title: 'Brian Lovin',
-  description: 'Product designer',
-  openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    url: 'https://brianlovin.com',
-    site_name: 'Brian Lovin',
-    images: [
-      {
-        url: 'https://brianlovin.com/static/meta/og-image.png',
-        alt: 'Brian Lovin',
-      },
-    ],
-  },
-  twitter: {
-    handle: '@brian_lovin',
-    site: '@brian_lovin',
-    cardType: 'summary_large_image',
-  },
-}
+import { defaultSEO } from '~/config/seo'
 
 export default function SEO() {
   const router = useRouter()
@@ -36,7 +15,7 @@ export default function SEO() {
 
   return (
     <React.Fragment>
-      <DefaultSeo {...SeoConfig} />
+      <DefaultSeo {...defaultSEO} />
       <Head>
         <meta name="theme-color" content={'#fefefe'} />
         <link rel="apple-touch-icon" href="/static/meta/apple-touch-icon.png" />

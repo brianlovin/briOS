@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import Cryptr from 'cryptr'
 import db from '~/graphql/services/firebase'
+import { baseUrl } from '~/config/seo'
 
 export function validEmail(email) {
   // eslint-disable-next-line
@@ -12,7 +13,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { token } = req.query
 
   function done() {
-    res.writeHead(301, { Location: 'https://brianlovin.com/hn' })
+    res.writeHead(301, { Location: `${baseUrl}/hn` })
     res.end()
   }
 

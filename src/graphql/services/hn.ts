@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-unfetch'
+import { baseUrl } from '~/config/seo'
 
 const TOP_BASE_URL = 'https://hacker-news.firebaseio.com/v0'
 const ITEM_BASE_URL = 'https://api.hnpwa.com/v0'
@@ -32,9 +33,7 @@ export async function getPostById(id, includeComments = false) {
     .map(trimComments)
     .filter(Boolean)
 
-  const cleanUrl = data.domain
-    ? `${data.url}?ref=brianlovin.com`
-    : `https://brianlovin.com/hn/${data.id}`
+  const cleanUrl = data.domain ? `${data.url}` : `${baseUrl}/hn/${data.id}`
 
   const post = Object.assign(data, {
     ...data,

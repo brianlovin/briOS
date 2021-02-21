@@ -12,6 +12,8 @@ import { GET_HOME } from '~/graphql/queries'
 import { Post, Episode, Repo } from '~/graphql/types.generated'
 import { DesignDetailsPostSummary, summaries } from '~/data/appDissections'
 import Divider from '~/components/Divider'
+import { NextSeo } from 'next-seo'
+import routes from '~/config/routes'
 
 interface Props {
   data: {
@@ -25,6 +27,12 @@ interface Props {
 function About({ data, summaries }: Props) {
   return (
     <Page>
+      <NextSeo
+        title={routes.about.seo.title}
+        description={routes.about.seo.description}
+        openGraph={routes.about.seo.openGraph}
+      />
+
       <CenteredColumn>
         <div className="flex flex-col space-y-12" data-cy="about-page">
           <div className="-mx-4 -mt-24 md:mt-0 md:-mx-8 ">

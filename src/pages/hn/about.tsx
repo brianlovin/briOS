@@ -4,24 +4,15 @@ import { NextSeo } from 'next-seo'
 import { CenteredColumn } from '~/components/Layouts'
 import Navigation from '~/components/HNPosts/Navigation'
 import HNSubscribeBox from '~/components/HNSubscribe'
+import routes from '~/config/routes'
 
 export default function HNAbout() {
   return (
     <Page>
       <NextSeo
-        title={'Hacker News · About'}
-        description={'About my personal Hacker News reader.'}
-        openGraph={{
-          url: 'https://brianlovin.com/hn/about',
-          title: 'Hacker News · About',
-          description: 'About my personal Hacker News reader.',
-          images: [
-            {
-              url: 'https://brianlovin.com/static/meta/hn.png',
-              alt: 'Hacker News',
-            },
-          ],
-        }}
+        title={routes.hn.seo.title}
+        description={routes.hn.seo.description}
+        openGraph={routes.hn.seo.openGraph}
       />
 
       <CenteredColumn data-cy="hn">

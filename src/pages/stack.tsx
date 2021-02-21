@@ -6,25 +6,17 @@ import { withApollo } from '~/components/withApollo'
 import { CenteredColumn } from '~/components/Layouts'
 import { Info } from 'react-feather'
 import Recommendations from '~/components/Stack/Recommendations'
+import routes from '~/config/routes'
 
 function Stack() {
   return (
     <Page>
       <NextSeo
-        title={'Stack'}
-        description={'My favorite tools and software.'}
-        openGraph={{
-          url: 'https://brianlovin.com/stack',
-          title: 'Stack',
-          description: 'My favorite tools and software.',
-          images: [
-            {
-              url: 'https://brianlovin.com/static/meta/stack.png',
-              alt: 'My favorite tools and software.',
-            },
-          ],
-        }}
+        title={routes.stack.seo.title}
+        description={routes.stack.seo.description}
+        openGraph={routes.stack.seo.openGraph}
       />
+
       <CenteredColumn>
         <PageHeader title="Stack" subtitle="My favorite tools and software." />
 

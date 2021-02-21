@@ -7,6 +7,7 @@ import { CenteredColumn } from '../Layouts'
 import Byline from './Byline'
 import { HNPost as HNPostType } from '~/pages/hn'
 import HNSubscribeBox from '../HNSubscribe'
+import { baseUrl } from '~/config/seo'
 
 interface Props {
   post: HNPostType
@@ -27,7 +28,7 @@ export function HNPost(props: Props) {
         }
         openGraph={{
           title: post.title,
-          url: `https://brianlovin.com/hn/${post.id}`,
+          url: `${baseUrl}/hn/${post.id}`,
           description:
             post.content || `${post.comments_count} comments · ${post.domain}`,
           site_name: 'Hacker News',
