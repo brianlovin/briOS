@@ -14,7 +14,7 @@ describe.skip('Home', () => {
     })
   })
 
-  it('should render overthought', () => {
-    cy.contains('Overthought').scrollIntoView().should('be.visible')
+  it('should render writing', () => {
+    cy.contains('Writing').scrollIntoView().should('be.visible')
   })
 })

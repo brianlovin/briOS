@@ -1,12 +1,6 @@
-const path = require('path')
-const withMDX = require('@next/mdx')({
-  extension: /\.mdx?$/,
-})
-
-module.exports = withMDX({
-  pageExtensions: ['ts', 'tsx', 'mdx'],
+module.exports = {
   images: {
-    domains: ['pbs.twimg.com'],
+    domains: ['pbs.twimg.com', 'overthought.ghost.io'],
   },
   env: {
     FATHOM_SITE_ID: process.env.FATHOM_SITE_ID,
@@ -48,4 +42,4 @@ module.exports = withMDX({
       },
     ]
   },
-})
+}

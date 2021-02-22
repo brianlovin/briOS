@@ -2,7 +2,6 @@ import * as React from 'react'
 import Link from 'next/link'
 import Prism from 'prismjs'
 import htmlParser from 'react-markdown/plugins/html-parser'
-import GlobalStyles from '~/components/GlobalStyles'
 import Markdown from 'react-markdown'
 import { baseUrl } from '~/config/seo'
 
@@ -42,7 +41,6 @@ export default function MarkdownRenderer(props: Props) {
 
   return (
     <React.Fragment>
-      <GlobalStyles.PrismStyles />
       <Markdown
         {...rest}
         className="prose lg:prose-lg"

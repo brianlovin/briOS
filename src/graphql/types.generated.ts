@@ -235,6 +235,7 @@ export type PostInfoFragment = {
   title?: Maybe<string>
   slug?: Maybe<string>
   updated_at?: Maybe<string>
+  published_at?: Maybe<string>
   excerpt?: Maybe<string>
   feature_image?: Maybe<string>
   html?: Maybe<string>
@@ -443,6 +444,7 @@ export const PostInfoFragmentDoc = gql`
     title
     slug
     updated_at
+    published_at
     excerpt
     feature_image
     html

@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 const styles =
-  'w-full focus:outline-none px-4 py-2 text-base rounded shadow-sm focus:border-blue-500 text-primary border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-1000'
+  'font-mono w-full focus:outline-none px-4 py-2 border-none focus:border-gray-1000 text-primary border-gray-200  bg-gray-1000 dark:bg-white bg-opacity-5 hover:bg-opacity-10 focus:ring-0'
 
 export function Input(props) {
   return <input className={styles} {...props} />

@@ -22,28 +22,22 @@ function Stack() {
 
         <StackList />
 
-        <div className="flex flex-col p-6 mt-16 space-y-3 bg-yellow-100 rounded-lg dark:bg-gray-900">
-          <div className="flex items-center">
-            <Info
-              size={20}
-              className="mr-3 text-yellow-900 dark:text-gray-100"
-            />
-            <p className="font-semibold text-yellow-900 dark:text-gray-100">
-              About these links
-            </p>
-          </div>
-          <p className="font-normal text-yellow-900 dark:text-gray-300">
+        <div className="flex flex-col p-8 mt-16 -mx-8 space-y-4 bg-yellow-400 border-t border-b border-yellow-300 border-dashed bg-opacity-5 dark:border-gray-800">
+          <p className="font-mono text-yellow-900 dark:text-gray-100">
+            About these links
+          </p>
+          <p className="font-mono text-yellow-700 dark:text-gray-300">
             I only recommend apps and tools that I use every day and think are
             excellent. Nobody is paying to be on this list.
           </p>
-          <p className="font-normal text-yellow-900 dark:text-gray-300">
+          <p className="font-mono text-yellow-700 dark:text-gray-300">
             However, some of the links above are affiliate links. If you don’t
             want to click them out of principle, I understand. Any affiliate
             income earned goes straight back into powering this website and my
             other side projects: servers, storage, domain names, and other
             operational costs do add up.
           </p>
-          <p className="font-normal text-yellow-900 dark:text-gray-300">
+          <p className="font-mono text-yellow-700 dark:text-gray-300">
             ❤️ Brian
           </p>
         </div>

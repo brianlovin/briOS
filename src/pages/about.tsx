@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Page from '~/components/Page'
 import { CenteredColumn } from '~/components/Layouts'
-import OverthoughtList from '~/components/Overthought/List'
+import PostsList from '~/components/Writing/List'
 import DesignDetailsGrid from '~/components/DesignDetailsGrid'
 import PodcastEpisodesList from '~/components/PodcastEpisodesList'
 import FigmaPlugins from '~/components/FigmaPlugins'
@@ -168,10 +168,10 @@ function About({ data, summaries }: Props) {
                 </p>
               </div>
 
-              {data && data.posts && <OverthoughtList posts={data.posts} />}
+              {data && data.posts && <PostsList posts={data.posts} />}
 
               <div className="flex flex-col space-y-1">
-                <Link href="/overthought" as="/overthought" passHref>
+                <Link href="/writing" as="/writing" passHref>
                   <a className="text-blue-600 dark:text-blue-500">
                     See all posts &rarr;
                   </a>

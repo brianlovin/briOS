@@ -15,7 +15,7 @@ export default function SEO({ post }: Props) {
         <link
           rel="alternate"
           type="application/rss+xml"
-          title="RSS Feed for Overthought"
+          title="RSS feed"
           href={`${baseUrl}/writing/rss`}
         />
       </Head>
@@ -35,7 +35,7 @@ export default function SEO({ post }: Props) {
               alt: post.title,
             },
           ],
-          site_name: 'Overthought',
+          site_name: 'Writing',
         }}
         twitter={{
           cardType: 'summary_large_image',

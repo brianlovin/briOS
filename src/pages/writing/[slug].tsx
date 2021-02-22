@@ -2,8 +2,8 @@ import * as React from 'react'
 import { Post } from '~/graphql/types.generated'
 import { GET_POST, GET_POSTS } from '~/graphql/queries'
 import Page from '~/components/Page'
-import PostContainer from '~/components/Overthought/Post'
-import NotFound from '~/components/Overthought/NotFound'
+import PostContainer from '~/components/Writing/Post'
+import NotFound from '~/components/Writing/NotFound'
 import { initApolloClient } from '~/graphql/services/apollo'
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
   }
 }
 
-function OverthoughtPost({ data }: Props) {
+function PostView({ data }: Props) {
   const post = data?.post
 
   if (!post) return <NotFound />
@@ -57,4 +57,4 @@ export async function getStaticProps({ params: { slug } }) {
   }
 }
 
-export default OverthoughtPost
+export default PostView

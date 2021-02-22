@@ -18,7 +18,7 @@ export default function Tooltip(props: Props) {
       arrow={true}
       hideOnClick={false}
       content={
-        <span className="font-medium" style={{ ...style }}>
+        <span className="font-mono text-sm font-medium" style={{ ...style }}>
           {content}
         </span>
       }

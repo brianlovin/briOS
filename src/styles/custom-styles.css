@@ -1,212 +1,46 @@
 /* Write your own custom component styles here */
+@font-face {
+  font-family: 'iA Quattro';
+  font-style: normal;
+  font-stretch: 25% 151%;
+  font-weight: 100 1000;
+  src: url("/static/fonts/iAWriterQuattroV.ttf") format("truetype supports variations");
+}
+
+@font-face {
+  font-family: 'iA Quattro';
+  font-style: italic;
+  font-stretch: 25% 151%;
+  font-weight: 100 1000;
+  src: url("/static/fonts/iAWriterQuattroV-Italic.ttf") format("truetype supports variations");
+}
+
 @layer components {
-  p, ul, ol, li {
-    @apply text-gray-1000 dark:text-gray-50;
+  input, textarea {
+    box-shadow: 0 1px 0 rgba(0,0,0,0.12);
   }
 
-  a {
-    @apply font-semibold;
-  }
-
-  h6 {
-    @apply text-base font-bold text-gray-1000 dark:text-gray-50;
-  }
-
-  h5 {
-    @apply text-lg font-bold text-gray-1000 dark:text-gray-50;
-  }
-
-  h4 {
-    @apply text-xl font-bold text-gray-1000 dark:text-gray-50;
-  }
-
-  h3 {
-    @apply text-2xl font-bold text-gray-1000 dark:text-gray-50;
-  }
-
-  h2 {
-    @apply text-3xl font-extrabold text-gray-1000 dark:text-gray-50;
-  }
-
-  h1 {
-    @apply text-4xl font-extrabold text-gray-1000 dark:text-gray-50;
-  }
-
-  .btn {
-    @apply flex items-center justify-center px-4 py-2 space-x-2 text-sm font-medium transition-shadow bg-white border rounded shadow-sm hover:border-gray-300 dark:border-gray-800 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:border-gray-600 focus:outline-none text-primary;
-  }
-
-  .btn-primary {
-    @apply text-white bg-blue-500 border-none hover:bg-blue-600 dark:hover:bg-blue-400;
-  }
-
-  .btn-outline {
-    @apply bg-white bg-opacity-0 shadow-none hover:bg-opacity-20 hover:shadow-none;
-  }
-
-  .btn-large {
-    @apply px-6 py-3 font-semibold rounded-md;
-  }
-
-  .tabbed-navigation::-webkit-scrollbar {
-    display: none;
-  }
-
-  .tab {
-    @apply flex flex-none md:justify-center md:flex-auto flex-nowrap;
-  }
-
-  .tab-active {
-    @apply border-b-2 text-gray-1000 dark:text-gray-50 border-gray-1000 dark:border-white hover:text-gray-1000 dark:hover:text-gray-50;
-  }
-
-  .tab-inactive {
-    @apply text-gray-600 border-b-2 border-gray-50 dark:text-gray-400 dark:border-gray-1000 hover:text-gray-1000 dark:hover:text-gray-50 hover:border-gray-300 dark:hover:border-gray-700;
+  input:focus, textarea:focus {
+    box-shadow: inset 0 -1px 0 rgba(0,0,0,0.72)!important;
   }
 }
 
 /* Your own custom utilities */
 @layer utilities {
   .text-primary {
-    @apply text-gray-1000 dark:text-gray-50;
+    @apply text-gray-1000 dark:text-gray-100;
   }
 
   .text-secondary {
-    @apply text-gray-800 dark:text-gray-200;
+    @apply text-gray-700 dark:text-gray-300;
   }
 
   .text-tertiary {
-    @apply text-gray-600 dark:text-gray-400;
+    @apply text-gray-500 dark:text-gray-500;
   }
 
-  .divider-gray {
-    @apply text-gray-300 dark:text-gray-700;
-  }
-
-  .bg-divider-gray {
-    @apply bg-gray-300 dark:bg-gray-700;
-  }
-
-  .page-subtitle {
-    @apply text-xl;
-  }
-
-  .p-small {
-    @apply text-sm text-gray-600 dark:text-gray-400;
-  }
-
-  .black-link {
-    @apply text-gray-1000 dark:text-gray-100 hover:underline dark:hover:text-gray-50;
-  }
-
-  .prose blockquote {
-    @apply border-l-2 border-gray-200 text-gray-1000 dark:text-gray-50 dark:border-gray-800;
-  }
-
-  .prose a {
-    @apply dark:text-blue-500;
-  }
-
-  .prose table {
-    @apply text-gray-1000 dark:text-gray-50;
-  }
-
-  /* the kg-embed-card gets applied to iframes sent from Ghost. this preserves a good video aspect ratio */
-  .prose .kg-embed-card {
-    @apply my-4;
-    position: relative;
-    padding-top: 56.25%;
-  }
-
-  .prose .kg-embed-card iframe {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
-
-  .prose strong,
-  .prose b {
-    @apply text-gray-1000 dark:text-gray-50;
-  }
-
-  .prose pre {
-    @apply bg-gray-100 border border-gray-200 dark:border-gray-700 dark:bg-gray-800;
-  }
-
-  /* this is needed to avoid HN comments from overflowing off the right edge of the screen */
-  .prose p {
-    @apply break-words;
-    word-break: break-word;
-  }
-
-  .prose p + p {
-    margin-top: 0;
-  }
-
-  .prose code {
-    @apply text-gray-800 dark:text-gray-200 px-1 py-0.5 border border-gray-100 dark:border-gray-800 rounded-md bg-gray-100 dark:bg-gray-900;
-  }
-
-  .token.comment,
-  .token.prolog,
-  .token.doctype,
-  .token.cdata {
-    @apply text-gray-700 dark:text-gray-300;
-  }
-
-  .token.punctuation {
-    @apply text-gray-700 dark:text-gray-300;
-  }
-
-  .token.property,
-  .token.tag,
-  .token.boolean,
-  .token.number,
-  .token.constant,
-  .token.symbol,
-  .token.deleted {
-    @apply text-green-500;
-  }
-
-  .token.selector,
-  .token.attr-name,
-  .token.string,
-  .token.char,
-  .token.builtin,
-  .token.inserted {
-    @apply text-purple-500;
-  }
-
-  .token.operator,
-  .token.entity,
-  .token.url,
-  .language-css .token.string,
-  .style .token.string {
-    @apply text-yellow-500;
-  }
-
-  .token.atrule,
-  .token.attr-value,
-  .token.keyword {
-    @apply text-blue-500;
-  }
-
-  .token.function,
-  .token.class-name {
-    @apply text-pink-500;
-  }
-
-  .token.regex,
-  .token.important,
-  .token.variable {
-    @apply text-yellow-500;
-  }
-
-  code[class*="language-"],
-  pre[class*="language-"] {
-    @apply text-gray-1000 dark:text-gray-50;
+  .text-quaternary {
+    @apply text-gray-400 dark:text-gray-600;
   }
 
   .timeline-inset {
@@ -342,5 +176,29 @@
 
   .filter-blur {
     backdrop-filter: saturate(180%) blur(20px);
+  }
+
+  .highlight-link-hover {
+    @apply hover:bg-yellow-400 bg-opacity-20 hover:bg-opacity-30
+  }
+
+  .highlight-link {
+    @apply bg-yellow-400 bg-opacity-20 hover:bg-opacity-30
+  }
+
+  .blink {
+    animation: blink-animation 1.5s steps(2, start) infinite;
+    -webkit-animation: blink-animation 1.5s steps(2, start) infinite;
+  }
+  
+  @keyframes blink-animation {
+    to {
+      visibility: hidden;
+    }
+  }
+  @-webkit-keyframes blink-animation {
+    to {
+      visibility: hidden;
+    }
   }
 }

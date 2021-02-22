@@ -9,7 +9,7 @@ export default function SEO() {
 
   let emoji = '👾'
   if (router.route.indexOf('/about') === 0) emoji = '👋'
-  if (router.route.indexOf('/overthought') === 0) emoji = '🤔'
+  if (router.route.indexOf('/writing') === 0) emoji = '🤔'
   if (router.route.indexOf('/design-details') === 0) emoji = '✨'
   if (router.route.indexOf('/bookmarks') === 0) emoji = '📖'
 

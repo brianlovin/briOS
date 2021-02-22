@@ -1,8 +1,8 @@
 import * as React from 'react'
 import Page, { PageHeader } from '~/components/Page'
 import { Post } from '~/graphql/types.generated'
-import OverthoughtSubscribeBox from '~/components/Overthought/Subscribe'
-import OverthoughtList from '~/components/Overthought/List'
+import WritingSubscribeBox from '~/components/Writing/Subscribe'
+import PostsList from '~/components/Writing/List'
 import { GET_POSTS } from '~/graphql/queries'
 import { initApolloClient } from '~/graphql/services/apollo'
 import { CenteredColumn } from '~/components/Layouts'
@@ -16,14 +16,14 @@ interface Props {
   }
 }
 
-function Overthought({ data }: Props) {
+function Writing({ data }: Props) {
   return (
     <Page>
       <Head>
         <link
           rel="alternate"
           type="application/rss+xml"
-          title="RSS Feed for Overthought"
+          title="RSS feed"
           href="/writing/rss"
         />
       </Head>
@@ -35,15 +35,14 @@ function Overthought({ data }: Props) {
       />
 
       <CenteredColumn>
-        <div data-cy="overthought" className="flex flex-col space-y-14">
+        <div data-cy="writing" className="flex flex-col space-y-10">
           <PageHeader
-            title="Overthought"
-            subtitle="Thinking out loud about design, development, and building
-              excellent software."
+            title={routes.writing.seo.title}
+            subtitle={routes.writing.seo.description}
           />
 
-          <OverthoughtSubscribeBox />
-          {data && data.posts && <OverthoughtList posts={data.posts} />}
+          <WritingSubscribeBox />
+          {data && data.posts && <PostsList posts={data.posts} />}
         </div>
       </CenteredColumn>
     </Page>
@@ -62,4 +61,4 @@ export async function getStaticProps() {
   }
 }
 
-export default Overthought
+export default Writing

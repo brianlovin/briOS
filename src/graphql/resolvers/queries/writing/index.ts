@@ -2,7 +2,7 @@ import { ghost } from '~/graphql/services/ghost'
 
 export async function getPosts(_, { first = 'all' }) {
   return await ghost.posts
-    .browse({ limit: first, order: 'updated_at DESC' })
+    .browse({ limit: first, order: 'published_at DESC' })
     .catch(() => [])
 }
 
