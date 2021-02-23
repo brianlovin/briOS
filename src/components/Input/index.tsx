@@ -10,3 +10,7 @@ export function Input(props) {
 export function Textarea(props) {
   return <textarea className={`${styles} block`} {...props} />
 }
+
+export function Select(props) {
+  return <select className={styles} {...props} />
+}

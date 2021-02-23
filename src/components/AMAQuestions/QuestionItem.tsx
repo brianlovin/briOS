@@ -4,6 +4,7 @@ import { format } from 'timeago.js'
 import QuestionReaction from './QuestionReaction'
 import EditQuestion from './EditQuestion'
 import MarkdownRenderer from '../MarkdownRenderer'
+import Linkify from '../Linkify'
 
 interface Props {
   editable: boolean
@@ -28,39 +29,34 @@ export const QuestionItem = React.memo((props: Props) => {
   }
 
   return (
-    <div className="flex flex-col space-y-2">
-      <p className="font-bold">{question.question}</p>
+    <div className="flex flex-col space-y-1">
+      <span>
+        <p className="font-mono font-medium text-primary">
+          {question.question}
+        </p>
+      </span>
       {question.answer && (
-        <div className="flex flex-col prose lg:prose-lg">
-          <MarkdownRenderer>{question.answer}</MarkdownRenderer>
-        </div>
+        <p className="font-mono text-tertiary clamp-3">
+          <Linkify>{question.answer}</Linkify>
+        </p>
       )}
-
-      <div className="flex items-center space-x-3">
+      <span className="flex items-center space-x-2 font-mono text-tertiary">
         <QuestionReaction question={question} />
-
-        <span className="divider-gray">/</span>
+        <span className="text-quaternary">{' · '}</span>
 
         <p
-          className={`p-small ${
-            question.answer ? 'text-tertiary' : 'text-yellow-500'
-          }`}
+          className={`${question.answer ? 'text-tertiary' : 'text-yellow-500'}`}
         >
-          {question.answer ? 'Updated' : 'Asked'} {format(updatedAt)}
+          {format(updatedAt)}
         </p>
 
         {editable && (
           <div className="flex space-x-2">
-            <span className="divider-gray">/</span>
-            <button
-              className="p-small black-link"
-              onClick={() => setIsEditing(true)}
-            >
-              Edit
-            </button>
+            <span className="text-quaternary">·</span>
+            <button onClick={() => setIsEditing(true)}>Edit</button>
           </div>
         )}
-      </div>
+      </span>
     </div>
   )
 })

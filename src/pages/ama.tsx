@@ -8,6 +8,7 @@ import { CenteredColumn } from '~/components/Layouts'
 import { NextSeo } from 'next-seo'
 import { AmaStatus } from '~/graphql/types.generated'
 import routes from '~/config/routes'
+import Link from 'next/link'
 
 function About() {
   return (
@@ -19,11 +20,18 @@ function About() {
       />
 
       <CenteredColumn>
-        <PageHeader
-          title="Ask Me Anything"
-          subtitle="Just for fun! Questions will be visible after I’ve answered."
-        />
-        <AMAQuestions />
+        <div className="flex flex-col space-y-8">
+          <Link href="/projects" passHref>
+            <a className="font-mono leading-snug text-tertiary hover:text-gray-1000 dark:hover:text-gray-100">
+              ⬖ Projects
+            </a>
+          </Link>
+          <PageHeader
+            title="Ask Me Anything"
+            subtitle="Just for fun! Questions will be visible after I’ve answered."
+          />
+          <AMAQuestions />
+        </div>
       </CenteredColumn>
     </Page>
   )

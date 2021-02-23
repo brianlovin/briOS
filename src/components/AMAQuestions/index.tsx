@@ -64,8 +64,6 @@ export default function QuestionsList() {
     <div className="flex flex-col mt-8 space-y-8">
       <AskQuestion />
 
-      <Divider />
-
       {isMe && <PendingQuestions />}
 
       {questions.map((question) => (

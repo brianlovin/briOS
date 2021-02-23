@@ -1,6 +1,8 @@
 import * as React from 'react'
 import { useAddAmaQuestionMutation } from '~/graphql/types.generated'
 import { Textarea } from '~/components/Input'
+import { ErrorAlert, SuccessAlert } from '../Alert'
+import Button from '../Button'
 
 export default function AddBookmark() {
   const [question, setQuestion] = React.useState('')
@@ -46,16 +48,14 @@ export default function AddBookmark() {
       />
       {question.length > 0 && (
         <div className="flex self-end">
-          <button className="btn btn-primary" onClick={onSubmit}>
-            Ask away!
-          </button>
+          <Button onClick={onSubmit}>Ask away!</Button>
         </div>
       )}
-      {error && <p className="text-red-500">{error}</p>}
+      {error && <ErrorAlert>{error}</ErrorAlert>}
       {success && (
-        <p className="text-green-500">
+        <SuccessAlert>
           Thanks for asking! I’ll reply soon, so feel free to check back 👋
-        </p>
+        </SuccessAlert>
       )}
     </form>
   )

@@ -7,11 +7,11 @@
 }
 
 @layer components {
-  input, textarea {
+  input, textarea, select {
     box-shadow: 0 1px 0 rgba(0,0,0,0.12);
   }
 
-  input:focus, textarea:focus {
+  input:focus, textarea:focus, select:focus {
     box-shadow: inset 0 -1px 0 rgba(0,0,0,0.72)!important;
   }
 }

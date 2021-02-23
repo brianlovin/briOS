@@ -46,10 +46,10 @@ function About({ data, summaries }: Props) {
             />
           </div>
           <div className="flex flex-col space-y-12">
-            <div className="flex flex-col leading-relaxed prose lg:prose-lg">
+            <div className="flex flex-col font-mono leading-relaxed prose">
               <p>
-                👋 I’m a product designer, podcaster, and writer, currently
-                living in San Francisco.
+                I’m a product designer, podcaster, and writer, currently living
+                in San Francisco.
               </p>
               <p>
                 Right now I’m designing{' '}
@@ -158,320 +158,358 @@ function About({ data, summaries }: Props) {
 
             <Divider />
 
-            <div className="flex flex-col space-y-4">
+            <div className="flex flex-col space-y-8">
               <div className="flex flex-col space-y-1">
-                <h4>Writing</h4>
-
-                <p className="text-lg">
-                  Thinking out loud about design, development, and building
-                  software.
-                </p>
+                <h4 className="font-mono font-extrabold">Writing</h4>
               </div>
 
               {data && data.posts && <PostsList posts={data.posts} />}
 
               <div className="flex flex-col space-y-1">
                 <Link href="/writing" as="/writing" passHref>
-                  <a className="text-blue-600 dark:text-blue-500">
+                  <a className="font-mono font-medium text-primary">
                     See all posts &rarr;
                   </a>
                 </Link>
-
-                <a
-                  href="https://overthought.ghost.io/rss/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 dark:text-blue-500"
-                >
-                  Subscribe via RSS &rarr;
-                </a>
               </div>
             </div>
 
-            <div className="flex flex-col space-y-4">
+            <Divider />
+
+            <div className="flex flex-col space-y-8">
               <div className="flex flex-col space-y-1">
-                <h4>Projects</h4>
-                <p className="text-lg">Weekend hacks for fun and learning.</p>
+                <h4 className="font-mono text-lg font-bold">Projects</h4>
               </div>
 
               <div className="flex flex-col space-y-1">
-                <Link passHref href="/design-details">
-                  <a className="text-blue-600 dark:text-blue-500">
-                    App Dissection
-                  </a>
-                </Link>
-                <p>
+                <span>
+                  <Link passHref href="/design-details">
+                    <a className="font-mono font-medium text-primary highlight-link-hover">
+                      App Dissection
+                    </a>
+                  </Link>
+                </span>
+                <p className="font-mono text-tertiary">
                   In-depth explorations of visual and interaction design in
                   well-known apps.
                 </p>
               </div>
               <div className="flex flex-col space-y-1">
-                <Link passHref href="/bookmarks">
-                  <a className="text-blue-600 dark:text-blue-500">Bookmarks</a>
-                </Link>
-                <p>Internet things, saved for later.</p>
-              </div>
-              <div className="flex flex-col space-y-1">
-                <Link passHref href="/ama">
-                  <a className="text-blue-600 dark:text-blue-500">AMA</a>
-                </Link>
-                <p>Ask me anything.</p>
-              </div>
-              <div className="flex flex-col space-y-1">
-                <Link passHref href="/hn">
-                  <a className="text-blue-600 dark:text-blue-500">
-                    Hacker News
-                  </a>
-                </Link>
-                <p>A better Hacker News.</p>
-              </div>
-              <div className="flex flex-col space-y-1">
-                <Link passHref href="/security">
-                  <a className="text-blue-600 dark:text-blue-500">
-                    Security Checklist
-                  </a>
-                </Link>
-                <p>Tools and resources for staying safe on the internet.</p>
-              </div>
-              <div className="flex flex-col space-y-1">
-                <Link passHref href="/stack">
-                  <a className="text-blue-600 dark:text-blue-500">My Stack</a>
-                </Link>
-                <p>A curated list of my favorite tools and software.</p>
-              </div>
-              <div className="flex flex-col space-y-1">
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 dark:text-blue-500"
-                  href="https://gumroad.com/l/waves-premium-phone-wallpapers"
-                >
-                  Waves Phone Wallpapers
-                </a>
-                <p>
-                  A custom-made set of 10 phone wallpapers, each with a unique
-                  color palette and design.
+                <span>
+                  <Link passHref href="/bookmarks">
+                    <a className="font-mono font-medium text-primary highlight-link-hover">
+                      Bookmarks
+                    </a>
+                  </Link>
+                </span>
+                <p className="font-mono text-tertiary">
+                  Internet things, saved for later.
                 </p>
               </div>
-              <div />
+              <div className="flex flex-col space-y-1">
+                <span>
+                  <Link passHref href="/ama">
+                    <a className="font-mono font-medium text-primary highlight-link-hover">
+                      AMA
+                    </a>
+                  </Link>
+                </span>
+                <p className="font-mono text-tertiary">Ask me anything.</p>
+              </div>
+              <div className="flex flex-col space-y-1">
+                <span>
+                  <Link passHref href="/hn">
+                    <a className="font-mono font-medium text-primary highlight-link-hover">
+                      Hacker News
+                    </a>
+                  </Link>
+                </span>
+                <p className="font-mono text-tertiary">A better Hacker News.</p>
+              </div>
+              <div className="flex flex-col space-y-1">
+                <span>
+                  <Link passHref href="/security">
+                    <a className="font-mono font-medium text-primary highlight-link-hover">
+                      Security Checklist
+                    </a>
+                  </Link>
+                </span>
+                <p className="font-mono text-tertiary">
+                  Tools and resources for staying safe on the internet.
+                </p>
+              </div>
+              <div className="flex flex-col space-y-1">
+                <span>
+                  <Link passHref href="/stack">
+                    <a className="font-mono font-medium text-primary highlight-link-hover">
+                      My Stack
+                    </a>
+                  </Link>
+                </span>
+                <p className="font-mono text-tertiary">
+                  A curated list of my favorite tools and software.
+                </p>
+              </div>
             </div>
 
-            <div className="flex flex-col space-y-4">
+            <Divider />
+
+            <div className="flex flex-col space-y-8">
               <div className="flex flex-col space-y-1">
-                <h4>Design Details Podcast</h4>
-                <p className="text-lg">
-                  A weekly conversation about design process and culture.
-                </p>
+                <h4 className="font-mono text-lg font-bold">
+                  Design Details Podcast
+                </h4>
               </div>
               {data && data.episodes && (
                 <PodcastEpisodesList episodes={data.episodes} />
               )}
-              <a
-                href="https://designdetails.fm/episodes"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 dark:text-blue-500"
-              >
-                See all episodes &rarr;
-              </a>
+              <span>
+                <a
+                  href="https://designdetails.fm"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-mono font-medium text-primary highlight-link-hover"
+                >
+                  Subscribe to Design Details &rarr;
+                </a>
+              </span>
             </div>
 
-            <div className="flex flex-col space-y-4">
+            <Divider />
+
+            <div className="flex flex-col space-y-8">
               <div className="flex flex-col space-y-1">
-                <h4>Figma plugins</h4>
-                <p className="text-lg">
-                  Making the design process less tedious.
-                </p>
+                <h4 className="font-mono text-lg font-bold">Figma plugins</h4>
               </div>
               <FigmaPlugins />
-              <a
-                className="text-blue-600 dark:text-blue-500"
-                href="https://figma.com/@brian"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                See my Figma profile &rarr;
-              </a>
+              <span>
+                <a
+                  className="font-mono font-medium text-primary highlight-link-hover"
+                  href="https://figma.com/@brian"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  See my Figma profile &rarr;
+                </a>
+              </span>
             </div>
 
-            <div className="flex flex-col space-y-4">
-              <h4>Open source work</h4>
+            <Divider />
+
+            <div className="flex flex-col space-y-8">
+              <h4 className="font-mono text-lg font-bold">Open source work</h4>
               <div className="flex flex-col space-y-1">
-                <a
-                  className="text-blue-600 dark:text-blue-500"
-                  href="https://github.com/designdetails/designdetails"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  designdetails / designdetails
-                </a>
-                <p>The code that powers Design Details.</p>
+                <span>
+                  <a
+                    className="font-mono font-medium text-primary highlight-link-hover"
+                    href="https://github.com/designdetails/designdetails"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    designdetails / designdetails
+                  </a>
+                </span>
+                <p className="font-mono text-tertiary">
+                  The code that powers Design Details.
+                </p>
               </div>
 
               <div className="flex flex-col space-y-1">
-                <a
-                  href="https://github.com/brianlovin/brian-lovin-next"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 dark:text-blue-500"
-                >
-                  brian-lovin-next
-                </a>
-                <p>The code that powers this website you’re looking at.</p>
+                <span>
+                  <a
+                    href="https://github.com/brianlovin/brian-lovin-next"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-mono font-medium text-primary highlight-link-hover"
+                  >
+                    brian-lovin-next
+                  </a>
+                </span>
+                <p className="font-mono text-tertiary">
+                  The code that powers this website you’re looking at.
+                </p>
               </div>
 
               <div className="flex flex-col space-y-1">
-                <a
-                  href="https://github.com/withspectrum/spectrum"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 dark:text-blue-500"
-                >
-                  withspectrum / spectrum
-                </a>
-                <p>Simple, powerful online communities.</p>
+                <span>
+                  <a
+                    href="https://github.com/withspectrum/spectrum"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-mono font-medium text-primary highlight-link-hover"
+                  >
+                    withspectrum / spectrum
+                  </a>
+                </span>
+                <p className="font-mono text-tertiary">
+                  Simple, powerful online communities.
+                </p>
               </div>
 
               <div className="flex flex-col space-y-1">
-                <a
-                  href="https://github.com/specfm/spec-next"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 dark:text-blue-500"
-                >
-                  specfm / spec-next
-                </a>
-                <p>
+                <span>
+                  <a
+                    href="https://github.com/specfm/spec-next"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-mono font-medium text-primary highlight-link-hover"
+                  >
+                    specfm / spec-next
+                  </a>
+                </span>
+                <p className="font-mono text-tertiary">
                   A podcast network to help designers and developers level up.
                 </p>
               </div>
 
-              <a
-                href="https://github.com/brianlovin"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 dark:text-blue-500"
-              >
-                Follow me on GitHub &rarr;
-              </a>
+              <span>
+                <a
+                  href="https://github.com/brianlovin"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-mono font-medium text-primary highlight-link-hover"
+                >
+                  Follow me on GitHub &rarr;
+                </a>
+              </span>
             </div>
 
-            <div className="flex flex-col space-y-4">
-              <h4>Speaking and interviews</h4>
-              <div className="flex flex-col space-y-4">
+            <Divider />
+
+            <div className="flex flex-col space-y-8">
+              <h4 className="font-mono text-lg font-bold">
+                Speaking and interviews
+              </h4>
+              <div className="flex flex-col space-y-8">
                 <div className="flex flex-col space-y-1">
-                  <a
-                    className="text-blue-600 dark:text-blue-500"
-                    href="https://layout.fm/episodes/194/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Layout.fm: It Ran Into the Wall of Reality
-                  </a>
-                  <p>
+                  <span>
+                    <a
+                      className="font-mono font-medium text-primary highlight-link-hover"
+                      href="https://layout.fm/episodes/194/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Layout.fm: It Ran Into the Wall of Reality
+                    </a>
+                  </span>
+                  <p className="font-mono text-tertiary">
                     I spoke with Kevin and Rafa about the Staff Design project,
                     career ladders, imposter syndrome, and Paul Rudd.
                   </p>
                 </div>
                 <div className="flex flex-col space-y-1">
-                  <a
-                    className="text-blue-600 dark:text-blue-500"
-                    href="https://www.swiftbysundell.com/podcast/67/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Building for open source
-                  </a>
-                  <p>
+                  <span>
+                    <a
+                      className="font-mono font-medium text-primary highlight-link-hover"
+                      href="https://www.swiftbysundell.com/podcast/67/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Building for open source
+                    </a>
+                  </span>
+                  <p className="font-mono text-tertiary">
                     Ryan Nystrom and I talk about designing and building the
                     mobile apps at GitHub.
                   </p>
                 </div>
 
                 <div className="flex flex-col space-y-1">
-                  <a
-                    className="text-blue-600 dark:text-blue-500"
-                    href="https://www.youtube.com/watch?v=SyS3h3kmBnY"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Extend what’s possible with Figma Plugins - Figma Config
-                  </a>
-                  <p>
+                  <span>
+                    <a
+                      className="font-mono font-medium text-primary highlight-link-hover"
+                      href="https://www.youtube.com/watch?v=SyS3h3kmBnY"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Extend what’s possible with Figma Plugins - Figma Config
+                    </a>
+                  </span>
+                  <p className="font-mono text-tertiary">
                     An exploration into the plugins I built to automate the
                     tedious parts of designing mobile apps at GitHub.
                   </p>
                 </div>
 
                 <div className="flex flex-col space-y-1">
-                  <a
-                    className="text-blue-600 dark:text-blue-500"
-                    href="https://www.youtube.com/watch?v=6MBBTdu8v6E"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Designing with GraphQL - GraphQL Summit
-                  </a>
-                  <p>
+                  <span>
+                    <a
+                      className="font-mono font-medium text-primary highlight-link-hover"
+                      href="https://www.youtube.com/watch?v=6MBBTdu8v6E"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Designing with GraphQL - GraphQL Summit
+                    </a>
+                  </span>
+                  <p className="font-mono text-tertiary">
                     Exploring the possibilities that open up when designers and
                     developers can speak the same language.
                   </p>
                 </div>
 
                 <div className="flex flex-col space-y-1">
-                  <a
-                    className="text-blue-600 dark:text-blue-500"
-                    href="https://interfacelovers.com/interviews/brian-lovin"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Interface Lovers Interview
-                  </a>
-                  <p>
+                  <span>
+                    <a
+                      className="font-mono font-medium text-primary highlight-link-hover"
+                      href="https://interfacelovers.com/interviews/brian-lovin"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Interface Lovers Interview
+                    </a>
+                  </span>
+                  <p className="font-mono text-tertiary">
                     An interview about how I got into design, my process, and
                     past work.
                   </p>
                 </div>
 
                 <div className="flex flex-col space-y-1">
-                  <a
-                    className="text-blue-600 dark:text-blue-500"
-                    href="https://spec.fm/podcasts/design-details/79352"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Charmander++ – Interviewing ourselves on Design Details
-                  </a>
-                  <p>
+                  <span>
+                    <a
+                      className="font-mono font-medium text-primary highlight-link-hover"
+                      href="https://spec.fm/podcasts/design-details/79352"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Charmander++ – Interviewing ourselves on Design Details
+                    </a>
+                  </span>
+                  <p className="font-mono text-tertiary">
                     Bryn Jackson and I interviewed each other. Totally humble.
                   </p>
                 </div>
 
                 <div className="flex flex-col space-y-1">
-                  <a
-                    className="text-blue-600 dark:text-blue-500"
-                    href="https://avocode.com/blog/brian-lovin-product-designer-github-interview"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Avocode Interview
-                  </a>
-                  <p>
+                  <span>
+                    <a
+                      className="font-mono font-medium text-primary highlight-link-hover"
+                      href="https://avocode.com/blog/brian-lovin-product-designer-github-interview"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Avocode Interview
+                    </a>
+                  </span>
+                  <p className="font-mono text-tertiary">
                     An interview where we dig into my work at Buffer, Facebook,
                     Spectrum, and what’s in the works at GitHub.
                   </p>
                 </div>
 
                 <div className="flex flex-col space-y-1">
-                  <a
-                    className="text-blue-600 dark:text-blue-500"
-                    href="https://softwareengineeringdaily.com/2020/07/15/github-mobile-with-brian-lovin-and-ryan-nystrom/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Software Engineering Daily: GitHub Mobile
-                  </a>
-                  <p>
+                  <span>
+                    <a
+                      className="font-mono font-medium text-primary highlight-link-hover"
+                      href="https://softwareengineeringdaily.com/2020/07/15/github-mobile-with-brian-lovin-and-ryan-nystrom/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Software Engineering Daily: GitHub Mobile
+                    </a>
+                  </span>
+                  <p className="font-mono text-tertiary">
                     Ryan and I discuss how we designed and built the first
                     version of GitHub’s mobile apps.
                   </p>
@@ -479,11 +517,15 @@ function About({ data, summaries }: Props) {
               </div>
             </div>
 
+            <Divider />
+
             <div className="flex flex-col space-y-6">
-              <div className="flex flex-col space-y-4">
+              <div className="flex flex-col space-y-8">
                 <div className="flex flex-col space-y-1">
-                  <h4>App Dissection</h4>
-                  <p className="text-lg">
+                  <h4 className="font-mono text-lg font-bold">
+                    App Dissection
+                  </h4>
+                  <p className="font-mono text-tertiary">
                     In-depth explorations of visual and interaction design in
                     well-known apps.
                   </p>

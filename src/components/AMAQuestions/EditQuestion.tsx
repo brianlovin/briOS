@@ -7,6 +7,7 @@ import {
 } from '~/graphql/types.generated'
 import { GET_AMA_QUESTIONS } from '~/graphql/queries'
 import { Textarea } from '~/components/Input'
+import Button from '../Button'
 
 interface Props {
   question: Ama
@@ -169,7 +170,6 @@ export default function EditQuestion(props: Props) {
       />
 
       <Textarea
-        autoFocus
         placeholder="Answer..."
         value={state.answer}
         onChange={onAnswerChange}
@@ -179,18 +179,12 @@ export default function EditQuestion(props: Props) {
 
       {state.error && <p className="text-red-500">{state.error}</p>}
 
-      <div className="flex space-between justify-between">
+      <div className="flex justify-between space-between">
+        <Button onClick={() => handleDelete()}>Delete</Button>
         <div className="flex space-x-3">
-          <button className="text-blue-500" onClick={handleSave}>
-            Save
-          </button>
-          <button className="black-link" onClick={onDone}>
-            Cancel
-          </button>
+          <Button onClick={onDone}>Cancel</Button>
+          <Button onClick={handleSave}>Save</Button>
         </div>
-        <button className="text-red-500" onClick={() => handleDelete()}>
-          Delete
-        </button>
       </div>
     </form>
   )

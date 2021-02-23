@@ -5,6 +5,7 @@ import { BookmarkListItem } from './BookmarkListItem'
 import { PAGINATION_AMOUNT } from '~/graphql/constants'
 import LoadingSpinner from '../LoadingSpinner'
 import FullscreenLoading from '../FullscreenLoading'
+import Button from '../Button'
 
 export default function BookmarksList({ category = undefined }) {
   const { isMe } = useAuth()
@@ -59,19 +60,18 @@ export default function BookmarksList({ category = undefined }) {
   }
 
   return (
-    <div className="flex flex-col w-full timeline-container">
+    <div className="flex flex-col w-full space-y-6 timeline-container">
       {bookmarks.map((bookmark, index) => (
         <BookmarkListItem
           editable={isMe}
           key={`${bookmark.url}-${index}`}
           bookmark={bookmark}
-          divider={index !== bookmarks.length - 1}
         />
       ))}
       {showLoadMore && (
-        <button className="mt-4 btn" onClick={handleLoadMore}>
-          {loading ? <LoadingSpinner /> : 'Show me more'}
-        </button>
+        <Button onClick={handleLoadMore}>
+          {loading ? <LoadingSpinner /> : 'Load more'}
+        </Button>
       )}
     </div>
   )

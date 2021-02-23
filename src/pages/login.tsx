@@ -32,7 +32,6 @@ function Login() {
       <div className="flex items-center justify-center w-screen h-screen">
         <form className="p-8 bg-gray-100 rounded-lg" onSubmit={onSubmit}>
           <Input
-            autoFocus
             type="password"
             placeholder="password"
             autoComplete="current-password"

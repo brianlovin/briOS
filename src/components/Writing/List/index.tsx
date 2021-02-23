@@ -34,9 +34,7 @@ export default function PostsList({ posts }: Props) {
             {post.excerpt && (
               <p className="font-mono text-tertiary clamp-3">{post.excerpt}</p>
             )}
-            <p className="flex items-center font-mono text-quaternary">
-              {date}
-            </p>
+            <p className="font-mono text-quaternary">{date}</p>
           </div>
         )
       })}
