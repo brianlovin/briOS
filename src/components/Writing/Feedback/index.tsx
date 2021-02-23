@@ -58,8 +58,10 @@ export default function Feedback({ post }: Props) {
       className="flex flex-col p-8 -mx-8 space-y-4 bg-gray-400 border-t border-gray-300 border-dashed bg-opacity-5 dark:border-gray-800"
       data-cy="writing-subscribe-box"
     >
-      <p className="flex items-center font-mono font-semibold">A small favor</p>
-      <p className="font-mono text-quaternary">
+      <p className="flex items-center font-mono font-semibold text-primary">
+        A small favor
+      </p>
+      <p className="font-mono text-tertiary">
         Was anything I wrote confusing, outdated, or incorrect? Please let me
         know! Just write a few words below and I’ll be sure to amend this post
         with your suggestions.

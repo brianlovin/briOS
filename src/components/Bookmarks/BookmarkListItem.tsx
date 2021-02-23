@@ -98,13 +98,11 @@ export const BookmarkListItem = React.memo((props: Props) => {
           </span>
           <span className="flex items-center space-x-2">
             <BookmarkReaction bookmark={bookmark} />
-            <span className="text-gray-300 dark:text-gray-700">{' / '}</span>
+            <span className="text-quaternary">{' / '}</span>
             <span className="text-sm text-tertiary">{cleanedCategory}</span>
             {editable && (
               <>
-                <span className="text-gray-300 dark:text-gray-700">
-                  {' / '}
-                </span>
+                <span className="text-quaternary">{' / '}</span>
                 <button
                   className="text-sm black-link"
                   onClick={() => setIsEditing(true)}

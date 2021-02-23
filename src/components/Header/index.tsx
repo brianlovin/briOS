@@ -24,10 +24,10 @@ export default function Header() {
           .find((r) => currPathName.includes(r.path))?.label
 
   return (
-    <div className="fixed top-0 z-10 w-full py-2 bg-white border-b border-gray-400 dark:border-opacity-5 border-opacity-10 bg-opacity-70 dark:bg-gray-800 dark:bg-opacity-40 filter-blur">
+    <div className="fixed top-0 z-10 w-full py-2 bg-white border-b border-gray-400 dark:border-opacity-5 border-opacity-10 bg-opacity-70 dark:bg-gray-900 dark:bg-opacity-40 filter-blur">
       {/* Mobile nav */}
       <div className="grid grid-cols-1 md:hidden">
-        <div className="flex items-center pr-4 text-gray-1000 dark:text-gray-50">
+        <div className="flex items-center pr-4 text-primary">
           <button
             className="p-4 pl-4 -my-2"
             onClick={() => setIsExpanded(!isExpanded)}
@@ -43,7 +43,7 @@ export default function Header() {
         )}
         {isExpanded &&
           defaultRoutes.map((route) => {
-            const defaultClasses = `flex items-center pl-12 py-4 font-medium font-mono text-sm text-gray-1000 dark:text-white text-opacity-80`
+            const defaultClasses = `flex items-center pl-12 py-4 font-medium font-mono text-sm text-primary text-opacity-80`
 
             return (
               <Link href={route.path} key={route.path}>
@@ -58,9 +58,9 @@ export default function Header() {
       <div className="hidden max-w-screen-md grid-cols-4 gap-1 mx-auto md:grid">
         {defaultRoutes.map((route) => {
           const isActive = route.path === router.pathname
-          const defaultClasses = `flex font-semibold items-center justify-center py-2 font-mono text-sm`
-          const activeClasses = `bg-gray-1000 bg-opacity-5 dark:bg-white text-gray-1000  filter-saturate filter-blur`
-          const inactiveClasses = `hover:bg-gray-900 filter-saturate hover:bg-opacity-5 dark:hover:bg-white text-gray-1000 dark:text-white text-opacity-40 hover:text-gray-1000 hover:text-opacity-100`
+          const defaultClasses = `flex font-medium items-center text-opacity-40 justify-center py-2 font-mono text-sm`
+          const activeClasses = `bg-gray-1000 bg-opacity-5 dark:bg-white text-primary filter-saturate filter-blur`
+          const inactiveClasses = `hover:bg-gray-900 filter-saturate hover:bg-opacity-5 dark:hover:bg-white dark:text-white  hover:text-gray-1000 dark:hover:text-gray-100 text-tertiary`
           return (
             <Link href={route.path} key={route.path}>
               <a

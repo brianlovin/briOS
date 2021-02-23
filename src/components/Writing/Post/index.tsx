@@ -24,21 +24,24 @@ export default function PostView({ post }: Props) {
       <SEO post={post} />
 
       <CenteredColumn>
-        <div data-cy="post" className="flex flex-col space-y-4">
-          <span className="flex space-x-4 text-quaternary">
-            <Link href="/writing" passHref>
-              <a className="font-mono leading-snug hover:text-gray-1000">
-                &larr; Writing
-              </a>
-            </Link>
-            <span>{' / '}</span>
-            <span className="font-mono leading-snug">{date}</span>
-          </span>
-          <h1 className="text-4xl font-extrabold">{post.title}</h1>
+        <div data-cy="post" className="flex flex-col space-y-8">
+          <Link href="/writing" passHref>
+            <a className="font-mono leading-snug text-tertiary hover:text-gray-1000 dark:hover:text-gray-100">
+              ⬖ Writing
+            </a>
+          </Link>
+          <div className="flex flex-col space-y-4">
+            <h1 className="text-4xl font-extrabold text-primary">
+              {post.title}
+            </h1>
+            <span className="font-mono text-lg leading-snug text-tertiary">
+              {date}
+            </span>
+          </div>
         </div>
 
         <div
-          className="mt-16 font-mono leading-relaxed prose lg:prose-lg"
+          className="mt-8 font-mono leading-relaxed prose lg:prose-lg"
           dangerouslySetInnerHTML={{ __html: post.html }}
         />
 

@@ -31,7 +31,7 @@ export const QuestionItem = React.memo((props: Props) => {
     <div className="flex flex-col space-y-2">
       <p className="font-bold">{question.question}</p>
       {question.answer && (
-        <div className="prose lg:prose-lg flex flex-col">
+        <div className="flex flex-col prose lg:prose-lg">
           <MarkdownRenderer>{question.answer}</MarkdownRenderer>
         </div>
       )}
@@ -43,7 +43,7 @@ export const QuestionItem = React.memo((props: Props) => {
 
         <p
           className={`p-small ${
-            question.answer ? 'text-gray-700' : 'text-yellow-500'
+            question.answer ? 'text-tertiary' : 'text-yellow-500'
           }`}
         >
           {question.answer ? 'Updated' : 'Asked'} {format(updatedAt)}

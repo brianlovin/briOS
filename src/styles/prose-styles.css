@@ -1,5 +1,5 @@
 .prose {
-  @apply text-gray-900 dark:text-gray-200;
+  @apply text-gray-900 dark:text-gray-300;
 }
 
 .prose blockquote {
@@ -11,7 +11,7 @@
 }
 
 .prose a {
-  @apply font-semibold no-underline bg-yellow-400 bg-opacity-20 hover:bg-opacity-30;
+  @apply font-medium no-underline bg-yellow-400 dark:bg-gray-100 dark:bg-opacity-20 text-gray-1000 dark:text-gray-300 bg-opacity-20 hover:bg-opacity-30;
 }
 
 .prose table {
@@ -20,7 +20,7 @@
 
 .prose b,
 .prose strong {
-  @apply font-bold;
+  @apply font-bold text-gray-900 dark:text-gray-300;
 }
 
 /* the kg-embed-card gets applied to iframes sent from Ghost. this preserves a good video aspect ratio */

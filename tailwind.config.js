@@ -1,3 +1,5 @@
+const colors = require('tailwindcss/colors')
+
 const mono = [
   'ui-monospace',
   'SFMono-Regular',
@@ -13,7 +15,8 @@ module.exports = {
   darkMode: 'media',
   variants: {
     extend: {
-      textColor: ['disabled'],
+      opacity: ['disabled'],
+      textColor: ['disabled', 'visited'],
       backgroundOpacity: ['disabled'],
     },
   },
@@ -25,11 +28,14 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        mono: ['iA Quattro', ...mono],
+        mono: ['"iA Quattro"', ...mono],
         code: mono,
+        sans:
+          'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
       },
       colors: {
         white: '#fff',
+        gray: colors.trueGray,
         'gray-1000': '#050505',
       },
       boxShadow: {

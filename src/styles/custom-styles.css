@@ -1,18 +1,9 @@
 /* Write your own custom component styles here */
 @font-face {
   font-family: 'iA Quattro';
-  font-style: normal;
-  font-stretch: 25% 151%;
+  font-stretch: 25% 150%;
   font-weight: 100 1000;
-  src: url("/static/fonts/iAWriterQuattroV.ttf") format("truetype supports variations");
-}
-
-@font-face {
-  font-family: 'iA Quattro';
-  font-style: italic;
-  font-stretch: 25% 151%;
-  font-weight: 100 1000;
-  src: url("/static/fonts/iAWriterQuattroV-Italic.ttf") format("truetype supports variations");
+  src: url("/static/fonts/iAWriterQuattroV.ttf") format("truetype-variations");
 }
 
 @layer components {
@@ -179,7 +170,7 @@
   }
 
   .highlight-link-hover {
-    @apply hover:bg-yellow-400 bg-opacity-20 hover:bg-opacity-30
+    @apply hover:bg-yellow-400 bg-opacity-20 hover:bg-opacity-30 dark:hover:bg-gray-100;
   }
 
   .highlight-link {
