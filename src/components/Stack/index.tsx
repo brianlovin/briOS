@@ -32,7 +32,7 @@ export default function StackList() {
 
             <div className="flex flex-col justify-center flex-1 col-span-3 pl-5 space-y-2 font-mono">
               <div className="flex flex-col space-y-1">
-                <p>{stack.name}</p>
+                <p className="font-medium">{stack.name}</p>
                 <p className="text-base font-normal text-tertiary">
                   {stack.description}
                 </p>
