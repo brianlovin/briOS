@@ -312,4 +312,13 @@ export default [
     description:
       'This is my new default email client for macOS. I love the batches feature and minimal UI.',
   },
+  {
+    name: 'Mailbrew',
+    url: 'https://mailbrew.com/?aff=Brian',
+    image: 'mailbrew.jpg',
+    oss: false,
+    independent: true,
+    description:
+      'This is my answer to Twitter FOMO: I set up a daily digest with the top links and best tweets from all the people I follow. Simple. Easiest $100/yr subscription to justify.',
+  },
 ]
