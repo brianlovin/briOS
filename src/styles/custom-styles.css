@@ -6,14 +6,13 @@
   src: url("/static/fonts/iAWriterQuattroV.ttf") format("truetype-variations");
 }
 
-@layer components {
-  input, textarea, select {
-    box-shadow: 0 1px 0 rgba(0,0,0,0.12);
+@layer base {
+  body {
+    @apply font-mono;
   }
+}
 
-  input:focus, textarea:focus, select:focus {
-    box-shadow: inset 0 -1px 0 rgba(0,0,0,0.72)!important;
-  }
+@layer components {
 }
 
 /* Your own custom utilities */

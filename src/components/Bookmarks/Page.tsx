@@ -23,8 +23,8 @@ export default function BookmarksPage({ category }) {
       <CenteredColumn>
         <div data-cy="bookmarks" className="flex flex-col space-y-8">
           <Link href="/projects" passHref>
-            <a className="font-mono leading-snug text-tertiary hover:text-gray-1000 dark:hover:text-gray-100">
-              ⬖ Projects
+            <a className="leading-snug text-tertiary hover:text-gray-1000 dark:hover:text-gray-100">
+              &larr; Projects
             </a>
           </Link>
           <PageHeader

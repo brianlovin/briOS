@@ -30,7 +30,7 @@ export default function StackList() {
               className="border border-gray-100 rounded-xl dark:border-gray-900 flex-0"
             />
 
-            <div className="flex flex-col justify-center flex-1 col-span-3 pl-5 space-y-2 font-mono">
+            <div className="flex flex-col justify-center flex-1 col-span-3 pl-5 space-y-2">
               <div className="flex flex-col space-y-1">
                 <p className="font-medium">{stack.name}</p>
                 <p className="text-base font-normal text-tertiary">
@@ -40,12 +40,12 @@ export default function StackList() {
               {hasBadges && (
                 <div className="flex space-x-2">
                   {stack.independent && (
-                    <span className="self-start px-3 py-0.5 text-sm font-medium font-mono leading-5 tracking-wide dark:text-purple-400 dark:border-purple-400 text-purple-600 bg-purple-500 bg-opacity-5">
+                    <span className="self-start rounded px-3 py-0.5 text-sm font-medium leading-5 tracking-wide dark:text-purple-400 dark:border-purple-400 text-purple-600 bg-purple-500 bg-opacity-5">
                       Indie
                     </span>
                   )}
                   {stack.oss && (
-                    <span className="self-start px-3 py-0.5 text-sm font-medium font-mono leading-5 tracking-wide dark:text-green-400 dark:border-green-400 text-green-600 bg-green-500 bg-opacity-5">
+                    <span className="self-start rounded px-3 py-0.5 text-sm font-medium leading-5 tracking-wide dark:text-green-400 dark:border-green-400 text-green-600 bg-green-500 bg-opacity-5">
                       Open Source
                     </span>
                   )}

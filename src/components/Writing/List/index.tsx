@@ -26,15 +26,15 @@ export default function PostsList({ posts }: Props) {
                 as={`/writing/${post.slug}`}
                 passHref
               >
-                <a className="font-mono font-medium text-primary highlight-link-hover">
+                <a className="font-medium text-primary highlight-link-hover">
                   {post.title}
                 </a>
               </Link>
             </span>
             {post.excerpt && (
-              <p className="font-mono text-tertiary clamp-3">{post.excerpt}</p>
+              <p className="text-tertiary clamp-3">{post.excerpt}</p>
             )}
-            <p className="font-mono text-quaternary">{date}</p>
+            <p className="text-quaternary">{date}</p>
           </div>
         )
       })}

@@ -42,17 +42,17 @@ export const BookmarkListItem = React.memo((props: Props) => {
           href={`${bookmark.url}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="font-mono font-medium text-primary highlight-link-hover"
+          className="font-medium text-primary highlight-link-hover"
         >
           {bookmark.title}
         </a>
       </span>
       {bookmark.notes && (
-        <p className="font-mono text-tertiary clamp-3">
+        <p className="text-tertiary clamp-3">
           <Linkify>{bookmark.notes}</Linkify>
         </p>
       )}
-      <span className="flex items-center space-x-2 font-mono">
+      <span className="flex items-center space-x-2">
         <BookmarkReaction bookmark={bookmark} />
         <span className="text-quaternary">{' · '}</span>
         <span className="text-tertiary">{cleanedCategory}</span>

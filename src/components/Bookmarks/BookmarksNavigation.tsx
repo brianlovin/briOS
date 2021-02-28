@@ -1,6 +1,5 @@
 import * as React from 'react'
 import Link from 'next/link'
-import { Bookmark, BookOpen, Compass, Star } from 'react-feather'
 import { useRouter } from 'next/router'
 
 export default function BookmarksNavigation() {
@@ -11,7 +10,7 @@ export default function BookmarksNavigation() {
     return category === path
   }
 
-  const defaultClasses = `text-primary font-mono flex items-center justify-center space-x-3`
+  const defaultClasses = `text-primary flex items-center justify-center space-x-3`
   const activeClasses = `bg-gray-1000 bg-opacity-5 dark:bg-white text-primary`
   const inactiveClasses = `hover:bg-gray-900 filter-saturate hover:bg-opacity-5 dark:hover:bg-white dark:text-white  hover:text-gray-1000 dark:hover:text-gray-100 text-tertiary`
 

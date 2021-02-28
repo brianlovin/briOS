@@ -124,7 +124,6 @@ export default function AddBookmark() {
               id="category"
               value={category}
               onChange={onCategoryChange}
-              className="font-mono"
             >
               <option value="reading">Reading</option>
               <option value="portfolio">Portfolio</option>

@@ -13,7 +13,7 @@ export default function PodcastEpisodesList({ episodes }: Props) {
         <div className="flex flex-col space-y-1" key={ep.id}>
           <span>
             <a
-              className="font-mono font-medium text-primary highlight-link-hover"
+              className="font-medium text-primary highlight-link-hover"
               target="_blank"
               rel="noopener noreferrer"
               href={`https://designdetails.fm/episodes/${
@@ -23,8 +23,8 @@ export default function PodcastEpisodesList({ episodes }: Props) {
               {ep.title}
             </a>
           </span>
-          <p className="font-mono text-tertiary clamp-3">{ep.description}</p>
-          <p className="font-mono text-quaternary">{format(ep.published_at)}</p>
+          <p className="text-tertiary clamp-3">{ep.description}</p>
+          <p className="text-quaternary">{format(ep.published_at)}</p>
         </div>
       ))}
     </div>

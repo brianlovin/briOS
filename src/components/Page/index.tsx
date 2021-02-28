@@ -27,7 +27,7 @@ export function PageHeader(props: HeaderProps) {
   return (
     <div className="flex flex-col space-y-2">
       <h1 className="text-4xl font-extrabold text-primary">{title}</h1>
-      <p className="font-mono text-xl leading-snug text-tertiary">
+      <p className="text-xl leading-snug text-tertiary">
         {subtitle}
         <span className="relative text-quaternary blink opacity-30 -top-0.5">
           █

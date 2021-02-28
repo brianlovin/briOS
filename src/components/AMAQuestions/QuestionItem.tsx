@@ -31,16 +31,14 @@ export const QuestionItem = React.memo((props: Props) => {
   return (
     <div className="flex flex-col space-y-1">
       <span>
-        <p className="font-mono font-medium text-primary">
-          {question.question}
-        </p>
+        <p className="font-medium text-primary">{question.question}</p>
       </span>
       {question.answer && (
-        <p className="font-mono text-tertiary clamp-3">
+        <p className="text-tertiary clamp-3">
           <Linkify>{question.answer}</Linkify>
         </p>
       )}
-      <span className="flex items-center space-x-2 font-mono text-tertiary">
+      <span className="flex items-center space-x-2 text-tertiary">
         <QuestionReaction question={question} />
         <span className="text-quaternary">{' · '}</span>
 

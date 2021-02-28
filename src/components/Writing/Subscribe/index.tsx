@@ -40,10 +40,10 @@ export default function WritingSubscribeBox() {
       data-cy="writing-subscribe-box"
     >
       <div className="flex flex-col space-y-2">
-        <p className="flex items-center font-mono font-semibold text-primary">
+        <p className="flex items-center font-semibold text-primary">
           Subscribe with email
         </p>
-        <p className="font-mono text-tertiary">
+        <p className="text-tertiary">
           Get updates about new posts and projects in your inbox. Alternatively,
           you can{' '}
           <a

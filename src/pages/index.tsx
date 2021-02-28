@@ -2,7 +2,6 @@ import * as React from 'react'
 import Link from 'next/link'
 import Page, { PageHeader } from '~/components/Page'
 import { CenteredColumn } from '~/components/Layouts'
-import { Timeline } from '~/components/Timeline'
 
 function Home() {
   return (
@@ -35,8 +34,6 @@ function Home() {
               </a>
             </div>
           </div>
-
-          <Timeline />
         </div>
       </CenteredColumn>
     </Page>

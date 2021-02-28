@@ -11,7 +11,7 @@
 }
 
 .prose a {
-  @apply font-medium no-underline bg-yellow-400 dark:bg-gray-100 dark:bg-opacity-20 text-gray-1000 dark:text-gray-300 bg-opacity-20 hover:bg-opacity-30;
+  @apply px-0.5 font-medium no-underline bg-yellow-400 rounded dark:bg-gray-100 dark:bg-opacity-20 text-gray-1000 dark:text-gray-300 bg-opacity-20 hover:bg-opacity-30;
 }
 
 .prose table {
