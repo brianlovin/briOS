@@ -5406,15 +5406,15 @@ eslint-config-prettier@^7.2.0:
   resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-7.2.0.tgz#f4a4bd2832e810e8cc7c1411ec85b3e85c0c53f9"
   integrity sha512-rV4Qu0C3nfJKPOAhFujFxB7RMP+URFyQqqOZW9DMRD7ZDTFyjaIlETU3xzHELt++4ugC0+Jm084HQYkkJe+Ivg==
 
-eslint-mdx@^1.8.2:
-  version "1.8.2"
-  resolved "https://registry.yarnpkg.com/eslint-mdx/-/eslint-mdx-1.8.2.tgz#06cda4a771e7f1f1d79f63d2a478994988b3e1b2"
-  integrity sha512-j7mkBFr7zHLaiqGu+iWker9qwWfti29xUAuUDDad95l+H189R4++dsuSUB6u19wy6CCuspIt5I6katzbpRbbMw==
+eslint-mdx@^1.9.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/eslint-mdx/-/eslint-mdx-1.9.0.tgz#40c41d1ff34c765fb716dcefde856281b34498ca"
+  integrity sha512-C06cp1OSbMCGOYVt15WxLOlWkbCnAjvBzKnCeZMfBU3h7jQPcbDIz6ZAv9PXh3t/msczxoufwnhsMplrbjOfyg==
   dependencies:
-    espree "^7.2.0"
-    remark-mdx "^1.6.16"
+    espree "^7.3.1"
+    remark-mdx "^1.6.22"
     remark-parse "^8.0.3"
-    tslib "^2.0.1"
+    tslib "^2.1.0"
     unified "^9.1.0"
 
 eslint-plugin-cypress@^2.11.2:
@@ -5424,20 +5424,20 @@ eslint-plugin-cypress@^2.11.2:
   dependencies:
     globals "^11.12.0"
 
-eslint-plugin-mdx@^1.8.2:
-  version "1.8.2"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-mdx/-/eslint-plugin-mdx-1.8.2.tgz#61fc4552329a38d352769c89bb2f0cf3c5eee8f0"
-  integrity sha512-fKkhsR1cTCHQUVcoguUmOohMo87297/H1Z0Zye3GF4ivvxcpX8fboLILLR2Em76QV8RrjP4sxrgBuOA9rBIumw==
+eslint-plugin-mdx@^1.9.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-mdx/-/eslint-plugin-mdx-1.9.0.tgz#abc53329e536878350221e55189d71630bd3a600"
+  integrity sha512-bIlqiddYLQxZ+Pk5JfT9t47G6i4XRyFY91ajf9pX8pm8M/+DS54+sA0InX8Hpx/EB/LXMcLvLY5x25KCrYOJ2A==
   dependencies:
     cosmiconfig "^7.0.0"
-    eslint-mdx "^1.8.2"
-    eslint-plugin-react "^7.20.6"
-    remark-mdx "^1.6.16"
+    eslint-mdx "^1.9.0"
+    eslint-plugin-react "^7.22.0"
+    remark-mdx "^1.6.22"
     remark-parse "^8.0.3"
     remark-stringify "^8.1.1"
-    tslib "^2.0.1"
+    tslib "^2.1.0"
     unified "^9.1.0"
-    vfile "^4.1.1"
+    vfile "^4.2.1"
   optionalDependencies:
     rebass "^4.0.7"
 
@@ -5448,7 +5448,7 @@ eslint-plugin-prettier@^3.3.1:
   dependencies:
     prettier-linter-helpers "^1.0.0"
 
-eslint-plugin-react@^7.20.6, eslint-plugin-react@^7.22.0:
+eslint-plugin-react@^7.22.0:
   version "7.22.0"
   resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-7.22.0.tgz#3d1c542d1d3169c45421c1215d9470e341707269"
   integrity sha512-p30tuX3VS+NWv9nQot9xIGAHBXR0+xJVaZriEsHoJrASGCJZDJ8JLNM0YqKqI0AKm6Uxaa1VUHoNEibxRCMQHA==
@@ -5550,7 +5550,7 @@ espree@^6.2.1:
     acorn-jsx "^5.2.0"
     eslint-visitor-keys "^1.1.0"
 
-espree@^7.2.0, espree@^7.3.0, espree@^7.3.1:
+espree@^7.3.0, espree@^7.3.1:
   version "7.3.1"
   resolved "https://registry.yarnpkg.com/espree/-/espree-7.3.1.tgz#f2df330b752c6f55019f8bd89b7660039c1bbbb6"
   integrity sha512-v3JCNCE64umkFpmkFGqzVKsOT0tN1Zr+ueqLZfpV1Ob8e+CEgPWa+OxCoGH3tnhimMKIaBm4m/vaRpJ/krRz2g==
@@ -10449,7 +10449,7 @@ remark-lint@^8.0.0:
   dependencies:
     remark-message-control "^6.0.0"
 
-remark-mdx@1.6.22, remark-mdx@^1.6.16:
+remark-mdx@1.6.22, remark-mdx@^1.6.22:
   version "1.6.22"
   resolved "https://registry.yarnpkg.com/remark-mdx/-/remark-mdx-1.6.22.tgz#06a8dab07dcfdd57f3373af7f86bd0e992108bbd"
   integrity sha512-phMHBJgeV76uyFkH4rvzCftLfKCr2RZuF+/gmVcaKrpsihyzmhXjA0BEMDaPTXG5y8qZOKPVo83NAOX01LPnOQ==
@@ -11892,7 +11892,7 @@ tslib@^1.10.0, tslib@^1.11.1, tslib@^1.14.1, tslib@^1.8.1, tslib@^1.9.0, tslib@^
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
 
-tslib@^2, tslib@^2.0.0, tslib@^2.0.1, tslib@^2.0.3, tslib@~2.1.0:
+tslib@^2, tslib@^2.0.0, tslib@^2.0.3, tslib@^2.1.0, tslib@~2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.1.0.tgz#da60860f1c2ecaa5703ab7d39bc05b6bf988b97a"
   integrity sha512-hcVC3wYEziELGGmEEXue7D75zbwIIVUMWAVbHItGPx0ziyXxrOMQx4rQEVEV45Ut/1IotuEvwqPopzIOkDMf0A==
@@ -12385,7 +12385,7 @@ vfile-message@^2.0.0:
     "@types/unist" "^2.0.0"
     unist-util-stringify-position "^2.0.0"
 
-vfile@^4.0.0, vfile@^4.1.1:
+vfile@^4.0.0, vfile@^4.2.1:
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/vfile/-/vfile-4.2.1.tgz#03f1dce28fc625c625bc6514350fbdb00fa9e624"
   integrity sha512-O6AE4OskCG5S1emQ/4gl8zK586RqA3srz3nfK/Viy0UPToBc5Trp9BVFb1u0CjsKrAWwnpr4ifM/KBXPWwJbCA==
