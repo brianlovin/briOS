@@ -5,6 +5,7 @@ interface Props {
   onClick?: any
   disabled?: boolean
   children: React.ReactChild | string
+  type?: string
 }
 
 export default function Button({ className, ...rest }: Props) {

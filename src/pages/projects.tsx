@@ -33,42 +33,32 @@ function Projects({ data }: Props) {
           <div className="space-y-20">
             <div className="space-y-6">
               <div className="space-y-1">
-                <Link passHref href="/design-details">
-                  <a className="font-medium highlight-link-hover">
-                    App Dissection
-                  </a>
+                <a
+                  href="https://staff.design"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium highlight-link-hover"
+                >
+                  Staff Design
+                </a>
+
+                <p className="text-tertiary">
+                  A collection of interviews exploring how product designers
+                  navigate the individual contributor path to its highest
+                  levels.
+                </p>
+              </div>
+
+              <div className="space-y-1">
+                <Link passHref href="/stack">
+                  <a className="font-medium highlight-link-hover">My Stack</a>
                 </Link>
 
                 <p className="text-tertiary">
-                  In-depth explorations of visual and interaction design in
-                  well-known apps.
+                  A curated list of my favorite tools and software.
                 </p>
               </div>
-              <div className="space-y-1">
-                <Link passHref href="/bookmarks">
-                  <a className="font-medium highlight-link-hover">Bookmarks</a>
-                </Link>
 
-                <p className="text-tertiary">
-                  Internet things, saved for later.
-                </p>
-              </div>
-              <div className="space-y-1">
-                <Link passHref href="/ama">
-                  <a className="font-medium highlight-link-hover">AMA</a>
-                </Link>
-
-                <p className="text-tertiary">Ask me anything.</p>
-              </div>
-              <div className="space-y-1">
-                <Link passHref href="/hn">
-                  <a className="font-medium highlight-link-hover">
-                    Better Hacker News
-                  </a>
-                </Link>
-
-                <p className="text-tertiary">A better Hacker News.</p>
-              </div>
               <div className="space-y-1">
                 <Link passHref href="/security">
                   <a className="font-medium highlight-link-hover">
@@ -80,22 +70,68 @@ function Projects({ data }: Props) {
                   Tools and resources for staying safe on the internet.
                 </p>
               </div>
+
               <div className="space-y-1">
-                <Link passHref href="/stack">
-                  <a className="font-medium highlight-link-hover">My Stack</a>
+                <Link passHref href="/bookmarks">
+                  <a className="font-medium highlight-link-hover">Bookmarks</a>
                 </Link>
 
                 <p className="text-tertiary">
-                  A curated list of my favorite tools and software.
+                  Internet things, saved for later.
+                </p>
+              </div>
+
+              <div className="space-y-1">
+                <Link passHref href="/ama">
+                  <a className="font-medium highlight-link-hover">AMA</a>
+                </Link>
+
+                <p className="text-tertiary">Ask me anything.</p>
+              </div>
+
+              <div className="space-y-1">
+                <Link passHref href="/hn">
+                  <a className="font-medium highlight-link-hover">
+                    Better Hacker News
+                  </a>
+                </Link>
+
+                <p className="text-tertiary">A better Hacker News.</p>
+              </div>
+
+              <div className="space-y-1">
+                <Link passHref href="/design-details">
+                  <a className="font-medium highlight-link-hover">
+                    App Dissection
+                  </a>
+                </Link>
+
+                <p className="text-tertiary">
+                  In-depth explorations of visual and interaction design in
+                  well-known apps.
                 </p>
               </div>
             </div>
 
             <div className="space-y-6">
-              <div className="space-y-1">
+              <div className="space-y-6">
                 <h4 className="text-lg font-semibold">
                   Design Details Podcast
                 </h4>
+                <p>
+                  I have co-hosted the Design Details Podcast since 2014. The
+                  first 256 episodes were interviews with designers, engineers,
+                  and founders about how they got to where they are today.
+                </p>
+                <p>
+                  After episode 256, we switched to a more topical news-style
+                  show where we answer listener questions, share design tips and
+                  tricks, and occassionally bring on guests to chat.
+                </p>
+                <p>
+                  Here are some of our most recent episodes, to give you a
+                  flavor of the show:
+                </p>
               </div>
               {data && data.episodes && (
                 <PodcastEpisodesList episodes={data.episodes} />
@@ -106,7 +142,7 @@ function Projects({ data }: Props) {
                 rel="noopener noreferrer"
                 className="inline-block font-medium highlight-link-hover"
               >
-                Subscribe to Design Details &rarr;
+                Check out all the episodes &rarr;
               </a>
             </div>
 

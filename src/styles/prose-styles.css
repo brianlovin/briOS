@@ -52,8 +52,7 @@
 }
 
 .prose pre {
-  @apply px-8 py-6 -mx-8 space-y-4 text-sm bg-gray-400 border-gray-300 bg-opacity-5 dark:border-gray-800;
-  border-radius: 0;
+  @apply px-8 py-6 space-y-4 text-sm text-gray-800 bg-gray-400 border-gray-300 rounded bg-opacity-5 dark:border-gray-800 dark:text-gray-200;
 }
 
 /* this is needed to avoid HN comments from overflowing off the right edge of the screen */

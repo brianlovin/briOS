@@ -21,23 +21,16 @@ export default function Byline(props: Props) {
   }, [])
 
   return (
-    <div className="space-x-2 p-small">
+    <div className="space-x-2 text-tertiary">
       <span>{timeAgo}</span>
 
-      <span className="divider-gray">/</span>
+      <span className="text-quaternary">·</span>
 
       <span>
         <Link href={`/hn/[id]`} as={`/hn/${post.id}`}>
-          <a className="font-normal black-link">{`${post.comments_count} comments`}</a>
+          <a className="font-normal text-primary highlight-link-hover">{`${post.comments_count} comments`}</a>
         </Link>
       </span>
-
-      {post.domain && (
-        <React.Fragment>
-          <span className="divider-gray">/</span>
-          <span>{post.domain}</span>
-        </React.Fragment>
-      )}
     </div>
   )
 }

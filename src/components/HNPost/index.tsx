@@ -38,16 +38,25 @@ export function HNPost(props: Props) {
         }}
       />
       <CenteredColumn data-cy="bookmarks">
-        <div className=" space-y-8">
-          <div className=" space-y-4">
-            <Link href={'/hn'}>
-              <a className="black-link">
-                <small>&larr; Back</small>
+        <div className="space-y-8 ">
+          <div className="space-y-4">
+            <Link href="/hn" passHref>
+              <a className="text-tertiary hover:text-gray-1000 dark:hover:text-gray-100">
+                &larr; Back
               </a>
             </Link>
-            <a href={post.url} target="blank" rel="noopener noreferrer">
-              <h3>{post.title}</h3>
+
+            <a
+              className="block"
+              href={post.url}
+              target="blank"
+              rel="noopener noreferrer"
+            >
+              <h1 className="font-sans text-4xl font-black text-primary">
+                {post.title}
+              </h1>
             </a>
+
             <Byline post={post} />
             {post.content && (
               <div
@@ -59,8 +68,6 @@ export function HNPost(props: Props) {
               />
             )}
           </div>
-
-          <Divider />
 
           <div>
             {comments.map((comment) => (
