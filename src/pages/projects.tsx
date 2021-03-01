@@ -9,6 +9,7 @@ import { GET_HOME } from '~/graphql/queries'
 import { Post, Episode, Repo } from '~/graphql/types.generated'
 import { NextSeo } from 'next-seo'
 import routes from '~/config/routes'
+import ProjectsList from '~/components/ProjectsList'
 
 interface Props {
   data: {
@@ -31,87 +32,7 @@ function Projects({ data }: Props) {
         <div className="space-y-12" data-cy="projects-page">
           <PageHeader title="Projects" subtitle="" />
           <div className="space-y-20">
-            <div className="space-y-6">
-              <div className="space-y-1">
-                <a
-                  href="https://staff.design"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-medium highlight-link-hover"
-                >
-                  Staff Design
-                </a>
-
-                <p className="text-tertiary">
-                  A collection of interviews exploring how product designers
-                  navigate the individual contributor path to its highest
-                  levels.
-                </p>
-              </div>
-
-              <div className="space-y-1">
-                <Link passHref href="/stack">
-                  <a className="font-medium highlight-link-hover">My Stack</a>
-                </Link>
-
-                <p className="text-tertiary">
-                  A curated list of my favorite tools and software.
-                </p>
-              </div>
-
-              <div className="space-y-1">
-                <Link passHref href="/security">
-                  <a className="font-medium highlight-link-hover">
-                    Security Checklist
-                  </a>
-                </Link>
-
-                <p className="text-tertiary">
-                  Tools and resources for staying safe on the internet.
-                </p>
-              </div>
-
-              <div className="space-y-1">
-                <Link passHref href="/bookmarks">
-                  <a className="font-medium highlight-link-hover">Bookmarks</a>
-                </Link>
-
-                <p className="text-tertiary">
-                  Internet things, saved for later.
-                </p>
-              </div>
-
-              <div className="space-y-1">
-                <Link passHref href="/ama">
-                  <a className="font-medium highlight-link-hover">AMA</a>
-                </Link>
-
-                <p className="text-tertiary">Ask me anything.</p>
-              </div>
-
-              <div className="space-y-1">
-                <Link passHref href="/hn">
-                  <a className="font-medium highlight-link-hover">
-                    Better Hacker News
-                  </a>
-                </Link>
-
-                <p className="text-tertiary">A better Hacker News.</p>
-              </div>
-
-              <div className="space-y-1">
-                <Link passHref href="/design-details">
-                  <a className="font-medium highlight-link-hover">
-                    App Dissection
-                  </a>
-                </Link>
-
-                <p className="text-tertiary">
-                  In-depth explorations of visual and interaction design in
-                  well-known apps.
-                </p>
-              </div>
-            </div>
+            <ProjectsList />
 
             <div className="space-y-6">
               <div className="space-y-6">
