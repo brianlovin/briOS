@@ -66,7 +66,9 @@ export default function DesignDetailsCard(props: Props) {
                   />
                 </ImageContainer>
                 <CardContent>
-                  <p className="font-sans font-semibold">{title}</p>
+                  <p className="font-sans font-semibold text-primary">
+                    {title}
+                  </p>
                   <p className="text-sm text-tertiary">
                     {detailsCount} details
                   </p>

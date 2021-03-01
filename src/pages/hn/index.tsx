@@ -55,7 +55,7 @@ export default function HNTop(props: Props) {
 
           <div className="py-4" />
 
-          <div className="prose lg:prose-lg">
+          <div className="prose">
             <h5>About this page</h5>
             <p>
               <a href="https://news.ycombinator.com">Hacker News</a> is a

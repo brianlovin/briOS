@@ -2,35 +2,33 @@ import * as React from 'react'
 import Link from 'next/link'
 import Page, { PageHeader } from '~/components/Page'
 import { CenteredColumn } from '~/components/Layouts'
+import Button from '~/components/Button'
 
 function Home() {
   return (
     <Page>
       <CenteredColumn>
-        <div className=" space-y-24">
-          <div className=" space-y-8 md:items-center">
+        <div className="space-y-24 ">
+          <div className="space-y-8 md:items-center">
             <PageHeader
               title="Hey, I’m Brian"
-              subtitle="I’m a product designer, podcaster, and writer, living in San
-                Francisco. I’m currently building native mobile apps at GitHub."
+              subtitle="I’m a product designer living in San
+                Francisco, currently building native mobile apps at GitHub."
             />
 
-            <div className=" space-y-2 md:space-x-4 md:flex-row md:space-y-0 md:items-center md:justify-center">
+            <div className="grid grid-cols-2 gap-4">
               <Link href="/about" passHref>
-                <a>
-                  <button className="w-full text-lg btn btn-primary btn-large">
-                    More about me
-                  </button>
+                <a className="block">
+                  <Button className="w-full">More about me</Button>
                 </a>
               </Link>
               <a
                 href="https://twitter.com/brian_lovin"
                 target="_blank"
                 rel="noopener noreferrer"
+                className="block"
               >
-                <button className="w-full text-lg btn btn-large">
-                  Follow me on Twitter
-                </button>
+                <Button className="w-full">Follow me on Twitter</Button>
               </a>
             </div>
           </div>

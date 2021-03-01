@@ -29,10 +29,7 @@ function About() {
           </div>
           <div className="space-y-12 ">
             <div className="leading-relaxed prose ">
-              <p>
-                I’m a product designer, podcaster, and writer, currently living
-                in San Francisco.
-              </p>
+              <p>I’m a product designer currently living in San Francisco.</p>
               <p>
                 Right now I’m designing{' '}
                 <a
@@ -140,7 +137,9 @@ function About() {
           <Divider />
 
           <div className="space-y-6">
-            <h4 className="text-lg font-semibold">Speaking and interviews</h4>
+            <h4 className="text-lg font-semibold text-primary">
+              Speaking and interviews
+            </h4>
             <div className="space-y-6">
               <div className="space-y-1">
                 <a

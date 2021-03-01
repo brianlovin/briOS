@@ -47,9 +47,9 @@ export const BookmarkListItem = React.memo((props: Props) => {
         </a>
       </span>
       {bookmark.notes && (
-        <p className="text-tertiary">
+        <div className="text-tertiary">
           <MarkdownRenderer>{bookmark.notes}</MarkdownRenderer>
-        </p>
+        </div>
       )}
       <span className="flex items-center space-x-2">
         <BookmarkReaction bookmark={bookmark} />
@@ -58,7 +58,10 @@ export const BookmarkListItem = React.memo((props: Props) => {
         {editable && (
           <>
             <span className="text-quaternary">{' · '}</span>
-            <button className="black-link" onClick={() => setIsEditing(true)}>
+            <button
+              className="text-secondary highlight-link-hover"
+              onClick={() => setIsEditing(true)}
+            >
               Edit
             </button>
           </>

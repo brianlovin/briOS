@@ -29,7 +29,7 @@ export const QuestionItem = React.memo((props: Props) => {
   }
 
   return (
-    <div className=" space-y-1">
+    <div className="space-y-1 ">
       <span>
         <p className="font-medium text-primary">{question.question}</p>
       </span>
@@ -51,7 +51,12 @@ export const QuestionItem = React.memo((props: Props) => {
         {editable && (
           <div className="flex space-x-2">
             <span className="text-quaternary">·</span>
-            <button onClick={() => setIsEditing(true)}>Edit</button>
+            <button
+              className="text-tertiary hover:text-gray-1000 dark:hover:text-gray-50"
+              onClick={() => setIsEditing(true)}
+            >
+              Edit
+            </button>
           </div>
         )}
       </span>

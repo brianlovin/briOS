@@ -11,6 +11,7 @@ const routes = {
     path: '/about',
     seo: extendSEO({
       title: 'About',
+      url: 'about',
     }),
   },
   projects: {
@@ -18,6 +19,8 @@ const routes = {
     path: '/projects',
     seo: extendSEO({
       title: 'Projects',
+      description: 'What I’m working on.',
+      url: 'projects',
     }),
   },
   writing: {

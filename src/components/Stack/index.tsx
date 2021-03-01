@@ -16,7 +16,7 @@ export default function StackList() {
         return (
           <a
             key={stack.name}
-            className="flex py-4 -mx-4 bg-gray-400 bg-opacity-0 rounded sm:p-4 sm:hover:bg-opacity-5 sm:dark:hover:bg-gray-900"
+            className="flex py-4 -mx-4 bg-gray-400 bg-opacity-0 rounded sm:p-4 sm:hover:bg-opacity-5 sm:dark:hover:bg-gray-900 sm:dark:hover:bg-opacity-100"
             href={stack.url}
             target="_blank"
             rel="nooopener noreferrer"
@@ -32,20 +32,20 @@ export default function StackList() {
 
             <div className="justify-center flex-1 col-span-3 pl-5 space-y-2 ">
               <div className="space-y-1 ">
-                <p className="font-medium">{stack.name}</p>
-                <p className="text-base font-normal text-tertiary">
+                <p className="font-medium text-primary">{stack.name}</p>
+                <p className="text-base font-normal leading-snug text-tertiary">
                   {stack.description}
                 </p>
               </div>
               {hasBadges && (
                 <div className="flex space-x-2">
                   {stack.independent && (
-                    <span className="self-start rounded px-3 py-0.5 text-sm font-medium leading-5 tracking-wide dark:text-purple-400 dark:border-purple-400 text-purple-600 bg-purple-500 bg-opacity-5">
+                    <span className="self-start rounded px-3 py-0.5 text-sm font-medium leading-5 tracking-wide dark:text-purple-400 dark:border-purple-400 text-purple-600 bg-purple-500 bg-opacity-5 dark:bg-opacity-20">
                       Indie
                     </span>
                   )}
                   {stack.oss && (
-                    <span className="self-start rounded px-3 py-0.5 text-sm font-medium leading-5 tracking-wide dark:text-green-400 dark:border-green-400 text-green-600 bg-green-500 bg-opacity-5">
+                    <span className="self-start rounded px-3 py-0.5 text-sm font-medium leading-5 tracking-wide dark:text-green-400 dark:border-green-400 text-green-600 bg-green-500 bg-opacity-5 dark:bg-opacity-20">
                       Open Source
                     </span>
                   )}

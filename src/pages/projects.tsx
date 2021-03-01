@@ -22,9 +22,9 @@ function Projects({ data }: Props) {
   return (
     <Page>
       <NextSeo
-        title={routes.about.seo.title}
-        description={routes.about.seo.description}
-        openGraph={routes.about.seo.openGraph}
+        title={routes.projects.seo.title}
+        description={routes.projects.seo.description}
+        openGraph={routes.projects.seo.openGraph}
       />
 
       <CenteredColumn>
@@ -115,20 +115,20 @@ function Projects({ data }: Props) {
 
             <div className="space-y-6">
               <div className="space-y-6">
-                <h4 className="text-lg font-semibold">
+                <h4 className="text-lg font-semibold text-primary">
                   Design Details Podcast
                 </h4>
-                <p>
+                <p className="text-secondary">
                   I have co-hosted the Design Details Podcast since 2014. The
                   first 256 episodes were interviews with designers, engineers,
                   and founders about how they got to where they are today.
                 </p>
-                <p>
+                <p className="text-secondary">
                   After episode 256, we switched to a more topical news-style
                   show where we answer listener questions, share design tips and
                   tricks, and occassionally bring on guests to chat.
                 </p>
-                <p>
+                <p className="text-secondary">
                   Here are some of our most recent episodes, to give you a
                   flavor of the show:
                 </p>
@@ -148,7 +148,9 @@ function Projects({ data }: Props) {
 
             <div className="space-y-6">
               <div className="space-y-1">
-                <h4 className="text-lg font-semibold">Figma plugins</h4>
+                <h4 className="text-lg font-semibold text-primary">
+                  Figma plugins
+                </h4>
               </div>
               <FigmaPlugins />
               <a
@@ -162,7 +164,9 @@ function Projects({ data }: Props) {
             </div>
 
             <div className="space-y-6">
-              <h4 className="text-lg font-semibold">Open source work</h4>
+              <h4 className="text-lg font-semibold text-primary">
+                Open source work
+              </h4>
               <div className="space-y-1">
                 <a
                   className="font-medium highlight-link-hover"
