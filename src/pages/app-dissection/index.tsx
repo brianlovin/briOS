@@ -5,6 +5,7 @@ import DesignDetailsGrid from '~/components/DesignDetailsGrid'
 import { summaries } from '~/data/appDissections'
 import { CenteredColumn } from '~/components/Layouts'
 import routes from '~/config/routes'
+import Link from 'next/link'
 
 export default function DesignDetails() {
   return (
@@ -16,7 +17,13 @@ export default function DesignDetails() {
       />
 
       <CenteredColumn>
-        <div className="flex flex-col space-y-8">
+        <div className="space-y-8 ">
+          <Link href="/projects" passHref>
+            <a className="leading-snug text-tertiary hover:text-gray-1000 dark:hover:text-gray-100">
+              &larr; Projects
+            </a>
+          </Link>
+
           <PageHeader
             title="App Dissection"
             subtitle="Exploring the best interaction patterns, visual styles, and design

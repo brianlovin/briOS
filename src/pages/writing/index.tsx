@@ -35,14 +35,16 @@ function Writing({ data }: Props) {
       />
 
       <CenteredColumn>
-        <div data-cy="writing" className="flex flex-col space-y-10">
+        <div data-cy="writing" className=" space-y-12">
           <PageHeader
             title={routes.writing.seo.title}
             subtitle={routes.writing.seo.description}
           />
 
           <WritingSubscribeBox />
-          {data && data.posts && <PostsList posts={data.posts} />}
+          <div className=" space-y-6">
+            {data && data.posts && <PostsList posts={data.posts} />}
+          </div>
         </div>
       </CenteredColumn>
     </Page>

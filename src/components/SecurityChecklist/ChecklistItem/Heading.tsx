@@ -6,5 +6,9 @@ type Props = {
 }
 
 export function Heading({ resource }: Props) {
-  return <p className="text-xl font-bold text-primary">{resource.title}</p>
+  return (
+    <p className="font-sans text-2xl font-bold text-primary">
+      {resource.title}
+    </p>
+  )
 }

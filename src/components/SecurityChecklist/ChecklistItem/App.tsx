@@ -105,7 +105,7 @@ export const AppRow = ({ app }: Props) => {
         key={key}
       >
         <a
-          className="flex flex-col items-center space-y-1 text-tertiary hover:text-gray-1000 dark:hover:text-gray-50"
+          className=" items-center space-y-1 text-tertiary hover:text-gray-1000 dark:hover:text-gray-50"
           href={sourceUrl}
           target="_blank"
           rel="noopener noreferrer"
@@ -117,7 +117,7 @@ export const AppRow = ({ app }: Props) => {
   }
 
   return (
-    <div className="flex flex-col p-4 pr-6 -mx-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800">
+    <div className=" p-4 pr-6 -mx-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800">
       <div className="flex items-center justify-between">
         <a
           className="flex items-center h-full space-x-3"

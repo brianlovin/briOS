@@ -6,7 +6,7 @@ import { TimelineEntry } from './Entry'
 
 export function Timeline() {
   return (
-    <div className="flex flex-col w-full timeline-container">
+    <div className=" w-full timeline-container">
       <Year2021 />
       <Year2020 />
       <TimelineEntry

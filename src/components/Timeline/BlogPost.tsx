@@ -31,8 +31,8 @@ export function BlogPost({
     >
       <Link passHref href={`/writing/${slug}`}>
         <a className="px-4 py-3 transition-shadow bg-white rounded-md shadow dark:bg-gray-900 hover:shadow-cardHover">
-          <div className="flex flex-col space-y-4">
-            <div className="flex flex-col space-y-1">
+          <div className=" space-y-4">
+            <div className=" space-y-1">
               {image && (
                 <div className="mb-3 -mt-3 -ml-4 -mr-4 overflow-hidden border-b border-gray-100 dark:border-gray-900 rounded-t-md">
                   <Image

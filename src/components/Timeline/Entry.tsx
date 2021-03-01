@@ -58,7 +58,7 @@ export function TimelineEntry({
   return (
     <div className="flex mb-12 md:mb-12 timeline-item">
       {/* Icon and dividing line */}
-      <div className="flex flex-col items-center">
+      <div className=" items-center">
         <div
           className={`flex justify-center p-3 rounded-full align-center border-4 border-gray-50 dark:border-gray-1000 ${getTint(
             tint
@@ -71,16 +71,14 @@ export function TimelineEntry({
         )}
       </div>
 
-      <div className="flex flex-col flex-1 ml-4 space-y-4">
-        <div className="flex flex-col pt-1 contents-center">
+      <div className=" flex-1 ml-4 space-y-4">
+        <div className=" pt-1 contents-center">
           <span className="font-medium text-primary">{title}</span>
           {timestamp && (
             <span className="text-sm text-tertiary">{timestamp}</span>
           )}
         </div>
-        <div className="flex flex-col space-y-4 timeline-full-width">
-          {children}
-        </div>
+        <div className=" space-y-4 timeline-full-width">{children}</div>
       </div>
     </div>
   )

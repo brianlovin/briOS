@@ -8,9 +8,9 @@ interface Props {
 
 export default function PodcastEpisodesList({ episodes }: Props) {
   return (
-    <div className="flex flex-col space-y-8">
+    <>
       {episodes.map((ep) => (
-        <div className="flex flex-col space-y-1" key={ep.id}>
+        <div className="space-y-1 " key={ep.id}>
           <span>
             <a
               className="font-medium text-primary highlight-link-hover"
@@ -23,10 +23,10 @@ export default function PodcastEpisodesList({ episodes }: Props) {
               {ep.title}
             </a>
           </span>
-          <p className="text-tertiary clamp-3">{ep.description}</p>
+          <p className="text-tertiary">{ep.description}</p>
           <p className="text-quaternary">{format(ep.published_at)}</p>
         </div>
       ))}
-    </div>
+    </>
   )
 }

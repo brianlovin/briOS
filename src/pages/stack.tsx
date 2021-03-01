@@ -4,9 +4,9 @@ import StackList from '~/components/Stack'
 import Page, { PageHeader } from '~/components/Page'
 import { withApollo } from '~/components/withApollo'
 import { CenteredColumn } from '~/components/Layouts'
-import { Info } from 'react-feather'
 import Recommendations from '~/components/Stack/Recommendations'
 import routes from '~/config/routes'
+import Link from 'next/link'
 
 function Stack() {
   return (
@@ -18,11 +18,21 @@ function Stack() {
       />
 
       <CenteredColumn>
-        <PageHeader title="Stack" subtitle="My favorite tools and software." />
+        <div className="space-y-8">
+          <Link href="/projects" passHref>
+            <a className="leading-snug text-tertiary hover:text-gray-1000 dark:hover:text-gray-100">
+              &larr; Projects
+            </a>
+          </Link>
+          <PageHeader
+            title="Stack"
+            subtitle="My favorite tools and software."
+          />
+        </div>
 
         <StackList />
 
-        <div className="flex flex-col p-8 mt-16 -mx-8 space-y-4 bg-yellow-400 border-t border-b border-yellow-300 border-dashed bg-opacity-5 dark:border-gray-800">
+        <div className="p-8 mt-16 -mx-8 space-y-4 bg-yellow-400 border-t border-b border-yellow-300 border-dashed bg-opacity-5 dark:border-gray-800">
           <p className="text-yellow-900 dark:text-gray-100">
             About these links
           </p>

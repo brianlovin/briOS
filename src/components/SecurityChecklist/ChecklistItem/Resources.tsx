@@ -9,13 +9,15 @@ type Props = {
 export function Resources({ resource }: Props) {
   if (!resource.resources) return null
   return (
-    <div className="flex flex-col space-y-0">
+    <div className="space-y-0 ">
       <p className="mb-4 text-sm font-medium tracking-wider uppercase text-tertiary">
         Resources
       </p>
-      {resource.resources.map((r) => (
-        <ResourceRow key={r.name} resource={r} />
-      ))}
+      <div className="space-y-3">
+        {resource.resources.map((r) => (
+          <ResourceRow key={r.name} resource={r} />
+        ))}
+      </div>
     </div>
   )
 }

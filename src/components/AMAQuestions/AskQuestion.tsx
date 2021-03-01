@@ -39,7 +39,7 @@ export default function AddBookmark() {
   }
 
   return (
-    <form className="flex flex-col items-stretch space-y-4" onSubmit={onSubmit}>
+    <form className="items-stretch space-y-4" onSubmit={onSubmit}>
       <Textarea
         value={question}
         placeholder="Ask me anything..."

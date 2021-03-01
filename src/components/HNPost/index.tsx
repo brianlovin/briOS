@@ -38,8 +38,8 @@ export function HNPost(props: Props) {
         }}
       />
       <CenteredColumn data-cy="bookmarks">
-        <div className="flex flex-col space-y-8">
-          <div className="flex flex-col space-y-4">
+        <div className=" space-y-8">
+          <div className=" space-y-4">
             <Link href={'/hn'}>
               <a className="black-link">
                 <small>&larr; Back</small>

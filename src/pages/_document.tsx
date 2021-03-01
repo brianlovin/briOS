@@ -33,7 +33,7 @@ export default class MyDocument extends Document {
     return (
       <Html
         lang="en"
-        className="text-base antialiased bg-white dark:bg-gray-1000"
+        className="text-base antialiased bg-gray-300 bg-opacity-5 dark:bg-gray-1000"
       >
         <Head></Head>
 

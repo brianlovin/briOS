@@ -29,7 +29,7 @@ export const QuestionItem = React.memo((props: Props) => {
   }
 
   return (
-    <div className="flex flex-col space-y-1">
+    <div className=" space-y-1">
       <span>
         <p className="font-medium text-primary">{question.question}</p>
       </span>

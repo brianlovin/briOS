@@ -60,7 +60,7 @@ export default function BookmarksList({ category = undefined }) {
   }
 
   return (
-    <div className="flex flex-col w-full space-y-6 timeline-container">
+    <div className="w-full space-y-6 timeline-container">
       {bookmarks.map((bookmark, index) => (
         <BookmarkListItem
           editable={isMe}
@@ -69,7 +69,7 @@ export default function BookmarksList({ category = undefined }) {
         />
       ))}
       {showLoadMore && (
-        <Button onClick={handleLoadMore}>
+        <Button className="w-full" onClick={handleLoadMore}>
           {loading ? <LoadingSpinner /> : 'Load more'}
         </Button>
       )}

@@ -7,15 +7,15 @@ function Home() {
   return (
     <Page>
       <CenteredColumn>
-        <div className="flex flex-col space-y-24">
-          <div className="flex flex-col space-y-8 md:items-center">
+        <div className=" space-y-24">
+          <div className=" space-y-8 md:items-center">
             <PageHeader
               title="Hey, I’m Brian"
               subtitle="I’m a product designer, podcaster, and writer, living in San
                 Francisco. I’m currently building native mobile apps at GitHub."
             />
 
-            <div className="flex flex-col space-y-2 md:space-x-4 md:flex-row md:space-y-0 md:items-center md:justify-center">
+            <div className=" space-y-2 md:space-x-4 md:flex-row md:space-y-0 md:items-center md:justify-center">
               <Link href="/about" passHref>
                 <a>
                   <button className="w-full text-lg btn btn-primary btn-large">

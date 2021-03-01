@@ -146,7 +146,7 @@ export default function EditingBookmarkListItem(props: Props) {
   }
 
   return (
-    <form className="flex flex-col mb-4 space-y-3" onSubmit={handleSave}>
+    <form className=" mb-4 space-y-3" onSubmit={handleSave}>
       <Input
         placeholder="Title"
         value={state.title}

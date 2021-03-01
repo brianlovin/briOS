@@ -4,6 +4,7 @@ import { GET_BOOKMARKS } from '~/graphql/queries'
 import { Input, Textarea } from '~/components/Input'
 import { useRouter } from 'next/router'
 import Button from '../Button'
+import { ErrorAlert } from '../Alert'
 
 export default function AddBookmark() {
   const router = useRouter()
@@ -95,7 +96,7 @@ export default function AddBookmark() {
   }
 
   return (
-    <form className="flex flex-col space-y-3" onSubmit={onSubmit}>
+    <form className="space-y-3 " onSubmit={onSubmit}>
       <Input
         type="text"
         placeholder="Add a url..."
@@ -137,7 +138,7 @@ export default function AddBookmark() {
           </div>
         </React.Fragment>
       )}
-      {error && <p className="text-red-500">{error}</p>}
+      {error && <ErrorAlert>{error}</ErrorAlert>}
     </form>
   )
 }

@@ -1,6 +1,5 @@
 import React from 'react'
 import Header from '~/components/Header'
-import { Footer } from '../Footer'
 
 interface Props {
   children: React.ReactNode
@@ -25,13 +24,10 @@ interface HeaderProps {
 export function PageHeader(props: HeaderProps) {
   const { title, subtitle } = props
   return (
-    <div className="flex flex-col space-y-2">
-      <h1 className="text-4xl font-extrabold text-primary">{title}</h1>
-      <p className="text-xl leading-snug text-tertiary">
+    <div className="space-y-2">
+      <h1 className="font-sans text-4xl font-black text-primary">{title}</h1>
+      <p className="font-sans text-2xl leading-snug text-tertiary">
         {subtitle}
-        <span className="relative text-quaternary blink opacity-30 -top-0.5">
-          █
-        </span>
       </p>
     </div>
   )

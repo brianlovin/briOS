@@ -161,7 +161,7 @@ export default function EditQuestion(props: Props) {
   }
 
   return (
-    <form className="flex flex-col space-y-4" onSubmit={handleSave}>
+    <form className="space-y-4" onSubmit={handleSave}>
       <Textarea
         placeholder="Question"
         value={state.question}

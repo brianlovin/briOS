@@ -36,10 +36,10 @@ export default function WritingSubscribeBox() {
 
   return (
     <div
-      className="flex flex-col p-8 -mx-8 space-y-4 bg-gray-400 border-t border-b border-gray-300 border-dashed bg-opacity-5 dark:border-gray-800"
+      className="p-8 -mx-8 space-y-4 bg-gray-400 border-t border-b border-gray-300 border-dashed  bg-opacity-5 dark:border-gray-800"
       data-cy="writing-subscribe-box"
     >
-      <div className="flex flex-col space-y-2">
+      <div className="space-y-2 ">
         <p className="flex items-center font-semibold text-primary">
           Subscribe with email
         </p>

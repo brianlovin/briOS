@@ -10,7 +10,7 @@ export const PostListItem = React.memo((props: Props) => {
   const { post } = props
 
   return (
-    <div className="flex flex-col space-y-1">
+    <div className=" space-y-1">
       <a
         className="text-blue-600 dark:text-blue-500"
         href={post.url}

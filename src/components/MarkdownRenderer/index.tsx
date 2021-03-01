@@ -40,17 +40,14 @@ export default function MarkdownRenderer(props: Props) {
   }, [children])
 
   return (
-    <React.Fragment>
-      <Markdown
-        {...rest}
-        className="prose lg:prose-lg"
-        astPlugins={[parseHtml]}
-        renderers={{
-          link: LinkRenderer,
-        }}
-      >
-        {children}
-      </Markdown>
-    </React.Fragment>
+    <Markdown
+      {...rest}
+      astPlugins={[parseHtml]}
+      renderers={{
+        link: LinkRenderer,
+      }}
+    >
+      {children}
+    </Markdown>
   )
 }

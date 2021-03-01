@@ -169,11 +169,11 @@
   }
 
   .highlight-link-hover {
-    @apply hover:bg-yellow-400 bg-opacity-20 hover:bg-opacity-30 dark:hover:bg-gray-100;
+    @apply px-0.5 -mx-0.5 no-underline hover:bg-yellow-400 rounded dark:hover:bg-gray-100 dark:bg-opacity-20 text-gray-1000 dark:text-gray-300 bg-opacity-20 hover:bg-opacity-30;
   }
 
   .highlight-link {
-    @apply bg-yellow-400 bg-opacity-20 hover:bg-opacity-30
+    @apply px-0.5 -mx-0.5 no-underline bg-yellow-400 rounded dark:bg-gray-100 dark:bg-opacity-20 text-gray-1000 dark:text-gray-300 bg-opacity-20 hover:bg-opacity-30;
   }
 
   .blink {

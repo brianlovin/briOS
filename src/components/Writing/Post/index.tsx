@@ -24,26 +24,28 @@ export default function PostView({ post }: Props) {
       <SEO post={post} />
 
       <CenteredColumn>
-        <div data-cy="post" className="flex flex-col space-y-8">
+        <div data-cy="post" className="space-y-8 ">
           <Link href="/writing" passHref>
             <a className="leading-snug text-tertiary hover:text-gray-1000 dark:hover:text-gray-100">
               &larr; Writing
             </a>
           </Link>
-          <div className="flex flex-col space-y-4">
-            <h1 className="text-4xl font-extrabold text-primary">
+          <div className="space-y-4">
+            <h1 className="font-sans text-4xl font-extrabold text-primary">
               {post.title}
             </h1>
-            <span className="text-lg leading-snug text-tertiary">{date}</span>
+            <span className="inline-block text-lg leading-snug text-tertiary">
+              {date}
+            </span>
           </div>
         </div>
 
         <div
-          className="mt-8 leading-relaxed prose lg:prose-lg"
+          className="mt-8 prose lg:prose-lg"
           dangerouslySetInnerHTML={{ __html: post.html }}
         />
 
-        <div className="flex flex-col mt-16">
+        <div className="mt-16 ">
           <Feedback post={post} />
           <WritingSubscribeBox />
         </div>

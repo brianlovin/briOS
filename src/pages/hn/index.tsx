@@ -38,7 +38,7 @@ export default function HNTop(props: Props) {
       />
 
       <CenteredColumn data-cy="hn">
-        <div className="flex flex-col space-y-8">
+        <div className=" space-y-8">
           <PageHeader title="Hacker News" />
           <div className="flex md:justify-center">
             <Navigation active={'top'} />

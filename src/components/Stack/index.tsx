@@ -10,7 +10,7 @@ export default function StackList() {
   })
 
   return (
-    <div className="flex flex-col mt-12">
+    <div className="mt-8">
       {sorted.map((stack) => {
         const hasBadges = stack.independent || stack.oss
         return (
@@ -30,8 +30,8 @@ export default function StackList() {
               className="border border-gray-100 rounded-xl dark:border-gray-900 flex-0"
             />
 
-            <div className="flex flex-col justify-center flex-1 col-span-3 pl-5 space-y-2">
-              <div className="flex flex-col space-y-1">
+            <div className="justify-center flex-1 col-span-3 pl-5 space-y-2 ">
+              <div className="space-y-1 ">
                 <p className="font-medium">{stack.name}</p>
                 <p className="text-base font-normal text-tertiary">
                   {stack.description}

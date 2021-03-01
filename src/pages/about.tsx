@@ -4,7 +4,7 @@ import Page from '~/components/Page'
 import { CenteredColumn } from '~/components/Layouts'
 import { NextSeo } from 'next-seo'
 import routes from '~/config/routes'
-import { Timeline } from '~/components/Timeline'
+import Divider from '~/components/Divider'
 
 function About() {
   return (
@@ -16,7 +16,7 @@ function About() {
       />
 
       <CenteredColumn>
-        <div className="flex flex-col space-y-12" data-cy="about-page">
+        <div className="space-y-12 " data-cy="about-page">
           <div className="-mx-4 -mt-24 md:mt-0 md:-mx-8 ">
             <Image
               src="/static/img/about.jpg"
@@ -27,8 +27,8 @@ function About() {
               className="md:rounded-lg"
             />
           </div>
-          <div className="flex flex-col space-y-12">
-            <div className="flex flex-col leading-relaxed prose">
+          <div className="space-y-12 ">
+            <div className="leading-relaxed prose ">
               <p>
                 I’m a product designer, podcaster, and writer, currently living
                 in San Francisco.
@@ -125,20 +125,150 @@ function About() {
                 of interface design.
               </p>
               <p>
-                <em>
-                  Photo by{' '}
-                  <a
-                    href="https://twitter.com/rxnjmmt"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    @rxnjmmt
-                  </a>
-                </em>
+                Photo by{' '}
+                <a
+                  href="https://twitter.com/rxnjmmt"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  @rxnjmmt
+                </a>
               </p>
             </div>
           </div>
-          <Timeline />
+
+          <Divider />
+
+          <div className="space-y-6">
+            <h4 className="text-lg font-semibold">Speaking and interviews</h4>
+            <div className="space-y-6">
+              <div className="space-y-1">
+                <a
+                  className="font-medium highlight-link-hover"
+                  href="https://layout.fm/episodes/194/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Layout.fm: It Ran Into the Wall of Reality
+                </a>
+
+                <p className="text-tertiary">
+                  I spoke with Kevin and Rafa about the Staff Design project,
+                  career ladders, imposter syndrome, and Paul Rudd.
+                </p>
+              </div>
+              <div className="space-y-1">
+                <a
+                  className="font-medium highlight-link-hover"
+                  href="https://www.swiftbysundell.com/podcast/67/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Building for open source
+                </a>
+
+                <p className="text-tertiary">
+                  Ryan Nystrom and I talk about designing and building the
+                  mobile apps at GitHub.
+                </p>
+              </div>
+
+              <div className="space-y-1">
+                <a
+                  className="font-medium highlight-link-hover"
+                  href="https://www.youtube.com/watch?v=SyS3h3kmBnY"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Extend what’s possible with Figma Plugins - Figma Config
+                </a>
+
+                <p className="text-tertiary">
+                  An exploration into the plugins I built to automate the
+                  tedious parts of designing mobile apps at GitHub.
+                </p>
+              </div>
+
+              <div className="space-y-1">
+                <a
+                  className="font-medium highlight-link-hover"
+                  href="https://www.youtube.com/watch?v=6MBBTdu8v6E"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Designing with GraphQL - GraphQL Summit
+                </a>
+
+                <p className="text-tertiary">
+                  Exploring the possibilities that open up when designers and
+                  developers can speak the same language.
+                </p>
+              </div>
+
+              <div className="space-y-1">
+                <a
+                  className="font-medium highlight-link-hover"
+                  href="https://interfacelovers.com/interviews/brian-lovin"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Interface Lovers Interview
+                </a>
+
+                <p className="text-tertiary">
+                  An interview about how I got into design, my process, and past
+                  work.
+                </p>
+              </div>
+
+              <div className="space-y-1">
+                <a
+                  className="font-medium highlight-link-hover"
+                  href="https://spec.fm/podcasts/design-details/79352"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Charmander++ – Interviewing ourselves on Design Details
+                </a>
+
+                <p className="text-tertiary">
+                  Bryn Jackson and I interviewed each other. Totally humble.
+                </p>
+              </div>
+
+              <div className="space-y-1">
+                <a
+                  className="font-medium highlight-link-hover"
+                  href="https://avocode.com/blog/brian-lovin-product-designer-github-interview"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Avocode Interview
+                </a>
+
+                <p className="text-tertiary">
+                  An interview where we dig into my work at Buffer, Facebook,
+                  Spectrum, and what’s in the works at GitHub.
+                </p>
+              </div>
+
+              <div className="space-y-1">
+                <a
+                  className="font-medium highlight-link-hover"
+                  href="https://softwareengineeringdaily.com/2020/07/15/github-mobile-with-brian-lovin-and-ryan-nystrom/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Software Engineering Daily: GitHub Mobile
+                </a>
+
+                <p className="text-tertiary">
+                  Ryan and I discuss how we designed and built the first version
+                  of GitHub’s mobile apps.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </CenteredColumn>
     </Page>

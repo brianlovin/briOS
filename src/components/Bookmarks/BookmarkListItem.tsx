@@ -2,8 +2,7 @@ import * as React from 'react'
 import { Bookmark } from '~/graphql/types.generated'
 import EditingBookmarkListItem from './EditingBookmarkListItem'
 import BookmarkReaction from './BookmarkReaction'
-import { Notes } from '../Timeline/Entry'
-import Linkify from '../Linkify'
+import MarkdownRenderer from '../MarkdownRenderer'
 
 interface Props {
   editable: boolean
@@ -36,7 +35,7 @@ export const BookmarkListItem = React.memo((props: Props) => {
   }
 
   return (
-    <div className="flex flex-col space-y-1">
+    <div className="space-y-1 ">
       <span>
         <a
           href={`${bookmark.url}`}
@@ -48,8 +47,8 @@ export const BookmarkListItem = React.memo((props: Props) => {
         </a>
       </span>
       {bookmark.notes && (
-        <p className="text-tertiary clamp-3">
-          <Linkify>{bookmark.notes}</Linkify>
+        <p className="text-tertiary">
+          <MarkdownRenderer>{bookmark.notes}</MarkdownRenderer>
         </p>
       )}
       <span className="flex items-center space-x-2">

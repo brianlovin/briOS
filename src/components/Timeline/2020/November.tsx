@@ -175,8 +175,8 @@ export function November() {
           rel="noopener noreferrer"
           href="https://gumroad.com/l/waves-premium-phone-wallpapers"
         >
-          <div className="flex flex-col overflow-hidden transition-shadow bg-white rounded-md shadow md:flex-row dark:bg-gray-900 hover:shadow-cardHover">
-            <div className="flex flex-col justify-start px-3 py-3 space-y-2 md:w-1/2">
+          <div className=" overflow-hidden transition-shadow bg-white rounded-md shadow md:flex-row dark:bg-gray-900 hover:shadow-cardHover">
+            <div className=" justify-start px-3 py-3 space-y-2 md:w-1/2">
               <h5 className="px-2 pt-2">Waves</h5>
               <p className="flex-1 px-2 font-normal">
                 A custom-made set of 10 phone wallpapers, each with a unique

@@ -19,8 +19,9 @@ export default function DesignDetailMedia(props: Props) {
     >
       <DetailContainer data-cy="detail-media-container">
         <DetailTitle>{detail.title}</DetailTitle>
-        <div style={{ padding: '8px' }} />
-        <Markdown>{detail.description}</Markdown>
+        <div className="prose">
+          <Markdown>{detail.description}</Markdown>
+        </div>
 
         {isVisible && (
           <MediaContainer className="bg-gray-100 dark:bg-gray-900">

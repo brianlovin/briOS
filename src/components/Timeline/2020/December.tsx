@@ -94,10 +94,10 @@ export function December() {
           rel="noopener noreferrer"
           href="https://staff.design"
         >
-          <div className="relative flex flex-col overflow-hidden transition-shadow bg-white rounded-md shadow md:flex-row dark:bg-gray-900 hover:shadow-cardHover">
+          <div className="relative  overflow-hidden transition-shadow bg-white rounded-md shadow md:flex-row dark:bg-gray-900 hover:shadow-cardHover">
             <div
               style={{ zIndex: 2 }}
-              className="flex flex-col justify-center flex-auto px-3 pt-8 pb-8 space-y-1 md:items-center"
+              className=" justify-center flex-auto px-3 pt-8 pb-8 space-y-1 md:items-center"
             >
               <svg
                 width="128"

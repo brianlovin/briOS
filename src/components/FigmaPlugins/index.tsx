@@ -2,8 +2,8 @@ import * as React from 'react'
 
 export default function FigmaPlugins() {
   return (
-    <div className="flex flex-col space-y-8">
-      <div className="flex flex-col space-y-1">
+    <>
+      <div className="space-y-1 ">
         <span>
           <a
             className="font-medium text-primary highlight-link-hover"
@@ -19,7 +19,7 @@ export default function FigmaPlugins() {
         </p>
       </div>
 
-      <div className="flex flex-col">
+      <div className="">
         <span>
           <a
             className="font-medium text-primary highlight-link-hover"
@@ -35,7 +35,7 @@ export default function FigmaPlugins() {
         </p>
       </div>
 
-      <div className="flex flex-col">
+      <div className="">
         <span>
           <a
             className="font-medium text-primary highlight-link-hover"
@@ -52,7 +52,7 @@ export default function FigmaPlugins() {
         </p>
       </div>
 
-      <div className="flex flex-col">
+      <div className="">
         <span>
           <a
             className="font-medium text-primary highlight-link-hover"
@@ -68,7 +68,7 @@ export default function FigmaPlugins() {
         </p>
       </div>
 
-      <div className="flex flex-col">
+      <div className="">
         <span>
           <a
             className="font-medium text-primary highlight-link-hover"
@@ -83,6 +83,6 @@ export default function FigmaPlugins() {
           Populate data from GitHub into Figma mocks
         </p>
       </div>
-    </div>
+    </>
   )
 }

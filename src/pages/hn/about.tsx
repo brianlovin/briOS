@@ -16,14 +16,14 @@ export default function HNAbout() {
       />
 
       <CenteredColumn data-cy="hn">
-        <div className="flex flex-col space-y-8">
+        <div className=" space-y-8">
           <PageHeader title="Hacker News" />
           <div className="flex md:justify-center">
             <Navigation active={'about'} />
           </div>
           <div className="h-px bg-gray-200 dark:bg-gray-800 timeline-stroke" />
 
-          <div className="flex flex-col prose lg:prose-lg">
+          <div className=" prose lg:prose-lg">
             <p>
               <a href="https://news.ycombinator.com">Hacker News</a> is a
               fantastic way to stay up to date on technology and software news.
