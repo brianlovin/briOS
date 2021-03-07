@@ -1,12 +1,12 @@
 import * as React from 'react'
 
-interface Props {
+type Props = {
   className?: string
   onClick?: any
   disabled?: boolean
   children: React.ReactChild | string
   type?: string
-}
+} & React.ComponentPropsWithoutRef<'button'>
 
 export default function Button({ className, ...rest }: Props) {
   return (

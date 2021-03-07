@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import * as React from 'react'
-import { Layers, Plus, Zap } from 'react-feather'
 import { BlogPost } from '../BlogPost'
 import { ButtonSet, DateEntry, Notes, TimelineEntry } from '../Entry'
 
@@ -9,11 +8,7 @@ export function December() {
     <>
       <DateEntry title="December, 2020" />
 
-      <TimelineEntry
-        title="Shut down Spec.fm"
-        timestamp="December 26, 2020"
-        Icon={Plus}
-      >
+      <TimelineEntry title="Shut down Spec.fm" timestamp="December 26, 2020">
         <>
           <Notes>
             <p>
@@ -38,11 +33,7 @@ export function December() {
         </>
       </TimelineEntry>
 
-      <TimelineEntry
-        title="Published my stack"
-        timestamp="December 21, 2020"
-        Icon={Layers}
-      >
+      <TimelineEntry title="Published my stack" timestamp="December 21, 2020">
         <>
           <Notes>
             <p>
@@ -69,9 +60,6 @@ export function December() {
       <TimelineEntry
         title="Announced Staff.design"
         timestamp="December 6, 2020"
-        Icon={Zap}
-        tint={'purple'}
-        divider={false}
       >
         <a href="https://staff.design">
           <div className="relative overflow-hidden transition-shadow bg-white rounded-md shadow md:flex-row dark:bg-gray-900 hover:shadow-cardHover">

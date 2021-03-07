@@ -1,7 +1,6 @@
 import * as React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { GitCommit, GitMerge, Zap, Wind, Twitter, Camera } from 'react-feather'
 import { ButtonSet, DateEntry, Notes, TimelineEntry } from '../Entry'
 import { BlogPost } from '../BlogPost'
 
@@ -19,7 +18,6 @@ export function November() {
       <TimelineEntry
         title="Added new bookmark types"
         timestamp="November 28, 2020"
-        Icon={GitCommit}
       >
         <Notes>
           <p>
@@ -69,12 +67,7 @@ export function November() {
             href="https://github.com/brianlovin/brian-lovin-next/pull/1190"
             className="w-full md:w-auto"
           >
-            <button className="w-full md:w-auto btn">
-              <>
-                <GitMerge size={16} />
-                <span>View pull request</span>
-              </>
-            </button>
+            <button className="w-full md:w-auto btn">View pull request</button>
           </a>
         </ButtonSet>
       </TimelineEntry>
@@ -82,7 +75,6 @@ export function November() {
       <TimelineEntry
         title="Moved Security Checklist to personal site"
         timestamp="November 24, 2020"
-        Icon={GitCommit}
       >
         <Notes>
           <p>
@@ -104,19 +96,13 @@ export function November() {
             href="https://github.com/brianlovin/brian-lovin-next/pull/1188"
             className="w-full md:w-auto"
           >
-            <button className="w-full md:w-auto btn">
-              <>
-                <GitMerge size={16} />
-                <span>View pull request</span>
-              </>
-            </button>
+            <button className="w-full md:w-auto btn">View pull request</button>
           </a>
         </ButtonSet>
       </TimelineEntry>
       <TimelineEntry
         title="Rebuilt site with Tailwind.css"
         timestamp="November 22, 2020"
-        Icon={Wind}
       >
         <Notes>
           <p>
@@ -134,12 +120,7 @@ export function November() {
             href="https://github.com/brianlovin/brian-lovin-next/pull/1175"
             className="w-full md:w-auto"
           >
-            <button className="w-full md:w-auto btn">
-              <>
-                <GitMerge size={16} />
-                <span>View pull request</span>
-              </>
-            </button>
+            <button className="w-full md:w-auto btn">View pull request</button>
           </a>
         </ButtonSet>
       </TimelineEntry>
@@ -156,8 +137,6 @@ export function November() {
       <TimelineEntry
         title="Created Waves wallpapers"
         timestamp="November 15, 2020"
-        Icon={Zap}
-        tint="purple"
       >
         <a href="https://gumroad.com/l/waves-premium-phone-wallpapers">
           <div className="overflow-hidden transition-shadow bg-white rounded-md shadow md:flex-row dark:bg-gray-900 hover:shadow-cardHover">
@@ -184,12 +163,7 @@ export function November() {
         </a>
       </TimelineEntry>
 
-      <TimelineEntry
-        title="Twitter conversation"
-        timestamp="November 14, 2020"
-        Icon={Twitter}
-        tint="blue"
-      >
+      <TimelineEntry title="Twitter conversation" timestamp="November 14, 2020">
         <Notes>
           <blockquote>
             Are any designers out there making good passive income outside of
@@ -220,12 +194,7 @@ export function November() {
         description="True respect is the difference between a fantastic collaborator and an asshole."
       />
 
-      <TimelineEntry
-        title="Visited Yosemite"
-        timestamp="November 9, 2020"
-        Icon={Camera}
-        tint="gray"
-      >
+      <TimelineEntry title="Visited Yosemite" timestamp="November 9, 2020">
         <a href="https://twitter.com/brian_lovin/status/1325864903370924033">
           <div className="grid grid-cols-2 grid-rows-2 gap-2">
             <Image
@@ -277,7 +246,6 @@ export function November() {
         slug="writing-better-self-reviews"
         title="Writing Better Self Reviews"
         description="My tips and strategies for writing effective self reviews."
-        divider={false}
       />
     </>
   )

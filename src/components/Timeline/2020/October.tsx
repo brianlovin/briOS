@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import * as React from 'react'
-import { Camera } from 'react-feather'
 import { DateEntry, Notes, TimelineEntry } from '../Entry'
 
 export function October() {
@@ -10,7 +9,6 @@ export function October() {
       <TimelineEntry
         title="Traveled from Colorado to San Francisco"
         timestamp="First week of October"
-        Icon={Camera}
       >
         <Notes>
           <p>

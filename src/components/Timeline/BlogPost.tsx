@@ -1,7 +1,6 @@
 import * as React from 'react'
 import Link from 'next/link'
 import { TimelineEntry } from './Entry'
-import { Edit2 } from 'react-feather'
 import Image from 'next/image'
 
 interface Props {
@@ -9,7 +8,6 @@ interface Props {
   title: string
   description: string
   timestamp: string
-  divider?: boolean
   image?: string
 }
 
@@ -18,21 +16,14 @@ export function BlogPost({
   title,
   description,
   timestamp,
-  divider = true,
   image,
 }: Props) {
   return (
-    <TimelineEntry
-      title="Published new post"
-      tint="green"
-      Icon={Edit2}
-      timestamp={timestamp}
-      divider={divider}
-    >
+    <TimelineEntry title="Published new post" timestamp={timestamp}>
       <Link passHref href={`/writing/${slug}`}>
         <a className="px-4 py-3 transition-shadow bg-white rounded-md shadow dark:bg-gray-900 hover:shadow-cardHover">
-          <div className=" space-y-4">
-            <div className=" space-y-1">
+          <div className="space-y-4 ">
+            <div className="space-y-1 ">
               {image && (
                 <div className="mb-3 -mt-3 -ml-4 -mr-4 overflow-hidden border-b border-gray-100 dark:border-gray-900 rounded-t-md">
                   <Image

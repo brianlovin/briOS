@@ -5,7 +5,6 @@ interface TimelineEntryProps {
   title: string
   timestamp?: string
   description?: string
-  divider?: boolean
 }
 
 export function Notes({ children }) {
@@ -28,17 +27,9 @@ export function TimelineEntry({
   title,
   timestamp,
   description,
-  divider = true,
 }: TimelineEntryProps) {
   return (
     <div className="flex py-4 pl-6 border-l border-gray-300 border-dashed dark:border-gray-800">
-      {/* Icon and dividing line */}
-      <div className="items-center">
-        {divider && (
-          <div className="flex flex-1 w-px -mb-12 bg-gray-200 md:-mb-12 dark:bg-gray-800" />
-        )}
-      </div>
-
       <div className="flex flex-col space-y-1">
         <span className="text-quaternary">{timestamp}</span>
         <span className="text-primary">{title}</span>

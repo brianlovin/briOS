@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { Zap } from 'react-feather'
 import { BlogPost } from '../BlogPost'
 import { DateEntry, TimelineEntry } from '../Entry'
 
@@ -15,17 +14,12 @@ export function January() {
         description="Tips and strategies for releasing and maximizing the value of side projects."
       />
 
-      <TimelineEntry
-        timestamp="January 19, 2021"
-        title="Launched Staff Design"
-        Icon={Zap}
-        tint="purple"
-      >
+      <TimelineEntry timestamp="January 19, 2021" title="Launched Staff Design">
         <a href="https://staff.design">
           <div className="relative overflow-hidden transition-shadow bg-white rounded-md shadow md:flex-row dark:bg-gray-900 hover:shadow-cardHover">
             <div
               style={{ zIndex: 2 }}
-              className="justify-center flex-auto px-3 pt-8 pb-8 space-y-1  md:items-center"
+              className="justify-center flex-auto px-3 pt-8 pb-8 space-y-1 md:items-center"
             >
               <svg
                 width="128"
@@ -101,7 +95,6 @@ export function January() {
         slug="2020-in-review"
         title="2020 in review"
         description="Looking back on 2020 and setting goals for the next year."
-        divider={false}
       />
     </>
   )
