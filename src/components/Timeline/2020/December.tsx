@@ -17,35 +17,19 @@ export function December() {
         <>
           <Notes>
             <p>
-              This week we shut down{' '}
-              <a
-                href="https://spec.fm"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Spec.fm
-              </a>
-              , a podcast network I co-founded in 2015. Sarah wrote a reflection
-              on the last five years of operating the network, lessons we
-              learned, and how much money the company made.
+              This week we shut down <a href="https://spec.fm">Spec.fm</a>, a
+              podcast network I co-founded in 2015. Sarah wrote a reflection on
+              the last five years of operating the network, lessons we learned,
+              and how much money the company made.
             </p>
             <p>
-              <a
-                href="https://designdetails.fm"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Design Details
-              </a>{' '}
-              will continue as an independent podast – new episodes coming in
-              2021!
+              <a href="https://designdetails.fm">Design Details</a> will
+              continue as an independent podast – new episodes coming in 2021!
             </p>
           </Notes>
           <ButtonSet>
             <a
               href="https://medium.com/@sarahberus/a09fa8390000"
-              target="_blank"
-              rel="noopener noreferrer"
               className="btn"
             >
               Read the blog post
@@ -89,15 +73,11 @@ export function December() {
         tint={'purple'}
         divider={false}
       >
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://staff.design"
-        >
-          <div className="relative  overflow-hidden transition-shadow bg-white rounded-md shadow md:flex-row dark:bg-gray-900 hover:shadow-cardHover">
+        <a href="https://staff.design">
+          <div className="relative overflow-hidden transition-shadow bg-white rounded-md shadow md:flex-row dark:bg-gray-900 hover:shadow-cardHover">
             <div
               style={{ zIndex: 2 }}
-              className=" justify-center flex-auto px-3 pt-8 pb-8 space-y-1 md:items-center"
+              className="justify-center flex-auto px-3 pt-8 pb-8 space-y-1 md:items-center"
             >
               <svg
                 width="128"

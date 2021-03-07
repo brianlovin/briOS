@@ -21,15 +21,11 @@ export function January() {
         Icon={Zap}
         tint="purple"
       >
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://staff.design"
-        >
-          <div className="relative  overflow-hidden transition-shadow bg-white rounded-md shadow md:flex-row dark:bg-gray-900 hover:shadow-cardHover">
+        <a href="https://staff.design">
+          <div className="relative overflow-hidden transition-shadow bg-white rounded-md shadow md:flex-row dark:bg-gray-900 hover:shadow-cardHover">
             <div
               style={{ zIndex: 2 }}
-              className=" justify-center flex-auto px-3 pt-8 pb-8 space-y-1 md:items-center"
+              className="justify-center flex-auto px-3 pt-8 pb-8 space-y-1  md:items-center"
             >
               <svg
                 width="128"

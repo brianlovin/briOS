@@ -32,104 +32,38 @@ function About() {
               <p>I’m a product designer currently living in San Francisco.</p>
               <p>
                 Right now I’m designing{' '}
-                <a
-                  href="https://github.com/mobile"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  native mobile apps
-                </a>{' '}
-                at{' '}
-                <a
-                  href="https://github.com/brianlovin"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  GitHub
-                </a>
-                . Before GitHub, I co-founded{' '}
-                <a
-                  href="https://spectrum.chat"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Spectrum
-                </a>
-                , a platform for large-scale communities to have better public
-                conversations. Spectrum was acquired by GitHub in November,
-                2018.
+                <a href="https://github.com/mobile">native mobile apps</a> at{' '}
+                <a href="https://github.com/brianlovin">GitHub</a>. Before
+                GitHub, I co-founded{' '}
+                <a href="https://spectrum.chat">Spectrum</a>, a platform for
+                large-scale communities to have better public conversations.
+                Spectrum was acquired by GitHub in November, 2018.
               </p>
               <p>
                 Before Spectrum I designed payments experiences at Facebook,
                 working across Facebook, Messenger, WhatsApp, and Instagram. I
                 originally cut my teeth as the first product designer at{' '}
-                <a
-                  href="https://buffer.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Buffer
-                </a>
-                .
+                <a href="https://buffer.com">Buffer</a>.
               </p>
               <p>
                 I also co-host the{' '}
-                <a
-                  href="https://designdetails.fm"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Design Details Podcast
-                </a>
-                , a weekly conversation about design process and culture. Design
-                Details is part of{' '}
-                <a
-                  href="https://spec.fm"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Spec.fm
-                </a>
-                , a podcast network for designers and developers, which I
-                co-founded in 2015.
+                <a href="https://designdetails.fm">Design Details Podcast</a>, a
+                weekly conversation about design process and culture. Design
+                Details is part of <a href="https://spec.fm">Spec.fm</a>, a
+                podcast network for designers and developers, which I co-founded
+                in 2015.
               </p>
               <p>
                 You can find me on{' '}
-                <a
-                  href="https://twitter.com/brian_lovin"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Twitter
-                </a>{' '}
-                where I talk about design and development, or on{' '}
-                <a
-                  href="https://github.com/brianlovin"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  GitHub
-                </a>{' '}
-                where I’m building in the open, or on{' '}
-                <a
-                  href="https://figma.com/@brian"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Figma
-                </a>{' '}
-                where I’m exploring how plugins can automate the tedious parts
-                of interface design.
+                <a href="https://twitter.com/brian_lovin">Twitter</a> where I
+                talk about design and development, or on{' '}
+                <a href="https://github.com/brianlovin">GitHub</a> where I’m
+                building in the open, or on{' '}
+                <a href="https://figma.com/@brian">Figma</a> where I’m exploring
+                how plugins can automate the tedious parts of interface design.
               </p>
               <p>
-                Photo by{' '}
-                <a
-                  href="https://twitter.com/rxnjmmt"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  @rxnjmmt
-                </a>
+                Photo by <a href="https://twitter.com/rxnjmmt">@rxnjmmt</a>
               </p>
             </div>
           </div>
@@ -137,16 +71,12 @@ function About() {
           <Divider />
 
           <div className="space-y-6">
-            <h4 className="text-lg font-semibold text-primary">
-              Speaking and interviews
-            </h4>
+            <h4 className="font-list-heading">Speaking and interviews</h4>
             <div className="space-y-6">
               <div className="space-y-1">
                 <a
                   className="font-medium highlight-link-hover"
                   href="https://layout.fm/episodes/194/"
-                  target="_blank"
-                  rel="noopener noreferrer"
                 >
                   Layout.fm: It Ran Into the Wall of Reality
                 </a>
@@ -160,8 +90,6 @@ function About() {
                 <a
                   className="font-medium highlight-link-hover"
                   href="https://www.swiftbysundell.com/podcast/67/"
-                  target="_blank"
-                  rel="noopener noreferrer"
                 >
                   Building for open source
                 </a>
@@ -176,8 +104,6 @@ function About() {
                 <a
                   className="font-medium highlight-link-hover"
                   href="https://www.youtube.com/watch?v=SyS3h3kmBnY"
-                  target="_blank"
-                  rel="noopener noreferrer"
                 >
                   Extend what’s possible with Figma Plugins - Figma Config
                 </a>
@@ -192,8 +118,6 @@ function About() {
                 <a
                   className="font-medium highlight-link-hover"
                   href="https://www.youtube.com/watch?v=6MBBTdu8v6E"
-                  target="_blank"
-                  rel="noopener noreferrer"
                 >
                   Designing with GraphQL - GraphQL Summit
                 </a>
@@ -208,8 +132,6 @@ function About() {
                 <a
                   className="font-medium highlight-link-hover"
                   href="https://interfacelovers.com/interviews/brian-lovin"
-                  target="_blank"
-                  rel="noopener noreferrer"
                 >
                   Interface Lovers Interview
                 </a>
@@ -224,8 +146,6 @@ function About() {
                 <a
                   className="font-medium highlight-link-hover"
                   href="https://spec.fm/podcasts/design-details/79352"
-                  target="_blank"
-                  rel="noopener noreferrer"
                 >
                   Charmander++ – Interviewing ourselves on Design Details
                 </a>
@@ -239,8 +159,6 @@ function About() {
                 <a
                   className="font-medium highlight-link-hover"
                   href="https://avocode.com/blog/brian-lovin-product-designer-github-interview"
-                  target="_blank"
-                  rel="noopener noreferrer"
                 >
                   Avocode Interview
                 </a>
@@ -255,8 +173,6 @@ function About() {
                 <a
                   className="font-medium highlight-link-hover"
                   href="https://softwareengineeringdaily.com/2020/07/15/github-mobile-with-brian-lovin-and-ryan-nystrom/"
-                  target="_blank"
-                  rel="noopener noreferrer"
                 >
                   Software Engineering Daily: GitHub Mobile
                 </a>

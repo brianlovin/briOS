@@ -8,8 +8,6 @@ export default function FigmaPlugins() {
           <a
             className="font-medium text-primary highlight-link-hover"
             href="https://www.figma.com/c/plugin/744725347356614754/Dominant-Color-Toolkit-🎨"
-            target="_blank"
-            rel="noopener noreferrer"
           >
             Dominant Color Toolkit
           </a>
@@ -24,8 +22,6 @@ export default function FigmaPlugins() {
           <a
             className="font-medium text-primary highlight-link-hover"
             href="https://www.figma.com/c/plugin/743654854885744527/Responsify-⚡%EF%B8%8F"
-            target="_blank"
-            rel="noopener noreferrer"
           >
             Responsify
           </a>
@@ -40,8 +36,6 @@ export default function FigmaPlugins() {
           <a
             className="font-medium text-primary highlight-link-hover"
             href="https://www.figma.com/c/plugin/747172434405306948/iOS-Export-Settings"
-            target="_blank"
-            rel="noopener noreferrer"
           >
             iOS Export Settings
           </a>
@@ -57,8 +51,6 @@ export default function FigmaPlugins() {
           <a
             className="font-medium text-primary highlight-link-hover"
             href="https://www.figma.com/c/plugin/747228167548695118/Export-.zip"
-            target="_blank"
-            rel="noopener noreferrer"
           >
             Export .zip
           </a>
@@ -73,8 +65,6 @@ export default function FigmaPlugins() {
           <a
             className="font-medium text-primary highlight-link-hover"
             href="https://github.com/brianlovin/figma-github-data"
-            target="_blank"
-            rel="noopener noreferrer"
           >
             GitHub Data
           </a>

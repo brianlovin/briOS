@@ -4,11 +4,10 @@ import Link from 'next/link'
 function ProjectsList() {
   return (
     <div className="space-y-6">
+      <h4 className="font-list-heading">Select projects</h4>
       <div className="space-y-1">
         <a
           href="https://staff.design"
-          target="_blank"
-          rel="noopener noreferrer"
           className="font-medium highlight-link-hover"
         >
           Staff Design

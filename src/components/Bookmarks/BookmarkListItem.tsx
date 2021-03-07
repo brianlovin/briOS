@@ -39,8 +39,6 @@ export const BookmarkListItem = React.memo((props: Props) => {
       <span>
         <a
           href={`${bookmark.url}`}
-          target="_blank"
-          rel="noopener noreferrer"
           className="font-medium text-primary highlight-link-hover"
         >
           {bookmark.title}

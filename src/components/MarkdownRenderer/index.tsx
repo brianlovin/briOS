@@ -25,11 +25,7 @@ function LinkRenderer(props: any) {
     )
   }
 
-  return (
-    <a href={href} target="_blank" rel="noopener noreferrer">
-      {children}
-    </a>
-  )
+  return <a href={href}>{children}</a>
 }
 
 export default function MarkdownRenderer(props: Props) {

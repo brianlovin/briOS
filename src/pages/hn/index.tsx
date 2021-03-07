@@ -4,7 +4,6 @@ import { NextSeo } from 'next-seo'
 import { CenteredColumn } from '~/components/Layouts'
 import HNPosts from '~/components/HNPosts'
 import { HNComment } from '~/components/HNPost/Comment'
-import Navigation from '~/components/HNPosts/Navigation'
 import { getHNPosts } from '~/graphql/services/hn'
 import HNSubscribeBox from '~/components/HNSubscribe'
 import routes from '~/config/routes'
@@ -47,12 +46,14 @@ export default function HNTop(props: Props) {
             </a>
           </Link>
 
-          <PageHeader title="Better Hacker News" />
-
-          <HNPosts posts={posts} />
+          <PageHeader title="Hacker News" />
 
           <HNSubscribeBox />
 
+          <HNPosts posts={posts} />
+
+          <div className="py-4" />
+          <Divider />
           <div className="py-4" />
 
           <div className="prose">

@@ -48,7 +48,7 @@ export default function Recommendations() {
 
   return (
     <div className="p-8 -mx-8 space-y-4 bg-gray-400 border-b border-gray-300 border-dashed bg-opacity-5 dark:border-gray-800">
-      <p className="flex">Recommendations</p>
+      <p className="flex font-semibold text-primary">Recommendations</p>
       <p className="text-tertiary">
         My stack is a curated list of tools and software that I use daily. In
         general, less is more. But I’m always interested in discovering great

@@ -1,8 +1,7 @@
 import * as React from 'react'
 import Link from 'next/link'
-import Page, { PageHeader } from '~/components/Page'
+import Page from '~/components/Page'
 import { CenteredColumn } from '~/components/Layouts'
-import Button from '~/components/Button'
 import { initApolloClient } from '~/graphql/services/apollo'
 import { GET_HOME } from '~/graphql/queries'
 import { Post } from '~/graphql/types.generated'
@@ -22,31 +21,46 @@ function Home({ data }: Props) {
       <CenteredColumn>
         <div className="space-y-24 ">
           <div className="space-y-8 md:items-center">
-            <PageHeader
-              title="Hey, I’m Brian"
-              subtitle="I’m a product designer living in San
-                Francisco, currently building native mobile apps at GitHub."
-            />
-
-            <div className="grid grid-cols-2 gap-4">
-              <Link href="/about" passHref>
-                <a className="block">
-                  <Button className="w-full">More about me</Button>
+            <div className="prose text-primary">
+              <p>
+                Hey, I&apos;m Brian. I&apos;m a designer,{' '}
+                <a href="https://designdetails.fm">podcaster</a>,{' '}
+                <Link href="/writing" passHref>
+                  <a>writer</a>
+                </Link>
+                , and{' '}
+                <a href="https://github.com/brianlovin">software tinkerer</a>.
+                I&apos;m currently building{' '}
+                <a href="https://github.com/mobile">
+                  native mobile apps at GitHub
                 </a>
-              </Link>
-              <a
-                href="https://twitter.com/brian_lovin"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block"
-              >
-                <Button className="w-full">Follow me on Twitter</Button>
-              </a>
+                .
+              </p>
+
+              <p>
+                In the past I co-founded{' '}
+                <a href="https://github.com/withspectrum/spectrum">Spectrum</a>,
+                a platform for online communities. Before that, I worked at
+                Facebook building payments systems, and cut my teeth as a
+                product designer at Buffer.
+              </p>
+
+              <p>
+                You can{' '}
+                <Link href="/about" passHref>
+                  <a>learn more about me</a>
+                </Link>
+                , or{' '}
+                <a href="https://twitter.com/brian_lovin">
+                  follow me on Twitter
+                </a>{' '}
+                for tweets about design, development, and technology.
+              </p>
             </div>
           </div>
 
           <div className="space-y-8">
-            <h4 className="text-lg font-semibold text-primary">Writing</h4>
+            <h4 className="font-list-heading">Recent Writing</h4>
             <div className="space-y-6 ">
               {data && data.posts && <PostsList posts={data.posts} />}
             </div>
@@ -58,11 +72,11 @@ function Home({ data }: Props) {
           </div>
 
           <div className="space-y-8">
-            <h4 className="text-lg font-semibold text-primary">Projects</h4>
+            <h4 className="font-list-heading">Select Projects</h4>
             <ProjectsList />
             <Link href="/projects">
               <a className="inline-block font-medium highlight-link-hover">
-                See all my projects &rarr;
+                See all projects &rarr;
               </a>
             </Link>
           </div>

@@ -18,8 +18,6 @@ export default function StackList() {
             key={stack.name}
             className="flex py-4 -mx-4 bg-gray-400 bg-opacity-0 rounded sm:p-4 sm:hover:bg-opacity-5 sm:dark:hover:bg-gray-900 sm:dark:hover:bg-opacity-100"
             href={stack.url}
-            target="_blank"
-            rel="nooopener noreferrer"
           >
             <Image
               src={`/static/img/stack/${stack.image}`}
@@ -32,7 +30,7 @@ export default function StackList() {
 
             <div className="justify-center flex-1 col-span-3 pl-5 space-y-2 ">
               <div className="space-y-1 ">
-                <p className="font-medium text-primary">{stack.name}</p>
+                <p className="mt-2 font-medium text-primary">{stack.name}</p>
                 <p className="text-base font-normal leading-snug text-tertiary">
                   {stack.description}
                 </p>

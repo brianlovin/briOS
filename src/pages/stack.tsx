@@ -33,7 +33,7 @@ function Stack() {
         <StackList />
 
         <div className="p-8 mt-16 -mx-8 space-y-4 bg-yellow-400 border-t border-b border-yellow-300 border-dashed bg-opacity-5 dark:border-gray-800">
-          <p className="text-yellow-900 dark:text-gray-100">
+          <p className="font-semibold text-yellow-900 dark:text-gray-100">
             About these links
           </p>
           <p className="text-yellow-700 dark:text-gray-300">

@@ -36,7 +36,7 @@ export default function WritingSubscribeBox() {
 
   return (
     <div
-      className="p-8 -mx-8 space-y-4 bg-gray-400 border-t border-b border-gray-300 border-dashed  bg-opacity-5 dark:border-gray-800"
+      className="p-8 -mx-8 space-y-4 bg-gray-400 border-t border-b border-gray-300 border-dashed bg-opacity-5 dark:border-gray-800"
       data-cy="writing-subscribe-box"
     >
       <div className="space-y-2 ">
@@ -48,8 +48,6 @@ export default function WritingSubscribeBox() {
           you can{' '}
           <a
             href="https://overthought.ghost.io/rss/"
-            target="_blank"
-            rel="noopener noreferrer"
             className="font-normal bg-purple-600 text-primary bg-opacity-10 hover:bg-opacity-20"
           >
             subscribe with RSS
@@ -57,8 +55,6 @@ export default function WritingSubscribeBox() {
           {' or '}
           <a
             href="https://twitter.com/brian_lovin/"
-            target="_blank"
-            rel="noopener noreferrer"
             className="font-normal bg-blue-400 text-primary bg-opacity-10 hover:bg-opacity-20"
           >
             follow me on Twitter

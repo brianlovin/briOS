@@ -14,8 +14,6 @@ export const PostListItem = React.memo((props: Props) => {
       <a
         className="font-medium text-primary highlight-link-hover"
         href={post.url}
-        target="_blank"
-        rel="noopener noreferrer"
       >
         {post.title} {post.domain && `(${post.domain})`}
       </a>

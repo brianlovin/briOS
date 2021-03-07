@@ -14,8 +14,6 @@ export default function PodcastEpisodesList({ episodes }: Props) {
           <span>
             <a
               className="font-medium text-primary highlight-link-hover"
-              target="_blank"
-              rel="noopener noreferrer"
               href={`https://designdetails.fm/episodes/${
                 ep.legacy_id || ep.token
               }`}

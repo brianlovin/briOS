@@ -9,8 +9,6 @@ export const ResourceRow = ({ resource }: Props) => (
   <div className="block">
     <a
       href={resource.url}
-      target="_blank"
-      rel="noopener noreferrer"
       className="-mx-3 space-x-3 font-normal text-secondary highlight-link-hover"
     >
       <p className="inline font-medium ">· {resource.name}</p>

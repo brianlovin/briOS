@@ -67,8 +67,6 @@ export function November() {
           </Link>
           <a
             href="https://github.com/brianlovin/brian-lovin-next/pull/1190"
-            target="_blank"
-            rel="noopener noreferrer"
             className="w-full md:w-auto"
           >
             <button className="w-full md:w-auto btn">
@@ -104,8 +102,6 @@ export function November() {
           </Link>
           <a
             href="https://github.com/brianlovin/brian-lovin-next/pull/1188"
-            target="_blank"
-            rel="noopener noreferrer"
             className="w-full md:w-auto"
           >
             <button className="w-full md:w-auto btn">
@@ -131,18 +127,11 @@ export function November() {
           </p>
         </Notes>
         <ButtonSet>
-          <a
-            href="https://tailwindcss.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full md:w-auto"
-          >
+          <a href="https://tailwindcss.com" className="w-full md:w-auto">
             <button className="w-full md:w-auto btn">Tailwind.css</button>
           </a>
           <a
             href="https://github.com/brianlovin/brian-lovin-next/pull/1175"
-            target="_blank"
-            rel="noopener noreferrer"
             className="w-full md:w-auto"
           >
             <button className="w-full md:w-auto btn">
@@ -170,13 +159,9 @@ export function November() {
         Icon={Zap}
         tint="purple"
       >
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://gumroad.com/l/waves-premium-phone-wallpapers"
-        >
-          <div className=" overflow-hidden transition-shadow bg-white rounded-md shadow md:flex-row dark:bg-gray-900 hover:shadow-cardHover">
-            <div className=" justify-start px-3 py-3 space-y-2 md:w-1/2">
+        <a href="https://gumroad.com/l/waves-premium-phone-wallpapers">
+          <div className="overflow-hidden transition-shadow bg-white rounded-md shadow md:flex-row dark:bg-gray-900 hover:shadow-cardHover">
+            <div className="justify-start px-3 py-3 space-y-2 md:w-1/2">
               <h5 className="px-2 pt-2">Waves</h5>
               <p className="flex-1 px-2 font-normal">
                 A custom-made set of 10 phone wallpapers, each with a unique
@@ -219,8 +204,6 @@ export function November() {
         <ButtonSet>
           <a
             href="https://twitter.com/brian_lovin/status/1327734503142354945?s=21"
-            target="_blank"
-            rel="noopener noreferrer"
             className="w-full md:w-auto"
           >
             <button className="w-full md:w-auto btn">
@@ -243,11 +226,7 @@ export function November() {
         Icon={Camera}
         tint="gray"
       >
-        <a
-          href="https://twitter.com/brian_lovin/status/1325864903370924033"
-          target="_blank"
-          rel="nooopener noreferrer"
-        >
+        <a href="https://twitter.com/brian_lovin/status/1325864903370924033">
           <div className="grid grid-cols-2 grid-rows-2 gap-2">
             <Image
               src="https://pbs.twimg.com/media/EmZqxm5VMAAO0mm?format=jpg&name=small"
@@ -286,8 +265,6 @@ export function November() {
         <ButtonSet>
           <a
             href="https://unsplash.com/@brianlovin"
-            target="_blank"
-            rel="noopener noreferrer"
             className="w-full md:w-auto btn"
           >
             Download on Unsplash

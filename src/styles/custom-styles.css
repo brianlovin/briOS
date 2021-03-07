@@ -13,6 +13,9 @@
 }
 
 @layer components {
+  .font-list-heading {
+    @apply font-sans text-lg font-bold text-primary;
+  }
 }
 
 /* Your own custom utilities */
