@@ -6,7 +6,8 @@ import { TimelineEntry } from './Entry'
 
 export function Timeline() {
   return (
-    <div className=" w-full timeline-container">
+    <div className="w-full timeline-container">
+      <h4 className="font-list-heading">Changelog</h4>
       <Year2021 />
       <Year2020 />
       <TimelineEntry

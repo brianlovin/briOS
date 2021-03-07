@@ -8,6 +8,7 @@ import { Post } from '~/graphql/types.generated'
 import WritingSubscribeBox from '~/components/Writing/Subscribe'
 import PostsList from '~/components/Writing/List'
 import ProjectsList from '~/components/ProjectsList'
+import { Timeline } from '~/components/Timeline'
 
 interface Props {
   data: {
@@ -46,18 +47,14 @@ function Home({ data }: Props) {
               </p>
 
               <p>
-                You can{' '}
                 <Link href="/about" passHref>
-                  <a>learn more about me</a>
+                  <a>Learn more about me &rarr;</a>
                 </Link>
-                , or{' '}
-                <a href="https://twitter.com/brian_lovin">
-                  follow me on Twitter
-                </a>{' '}
-                for tweets about design, development, and technology.
               </p>
             </div>
           </div>
+
+          <WritingSubscribeBox />
 
           <div className="space-y-8">
             <h4 className="font-list-heading">Recent Writing</h4>
@@ -81,7 +78,7 @@ function Home({ data }: Props) {
             </Link>
           </div>
 
-          <WritingSubscribeBox />
+          {/* <Timeline /> */}
         </div>
       </CenteredColumn>
     </Page>

@@ -44,18 +44,18 @@ export default function WritingSubscribeBox() {
           Subscribe with email
         </p>
         <p className="text-tertiary">
-          Get updates about new posts and projects in your inbox. Alternatively,
-          you can{' '}
+          Get updates about new posts, new projects, or other meaningful updates
+          to this site delivered to your inbox. Alternatively, you can{' '}
           <a
             href="https://overthought.ghost.io/rss/"
-            className="font-normal bg-purple-600 text-primary bg-opacity-10 hover:bg-opacity-20"
+            className="font-normal rounded-sm px-0.5 -mx-0.5 bg-purple-600 text-primary bg-opacity-20 hover:bg-opacity-30 dark:hover:bg-opacity-100"
           >
             subscribe with RSS
           </a>
           {' or '}
           <a
             href="https://twitter.com/brian_lovin/"
-            className="font-normal bg-blue-400 text-primary bg-opacity-10 hover:bg-opacity-20"
+            className="font-normal rounded-sm px-0.5 -mx-0.5 bg-blue-500 text-primary bg-opacity-20 hover:bg-opacity-30 dark:hover:bg-opacity-100"
           >
             follow me on Twitter
           </a>
