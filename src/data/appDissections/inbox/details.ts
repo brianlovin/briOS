@@ -65,7 +65,7 @@ export default [
   },
   {
     description:
-      'When a feature like Reminders has this level of prominence in a Google app, it’s best to pay attention. In the core [Google Search](https://brianlovin.com/design-details-google-search-for-ios/) app, Reminders are tucked away in the interface – out of sight, out of mind.\r\n\r\nThere’s no doubt with Inbox, however, that Reminders play a larger part of Google’s vision for the future. Why? I’m not totally sure yet. Mixing reminders with snoozed emails with pinned emails – the meaning of these terms is starting to become a bit convoluted.',
+      'When a feature like Reminders has this level of prominence in a Google app, it’s best to pay attention. In the core [Google Search](https://brianlovin.com/app-dissection/google-search-for-ios/) app, Reminders are tucked away in the interface – out of sight, out of mind.\r\n\r\nThere’s no doubt with Inbox, however, that Reminders play a larger part of Google’s vision for the future. Why? I’m not totally sure yet. Mixing reminders with snoozed emails with pinned emails – the meaning of these terms is starting to become a bit convoluted.',
     title: 'Reminders',
     media: [
       'https://player.vimeo.com/external/157936430.hd.mp4?s=4134dccccfa542bc54a061029a5fe7e6bbc2b792&profile_id=167',
