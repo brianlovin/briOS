@@ -8,6 +8,7 @@ import { QuestionItem } from './QuestionItem'
 import AskQuestion from './AskQuestion'
 import PendingQuestions from './PendingQuestions'
 import FullscreenLoading from '../FullscreenLoading'
+import Button from '../Button'
 
 export default function QuestionsList() {
   const { isMe } = useAuth()
@@ -61,7 +62,7 @@ export default function QuestionsList() {
   }
 
   return (
-    <div className=" mt-8 space-y-8">
+    <div className="mt-8 space-y-8 ">
       <AskQuestion />
 
       {isMe && <PendingQuestions />}
@@ -73,9 +74,9 @@ export default function QuestionsList() {
       {questions.length === 0 && <p>No questions yet!</p>}
 
       {showLoadMore && (
-        <button className="btn" onClick={handleLoadMore}>
+        <Button className="w-full" onClick={handleLoadMore}>
           {loading ? <LoadingSpinner /> : 'Show me more'}
-        </button>
+        </Button>
       )}
     </div>
   )

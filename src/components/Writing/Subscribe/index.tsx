@@ -36,23 +36,16 @@ export default function WritingSubscribeBox() {
 
   return (
     <div
-      className="p-8 -mx-8 space-y-4 bg-gray-400 border-t border-b border-gray-300 border-dashed bg-opacity-5 dark:border-gray-800"
+      className="p-8 -mx-8 space-y-4 bg-gray-400 border-t border-b border-gray-300 border-dashed dark:bg-gray-200 bg-opacity-5 dark:border-gray-800"
       data-cy="writing-subscribe-box"
     >
       <div className="space-y-2 ">
         <p className="flex items-center font-semibold text-primary">
-          Subscribe with email
+          The email newsletter
         </p>
         <p className="text-tertiary">
           Get updates about new posts, new projects, or other meaningful updates
           to this site delivered to your inbox. Alternatively, you can{' '}
-          <a
-            href="https://overthought.ghost.io/rss/"
-            className="font-normal rounded-sm px-0.5 -mx-0.5 bg-purple-600 text-primary bg-opacity-20 hover:bg-opacity-30 dark:hover:bg-opacity-100"
-          >
-            subscribe with RSS
-          </a>
-          {' or '}
           <a
             href="https://twitter.com/brian_lovin/"
             className="font-normal rounded-sm px-0.5 -mx-0.5 bg-blue-500 text-primary bg-opacity-20 hover:bg-opacity-30 dark:hover:bg-opacity-100"
@@ -69,7 +62,7 @@ export default function WritingSubscribeBox() {
           onSubmit={submit}
           className="grid grid-cols-1 gap-2 mt-2 md:grid-cols-3"
         >
-          <label className="col-span-2">
+          <label className="md:col-span-2">
             <span className="sr-only">Email address</span>
             <Input
               value={email}
@@ -84,6 +77,7 @@ export default function WritingSubscribeBox() {
             onClick={submit}
             disabled={status === 'submitting' || !email}
             type="submit"
+            className="w-full"
           >
             Subscribe
           </Button>

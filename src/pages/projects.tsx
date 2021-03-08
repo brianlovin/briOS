@@ -9,7 +9,6 @@ import { Post, Episode, Repo } from '~/graphql/types.generated'
 import { NextSeo } from 'next-seo'
 import routes from '~/config/routes'
 import ProjectsList from '~/components/ProjectsList'
-import SubscriptionButtons from '~/components/SubscriptionButtons'
 
 interface Props {
   data: {
@@ -31,7 +30,8 @@ function Projects({ data }: Props) {
       <CenteredColumn>
         <div className="space-y-12" data-cy="projects-page">
           <PageHeader title="Projects" subtitle="" />
-          <div className="space-y-20">
+
+          <div className="space-y-16 md:space-y-24">
             <div className="space-y-8">
               <h4 className="font-list-heading">Select Projects</h4>
               <ProjectsList />
@@ -61,7 +61,6 @@ function Projects({ data }: Props) {
               >
                 Check out all the episodes &rarr;
               </a>
-              <SubscriptionButtons />
             </div>
 
             <div className="space-y-6">

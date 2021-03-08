@@ -8,7 +8,6 @@ import { Post } from '~/graphql/types.generated'
 import WritingSubscribeBox from '~/components/Writing/Subscribe'
 import PostsList from '~/components/Writing/List'
 import ProjectsList from '~/components/ProjectsList'
-import { Timeline } from '~/components/Timeline'
 
 interface Props {
   data: {
@@ -20,7 +19,7 @@ function Home({ data }: Props) {
   return (
     <Page>
       <CenteredColumn>
-        <div className="space-y-24 ">
+        <div className="space-y-16 md:space-y-24 ">
           <div className="space-y-8 md:items-center">
             <div className="prose text-primary">
               <p>
@@ -77,8 +76,6 @@ function Home({ data }: Props) {
               </a>
             </Link>
           </div>
-
-          {/* <Timeline /> */}
         </div>
       </CenteredColumn>
     </Page>

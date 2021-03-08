@@ -10,11 +10,20 @@
   body {
     @apply font-mono;
   }
+
+  /* needed to override tailwind forms styles */
+  select {
+    @apply w-full px-4 py-2 border border-gray-200 rounded focus:outline-none focus:border-gray-1000 text-primary dark:border-gray-800 dark:focus:border-gray-600 bg-gray-1000 dark:bg-white bg-opacity-5 hover:bg-opacity-10 focus:ring-0;
+  }
 }
 
 @layer components {
   .font-list-heading {
     @apply font-sans text-lg font-bold text-primary;
+  }
+
+  .tabbed-navigation::-webkit-scrollbar {
+    display: none;
   }
 }
 

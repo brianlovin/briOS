@@ -4,7 +4,7 @@ import Page from '~/components/Page'
 import { CenteredColumn } from '~/components/Layouts'
 import { NextSeo } from 'next-seo'
 import routes from '~/config/routes'
-import Divider from '~/components/Divider'
+import WritingSubscribeBox from '~/components/Writing/Subscribe'
 
 function About() {
   return (
@@ -68,7 +68,7 @@ function About() {
             </div>
           </div>
 
-          <Divider />
+          <WritingSubscribeBox />
 
           <div className="space-y-6">
             <h4 className="font-list-heading">Speaking and interviews</h4>

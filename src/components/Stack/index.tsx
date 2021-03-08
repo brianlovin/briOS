@@ -16,7 +16,7 @@ export default function StackList() {
         return (
           <a
             key={stack.name}
-            className="flex py-4 -mx-4 bg-gray-400 bg-opacity-0 rounded sm:p-4 sm:hover:bg-opacity-5 sm:dark:hover:bg-gray-900 sm:dark:hover:bg-opacity-100"
+            className="flex py-4 bg-gray-400 bg-opacity-0 rounded md:-mx-4 sm:p-4 sm:hover:bg-opacity-5 sm:dark:hover:bg-gray-900 sm:dark:hover:bg-opacity-100"
             href={stack.url}
           >
             <Image

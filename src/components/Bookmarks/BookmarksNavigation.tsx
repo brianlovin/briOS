@@ -10,12 +10,12 @@ export default function BookmarksNavigation() {
     return category === path
   }
 
-  const defaultClasses = `rounded text-primary flex items-center justify-center space-x-3`
+  const defaultClasses = `flex flex-none rounded text-primary items-center justify-center space-x-3`
   const activeClasses = `bg-gray-1000 bg-opacity-5 dark:bg-white text-primary`
   const inactiveClasses = `hover:bg-gray-900 filter-saturate hover:bg-opacity-5 dark:hover:bg-white dark:text-white  hover:text-gray-1000 dark:hover:text-gray-100 text-tertiary`
 
   return (
-    <div className="grid grid-cols-4 gap-2 overflow-x-auto md:justify-center md:-ml-0 md:-mr-0 flex-nowrap">
+    <div className="hidden grid-cols-4 gap-2 overflow-x-auto md:grid tabbed-navigation md:justify-center md:-ml-0 md:-mr-0 flex-nowrap">
       <Link href="/bookmarks">
         <a
           className={`${defaultClasses} ${

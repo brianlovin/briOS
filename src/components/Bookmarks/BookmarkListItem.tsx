@@ -45,14 +45,14 @@ export const BookmarkListItem = React.memo((props: Props) => {
         </a>
       </span>
       {bookmark.notes && (
-        <div className="text-tertiary">
+        <div className="pl-2 border-l border-gray-300 border-dashed text-tertiary dark:border-gray-700">
           <MarkdownRenderer>{bookmark.notes}</MarkdownRenderer>
         </div>
       )}
       <span className="flex items-center space-x-2">
         <BookmarkReaction bookmark={bookmark} />
         <span className="text-quaternary">{' · '}</span>
-        <span className="text-tertiary">{cleanedCategory}</span>
+        <span className="inline-block text-tertiary">{cleanedCategory}</span>
         {editable && (
           <>
             <span className="text-quaternary">{' · '}</span>
