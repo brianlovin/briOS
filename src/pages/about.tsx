@@ -17,7 +17,7 @@ function About() {
 
       <CenteredColumn>
         <div className="space-y-12 " data-cy="about-page">
-          <div className="-mx-4 -mt-24 md:mt-0 md:-mx-8 ">
+          <div className="-mx-4 -mt-16 md:mt-0 md:-mx-8 ">
             <Image
               src="/static/img/about.jpg"
               alt={'A photo of me'}
