@@ -60,7 +60,7 @@ function Home({ data }: Props) {
             <div className="space-y-6 ">
               {data && data.posts && <PostsList posts={data.posts} />}
             </div>
-            <Link href="/projects">
+            <Link href="/writing">
               <a className="inline-block font-medium highlight-link-hover">
                 Read all posts &rarr;
               </a>
