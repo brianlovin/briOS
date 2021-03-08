@@ -11,8 +11,7 @@
     "firebase": "cd src/firebase && firebase deploy --only functions && cd ../",
     "generate": "graphql-codegen",
     "generate:watch": "graphql-codegen --watch 'src/graphql/**/*.ts'",
-    "postinstall": "yarn generate",
-    "prepare": "husky install"
+    "postinstall": "yarn generate"
   },
   "husky": {
     "hooks": {
