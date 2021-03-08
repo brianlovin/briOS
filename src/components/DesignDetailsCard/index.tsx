@@ -48,8 +48,8 @@ export default function DesignDetailsCard(props: Props) {
       onChange={(visible) => visible && setIsVisible(true)}
     >
       <Link
-        href="/design-details/[slug]"
-        as={`/design-details/${slug}`}
+        href="/app-dissection/[slug]"
+        as={`/app-dissection/${slug}`}
         passHref
       >
         <a className="block">
@@ -62,7 +62,7 @@ export default function DesignDetailsCard(props: Props) {
                     height={'56px'}
                     layout="fixed"
                     alt={'Design Details'}
-                    src={`/static/img/design-details/${slug}.jpeg`}
+                    src={`/static/img/app-dissection/${slug}.jpeg`}
                   />
                 </ImageContainer>
                 <CardContent>

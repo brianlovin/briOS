@@ -5,7 +5,7 @@ import designDetailsPosts from '../../src/data/appDissections'
 
 describe('Design Details', () => {
   before(() => {
-    cy.visit('/design-details')
+    cy.visit('/app-dissection')
   })
 
   it('should render design details', () => {

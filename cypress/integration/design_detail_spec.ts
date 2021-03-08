@@ -9,7 +9,7 @@ const detail = designDetailsPosts.find((d) => d.slug === slug)
 
 describe('Design Detail Post', () => {
   before(() => {
-    cy.visit(`/design-details/${slug}`)
+    cy.visit(`/app-dissection/${slug}`)
   })
 
   it('should render design detail header', () => {

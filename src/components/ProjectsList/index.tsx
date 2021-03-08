@@ -63,7 +63,7 @@ function ProjectsList() {
       </div>
 
       <div className="space-y-1">
-        <Link passHref href="/design-details">
+        <Link passHref href="/app-dissection">
           <a className="font-medium highlight-link-hover">App Dissection</a>
         </Link>
 

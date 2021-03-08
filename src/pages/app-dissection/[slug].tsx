@@ -18,7 +18,7 @@ export default function DesignDetail({ post }: Props) {
   React.useEffect(() => {
     // handle bad slug
     if (!post) {
-      router.push('/design-details')
+      router.push('/app-dissection')
     }
   }, [])
 
@@ -29,7 +29,7 @@ export default function DesignDetail({ post }: Props) {
           title={`${post.title} · App Dissection`}
           description={post.description}
           openGraph={{
-            url: `${baseUrl}/design-details/${post.slug}`,
+            url: `${baseUrl}/app-dissection/${post.slug}`,
             title: post.title,
             description: removeMd(post.description),
             site_name: 'App Dissection',

@@ -25,7 +25,7 @@ export function Footer() {
           <Link href="/writing" as="/writing" passHref>
             <a className="black-link">Writing</a>
           </Link>
-          <Link href="/design-details" as="/design-details" passHref>
+          <Link href="/app-dissection" as="/app-dissection" passHref>
             <a className="black-link">App Dissection</a>
           </Link>
           <Link href="/ama" as="/ama" passHref>
