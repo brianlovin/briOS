@@ -52,7 +52,7 @@ export function HNPost(props: Props) {
               target="blank"
               rel="noopener noreferrer"
             >
-              <h1 className="font-sans text-4xl font-black text-primary">
+              <h1 className="font-sans text-2xl font-black md:text-4xl text-primary">
                 {post.title}
               </h1>
             </a>

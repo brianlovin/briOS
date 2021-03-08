@@ -181,7 +181,7 @@
   }
 
   .highlight-link-hover {
-    @apply px-0.5 -mx-0.5 no-underline hover:bg-yellow-400 rounded-sm dark:hover:bg-yellow-500 dark:bg-opacity-100 text-gray-1000 dark:text-gray-300 bg-opacity-20 hover:bg-opacity-30 dark:hover:bg-opacity-100 dark:hover:text-gray-1000;
+    @apply px-0.5 -mx-0.5 no-underline md:hover:bg-yellow-400 rounded-sm md:dark:hover:bg-yellow-500 dark:bg-opacity-100 text-gray-1000 dark:text-gray-300 bg-opacity-20 hover:bg-opacity-30 dark:hover:bg-opacity-100 dark:hover:text-gray-1000;
   }
 
   .highlight-link {

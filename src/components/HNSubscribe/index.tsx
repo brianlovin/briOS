@@ -36,7 +36,7 @@ export default function HNSubscribeBox() {
 
   return (
     <div
-      className="p-8 -mx-8 space-y-4 bg-gray-400 border-t border-b border-gray-300 border-dashed dark:bg-gray-200 bg-opacity-5 dark:border-gray-800"
+      className="p-8 -mx-4 space-y-4 bg-gray-400 border-t border-b border-gray-300 border-dashed md:-mx-8 dark:bg-gray-200 bg-opacity-5 dark:border-gray-800"
       data-cy="hn-subscribe-box"
     >
       <p className="font-semibold text-primary">Daily digest email</p>
@@ -51,7 +51,7 @@ export default function HNSubscribeBox() {
           onSubmit={submit}
           className="grid grid-cols-1 gap-2 mt-2 md:grid-cols-3"
         >
-          <label className="col-span-2">
+          <label className="md:col-span-2">
             <span className="sr-only">Email address</span>
             <Input
               value={email}

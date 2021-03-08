@@ -99,9 +99,8 @@ export const AppRow = ({ app }: Props) => {
       renderMatch === 'windows'
     return (
       <div
-        className={`flex ${
-          hideOnMobile ? 'hidden' : 'block'
-        } flex-x-3 md:block`}
+        className={`flex ${hideOnMobile ? 'hidden' : 'block'
+          } flex-x-3 md:block`}
         key={key}
       >
         <a
@@ -115,7 +114,7 @@ export const AppRow = ({ app }: Props) => {
   }
 
   return (
-    <div className="p-4 pr-6 -mx-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800">
+    <div className="p-4 pr-6 -mx-4 rounded-md md:hover:bg-gray-100 md:dark:hover:bg-gray-800">
       <div className="flex items-center justify-between">
         <a
           className="flex items-center h-full space-x-3"

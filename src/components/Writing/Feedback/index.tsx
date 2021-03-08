@@ -55,7 +55,7 @@ export default function Feedback({ post }: Props) {
 
   return (
     <div
-      className="p-8 -mx-8 space-y-4 bg-gray-400 border-t border-gray-300 border-dashed dark:bg-gray-200 bg-opacity-5 dark:border-gray-800"
+      className="p-8 -mx-4 space-y-4 bg-gray-400 border-t border-gray-300 border-dashed md:-mx-8 dark:bg-gray-200 bg-opacity-5 dark:border-gray-800"
       data-cy="writing-feedback-box"
     >
       <p className="font-semibold text-primary">A small favor</p>

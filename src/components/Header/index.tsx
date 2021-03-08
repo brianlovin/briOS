@@ -20,8 +20,8 @@ export default function Header() {
     currPathName === '/'
       ? 'Home'
       : routesAsArr
-          .filter((r) => r.path !== '/')
-          .find((r) => currPathName.includes(r.path))?.label
+        .filter((r) => r.path !== '/')
+        .find((r) => currPathName.includes(r.path))?.label
 
   return (
     <div className="fixed top-0 z-10 w-full py-2 bg-white border-b border-gray-400 dark:border-opacity-10 border-opacity-20 bg-opacity-70 dark:bg-gray-900 dark:bg-opacity-40 filter-blur">
@@ -34,7 +34,7 @@ export default function Header() {
           >
             {isExpanded ? <X size={16} /> : <Menu size={16} />}
           </button>
-          <p className="text-sm font-medium clamp-1 text-primary">
+          <p className="font-sans text-sm font-semibold clamp-1 text-primary">
             {mobileTitle}
           </p>
         </div>
@@ -43,7 +43,7 @@ export default function Header() {
         )}
         {isExpanded &&
           defaultRoutes.map((route) => {
-            const defaultClasses = `flex font-sans items-center pl-12 py-4 font-medium text-sm text-primary text-opacity-80`
+            const defaultClasses = `flex font-sans items-center pl-12 py-4 font-semibold text-sm text-primary text-opacity-80`
 
             return (
               <Link href={route.path} key={route.path}>
@@ -58,7 +58,7 @@ export default function Header() {
       <div className="hidden max-w-screen-md grid-cols-4 gap-1 mx-auto md:grid">
         {defaultRoutes.map((route) => {
           const isActive = route.path === router.pathname
-          const defaultClasses = `font-sans font-semibold flex rounded font-medium items-center text-opacity-40 justify-center py-2 text-sm`
+          const defaultClasses = `font-sans font-semibold flex rounded items-center text-opacity-40 justify-center py-2 text-sm`
           const activeClasses = `bg-gray-1000 bg-opacity-5 dark:bg-white text-primary filter-saturate filter-blur`
           const inactiveClasses = `hover:bg-gray-900 filter-saturate hover:bg-opacity-5 dark:hover:bg-white dark:text-white  hover:text-gray-1000 dark:hover:text-gray-100 text-tertiary`
           return (

@@ -45,7 +45,7 @@ export const BookmarkListItem = React.memo((props: Props) => {
         </a>
       </span>
       {bookmark.notes && (
-        <div className="pl-2 border-l border-gray-300 border-dashed text-tertiary dark:border-gray-700">
+        <div className="pl-4 border-l border-gray-300 border-dashed text-tertiary dark:border-gray-700">
           <MarkdownRenderer>{bookmark.notes}</MarkdownRenderer>
         </div>
       )}
