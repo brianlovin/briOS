@@ -6,6 +6,8 @@ import { useAuth } from '~/hooks/useAuth'
 import AddBookmark from '~/components/Bookmarks/AddBookmark'
 import { CenteredColumn } from '~/components/Layouts'
 import BookmarksNavigation from '~/components/Bookmarks/BookmarksNavigation'
+import routes from '~/config/routes'
+import Link from 'next/link'
 
 export default function BookmarksPage({ category }) {
   const { isMe } = useAuth()
@@ -13,28 +15,24 @@ export default function BookmarksPage({ category }) {
   return (
     <Page>
       <NextSeo
-        title={'Bookmarks'}
-        description={'Internet things, saved for later.'}
-        openGraph={{
-          url: 'https://brianlovin.com/bookmarks',
-          title: 'Bookmarks',
-          description: 'Internet things, saved for later.',
-          images: [
-            {
-              url: 'https://brianlovin.com/static/meta/bookmarks.png',
-              alt: 'Bookmarks',
-            },
-          ],
-        }}
+        title={routes.bookmarks.seo.title}
+        description={routes.bookmarks.seo.description}
+        openGraph={routes.bookmarks.seo.openGraph}
       />
+
       <CenteredColumn>
-        <div data-cy="bookmarks" className="flex flex-col space-y-8">
+        <div data-cy="bookmarks" className="space-y-8">
+          <Link href="/projects" passHref>
+            <a className="leading-snug text-tertiary hover:text-gray-1000 dark:hover:text-gray-100">
+              &larr; Projects
+            </a>
+          </Link>
           <PageHeader
             title="Bookmarks"
             subtitle="Internet things, saved for later."
           />
-          <BookmarksNavigation />
           {isMe && <AddBookmark />}
+          <BookmarksNavigation />
           <BookmarksList category={category} />
         </div>
       </CenteredColumn>

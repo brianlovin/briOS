@@ -8,10 +8,10 @@ interface Props {
 
 export default function DesignDetailsGrid({ summaries }: Props) {
   return (
-    <div className="flex flex-col space-y-4">
+    <>
       {summaries.map((summary) => (
         <DesignDetailsCard key={summary.slug} summary={summary} />
       ))}
-    </div>
+    </>
   )
 }

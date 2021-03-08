@@ -18,9 +18,12 @@ export default function DesignDetailMedia(props: Props) {
       onChange={(visible: boolean) => !isVisible && setIsVisible(visible)}
     >
       <DetailContainer data-cy="detail-media-container">
-        <DetailTitle>{detail.title}</DetailTitle>
-        <div style={{ padding: '8px' }} />
-        <Markdown>{detail.description}</Markdown>
+        <DetailTitle className="font-sans font-bold text-primary">
+          {detail.title}
+        </DetailTitle>
+        <div className="prose">
+          <Markdown>{detail.description}</Markdown>
+        </div>
 
         {isVisible && (
           <MediaContainer className="bg-gray-100 dark:bg-gray-900">

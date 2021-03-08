@@ -1,7 +1,6 @@
 import * as React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { GitCommit, GitMerge, Zap, Wind, Twitter, Camera } from 'react-feather'
 import { ButtonSet, DateEntry, Notes, TimelineEntry } from '../Entry'
 import { BlogPost } from '../BlogPost'
 
@@ -19,7 +18,6 @@ export function November() {
       <TimelineEntry
         title="Added new bookmark types"
         timestamp="November 28, 2020"
-        Icon={GitCommit}
       >
         <Notes>
           <p>
@@ -67,16 +65,9 @@ export function November() {
           </Link>
           <a
             href="https://github.com/brianlovin/brian-lovin-next/pull/1190"
-            target="_blank"
-            rel="noopener noreferrer"
             className="w-full md:w-auto"
           >
-            <button className="w-full md:w-auto btn">
-              <>
-                <GitMerge size={16} />
-                <span>View pull request</span>
-              </>
-            </button>
+            <button className="w-full md:w-auto btn">View pull request</button>
           </a>
         </ButtonSet>
       </TimelineEntry>
@@ -84,7 +75,6 @@ export function November() {
       <TimelineEntry
         title="Moved Security Checklist to personal site"
         timestamp="November 24, 2020"
-        Icon={GitCommit}
       >
         <Notes>
           <p>
@@ -104,23 +94,15 @@ export function November() {
           </Link>
           <a
             href="https://github.com/brianlovin/brian-lovin-next/pull/1188"
-            target="_blank"
-            rel="noopener noreferrer"
             className="w-full md:w-auto"
           >
-            <button className="w-full md:w-auto btn">
-              <>
-                <GitMerge size={16} />
-                <span>View pull request</span>
-              </>
-            </button>
+            <button className="w-full md:w-auto btn">View pull request</button>
           </a>
         </ButtonSet>
       </TimelineEntry>
       <TimelineEntry
         title="Rebuilt site with Tailwind.css"
         timestamp="November 22, 2020"
-        Icon={Wind}
       >
         <Notes>
           <p>
@@ -131,26 +113,14 @@ export function November() {
           </p>
         </Notes>
         <ButtonSet>
-          <a
-            href="https://tailwindcss.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full md:w-auto"
-          >
+          <a href="https://tailwindcss.com" className="w-full md:w-auto">
             <button className="w-full md:w-auto btn">Tailwind.css</button>
           </a>
           <a
             href="https://github.com/brianlovin/brian-lovin-next/pull/1175"
-            target="_blank"
-            rel="noopener noreferrer"
             className="w-full md:w-auto"
           >
-            <button className="w-full md:w-auto btn">
-              <>
-                <GitMerge size={16} />
-                <span>View pull request</span>
-              </>
-            </button>
+            <button className="w-full md:w-auto btn">View pull request</button>
           </a>
         </ButtonSet>
       </TimelineEntry>
@@ -167,16 +137,10 @@ export function November() {
       <TimelineEntry
         title="Created Waves wallpapers"
         timestamp="November 15, 2020"
-        Icon={Zap}
-        tint="purple"
       >
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://gumroad.com/l/waves-premium-phone-wallpapers"
-        >
-          <div className="flex flex-col overflow-hidden transition-shadow bg-white rounded-md shadow md:flex-row dark:bg-gray-900 hover:shadow-cardHover">
-            <div className="flex flex-col justify-start px-3 py-3 space-y-2 md:w-1/2">
+        <a href="https://gumroad.com/l/waves-premium-phone-wallpapers">
+          <div className="overflow-hidden transition-shadow bg-white rounded-md shadow md:flex-row dark:bg-gray-900 hover:shadow-cardHover">
+            <div className="justify-start px-3 py-3 space-y-2 md:w-1/2">
               <h5 className="px-2 pt-2">Waves</h5>
               <p className="flex-1 px-2 font-normal">
                 A custom-made set of 10 phone wallpapers, each with a unique
@@ -199,12 +163,7 @@ export function November() {
         </a>
       </TimelineEntry>
 
-      <TimelineEntry
-        title="Twitter conversation"
-        timestamp="November 14, 2020"
-        Icon={Twitter}
-        tint="blue"
-      >
+      <TimelineEntry title="Twitter conversation" timestamp="November 14, 2020">
         <Notes>
           <blockquote>
             Are any designers out there making good passive income outside of
@@ -219,8 +178,6 @@ export function November() {
         <ButtonSet>
           <a
             href="https://twitter.com/brian_lovin/status/1327734503142354945?s=21"
-            target="_blank"
-            rel="noopener noreferrer"
             className="w-full md:w-auto"
           >
             <button className="w-full md:w-auto btn">
@@ -237,17 +194,8 @@ export function November() {
         description="True respect is the difference between a fantastic collaborator and an asshole."
       />
 
-      <TimelineEntry
-        title="Visited Yosemite"
-        timestamp="November 9, 2020"
-        Icon={Camera}
-        tint="gray"
-      >
-        <a
-          href="https://twitter.com/brian_lovin/status/1325864903370924033"
-          target="_blank"
-          rel="nooopener noreferrer"
-        >
+      <TimelineEntry title="Visited Yosemite" timestamp="November 9, 2020">
+        <a href="https://twitter.com/brian_lovin/status/1325864903370924033">
           <div className="grid grid-cols-2 grid-rows-2 gap-2">
             <Image
               src="https://pbs.twimg.com/media/EmZqxm5VMAAO0mm?format=jpg&name=small"
@@ -286,8 +234,6 @@ export function November() {
         <ButtonSet>
           <a
             href="https://unsplash.com/@brianlovin"
-            target="_blank"
-            rel="noopener noreferrer"
             className="w-full md:w-auto btn"
           >
             Download on Unsplash
@@ -300,7 +246,6 @@ export function November() {
         slug="writing-better-self-reviews"
         title="Writing Better Self Reviews"
         description="My tips and strategies for writing effective self reviews."
-        divider={false}
       />
     </>
   )

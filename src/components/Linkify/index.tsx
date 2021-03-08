@@ -6,7 +6,7 @@ const MARKDOWN_LINK = /(?:\[(.*?)\]\((.*?)\))/g
 function RenderTextWithMarkdownLinks(text: string) {
   return replace(text, MARKDOWN_LINK, function (_, text, url) {
     return (
-      <a href={url} target="_blank" rel="noopener noreferrer" key={url}>
+      <a href={url} key={url}>
         {text}
       </a>
     )

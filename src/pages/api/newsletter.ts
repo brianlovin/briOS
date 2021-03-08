@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-unfetch'
 import { NextApiRequest, NextApiResponse } from 'next'
+import { baseEmail } from '~/config/seo'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { email } = req.body
@@ -37,8 +38,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (response.status >= 400) {
     return res.status(400).json({
-      error:
-        'Hm, couldn’t add you to the newsletter - ping me directly at hi@brianlovin.com and I’ll add you to this list!',
+      error: `Hm, couldn’t add you to the newsletter - ping me directly at ${baseEmail} and I’ll add you to this list!`,
     })
   }
 

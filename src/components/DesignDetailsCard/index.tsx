@@ -2,18 +2,16 @@ import * as React from 'react'
 import ReactVisibilitySensor from 'react-visibility-sensor'
 import Link from 'next/link'
 import {
-  Title,
   Container,
   CardContent,
   VideoPlayer,
   ImageContainer,
-  DetailsCount,
   Arrow,
   Circle,
 } from './style'
-import Picture from '~/components/Picture'
 import Card from '~/components/Card'
 import { DesignDetailsPostSummary } from '~/data/appDissections'
+import Image from 'next/image'
 
 interface Props {
   summary: DesignDetailsPostSummary
@@ -28,11 +26,6 @@ export default function DesignDetailsCard(props: Props) {
   const {
     summary: { title, slug, firstDetail, tint, detailsCount },
   } = props
-
-  const srcset = [
-    `/static/img/design-details/${slug}.webp`,
-    `/static/img/design-details/${slug}.jpeg`,
-  ]
 
   const videosrc = firstDetail.media[0]
 
@@ -59,21 +52,28 @@ export default function DesignDetailsCard(props: Props) {
         as={`/design-details/${slug}`}
         passHref
       >
-        <a>
+        <a className="block">
           <Card className="lg:-mx-8">
             <Container onMouseEnter={play} onMouseLeave={pause}>
-              <ImageContainer>
-                <Picture
-                  width={'56px'}
-                  height={'56px'}
-                  alt={'Design Details'}
-                  srcset={srcset}
-                />
-              </ImageContainer>
-              <CardContent>
-                <Title>{title}</Title>
-                <DetailsCount>{detailsCount} details</DetailsCount>
-              </CardContent>
+              <div className="flex items-center">
+                <ImageContainer>
+                  <Image
+                    width={'56px'}
+                    height={'56px'}
+                    layout="fixed"
+                    alt={'Design Details'}
+                    src={`/static/img/design-details/${slug}.jpeg`}
+                  />
+                </ImageContainer>
+                <CardContent>
+                  <p className="font-sans font-semibold text-primary">
+                    {title}
+                  </p>
+                  <p className="text-sm text-tertiary">
+                    {detailsCount} details
+                  </p>
+                </CardContent>
+              </div>
               <Circle color={tint} />
               <Arrow>
                 <svg

@@ -22,7 +22,7 @@ export default function PendingQuestion() {
   if (!data || !data.amaQuestions) return null
 
   return (
-    <div className="flex flex-col space-y-8">
+    <div className=" space-y-8">
       {data.amaQuestions.map((question) => (
         <QuestionItem editable={true} key={question.id} question={question} />
       ))}

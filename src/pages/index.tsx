@@ -1,46 +1,98 @@
 import * as React from 'react'
 import Link from 'next/link'
-import Page, { PageHeader } from '~/components/Page'
+import Page from '~/components/Page'
 import { CenteredColumn } from '~/components/Layouts'
-import { Timeline } from '~/components/Timeline'
+import { initApolloClient } from '~/graphql/services/apollo'
+import { GET_HOME } from '~/graphql/queries'
+import { Post } from '~/graphql/types.generated'
+import WritingSubscribeBox from '~/components/Writing/Subscribe'
+import PostsList from '~/components/Writing/List'
+import ProjectsList from '~/components/ProjectsList'
 
-function Home() {
+interface Props {
+  data: {
+    posts: Post[]
+  }
+}
+
+function Home({ data }: Props) {
   return (
     <Page>
       <CenteredColumn>
-        <div className="flex flex-col space-y-24">
-          <div className="flex flex-col space-y-8 md:items-center">
-            <PageHeader
-              title="Hey, I’m Brian"
-              subtitle="I’m a product designer, podcaster, and writer, living in San
-                Francisco. I’m currently building native mobile apps at GitHub."
-            />
-
-            <div className="flex flex-col space-y-2 md:space-x-4 md:flex-row md:space-y-0 md:items-center md:justify-center">
-              <Link href="/about" passHref>
-                <a>
-                  <button className="w-full text-lg btn btn-primary btn-large">
-                    More about me
-                  </button>
+        <div className="space-y-16 md:space-y-24 ">
+          <div className="space-y-8 md:items-center">
+            <div className="prose text-primary">
+              <p>
+                Hey, I&apos;m Brian. I&apos;m a designer,{' '}
+                <a href="https://designdetails.fm">podcaster</a>,{' '}
+                <Link href="/writing" passHref>
+                  <a>writer</a>
+                </Link>
+                , and{' '}
+                <a href="https://github.com/brianlovin">software tinkerer</a>.
+                I&apos;m currently building{' '}
+                <a href="https://github.com/mobile">
+                  native mobile apps at GitHub
                 </a>
-              </Link>
-              <a
-                href="https://twitter.com/brian_lovin"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <button className="w-full text-lg btn btn-large">
-                  Follow me on Twitter
-                </button>
-              </a>
+                .
+              </p>
+
+              <p>
+                In the past I co-founded{' '}
+                <a href="https://github.com/withspectrum/spectrum">Spectrum</a>,
+                a platform for online communities. Before that, I worked at
+                Facebook building payments systems, and cut my teeth as a
+                product designer at Buffer.
+              </p>
+
+              <p>
+                <Link href="/about" passHref>
+                  <a>Learn more about me &rarr;</a>
+                </Link>
+              </p>
             </div>
           </div>
 
-          <Timeline />
+          <WritingSubscribeBox />
+
+          <div className="space-y-8">
+            <h4 className="font-list-heading">Recent Writing</h4>
+            <div className="space-y-6 ">
+              {data && data.posts && <PostsList posts={data.posts} />}
+            </div>
+            <Link href="/projects">
+              <a className="inline-block font-medium highlight-link-hover">
+                Read all posts &rarr;
+              </a>
+            </Link>
+          </div>
+
+          <div className="space-y-8">
+            <h4 className="font-list-heading">Select Projects</h4>
+            <ProjectsList />
+            <Link href="/projects">
+              <a className="inline-block font-medium highlight-link-hover">
+                See all projects &rarr;
+              </a>
+            </Link>
+          </div>
         </div>
       </CenteredColumn>
     </Page>
   )
+}
+
+export async function getStaticProps() {
+  const client = await initApolloClient({})
+  const { data } = await client.query({ query: GET_HOME })
+  return {
+    // because this data is slightly more dynamic, update it every hour
+    revalidate: 60 * 60,
+    props: {
+      data,
+      apolloStaticCache: client.cache.extract(),
+    },
+  }
 }
 
 export default Home

@@ -7,31 +7,31 @@ import AMAQuestions from '~/components/AMAQuestions'
 import { CenteredColumn } from '~/components/Layouts'
 import { NextSeo } from 'next-seo'
 import { AmaStatus } from '~/graphql/types.generated'
+import routes from '~/config/routes'
+import Link from 'next/link'
 
 function About() {
   return (
     <Page>
       <NextSeo
-        title={'Ask Me Anything'}
-        description={'Answering questions, just for fun.'}
-        openGraph={{
-          url: 'https://brianlovin.com/ama',
-          title: 'Ask Me Anything',
-          description: 'Answering questions, just for fun.',
-          images: [
-            {
-              url: 'https://brianlovin.com/static/meta/ama.png',
-              alt: 'Ask Me Anything',
-            },
-          ],
-        }}
+        title={routes.ama.seo.title}
+        description={routes.ama.seo.description}
+        openGraph={routes.ama.seo.openGraph}
       />
+
       <CenteredColumn>
-        <PageHeader
-          title="Ask Me Anything"
-          subtitle="Just for fun! Questions will be visible after I’ve answered."
-        />
-        <AMAQuestions />
+        <div className=" space-y-8">
+          <Link href="/projects" passHref>
+            <a className="leading-snug text-tertiary hover:text-gray-1000 dark:hover:text-gray-100">
+              &larr; Projects
+            </a>
+          </Link>
+          <PageHeader
+            title="Ask Me Anything"
+            subtitle="Just for fun! Questions will be visible after I’ve answered."
+          />
+          <AMAQuestions />
+        </div>
       </CenteredColumn>
     </Page>
   )

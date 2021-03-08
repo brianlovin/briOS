@@ -1,6 +1,7 @@
 import twilio from 'twilio'
 const MessagingResponse = twilio.twiml.MessagingResponse
 import { URL } from 'url'
+import { baseUrl } from '~/config/seo'
 
 import db from '~/graphql/services/firebase'
 
@@ -17,7 +18,7 @@ export default async (req, res) => {
   if (process.env.NODE_ENV === 'production') {
     const twilioSignature = req.headers['x-twilio-signature']
     const params = req.body
-    const webhookUrl = 'https://brianlovin.com/api/bookmarks/add'
+    const webhookUrl = `${baseUrl}/api/bookmarks/add`
 
     const requestIsValid = twilio.validateRequest(
       process.env.TWILIO_AUTH_TOKEN,

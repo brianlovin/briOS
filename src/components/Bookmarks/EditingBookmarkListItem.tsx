@@ -5,8 +5,9 @@ import {
   useEditBookmarkMutation,
 } from '~/graphql/types.generated'
 import { GET_BOOKMARKS } from '~/graphql/queries'
-import { Input, Textarea } from '~/components/Input'
+import { Input, Select, Textarea } from '~/components/Input'
 import { useRouter } from 'next/router'
+import Button from '../Button'
 
 interface Props {
   bookmark: Bookmark
@@ -145,9 +146,8 @@ export default function EditingBookmarkListItem(props: Props) {
   }
 
   return (
-    <form className="flex flex-col mb-4 space-y-3" onSubmit={handleSave}>
+    <form className=" mb-4 space-y-3" onSubmit={handleSave}>
       <Input
-        autoFocus
         placeholder="Title"
         value={state.title}
         onChange={onTitleChange}
@@ -167,7 +167,7 @@ export default function EditingBookmarkListItem(props: Props) {
           onChange={onTwitterHandleChange}
           onKeyDown={onKeyDown}
         />
-        <select
+        <Select
           name="category"
           id="category"
           value={state.category}
@@ -176,21 +176,17 @@ export default function EditingBookmarkListItem(props: Props) {
           <option value="reading">Reading</option>
           <option value="portfolio">Portfolio</option>
           <option value="website">Personal Site / Blog</option>
-        </select>
+        </Select>
       </div>
       {state.error && <p className="text-red-500">{state.error}</p>}
 
       <div className="flex justify-between">
-        <button className="text-red-500" onClick={() => handleDelete()}>
+        <Button className="text-red-500" onClick={() => handleDelete()}>
           Delete
-        </button>
+        </Button>
         <div className="flex space-x-3">
-          <button className="btn" onClick={onDone}>
-            Cancel
-          </button>
-          <button className="btn btn-primary" onClick={handleSave}>
-            Save
-          </button>
+          <Button onClick={onDone}>Cancel</Button>
+          <Button onClick={handleSave}>Save</Button>
         </div>
       </div>
     </form>

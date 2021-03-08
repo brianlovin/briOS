@@ -10,7 +10,7 @@ const PostList = React.memo((props: Props) => {
   const { posts } = props
 
   return (
-    <div className="flex flex-col space-y-6">
+    <div className="space-y-6">
       {posts.map((post) => (
         <PostListItem key={post.id} post={post} />
       ))}

@@ -8,23 +8,23 @@ interface Props {
 
 export default function PodcastEpisodesList({ episodes }: Props) {
   return (
-    <div className="flex flex-col space-y-4">
+    <>
       {episodes.map((ep) => (
-        <div className="flex flex-col space-y-1" key={ep.id}>
-          <a
-            className="text-blue-600 dark:text-blue-500"
-            target="_blank"
-            rel="noopener noreferrer"
-            href={`https://designdetails.fm/episodes/${
-              ep.legacy_id || ep.token
-            }`}
-          >
-            {ep.title}
-          </a>
-          <p className="clamp-2">{ep.description}</p>
-          <p className="p-small">Released {format(ep.published_at)}</p>
+        <div className="space-y-1 " key={ep.id}>
+          <span>
+            <a
+              className="font-medium text-primary highlight-link-hover"
+              href={`https://designdetails.fm/episodes/${
+                ep.legacy_id || ep.token
+              }`}
+            >
+              {ep.title}
+            </a>
+          </span>
+          <p className="text-tertiary">{ep.description}</p>
+          <p className="text-quaternary">{format(ep.published_at)}</p>
         </div>
       ))}
-    </div>
+    </>
   )
 }

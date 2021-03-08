@@ -1,3 +1,4 @@
+import { baseUrl } from '~/config/seo'
 import db from '~/graphql/services/firebase'
 import { emailMe } from '~/graphql/services/postmark'
 
@@ -16,7 +17,7 @@ export async function editAMAQuestion(_, { id, question, answer, status }) {
 export async function addAMAQuestion(_, { question }) {
   emailMe({
     subject: `AMA: ${question}`,
-    body: `${question}\n\nhttps://brianlovin.com/ama`,
+    body: `${question}\n\n${baseUrl}/ama`,
   })
 
   return await db

@@ -5,6 +5,7 @@ import { getHNPostsForDigest } from '~/graphql/services/hn'
 import { client as postmark } from '~/graphql/services/postmark'
 import db from '~/graphql/services/firebase'
 import { validEmail } from './unsubscribe'
+import { baseEmail, baseUrl } from '~/config/seo'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const COLLECTION = 'hnsubscribers'
@@ -42,7 +43,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     */
   const ref =
     test || process.env.NODE_ENV !== 'production'
-      ? db.collection(COLLECTION).where('email', '==', 'hi@brianlovin.com')
+      ? db.collection(COLLECTION).where('email', '==', baseEmail)
       : db.collection(COLLECTION)
 
   let count = 0
@@ -53,11 +54,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     if (validEmail(user.email)) {
       const unsubscribeToken = cryptr.encrypt(user.email)
-      const unsubscribe_url = `https://brianlovin.com/api/hn/unsubscribe?token=${unsubscribeToken}`
+      const unsubscribe_url = `${baseUrl}/api/hn/unsubscribe?token=${unsubscribeToken}`
 
       count = count + 1
       await postmark.sendEmailWithTemplate({
-        From: 'hi@brianlovin.com',
+        From: baseEmail,
         To: user.email,
         TemplateId: 18037634,
         TemplateModel: {

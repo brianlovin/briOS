@@ -41,13 +41,13 @@ export const Comment = React.memo((props: Props) => {
               onClick={() => setCollapsed(!collapsed)}
             />
           )}
-          <small>{`${comment.time_ago} by ${comment.user}`}</small>
-          <small
+          <p>{`${comment.time_ago} by ${comment.user}`}</p>
+          <p
             style={{ cursor: 'pointer', marginTop: '4px' }}
             onClick={() => setCollapsed(!collapsed)}
           >
             Expand
-          </small>
+          </p>
         </div>
       </div>
     )
@@ -76,10 +76,10 @@ export const Comment = React.memo((props: Props) => {
             </a>
           )}
         >
-          <small className="text-tertiary">{`${comment.time_ago} by ${comment.user}`}</small>
+          <p className="mb-3 text-sm text-tertiary">{`${comment.time_ago} by ${comment.user}`}</p>
         </ConditionalWrapper>
         <div
-          className={'prose prose-sm md:prose lg:prose-lg'}
+          className={'prose'}
           dangerouslySetInnerHTML={{ __html: comment.content }}
         />
       </div>

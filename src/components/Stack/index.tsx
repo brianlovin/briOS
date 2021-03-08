@@ -10,16 +10,14 @@ export default function StackList() {
   })
 
   return (
-    <div className="flex flex-col mt-16">
+    <div className="mt-8">
       {sorted.map((stack) => {
         const hasBadges = stack.independent || stack.oss
         return (
           <a
             key={stack.name}
-            className="flex py-4 rounded-lg sm:p-4 sm:hover:bg-gray-100 sm:dark:hover:bg-gray-900"
+            className="flex py-4 bg-gray-400 bg-opacity-0 rounded md:-mx-4 sm:p-4 sm:hover:bg-opacity-5 sm:dark:hover:bg-gray-900 sm:dark:hover:bg-opacity-100"
             href={stack.url}
-            target="_blank"
-            rel="nooopener noreferrer"
           >
             <Image
               src={`/static/img/stack/${stack.image}`}
@@ -27,24 +25,25 @@ export default function StackList() {
               height={64}
               layout="fixed"
               alt={`${stack.name} icon`}
-              className="border border-gray-100 dark:border-gray-900 rounded-xl flex-0"
+              className="border border-gray-100 rounded-xl dark:border-gray-900 flex-0"
             />
-            <div className="flex flex-col justify-center flex-1 col-span-3 pl-5 space-y-2">
-              <div className="flex flex-col">
-                <p>{stack.name}</p>
-                <p className="text-base font-normal text-gray-600 dark:text-gray-400">
+
+            <div className="justify-center flex-1 col-span-3 pl-5 space-y-2 ">
+              <div className="space-y-1 ">
+                <p className="mt-2 font-medium text-primary">{stack.name}</p>
+                <p className="text-base font-normal leading-snug text-tertiary">
                   {stack.description}
                 </p>
               </div>
               {hasBadges && (
                 <div className="flex space-x-2">
                   {stack.independent && (
-                    <span className="self-start px-3 py-0.5 text-xs font-medium leading-5 tracking-wide dark:text-purple-400 dark:border-purple-400 text-purple-600 border border-purple-600 rounded-full">
+                    <span className="self-start rounded px-3 py-0.5 text-sm font-medium leading-5 tracking-wide dark:text-purple-400 dark:border-purple-400 text-purple-600 bg-purple-500 bg-opacity-5 dark:bg-opacity-20">
                       Indie
                     </span>
                   )}
                   {stack.oss && (
-                    <span className="self-start px-3 py-0.5 text-xs font-medium leading-5 tracking-wide dark:text-green-400 dark:border-green-400 text-green-600 border border-green-600 rounded-full">
+                    <span className="self-start rounded px-3 py-0.5 text-sm font-medium leading-5 tracking-wide dark:text-green-400 dark:border-green-400 text-green-600 bg-green-500 bg-opacity-5 dark:bg-opacity-20">
                       Open Source
                     </span>
                   )}

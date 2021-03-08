@@ -119,19 +119,6 @@ export const CardContent = styled.div`
   z-index: 3;
 `
 
-export const DetailsCount = styled.h6`
-  margin-top: ${theme.space[0]};
-  font-weight: ${theme.fontWeights.link};
-`
-
-export const Title = styled.p`
-  font-size: 18px;
-  font-weight: 700;
-  margin: 0;
-  margin-top: 2px;
-  line-height: 1.3;
-`
-
 export const ImageContainer = styled.span`
   background: transparent;
   z-index: 1;

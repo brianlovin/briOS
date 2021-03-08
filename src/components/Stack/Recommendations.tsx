@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { Zap } from 'react-feather'
 import { Input, Textarea } from '~/components/Input'
 
 export default function Recommendations() {
@@ -48,14 +47,9 @@ export default function Recommendations() {
   }
 
   return (
-    <div className="flex flex-col p-6 mt-8 space-y-3 bg-gray-100 rounded-lg dark:bg-gray-900">
-      <div className="flex items-center">
-        <Zap size={20} className="mr-3 text-gray-900 dark:text-gray-100" />
-        <p className="font-semibold text-gray-900 dark:text-gray-100">
-          Recommendations
-        </p>
-      </div>
-      <p className="font-normal text-gray-900 dark:text-gray-300">
+    <div className="p-8 -mx-8 space-y-4 bg-gray-400 border-b border-gray-300 border-dashed dark:bg-gray-200 bg-opacity-5 dark:border-gray-800">
+      <p className="flex font-semibold text-primary">Recommendations</p>
+      <p className="text-tertiary">
         My stack is a curated list of tools and software that I use daily. In
         general, less is more. But I’m always interested in discovering great
         new apps and tools – let me know what I should check out.
@@ -104,7 +98,7 @@ export default function Recommendations() {
         </div>
         <div className="flex justify-end">
           <button
-            className="btn btn-primary"
+            className="px-8 py-2 font-medium rounded flex-0 disabled:text-gray-400 bg-gray-1000 dark:bg-white bg-opacity-5 text-primary hover:bg-opacity-10"
             disabled={serverState.submitting || !message}
             type="submit"
           >
@@ -113,11 +107,11 @@ export default function Recommendations() {
         </div>
         {serverState.submitted &&
           (serverState.error ? (
-            <p className="p-3 text-white bg-red-500 rounded">
+            <p className="p-2 text-center text-red-600 bg-red-500 rounded bg-opacity-5">
               {serverState.error}
             </p>
           ) : (
-            <p className="p-3 text-center text-white bg-green-500 rounded">
+            <p className="p-2 text-center text-green-700 bg-green-500 rounded bg-opacity-5">
               Thanks for the recommendation!
             </p>
           ))}

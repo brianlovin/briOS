@@ -39,6 +39,7 @@ export const Video = styled.video`
 export const DetailTitle = styled.h5`
   font-size: 24px;
   font-weight: 700;
+  margin-bottom: 16px;
 
   @media (max-width: 968px) {
     max-width: 100%;

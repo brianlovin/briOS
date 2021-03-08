@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import FullscreenLoading from '~/components/FullscreenLoading'
 import { getPostById, getPostIds } from '~/graphql/services/hn'
 import { HNPost as HNPostType } from '.'
+import { baseUrl } from '~/config/seo'
 
 interface Props {
   post: HNPostType
@@ -31,7 +32,7 @@ export default function HNPostView(props: Props) {
           description: 'My personal Hacker News reader.',
           images: [
             {
-              url: 'https://brianlovin.com/static/meta/hn.png',
+              url: `${baseUrl}/static/meta/hn.png`,
               alt: 'Hacker News',
             },
           ],
