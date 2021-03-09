@@ -16,9 +16,8 @@ interface Props {
 export default function DesignDetailView(props: Props) {
   const { post } = props
 
-  const subheading = `Posted ${format(post.createdAt)} · ${
-    post.details.length
-  } details`
+  const subheading = `Posted ${format(post.createdAt)} · ${post.details.length
+    } details`
 
   return (
     <CenteredColumn>
@@ -35,7 +34,7 @@ export default function DesignDetailView(props: Props) {
             height={'72px'}
             layout="fixed"
             className="rounded-xl"
-            src={`/static/img/design-details/${post.slug}.webp`}
+            src={`/static/img/app-dissection/${post.slug}.webp`}
             alt={post.title}
           />
           <div>
