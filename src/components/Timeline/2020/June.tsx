@@ -12,7 +12,7 @@ export function June() {
         timestamp="June 28, 2020"
         Icon={Zap}
         tint={'green'}
-        divider={false}
+        divider={true}
       >
         <div className="flex flex-col overflow-hidden transition-shadow bg-white rounded-md shadow md:flex-row dark:bg-gray-900 hover:shadow-cardHover">
           <div className="flex flex-col justify-center px-3 py-3 space-y-1 md:items-center">

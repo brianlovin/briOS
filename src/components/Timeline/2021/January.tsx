@@ -13,7 +13,7 @@ export function January() {
         slug="sentiment-analysis-for-platform-design"
         title="Data Science for Platform Design and User Engagement"
         description="Part 1: The need for data driven insights to inform product design at PôleFLS"
-        divider={false}
+        divider={true}
       />
     </>
   )

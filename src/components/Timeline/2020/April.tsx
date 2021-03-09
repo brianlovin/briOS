@@ -41,7 +41,7 @@ export function April() {
               width="640"
               height="698"
               layout="responsive"
-              src="/static/img/project/kpmg.png"
+              src="https://d2fl8krjhnb3wd.cloudfront.net/static/img/project/kpmg.png"
               alt="A preview of the KPMG logo"
             />
           </div>

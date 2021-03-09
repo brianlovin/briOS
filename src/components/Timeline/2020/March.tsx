@@ -12,7 +12,7 @@ export function March() {
         timestamp="March 6, 2020"
         Icon={Zap}
         tint={'green'}
-        divider={false}
+        divider={true}
       >
         <a
           target="_blank"

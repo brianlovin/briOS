@@ -6,7 +6,7 @@ const withSourceMaps = require('@zeit/next-source-maps')()
 
 module.exports = withSourceMaps({
   images: {
-    domains: ['pbs.twimg.com'],
+    domains: ['d2fl8krjhnb3wd.cloudfront.net', 'pbs.twimg.com'],
   },
   env: {
     FATHOM_SITE_ID: process.env.FATHOM_SITE_ID,

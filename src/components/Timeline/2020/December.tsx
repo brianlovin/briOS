@@ -41,7 +41,7 @@ export function December() {
               width="640"
               height="698"
               layout="responsive"
-              src="/static/img/project/bergeron.jpg"
+              src="https://d2fl8krjhnb3wd.cloudfront.net/static/img/project/bergeron.jpg"
               alt="A preview of the CreateDAV certificate"
             />
           </div>

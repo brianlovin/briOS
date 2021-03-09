@@ -49,7 +49,7 @@ export function January() {
               width="640"
               height="698"
               layout="responsive"
-              src="/static/img/project/twitter.png"
+              src="https://d2fl8krjhnb3wd.cloudfront.net/static/img/project/twitter.png"
               alt="A preview of the twitter logo"
             />
           </div>
@@ -79,7 +79,7 @@ export function January() {
         </Notes>
         <div className="grid grid-cols-2 grid-rows-2 gap-2">
           <Image
-            src="/static/photos/best-1.png"
+            src="https://d2fl8krjhnb3wd.cloudfront.net/static/photos/best-1.png"
             width="1072"
             height="1010"
             layout="responsive"
@@ -87,7 +87,7 @@ export function January() {
             alt="Photo from the competition, Toronto"
           />
           <Image
-            src="/static/photos/best-2.png"
+            src="https://d2fl8krjhnb3wd.cloudfront.net/static/photos/best-2.png"
             width="300"
             height="300"
             layout="responsive"
@@ -95,7 +95,7 @@ export function January() {
             alt="Photo from the competition, Toronto"
           />
           <Image
-            src="/static/photos/best-3.jpeg"
+            src="https://d2fl8krjhnb3wd.cloudfront.net/static/photos/best-3.jpeg"
             width="1458"
             height="1944"
             layout="responsive"
@@ -103,7 +103,7 @@ export function January() {
             alt="Photo from the competition, Toronto"
           />
           <Image
-            src="/static/photos/best-4.jpg"
+            src="https://d2fl8krjhnb3wd.cloudfront.net/static/photos/best-4.jpg"
             width="3024"
             height="4032"
             layout="responsive"

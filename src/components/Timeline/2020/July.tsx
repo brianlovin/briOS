@@ -63,6 +63,7 @@ export function July() {
         timestamp="July 4, 2020"
         Icon={Zap}
         tint="blue"
+        divider={true}
       >
         <div className="flex flex-col overflow-hidden transition-shadow bg-white rounded-md shadow md:flex-row dark:bg-gray-900 hover:shadow-cardHover">
           <div className="flex flex-col justify-start px-3 py-3 space-y-2 md:w-1/2">
@@ -97,7 +98,7 @@ export function July() {
               width="640"
               height="698"
               layout="responsive"
-              src="/static/img/project/map.png"
+              src="https://d2fl8krjhnb3wd.cloudfront.net/static/img/project/map.png"
               alt="A preview of the maps4resources logo"
             />
           </div>

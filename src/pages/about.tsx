@@ -29,7 +29,7 @@ function About({ data, summaries }: Props) {
         <div className="flex flex-col space-y-12" data-cy="about-page">
           <div className="-mx-4 -mt-24 md:mt-0 md:-mx-8 ">
             <Image
-              src="/static/img/about.png"
+              src="https://d2fl8krjhnb3wd.cloudfront.net/static/img/about.png"
               alt={'A photo of me'}
               layout="responsive"
               width="1922"
@@ -40,8 +40,8 @@ function About({ data, summaries }: Props) {
           <div className="flex flex-col space-y-12">
             <div className="flex flex-col prose lg:prose-lg">
               <p>
-                👋 I’m a software developer, researcher, and writer, currently
-                living in Dar es Salaam.
+                👋 I’m a software developer and researcher, currently living in
+                Toronto.
               </p>
               <p>
                 I currently conduct research at{' '}
@@ -52,18 +52,27 @@ function About({ data, summaries }: Props) {
                 >
                   York University
                 </a>{' '}
-                where I work with an interdisciplinary team to develop an open
-                knowledge accelerator. My research is focused on building and
-                executing{' '}
+                where I work with an interdisciplinary team to study discourse
+                and information cascades in social networks. My research is
+                primarily motivated by the need to accurately discover
+                interesting patterns in large data sets. It profoundly involves
+                the design and development of methods at the intersection of{' '}
                 <a
-                  href="https://en.wikipedia.org/wiki/Open-source_intelligence"
+                  href="https://en.wikipedia.org/wiki/Data_mining"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  open source intelligence
+                  data mining
                 </a>{' '}
-                software for the purpose of studying our audience’s preferences
-                and engagement cues.
+                and{' '}
+                <a
+                  href="https://en.wikipedia.org/wiki/Machine_learning"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  machine learning
+                </a>
+                .
               </p>
 
               <p>
@@ -76,22 +85,20 @@ function About({ data, summaries }: Props) {
                   PharmAssess Diagnostics Corp.
                 </a>
                 , where I develop software to mine data from literature and
-                public databases, and create real-time inference engines that
-                are being used to provide better healthcare to Canadians.
+                public databases, and securely process PHI used in real-time
+                inference engines that provide better healthcare to Canadians.
               </p>
               <p>
-                I enjoy researching and working on problems in the field of data
-                mining and machine learning. Through creation of software, I
-                hope to make impactful and novel contributions that accelerate
-                the applications of{' '}
+                Through creation of software, I hope to make impactful and novel
+                contributions that accelerate applications of{' '}
                 <a
                   href="https://cci.mit.edu"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   collective intelligence
-                </a>
-                . You can find me on{' '}
+                </a>{' '}
+                in our society. You can find me on{' '}
                 <a
                   href="https://github.com/paulowe"
                   target="_blank"

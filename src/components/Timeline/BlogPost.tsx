@@ -36,7 +36,7 @@ export function BlogPost({
               {image && (
                 <div className="mb-3 -mt-3 -ml-4 -mr-4 overflow-hidden border-b border-gray-100 dark:border-gray-900 rounded-t-md">
                   <Image
-                    src={`/static/img/paulsmessage/${image}`}
+                    src={`https://d2fl8krjhnb3wd.cloudfront.net/static/img/paulsmessage/${image}`}
                     width={1012}
                     height={506}
                     layout="responsive"
