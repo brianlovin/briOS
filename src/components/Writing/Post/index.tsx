@@ -34,7 +34,7 @@ export default function PostView({ post }: Props) {
             <h1 className="font-sans text-2xl font-extrabold md:text-4xl text-primary">
               {post.title}
             </h1>
-            <span className="inline-block text-lg leading-snug text-tertiary">
+            <span className="inline-block leading-snug text-tertiary">
               {date}
             </span>
           </div>
