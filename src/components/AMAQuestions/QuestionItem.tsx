@@ -34,8 +34,8 @@ export const QuestionItem = React.memo((props: Props) => {
         <p className="font-medium text-primary">{question.question}</p>
       </span>
       {question.answer && (
-        <p className="text-tertiary clamp-3">
-          <Linkify>{question.answer}</Linkify>
+        <p className="prose text-tertiary">
+          <MarkdownRenderer>{question.answer}</MarkdownRenderer>
         </p>
       )}
       <span className="flex items-center space-x-2 text-tertiary">
