@@ -36,7 +36,7 @@ export default function WritingSubscribeBox() {
 
   return (
     <div
-      className="p-8 -mx-4 space-y-4 bg-gray-400 border-t border-b border-gray-300 border-dashed md:-mx-8 dark:bg-gray-200 bg-opacity-5 dark:border-gray-800"
+      className="p-8 -mx-4 space-y-4 border-t border-b border-gray-300 border-dashed md:-mx-8 dark:border-gray-700 bg-elevated"
       data-cy="writing-subscribe-box"
     >
       <div className="space-y-2 ">
