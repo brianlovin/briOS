@@ -9249,10 +9249,10 @@ postcss@^8.1.6, postcss@^8.2.1, postcss@^8.2.5:
     nanoid "^3.1.20"
     source-map "^0.6.1"
 
-postmark@^2.7.1:
-  version "2.7.2"
-  resolved "https://registry.yarnpkg.com/postmark/-/postmark-2.7.2.tgz#741c8d1f5be0aa26cd0709882be6b175b2bbd3c7"
-  integrity sha512-BsHLedDIncwYfp/Y6X3VEXOKICsDPZiogQpeQz+33bVeKK6w9MsbZlMonCvAVJYOdI4YU0ZrsVj1S1xTbC17lg==
+postmark@^2.7.3:
+  version "2.7.3"
+  resolved "https://registry.yarnpkg.com/postmark/-/postmark-2.7.3.tgz#e699dd52794cbca8a0d22b9bdcf472fe4e5f9dbc"
+  integrity sha512-YQ6mngTBmX9x/s9E5cE2K8JwOeMNI2yfNlLLRdtM+WyxyrLJ8CuIqDRGa5hyngd7+P4bH34mKuy2CHeci8ViOQ==
   dependencies:
     axios "^0.21.1"
 
