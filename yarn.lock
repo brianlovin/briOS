@@ -5225,16 +5225,16 @@ eslint-config-prettier@^7.2.0:
   resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-7.2.0.tgz#f4a4bd2832e810e8cc7c1411ec85b3e85c0c53f9"
   integrity sha512-rV4Qu0C3nfJKPOAhFujFxB7RMP+URFyQqqOZW9DMRD7ZDTFyjaIlETU3xzHELt++4ugC0+Jm084HQYkkJe+Ivg==
 
-eslint-mdx@^1.9.0:
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/eslint-mdx/-/eslint-mdx-1.9.0.tgz#40c41d1ff34c765fb716dcefde856281b34498ca"
-  integrity sha512-C06cp1OSbMCGOYVt15WxLOlWkbCnAjvBzKnCeZMfBU3h7jQPcbDIz6ZAv9PXh3t/msczxoufwnhsMplrbjOfyg==
+eslint-mdx@^1.9.1:
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/eslint-mdx/-/eslint-mdx-1.9.1.tgz#737f1cd3e3fb0f00ea7b6814213a3b7f51cb55b7"
+  integrity sha512-4G8Sidk/3e2lPpcjyUE9HQt96jbopcV0KMv45KN2Jv8pL7LCd0mNY6ueIp698n8CrkpyWFzv6LJcouZ5E0NHCQ==
   dependencies:
     espree "^7.3.1"
     remark-mdx "^1.6.22"
     remark-parse "^8.0.3"
     tslib "^2.1.0"
-    unified "^9.1.0"
+    unified "^9.2.1"
 
 eslint-plugin-cypress@^2.11.2:
   version "2.11.2"
@@ -5243,19 +5243,19 @@ eslint-plugin-cypress@^2.11.2:
   dependencies:
     globals "^11.12.0"
 
-eslint-plugin-mdx@^1.9.0:
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-mdx/-/eslint-plugin-mdx-1.9.0.tgz#abc53329e536878350221e55189d71630bd3a600"
-  integrity sha512-bIlqiddYLQxZ+Pk5JfT9t47G6i4XRyFY91ajf9pX8pm8M/+DS54+sA0InX8Hpx/EB/LXMcLvLY5x25KCrYOJ2A==
+eslint-plugin-mdx@^1.9.1:
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-mdx/-/eslint-plugin-mdx-1.9.1.tgz#37e74c716545e17ce9175ec33e70a0048a527a87"
+  integrity sha512-fAPLpW4T0U8L/HXNR7y1UYuXpkhKyGVoPNDLkFVHw5oBeYmBoGMYa/M7LcfmJW4OnRk6h9WZtug94H78YeVckA==
   dependencies:
     cosmiconfig "^7.0.0"
-    eslint-mdx "^1.9.0"
+    eslint-mdx "^1.9.1"
     eslint-plugin-react "^7.22.0"
     remark-mdx "^1.6.22"
     remark-parse "^8.0.3"
     remark-stringify "^8.1.1"
     tslib "^2.1.0"
-    unified "^9.1.0"
+    unified "^9.2.1"
     vfile "^4.2.1"
   optionalDependencies:
     rebass "^4.0.7"
@@ -11589,7 +11589,7 @@ unified@9.2.0:
     trough "^1.0.0"
     vfile "^4.0.0"
 
-unified@^9.0.0, unified@^9.1.0, unified@^9.2.1:
+unified@^9.0.0, unified@^9.2.1:
   version "9.2.1"
   resolved "https://registry.yarnpkg.com/unified/-/unified-9.2.1.tgz#ae18d5674c114021bfdbdf73865ca60f410215a3"
   integrity sha512-juWjuI8Z4xFg8pJbnEZ41b5xjGUWGHqXALmBZ3FC3WX0PIx1CZBIIJ6mXbYMcf6Yw4Fi0rFUTA1cdz/BglbOhA==
