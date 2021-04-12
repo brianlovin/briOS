@@ -9276,10 +9276,10 @@ postcss@^8.1.6, postcss@^8.2.1, postcss@^8.2.5:
     nanoid "^3.1.20"
     source-map "^0.6.1"
 
-postmark@^2.7.1:
-  version "2.7.2"
-  resolved "https://registry.yarnpkg.com/postmark/-/postmark-2.7.2.tgz#741c8d1f5be0aa26cd0709882be6b175b2bbd3c7"
-  integrity sha512-BsHLedDIncwYfp/Y6X3VEXOKICsDPZiogQpeQz+33bVeKK6w9MsbZlMonCvAVJYOdI4YU0ZrsVj1S1xTbC17lg==
+postmark@^2.7.4:
+  version "2.7.4"
+  resolved "https://registry.yarnpkg.com/postmark/-/postmark-2.7.4.tgz#f98ca7caa6825dc0b031086421a1d190a6e36701"
+  integrity sha512-k2EKIySFhB6oZaIN3w2xS2XIivgRaqpmw65M7ywcSx1L0cKnaXXC56hQ3XzNFSXyzzJRsh1hFv41Z4LPQeEmiQ==
   dependencies:
     axios "^0.21.1"
 
