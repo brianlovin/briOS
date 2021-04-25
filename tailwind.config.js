@@ -11,15 +11,9 @@ const mono = [
   'monospace',
 ]
 module.exports = {
+  mode: 'jit',
   purge: ['./src/**/*.tsx'],
   darkMode: 'media',
-  variants: {
-    extend: {
-      opacity: ['disabled'],
-      textColor: ['disabled', 'visited'],
-      backgroundOpacity: ['disabled'],
-    },
-  },
   theme: {
     lineClamp: {
       1: 1,
