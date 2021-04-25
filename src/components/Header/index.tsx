@@ -20,8 +20,8 @@ export default function Header() {
     currPathName === '/'
       ? 'Home'
       : routesAsArr
-        .filter((r) => r.path !== '/')
-        .find((r) => currPathName.includes(r.path))?.label
+          .filter((r) => r.path !== '/')
+          .find((r) => currPathName.includes(r.path))?.label
 
   return (
     <div className="fixed top-0 z-10 w-full py-2 bg-white border-b border-gray-400 dark:border-opacity-10 border-opacity-20 md:bg-opacity-70 dark:bg-gray-900 dark:bg-opacity-40 filter-blur">
@@ -34,7 +34,7 @@ export default function Header() {
           >
             {isExpanded ? <X size={16} /> : <Menu size={16} />}
           </button>
-          <p className="font-sans text-sm font-semibold clamp-1 text-primary">
+          <p className="font-sans text-sm font-semibold text-primary">
             {mobileTitle}
           </p>
         </div>

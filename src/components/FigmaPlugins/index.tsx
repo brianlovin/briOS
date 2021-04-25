@@ -12,7 +12,7 @@ export default function FigmaPlugins() {
             Dominant Color Toolkit
           </a>
         </span>
-        <p className="text-tertiary clamp-3">
+        <p className="text-tertiary">
           Generate a palette from an image to magically populate your designs.
         </p>
       </div>
@@ -26,7 +26,7 @@ export default function FigmaPlugins() {
             Responsify
           </a>
         </span>
-        <p className="text-tertiary clamp-3">
+        <p className="text-tertiary">
           Quickly test your designs across multiple device sizes.
         </p>
       </div>
@@ -40,7 +40,7 @@ export default function FigmaPlugins() {
             iOS Export Settings
           </a>
         </span>
-        <p className="text-tertiary clamp-3">
+        <p className="text-tertiary">
           Applies the correct export settings for every required iOS App Icon
           size and density.
         </p>
@@ -55,7 +55,7 @@ export default function FigmaPlugins() {
             Export .zip
           </a>
         </span>
-        <p className="text-tertiary clamp-3">
+        <p className="text-tertiary">
           Easily export assets from Figma directly into a .zip file.
         </p>
       </div>
@@ -69,7 +69,7 @@ export default function FigmaPlugins() {
             GitHub Data
           </a>
         </span>
-        <p className="text-tertiary clamp-3">
+        <p className="text-tertiary">
           Populate data from GitHub into Figma mocks
         </p>
       </div>

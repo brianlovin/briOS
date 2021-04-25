@@ -15,11 +15,6 @@ module.exports = {
   purge: ['./src/**/*.tsx'],
   darkMode: 'media',
   theme: {
-    lineClamp: {
-      1: 1,
-      2: 2,
-      3: 3,
-    },
     extend: {
       fontFamily: {
         mono: ['"iA Quattro"', ...mono],
@@ -38,9 +33,5 @@ module.exports = {
       },
     },
   },
-  plugins: [
-    require('@tailwindcss/typography'),
-    require('@tailwindcss/forms'),
-    require('tailwindcss-line-clamp'),
-  ],
+  plugins: [require('@tailwindcss/typography'), require('@tailwindcss/forms')],
 }
