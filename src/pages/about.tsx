@@ -5,6 +5,7 @@ import { CenteredColumn } from '~/components/Layouts'
 import { NextSeo } from 'next-seo'
 import routes from '~/config/routes'
 import WritingSubscribeBox from '~/components/Writing/Subscribe'
+import Link from 'next/link'
 
 function About() {
   return (
@@ -29,12 +30,22 @@ function About() {
           </div>
           <div className="space-y-12 ">
             <div className="leading-relaxed prose ">
-              <p>I’m a product designer currently living in San Francisco.</p>
               <p>
-                Right now I’m designing{' '}
-                <a href="https://github.com/mobile">native mobile apps</a> at{' '}
-                <a href="https://github.com/brianlovin">GitHub</a>. Before
-                GitHub, I co-founded{' '}
+                Hey, I&apos;m Brian. I&apos;m a designer,{' '}
+                <a href="https://designdetails.fm">podcaster</a>,{' '}
+                <Link href="/writing" passHref>
+                  <a>writer</a>
+                </Link>
+                , and{' '}
+                <a href="https://github.com/brianlovin">software tinkerer</a>.
+                I&apos;m currently building{' '}
+                <a href="https://github.com/mobile">
+                  native mobile apps at GitHub
+                </a>
+                .
+              </p>
+              <p>
+                Before GitHub, I co-founded{' '}
                 <a href="https://spectrum.chat">Spectrum</a>, a platform for
                 large-scale communities to have better public conversations.
                 Spectrum was acquired by GitHub in November, 2018.
@@ -63,7 +74,7 @@ function About() {
                 how plugins can automate the tedious parts of interface design.
               </p>
               <p>
-                Photo by <a href="https://twitter.com/rxnjmmt">@rxnjmmt</a>
+                Photo by <a href="https://twitter.com/rxnjmmt">@rxnjmmt</a>.
               </p>
             </div>
           </div>
