@@ -21,7 +21,7 @@ function Home({ data }: Props) {
       <CenteredColumn>
         <div className="space-y-16 md:space-y-24 ">
           <div className="space-y-8 md:items-center">
-            <div className="prose text-primary">
+            <div className="prose lg:prose-lg text-primary">
               <p>
                 Hey, I&apos;m Brian. I&apos;m a designer,{' '}
                 <a href="https://designdetails.fm">podcaster</a>,{' '}
