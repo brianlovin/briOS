@@ -1,5 +1,5 @@
 {
-  "extends": ["prettier"],
+  "extends": ["plugin:prettier/recommended"],
   "plugins": ["react", "@typescript-eslint"],
   "env": {
     "node": true,
