@@ -3,6 +3,7 @@ node_modules
 .DS_Store
 .env
 .env.build
+.env.local
 .vscode
 yarn-error.log
 .now
