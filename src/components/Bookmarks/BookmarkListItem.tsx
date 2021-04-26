@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Bookmark } from '~/graphql/types.generated'
 import EditingBookmarkListItem from './EditingBookmarkListItem'
 import BookmarkReaction from './BookmarkReaction'
-import MarkdownRenderer from '../MarkdownRenderer'
+import { MarkdownRenderer } from '../MarkdownRenderer'
 
 interface Props {
   editable: boolean
@@ -45,7 +45,7 @@ export const BookmarkListItem = React.memo((props: Props) => {
         </a>
       </span>
       {bookmark.notes && (
-        <div className="pl-4 border-l border-gray-300 border-dashed text-tertiary dark:border-gray-700">
+        <div className="pl-4 prose-sm prose border-l border-gray-300 border-dashed text-tertiary dark:border-gray-700">
           <MarkdownRenderer>{bookmark.notes}</MarkdownRenderer>
         </div>
       )}

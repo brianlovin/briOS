@@ -1,6 +1,6 @@
 import React from 'react'
 import DesignDetailMedia from '~/components/DesignDetailMedia'
-import Markdown from '~/components/MarkdownRenderer'
+import { MarkdownRenderer } from '~/components/MarkdownRenderer'
 import { format } from 'timeago.js'
 import { DesignDetailsPost } from '~/data/appDissections'
 import { CenteredColumn } from '../Layouts'
@@ -16,8 +16,9 @@ interface Props {
 export default function DesignDetailView(props: Props) {
   const { post } = props
 
-  const subheading = `Posted ${format(post.createdAt)} · ${post.details.length
-    } details`
+  const subheading = `Posted ${format(post.createdAt)} · ${
+    post.details.length
+  } details`
 
   return (
     <CenteredColumn>
@@ -44,7 +45,7 @@ export default function DesignDetailView(props: Props) {
         </div>
 
         <div className="prose">
-          <Markdown>{post.description}</Markdown>
+          <MarkdownRenderer>{post.description}</MarkdownRenderer>
         </div>
 
         <WritingSubscribeBox />

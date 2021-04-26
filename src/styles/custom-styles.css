@@ -3,7 +3,7 @@
   font-family: 'iA Quattro';
   font-stretch: 25% 150%;
   font-weight: 100 1000;
-  src: url("/static/fonts/iAWriterQuattroV.ttf") format("truetype-variations");
+  src: url('/static/fonts/iAWriterQuattroV.ttf') format('truetype-variations');
 }
 
 @layer base {
@@ -56,11 +56,11 @@
   .timeline-full-width {
     @apply -ml-16 md:ml-0;
   }
-  
+
   .filter-none {
     filter: none;
   }
-  
+
   .filter-grayscale {
     filter: grayscale(100%);
   }
@@ -86,7 +86,7 @@
     animation: blink-animation 1.5s steps(2, start) infinite;
     -webkit-animation: blink-animation 1.5s steps(2, start) infinite;
   }
-  
+
   @keyframes blink-animation {
     to {
       visibility: hidden;

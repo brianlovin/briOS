@@ -3,7 +3,7 @@ import type { ChecklistResource } from '../types'
 import { Heading } from './Heading'
 import { Apps } from './Apps'
 import { Resources } from './Resources'
-import MarkdownRenderer from '~/components/MarkdownRenderer'
+import { MarkdownRenderer } from '~/components/MarkdownRenderer'
 
 type Props = {
   resource: ChecklistResource

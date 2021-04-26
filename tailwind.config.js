@@ -11,7 +11,7 @@ const mono = [
   'monospace',
 ]
 module.exports = {
-  mode: 'jit',
+  // mode: 'jit',
   purge: ['./src/**/*.tsx'],
   darkMode: 'media',
   theme: {

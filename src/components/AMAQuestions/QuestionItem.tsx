@@ -3,7 +3,7 @@ import { Ama } from '~/graphql/types.generated'
 import { format } from 'timeago.js'
 import QuestionReaction from './QuestionReaction'
 import EditQuestion from './EditQuestion'
-import MarkdownRenderer from '../MarkdownRenderer'
+import { MarkdownRenderer } from '../MarkdownRenderer'
 import Linkify from '../Linkify'
 
 interface Props {

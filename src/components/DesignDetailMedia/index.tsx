@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import VisibilitySensor from 'react-visibility-sensor'
-import Markdown from '~/components/MarkdownRenderer'
+import { MarkdownRenderer } from '~/components/MarkdownRenderer'
 import { DetailContainer, DetailTitle, MediaContainer, Video } from './style'
 import { DesignDetail } from '~/data/appDissections'
 
@@ -22,7 +22,7 @@ export default function DesignDetailMedia(props: Props) {
           {detail.title}
         </DetailTitle>
         <div className="prose">
-          <Markdown>{detail.description}</Markdown>
+          <MarkdownRenderer>{detail.description}</MarkdownRenderer>
         </div>
 
         {isVisible && (

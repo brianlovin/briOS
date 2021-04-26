@@ -4,7 +4,9 @@ import parse from 'rehype-parse'
 import rehype2remark from 'rehype-remark'
 import stringify from 'remark-stringify'
 import { Post } from '~/graphql/types.generated'
-import Markdown from '~/components/MarkdownRenderer'
+import { MarkdownRenderer } from '~/components/MarkdownRenderer'
+import raw from 'rehype-raw'
+import sanitize from 'rehype-sanitize'
 
 interface Props {
   post: Post
@@ -15,8 +17,10 @@ export default function Body({ post }: Props) {
     .use(parse)
     .use(rehype2remark)
     .use(stringify)
+    .use(raw)
+    .use(sanitize)
     .processSync(post.html)
     .toString()
 
-  return <Markdown>{md}</Markdown>
+  return <MarkdownRenderer>{md}</MarkdownRenderer>
 }
