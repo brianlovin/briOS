@@ -8,6 +8,7 @@ import { Post } from '~/graphql/types.generated'
 import WritingSubscribeBox from '~/components/Writing/Subscribe'
 import PostsList from '~/components/Writing/List'
 import ProjectsList from '~/components/ProjectsList'
+import Button from '~/components/Button'
 
 interface Props {
   data: {
@@ -44,12 +45,16 @@ function Home({ data }: Props) {
                 Facebook building payments systems, and cut my teeth as a
                 product designer at Buffer.
               </p>
-
-              <p>
-                <Link href="/about" passHref>
-                  <a>Learn more about me &rarr;</a>
-                </Link>
-              </p>
+            </div>
+            <div className="flex space-x-4">
+              <Link href="/about" passHref>
+                <a>
+                  <Button>Learn more about me</Button>
+                </a>
+              </Link>
+              <a href="https://changelog.brianlovin.com">
+                <Button>My changelog</Button>
+              </a>
             </div>
           </div>
 
