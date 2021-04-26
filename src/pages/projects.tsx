@@ -18,6 +18,34 @@ interface Props {
   }
 }
 
+const workHistory = [
+  {
+    name: 'GitHub · Staff Product Designer',
+    timeframe: 'November 2018 – Present',
+  },
+  {
+    name: 'Spectrum · Co-founder',
+    timeframe: 'February 2017 – November 2018',
+  },
+  {
+    name: 'Spec.fm · Co-founder',
+    timeframe: 'July, 2015 – July, 2020',
+  },
+  {
+    name: 'Facebook · Product Designer',
+    timeframe: 'July 2015 – July 2017',
+  },
+  {
+    name: 'Buffer · Product Designer',
+    timeframe: 'June 2013 – July 2015',
+  },
+  {
+    name: 'The Kollection · Founder',
+    timeframe: 'June 2010 – June 2015',
+    description: '',
+  },
+]
+
 function Projects({ data }: Props) {
   return (
     <Page>
@@ -38,9 +66,19 @@ function Projects({ data }: Props) {
             </div>
 
             <div className="space-y-6">
+              <h4 className="font-list-heading">Work history</h4>
+              {workHistory.map((job) => (
+                <div className="space-y-1" key={job.name}>
+                  <p className="font-medium">{job.name}</p>
+                  <p className="text-quaternary">{job.timeframe}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="space-y-6">
               <div className="space-y-6">
                 <h4 className="font-list-heading">Design Details Podcast</h4>
-                <p className="text-secondary">
+                <p className="text-secondary lg:prose-lg">
                   A weekly conversation about design process and culture,
                   co-hosted with{' '}
                   <a

@@ -7,8 +7,8 @@ import { Menu, X } from 'react-feather'
 const defaultRoutes = [
   routes.home,
   routes.about,
-  routes.projects,
   routes.writing,
+  routes.projects,
 ]
 
 export default function Header() {
