@@ -66,16 +66,6 @@ function Projects({ data }: Props) {
             </div>
 
             <div className="space-y-6">
-              <h4 className="font-list-heading">Work history</h4>
-              {workHistory.map((job) => (
-                <div className="space-y-1" key={job.name}>
-                  <p className="font-medium">{job.name}</p>
-                  <p className="text-quaternary">{job.timeframe}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="space-y-6">
               <div className="space-y-6">
                 <h4 className="font-list-heading">Design Details Podcast</h4>
                 <p className="text-secondary lg:prose-lg">
@@ -174,6 +164,15 @@ function Projects({ data }: Props) {
               >
                 Follow me on GitHub &rarr;
               </a>
+            </div>
+            <div className="space-y-6">
+              <h4 className="font-list-heading">Work history</h4>
+              {workHistory.map((job) => (
+                <div className="space-y-1" key={job.name}>
+                  <p className="font-medium text-secondary">{job.name}</p>
+                  <p className="text-quaternary">{job.timeframe}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
