@@ -1,6 +1,7 @@
 name: CI
 on: [deployment_status]
 jobs:
+  # trigger a test
   Cypress:
     if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
