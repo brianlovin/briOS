@@ -1,6 +1,7 @@
 name: CI
 on: [deployment_status]
 jobs:
+  # trigger a test
   Cypress:
     if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
@@ -19,7 +20,7 @@ jobs:
           --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
           --header 'content-type: application/json' \
           --data '{
-            "context": "e2e",
+            "context": "Cypress ✅",
             "state": "success",
             "description": "Cypress tests passed",
             "target_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
@@ -33,7 +34,7 @@ jobs:
           --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
           --header 'content-type: application/json' \
           --data '{
-            "context": "e2e",
+            "context": "Cypress 🚨",
             "state": "failure",
             "description": "Cypress tests failed"
           }'
