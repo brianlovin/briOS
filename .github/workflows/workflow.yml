@@ -1,15 +1,43 @@
-name: Cypress
-# https://docs.github.com/en/actions/reference/events-that-trigger-workflows
-on: [deployment_status]
-jobs:
-  e2e:
-    # only runs this job on successful deploy
-    if: github.event.deployment_status.state == 'success'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout 🛎
-        uses: actions/checkout@v2
-      - name: Run Cypress 🌲
-        uses: cypress-io/github-action@v2
-        env:
-          CYPRESS_BASE_URL: ${{ github.event.deployment_status.target_url }}
+- name: Run Cypress
+  on: [deployment_status]
+  jobs:
+    Cypress:
+      if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v2
+        - name: Run Cypress
+          uses: cypress-io/github-action@v2
+          env:
+            CYPRESS_BASE_URL: ${{ github.event.deployment_status.target_url }}
+
+- name: Cypress tests ✅
+  if: ${{ success() }}
+  # set the merge commit status check
+  # using GitHub REST API
+  # see https://docs.github.com/en/rest/reference/repos#create-a-commit-status
+  run: |
+    curl --request POST \
+    --url https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
+    --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+    --header 'content-type: application/json' \
+    --data '{
+      "context": "e2e",
+      "state": "success",
+      "description": "Cypress tests passed",
+      "target_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+    }'
+
+- name: Cypress tests 🚨
+  if: ${{ failure() }}
+  run: |
+    curl --request POST \
+    --url https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
+    --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+    --header 'content-type: application/json' \
+    --data '{
+      "context": "e2e",
+      "state": "failure",
+      "description": "Cypress tests failed"
+    }'
