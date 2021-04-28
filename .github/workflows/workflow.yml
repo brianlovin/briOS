@@ -1,6 +1,15 @@
-- name: Run Cypress 🌲
-  uses: cypress-io/github-action@v2
-  with:
-    record: true
-  env:
-    CYPRESS_BASE_URL: ${{ github.event.deployment_status.target_url }}
+name: Cypress
+# https://docs.github.com/en/actions/reference/events-that-trigger-workflows
+on: [deployment_status]
+jobs:
+  e2e:
+    # only runs this job on successful deploy
+    if: github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@v2
+      - name: Run Cypress 🌲
+        uses: cypress-io/github-action@v2
+        env:
+          CYPRESS_BASE_URL: ${{ github.event.deployment_status.target_url }}
