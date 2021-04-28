@@ -1,9 +1,7 @@
 name: Cypress
-# https://docs.github.com/en/actions/reference/events-that-trigger-workflows
 on: [deployment_status]
 jobs:
-  e2e:
-    # only runs this job on successful deploy
+  cypress:
     if: github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
     steps:
