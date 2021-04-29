@@ -4,7 +4,6 @@
   font-stretch: 25% 150%;
   font-weight: 100 1000;
   src: url('/static/fonts/iAWriterQuattroV.ttf') format('truetype-variations');
-  font-display: swap;
 }
 
 @layer base {
