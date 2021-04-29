@@ -31,6 +31,7 @@ export default function Header() {
           <button
             className="p-4 pl-4 -my-2"
             onClick={() => setIsExpanded(!isExpanded)}
+            aria-label="toggle menu"
           >
             {isExpanded ? <X size={16} /> : <Menu size={16} />}
           </button>
