@@ -1,18 +1,21 @@
+import { useRouter } from 'next/router'
 import React from 'react'
 import Header from '~/components/Header'
+import { LiveCursor } from '../LiveCursor'
 
 interface Props {
   children: React.ReactNode
 }
 
 export default function Page(props: Props) {
+  const router = useRouter()
+  const { pathname } = router
   const { children } = props
   return (
-    <>
+    <LiveCursor room={pathname}>
       <Header />
       <div className="px-4 py-24 md:py-32 lg:px-0">{children}</div>
-      {/* <Footer /> */}
-    </>
+    </LiveCursor>
   )
 }
 
