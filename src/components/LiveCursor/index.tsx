@@ -26,6 +26,37 @@ export function LiveCursor({ room, children }: Props) {
   const others = useOthersPresence<Presence>(room)
   const broadcast = useBroadcastEvent(room)
 
+  function onFocus(e) {
+    updatePresence({
+      cursor: mouseEventToScenePoint(e, containerRef),
+    })
+  }
+
+  function onBlur() {
+    updatePresence({
+      cursor: null,
+    })
+  }
+
+  // handle users app switching away from browser or switching tabs
+  React.useEffect(() => {
+    window.addEventListener('focus', onFocus)
+    window.addEventListener('blur', onBlur)
+    return () => {
+      window.removeEventListener('focus', onFocus)
+      window.removeEventListener('blur', onBlur)
+    }
+  })
+
+  // if user navigates to another page or closes the window, hide their cursor
+  if (process.browser) {
+    window.onbeforeunload = () => {
+      updatePresence({
+        cursor: null,
+      })
+    }
+  }
+
   function onPointerDown(e) {
     broadcast({
       type: 'POINTER_DOWN',
