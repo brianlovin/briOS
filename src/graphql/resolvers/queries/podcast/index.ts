@@ -31,7 +31,7 @@ async function simplecast(url, opts = {}) {
 
 export async function getEpisodes() {
   return await simplecast(
-    `/podcasts/${SHOW_ID}/episodes?limit=5&offset=0&sort=published_at_desc`
+    `/podcasts/${SHOW_ID}/episodes?limit=3&offset=0&sort=published_at_desc`
   )
     .then((res) => res.collection.filter((ep) => ep.status === 'published'))
     .then((res) => res.map(transformEpisodeData))
