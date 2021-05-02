@@ -162,7 +162,7 @@ function Projects({ data }: Props) {
                 href="https://github.com/brianlovin"
                 className="inline-block font-medium highlight-link-hover"
               >
-                Follow me on GitHub &rarr;
+                See my work on GitHub &rarr;
               </a>
             </div>
             <div className="space-y-6">
@@ -173,6 +173,12 @@ function Projects({ data }: Props) {
                   <p className="text-quaternary">{job.timeframe}</p>
                 </div>
               ))}
+              <a
+                href="https://www.linkedin.com/in/brianlovin/"
+                className="inline-block font-medium highlight-link-hover"
+              >
+                See my LinkedIn &rarr;
+              </a>
             </div>
           </div>
         </div>
