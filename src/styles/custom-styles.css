@@ -97,4 +97,26 @@
       visibility: hidden;
     }
   }
+
+  .ripple {
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    border-radius: 64px;
+    margin-left: -32px;
+    margin-top: -32px;
+    animation: ripple 2s forwards cubic-bezier(0.075, 0.82, 0.165, 1);
+  }
+
+  @keyframes ripple {
+    0% {
+      opacity: 0.8;
+      transform: scale(0);
+    }
+
+    100% {
+      opacity: 0;
+      transform: scale(1);
+    }
+  }
 }
