@@ -19,7 +19,7 @@
     }
   },
   "dependencies": {
-    "@apollo/client": "^3.3.15",
+    "@apollo/client": "^3.3.16",
     "@apollo/link-error": "^2.0.0-beta.3",
     "@apollo/link-schema": "^2.0.0-beta.3",
     "@liveblocks/node": "^0.2.0",
@@ -34,7 +34,7 @@
     "cookie": "^0.4.1",
     "cryptr": "^6.0.2",
     "date-fns": "^2.21.1",
-    "firebase-admin": "^9.6.0",
+    "firebase-admin": "^9.7.0",
     "graphql": "^15.5.0",
     "graphql-tools": "^7.0.2",
     "graphql-tools-fork": "^9.0.1",
@@ -82,7 +82,7 @@
     "autoprefixer": "^10.2.4",
     "babel-eslint": "^10.1.0",
     "babel-plugin-styled-components": "^1.12.0",
-    "cypress": "^7.1.0",
+    "cypress": "^7.2.0",
     "eslint": "^7.25.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-cypress": "^2.11.2",
