@@ -12,7 +12,7 @@ export default function Page(props: Props) {
   const { pathname } = router
   const { children } = props
   return (
-    <LiveCursor room={pathname}>
+    <LiveCursor room={`${pathname}-v2`}>
       <Header />
       <div className="px-4 py-24 md:py-32 lg:px-0">{children}</div>
     </LiveCursor>
