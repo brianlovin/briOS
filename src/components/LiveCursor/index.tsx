@@ -92,7 +92,7 @@ export function LiveCursor({ room, children }: Props) {
     >
       {children}
 
-      <div className="absolute inset-0 flex justify-center pointer-events-none">
+      <div className="absolute inset-0 justify-center hidden pointer-events-none md:flex">
         {others.map(({ connectionId, presence }) => {
           if (presence == null || presence.cursor == null) {
             return null
