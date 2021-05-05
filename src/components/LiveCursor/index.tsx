@@ -3,7 +3,6 @@ import {
   useOthersPresence,
   useUpdateMyPresence,
 } from '@liveblocks/react'
-import { useRouter } from 'next/router'
 import React, { useRef } from 'react'
 import { Cursor, Ripple } from './Cursor'
 
@@ -20,7 +19,6 @@ type Props = {
 }
 
 export function LiveCursor({ room, children }: Props) {
-  const router = useRouter()
   const containerRef = useRef<HTMLDivElement>(null)
   const updatePresence = useUpdateMyPresence<Presence>(room, () => ({
     cursor: null,
@@ -42,8 +40,6 @@ export function LiveCursor({ room, children }: Props) {
 
   // handle users app switching away from browser or switching tabs
   React.useEffect(() => {
-    router.events.on('routeChangeStart', onBlur)
-    router.events.on('routeChangeComplete', onBlur)
     window.addEventListener('focus', onFocus)
     window.addEventListener('blur', onBlur)
     return () => {
@@ -51,15 +47,6 @@ export function LiveCursor({ room, children }: Props) {
       window.removeEventListener('blur', onBlur)
     }
   })
-
-  // if user navigates to another page or closes the window, hide their cursor
-  if (process.browser) {
-    window.onbeforeunload = () => {
-      updatePresence({
-        cursor: null,
-      })
-    }
-  }
 
   function onPointerDown(e) {
     broadcast({

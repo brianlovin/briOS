@@ -52,7 +52,7 @@ export function Ripple({ connectionId, room, containerRef }: RippleProps) {
     rippleRef.current.classList.remove('ripple')
     rippleRef.current.offsetHeight
     rippleRef.current.classList.add('ripple')
-    rippleRef.current.style.top = `${event.position.y + window.scrollY}px`
+    rippleRef.current.style.top = `${event.position.y}px`
     rippleRef.current.style.left = `${event.position.x + bounds.width / 2}px`
 
     clearTimeout(timeoutId.current)
