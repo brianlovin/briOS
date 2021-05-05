@@ -41,12 +41,13 @@ export const Comment = React.memo((props: Props) => {
               onClick={() => setCollapsed(!collapsed)}
             />
           )}
-          <p>{`${comment.time_ago} by ${comment.user}`}</p>
+          <p className="mb-3 text-sm text-quaternary">{`${comment.time_ago} by ${comment.user}`}</p>
           <p
+            className="text-tertiary hover:text-gray-700 dark:hover:text-gray-300"
             style={{ cursor: 'pointer', marginTop: '4px' }}
             onClick={() => setCollapsed(!collapsed)}
           >
-            Expand
+            <em>Collapsed</em>
           </p>
         </div>
       </div>
@@ -76,7 +77,7 @@ export const Comment = React.memo((props: Props) => {
             </a>
           )}
         >
-          <p className="mb-3 text-sm text-tertiary">{`${comment.time_ago} by ${comment.user}`}</p>
+          <p className="mb-3 text-sm text-quaternary">{`${comment.time_ago} by ${comment.user}`}</p>
         </ConditionalWrapper>
         <div
           className={'prose'}
