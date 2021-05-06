@@ -45,7 +45,7 @@ export default function PostView({ post }: Props) {
           dangerouslySetInnerHTML={{ __html: post.html }}
         />
 
-        <div className="mt-16 ">
+        <div className="mt-32 ">
           <Feedback post={post} />
           <WritingSubscribeBox />
         </div>

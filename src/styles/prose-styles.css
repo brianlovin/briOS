@@ -31,6 +31,10 @@
   @apply font-bold text-gray-900 dark:text-gray-300;
 }
 
+.prose hr {
+  @apply border-gray-300 dark:border-gray-800;
+}
+
 /* the kg-embed-card gets applied to iframes sent from Ghost. this preserves a good video aspect ratio */
 .prose .kg-embed-card {
   @apply my-4;
