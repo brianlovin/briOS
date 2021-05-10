@@ -9640,15 +9640,10 @@ react-is@16.13.1, react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
-react-is@^17.0.0:
+react-is@^17.0.0, react-is@^17.0.1:
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
-
-react-is@^17.0.1:
-  version "17.0.1"
-  resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.1.tgz#5b3531bd76a645a4c9fb6e693ed36419e3301339"
-  integrity sha512-NAnt2iGDXohE5LI7uBnLnqvLQMtzhkiAOLXTmv+qnF9Ky7xAPcX8Up/xWIhxvLVGJvuLiNc4xQLtuqDRzb4fSA==
 
 react-linkify@^1.0.0-alpha:
   version "1.0.0-alpha"
@@ -9658,10 +9653,10 @@ react-linkify@^1.0.0-alpha:
     linkify-it "^2.0.3"
     tlds "^1.199.0"
 
-react-markdown@^6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/react-markdown/-/react-markdown-6.0.1.tgz#755a78840bdb32a6fa3fb2c33874005c6ac6c3b5"
-  integrity sha512-JNOIU+6xrG+eOwZu9UNZxDAc1bNBCpI8mueQNx5NwZWRbSrcD25FllhKHxyUkXhpdu3r/eg1hrLKCtCq9/uIrw==
+react-markdown@^6.0.2:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/react-markdown/-/react-markdown-6.0.2.tgz#d89be45c278b1e5f0196f851fffb11e30c69f027"
+  integrity sha512-Et2AjXAsbmPP1nLQQRqmVgcqzfwcz8uQJ8VAdADs8Nk/aaUA0YeU9RDLuCtD+GwajCnm/+Iiu2KPmXzmD/M3vA==
   dependencies:
     "@types/hast" "^2.0.0"
     "@types/unist" "^2.0.3"
@@ -9675,6 +9670,7 @@ react-markdown@^6.0.1:
     style-to-object "^0.3.0"
     unified "^9.0.0"
     unist-util-visit "^2.0.0"
+    vfile "^4.0.0"
 
 react-refresh@0.8.3:
   version "0.8.3"
