@@ -28,7 +28,7 @@
     "@tailwindcss/typography": "^0.4.0",
     "@tippy.js/react": "^3.1.1",
     "@tryghost/content-api": "^1.5.4",
-    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/eslint-plugin": "^4.22.1",
     "apollo-server-micro": "^2.24.0",
     "cheerio": "^1.0.0-rc.6",
     "cookie": "^0.4.1",
