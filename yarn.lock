@@ -1826,10 +1826,10 @@
   resolved "https://registry.yarnpkg.com/@liveblocks/client/-/client-0.6.0-beta.4.tgz#6533c680e2329ea11bc0064ecaac4dffca87a91e"
   integrity sha512-06q07Ha1F/0Nhg2KduFg6PtAo3nsSCnzjedJVSzuqKziGvlehWGrAZa9y5YPJePEJfc+2o+izCdECCPFu5hdmQ==
 
-"@liveblocks/node@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@liveblocks/node/-/node-0.2.0.tgz#8ddebf54f73bbd5bc084331139f8fa65313ab92b"
-  integrity sha512-rLuw/0KKMLrn6OUWu2D/3Iafmh7ZjXYkRWgTOzI5G8BIgViT9ek0WaMZdYnlf7+PI9VO1xl4mXXka5yvsENPwQ==
+"@liveblocks/node@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@liveblocks/node/-/node-0.3.0.tgz#f22ff0c3415502af2baf22250431852e198b12e0"
+  integrity sha512-3IJ6uN3QU71z6WXiDM97wW17fVVvrG9zMy4G4PY3zYzmeRfMnA+KBSBT1uPvlfgWm2D3d6/HNIXWxhwyv7bkfw==
   dependencies:
     node-fetch "^2.6.1"
 
