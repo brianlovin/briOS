@@ -200,13 +200,16 @@ function About({ data, summaries }: Props) {
               <div className="flex flex-col space-y-1">
                 <a
                   className="text-blue-600 dark:text-blue-500"
-                  href="https://github.com/TryGhost/Ghost"
+                  href="https://github.com/paulowe/influence-max-gpp"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  TryGhost / Ghost
+                  paulowe / influence-max-gpp
                 </a>
-                <p>The code that powers Paul&apos;s Message.</p>
+                <p>
+                  A graph processing platform to create a ranking dashboard of
+                  influential Twitter profiles.{' '}
+                </p>
               </div>
 
               <div className="flex flex-col space-y-1">
