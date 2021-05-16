@@ -38,7 +38,7 @@ export function May() {
               height="698"
               layout="responsive"
               src="https://d2fl8krjhnb3wd.cloudfront.net/static/img/project/salesanalysis.png"
-              alt="A preview of the CreateDAV certificate"
+              alt="A preview of the SalesAnalysis Notebook"
             />
           </div>
         </div>
