@@ -33,7 +33,7 @@
     "cheerio": "^1.0.0-rc.9",
     "cookie": "^0.4.1",
     "cryptr": "^6.0.2",
-    "date-fns": "^2.21.1",
+    "date-fns": "^2.21.3",
     "firebase-admin": "^9.8.0",
     "graphql": "^15.5.0",
     "graphql-tools": "^7.0.5",
