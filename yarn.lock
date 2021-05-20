@@ -21,44 +21,6 @@
     tslib "^1.10.0"
     zen-observable "^0.8.14"
 
-"@apollo/client@~3.2.5 || ~3.3.0":
-  version "3.3.18"
-  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.3.18.tgz#dc722576a88fddb5c3ae0bb03d5675e0bb7ec07e"
-  integrity sha512-SaJSda4V36/pnv7jkCBROBPwd3w/3TnG/Bd8oLESuNqm6ruXDHt067ow00Y2zz1AOL8SuOI9LXjmkr+FcTqnIQ==
-  dependencies:
-    "@graphql-typed-document-node/core" "^3.0.0"
-    "@types/zen-observable" "^0.8.0"
-    "@wry/context" "^0.6.0"
-    "@wry/equality" "^0.4.0"
-    fast-json-stable-stringify "^2.0.0"
-    graphql-tag "^2.12.0"
-    hoist-non-react-statics "^3.3.2"
-    optimism "^0.16.0"
-    prop-types "^15.7.2"
-    symbol-observable "^2.0.0"
-    ts-invariant "^0.7.0"
-    tslib "^1.10.0"
-    zen-observable "^0.8.14"
-
-"@apollo/client@~3.2.5 || ~3.3.0":
-  version "3.3.18"
-  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.3.18.tgz#dc722576a88fddb5c3ae0bb03d5675e0bb7ec07e"
-  integrity sha512-SaJSda4V36/pnv7jkCBROBPwd3w/3TnG/Bd8oLESuNqm6ruXDHt067ow00Y2zz1AOL8SuOI9LXjmkr+FcTqnIQ==
-  dependencies:
-    "@graphql-typed-document-node/core" "^3.0.0"
-    "@types/zen-observable" "^0.8.0"
-    "@wry/context" "^0.6.0"
-    "@wry/equality" "^0.4.0"
-    fast-json-stable-stringify "^2.0.0"
-    graphql-tag "^2.12.0"
-    hoist-non-react-statics "^3.3.2"
-    optimism "^0.16.0"
-    prop-types "^15.7.2"
-    symbol-observable "^2.0.0"
-    ts-invariant "^0.7.0"
-    tslib "^1.10.0"
-    zen-observable "^0.8.14"
-
 "@apollo/link-error@^2.0.0-beta.3":
   version "2.0.0-beta.3"
   resolved "https://registry.yarnpkg.com/@apollo/link-error/-/link-error-2.0.0-beta.3.tgz#80182f2be07980921fe441a8d66c08914f5a9b56"
@@ -1859,10 +1821,10 @@
   resolved "https://registry.yarnpkg.com/@josephg/resolvable/-/resolvable-1.0.0.tgz#cd75b09cfad18cd945de9221d403203aa07e3d0a"
   integrity sha512-OfTtjoqB2doov5aTJxkyAMK8dXoo7CjCUQSYUEtiY34jbWduOGV7+168tmCT8COMsUEd5DMSFg/0iAOPCBTNAQ==
 
-"@liveblocks/client@0.6.0-beta.4":
-  version "0.6.0-beta.4"
-  resolved "https://registry.yarnpkg.com/@liveblocks/client/-/client-0.6.0-beta.4.tgz#6533c680e2329ea11bc0064ecaac4dffca87a91e"
-  integrity sha512-06q07Ha1F/0Nhg2KduFg6PtAo3nsSCnzjedJVSzuqKziGvlehWGrAZa9y5YPJePEJfc+2o+izCdECCPFu5hdmQ==
+"@liveblocks/client@0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@liveblocks/client/-/client-0.7.0.tgz#d0a1371261aed581e38daee58f38db7db6c9e1fb"
+  integrity sha512-qVLUeRrSON8Y0qJ6V9ewjILbbyvR/N1nEwSwTiIATAxFbQ7h9QRtd0cfwgBJ34aycCWEZP+iyTFO3jsABujFeA==
 
 "@liveblocks/node@^0.3.0":
   version "0.3.0"
@@ -1871,12 +1833,12 @@
   dependencies:
     node-fetch "^2.6.1"
 
-"@liveblocks/react@^0.6.0-beta.5":
-  version "0.6.0-beta.5"
-  resolved "https://registry.yarnpkg.com/@liveblocks/react/-/react-0.6.0-beta.5.tgz#a2e29813f0715076f778862f4aed299ec6816e14"
-  integrity sha512-u/wJuheLCKBLOfA3O4ge1iZFqCMHRydFFjsrA6+qGZKgDmLD189wOyuia+qzGl3X8Ce7w5Y2gvqk5QfBGcC8dg==
+"@liveblocks/react@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@liveblocks/react/-/react-0.7.0.tgz#e7260a8a2b47cf31dae5b1778049393851b161e6"
+  integrity sha512-iEQmTBRTPLm59VzTz86imGhERjPtnDn59scMaQUbeesGmAFSV6+mIKjtlbquKBjEK5dbQdp7qhdsWZqE6Of8cw==
   dependencies:
-    "@liveblocks/client" "0.6.0-beta.4"
+    "@liveblocks/client" "0.7.0"
 
 "@mdx-js/util@1.6.22":
   version "1.6.22"
@@ -8670,22 +8632,6 @@ onetime@^5.1.0, onetime@^5.1.2:
   integrity sha512-kbpaSSGJTWdAY5KPVeMOKXSrPtr8C8C7wodJbcsd51jRnmD+GZu8Y0VoU6Dm5Z4vWr0Ig/1NKuWRKf7j5aaYSg==
   dependencies:
     mimic-fn "^2.1.0"
-
-optimism@^0.16.0:
-  version "0.16.1"
-  resolved "https://registry.yarnpkg.com/optimism/-/optimism-0.16.1.tgz#7c8efc1f3179f18307b887e18c15c5b7133f6e7d"
-  integrity sha512-64i+Uw3otrndfq5kaoGNoY7pvOhSsjFEN4bdEFh80MWVk/dbgJfMv7VFDeCT8LxNAlEVhQmdVEbfE7X2nWNIIg==
-  dependencies:
-    "@wry/context" "^0.6.0"
-    "@wry/trie" "^0.3.0"
-
-optimism@^0.16.0:
-  version "0.16.1"
-  resolved "https://registry.yarnpkg.com/optimism/-/optimism-0.16.1.tgz#7c8efc1f3179f18307b887e18c15c5b7133f6e7d"
-  integrity sha512-64i+Uw3otrndfq5kaoGNoY7pvOhSsjFEN4bdEFh80MWVk/dbgJfMv7VFDeCT8LxNAlEVhQmdVEbfE7X2nWNIIg==
-  dependencies:
-    "@wry/context" "^0.6.0"
-    "@wry/trie" "^0.3.0"
 
 optimism@^0.16.0:
   version "0.16.1"
