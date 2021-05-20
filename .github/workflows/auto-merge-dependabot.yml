@@ -10,6 +10,6 @@ jobs:
     if: github.actor == 'dependabot[bot]'
     steps:
       - name: Enable auto-merge for Dependabot PRs
-        run: gh pr merge --auto --merge "${{github.event.pull_request.number}}"
+        run: gh pr merge --auto --merge "$PR_URL"
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
