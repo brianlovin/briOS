@@ -1,12 +1,11 @@
-name: auto-merge
- on:
-   pull_request:
- jobs:
-   auto-merge:
-     runs-on: ubuntu-latest
-     steps:
-       - uses: actions/checkout@v2
-       - uses: ahmadnassri/action-dependabot-auto-merge@v2
-         with:
-           target: minor
-           github-token: ${{ secrets.AUTOMERGE_PAT }}
+name: Dependabot auto-merge
+on: pull_request_target
+jobs:
+  dependabot:
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+    steps:
+      - name: Enable auto-merge for Dependabot PRs
+        run: gh pr merge --auto --merge "${{github.event.pull_request.number}}"
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
