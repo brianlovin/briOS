@@ -1,5 +1,9 @@
 name: Dependabot auto-merge
-on: pull_request_target
+on: 
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 jobs:
   dependabot:
     runs-on: ubuntu-latest
