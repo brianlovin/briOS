@@ -22,35 +22,20 @@ export type Scalars = {
   Float: number
 }
 
-export type Post = {
-  __typename?: 'Post'
-  canonical_url?: Maybe<Scalars['String']>
-  codeinjection_foot?: Maybe<Scalars['String']>
-  codeinjection_head?: Maybe<Scalars['String']>
-  comment_id?: Maybe<Scalars['String']>
-  created_at?: Maybe<Scalars['String']>
-  custom_excerpt?: Maybe<Scalars['String']>
-  excerpt?: Maybe<Scalars['String']>
-  feature_image?: Maybe<Scalars['String']>
-  featured?: Maybe<Scalars['Boolean']>
-  html?: Maybe<Scalars['String']>
-  id?: Maybe<Scalars['String']>
-  meta_description?: Maybe<Scalars['String']>
-  meta_title?: Maybe<Scalars['String']>
-  og_description?: Maybe<Scalars['String']>
-  og_image?: Maybe<Scalars['String']>
-  og_title?: Maybe<Scalars['String']>
-  published_at?: Maybe<Scalars['String']>
-  reading_time?: Maybe<Scalars['Int']>
-  slug?: Maybe<Scalars['String']>
-  title?: Maybe<Scalars['String']>
-  twitter_description?: Maybe<Scalars['String']>
-  twitter_image?: Maybe<Scalars['String']>
-  twitter_title?: Maybe<Scalars['String']>
-  updated_at?: Maybe<Scalars['String']>
-  url?: Maybe<Scalars['String']>
-  uuid?: Maybe<Scalars['String']>
-  visibility?: Maybe<Scalars['String']>
+export type Ama = {
+  __typename?: 'AMA'
+  id: Scalars['String']
+  question: Scalars['String']
+  status?: Maybe<AmaStatus>
+  answer?: Maybe<Scalars['String']>
+  createdAt?: Maybe<Scalars['String']>
+  updatedAt?: Maybe<Scalars['String']>
+  reactions?: Maybe<Scalars['Int']>
+}
+
+export enum AmaStatus {
+  Pending = 'PENDING',
+  Answered = 'ANSWERED',
 }
 
 export type Bookmark = {
@@ -80,59 +65,6 @@ export type Episode = {
   status?: Maybe<Scalars['String']>
   title?: Maybe<Scalars['String']>
   token?: Maybe<Scalars['String']>
-}
-
-export type Repo = {
-  __typename?: 'Repo'
-  org?: Maybe<Scalars['String']>
-  name?: Maybe<Scalars['String']>
-  description?: Maybe<Scalars['String']>
-  stars?: Maybe<Scalars['Int']>
-}
-
-export enum AmaStatus {
-  Pending = 'PENDING',
-  Answered = 'ANSWERED',
-}
-
-export type Ama = {
-  __typename?: 'AMA'
-  id: Scalars['String']
-  question: Scalars['String']
-  status?: Maybe<AmaStatus>
-  answer?: Maybe<Scalars['String']>
-  createdAt?: Maybe<Scalars['String']>
-  updatedAt?: Maybe<Scalars['String']>
-  reactions?: Maybe<Scalars['Int']>
-}
-
-export type Query = {
-  __typename?: 'Query'
-  bookmarks: Array<Maybe<Bookmark>>
-  episodes: Array<Maybe<Episode>>
-  posts: Array<Maybe<Post>>
-  post?: Maybe<Post>
-  amaQuestions: Array<Maybe<Ama>>
-  repos: Array<Maybe<Repo>>
-  isMe?: Maybe<Scalars['Boolean']>
-}
-
-export type QueryBookmarksArgs = {
-  skip?: Maybe<Scalars['Int']>
-  category?: Maybe<Scalars['String']>
-}
-
-export type QueryPostsArgs = {
-  first?: Maybe<Scalars['Int']>
-}
-
-export type QueryPostArgs = {
-  slug: Scalars['String']
-}
-
-export type QueryAmaQuestionsArgs = {
-  skip?: Maybe<Scalars['Int']>
-  status?: Maybe<AmaStatus>
 }
 
 export type Mutation = {
@@ -193,6 +125,74 @@ export type MutationEditAmaQuestionArgs = {
 
 export type MutationAddAmaReactionArgs = {
   id: Scalars['ID']
+}
+
+export type Post = {
+  __typename?: 'Post'
+  canonical_url?: Maybe<Scalars['String']>
+  codeinjection_foot?: Maybe<Scalars['String']>
+  codeinjection_head?: Maybe<Scalars['String']>
+  comment_id?: Maybe<Scalars['String']>
+  created_at?: Maybe<Scalars['String']>
+  custom_excerpt?: Maybe<Scalars['String']>
+  excerpt?: Maybe<Scalars['String']>
+  feature_image?: Maybe<Scalars['String']>
+  featured?: Maybe<Scalars['Boolean']>
+  html?: Maybe<Scalars['String']>
+  id?: Maybe<Scalars['String']>
+  meta_description?: Maybe<Scalars['String']>
+  meta_title?: Maybe<Scalars['String']>
+  og_description?: Maybe<Scalars['String']>
+  og_image?: Maybe<Scalars['String']>
+  og_title?: Maybe<Scalars['String']>
+  published_at?: Maybe<Scalars['String']>
+  reading_time?: Maybe<Scalars['Int']>
+  slug?: Maybe<Scalars['String']>
+  title?: Maybe<Scalars['String']>
+  twitter_description?: Maybe<Scalars['String']>
+  twitter_image?: Maybe<Scalars['String']>
+  twitter_title?: Maybe<Scalars['String']>
+  updated_at?: Maybe<Scalars['String']>
+  url?: Maybe<Scalars['String']>
+  uuid?: Maybe<Scalars['String']>
+  visibility?: Maybe<Scalars['String']>
+}
+
+export type Query = {
+  __typename?: 'Query'
+  bookmarks: Array<Maybe<Bookmark>>
+  episodes: Array<Maybe<Episode>>
+  posts: Array<Maybe<Post>>
+  post?: Maybe<Post>
+  amaQuestions: Array<Maybe<Ama>>
+  repos: Array<Maybe<Repo>>
+  isMe?: Maybe<Scalars['Boolean']>
+}
+
+export type QueryBookmarksArgs = {
+  skip?: Maybe<Scalars['Int']>
+  category?: Maybe<Scalars['String']>
+}
+
+export type QueryPostsArgs = {
+  first?: Maybe<Scalars['Int']>
+}
+
+export type QueryPostArgs = {
+  slug: Scalars['String']
+}
+
+export type QueryAmaQuestionsArgs = {
+  skip?: Maybe<Scalars['Int']>
+  status?: Maybe<AmaStatus>
+}
+
+export type Repo = {
+  __typename?: 'Repo'
+  org?: Maybe<Scalars['String']>
+  name?: Maybe<Scalars['String']>
+  description?: Maybe<Scalars['String']>
+  stars?: Maybe<Scalars['Int']>
 }
 
 export type AmaInfoFragment = {
@@ -517,7 +517,8 @@ export function useEditAmaQuestionMutation(
 export type EditAmaQuestionMutationHookResult = ReturnType<
   typeof useEditAmaQuestionMutation
 >
-export type EditAmaQuestionMutationResult = Apollo.MutationResult<EditAmaQuestionMutation>
+export type EditAmaQuestionMutationResult =
+  Apollo.MutationResult<EditAmaQuestionMutation>
 export type EditAmaQuestionMutationOptions = Apollo.BaseMutationOptions<
   EditAmaQuestionMutation,
   EditAmaQuestionMutationVariables
@@ -564,7 +565,8 @@ export function useDeleteAmaQuestionMutation(
 export type DeleteAmaQuestionMutationHookResult = ReturnType<
   typeof useDeleteAmaQuestionMutation
 >
-export type DeleteAmaQuestionMutationResult = Apollo.MutationResult<DeleteAmaQuestionMutation>
+export type DeleteAmaQuestionMutationResult =
+  Apollo.MutationResult<DeleteAmaQuestionMutation>
 export type DeleteAmaQuestionMutationOptions = Apollo.BaseMutationOptions<
   DeleteAmaQuestionMutation,
   DeleteAmaQuestionMutationVariables
@@ -611,7 +613,8 @@ export function useAddAmaQuestionMutation(
 export type AddAmaQuestionMutationHookResult = ReturnType<
   typeof useAddAmaQuestionMutation
 >
-export type AddAmaQuestionMutationResult = Apollo.MutationResult<AddAmaQuestionMutation>
+export type AddAmaQuestionMutationResult =
+  Apollo.MutationResult<AddAmaQuestionMutation>
 export type AddAmaQuestionMutationOptions = Apollo.BaseMutationOptions<
   AddAmaQuestionMutation,
   AddAmaQuestionMutationVariables
@@ -661,7 +664,8 @@ export function useAddAmaReactionMutation(
 export type AddAmaReactionMutationHookResult = ReturnType<
   typeof useAddAmaReactionMutation
 >
-export type AddAmaReactionMutationResult = Apollo.MutationResult<AddAmaReactionMutation>
+export type AddAmaReactionMutationResult =
+  Apollo.MutationResult<AddAmaReactionMutation>
 export type AddAmaReactionMutationOptions = Apollo.BaseMutationOptions<
   AddAmaReactionMutation,
   AddAmaReactionMutationVariables
@@ -816,7 +820,8 @@ export function useEditBookmarkMutation(
 export type EditBookmarkMutationHookResult = ReturnType<
   typeof useEditBookmarkMutation
 >
-export type EditBookmarkMutationResult = Apollo.MutationResult<EditBookmarkMutation>
+export type EditBookmarkMutationResult =
+  Apollo.MutationResult<EditBookmarkMutation>
 export type EditBookmarkMutationOptions = Apollo.BaseMutationOptions<
   EditBookmarkMutation,
   EditBookmarkMutationVariables
@@ -863,7 +868,8 @@ export function useDeleteBookmarkMutation(
 export type DeleteBookmarkMutationHookResult = ReturnType<
   typeof useDeleteBookmarkMutation
 >
-export type DeleteBookmarkMutationResult = Apollo.MutationResult<DeleteBookmarkMutation>
+export type DeleteBookmarkMutationResult =
+  Apollo.MutationResult<DeleteBookmarkMutation>
 export type DeleteBookmarkMutationOptions = Apollo.BaseMutationOptions<
   DeleteBookmarkMutation,
   DeleteBookmarkMutationVariables
@@ -926,7 +932,8 @@ export function useAddBookmarkMutation(
 export type AddBookmarkMutationHookResult = ReturnType<
   typeof useAddBookmarkMutation
 >
-export type AddBookmarkMutationResult = Apollo.MutationResult<AddBookmarkMutation>
+export type AddBookmarkMutationResult =
+  Apollo.MutationResult<AddBookmarkMutation>
 export type AddBookmarkMutationOptions = Apollo.BaseMutationOptions<
   AddBookmarkMutation,
   AddBookmarkMutationVariables
@@ -976,7 +983,8 @@ export function useAddBookmarkReactionMutation(
 export type AddBookmarkReactionMutationHookResult = ReturnType<
   typeof useAddBookmarkReactionMutation
 >
-export type AddBookmarkReactionMutationResult = Apollo.MutationResult<AddBookmarkReactionMutation>
+export type AddBookmarkReactionMutationResult =
+  Apollo.MutationResult<AddBookmarkReactionMutation>
 export type AddBookmarkReactionMutationOptions = Apollo.BaseMutationOptions<
   AddBookmarkReactionMutation,
   AddBookmarkReactionMutationVariables

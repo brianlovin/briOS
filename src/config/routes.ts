@@ -102,6 +102,16 @@ const routes = {
       url: 'stack',
     }),
   },
+  startupJobs: {
+    label: 'Startup Jobs',
+    path: '/startups',
+    seo: extendSEO({
+      title: 'Startup Jobs',
+      description: 'Connecting great designers with growing startups.',
+      image: 'meta/startups.png',
+      url: 'startups',
+    }),
+  },
 }
 
 export default routes
