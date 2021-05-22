@@ -5,6 +5,16 @@ function ProjectsList() {
   return (
     <div className="space-y-6">
       <div className="space-y-1">
+        <Link passHref href="/startups">
+          <a className="font-medium highlight-link-hover">Startup Jobs</a>
+        </Link>
+
+        <p className="text-tertiary">
+          Connecting great designers with growing startups.
+        </p>
+      </div>
+
+      <div className="space-y-1">
         <a
           href="https://staff.design"
           className="font-medium highlight-link-hover"
