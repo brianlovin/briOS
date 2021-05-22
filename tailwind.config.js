@@ -11,16 +11,14 @@ const mono = [
   'monospace',
 ]
 module.exports = {
-  // mode: 'jit',
-  purge: ['./src/**/*.tsx'],
+  purge: ['./src/**/*.{js,jsx,ts,tsx,vue}'],
   darkMode: 'media',
   theme: {
     extend: {
       fontFamily: {
         mono: ['"iA Quattro"', ...mono],
         code: mono,
-        sans:
-          'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+        sans: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
       },
       colors: {
         white: '#fff',
