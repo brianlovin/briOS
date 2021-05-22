@@ -26,7 +26,7 @@ export const startupJobs = [
   {
     name: 'GraphCDN',
     description:
-      'GraphCDN is going to make a lot of websites very, very fast. They’re building the exact product I wish we’d had access to while building [Spectrum.chat](https://spectrum.chat). GraphCDN is looking for a first designer.',
+      'GraphCDN is going to make a lot of websites very, very fast. They’re building the exact product I wish we’d had access to while building [Spectrum.chat](https://spectrum.chat). Join as the team’s first designer!',
     siteUrl: 'https://graphcdn.io',
     applicationUrl: 'https://twitter.com/mxstbr',
     logo: 'graphcdn.png',
@@ -38,6 +38,14 @@ export const startupJobs = [
     siteUrl: 'https://leap.so',
     applicationUrl: 'https://twitter.com/caroingeborn',
     logo: 'leap.png',
+  },
+  {
+    name: 'Maze',
+    description:
+      'Maze is enabling anyone in an organization to test and learn quickly from real people, making it possible to build better, more informed products. And they’re hiring designers!',
+    siteUrl: 'https://maze.co',
+    applicationUrl: 'https://boards.greenhouse.io/maze/jobs/4509814003',
+    logo: 'maze.png',
   },
   {
     name: 'Metaphor',

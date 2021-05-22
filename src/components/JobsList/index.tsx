@@ -17,7 +17,7 @@ export default function JobsList() {
       {sorted.map((job) => {
         return (
           <div
-            className="flex py-4 bg-gray-400 bg-opacity-0 rounded md:-mx-4 sm:p-4 "
+            className="flex py-4 bg-gray-400 bg-opacity-0 rounded md:-mx-4 sm:p-4 sm:py-6"
             key={job.name}
           >
             <a href={job.siteUrl}>
