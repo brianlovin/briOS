@@ -27,7 +27,7 @@ export default function JobsList() {
                 height={64}
                 layout="fixed"
                 alt={`${job.name} logo`}
-                className="rounded-xl flex-0"
+                className="rounded-xl flex-0 dark:bg-gray-800"
               />
             </a>
 
@@ -40,7 +40,7 @@ export default function JobsList() {
                   <Linkify>{job.description}</Linkify>
                 </p>
                 <div className="flex pt-3 space-x-3">
-                  <a href={job.applicationurl}>
+                  <a href={job.applicationUrl}>
                     <Button>Get in touch</Button>
                   </a>
                   <a href={job.siteUrl}>
