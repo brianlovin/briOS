@@ -321,4 +321,66 @@ export default [
     description:
       'This is my answer to Twitter FOMO: I set up a daily digest with the top links and best tweets from all the people I follow. Simple. Easiest $100/yr subscription to justify.',
   },
+  {
+    name: 'Readng',
+    url: 'https://beta.readng.co',
+    image: 'readng.png',
+    oss: false,
+    independent: true,
+    description:
+      'A beautiful and simple app for tracking my reading list. It has light social features that help you discover new books to read, too.',
+  },
+  {
+    name: 'VSCode',
+    url: 'https://code.visualstudio.com',
+    image: 'vscode.png',
+    oss: true,
+    independent: false,
+    description: 'My code editor of choice.',
+  },
+  {
+    name: 'Better',
+    url: 'https://better.fyi',
+    image: 'better.png',
+    oss: false,
+    independent: true,
+    description:
+      'A lightweight Safari extension (for macOS and iOS) that blocks 3rd party trackers on the web.',
+  },
+  {
+    name: 'Spotify',
+    url: 'https://www.spotify.com/us/home/',
+    image: 'spotify.png',
+    oss: false,
+    independent: false,
+    description:
+      'As far as I can tell, the best music disocvery and recommndation service available. I basically live in Spotify’s personal playlists.',
+  },
+  {
+    name: 'Clay',
+    url: 'https://clay.earth',
+    image: 'clay.png',
+    oss: false,
+    independent: true,
+    description:
+      'A beautiful application to keep track of personal relationships over time.',
+  },
+  {
+    name: 'Audible',
+    url: 'https://www.audible.com',
+    image: 'audible.png',
+    oss: false,
+    independent: false,
+    description:
+      'My preferred way to engage with fiction books – get a good narrator, and it’s unbeatable.',
+  },
+  {
+    name: 'Sonos',
+    url: 'https://www.sonos.com/en-us/home',
+    image: 'sonos.png',
+    oss: false,
+    independent: false,
+    description:
+      'The best way to set up multi-room, multi-player, multi-service music experiences at home. One you’ve fully committed to the ecosystem, it’s magic.',
+  },
 ]
