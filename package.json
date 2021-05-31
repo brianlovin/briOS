@@ -34,7 +34,7 @@
     "cookie": "^0.4.1",
     "cryptr": "^6.0.2",
     "date-fns": "^2.21.3",
-    "firebase-admin": "^9.8.0",
+    "firebase-admin": "^9.9.0",
     "graphql": "^15.5.0",
     "graphql-tools": "^7.0.5",
     "graphql-tools-fork": "^9.0.1",
