@@ -1810,10 +1810,10 @@
   resolved "https://registry.yarnpkg.com/@josephg/resolvable/-/resolvable-1.0.0.tgz#cd75b09cfad18cd945de9221d403203aa07e3d0a"
   integrity sha512-OfTtjoqB2doov5aTJxkyAMK8dXoo7CjCUQSYUEtiY34jbWduOGV7+168tmCT8COMsUEd5DMSFg/0iAOPCBTNAQ==
 
-"@liveblocks/client@0.6.0-beta.4":
-  version "0.6.0-beta.4"
-  resolved "https://registry.yarnpkg.com/@liveblocks/client/-/client-0.6.0-beta.4.tgz#6533c680e2329ea11bc0064ecaac4dffca87a91e"
-  integrity sha512-06q07Ha1F/0Nhg2KduFg6PtAo3nsSCnzjedJVSzuqKziGvlehWGrAZa9y5YPJePEJfc+2o+izCdECCPFu5hdmQ==
+"@liveblocks/client@0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@liveblocks/client/-/client-0.7.1.tgz#a8a40227ed4a393a71538b0daf3c0cb21d852fca"
+  integrity sha512-Nxo1Evo3PtE7fVuD8Oj0iGcBqcXE27iaFUXytcS2BHJbGS/FLkXuxbpTydc7mf1EaDUp2JWdMcdZZ6xs4DJKvw==
 
 "@liveblocks/node@^0.3.0":
   version "0.3.0"
@@ -1822,12 +1822,12 @@
   dependencies:
     node-fetch "^2.6.1"
 
-"@liveblocks/react@^0.6.0-beta.5":
-  version "0.6.0-beta.5"
-  resolved "https://registry.yarnpkg.com/@liveblocks/react/-/react-0.6.0-beta.5.tgz#a2e29813f0715076f778862f4aed299ec6816e14"
-  integrity sha512-u/wJuheLCKBLOfA3O4ge1iZFqCMHRydFFjsrA6+qGZKgDmLD189wOyuia+qzGl3X8Ce7w5Y2gvqk5QfBGcC8dg==
+"@liveblocks/react@^0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@liveblocks/react/-/react-0.7.1.tgz#ceacc5bc8602bf91e94b3bed675fe5d6a61d18fc"
+  integrity sha512-7zRmIi15X/yLCORGfklVX2ipRmedC8uxztO/GfdZony3FMU6OSuDP3c0KDlTJAecPewKc1KzRjtfblY2UPXkvA==
   dependencies:
-    "@liveblocks/client" "0.6.0-beta.4"
+    "@liveblocks/client" "0.7.1"
 
 "@mdx-js/util@1.6.22":
   version "1.6.22"
