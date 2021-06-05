@@ -40,7 +40,7 @@ function About({ data, summaries }: Props) {
           <div className="flex flex-col space-y-12">
             <div className="flex flex-col prose lg:prose-lg">
               <p>
-                👋 I’m a software developer and researcher, currently living in
+                👋 I’m a data scientist and cloud engineer, currently living in
                 Toronto.
               </p>
               <p>
@@ -76,7 +76,7 @@ function About({ data, summaries }: Props) {
               </p>
 
               <p>
-                I also co-founded{' '}
+                I also co-found{' '}
                 <a
                   href="https://www.pharmassess.ca/about/"
                   target="_blank"
@@ -89,16 +89,7 @@ function About({ data, summaries }: Props) {
                 inference engines that provide better healthcare to Canadians.
               </p>
               <p>
-                Through creation of software, I hope to make impactful and novel
-                contributions that accelerate applications of{' '}
-                <a
-                  href="https://cci.mit.edu"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  collective intelligence
-                </a>{' '}
-                in our society. You can find me on{' '}
+                You can find me on{' '}
                 <a
                   href="https://github.com/paulowe"
                   target="_blank"

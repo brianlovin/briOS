@@ -12,7 +12,7 @@ function Home() {
           <div className="flex flex-col space-y-8 md:items-center">
             <PageHeader
               title="Paul Owe"
-              subtitle="I am currently exploring cloud computing, data mining and machine learning technologies."
+              subtitle="is a data scientist with certified experience deploying big data applications on public clouds such as Amazon Web Services and Google Cloud Platform."
             />
 
             <div className="flex flex-col space-y-2 md:space-x-4 md:flex-row md:space-y-0 md:items-center md:justify-center">
