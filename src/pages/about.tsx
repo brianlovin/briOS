@@ -40,11 +40,20 @@ function About({ data, summaries }: Props) {
           <div className="flex flex-col space-y-12">
             <div className="flex flex-col prose lg:prose-lg">
               <p>
-                👋 I’m a data scientist and cloud engineer, currently living in
-                Toronto.
+                Paul is a{' '}
+                <a
+                  href="https://cloud.google.com/certification/cloud-architect"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  professional cloud architect
+                </a>{' '}
+                on the Google Cloud Platform, designing and building data
+                intensive architectures for deploying resilient, highly scalable
+                and fault tolerant big data workloads.
               </p>
               <p>
-                I currently conduct research at{' '}
+                Previously, he worked as a graduate research assistant at{' '}
                 <a
                   href="https://lassonde.yorku.ca"
                   target="_blank"
@@ -52,44 +61,19 @@ function About({ data, summaries }: Props) {
                 >
                   York University
                 </a>{' '}
-                where I work with an interdisciplinary team to study discourse
-                and information cascades in social networks. My research is
-                primarily motivated by the need to accurately discover
-                interesting patterns in large data sets. It profoundly involves
-                the design and development of methods at the intersection of{' '}
+                where he conducted research and built big data applications for{' '}
                 <a
-                  href="https://en.wikipedia.org/wiki/Data_mining"
+                  href="https://www.youtube.com/watch?v=0CU6C0kJoCA&t=18s"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  data mining
+                  graph data mining in social networks
                 </a>{' '}
-                and{' '}
-                <a
-                  href="https://en.wikipedia.org/wiki/Machine_learning"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  machine learning
-                </a>
-                .
-              </p>
-
-              <p>
-                I also co-found{' '}
-                <a
-                  href="https://www.pharmassess.ca/about/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  PharmAssess Diagnostics Corp.
-                </a>
-                , where I develop software to mine data from literature and
-                public databases, and securely process PHI used in real-time
-                inference engines that provide better healthcare to Canadians.
+                . His research was primarily motivated by the need to accurately
+                discover interesting patterns from large data files over 60TB.
               </p>
               <p>
-                You can find me on{' '}
+                You can find him on{' '}
                 <a
                   href="https://github.com/paulowe"
                   target="_blank"
@@ -97,7 +81,7 @@ function About({ data, summaries }: Props) {
                 >
                   GitHub
                 </a>{' '}
-                where I’m building in the open, or on{' '}
+                where he is building in the open, or on{' '}
                 <a
                   href="https://www.linkedin.com/in/paulowe"
                   target="_blank"
