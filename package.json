@@ -41,7 +41,7 @@
     "isomorphic-unfetch": "^3.1.0",
     "next": "^10.2.3",
     "next-seo": "^4.24.0",
-    "postmark": "^2.7.4",
+    "postmark": "^2.7.6",
     "prismjs": "^1.23.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
