@@ -354,7 +354,7 @@ export default [
     oss: false,
     independent: false,
     description:
-      'As far as I can tell, the best music disocvery and recommndation service available. I basically live in Spotify’s personal playlists.',
+      'As far as I can tell, the best music discovery and recommendation service available. I basically live in Spotify’s personal playlists.',
   },
   {
     name: 'Clay',
