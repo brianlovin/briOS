@@ -42,7 +42,7 @@
     "next": "^10.2.3",
     "next-seo": "^4.26.0",
     "postmark": "^2.7.6",
-    "prismjs": "^1.24.0",
+    "prismjs": "^1.24.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-feather": "^2.0.9",
