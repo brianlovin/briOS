@@ -78,7 +78,7 @@
     "@types/mocha": "^8.2.2",
     "@types/node": "^15.6.1",
     "@types/react": "^17.0.13",
-    "@typescript-eslint/parser": "^4.28.1",
+    "@typescript-eslint/parser": "^4.28.2",
     "autoprefixer": "^10.2.6",
     "babel-eslint": "^10.1.0",
     "babel-plugin-styled-components": "^1.12.0",
