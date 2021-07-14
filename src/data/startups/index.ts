@@ -32,14 +32,6 @@ export const startupJobs = [
     logo: 'graphcdn.png',
   },
   {
-    name: 'Leap',
-    description:
-      'Leap connects people together in small, intimate group conversations. The product is in its early days and needs a founding designer to help shape the product and define the roadmap.',
-    siteUrl: 'https://leap.so',
-    applicationUrl: 'https://twitter.com/caroingeborn',
-    logo: 'leap.png',
-  },
-  {
     name: 'Maze',
     description:
       'Maze is enabling anyone in an organization to test and learn quickly from real people, making it possible to build better, more informed products. And they’re hiring designers!',
