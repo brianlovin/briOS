@@ -48,4 +48,11 @@ export const startupJobs = [
     applicationUrl: 'mailto:pardhu@metaphor.io',
     logo: 'metaphor.png',
   },
+  {
+    name: 'Eraser',
+    description: 'Eraser is an ideation and brainstorming app for technical teams. Eraser allows users to communicate ideas at the speed of thought using a markdown note editor, a lightweight canvas, and audio chat.',
+    siteUrl: 'https://tryeraser.com/',
+    applicationUrl: 'https://twitter.com/_shinkim',
+    logo: 'eraser.png',
+  }
 ]
