@@ -76,7 +76,7 @@
     "@types/chai": "^4.2.21",
     "@types/jest": "^26.0.24",
     "@types/mocha": "^8.2.2",
-    "@types/node": "^15.6.1",
+    "@types/node": "^16.3.3",
     "@types/react": "^17.0.14",
     "@typescript-eslint/parser": "^4.28.2",
     "autoprefixer": "^10.2.6",
