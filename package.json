@@ -60,7 +60,7 @@
     "styled-components": "^4.4.1",
     "timeago.js": "^4.0.2",
     "unified": "^9.2.1",
-    "unified-stream": "^1.0.6"
+    "unified-stream": "^2.0.0"
   },
   "devDependencies": {
     "@ardatan/graphql-tools": "^4.1.0",
