@@ -1,5 +1,5 @@
 name: brianlovin
-originUrl: 'https://brianlovin.com/api/graphql'
+originUrl: 'https://graphcdn.brianlovin.com'
 rules:
   - description: Cache authentication for a month
     maxAge: 2592000
