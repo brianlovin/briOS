@@ -4,14 +4,12 @@ import {
   ApolloLink,
   HttpLink,
 } from '@apollo/client'
-import { CLIENT_URL } from '~/graphql/constants'
+import { GRAPHQL_URL } from '~/graphql/constants'
 
 // ensure that queries can run on the server during SSR and SSG
 // @ts-ignore
 global.fetch = require('node-fetch')
 let globalApolloClient = null
-
-export const endpoint = `${CLIENT_URL}/api/graphql`
 
 function createIsomorphLink() {
   if (typeof window === 'undefined') {
@@ -24,7 +22,7 @@ function createIsomorphLink() {
     return new SchemaLink({ schema, context: { isMe: false, cookie: null } })
   } else {
     return new HttpLink({
-      uri: endpoint,
+      uri: GRAPHQL_URL,
     })
   }
 }

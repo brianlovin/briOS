@@ -17,6 +17,8 @@ export function login(_, { password }, ctx) {
     httpOnly: true,
     sameSite: 'strict',
     maxAge: 60 * 60 * 24 * 30,
+    domain:
+      process.env.NODE_ENV === 'production' ? 'brianlovin.com' : undefined,
   })
 
   return true

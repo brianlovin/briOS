@@ -1,0 +1,42 @@
+name: brianlovin
+originUrl: 'https://brianlovin.com/api/graphql'
+rules:
+  - description: Cache repos weekly
+    maxAge: 604800
+    scope: PUBLIC
+    swr: 604800
+    types:
+      Query:
+        repos: true
+  - description: Cache episodes daily
+    maxAge: 86400
+    scope: PUBLIC
+    swr: 86400
+    types:
+      Query:
+        episodes: true
+  - description: Cache posts daily
+    maxAge: 86400
+    scope: PUBLIC
+    swr: 86400
+    types:
+      Query:
+        posts: true
+  - description: Cache single post hourly
+    maxAge: 3600
+    scope: PUBLIC
+    swr: 3600
+    types:
+      Query:
+        post: true
+  - description: Cache bookmarks and AMAs for 15 minutes
+    maxAge: 900
+    scope: PUBLIC
+    swr: 900
+    types:
+      Query:
+        amaQuestions: true
+        bookmarks: true
+schema: 'http://localhost:3000/api/graphql'
+scopes:
+  ADMIN: 'cookie:session'

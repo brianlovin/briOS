@@ -2,6 +2,7 @@ import { URL } from 'url'
 import { UserInputError } from 'apollo-server-micro'
 import firebase from '~/graphql/services/firebase'
 import getBookmarkMetaData from './getBookmarkMetaData'
+import fetch from 'node-fetch'
 
 function isValidUrl(string) {
   try {
@@ -10,6 +11,19 @@ function isValidUrl(string) {
   } catch (err) {
     return false
   }
+}
+
+async function purgeBookmarks() {
+  await fetch('https://admin.graphcdn.io/brianlovin>', {
+    method: 'POST', // Always POST purge mutations
+    headers: {
+      'Content-Type': 'application/json', // and specify the Content-Type
+      'graphcdn-token': process.env.GRAPHCDN_PURGE_KEY,
+    },
+    body: JSON.stringify({
+      query: `mutation { _purgeQuery(queries:[bookmarks]) }`,
+    }),
+  })
 }
 
 const COLLECTION = 'bookmarks'
@@ -25,6 +39,8 @@ export async function editBookmark(
     .collection(COLLECTION)
     .doc(id)
     .update({ title, notes, category, twitterHandle })
+
+  purgeBookmarks().catch((e) => console.error(e))
 
   return await firebase
     .collection(COLLECTION)
@@ -59,6 +75,8 @@ export async function addBookmark(_, { url, notes, category, twitterHandle }) {
     })
     .then(({ id }) => id)
 
+  purgeBookmarks().catch((e) => console.error(e))
+
   return await firebase
     .collection(COLLECTION)
     .doc(id)
@@ -72,7 +90,10 @@ export async function deleteBookmark(_, { id }) {
     .collection(COLLECTION)
     .doc(id)
     .delete()
-    .then(() => true)
+    .then(async () => {
+      await purgeBookmarks().catch((e) => console.error(e))
+      return true
+    })
 }
 
 export async function addBookmarkReaction(_, { id }) {
