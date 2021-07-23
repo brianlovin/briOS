@@ -14,7 +14,7 @@ function isValidUrl(string) {
 }
 
 async function purgeBookmarks() {
-  await fetch('https://admin.graphcdn.io/brianlovin>', {
+  await fetch('https://admin.graphcdn.io/brianlovin', {
     method: 'POST', // Always POST purge mutations
     headers: {
       'Content-Type': 'application/json', // and specify the Content-Type
