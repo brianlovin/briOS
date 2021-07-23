@@ -1,7 +1,8 @@
 import {
+  RoomProvider,
   useBroadcastEvent,
-  useOthersPresence,
-  useUpdateMyPresence,
+  useOthers,
+  useMyPresence,
 } from '@liveblocks/react'
 import React, { useRef } from 'react'
 import { Cursor, Ripple } from './Cursor'
@@ -10,7 +11,7 @@ type Presence = {
   cursor: {
     x: number
     y: number
-  } | null
+  }
 }
 
 type Props = {
@@ -19,21 +20,27 @@ type Props = {
 }
 
 export function LiveCursor({ room, children }: Props) {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const updatePresence = useUpdateMyPresence<Presence>(room, () => ({
-    cursor: null,
-  }))
-  const others = useOthersPresence<Presence>(room)
-  const broadcast = useBroadcastEvent(room)
+  return (
+    <RoomProvider id={room} defaultPresence={() => ({ cursor: null })}>
+      <Canvas room={room}>{children}</Canvas>
+    </RoomProvider>
+  )
+}
+
+export function Canvas({ children }: Props) {
+  const [_, updateMyPresence] = useMyPresence()
+  const containerRef = useRef(null)
+  const others = useOthers<Presence>()
+  const broadcast = useBroadcastEvent()
 
   function onFocus(e) {
-    updatePresence({
+    updateMyPresence({
       cursor: mouseEventToScenePoint(e, containerRef),
     })
   }
 
   function onBlur() {
-    updatePresence({
+    updateMyPresence({
       cursor: null,
     })
   }
@@ -56,19 +63,19 @@ export function LiveCursor({ room, children }: Props) {
   }
 
   function onPointerMove(e) {
-    updatePresence({
+    updateMyPresence({
       cursor: mouseEventToScenePoint(e, containerRef),
     })
   }
 
   function onPointerLeave() {
-    updatePresence({
+    updateMyPresence({
       cursor: null,
     })
   }
 
   function onWheel(e) {
-    updatePresence({
+    updateMyPresence({
       cursor: mouseEventToScenePoint(e, containerRef),
     })
   }
@@ -85,20 +92,19 @@ export function LiveCursor({ room, children }: Props) {
 
       <div className="absolute inset-0 justify-center hidden pointer-events-none md:flex">
         {others.map(({ connectionId, presence }) => {
-          if (presence == null || presence.cursor == null) {
+          if (presence && presence.cursor) {
+            return (
+              <React.Fragment key={`ripple-${connectionId}`}>
+                <Ripple
+                  containerRef={containerRef}
+                  connectionId={connectionId}
+                />
+                <Cursor presence={presence} connectionId={connectionId} />
+              </React.Fragment>
+            )
+          } else {
             return null
           }
-
-          return (
-            <React.Fragment key={`ripple-${connectionId}`}>
-              <Ripple
-                containerRef={containerRef}
-                connectionId={connectionId}
-                room={room}
-              />
-              <Cursor presence={presence} connectionId={connectionId} />
-            </React.Fragment>
-          )
         })}
       </div>
     </div>
@@ -106,14 +112,13 @@ export function LiveCursor({ room, children }: Props) {
 }
 
 function mouseEventToScenePoint(event, containerRef) {
-  if (!containerRef.current || !window) {
+  if (!containerRef.current) {
     return null
   }
 
-  const bounds = containerRef.current.getBoundingClientRect()
-
+  const boundingRectangle = containerRef.current.getBoundingClientRect()
   return {
-    x: event.clientX - bounds.left - bounds.width / 2,
-    y: event.clientY - bounds.y,
+    x: event.clientX - boundingRectangle.left - boundingRectangle.width / 2,
+    y: event.clientY - boundingRectangle.y,
   }
 }

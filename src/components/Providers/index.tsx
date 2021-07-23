@@ -1,7 +1,8 @@
 import * as React from 'react'
 import Fathom from './Fathom'
 import SEO from './SEO'
-import { createClient, LiveblocksProvider } from '@liveblocks/react'
+import { createClient } from '@liveblocks/client'
+import { LiveblocksProvider } from '@liveblocks/react'
 
 interface Props {
   children?: any
