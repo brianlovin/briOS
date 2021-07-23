@@ -30,15 +30,14 @@ type Event = {
 
 type RippleProps = {
   connectionId: number
-  room: string
   containerRef: MutableRefObject<HTMLDivElement>
 }
 
-export function Ripple({ connectionId, room, containerRef }: RippleProps) {
+export function Ripple({ connectionId, containerRef }: RippleProps) {
   const timeoutId = useRef<number>(0)
   const rippleRef = useRef<HTMLDivElement>(null)
 
-  useEventListener<Event>(room, ({ connectionId: id, event }) => {
+  useEventListener<Event>(({ connectionId: id, event }) => {
     if (
       event.type !== 'POINTER_DOWN' ||
       rippleRef.current == null ||
