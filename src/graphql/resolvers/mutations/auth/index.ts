@@ -14,6 +14,7 @@ export function login(_, { password }, ctx) {
 
   cookie('session', encrypted, {
     path: '/',
+    domain: process.env.NODE_ENV === 'production' ? 'brianlovin.com' : undefined,
     httpOnly: true,
     sameSite: 'strict',
     maxAge: 60 * 60 * 24 * 30,
