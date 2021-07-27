@@ -50,9 +50,18 @@ export const startupJobs = [
   },
   {
     name: 'Eraser',
-    description: 'Eraser is an ideation and brainstorming app for technical teams. Eraser allows users to communicate ideas at the speed of thought using a markdown note editor, a lightweight canvas, and audio chat.',
+    description:
+      'Eraser is an ideation and brainstorming app for technical teams. Eraser allows users to communicate ideas at the speed of thought using a markdown note editor, a lightweight canvas, and audio chat.',
     siteUrl: 'https://tryeraser.com/',
     applicationUrl: 'https://twitter.com/_shinkim',
     logo: 'eraser.png',
-  }
+  },
+  {
+    name: 'Dashworks',
+    description:
+      'Dashworks puts knowledge management on autopilot. It’s a wildly fast and smart tool that helps you find anything, from any app, in one simple search interface.',
+    siteUrl: 'https://dashworks.ai/',
+    applicationUrl: 'https://dashworks.ai/careers',
+    logo: 'dashworks.png',
+  },
 ]
