@@ -64,4 +64,12 @@ export const startupJobs = [
     applicationUrl: 'https://dashworks.ai/careers',
     logo: 'dashworks.png',
   },
+  {
+    name: 'Liveblocks',
+    description:
+      'Liveblocks is building real‑time collaboration infrastructure as a service. Consumer expectations for embedded real-time experiences in every app and website is increasing, and Liveblocks is positioned to ride that wave with thoughtful APIs and beautiful design.',
+    siteUrl: 'https://liveblocks.io/',
+    applicationUrl: 'https://join.team/liveblocks',
+    logo: 'liveblocks.jpg',
+  },
 ]
