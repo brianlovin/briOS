@@ -90,24 +90,23 @@ export function July() {
       </TimelineEntry>
       <TimelineEntry
         title="DataMaps: Complete software specification"
-        timestamp="July 10, 2021"
+        timestamp="July 14, 2021"
         Icon={Camera}
         tint="blue"
       >
         <div className="flex flex-col overflow-hidden transition-shadow bg-white rounded-md shadow md:flex-row dark:bg-gray-900 hover:shadow-cardHover">
           <div className="flex flex-col justify-start px-3 py-3 space-y-2 md:w-1/2">
-            <p className="flex-1 px-2 font-normal">
-              This large-scale project seeks to uncover characteristics and
-              structural properties of the FSL Twitter network. A graph
-              processing platform to create a dashboard of influential Twitter
-              profiles and a geo-visualization tool are implemented as part of
-              the big data solution
+            <p className="flex px-2 font-normal">
+              This video introduces the DataMaps project and provides a complete
+              walkthrough of the Spreadsheet Map list of functionalities such as
+              Uploads, Search/Filtering, Ratings, Site administration, and
+              application portals for students and faculty.
             </p>
             <span />
             <a
               target="_blank"
               rel="noopener noreferrer"
-              href="https://www.youtube.com/watch?v=0CU6C0kJoCA&t=103s"
+              href="https://www.youtube.com/watch?v=OMIljzaZQZc"
             >
               <div className="btn">
                 <span>Watch video</span>
@@ -116,11 +115,11 @@ export function July() {
           </div>
           <div className="hidden w-full md:w-1/2 md:inline-block">
             <Image
-              width="640"
-              height="698"
+              width="3000"
+              height="2000"
               layout="responsive"
-              src="/static/img/project/cam1.png"
-              alt="Paul's Research expo presentation - June 2021"
+              src="/static/img/project/datamaps.gif"
+              alt="Paul's Datamaps presentation - July 2021"
             />
           </div>
         </div>
