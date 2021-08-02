@@ -42,7 +42,7 @@ export function July() {
               width="419"
               height="452"
               layout="responsive"
-              src="/static/img/project/terraform.png"
+              src="/static/img/project/Terraform.png"
               alt="Hashicorp Terraform logo"
             />
           </div>
