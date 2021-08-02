@@ -53,7 +53,8 @@ export async function getAMAQuestions(
       const id = question.id
       const createdAt = d.createdAt.toDate()
       const updatedAt = d.updatedAt.toDate()
-      const audioUrl = d.audioWaveform ? await fetchAudioPlaybackUrl(id) : null
+      const audioUrl =
+        d.audioWaveform.length > 0 ? await fetchAudioPlaybackUrl(id) : null
       const audioPlayCount = d.audioPlayCount || 0
       const audioWaveform = d.audioWaveform || []
       const record = {
