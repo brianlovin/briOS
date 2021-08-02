@@ -88,11 +88,18 @@ export const QuestionItem = React.memo((props: Props) => {
         </>
       )}
 
-      {question.answer && transcriptionIsVisible && (
+      {!question.audioUrl ? (
         <div className="prose text-tertiary">
           <MarkdownRenderer>{question.answer}</MarkdownRenderer>
         </div>
+      ) : (
+        transcriptionIsVisible && (
+          <div className="prose text-tertiary">
+            <MarkdownRenderer>{question.answer}</MarkdownRenderer>
+          </div>
+        )
       )}
+
       <span className="flex items-center space-x-2 text-tertiary">
         <QuestionReaction question={question} />
         <span className="text-quaternary">{' · '}</span>
