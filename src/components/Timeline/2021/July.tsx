@@ -43,7 +43,7 @@ export function July() {
               height="452"
               layout="responsive"
               src="/static/img/project/terraform.png"
-              alt="A gif of the GCP logo"
+              alt="Hashicorp Terraform logo"
             />
           </div>
         </div>
@@ -75,7 +75,7 @@ export function July() {
             height="1010"
             layout="responsive"
             className="rounded"
-            alt="Photo from the competition, Toronto"
+            alt="Paul's GCP AI skill badge"
           />
           <Image
             src="/static/img/project/gcp.gif"
@@ -83,7 +83,7 @@ export function July() {
             height="300"
             layout="responsive"
             className="rounded"
-            alt="Photo from the competition, Toronto"
+            alt="A gif of the GCP logo"
           />
         </div>
       </TimelineEntry>
