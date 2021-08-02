@@ -9418,10 +9418,10 @@ prepend-http@^2.0.0:
   resolved "https://registry.yarnpkg.com/prepend-http/-/prepend-http-2.0.0.tgz#e92434bfa5ea8c19f41cdfd401d741a3c819d897"
   integrity sha1-6SQ0v6XqjBn0HN/UAddBo8gZ2Jc=
 
-prettier-eslint@^12.0.0:
-  version "12.0.0"
-  resolved "https://registry.yarnpkg.com/prettier-eslint/-/prettier-eslint-12.0.0.tgz#b4dab5111aad1c0dca062eb7f92a69d5fb1ac1d3"
-  integrity sha512-N8SGGQwAosISXTNl1E57sBbtnqUGlyRWjcfIUxyD3HF4ynehA9GZ8IfJgiep/OfYvCof/JEpy9ZqSl250Wia7A==
+prettier-eslint@^13.0.0:
+  version "13.0.0"
+  resolved "https://registry.yarnpkg.com/prettier-eslint/-/prettier-eslint-13.0.0.tgz#769f5c04057278d071847d893ebc7b9817594184"
+  integrity sha512-P5K31qWgUOQCtJL/3tpvEe28KfP49qbr6MTVEXC7I2k7ci55bP3YDr+glhyCdhIzxGCVp2f8eobfQ5so52RIIA==
   dependencies:
     "@typescript-eslint/parser" "^3.0.0"
     common-tags "^1.4.0"
