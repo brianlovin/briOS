@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import db from '~/graphql/services/firebase'
+import { db } from '~/graphql/services/firebase'
 import { validEmail } from './unsubscribe'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
