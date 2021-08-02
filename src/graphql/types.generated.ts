@@ -31,6 +31,9 @@ export type Ama = {
   createdAt?: Maybe<Scalars['String']>
   updatedAt?: Maybe<Scalars['String']>
   reactions?: Maybe<Scalars['Int']>
+  audioUrl?: Maybe<Scalars['String']>
+  audioPlayCount?: Maybe<Scalars['Int']>
+  audioWaveform?: Maybe<Array<Maybe<Scalars['Float']>>>
 }
 
 export enum AmaStatus {
@@ -79,6 +82,8 @@ export type Mutation = {
   deleteAMAQuestion?: Maybe<Scalars['Boolean']>
   editAMAQuestion?: Maybe<Ama>
   addAMAReaction?: Maybe<Ama>
+  addAMAAudioPlay?: Maybe<Scalars['Boolean']>
+  transcribeAudio?: Maybe<Scalars['String']>
 }
 
 export type MutationLoginArgs = {
@@ -121,10 +126,19 @@ export type MutationEditAmaQuestionArgs = {
   answer?: Maybe<Scalars['String']>
   question?: Maybe<Scalars['String']>
   status?: Maybe<AmaStatus>
+  audioWaveform?: Maybe<Array<Maybe<Scalars['Float']>>>
 }
 
 export type MutationAddAmaReactionArgs = {
   id: Scalars['ID']
+}
+
+export type MutationAddAmaAudioPlayArgs = {
+  id: Scalars['ID']
+}
+
+export type MutationTranscribeAudioArgs = {
+  url: Scalars['String']
 }
 
 export type Post = {
@@ -167,6 +181,9 @@ export type Query = {
   amaQuestions: Array<Maybe<Ama>>
   repos: Array<Maybe<Repo>>
   isMe?: Maybe<Scalars['Boolean']>
+  signedUploadUrl?: Maybe<Scalars['String']>
+  signedPlaybackUrl?: Maybe<Scalars['String']>
+  transcription?: Maybe<Scalars['String']>
 }
 
 export type QueryBookmarksArgs = {
@@ -187,6 +204,18 @@ export type QueryAmaQuestionsArgs = {
   status?: Maybe<AmaStatus>
 }
 
+export type QuerySignedUploadUrlArgs = {
+  id: Scalars['ID']
+}
+
+export type QuerySignedPlaybackUrlArgs = {
+  id: Scalars['ID']
+}
+
+export type QueryTranscriptionArgs = {
+  transcriptionId: Scalars['ID']
+}
+
 export type Repo = {
   __typename?: 'Repo'
   org?: Maybe<Scalars['String']>
@@ -204,6 +233,9 @@ export type AmaInfoFragment = {
   answer?: Maybe<string>
   status?: Maybe<AmaStatus>
   reactions?: Maybe<number>
+  audioUrl?: Maybe<string>
+  audioPlayCount?: Maybe<number>
+  audioWaveform?: Maybe<Array<Maybe<number>>>
 }
 
 export type BookmarkInfoFragment = {
@@ -255,6 +287,9 @@ export type EditAmaQuestionMutationVariables = Exact<{
   question: Scalars['String']
   answer: Scalars['String']
   status: AmaStatus
+  audioWaveform?: Maybe<
+    Array<Maybe<Scalars['Float']>> | Maybe<Scalars['Float']>
+  >
 }>
 
 export type EditAmaQuestionMutation = {
@@ -287,6 +322,24 @@ export type AddAmaReactionMutationVariables = Exact<{
 export type AddAmaReactionMutation = {
   __typename?: 'Mutation'
   addAMAReaction?: Maybe<{ __typename?: 'AMA' } & AmaInfoFragment>
+}
+
+export type AddAmaAudioPlayMutationVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type AddAmaAudioPlayMutation = {
+  __typename?: 'Mutation'
+  addAMAAudioPlay?: Maybe<boolean>
+}
+
+export type TranscribeAudioMutationVariables = Exact<{
+  url: Scalars['String']
+}>
+
+export type TranscribeAudioMutation = {
+  __typename?: 'Mutation'
+  transcribeAudio?: Maybe<string>
 }
 
 export type LoginMutationVariables = Exact<{
@@ -357,6 +410,33 @@ export type GetAmaQuestionsQuery = {
   amaQuestions: Array<Maybe<{ __typename?: 'AMA' } & AmaInfoFragment>>
 }
 
+export type SignedUploadUrlQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type SignedUploadUrlQuery = {
+  __typename?: 'Query'
+  signedUploadUrl?: Maybe<string>
+}
+
+export type SignedPlaybackUrlQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type SignedPlaybackUrlQuery = {
+  __typename?: 'Query'
+  signedPlaybackUrl?: Maybe<string>
+}
+
+export type TranscriptionQueryVariables = Exact<{
+  transcriptionId: Scalars['ID']
+}>
+
+export type TranscriptionQuery = {
+  __typename?: 'Query'
+  transcription?: Maybe<string>
+}
+
 export type GetBookmarksQueryVariables = Exact<{
   skip?: Maybe<Scalars['Int']>
   category?: Maybe<Scalars['String']>
@@ -412,6 +492,9 @@ export const AmaInfoFragmentDoc = gql`
     answer
     status
     reactions
+    audioUrl
+    audioPlayCount
+    audioWaveform
   }
 `
 export const BookmarkInfoFragmentDoc = gql`
@@ -465,12 +548,14 @@ export const EditAmaQuestionDocument = gql`
     $question: String!
     $answer: String!
     $status: AMAStatus!
+    $audioWaveform: [Float]
   ) {
     editAMAQuestion(
       id: $id
       question: $question
       answer: $answer
       status: $status
+      audioWaveform: $audioWaveform
     ) {
       ...AMAInfo
     }
@@ -499,6 +584,7 @@ export type EditAmaQuestionMutationFn = Apollo.MutationFunction<
  *      question: // value for 'question'
  *      answer: // value for 'answer'
  *      status: // value for 'status'
+ *      audioWaveform: // value for 'audioWaveform'
  *   },
  * });
  */
@@ -669,6 +755,102 @@ export type AddAmaReactionMutationResult =
 export type AddAmaReactionMutationOptions = Apollo.BaseMutationOptions<
   AddAmaReactionMutation,
   AddAmaReactionMutationVariables
+>
+export const AddAmaAudioPlayDocument = gql`
+  mutation addAMAAudioPlay($id: ID!) {
+    addAMAAudioPlay(id: $id)
+  }
+`
+export type AddAmaAudioPlayMutationFn = Apollo.MutationFunction<
+  AddAmaAudioPlayMutation,
+  AddAmaAudioPlayMutationVariables
+>
+
+/**
+ * __useAddAmaAudioPlayMutation__
+ *
+ * To run a mutation, you first call `useAddAmaAudioPlayMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddAmaAudioPlayMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addAmaAudioPlayMutation, { data, loading, error }] = useAddAmaAudioPlayMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useAddAmaAudioPlayMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    AddAmaAudioPlayMutation,
+    AddAmaAudioPlayMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    AddAmaAudioPlayMutation,
+    AddAmaAudioPlayMutationVariables
+  >(AddAmaAudioPlayDocument, options)
+}
+export type AddAmaAudioPlayMutationHookResult = ReturnType<
+  typeof useAddAmaAudioPlayMutation
+>
+export type AddAmaAudioPlayMutationResult =
+  Apollo.MutationResult<AddAmaAudioPlayMutation>
+export type AddAmaAudioPlayMutationOptions = Apollo.BaseMutationOptions<
+  AddAmaAudioPlayMutation,
+  AddAmaAudioPlayMutationVariables
+>
+export const TranscribeAudioDocument = gql`
+  mutation transcribeAudio($url: String!) {
+    transcribeAudio(url: $url)
+  }
+`
+export type TranscribeAudioMutationFn = Apollo.MutationFunction<
+  TranscribeAudioMutation,
+  TranscribeAudioMutationVariables
+>
+
+/**
+ * __useTranscribeAudioMutation__
+ *
+ * To run a mutation, you first call `useTranscribeAudioMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useTranscribeAudioMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [transcribeAudioMutation, { data, loading, error }] = useTranscribeAudioMutation({
+ *   variables: {
+ *      url: // value for 'url'
+ *   },
+ * });
+ */
+export function useTranscribeAudioMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    TranscribeAudioMutation,
+    TranscribeAudioMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    TranscribeAudioMutation,
+    TranscribeAudioMutationVariables
+  >(TranscribeAudioDocument, options)
+}
+export type TranscribeAudioMutationHookResult = ReturnType<
+  typeof useTranscribeAudioMutation
+>
+export type TranscribeAudioMutationResult =
+  Apollo.MutationResult<TranscribeAudioMutation>
+export type TranscribeAudioMutationOptions = Apollo.BaseMutationOptions<
+  TranscribeAudioMutation,
+  TranscribeAudioMutationVariables
 >
 export const LoginDocument = gql`
   mutation login($password: String!) {
@@ -1048,6 +1230,174 @@ export type GetAmaQuestionsLazyQueryHookResult = ReturnType<
 export type GetAmaQuestionsQueryResult = Apollo.QueryResult<
   GetAmaQuestionsQuery,
   GetAmaQuestionsQueryVariables
+>
+export const SignedUploadUrlDocument = gql`
+  query signedUploadUrl($id: ID!) {
+    signedUploadUrl(id: $id)
+  }
+`
+
+/**
+ * __useSignedUploadUrlQuery__
+ *
+ * To run a query within a React component, call `useSignedUploadUrlQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSignedUploadUrlQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSignedUploadUrlQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useSignedUploadUrlQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    SignedUploadUrlQuery,
+    SignedUploadUrlQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<SignedUploadUrlQuery, SignedUploadUrlQueryVariables>(
+    SignedUploadUrlDocument,
+    options
+  )
+}
+export function useSignedUploadUrlLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    SignedUploadUrlQuery,
+    SignedUploadUrlQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    SignedUploadUrlQuery,
+    SignedUploadUrlQueryVariables
+  >(SignedUploadUrlDocument, options)
+}
+export type SignedUploadUrlQueryHookResult = ReturnType<
+  typeof useSignedUploadUrlQuery
+>
+export type SignedUploadUrlLazyQueryHookResult = ReturnType<
+  typeof useSignedUploadUrlLazyQuery
+>
+export type SignedUploadUrlQueryResult = Apollo.QueryResult<
+  SignedUploadUrlQuery,
+  SignedUploadUrlQueryVariables
+>
+export const SignedPlaybackUrlDocument = gql`
+  query signedPlaybackUrl($id: ID!) {
+    signedPlaybackUrl(id: $id)
+  }
+`
+
+/**
+ * __useSignedPlaybackUrlQuery__
+ *
+ * To run a query within a React component, call `useSignedPlaybackUrlQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSignedPlaybackUrlQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSignedPlaybackUrlQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useSignedPlaybackUrlQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    SignedPlaybackUrlQuery,
+    SignedPlaybackUrlQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    SignedPlaybackUrlQuery,
+    SignedPlaybackUrlQueryVariables
+  >(SignedPlaybackUrlDocument, options)
+}
+export function useSignedPlaybackUrlLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    SignedPlaybackUrlQuery,
+    SignedPlaybackUrlQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    SignedPlaybackUrlQuery,
+    SignedPlaybackUrlQueryVariables
+  >(SignedPlaybackUrlDocument, options)
+}
+export type SignedPlaybackUrlQueryHookResult = ReturnType<
+  typeof useSignedPlaybackUrlQuery
+>
+export type SignedPlaybackUrlLazyQueryHookResult = ReturnType<
+  typeof useSignedPlaybackUrlLazyQuery
+>
+export type SignedPlaybackUrlQueryResult = Apollo.QueryResult<
+  SignedPlaybackUrlQuery,
+  SignedPlaybackUrlQueryVariables
+>
+export const TranscriptionDocument = gql`
+  query transcription($transcriptionId: ID!) {
+    transcription(transcriptionId: $transcriptionId)
+  }
+`
+
+/**
+ * __useTranscriptionQuery__
+ *
+ * To run a query within a React component, call `useTranscriptionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTranscriptionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTranscriptionQuery({
+ *   variables: {
+ *      transcriptionId: // value for 'transcriptionId'
+ *   },
+ * });
+ */
+export function useTranscriptionQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    TranscriptionQuery,
+    TranscriptionQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<TranscriptionQuery, TranscriptionQueryVariables>(
+    TranscriptionDocument,
+    options
+  )
+}
+export function useTranscriptionLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    TranscriptionQuery,
+    TranscriptionQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<TranscriptionQuery, TranscriptionQueryVariables>(
+    TranscriptionDocument,
+    options
+  )
+}
+export type TranscriptionQueryHookResult = ReturnType<
+  typeof useTranscriptionQuery
+>
+export type TranscriptionLazyQueryHookResult = ReturnType<
+  typeof useTranscriptionLazyQuery
+>
+export type TranscriptionQueryResult = Apollo.QueryResult<
+  TranscriptionQuery,
+  TranscriptionQueryVariables
 >
 export const GetBookmarksDocument = gql`
   query GetBookmarks($skip: Int, $category: String) {

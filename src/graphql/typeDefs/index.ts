@@ -78,6 +78,9 @@ export default gql`
     createdAt: String
     updatedAt: String
     reactions: Int
+    audioUrl: String
+    audioPlayCount: Int
+    audioWaveform: [Float]
   }
 
   type Query {
@@ -88,6 +91,9 @@ export default gql`
     amaQuestions(skip: Int, status: AMAStatus): [AMA]!
     repos: [Repo]!
     isMe: Boolean
+    signedUploadUrl(id: ID!): String
+    signedPlaybackUrl(id: ID!): String
+    transcription(transcriptionId: ID!): String
   }
 
   type Mutation {
@@ -115,7 +121,10 @@ export default gql`
       answer: String
       question: String
       status: AMAStatus
+      audioWaveform: [Float]
     ): AMA
     addAMAReaction(id: ID!): AMA
+    addAMAAudioPlay(id: ID!): Boolean
+    transcribeAudio(url: String!): String
   }
 `
