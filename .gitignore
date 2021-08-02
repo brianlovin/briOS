@@ -8,3 +8,4 @@ node_modules
 yarn-error.log
 .now
 .vercel
+cors.json
