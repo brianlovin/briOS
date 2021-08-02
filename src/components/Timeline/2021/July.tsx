@@ -118,7 +118,7 @@ export function July() {
               width="3000"
               height="2000"
               layout="responsive"
-              src="/static/img/project/datamaps.gif"
+              src="/static/img/project/datamaps.png"
               alt="Paul's Datamaps presentation - July 2021"
             />
           </div>
