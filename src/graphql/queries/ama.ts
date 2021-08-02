@@ -9,3 +9,21 @@ export const GET_AMA_QUESTIONS = gql`
   }
   ${AMAInfoFragment}
 `
+
+export const GET_SIGNED_UPLOAD_URL = gql`
+  query signedUploadUrl($id: ID!) {
+    signedUploadUrl(id: $id)
+  }
+`
+
+export const GET_SIGNED_PLAYBACK_URL = gql`
+  query signedPlaybackUrl($id: ID!) {
+    signedPlaybackUrl(id: $id)
+  }
+`
+
+export const GET_TRANSCRIPTION = gql`
+  query transcription($transcriptionId: ID!) {
+    transcription(transcriptionId: $transcriptionId)
+  }
+`

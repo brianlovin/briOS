@@ -9,5 +9,8 @@ export const AMAInfoFragment = gql`
     answer
     status
     reactions
+    audioUrl
+    audioPlayCount
+    audioWaveform
   }
 `
