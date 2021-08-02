@@ -57,7 +57,7 @@ export function January() {
       </TimelineEntry>
       <TimelineEntry
         title="BEST Startup of the Year Award"
-        timestamp="First week of January"
+        timestamp="January 7, 2020"
         Icon={Camera}
       >
         <Notes>
