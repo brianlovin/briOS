@@ -93,7 +93,10 @@ function About() {
                 </a>
 
                 <p className="text-tertiary">
-                  I caught up with Jonny from Progression to talk about the rise of the senior IC, career development for designers, building and exiting a startup, the importance of job titles, and a whole lot more.
+                  I caught up with Jonny from Progression to talk about the rise
+                  of the senior IC, career development for designers, building
+                  and exiting a startup, the importance of job titles, and a
+                  whole lot more.
                 </p>
               </div>
               <div className="space-y-1">
