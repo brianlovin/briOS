@@ -2093,6 +2093,11 @@
     "@types/keygrip" "*"
     "@types/node" "*"
 
+"@types/dom-mediacapture-record@^1.0.10":
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@types/dom-mediacapture-record/-/dom-mediacapture-record-1.0.10.tgz#3b96ead62f89b01eb2b9d5d080f29b2373f2493c"
+  integrity sha512-8O84hHuVhMMLHLybf3y9SQpNcnQSuzVzcJaUNq9+4Ovb7fodS0aQXep4hyMtxd6fe/dyszbHFjFqtyawf4y46A==
+
 "@types/eslint-visitor-keys@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@types/eslint-visitor-keys/-/eslint-visitor-keys-1.0.0.tgz#1ee30d79544ca84d68d4b3cdb0af4f205663dd2d"
@@ -2349,6 +2354,11 @@
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/@types/unist/-/unist-2.0.3.tgz#9c088679876f374eb5983f150d4787aa6fb32d7e"
   integrity sha512-FvUupuM3rlRsRtCN+fDudtmytGO6iHJuuRKS1Ss0pG5z8oX0diNEw94UEL7hgDbpN94rgaK5R7sWm6RrSkZuAQ==
+
+"@types/webrtc@^0.0.29":
+  version "0.0.29"
+  resolved "https://registry.yarnpkg.com/@types/webrtc/-/webrtc-0.0.29.tgz#b1b1858f21c4f8e4ee529c91e4b7b7633bf90898"
+  integrity sha512-xrSlKRdEmlSJVLiVsTuvCEqJ76OzSxMqd5ME1MNixmUFGnw9jzjuKXUcF0aEtHKrBF9eLDRjHZzb4JYG+OcHlQ==
 
 "@types/websocket@1.0.2":
   version "1.0.2"
