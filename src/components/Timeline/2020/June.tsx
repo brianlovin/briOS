@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Zap } from 'react-feather'
+import { Zap, CheckCircle } from 'react-feather'
 import Image from 'next/image'
 import { DateEntry, TimelineEntry } from '../Entry'
 
@@ -10,7 +10,7 @@ export function June() {
       <TimelineEntry
         title="🎊 Graduated from York University 🎊 "
         timestamp="June 28, 2020"
-        Icon={Zap}
+        Icon={CheckCircle}
         tint={'green'}
         divider={true}
       >

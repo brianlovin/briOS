@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Zap, GitCommit, GitMerge } from 'react-feather'
+import { Zap, GitCommit, GitMerge, Camera } from 'react-feather'
 import Image from 'next/image'
 import { DateEntry, TimelineEntry } from '../Entry'
 
@@ -10,7 +10,7 @@ export function June() {
       <TimelineEntry
         title="Mapping FSL Twitter: A visual and technical perspective"
         timestamp="June 05, 2021"
-        Icon={GitCommit}
+        Icon={Camera}
         tint="red"
       >
         <div className="flex flex-col overflow-hidden transition-shadow bg-white rounded-md shadow md:flex-row dark:bg-gray-900 hover:shadow-cardHover">

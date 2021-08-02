@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Zap, GitCommit, GitMerge } from 'react-feather'
+import { Zap, GitCommit, GitMerge, CheckCircle } from 'react-feather'
 import Image from 'next/image'
 import { DateEntry, TimelineEntry } from '../Entry'
 
@@ -85,7 +85,7 @@ export function May() {
       <TimelineEntry
         title="🎊 Graduated from AWS re/Start 🎊"
         timestamp="May 8, 2020"
-        Icon={Zap}
+        Icon={CheckCircle}
         tint={'green'}
         divider={true}
       >
