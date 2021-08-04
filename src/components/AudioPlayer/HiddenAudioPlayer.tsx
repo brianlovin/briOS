@@ -9,6 +9,7 @@ const HiddenAudioPlayer = React.forwardRef<HTMLAudioElement, Props>(
     return (
       <audio preload="metadata" ref={ref} controls={false} className="hidden">
         <source src={src} type="audio/mp3" />
+        Your browser does not support the audio element
       </audio>
     )
   }
