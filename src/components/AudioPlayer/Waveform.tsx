@@ -24,6 +24,7 @@ export default function Waveform({
       )
   }
 
+  // See https://css-tricks.com/making-an-audio-waveform-visualizer-with-vanilla-javascript/ for the full tutorial explaining how this works
   const filterData = (audioBuffer, sampleCount) => {
     const rawData = audioBuffer.getChannelData(0) // We only need to work with one channel of data
     const samples = sampleCount // Number of samples we want to have in our final data set
