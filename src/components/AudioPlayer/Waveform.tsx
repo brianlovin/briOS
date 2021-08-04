@@ -15,16 +15,18 @@ export default function Waveform({
   const [hasDrawnAudio, setHasDrawnAudio] = React.useState(false)
   const [bars, setBars] = React.useState(waveform)
 
-  const drawAudio = (url) => {
+  const drawAudio = (url, sampleCount) => {
     fetch(url)
       .then((response) => response.arrayBuffer())
       .then((arrayBuffer) => audioContext.decodeAudioData(arrayBuffer))
-      .then((audioBuffer) => draw(normalizeData(filterData(audioBuffer))))
+      .then((audioBuffer) =>
+        draw(normalizeData(filterData(audioBuffer, sampleCount)))
+      )
   }
 
-  const filterData = (audioBuffer) => {
+  const filterData = (audioBuffer, sampleCount) => {
     const rawData = audioBuffer.getChannelData(0) // We only need to work with one channel of data
-    const samples = 64 // Number of samples we want to have in our final data set
+    const samples = sampleCount // Number of samples we want to have in our final data set
     const blockSize = Math.floor(rawData.length / samples) // the number of samples in each subdivision
     const filteredData = []
     for (let i = 0; i < samples; i++) {
@@ -62,7 +64,15 @@ export default function Waveform({
 
   React.useEffect(() => {
     if (audioContext && !hasDrawnAudio) {
-      drawAudio(src)
+      const width = Math.max(
+        document.documentElement.clientWidth || 0,
+        window.innerWidth || 0
+      )
+      let sampleCount = 64
+      if (width < 800) sampleCount = 48
+      if (width < 600) sampleCount = 40
+      if (width < 400) sampleCount = 32
+      drawAudio(src, sampleCount)
       setHasDrawnAudio(true)
     }
   }, [audioContext])
@@ -75,7 +85,7 @@ export default function Waveform({
           return (
             <span
               key={i}
-              style={{ height }}
+              style={{ height, minWidth: '2px' }}
               className="w-full bg-gray-800 rounded-md dark:bg-gray-200"
             />
           )
