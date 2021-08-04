@@ -105,7 +105,11 @@ export const QuestionItem = React.memo((props: Props) => {
         <span className="text-quaternary">{' · '}</span>
 
         <p
-          className={`${question.answer ? 'text-tertiary' : 'text-yellow-500'}`}
+          className={`${
+            question.answer || question.audioWaveform?.length > 0
+              ? 'text-tertiary'
+              : 'text-yellow-500'
+          }`}
         >
           {format(updatedAt)}
         </p>
