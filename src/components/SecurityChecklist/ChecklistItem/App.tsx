@@ -99,8 +99,9 @@ export const AppRow = ({ app }: Props) => {
       renderMatch === 'windows'
     return (
       <div
-        className={`flex ${hideOnMobile ? 'hidden' : 'block'
-          } flex-x-3 md:block`}
+        className={`flex ${
+          hideOnMobile ? 'hidden' : 'block'
+        } flex-x-3 md:block`}
         key={key}
       >
         <a

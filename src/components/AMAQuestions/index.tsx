@@ -28,6 +28,12 @@ export default function QuestionsList() {
 
   const { amaQuestions: questions } = data
 
+  React.useEffect(() => {
+    if (questions.length < PAGINATION_AMOUNT) {
+      setShowLoadMore(false)
+    }
+  }, [questions])
+
   function handleLoadMore() {
     if (loading) return
 
@@ -67,9 +73,11 @@ export default function QuestionsList() {
 
       {isMe && <PendingQuestions />}
 
-      {questions.map((question) => (
-        <QuestionItem editable={isMe} key={question.id} question={question} />
-      ))}
+      <div className="space-y-16">
+        {questions.map((question) => (
+          <QuestionItem editable={isMe} key={question.id} question={question} />
+        ))}
+      </div>
 
       {questions.length === 0 && <p>No questions yet!</p>}
 

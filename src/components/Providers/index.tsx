@@ -14,11 +14,11 @@ const client = createClient({
 
 export default function Providers({ children }: Props) {
   return (
-    <LiveblocksProvider client={client}>
+    <>
       <SEO />
       <Fathom />
 
       {children}
-    </LiveblocksProvider>
+    </>
   )
 }

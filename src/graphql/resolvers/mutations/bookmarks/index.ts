@@ -1,6 +1,6 @@
 import { URL } from 'url'
 import { UserInputError } from 'apollo-server-micro'
-import firebase from '~/graphql/services/firebase'
+import { db } from '~/graphql/services/firebase'
 import getBookmarkMetaData from './getBookmarkMetaData'
 
 function isValidUrl(string) {
@@ -21,12 +21,12 @@ export async function editBookmark(
   if (!title || title.length === 0)
     throw new UserInputError('Bookmark must have a title')
 
-  await firebase
+  await db
     .collection(COLLECTION)
     .doc(id)
     .update({ title, notes, category, twitterHandle })
 
-  return await firebase
+  return await db
     .collection(COLLECTION)
     .doc(id)
     .get()
@@ -37,7 +37,7 @@ export async function editBookmark(
 export async function addBookmark(_, { url, notes, category, twitterHandle }) {
   if (!isValidUrl(url)) throw new UserInputError('URL was invalid')
 
-  const existingRef = await firebase
+  const existingRef = await db
     .collection(COLLECTION)
     .where('url', '==', url)
     .get()
@@ -47,7 +47,7 @@ export async function addBookmark(_, { url, notes, category, twitterHandle }) {
 
   const metadata = await getBookmarkMetaData(url)
 
-  const id = await firebase
+  const id = await db
     .collection(COLLECTION)
     .add({
       createdAt: new Date(),
@@ -59,7 +59,7 @@ export async function addBookmark(_, { url, notes, category, twitterHandle }) {
     })
     .then(({ id }) => id)
 
-  return await firebase
+  return await db
     .collection(COLLECTION)
     .doc(id)
     .get()
@@ -68,7 +68,7 @@ export async function addBookmark(_, { url, notes, category, twitterHandle }) {
 }
 
 export async function deleteBookmark(_, { id }) {
-  return await firebase
+  return await db
     .collection(COLLECTION)
     .doc(id)
     .delete()
@@ -76,7 +76,7 @@ export async function deleteBookmark(_, { id }) {
 }
 
 export async function addBookmarkReaction(_, { id }) {
-  const docRef = firebase.collection(COLLECTION).doc(id)
+  const docRef = db.collection(COLLECTION).doc(id)
   const doc = await docRef.get().then((doc) => doc.data())
   const count = doc.reactions ? doc.reactions + 1 : 1
 

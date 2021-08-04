@@ -7,12 +7,14 @@ export const EDIT_AMA_QUESTION = gql`
     $question: String!
     $answer: String!
     $status: AMAStatus!
+    $audioWaveform: [Float]
   ) {
     editAMAQuestion(
       id: $id
       question: $question
       answer: $answer
       status: $status
+      audioWaveform: $audioWaveform
     ) {
       ...AMAInfo
     }
@@ -40,4 +42,16 @@ export const ADD_AMA_QUESTION_REACTION = gql`
     }
   }
   ${AMAInfoFragment}
+`
+
+export const ADD_AMA_AUDIO_PLAY = gql`
+  mutation addAMAAudioPlay($id: ID!) {
+    addAMAAudioPlay(id: $id)
+  }
+`
+
+export const TRANSCRIBE_AUDIO = gql`
+  mutation transcribeAudio($url: String!) {
+    transcribeAudio(url: $url)
+  }
 `

@@ -21,6 +21,5 @@ if (!apps.length) {
   })
 }
 
-const db = admin.firestore()
-
-export default db
+export const db = admin.firestore()
+export const storage = admin.storage()

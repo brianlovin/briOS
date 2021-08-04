@@ -11,6 +11,8 @@ import {
   editAMAQuestion,
   deleteAMAQuestion,
   addAMAReaction,
+  addAMAAudioPlay,
+  transcribeAudio,
 } from '~/graphql/resolvers/mutations/ama'
 
 export default {
@@ -24,4 +26,6 @@ export default {
   editAMAQuestion: requiresMe(editAMAQuestion),
   deleteAMAQuestion: requiresMe(deleteAMAQuestion),
   addAMAReaction,
+  addAMAAudioPlay,
+  transcribeAudio: requiresMe(transcribeAudio),
 }
