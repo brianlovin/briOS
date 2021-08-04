@@ -7,9 +7,10 @@ import {
   GET_TRANSCRIPTION,
 } from '~/graphql/queries/ama'
 import AudioPlayer from '../AudioPlayer'
-import Button, { RecordingButton } from '../Button'
+import Button, { DeleteButton, RecordingButton } from '../Button'
 import Spinner from '../LoadingSpinner'
 import { ErrorAlert } from '../Alert'
+import { Trash } from 'react-feather'
 
 interface OnComplete {
   transcript: string
@@ -25,6 +26,7 @@ interface Props {
   onRecordingStop?: Function
   onRecordingError?: Function
   onTranscriptionComplete?: (e: OnComplete) => void
+  onDeleteAudio?: Function
 }
 
 interface State {
@@ -51,6 +53,7 @@ type Action =
   | { type: 'done'; transcript: string }
   | { type: 'set-waveform'; waveform: number[] }
   | { type: 'error'; error: string }
+  | { type: 'delete' }
 
 export default function AudioRecorder(props: Props) {
   const {
@@ -61,10 +64,11 @@ export default function AudioRecorder(props: Props) {
     onRecordingStop,
     onRecordingError,
     onTranscriptionComplete,
+    onDeleteAudio,
   } = props
 
   const initialState = {
-    status: 'idle',
+    status: initialAudioUrl ? 'recorded' : 'idle',
     audioUrl: initialAudioUrl,
     audioBlob: null,
     waveform: initialWaveform,
@@ -132,6 +136,17 @@ export default function AudioRecorder(props: Props) {
           error: action.error,
         }
       }
+      case 'delete': {
+        onDeleteAudio && onDeleteAudio()
+        return {
+          ...initialState,
+          audioUrl: null,
+          audioBlob: null,
+          waveform: [],
+          transcript: null,
+          status: 'idle',
+        }
+      }
       default:
         throw new Error()
     }
@@ -194,6 +209,11 @@ export default function AudioRecorder(props: Props) {
     dispatch({ type: 'reset' })
     setAudioChunks([])
     startRecording()
+  }
+
+  function handleDelete() {
+    dispatch({ type: 'delete' })
+    setAudioChunks([])
   }
 
   function handleUpload() {
@@ -292,12 +312,24 @@ export default function AudioRecorder(props: Props) {
         </>
       )}
 
-      {(state.status === 'recorded' || state.status === 'done') && (
-        <div className="flex justify-end w-full space-x-3">
-          <Button onClick={reRecord}>Record again</Button>
-          <Button onClick={handleUpload}>Upload audio</Button>
-        </div>
-      )}
+      {state.audioUrl &&
+        state.status !== 'uploading' &&
+        state.status !== 'transcribing' && (
+          <div className="flex justify-between w-full">
+            {state.status !== 'recording' && (
+              <DeleteButton onClick={handleDelete}>
+                <Trash size={16} />
+              </DeleteButton>
+            )}
+
+            {(state.status === 'recorded' || state.status === 'done') && (
+              <div className="flex space-x-3">
+                <Button onClick={reRecord}>Record again</Button>
+                <Button onClick={handleUpload}>Upload audio</Button>
+              </div>
+            )}
+          </div>
+        )}
 
       {state.error && <ErrorAlert>{state.error}</ErrorAlert>}
 

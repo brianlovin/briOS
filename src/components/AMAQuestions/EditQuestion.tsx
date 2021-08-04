@@ -196,7 +196,7 @@ export default function EditQuestion(props: Props) {
     }
   }
 
-  async function handlePostUpload({ transcript, waveform, src }) {
+  async function onTranscriptionComplete({ transcript, waveform, src }) {
     dispatch({ type: 'edit-answer', value: transcript })
     dispatch({ type: 'add-waveform', value: { waveform, src } })
     dispatch({ type: 'is-recording', value: false })
@@ -206,7 +206,7 @@ export default function EditQuestion(props: Props) {
     dispatch({ type: 'is-recording', value: true })
   }
 
-  function handleRemoveAudio() {
+  function onDeleteAudio() {
     dispatch({ type: 'remove-audio' })
   }
 
@@ -229,18 +229,11 @@ export default function EditQuestion(props: Props) {
             id={question.id}
             initialAudioUrl={state.src}
             initialWaveform={state.waveform}
-            onTranscriptionComplete={handlePostUpload}
+            onTranscriptionComplete={onTranscriptionComplete}
             onRecordingStart={onRecordingStart}
+            onDeleteAudio={onDeleteAudio}
           />
         </div>
-
-        {state.src && (
-          <div className="flex justify-end">
-            <DeleteButton onClick={handleRemoveAudio}>
-              Remove audio
-            </DeleteButton>
-          </div>
-        )}
 
         {!state.isRecording && (
           <div className="flex flex-col space-y-2">
@@ -267,7 +260,9 @@ export default function EditQuestion(props: Props) {
 
         {!state.isRecording && (
           <div className="flex justify-between space-between">
-            <DeleteButton onClick={() => handleDelete()}>Delete</DeleteButton>
+            <DeleteButton onClick={() => handleDelete()}>
+              Delete question
+            </DeleteButton>
             <div className="flex space-x-3">
               <Button onClick={onDone}>Cancel</Button>
               <Button onClick={handleSave}>Save</Button>
