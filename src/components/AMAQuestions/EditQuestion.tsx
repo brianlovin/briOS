@@ -29,6 +29,7 @@ type Action =
   | { type: 'edit-answer'; value: string }
   | { type: 'error'; value: string }
   | { type: 'is-recording'; value: boolean }
+  | { type: 'remove-audio' }
   | { type: 'add-waveform'; value: { waveform: number[]; src: string } }
 
 export default function EditQuestion(props: Props) {
@@ -71,6 +72,13 @@ export default function EditQuestion(props: Props) {
           isRecording: action.value,
         }
       }
+      case 'remove-audio': {
+        return {
+          ...state,
+          waveform: [],
+          src: null,
+        }
+      }
       case 'error': {
         return {
           ...state,
@@ -89,7 +97,10 @@ export default function EditQuestion(props: Props) {
       question: state.question,
       id: question.id,
       answer: state.answer,
-      status: state.answer.length > 0 ? AmaStatus.Answered : AmaStatus.Pending,
+      status:
+        state.answer.length > 0 || state.waveform?.length > 0
+          ? AmaStatus.Answered
+          : AmaStatus.Pending,
       audioWaveform: state.waveform,
     },
     optimisticResponse: {
@@ -195,6 +206,10 @@ export default function EditQuestion(props: Props) {
     dispatch({ type: 'is-recording', value: true })
   }
 
+  function handleRemoveAudio() {
+    dispatch({ type: 'remove-audio' })
+  }
+
   return (
     <>
       <div className="p-4 space-y-6 bg-white border border-gray-200 rounded-md shadow-md dark:border-gray-800 dark:bg-gray-900">
@@ -218,6 +233,14 @@ export default function EditQuestion(props: Props) {
             onRecordingStart={onRecordingStart}
           />
         </div>
+
+        {state.src && (
+          <div className="flex justify-end">
+            <DeleteButton onClick={handleRemoveAudio}>
+              Remove audio
+            </DeleteButton>
+          </div>
+        )}
 
         {!state.isRecording && (
           <div className="flex flex-col space-y-2">
