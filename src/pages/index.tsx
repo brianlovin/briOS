@@ -46,14 +46,14 @@ function Home({ data }: Props) {
                 product designer at Buffer.
               </p>
             </div>
-            <div className="flex space-x-4">
+            <div className="flex flex-col space-y-3 md:space-x-4 md:space-y-0 md:flex-row">
               <Link href="/about" passHref>
                 <a>
-                  <Button>Learn more about me</Button>
+                  <Button className="block w-full">Learn more about me</Button>
                 </a>
               </Link>
               <a href="https://changelog.brianlovin.com">
-                <Button>My changelog</Button>
+                <Button className="block w-full">My changelog</Button>
               </a>
             </div>
           </div>
