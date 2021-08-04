@@ -7,7 +7,7 @@ import {
   GET_TRANSCRIPTION,
 } from '~/graphql/queries/ama'
 import AudioPlayer from '../AudioPlayer'
-import Button from '../Button'
+import Button, { RecordingButton } from '../Button'
 import Spinner from '../LoadingSpinner'
 import { ErrorAlert } from '../Alert'
 
@@ -274,7 +274,9 @@ export default function AudioRecorder(props: Props) {
       )}
 
       {state.status === 'recording' && (
-        <Button onClick={stopRecording}>Stop recording...</Button>
+        <RecordingButton onClick={stopRecording}>
+          Stop recording...
+        </RecordingButton>
       )}
 
       {state.audioUrl && state.status !== 'recording' && (
