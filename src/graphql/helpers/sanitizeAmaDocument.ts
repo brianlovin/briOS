@@ -1,3 +1,4 @@
+import { format } from 'timeago.js'
 import { storage } from '~/graphql/services/firebase'
 import { AUDIO_STORAGE_BUCKET } from '../constants'
 
@@ -19,7 +20,7 @@ async function fetchAudioPlaybackUrl(id) {
 
 export async function sanitizeAmaDocument(document, id) {
   const createdAt = document.createdAt.toDate()
-  const updatedAt = document.updatedAt.toDate()
+  const updatedAt = format(document.updatedAt.toDate())
   const audioUrl =
     document.audioWaveform?.length > 0 ? await fetchAudioPlaybackUrl(id) : null
   const audioPlayCount = document.audioPlayCount || 0

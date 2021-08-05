@@ -14,17 +14,10 @@ interface Props {
 
 export const QuestionItem = React.memo((props: Props) => {
   const { question, editable } = props
-  // set in state otherwise when we format() this value, it can differ between
-  // the server and client
-  const [updatedAt, setUpdatedAt] = React.useState(question.updatedAt)
   const [isEditing, setIsEditing] = React.useState(false)
   const [transcriptionIsVisible, setTranscriptionIsVisible] = React.useState(
     !question.audioWaveform
   )
-
-  React.useEffect(() => {
-    setUpdatedAt(question.updatedAt)
-  }, [question.updatedAt])
 
   if (isEditing) {
     return (
@@ -111,7 +104,7 @@ export const QuestionItem = React.memo((props: Props) => {
               : 'text-yellow-500'
           }`}
         >
-          {format(updatedAt)}
+          {question.updatedAt}
         </p>
 
         {editable && (
