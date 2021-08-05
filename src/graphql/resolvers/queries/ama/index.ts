@@ -11,6 +11,7 @@ import {
   IS_PROD,
   PAGINATION_AMOUNT,
 } from '~/graphql/constants'
+import { sanitizeAmaDocument } from '~/graphql/helpers/sanitizeAmaDocument'
 
 async function fetchAudioPlaybackUrl(id) {
   const bucket = storage.bucket(AUDIO_STORAGE_BUCKET)
@@ -51,20 +52,13 @@ export async function getAMAQuestions(
     for (let question of questionsRef.docs) {
       const d = question.data()
       const id = question.id
-      const createdAt = d.createdAt.toDate()
-      const updatedAt = d.updatedAt.toDate()
-      const audioUrl =
-        d.audioWaveform?.length > 0 ? await fetchAudioPlaybackUrl(id) : null
-      const audioPlayCount = d.audioPlayCount || 0
-      const audioWaveform = d.audioWaveform || []
+
+      const sanitizedAmaDocument = await sanitizeAmaDocument(d, id)
+
       const record = {
         ...d,
         id,
-        createdAt,
-        updatedAt,
-        audioUrl,
-        audioPlayCount,
-        audioWaveform,
+        ...sanitizedAmaDocument,
       } as Ama
 
       data.push(record)

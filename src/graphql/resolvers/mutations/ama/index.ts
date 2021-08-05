@@ -9,6 +9,7 @@ import {
   MutationEditAmaQuestionArgs,
   MutationTranscribeAudioArgs,
 } from '~/graphql/types.generated'
+import { sanitizeAmaDocument } from '~/graphql/helpers/sanitizeAmaDocument'
 
 const COLLECTION = IS_PROD ? 'questions' : 'questions-dev'
 
@@ -70,9 +71,8 @@ export async function addAMAReaction(_, { id }) {
   })
 
   const res = await docRef.get().then((doc) => doc.data())
-  const createdAt = res.createdAt.toDate()
-  const updatedAt = res.updatedAt.toDate()
-  return { ...res, createdAt, updatedAt, id }
+  const sanitizedAmaDocument = await sanitizeAmaDocument(doc, id)
+  return { ...res, id, ...sanitizedAmaDocument }
 }
 
 export async function addAMAAudioPlay(_, { id }) {

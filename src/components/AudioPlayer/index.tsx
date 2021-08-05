@@ -37,9 +37,9 @@ export default function AudioPlayer({
     audioRef.current.addEventListener('ended', onAudioElementEnded)
 
     return function cleanupListeners() {
-      audioRef.current.removeEventListener('play', onAudioElementPlay)
-      audioRef.current.removeEventListener('pause', onAudioElementPause)
-      audioRef.current.removeEventListener('ended', onAudioElementEnded)
+      audioRef?.current?.removeEventListener('play', onAudioElementPlay)
+      audioRef?.current?.removeEventListener('pause', onAudioElementPause)
+      audioRef?.current?.removeEventListener('ended', onAudioElementEnded)
     }
   }, [])
 
