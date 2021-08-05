@@ -84,6 +84,8 @@ export default function AudioPlayer({
   }
 
   function onAudioElementPause() {
+    const progress = audioRef.current.currentTime / audioRef.current.duration
+    setProgressOverlayScale(progress)
     setIsPlaying(false)
   }
 
