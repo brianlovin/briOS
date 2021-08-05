@@ -7,8 +7,8 @@ import {
   QueryTranscriptionArgs,
 } from '~/graphql/types.generated'
 import {
+  AMA_QUESTIONS_COLLECTION,
   AUDIO_STORAGE_BUCKET,
-  IS_PROD,
   PAGINATION_AMOUNT,
 } from '~/graphql/constants'
 import { sanitizeAmaDocument } from '~/graphql/helpers/sanitizeAmaDocument'
@@ -34,7 +34,6 @@ export async function getAMAQuestions(
   args: QueryAmaQuestionsArgs,
   { isMe }
 ) {
-  const COLLECTION = IS_PROD ? 'questions' : 'questions-dev'
   const { skip = 0, status = 'ANSWERED' } = args
 
   if (status === 'PENDING' && !isMe) return []
@@ -42,7 +41,7 @@ export async function getAMAQuestions(
   const data = []
 
   async function processQuestions() {
-    let collection = db.collection(COLLECTION)
+    let collection = db.collection(AMA_QUESTIONS_COLLECTION)
     let questionsRef = await collection
       .where('status', '==', status)
       .orderBy('updatedAt', 'desc')

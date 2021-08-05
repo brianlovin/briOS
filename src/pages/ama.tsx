@@ -20,7 +20,7 @@ function About() {
       />
 
       <CenteredColumn>
-        <div className=" space-y-8">
+        <div className="space-y-8">
           <Link href="/projects" passHref>
             <a className="leading-snug text-tertiary hover:text-gray-1000 dark:hover:text-gray-100">
               &larr; Projects
@@ -37,7 +37,7 @@ function About() {
   )
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const client = await initApolloClient({})
   await client.query({
     query: GET_AMA_QUESTIONS,
@@ -55,7 +55,6 @@ export async function getStaticProps() {
   */
   const apolloStaticCache = client.cache.extract()
   return {
-    revalidate: 60 * 60,
     props: {
       apolloStaticCache,
     },
