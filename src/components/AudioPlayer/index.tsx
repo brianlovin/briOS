@@ -32,11 +32,15 @@ export default function AudioPlayer({
   React.useEffect(() => {
     resetProgressOverlay()
 
-    audioRef.current.addEventListener('ended', function () {
-      audioRef.current.currentTime = 0
-      resetProgressOverlay()
-      setIsPlaying(false)
-    })
+    audioRef.current.addEventListener('play', onAudioElementPlay)
+    audioRef.current.addEventListener('pause', onAudioElementPause)
+    audioRef.current.addEventListener('ended', onAudioElementEnded)
+
+    return function cleanupListeners() {
+      audioRef.current.removeEventListener('play', onAudioElementPlay)
+      audioRef.current.removeEventListener('pause', onAudioElementPause)
+      audioRef.current.removeEventListener('ended', onAudioElementEnded)
+    }
   }, [])
 
   function pause() {
@@ -69,7 +73,26 @@ export default function AudioPlayer({
     setIsPlaying(true)
   }
 
+  function onAudioElementEnded() {
+    audioRef.current.currentTime = 0
+    resetProgressOverlay()
+    setIsPlaying(false)
+  }
+
+  function onAudioElementPlay() {
+    setIsPlaying(true)
+  }
+
+  function onAudioElementPause() {
+    setIsPlaying(false)
+  }
+
   function togglePlay() {
+    // pause all other audio players
+    const audios = document.querySelectorAll('audio')
+    audios.forEach((audio) => audio.pause())
+
+    // pause or play this audio player
     isPlaying ? pause() : play()
   }
 

@@ -85,7 +85,7 @@ export default function Waveform({
           return (
             <span
               key={i}
-              style={{ height, minWidth: '2px' }}
+              style={{ height, minWidth: '2px', minHeight: '2px' }}
               className="w-full bg-gray-800 rounded-md dark:bg-gray-200"
             />
           )
