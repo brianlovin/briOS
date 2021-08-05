@@ -383,4 +383,13 @@ export default [
     description:
       'The best way to set up multi-room, multi-player, multi-service music experiences at home. One you’ve fully committed to the ecosystem, it’s magic.',
   },
+  {
+    name: 'Cometeer',
+    url: 'https://cometeer.com/get-started?code=iIgdGw',
+    image: 'cometeer.jpg',
+    oss: false,
+    independent: false,
+    description:
+      'Game over. They solved coffee. Once you try it, you’see what I mean (I’m on the light/medium roast variety subscription).',
+  },
 ]
