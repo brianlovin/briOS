@@ -1,5 +1,5 @@
 import { baseUrl } from '~/config/seo'
-import { IS_PROD } from '~/graphql/constants'
+import { AMA_QUESTIONS_COLLECTION, IS_PROD } from '~/graphql/constants'
 import { db } from '~/graphql/services/firebase'
 import { emailMe } from '~/graphql/services/postmark'
 import fetch from 'node-fetch'
@@ -9,12 +9,11 @@ import {
   MutationEditAmaQuestionArgs,
   MutationTranscribeAudioArgs,
 } from '~/graphql/types.generated'
-
-const COLLECTION = IS_PROD ? 'questions' : 'questions-dev'
+import { sanitizeAmaDocument } from '~/graphql/helpers/sanitizeAmaDocument'
 
 export async function editAMAQuestion(_, args: MutationEditAmaQuestionArgs) {
   const { id, question, answer, status, audioWaveform } = args
-  const docRef = db.collection(COLLECTION).doc(id)
+  const docRef = db.collection(AMA_QUESTIONS_COLLECTION).doc(id)
   await docRef.update({
     question,
     answer,
@@ -39,7 +38,7 @@ export async function addAMAQuestion(
   })
 
   return await db
-    .collection(COLLECTION)
+    .collection(AMA_QUESTIONS_COLLECTION)
     .add({
       question,
       answer: null,
@@ -55,12 +54,12 @@ export async function deleteAMAQuestion(
   _,
   { id }: MutationDeleteAmaQuestionArgs
 ) {
-  const docRef = db.collection(COLLECTION).doc(id)
+  const docRef = db.collection(AMA_QUESTIONS_COLLECTION).doc(id)
   return await docRef.delete().then(() => true)
 }
 
 export async function addAMAReaction(_, { id }) {
-  const docRef = db.collection(COLLECTION).doc(id)
+  const docRef = db.collection(AMA_QUESTIONS_COLLECTION).doc(id)
   const doc = await docRef.get().then((doc) => doc.data())
 
   const count = doc.reactions ? doc.reactions + 1 : 1
@@ -70,15 +69,13 @@ export async function addAMAReaction(_, { id }) {
   })
 
   const res = await docRef.get().then((doc) => doc.data())
-  const createdAt = res.createdAt.toDate()
-  const updatedAt = res.updatedAt.toDate()
-  return { ...res, createdAt, updatedAt, id }
+  const sanitizedAmaDocument = await sanitizeAmaDocument(doc, id)
+  return { ...res, id, ...sanitizedAmaDocument }
 }
 
 export async function addAMAAudioPlay(_, { id }) {
-  const docRef = db.collection(COLLECTION).doc(id)
+  const docRef = db.collection(AMA_QUESTIONS_COLLECTION).doc(id)
   const doc = await docRef.get().then((doc) => doc.data())
-
   const count = doc.playCount ? doc.playCount + 1 : 1
 
   await docRef.update({

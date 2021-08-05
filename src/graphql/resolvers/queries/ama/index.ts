@@ -7,10 +7,11 @@ import {
   QueryTranscriptionArgs,
 } from '~/graphql/types.generated'
 import {
+  AMA_QUESTIONS_COLLECTION,
   AUDIO_STORAGE_BUCKET,
-  IS_PROD,
   PAGINATION_AMOUNT,
 } from '~/graphql/constants'
+import { sanitizeAmaDocument } from '~/graphql/helpers/sanitizeAmaDocument'
 
 async function fetchAudioPlaybackUrl(id) {
   const bucket = storage.bucket(AUDIO_STORAGE_BUCKET)
@@ -33,7 +34,6 @@ export async function getAMAQuestions(
   args: QueryAmaQuestionsArgs,
   { isMe }
 ) {
-  const COLLECTION = IS_PROD ? 'questions' : 'questions-dev'
   const { skip = 0, status = 'ANSWERED' } = args
 
   if (status === 'PENDING' && !isMe) return []
@@ -41,7 +41,7 @@ export async function getAMAQuestions(
   const data = []
 
   async function processQuestions() {
-    let collection = db.collection(COLLECTION)
+    let collection = db.collection(AMA_QUESTIONS_COLLECTION)
     let questionsRef = await collection
       .where('status', '==', status)
       .orderBy('updatedAt', 'desc')
@@ -51,20 +51,13 @@ export async function getAMAQuestions(
     for (let question of questionsRef.docs) {
       const d = question.data()
       const id = question.id
-      const createdAt = d.createdAt.toDate()
-      const updatedAt = d.updatedAt.toDate()
-      const audioUrl =
-        d.audioWaveform?.length > 0 ? await fetchAudioPlaybackUrl(id) : null
-      const audioPlayCount = d.audioPlayCount || 0
-      const audioWaveform = d.audioWaveform || []
+
+      const sanitizedAmaDocument = await sanitizeAmaDocument(d, id)
+
       const record = {
         ...d,
         id,
-        createdAt,
-        updatedAt,
-        audioUrl,
-        audioPlayCount,
-        audioWaveform,
+        ...sanitizedAmaDocument,
       } as Ama
 
       data.push(record)
