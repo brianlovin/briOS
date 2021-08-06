@@ -1,9 +1,9 @@
 import { db } from '~/graphql/services/firebase'
-import { PAGINATION_AMOUNT } from '~/graphql/constants'
+import { BOOKMARKS_COLLECTION, PAGINATION_AMOUNT } from '~/graphql/constants'
 
 export async function getBookmarks(_, { skip = 0, category = undefined }) {
   const data = []
-  const ref = db.collection('bookmarks')
+  const ref = db.collection(BOOKMARKS_COLLECTION)
   if (category) {
     await ref
       .where('category', '==', category)

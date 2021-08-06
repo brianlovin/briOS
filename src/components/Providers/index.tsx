@@ -3,6 +3,7 @@ import Fathom from './Fathom'
 import SEO from './SEO'
 import { createClient } from '@liveblocks/client'
 import { LiveblocksProvider } from '@liveblocks/react'
+import Toast from './Toaster'
 
 interface Props {
   children?: any
@@ -17,7 +18,7 @@ export default function Providers({ children }: Props) {
     <>
       <SEO />
       <Fathom />
-
+      <Toast />
       {children}
     </>
   )

@@ -5,6 +5,7 @@ import { Input, Textarea } from '~/components/Input'
 import { useRouter } from 'next/router'
 import Button from '../Button'
 import { ErrorAlert } from '../Alert'
+import toast from 'react-hot-toast'
 
 export default function AddBookmark() {
   const router = useRouter()
@@ -44,6 +45,7 @@ export default function AddBookmark() {
       setUrl('')
       setNotes('')
       setTwitterHandle('')
+      toast.success('Saved!')
     },
     update(cache, { data: { addBookmark } }) {
       const { bookmarks } = cache.readQuery({

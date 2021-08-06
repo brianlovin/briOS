@@ -3,7 +3,10 @@ import {
   InMemoryCache,
   ApolloLink,
   HttpLink,
+  ServerError,
 } from '@apollo/client'
+import { onError } from '@apollo/client/link/error'
+import toast from 'react-hot-toast'
 import { CLIENT_URL } from '~/graphql/constants'
 
 // ensure that queries can run on the server during SSR and SSG
@@ -29,7 +32,28 @@ function createIsomorphLink() {
   }
 }
 
-const link = ApolloLink.from([createIsomorphLink()])
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) {
+    graphQLErrors.forEach(({ message }) => {
+      try {
+        toast.error(message)
+      } catch {
+        console.error({ message })
+      }
+    })
+  }
+
+  if (networkError) {
+    const err = networkError as ServerError
+    try {
+      toast.error(err.result.error)
+    } catch {
+      console.error({ err })
+    }
+  }
+})
+
+const link = ApolloLink.from([errorLink, createIsomorphLink()])
 
 export function createApolloClient(initialState = {}) {
   const ssrMode = typeof window === 'undefined'
