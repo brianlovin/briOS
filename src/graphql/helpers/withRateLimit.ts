@@ -34,13 +34,13 @@ const rateLimit = (options) => {
 }
 
 const limiter = rateLimit({
-  interval: RATE_LIMIT_REQUEST_DURATION, // 60 seconds
-  uniqueTokenPerInterval: 500, // Max 500 users per second
+  interval: RATE_LIMIT_REQUEST_DURATION,
+  uniqueTokenPerInterval: 500,
 })
 
 const withRateLimit = (handler) => async (req, res) => {
   try {
-    await limiter.check(res, RATE_LIMIT_REQUEST_AMOUNT, 'GRAPHQL_RATE_LIMIT') // 10 requests per minute
+    await limiter.check(res, RATE_LIMIT_REQUEST_AMOUNT, 'GRAPHQL_RATE_LIMIT')
     return handler(req, res)
   } catch {
     return res.status(429).json({ error: 'Rate limit exceeded' })
