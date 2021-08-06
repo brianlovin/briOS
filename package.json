@@ -39,6 +39,7 @@
     "firebase-admin": "^9.11.0",
     "graphql": "^15.5.1",
     "isomorphic-unfetch": "^3.1.0",
+    "lru-cache": "^6.0.0",
     "next": "^11.0.1",
     "next-seo": "^4.26.0",
     "postmark": "^2.7.6",
@@ -46,6 +47,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-feather": "^2.0.9",
+    "react-hot-toast": "^2.1.0",
     "react-linkify": "^1.0.0-alpha",
     "react-markdown": "^6.0.3",
     "react-visibility-sensor": "^5.1.1",
@@ -60,7 +62,8 @@
     "styled-components": "^4.4.1",
     "timeago.js": "^4.0.2",
     "unified": "^10.1.0",
-    "unified-stream": "^2.0.0"
+    "unified-stream": "^2.0.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@ardatan/graphql-tools": "^4.1.0",

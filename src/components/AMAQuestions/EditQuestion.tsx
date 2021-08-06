@@ -9,6 +9,7 @@ import { GET_AMA_QUESTIONS, GET_SIGNED_UPLOAD_URL } from '~/graphql/queries'
 import { Textarea } from '~/components/Input'
 import Button, { DeleteButton } from '../Button'
 import AudioRecorder from '../AudioRecorder'
+import toast from 'react-hot-toast'
 
 interface Props {
   question: Ama
@@ -142,9 +143,8 @@ export default function EditQuestion(props: Props) {
         },
       })
     },
-    onError({ message }) {
-      const value = message.replace('GraphQL error:', '')
-      dispatch({ type: 'error', value })
+    onCompleted() {
+      toast.success('Saved!')
     },
   })
 

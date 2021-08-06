@@ -2,6 +2,7 @@ import { URL } from 'url'
 import { UserInputError } from 'apollo-server-micro'
 import { db } from '~/graphql/services/firebase'
 import getBookmarkMetaData from './getBookmarkMetaData'
+import { BOOKMARKS_COLLECTION } from '~/graphql/constants'
 
 function isValidUrl(string) {
   try {
@@ -12,8 +13,6 @@ function isValidUrl(string) {
   }
 }
 
-const COLLECTION = 'bookmarks'
-
 export async function editBookmark(
   _,
   { id, title, notes = '', category, twitterHandle }
@@ -22,12 +21,12 @@ export async function editBookmark(
     throw new UserInputError('Bookmark must have a title')
 
   await db
-    .collection(COLLECTION)
+    .collection(BOOKMARKS_COLLECTION)
     .doc(id)
     .update({ title, notes, category, twitterHandle })
 
   return await db
-    .collection(COLLECTION)
+    .collection(BOOKMARKS_COLLECTION)
     .doc(id)
     .get()
     .then((doc) => doc.data())
@@ -38,7 +37,7 @@ export async function addBookmark(_, { url, notes, category, twitterHandle }) {
   if (!isValidUrl(url)) throw new UserInputError('URL was invalid')
 
   const existingRef = await db
-    .collection(COLLECTION)
+    .collection(BOOKMARKS_COLLECTION)
     .where('url', '==', url)
     .get()
     .then((snapshot) => !snapshot.empty)
@@ -48,7 +47,7 @@ export async function addBookmark(_, { url, notes, category, twitterHandle }) {
   const metadata = await getBookmarkMetaData(url)
 
   const id = await db
-    .collection(COLLECTION)
+    .collection(BOOKMARKS_COLLECTION)
     .add({
       createdAt: new Date(),
       ...metadata,
@@ -60,7 +59,7 @@ export async function addBookmark(_, { url, notes, category, twitterHandle }) {
     .then(({ id }) => id)
 
   return await db
-    .collection(COLLECTION)
+    .collection(BOOKMARKS_COLLECTION)
     .doc(id)
     .get()
     .then((doc) => doc.data())
@@ -69,14 +68,14 @@ export async function addBookmark(_, { url, notes, category, twitterHandle }) {
 
 export async function deleteBookmark(_, { id }) {
   return await db
-    .collection(COLLECTION)
+    .collection(BOOKMARKS_COLLECTION)
     .doc(id)
     .delete()
     .then(() => true)
 }
 
 export async function addBookmarkReaction(_, { id }) {
-  const docRef = db.collection(COLLECTION).doc(id)
+  const docRef = db.collection(BOOKMARKS_COLLECTION).doc(id)
   const doc = await docRef.get().then((doc) => doc.data())
   const count = doc.reactions ? doc.reactions + 1 : 1
 
