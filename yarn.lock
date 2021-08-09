@@ -10038,10 +10038,10 @@ rehype-minify-whitespace@^4.0.0:
     hast-util-whitespace "^1.0.4"
     unist-util-is "^4.0.0"
 
-rehype-parse@^8.0.1:
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/rehype-parse/-/rehype-parse-8.0.1.tgz#ac7e061ee68a278ea9184714334f666faf168909"
-  integrity sha512-e+D4PckypYK/dW5vTaOTP0rHlhgMveoMgJYfOq9bUNeRARzi18zw4ICJl8QLsLAPRVaFZ36TpezS6iOqj44N6g==
+rehype-parse@^8.0.2:
+  version "8.0.2"
+  resolved "https://registry.yarnpkg.com/rehype-parse/-/rehype-parse-8.0.2.tgz#8e8ebe6bff33521a446eacce818a49848d0c1b46"
+  integrity sha512-Y5AvUbTareuAcCQITTbC9SGagm1IvOOSfG5CTTaOUW0pEeoNHkOq4YmMaEywUmSwwOgel3gOF3O7Mwl1acoBzg==
   dependencies:
     "@types/hast" "^2.0.0"
     hast-util-from-parse5 "^7.0.0"
