@@ -1413,14 +1413,14 @@
     lodash "~4.17.0"
     tslib "~2.3.0"
 
-"@graphql-codegen/typescript-operations@^1.18.4":
-  version "1.18.4"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-operations/-/typescript-operations-1.18.4.tgz#78149af3a949b760a7af7526593f2b7269a6841a"
-  integrity sha512-bxeRaCCwu2rUXkRj6WwMVazlMignemeUJfDjrK7d4z9o9tyjlrGWnbsjeZI7M17GNCARU9Vkr6XH94wEyooSsA==
+"@graphql-codegen/typescript-operations@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-operations/-/typescript-operations-2.0.1.tgz#e4e6ccafa7cb3b4c8b4820e26e470785748ad937"
+  integrity sha512-AY0iwqPjlxLsdUskQAP/vhpA9Kp+OZl35B6Pp2UOlQzs6eQ/8yHtlFFRdo5Pn9D+S3u4zQxLZvK03fV6lxxPrA==
   dependencies:
-    "@graphql-codegen/plugin-helpers" "^1.18.8"
-    "@graphql-codegen/typescript" "^1.23.0"
-    "@graphql-codegen/visitor-plugin-common" "1.22.0"
+    "@graphql-codegen/plugin-helpers" "^2.0.0"
+    "@graphql-codegen/typescript" "^2.0.0"
+    "@graphql-codegen/visitor-plugin-common" "2.0.0"
     auto-bind "~4.0.0"
     tslib "~2.3.0"
 
@@ -1435,13 +1435,23 @@
     change-case-all "1.0.14"
     tslib "~2.3.0"
 
-"@graphql-codegen/typescript@^1.22.2", "@graphql-codegen/typescript@^1.23.0":
+"@graphql-codegen/typescript@^1.22.2":
   version "1.23.0"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript/-/typescript-1.23.0.tgz#48a5372bcbe81a442c71c1bb032c312c6586a59a"
   integrity sha512-ZfFgk5mGfuOy4kEpy+dcuvJMphigMfJ4AkiP1qWmWFufDW3Sg2yayTSNmzeFdcXMrWGgfNW2dKtuuTmbmQhS5g==
   dependencies:
     "@graphql-codegen/plugin-helpers" "^1.18.8"
     "@graphql-codegen/visitor-plugin-common" "1.22.0"
+    auto-bind "~4.0.0"
+    tslib "~2.3.0"
+
+"@graphql-codegen/typescript@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript/-/typescript-2.0.0.tgz#59270ccac6c222ef773be18486149398e90f5199"
+  integrity sha512-SsgN3DG0MntpMENkMEzbLSUQr8HBVqEcuDY5259+aJM4TizfVVfxbpWuBCxBLz2d0RdQpF5YzkzdDrJ123rQ0g==
+  dependencies:
+    "@graphql-codegen/plugin-helpers" "^2.0.0"
+    "@graphql-codegen/visitor-plugin-common" "2.0.0"
     auto-bind "~4.0.0"
     tslib "~2.3.0"
 
@@ -4707,11 +4717,6 @@ decompress-response@^3.3.0:
   dependencies:
     mimic-response "^1.0.0"
 
-dedent@^0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/dedent/-/dedent-0.7.0.tgz#2495ddbaf6eb874abb0e1be9df22d2e5a544326c"
-  integrity sha1-JJXduvbrh0q7Dhvp3yLS5aVEMmw=
-
 deep-extend@^0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/deep-extend/-/deep-extend-0.6.0.tgz#c4fa7c95404a17a9c3e8ca7e1537312b736330ac"
@@ -7593,17 +7598,16 @@ linkify-it@^2.0.3:
   dependencies:
     uc.micro "^1.0.1"
 
-lint-staged@^11.0.0:
-  version "11.1.1"
-  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-11.1.1.tgz#9c2018b872654cf80b2b1ff5a10b6b74aef6e300"
-  integrity sha512-eTNGe6i78PSUUH2BZi1gZmGmNfb8IeN4z2OzMYxSZ1qnP1WXKn1E7D+OHwLbRDm/wQINnzIj0bsKJ6lLVSuZiQ==
+lint-staged@^11.1.2:
+  version "11.1.2"
+  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-11.1.2.tgz#4dd78782ae43ee6ebf2969cad9af67a46b33cd90"
+  integrity sha512-6lYpNoA9wGqkL6Hew/4n1H6lRqF3qCsujVT0Oq5Z4hiSAM7S6NksPJ3gnr7A7R52xCtiZMcEUNNQ6d6X5Bvh9w==
   dependencies:
     chalk "^4.1.1"
     cli-truncate "^2.1.0"
     commander "^7.2.0"
     cosmiconfig "^7.0.0"
     debug "^4.3.1"
-    dedent "^0.7.0"
     enquirer "^2.3.6"
     execa "^5.0.0"
     listr2 "^3.8.2"
