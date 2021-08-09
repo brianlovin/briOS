@@ -1424,13 +1424,13 @@
     auto-bind "~4.0.0"
     tslib "~2.3.0"
 
-"@graphql-codegen/typescript-react-apollo@^2.3.1":
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-react-apollo/-/typescript-react-apollo-2.3.1.tgz#e1ad3f09346f37d3d1604ecc4f342824712b726e"
-  integrity sha512-g5MAOCi8Rxwh2raiOiVVBy4ONDcZjSs4z+XKprZ9Qw12sJwVUUDLKiro+/kqByk7inXwFqlc156IMFvb6QBxbA==
+"@graphql-codegen/typescript-react-apollo@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-react-apollo/-/typescript-react-apollo-3.0.0.tgz#8ec6e65a1a6cf177418b38c681d1376f81095093"
+  integrity sha512-acg2GArcdHYusLragNCqrDjLLbE3M2I9cUuckIoo8KiDtB3/PzQ9eCg3WRjgPYA5zaFpLaFS6QQlRJhD/j0Wgw==
   dependencies:
-    "@graphql-codegen/plugin-helpers" "^1.18.8"
-    "@graphql-codegen/visitor-plugin-common" "1.22.0"
+    "@graphql-codegen/plugin-helpers" "^2.0.0"
+    "@graphql-codegen/visitor-plugin-common" "2.0.0"
     auto-bind "~4.0.0"
     change-case-all "1.0.14"
     tslib "~2.3.0"
@@ -1453,6 +1453,22 @@
     "@graphql-codegen/plugin-helpers" "^1.18.8"
     "@graphql-tools/optimize" "^1.0.1"
     "@graphql-tools/relay-operation-optimizer" "^6.3.0"
+    array.prototype.flatmap "^1.2.4"
+    auto-bind "~4.0.0"
+    change-case-all "1.0.14"
+    dependency-graph "^0.11.0"
+    graphql-tag "^2.11.0"
+    parse-filepath "^1.0.2"
+    tslib "~2.3.0"
+
+"@graphql-codegen/visitor-plugin-common@2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/visitor-plugin-common/-/visitor-plugin-common-2.0.0.tgz#4101a016f67dbf7eedc507b27518e9c84464f2c9"
+  integrity sha512-JUmOgUwc/hNiUDyihuzDQH/YZtAQseGo67buRDYLe5QW7XW9c9twEC0DlqzEKO8poJDDeemDAr8TPgBlLykXgg==
+  dependencies:
+    "@graphql-codegen/plugin-helpers" "^2.0.0"
+    "@graphql-tools/optimize" "^1.0.1"
+    "@graphql-tools/relay-operation-optimizer" "^6.3.3"
     array.prototype.flatmap "^1.2.4"
     auto-bind "~4.0.0"
     change-case-all "1.0.14"
@@ -1634,6 +1650,15 @@
   integrity sha512-3WsDTqKnAJR29q2E5JmQ3iUo1Y2T/4jub+gfhLhOOrQc3kQrcP4FaIJhVYoRBcR2cIve3fcQ6P1jVwensjTDJw==
   dependencies:
     "@graphql-tools/utils" "8.0.1"
+    relay-compiler "11.0.2"
+    tslib "~2.3.0"
+
+"@graphql-tools/relay-operation-optimizer@^6.3.3":
+  version "6.3.4"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/relay-operation-optimizer/-/relay-operation-optimizer-6.3.4.tgz#8c50ffd23b790cae462ec93b08f07a97cea9594f"
+  integrity sha512-/KLAHGFh8Q8hVpoVBEtqLddrOI0ro2clHR1BsCLOaO6jkYZ7+O8JUGK/y/44Zj2gsxuFiQbgXAuG9tnLbtFLmw==
+  dependencies:
+    "@graphql-tools/utils" "8.0.2"
     relay-compiler "11.0.2"
     tslib "~2.3.0"
 
