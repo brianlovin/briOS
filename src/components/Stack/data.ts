@@ -322,8 +322,8 @@ export default [
       'This is my answer to Twitter FOMO: I set up a daily digest with the top links and best tweets from all the people I follow. Simple. Easiest $100/yr subscription to justify.',
   },
   {
-    name: 'Readng',
-    url: 'https://beta.readng.co',
+    name: 'Oku',
+    url: 'https://oku.club',
     image: 'readng.png',
     oss: false,
     independent: true,
