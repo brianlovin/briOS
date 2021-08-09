@@ -2116,10 +2116,10 @@
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"
   integrity sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==
 
-"@tryghost/content-api@^1.5.6":
-  version "1.5.11"
-  resolved "https://registry.yarnpkg.com/@tryghost/content-api/-/content-api-1.5.11.tgz#63cf19f52284555857aee3b97c7cb8b9d89a98aa"
-  integrity sha512-VsVr9YvKnLzGsCGkQHtlgzB1kd6GR21iwt9b/fhzIHOfq7dXt/8o7eDhKZRMriwvBLmMqCRC9Bdrr2zh8EIUQA==
+"@tryghost/content-api@^1.5.12":
+  version "1.5.12"
+  resolved "https://registry.yarnpkg.com/@tryghost/content-api/-/content-api-1.5.12.tgz#83e548258b1a013091426515394047ecf509cbb4"
+  integrity sha512-Ys0QiYu3EKQm+TPDW5kApH+SUYB9Nt8sBqltZ+2f8Trr+xL1/tBcNl82UyEuSZDd6dbzCO3aTDiFi/c7XKvntQ==
   dependencies:
     axios "^0.21.1"
 
