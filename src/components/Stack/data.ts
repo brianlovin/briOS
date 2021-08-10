@@ -305,7 +305,7 @@ export default [
   },
   {
     name: 'Tempo',
-    url: 'https://www.yourtempo.co',
+    url: 'https://www.yourtempo.co/ref?code=7Y2MHN',
     image: 'tempo.png',
     oss: false,
     independent: true,
