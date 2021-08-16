@@ -78,7 +78,7 @@
     "@testing-library/cypress": "^8.0.0",
     "@types/chai": "^4.2.21",
     "@types/dom-mediacapture-record": "^1.0.10",
-    "@types/jest": "^26.0.24",
+    "@types/jest": "^27.0.1",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.6.1",
     "@types/react": "^17.0.16",
