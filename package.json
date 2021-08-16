@@ -83,7 +83,7 @@
     "@types/node": "^16.6.1",
     "@types/react": "^17.0.16",
     "@types/webrtc": "^0.0.29",
-    "@typescript-eslint/parser": "^4.29.0",
+    "@typescript-eslint/parser": "^4.29.1",
     "autoprefixer": "^10.3.1",
     "babel-eslint": "^10.1.0",
     "babel-plugin-styled-components": "^1.13.2",
