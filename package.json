@@ -82,7 +82,7 @@
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.7.1",
     "@types/react": "^17.0.18",
-    "@types/webrtc": "^0.0.29",
+    "@types/webrtc": "^0.0.30",
     "@typescript-eslint/parser": "^4.29.1",
     "autoprefixer": "^10.3.2",
     "babel-eslint": "^10.1.0",
