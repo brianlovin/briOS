@@ -80,7 +80,7 @@
     "@types/dom-mediacapture-record": "^1.0.10",
     "@types/jest": "^27.0.1",
     "@types/mocha": "^9.0.0",
-    "@types/node": "^16.6.1",
+    "@types/node": "^16.7.1",
     "@types/react": "^17.0.18",
     "@types/webrtc": "^0.0.29",
     "@typescript-eslint/parser": "^4.29.1",
