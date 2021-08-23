@@ -36,7 +36,7 @@
     "cookie": "^0.4.1",
     "cryptr": "^6.0.2",
     "date-fns": "^2.23.0",
-    "firebase-admin": "^9.11.0",
+    "firebase-admin": "^9.11.1",
     "graphql": "^15.5.1",
     "isomorphic-unfetch": "^3.1.0",
     "lru-cache": "^6.0.0",
