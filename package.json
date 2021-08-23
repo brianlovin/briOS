@@ -22,7 +22,7 @@
     "@apollo/client": "^3.4.7",
     "@apollo/link-error": "^2.0.0-beta.3",
     "@apollo/link-schema": "^2.0.0-beta.3",
-    "@graphql-tools/schema": "^8.1.0",
+    "@graphql-tools/schema": "^8.1.2",
     "@liveblocks/client": "^0.10.0",
     "@liveblocks/node": "^0.3.0",
     "@liveblocks/react": "^0.10.0",
