@@ -58,7 +58,7 @@
     "remark-preset-lint-recommended": "^6.0.0",
     "remark-stringify": "^10.0.0",
     "remove-markdown": "^0.3.0",
-    "string-replace-to-array": "^1.0.3",
+    "string-replace-to-array": "^2.1.0",
     "styled-components": "^4.4.1",
     "timeago.js": "^4.0.2",
     "unified": "^10.1.0",
