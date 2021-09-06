@@ -51,7 +51,7 @@
     "react-linkify": "^1.0.0-alpha",
     "react-markdown": "^7.0.1",
     "react-visibility-sensor": "^5.1.1",
-    "rehype-parse": "^8.0.2",
+    "rehype-parse": "^8.0.3",
     "rehype-raw": "^6.1.0",
     "rehype-remark": "^9.0.0",
     "rehype-sanitize": "^5.0.0",
