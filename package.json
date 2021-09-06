@@ -81,7 +81,7 @@
     "@types/jest": "^27.0.1",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.7.10",
-    "@types/react": "^17.0.19",
+    "@types/react": "^17.0.20",
     "@types/webrtc": "^0.0.30",
     "@typescript-eslint/parser": "^4.29.3",
     "autoprefixer": "^10.3.4",
