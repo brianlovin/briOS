@@ -29,7 +29,7 @@
     "@tailwindcss/forms": "^0.3.3",
     "@tailwindcss/typography": "^0.4.1",
     "@tippy.js/react": "^3.1.1",
-    "@tryghost/content-api": "^1.5.12",
+    "@tryghost/content-api": "^1.5.13",
     "@typescript-eslint/eslint-plugin": "^4.30.0",
     "apollo-server-micro": "^2.25.2",
     "cheerio": "^1.0.0-rc.10",
@@ -104,7 +104,7 @@
     "prettier": "^2.3.2",
     "prettier-eslint": "^13.0.0",
     "stylelint-config-recommended": "^5.0.0",
-    "tailwindcss": "^2.2.8",
+    "tailwindcss": "^2.2.9",
     "typescript": "^4.4.2",
     "typescript-eslint-parser": "^22.0.0",
     "webpack": "^4.46.0"
