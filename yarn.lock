@@ -1416,14 +1416,14 @@
     lodash "~4.17.0"
     tslib "~2.3.0"
 
-"@graphql-codegen/typescript-operations@^2.1.2":
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-operations/-/typescript-operations-2.1.2.tgz#fe93ec2e1fe6c036f6d60210d8259a24b2e9434d"
-  integrity sha512-4Eqn2TREH3mFY7yiGFlFN+UWGxhPX0HcEt/WIxLydvR57tOEMDYpDdPmaIQ/BQ8vntPA6h/FHIs6wnwFMvJ9jQ==
+"@graphql-codegen/typescript-operations@^2.1.3":
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-operations/-/typescript-operations-2.1.3.tgz#34f94e323c69006788e7eb0f4d039522a95dd31f"
+  integrity sha512-CGRc2mu7NVW+U6J+a66YdLn7UAZFrVO1axBSzgQOCR9OaSJ9Kr2K3Iq/R8PX31YHWu6hDI93Nf8zc2TIiRLDwQ==
   dependencies:
     "@graphql-codegen/plugin-helpers" "^2.1.1"
-    "@graphql-codegen/typescript" "^2.1.2"
-    "@graphql-codegen/visitor-plugin-common" "2.1.2"
+    "@graphql-codegen/typescript" "^2.2.0"
+    "@graphql-codegen/visitor-plugin-common" "2.2.0"
     auto-bind "~4.0.0"
     tslib "~2.3.0"
 
@@ -1438,7 +1438,7 @@
     change-case-all "1.0.14"
     tslib "~2.3.0"
 
-"@graphql-codegen/typescript@^2.1.2", "@graphql-codegen/typescript@^2.2.0":
+"@graphql-codegen/typescript@^2.2.0":
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript/-/typescript-2.2.0.tgz#3ff0ea851180842d760df165d3272e78566ac005"
   integrity sha512-36F7DDFpIenvziyCyu9pS7ztb122TRz4mPQGklDycdz97fyYy/7yLyTTNTfX9T4+RaNBfbL80U1CcqxYgnF9yQ==
@@ -1446,22 +1446,6 @@
     "@graphql-codegen/plugin-helpers" "^2.1.1"
     "@graphql-codegen/visitor-plugin-common" "2.2.0"
     auto-bind "~4.0.0"
-    tslib "~2.3.0"
-
-"@graphql-codegen/visitor-plugin-common@2.1.2":
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/visitor-plugin-common/-/visitor-plugin-common-2.1.2.tgz#30f96e27bd6410211bf8b90cbb26e1b432221670"
-  integrity sha512-Mij8zXxA6nEL5wafCL9pVITFsmYnNIgkJ0B929cnAKHMFw0qU6ms1PkNCh7Or1ekWtu+RYQq/2tkCT//1HZASw==
-  dependencies:
-    "@graphql-codegen/plugin-helpers" "^2.1.1"
-    "@graphql-tools/optimize" "^1.0.1"
-    "@graphql-tools/relay-operation-optimizer" "^6.3.7"
-    "@graphql-tools/utils" "8.1.2"
-    auto-bind "~4.0.0"
-    change-case-all "1.0.14"
-    dependency-graph "^0.11.0"
-    graphql-tag "^2.11.0"
-    parse-filepath "^1.0.2"
     tslib "~2.3.0"
 
 "@graphql-codegen/visitor-plugin-common@2.2.0":
@@ -1705,13 +1689,6 @@
   version "8.0.1"
   resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-8.0.1.tgz#bf09e8d6d17c4a0830f0fbf2c69dd725de19058c"
   integrity sha512-gjQk6sht4b0/hcG+QEVxfMyO8bn5tuU1nIOVhQ4whgFaUmrnb3hx2mwzz1EJzfIOAuHKE8tY0lu6jt3bGTD4yg==
-  dependencies:
-    tslib "~2.3.0"
-
-"@graphql-tools/utils@8.1.2":
-  version "8.1.2"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-8.1.2.tgz#a376259fafbca7532fda657e3abeec23b545e5d3"
-  integrity sha512-3G+NIBR5mHjPm78jAD0l07JRE0XH+lr9m7yL/wl69jAzK0Jr/H+/Ok4ljEolI70iglz+ZhIShVPAwyesF6rnFg==
   dependencies:
     tslib "~2.3.0"
 
