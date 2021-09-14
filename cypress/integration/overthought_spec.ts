@@ -9,10 +9,4 @@ describe('Posts index', () => {
   it('should render header', () => {
     cy.get('[data-cy="writing"]').scrollIntoView().should('be.visible')
   })
-
-  it('should render newsletter', () => {
-    cy.get('[data-cy="writing-subscribe-box"]')
-      .scrollIntoView()
-      .should('be.visible')
-  })
 })
