@@ -79,8 +79,6 @@ function About() {
             </div>
           </div>
 
-          <WritingSubscribeBox />
-
           <div className="space-y-6">
             <h4 className="font-list-heading">Speaking and interviews</h4>
             <div className="space-y-6">
