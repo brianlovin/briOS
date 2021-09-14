@@ -47,7 +47,6 @@ export default function PostView({ post }: Props) {
 
         <div className="mt-32 ">
           <Feedback post={post} />
-          <WritingSubscribeBox />
         </div>
       </CenteredColumn>
     </React.Fragment>
