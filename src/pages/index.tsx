@@ -5,7 +5,6 @@ import { CenteredColumn } from '~/components/Layouts'
 import { initApolloClient } from '~/graphql/services/apollo'
 import { GET_HOME } from '~/graphql/queries'
 import { Post } from '~/graphql/types.generated'
-import WritingSubscribeBox from '~/components/Writing/Subscribe'
 import PostsList from '~/components/Writing/List'
 import ProjectsList from '~/components/ProjectsList'
 import Button from '~/components/Button'
@@ -57,8 +56,6 @@ function Home({ data }: Props) {
               </a>
             </div>
           </div>
-
-          <WritingSubscribeBox />
 
           <div className="space-y-8">
             <h4 className="font-list-heading">Recent Writing</h4>

@@ -7,7 +7,6 @@ import { CenteredColumn } from '../Layouts'
 import { PageHeader } from '../Page'
 import Image from 'next/image'
 import Link from 'next/link'
-import WritingSubscribeBox from '../Writing/Subscribe'
 
 interface Props {
   post: DesignDetailsPost
@@ -47,8 +46,6 @@ export default function DesignDetailView(props: Props) {
         <div className="prose">
           <MarkdownRenderer>{post.description}</MarkdownRenderer>
         </div>
-
-        <WritingSubscribeBox />
 
         {post.details.map((detail, i) => (
           <DesignDetailMedia detail={detail} key={`${detail.title}-${i}`} />
