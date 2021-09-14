@@ -1,7 +1,6 @@
 import * as React from 'react'
 import Page, { PageHeader } from '~/components/Page'
 import { Post } from '~/graphql/types.generated'
-import WritingSubscribeBox from '~/components/Writing/Subscribe'
 import PostsList from '~/components/Writing/List'
 import { GET_POSTS } from '~/graphql/queries'
 import { initApolloClient } from '~/graphql/services/apollo'
@@ -35,13 +34,13 @@ function Writing({ data }: Props) {
       />
 
       <CenteredColumn>
-        <div data-cy="writing" className=" space-y-12">
+        <div data-cy="writing" className="space-y-12 ">
           <PageHeader
             title={routes.writing.seo.title}
             subtitle={routes.writing.seo.description}
           />
-          
-          <div className=" space-y-6">
+
+          <div className="space-y-6 ">
             {data && data.posts && <PostsList posts={data.posts} />}
           </div>
         </div>

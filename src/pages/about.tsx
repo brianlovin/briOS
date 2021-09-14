@@ -4,7 +4,6 @@ import Page from '~/components/Page'
 import { CenteredColumn } from '~/components/Layouts'
 import { NextSeo } from 'next-seo'
 import routes from '~/config/routes'
-import WritingSubscribeBox from '~/components/Writing/Subscribe'
 import Link from 'next/link'
 
 function About() {
