@@ -40,8 +40,7 @@ function Writing({ data }: Props) {
             title={routes.writing.seo.title}
             subtitle={routes.writing.seo.description}
           />
-
-          <WritingSubscribeBox />
+          
           <div className=" space-y-6">
             {data && data.posts && <PostsList posts={data.posts} />}
           </div>
