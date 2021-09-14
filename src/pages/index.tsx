@@ -58,8 +58,6 @@ function Home({ data }: Props) {
             </div>
           </div>
 
-          <WritingSubscribeBox />
-
           <div className="space-y-8">
             <h4 className="font-list-heading">Recent Writing</h4>
             <div className="space-y-6 ">
