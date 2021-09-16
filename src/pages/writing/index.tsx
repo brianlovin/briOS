@@ -4,10 +4,11 @@ import { Post } from '~/graphql/types.generated'
 import PostsList from '~/components/Writing/List'
 import { GET_POSTS } from '~/graphql/queries'
 import { initApolloClient } from '~/graphql/services/apollo'
-import { CenteredColumn } from '~/components/Layouts'
+import { CenteredColumn, ListViewOnly } from '~/components/Layouts'
 import Head from 'next/head'
 import { NextSeo } from 'next-seo'
 import routes from '~/config/routes'
+import InlineNewsletterSubscribeBox from '~/components/Newsletter/InlineNewsletter'
 
 interface Props {
   data: {
@@ -17,7 +18,7 @@ interface Props {
 
 function Writing({ data }: Props) {
   return (
-    <Page>
+    <>
       <Head>
         <link
           rel="alternate"
@@ -33,19 +34,8 @@ function Writing({ data }: Props) {
         openGraph={routes.writing.seo.openGraph}
       />
 
-      <CenteredColumn>
-        <div data-cy="writing" className="space-y-12 ">
-          <PageHeader
-            title={routes.writing.seo.title}
-            subtitle={routes.writing.seo.description}
-          />
-
-          <div className="space-y-6 ">
-            {data && data.posts && <PostsList posts={data.posts} />}
-          </div>
-        </div>
-      </CenteredColumn>
-    </Page>
+      <ListViewOnly list={<PostsList posts={data.posts} />} />
+    </>
   )
 }
 

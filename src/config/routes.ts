@@ -29,16 +29,17 @@ const routes = {
     seo: extendSEO({
       title: 'Writing',
       description: 'Thinking out loud about software design and development.',
-      image: 'meta/overthought.png',
+      image: 'meta/writing.png',
       url: 'writing',
     }),
   },
   hn: {
-    label: 'Hacker News',
+    label: 'HN',
     path: '/hn',
+    icon: '/static/img/side-projects/hn.png',
     seo: extendSEO({
-      title: 'Hacker News',
-      description: 'My personal Hacker News reader.',
+      title: 'HN',
+      description: 'A better Hacker News.',
       image: 'meta/hn.png',
       url: 'hn',
     }),
@@ -46,6 +47,7 @@ const routes = {
   bookmarks: {
     label: 'Bookmarks',
     path: '/bookmarks',
+    icon: '/static/img/side-projects/bookmarks.png',
     seo: extendSEO({
       title: 'Bookmarks',
       description: 'Internet things, saved for later.',
@@ -56,6 +58,7 @@ const routes = {
   appDissection: {
     label: 'App Dissection',
     path: '/app-dissection',
+    icon: '/static/img/side-projects/app-dissection.png',
     seo: extendSEO({
       title: 'App Dissection',
       description: 'In-depth design explorations.',
@@ -64,11 +67,12 @@ const routes = {
     }),
   },
   ama: {
-    label: 'Ask Me Anything',
+    label: 'AMA',
     path: '/ama',
+    icon: '/static/img/side-projects/ama.png',
     seo: extendSEO({
-      title: 'Ask Me Anything',
-      description: 'Answering questions, just for fun.',
+      title: 'AMA',
+      description: 'Ask me anything.',
       image: 'meta/ama.png',
       url: 'ama',
     }),
@@ -85,16 +89,18 @@ const routes = {
   security: {
     label: 'Security Checklist',
     path: '/security',
+    icon: '/static/img/side-projects/security.png',
     seo: extendSEO({
       title: 'Security Checklist',
-      description: 'Tools and resources for staying safe on the internet.',
-      image: 'meta/security.png',
+      description: 'Staying safe on the internet.',
+      image: 'meta/security-checklist.png',
       url: 'security',
     }),
   },
   stack: {
     label: 'Stack',
     path: '/stack',
+    icon: '/static/img/side-projects/stack.png',
     seo: extendSEO({
       title: 'Stack',
       description: 'My favorite tools and software.',
@@ -108,7 +114,7 @@ const routes = {
     seo: extendSEO({
       title: 'Startup Jobs',
       description: 'Connecting great designers with growing startups.',
-      image: 'meta/startups.png',
+      image: 'meta/startups.jpg',
       url: 'startups',
     }),
   },

@@ -1,20 +1,22 @@
 import * as React from 'react'
-import Page from '~/components/Page'
 import { NextSeo } from 'next-seo'
-import { CenteredColumn } from '~/components/Layouts'
 import { HNPost } from '~/components/HNPost'
+import HNPosts from '~/components/HNPosts'
 import { useRouter } from 'next/router'
 import FullscreenLoading from '~/components/FullscreenLoading'
 import { getPostById, getPostIds } from '~/graphql/services/hn'
 import { HNPost as HNPostType } from '.'
 import { baseUrl } from '~/config/seo'
+import { getHNPosts } from '~/graphql/services/hn'
+import { ListDetailView } from '~/components/Layouts'
 
 interface Props {
   post: HNPostType
+  posts: HNPostType[]
 }
 
 export default function HNPostView(props: Props) {
-  const { post } = props
+  const { post, posts } = props
 
   const router = useRouter()
 
@@ -23,7 +25,7 @@ export default function HNPostView(props: Props) {
   }
 
   return (
-    <Page>
+    <>
       <NextSeo
         title={'Hacker News'}
         description={'My personal Hacker News reader.'}
@@ -39,10 +41,11 @@ export default function HNPostView(props: Props) {
         }}
       />
 
-      <CenteredColumn data-cy="hn">
-        <HNPost post={post} />
-      </CenteredColumn>
-    </Page>
+      <ListDetailView
+        list={<HNPosts posts={posts} />}
+        detail={<HNPost post={post} />}
+      />
+    </>
   )
 }
 
@@ -60,11 +63,13 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params: { id } }) {
   const post = await getPostById(id, true)
+  const posts = await getHNPosts('top')
 
   return {
     revalidate: 60 * 60,
     props: {
       post,
+      posts,
     },
   }
 }

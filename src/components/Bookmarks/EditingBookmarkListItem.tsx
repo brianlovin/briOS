@@ -7,7 +7,7 @@ import {
 import { GET_BOOKMARKS } from '~/graphql/queries'
 import { Input, Select, Textarea } from '~/components/Input'
 import { useRouter } from 'next/router'
-import Button from '../Button'
+import Button, { DeleteButton } from '../Button'
 
 interface Props {
   bookmark: Bookmark
@@ -146,7 +146,7 @@ export default function EditingBookmarkListItem(props: Props) {
   }
 
   return (
-    <form className=" mb-4 space-y-3" onSubmit={handleSave}>
+    <form className="mb-4 space-y-3 " onSubmit={handleSave}>
       <Input
         placeholder="Title"
         value={state.title}
@@ -181,9 +181,9 @@ export default function EditingBookmarkListItem(props: Props) {
       {state.error && <p className="text-red-500">{state.error}</p>}
 
       <div className="flex justify-between">
-        <Button className="text-red-500" onClick={() => handleDelete()}>
+        <DeleteButton className="text-red-500" onClick={() => handleDelete()}>
           Delete
-        </Button>
+        </DeleteButton>
         <div className="flex space-x-3">
           <Button onClick={onDone}>Cancel</Button>
           <Button onClick={handleSave}>Save</Button>

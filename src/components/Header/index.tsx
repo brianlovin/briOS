@@ -4,12 +4,7 @@ import { useRouter } from 'next/router'
 import routes from '~/config/routes'
 import { Menu, X } from 'react-feather'
 
-const defaultRoutes = [
-  routes.home,
-  routes.about,
-  routes.writing,
-  routes.projects,
-]
+const defaultRoutes = [routes.home, routes.about, routes.writing]
 
 export default function Header() {
   const [isExpanded, setIsExpanded] = React.useState(false)
@@ -56,7 +51,7 @@ export default function Header() {
       {/* End mobile nav */}
 
       {/* Desktop nav */}
-      <div className="hidden max-w-screen-md grid-cols-4 gap-1 mx-auto md:grid">
+      <div className="hidden max-w-screen-md grid-cols-3 gap-1 mx-auto md:grid">
         {defaultRoutes.map((route) => {
           const isActive = route.path === router.pathname
           const defaultClasses = `font-sans font-semibold flex rounded items-center text-opacity-40 justify-center py-2 text-sm`

@@ -1,6 +1,9 @@
 import * as React from 'react'
 import { Post } from '~/graphql/types.generated'
-import Link from 'next/link'
+import { useRouter } from 'next/router'
+import ListItem from '~/components/ListDetail/ListItem'
+import TitleBar from '~/components/ListDetail/TitleBar'
+import ListContainer from '~/components/ListDetail/ListContainer'
 
 interface Props {
   posts: Post[]
@@ -9,27 +12,35 @@ interface Props {
 export default function PostsList({ posts }: Props) {
   if (!posts || posts.length === 0) return null
 
-  return (
-    <>
-      {posts.map((post) => {
-        const date = new Date(post.published_at).toLocaleDateString('en-us', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        })
+  const router = useRouter()
 
-        return (
-          <div className="space-y-1" key={post.id}>
-            <Link href="/writing/[slug]" as={`/writing/${post.slug}`} passHref>
-              <a className="inline font-medium text-primary highlight-link-hover">
-                {post.title}
-              </a>
-            </Link>
-            {post.excerpt && <p className="text-tertiary">{post.excerpt}</p>}
-            <p className="text-quaternary">{date}</p>
-          </div>
-        )
-      })}
-    </>
+  return (
+    <ListContainer>
+      <TitleBar title="Writing" />
+
+      <div className="lg:p-3 lg:space-y-1">
+        {posts.map((post) => {
+          const date = new Date(post.published_at).toLocaleDateString('en-us', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          })
+
+          const active = router.query?.slug === post.slug
+
+          return (
+            <ListItem
+              key={post.id}
+              href="/writing/[slug]"
+              as={`/writing/${post.slug}`}
+              title={post.title}
+              description={post.excerpt}
+              byline={date}
+              active={active}
+            />
+          )
+        })}
+      </div>
+    </ListContainer>
   )
 }

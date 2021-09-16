@@ -3,7 +3,14 @@ import { gql } from '@apollo/client'
 
 export const GET_HOME = gql`
   query GetHome {
-    posts(first: 3) {
+    recent: posts(first: 12) {
+      ...PostInfo
+    }
+    popular: posts(
+      first: 12
+      filter: "tag:popular"
+      order: "published_at ASC"
+    ) {
       ...PostInfo
     }
     episodes {

@@ -1,4 +1,5 @@
 import * as React from 'react'
+import Link from 'next/link'
 
 type Props = {
   className?: string
@@ -6,15 +7,41 @@ type Props = {
   disabled?: boolean
   children: React.ReactChild | string | string[]
   type?: string
+  href?: string
 } & React.ComponentPropsWithoutRef<'button'>
 
-export default function Button({ className, ...rest }: Props) {
-  return (
-    <button
-      className={`flex items-center rounded justify-center flex-none px-4 py-1.5 space-x-3 font-medium bg-white border border-gray-200 dark:border-gray-700 dark:hover:border-gray-600 disabled:opacity-50 dark:bg-white dark:bg-opacity-10 disabled:bg-opacity-0 disabled:opacity-0 text-primary hover:border-gray-300 focus:border-gray-1000 dark:focus:border-gray-600 focus:ring-0 focus:outline-none ${className}`}
-      {...rest}
-    />
-  )
+export default function Button({ className, href, children, ...rest }: Props) {
+  const classes = `flex font-sans text-sm 2xl:text-base text-gray-700 hover:text-gray-1000 items-center shadow-xs rounded-md justify-center flex-none px-6 py-1.5 space-x-3 font-semibold bg-white border border-gray-400 border-opacity-30 dark:border-gray-700 dark:hover:border-gray-600 disabled:opacity-50 dark:bg-white dark:bg-opacity-10 dark:text-gray-200 dark:hover:text-white leading-none disabled:bg-opacity-0 disabled:opacity-0 hover:border-opacity-50 hover:shadow-sm transition-shadow focus:border-gray-1000 dark:focus:border-gray-600 focus:ring-0 focus:outline-none cursor-pointer ${className}`
+
+  if (href) {
+    if (href.startsWith('/')) {
+      return (
+        <Link href={href}>
+          <a className={classes} children={children} />
+        </Link>
+      )
+    }
+
+    return <a className={classes} children={children} />
+  }
+  return <button className={classes} children={children} {...rest} />
+}
+
+export function SmallButton({ className, href, children, ...rest }: Props) {
+  const classes = `flex font-sans text-xs 2xl:text-sm text-gray-700 hover:text-gray-1000 items-center shadow-xs rounded-md justify-center flex-none px-6 py-1.5 space-x-3 font-medium bg-white border border-gray-400 border-opacity-30 dark:border-gray-700 dark:hover:border-gray-600 disabled:opacity-50 dark:bg-white dark:bg-opacity-10 dark:text-gray-200 dark:hover:text-white leading-none disabled:bg-opacity-0 disabled:opacity-0 hover:border-opacity-50 hover:shadow-sm transition-shadow focus:border-gray-1000 dark:focus:border-gray-600 focus:ring-0 focus:outline-none cursor-pointer ${className}`
+
+  if (href) {
+    if (href.startsWith('/')) {
+      return (
+        <Link href={href}>
+          <a className={classes} children={children} />
+        </Link>
+      )
+    }
+
+    return <a className={classes} children={children} />
+  }
+  return <button className={classes} children={children} {...rest} />
 }
 
 export function DeleteButton({ className, ...rest }: Props) {

@@ -1,4 +1,9 @@
 module.exports = {
+  resolve: {
+    fallback: {
+      fs: false,
+    },
+  },
   images: {
     domains: ['pbs.twimg.com', 'overthought.ghost.io'],
   },

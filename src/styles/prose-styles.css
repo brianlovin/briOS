@@ -1,5 +1,5 @@
 .prose {
-  @apply text-gray-900 dark:text-gray-300;
+  @apply text-gray-700 dark:text-gray-400;
 }
 
 .prose blockquote {
@@ -15,7 +15,7 @@
 }
 
 .prose a {
-  @apply px-0.5 -mx-0.5 font-medium no-underline bg-yellow-400 rounded-sm dark:bg-gray-100 dark:bg-opacity-20 text-gray-1000 dark:text-gray-300 bg-opacity-20 md:hover:bg-opacity-30 md:dark:hover:bg-yellow-500 md:dark:hover:bg-opacity-100 md:dark:hover:text-gray-1000 break-words;
+  @apply font-medium text-blue-600 no-underline break-words dark:text-blue-500 hover:underline;
 }
 
 .prose a code {
@@ -56,7 +56,7 @@
 .prose h4,
 .prose h5,
 .prose h6 {
-  @apply font-sans font-extrabold;
+  @apply font-sans font-bold;
 }
 
 .prose h5 {

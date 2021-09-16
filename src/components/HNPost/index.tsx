@@ -2,12 +2,12 @@ import * as React from 'react'
 import Link from 'next/link'
 import { NextSeo } from 'next-seo'
 import { Comment } from './Comment'
-import Divider from '../Divider'
-import { CenteredColumn } from '../Layouts'
 import Byline from './Byline'
 import { HNPost as HNPostType } from '~/pages/hn'
 import HNSubscribeBox from '../HNSubscribe'
 import { baseUrl } from '~/config/seo'
+import { ArrowLeft } from 'react-feather'
+import TitleBar from '../ListDetail/TitleBar'
 
 interface Props {
   post: HNPostType
@@ -18,6 +18,9 @@ export function HNPost(props: Props) {
 
   // trim things down to a readable amount
   const comments = post.comments.slice(0, 8)
+
+  const scrollContainerRef = React.useRef(null)
+  const titleRef = React.useRef(null)
 
   return (
     <React.Fragment>
@@ -37,27 +40,32 @@ export function HNPost(props: Props) {
           cardType: 'summary_large_image',
         }}
       />
-      <CenteredColumn data-cy="bookmarks">
-        <div className="space-y-8 ">
-          <div className="space-y-4">
-            <Link href="/hn" passHref>
-              <a className="text-tertiary hover:text-gray-1000 dark:hover:text-gray-100">
-                &larr; Back
-              </a>
-            </Link>
 
-            <a
-              className="block"
-              href={post.url}
-              target="blank"
-              rel="noopener noreferrer"
-            >
-              <h1 className="font-sans text-2xl font-black md:text-4xl text-primary">
+      <div
+        ref={scrollContainerRef}
+        className="w-full max-h-screen overflow-y-auto bg-white dark:bg-black"
+      >
+        <TitleBar
+          backButtonHref="/hn"
+          backButton
+          globalMenu={false}
+          magicTitle
+          title={post.title}
+          titleRef={titleRef}
+          scrollContainerRef={scrollContainerRef}
+        />
+
+        <div className="max-w-3xl px-4 py-8 mx-auto md:px-8 xl:py-16">
+          <div data-cy="post" className="space-y-8">
+            <div className="space-y-4">
+              <h1
+                ref={titleRef}
+                className="font-sans text-2xl font-bold md:text-3xl text-primary"
+              >
                 {post.title}
               </h1>
-            </a>
-
-            <Byline post={post} />
+              <Byline post={post} />
+            </div>
             {post.content && (
               <div
                 className={'prose lg:prose-lg'}
@@ -67,17 +75,12 @@ export function HNPost(props: Props) {
                 dangerouslySetInnerHTML={{ __html: post.content }}
               />
             )}
-          </div>
-
-          <div>
             {comments.map((comment) => (
               <Comment key={comment.id} comment={comment} />
             ))}
           </div>
-
-          <HNSubscribeBox />
         </div>
-      </CenteredColumn>
+      </div>
     </React.Fragment>
   )
 }

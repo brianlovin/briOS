@@ -15,21 +15,37 @@ module.exports = {
   darkMode: 'media',
   theme: {
     extend: {
-      fontFamily: {
-        mono: ['"iA Quattro"', ...mono],
-        code: mono,
-        sans: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
-      },
       colors: {
         white: '#fff',
         gray: colors.trueGray,
         'gray-1000': '#050505',
+        black: '#050505',
+        'design-details': '#458886',
+        'design-details-light': '#EEF3F3',
+        'design-details-dark': '#273F3F',
+        'hacker-news': '#FF965A',
+        twitter: '#479BEA',
       },
       boxShadow: {
+        xs: '0 1px 2px 0px rgba(0,0,0,0.03)',
         cardHover:
           '0 4px 4.1px rgba(0, 0, 0, 0.012),0 4.9px 5.8px rgba(0, 0, 0, 0.018),0 6.3px 8.4px rgba(0, 0, 0, 0.029),0 8.8px 12.9px rgba(0, 0, 0, 0.05),0 15px 23px rgba(0, 0, 0, 0.11)',
       },
+      animation: {
+        gradient: 'gradient-pulse 10s ease infinite',
+      },
+      keyframes: {
+        'gradient-pulse': {
+          '0%': { backgroundPosition: '0% 50% ' },
+          '50%': { backgroundPosition: '100% 50%' },
+          '100%': { backgroundPosition: '0% 50%' },
+        },
+      },
     },
   },
-  plugins: [require('@tailwindcss/typography'), require('@tailwindcss/forms')],
+  plugins: [
+    require('@tailwindcss/typography'),
+    require('@tailwindcss/forms'),
+    require('@tailwindcss/line-clamp'),
+  ],
 }

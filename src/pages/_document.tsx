@@ -31,10 +31,7 @@ export default class MyDocument extends Document {
 
   render() {
     return (
-      <Html
-        lang="en"
-        className="text-base antialiased bg-gray-300 bg-opacity-5 dark:bg-gray-1000 dark:bg-opacity-100"
-      >
+      <Html lang="en">
         <Head></Head>
 
         <body>

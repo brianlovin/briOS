@@ -1,21 +1,44 @@
 import fetch from 'isomorphic-unfetch'
 import { baseUrl } from '~/config/seo'
+import { useLocalFiles } from '~/graphql/helpers/useLocalFiles'
+import { IS_PROD } from '../constants'
 
 const TOP_BASE_URL = 'https://hacker-news.firebaseio.com/v0'
 const ITEM_BASE_URL = 'https://api.hnpwa.com/v0'
 
 export async function getPostIds(sort) {
-  const data = await fetch(`${TOP_BASE_URL}/${sort}stories.json`).then((res) =>
-    res.json()
-  )
+  async function getData() {
+    return await fetch(`${TOP_BASE_URL}/${sort}stories.json`).then((res) =>
+      res.json()
+    )
+  }
 
-  return data
+  if (IS_PROD) {
+    return await getData()
+  } else {
+    return useLocalFiles({
+      path: `${sort}Hn`,
+      fetch: getData,
+    })
+  }
 }
 
 export async function getPostById(id, includeComments = false) {
-  const data = await fetch(`${ITEM_BASE_URL}/item/${id}.json`).then((res) => {
-    return res.json()
-  })
+  async function getPost() {
+    return await fetch(`${ITEM_BASE_URL}/item/${id}.json`).then((res) =>
+      res.json()
+    )
+  }
+
+  let data
+  if (IS_PROD) {
+    data = await getPost()
+  } else {
+    data = await useLocalFiles({
+      path: `${id}Hn`,
+      fetch: getPost,
+    })
+  }
 
   function trimComments(comment) {
     if (!comment) return null
@@ -47,7 +70,7 @@ export async function getPostById(id, includeComments = false) {
 export async function getHNPosts(sort) {
   const topPostIds = await getPostIds(sort)
   const postPromises = topPostIds
-    .slice(0, 16)
+    .slice(0, 32)
     .map(async (id) => await getPostById(id, false))
 
   return await Promise.all([...postPromises])

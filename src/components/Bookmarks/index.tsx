@@ -1,11 +1,14 @@
 import * as React from 'react'
 import { useGetBookmarksQuery } from '~/graphql/types.generated'
 import { useAuth } from '~/hooks/useAuth'
-import { BookmarkListItem } from './BookmarkListItem'
 import { PAGINATION_AMOUNT } from '~/graphql/constants'
-import LoadingSpinner from '../LoadingSpinner'
-import FullscreenLoading from '../FullscreenLoading'
-import Button from '../Button'
+import LoadingSpinner from '~/components/LoadingSpinner'
+import FullscreenLoading from '~/components/FullscreenLoading'
+import Button from '~/components/Button'
+import ListContainer from '~/components/ListDetail/ListContainer'
+import TitleBar from '~/components/ListDetail/TitleBar'
+import ListItem from '~/components/ListDetail/ListItem'
+import { useRouter } from 'next/router'
 
 export default function BookmarksList({ category = undefined }) {
   const { isMe } = useAuth()
@@ -59,20 +62,33 @@ export default function BookmarksList({ category = undefined }) {
     }
   }
 
+  const router = useRouter()
+
   return (
-    <div className="w-full space-y-6 timeline-container">
-      {bookmarks.map((bookmark, index) => (
-        <BookmarkListItem
-          editable={isMe}
-          key={`${bookmark.url}-${index}`}
-          bookmark={bookmark}
-        />
-      ))}
-      {showLoadMore && (
-        <Button className="w-full" onClick={handleLoadMore}>
-          {loading ? <LoadingSpinner /> : 'Load more'}
-        </Button>
-      )}
-    </div>
+    <ListContainer>
+      <TitleBar title="Bookmarks" />
+
+      <div className="lg:p-3 lg:space-y-1">
+        {bookmarks.map((bookmark, index) => {
+          const active = router.query?.id === bookmark.id
+          return (
+            <ListItem
+              key={bookmark.id}
+              title={bookmark.title}
+              description={bookmark.notes}
+              byline={bookmark.host}
+              active={active}
+              href="/bookmarks/[id]"
+              as={`/bookmarks/${bookmark.id}`}
+            />
+          )
+        })}
+        {showLoadMore && (
+          <Button className="w-full" onClick={handleLoadMore}>
+            {loading ? <LoadingSpinner /> : 'Load more'}
+          </Button>
+        )}
+      </div>
+    </ListContainer>
   )
 }

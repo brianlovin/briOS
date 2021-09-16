@@ -1,22 +1,22 @@
 import * as React from 'react'
 import Image from 'next/image'
-import Page from '~/components/Page'
-import { CenteredColumn } from '~/components/Layouts'
+import { DetailViewOnly } from '~/components/Layouts'
 import { NextSeo } from 'next-seo'
 import routes from '~/config/routes'
 import Link from 'next/link'
+import InlineNewsletterSubscribeBox from '~/components/Newsletter/InlineNewsletter'
 
 function About() {
   return (
-    <Page>
+    <>
       <NextSeo
         title={routes.about.seo.title}
         description={routes.about.seo.description}
         openGraph={routes.about.seo.openGraph}
       />
 
-      <CenteredColumn>
-        <div className="space-y-12 " data-cy="about-page">
+      <DetailViewOnly>
+        <div className="space-y-12" data-cy="about-page">
           <div className="-mx-4 -mt-16 md:mt-0 md:-mx-8 ">
             <Image
               src="/static/img/about.jpg"
@@ -77,6 +77,8 @@ function About() {
               </p>
             </div>
           </div>
+
+          <InlineNewsletterSubscribeBox />
 
           <div className="space-y-6">
             <h4 className="font-list-heading">Speaking and interviews</h4>
@@ -208,8 +210,8 @@ function About() {
             </div>
           </div>
         </div>
-      </CenteredColumn>
-    </Page>
+      </DetailViewOnly>
+    </>
   )
 }
 

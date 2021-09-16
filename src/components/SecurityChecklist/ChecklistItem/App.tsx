@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import * as React from 'react'
 import type { App } from '../types'
 import Offer from './Offer'
@@ -123,9 +124,12 @@ export const AppRow = ({ app }: Props) => {
           title={`go to: ${app.name}`}
         >
           {app.image && (
-            <img
+            <Image
               className="w-8 h-8 transition-shadow rounded-md shadow-sm hover:shadow"
               alt={app.name}
+              width={32}
+              height={32}
+              layout={'fixed'}
               src={`/static/img/security/${app.image}`}
             />
           )}

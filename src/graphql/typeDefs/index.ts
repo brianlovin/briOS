@@ -86,7 +86,7 @@ export default gql`
   type Query {
     bookmarks(skip: Int, category: String): [Bookmark]!
     episodes: [Episode]!
-    posts(first: Int): [Post]!
+    posts(first: Int, filter: String, order: String): [Post]!
     post(slug: String!): Post
     amaQuestions(skip: Int, status: AMAStatus): [AMA]!
     repos: [Repo]!

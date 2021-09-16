@@ -5,11 +5,14 @@ import Page from '~/components/Page'
 import PostContainer from '~/components/Writing/Post'
 import NotFound from '~/components/Writing/NotFound'
 import { initApolloClient } from '~/graphql/services/apollo'
+import PostsList from '~/components/Writing/List'
+import { ListDetailView } from '~/components/Layouts'
 
 interface Props {
   slug: string
   data: {
     post: Post
+    posts: Post[]
   }
 }
 
@@ -19,9 +22,10 @@ function PostView({ data }: Props) {
   if (!post) return <NotFound />
 
   return (
-    <Page>
-      <PostContainer post={post} />
-    </Page>
+    <ListDetailView
+      list={<PostsList posts={data.posts} />}
+      detail={<PostContainer post={post} />}
+    />
   )
 }
 
@@ -40,10 +44,12 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params: { slug } }) {
   const client = await initApolloClient({})
-  const { data } = await client.query({
+  const { data: postData } = await client.query({
     query: GET_POST,
-    variables: { slug, first: 5 },
+    variables: { slug },
   })
+
+  const { data: postsData } = await client.query({ query: GET_POSTS })
 
   return {
     // because this data is slightly more dynamic, update it every hour
@@ -51,7 +57,8 @@ export async function getStaticProps({ params: { slug } }) {
     props: {
       slug,
       data: {
-        post: data.post,
+        post: postData.post,
+        posts: postsData.posts,
       },
     },
   }

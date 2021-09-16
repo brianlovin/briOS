@@ -1,4 +1,6 @@
-export const baseUrl = 'https://brianlovin.com'
+import { IS_PROD } from '~/graphql/constants'
+
+export const baseUrl = IS_PROD ? 'https://brianlovin.com' : ''
 export const baseEmail = 'hi@brianlovin.com'
 
 export const defaultSEO = {

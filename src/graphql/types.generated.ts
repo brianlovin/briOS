@@ -193,6 +193,8 @@ export type QueryBookmarksArgs = {
 
 export type QueryPostsArgs = {
   first?: Maybe<Scalars['Int']>
+  filter?: Maybe<Scalars['String']>
+  order?: Maybe<Scalars['String']>
 }
 
 export type QueryPostArgs = {
@@ -294,7 +296,19 @@ export type EditAmaQuestionMutationVariables = Exact<{
 
 export type EditAmaQuestionMutation = {
   __typename?: 'Mutation'
-  editAMAQuestion?: Maybe<{ __typename?: 'AMA' } & AmaInfoFragment>
+  editAMAQuestion?: Maybe<{
+    __typename?: 'AMA'
+    id: string
+    createdAt?: Maybe<string>
+    updatedAt?: Maybe<string>
+    question: string
+    answer?: Maybe<string>
+    status?: Maybe<AmaStatus>
+    reactions?: Maybe<number>
+    audioUrl?: Maybe<string>
+    audioPlayCount?: Maybe<number>
+    audioWaveform?: Maybe<Array<Maybe<number>>>
+  }>
 }
 
 export type DeleteAmaQuestionMutationVariables = Exact<{
@@ -321,7 +335,19 @@ export type AddAmaReactionMutationVariables = Exact<{
 
 export type AddAmaReactionMutation = {
   __typename?: 'Mutation'
-  addAMAReaction?: Maybe<{ __typename?: 'AMA' } & AmaInfoFragment>
+  addAMAReaction?: Maybe<{
+    __typename?: 'AMA'
+    id: string
+    createdAt?: Maybe<string>
+    updatedAt?: Maybe<string>
+    question: string
+    answer?: Maybe<string>
+    status?: Maybe<AmaStatus>
+    reactions?: Maybe<number>
+    audioUrl?: Maybe<string>
+    audioPlayCount?: Maybe<number>
+    audioWaveform?: Maybe<Array<Maybe<number>>>
+  }>
 }
 
 export type AddAmaAudioPlayMutationVariables = Exact<{
@@ -365,7 +391,17 @@ export type EditBookmarkMutationVariables = Exact<{
 
 export type EditBookmarkMutation = {
   __typename?: 'Mutation'
-  editBookmark?: Maybe<{ __typename?: 'Bookmark' } & BookmarkInfoFragment>
+  editBookmark?: Maybe<{
+    __typename: 'Bookmark'
+    id: string
+    title?: Maybe<string>
+    url: string
+    host?: Maybe<string>
+    reactions?: Maybe<number>
+    notes?: Maybe<string>
+    category?: Maybe<string>
+    twitterHandle?: Maybe<string>
+  }>
 }
 
 export type DeleteBookmarkMutationVariables = Exact<{
@@ -386,7 +422,17 @@ export type AddBookmarkMutationVariables = Exact<{
 
 export type AddBookmarkMutation = {
   __typename?: 'Mutation'
-  addBookmark?: Maybe<{ __typename?: 'Bookmark' } & BookmarkInfoFragment>
+  addBookmark?: Maybe<{
+    __typename: 'Bookmark'
+    id: string
+    title?: Maybe<string>
+    url: string
+    host?: Maybe<string>
+    reactions?: Maybe<number>
+    notes?: Maybe<string>
+    category?: Maybe<string>
+    twitterHandle?: Maybe<string>
+  }>
 }
 
 export type AddBookmarkReactionMutationVariables = Exact<{
@@ -395,9 +441,17 @@ export type AddBookmarkReactionMutationVariables = Exact<{
 
 export type AddBookmarkReactionMutation = {
   __typename?: 'Mutation'
-  addBookmarkReaction?: Maybe<
-    { __typename?: 'Bookmark' } & BookmarkInfoFragment
-  >
+  addBookmarkReaction?: Maybe<{
+    __typename: 'Bookmark'
+    id: string
+    title?: Maybe<string>
+    url: string
+    host?: Maybe<string>
+    reactions?: Maybe<number>
+    notes?: Maybe<string>
+    category?: Maybe<string>
+    twitterHandle?: Maybe<string>
+  }>
 }
 
 export type GetAmaQuestionsQueryVariables = Exact<{
@@ -407,7 +461,21 @@ export type GetAmaQuestionsQueryVariables = Exact<{
 
 export type GetAmaQuestionsQuery = {
   __typename?: 'Query'
-  amaQuestions: Array<Maybe<{ __typename?: 'AMA' } & AmaInfoFragment>>
+  amaQuestions: Array<
+    Maybe<{
+      __typename?: 'AMA'
+      id: string
+      createdAt?: Maybe<string>
+      updatedAt?: Maybe<string>
+      question: string
+      answer?: Maybe<string>
+      status?: Maybe<AmaStatus>
+      reactions?: Maybe<number>
+      audioUrl?: Maybe<string>
+      audioPlayCount?: Maybe<number>
+      audioWaveform?: Maybe<Array<Maybe<number>>>
+    }>
+  >
 }
 
 export type SignedUploadUrlQueryVariables = Exact<{
@@ -444,22 +512,83 @@ export type GetBookmarksQueryVariables = Exact<{
 
 export type GetBookmarksQuery = {
   __typename?: 'Query'
-  bookmarks: Array<Maybe<{ __typename?: 'Bookmark' } & BookmarkInfoFragment>>
+  bookmarks: Array<
+    Maybe<{
+      __typename: 'Bookmark'
+      id: string
+      title?: Maybe<string>
+      url: string
+      host?: Maybe<string>
+      reactions?: Maybe<number>
+      notes?: Maybe<string>
+      category?: Maybe<string>
+      twitterHandle?: Maybe<string>
+    }>
+  >
 }
 
 export type GetEpisodesQueryVariables = Exact<{ [key: string]: never }>
 
 export type GetEpisodesQuery = {
   __typename?: 'Query'
-  episodes: Array<Maybe<{ __typename?: 'Episode' } & EpisodeInfoFragment>>
+  episodes: Array<
+    Maybe<{
+      __typename?: 'Episode'
+      id?: Maybe<string>
+      description?: Maybe<string>
+      legacy_id?: Maybe<string>
+      long_description?: Maybe<string>
+      published_at?: Maybe<string>
+      status?: Maybe<string>
+      title?: Maybe<string>
+      token?: Maybe<string>
+    }>
+  >
 }
 
 export type GetHomeQueryVariables = Exact<{ [key: string]: never }>
 
 export type GetHomeQuery = {
   __typename?: 'Query'
-  posts: Array<Maybe<{ __typename?: 'Post' } & PostInfoFragment>>
-  episodes: Array<Maybe<{ __typename?: 'Episode' } & EpisodeInfoFragment>>
+  recent: Array<
+    Maybe<{
+      __typename?: 'Post'
+      id?: Maybe<string>
+      title?: Maybe<string>
+      slug?: Maybe<string>
+      updated_at?: Maybe<string>
+      published_at?: Maybe<string>
+      excerpt?: Maybe<string>
+      feature_image?: Maybe<string>
+      html?: Maybe<string>
+    }>
+  >
+  popular: Array<
+    Maybe<{
+      __typename?: 'Post'
+      id?: Maybe<string>
+      title?: Maybe<string>
+      slug?: Maybe<string>
+      updated_at?: Maybe<string>
+      published_at?: Maybe<string>
+      excerpt?: Maybe<string>
+      feature_image?: Maybe<string>
+      html?: Maybe<string>
+    }>
+  >
+  episodes: Array<
+    Maybe<{
+      __typename?: 'Episode'
+      id?: Maybe<string>
+      description?: Maybe<string>
+      legacy_id?: Maybe<string>
+      long_description?: Maybe<string>
+      published_at?: Maybe<string>
+      status?: Maybe<string>
+      title?: Maybe<string>
+      token?: Maybe<string>
+    }>
+  >
 }
 
 export type IsMeQueryVariables = Exact<{ [key: string]: never }>
@@ -470,7 +599,19 @@ export type GetPostsQueryVariables = Exact<{ [key: string]: never }>
 
 export type GetPostsQuery = {
   __typename?: 'Query'
-  posts: Array<Maybe<{ __typename?: 'Post' } & PostInfoFragment>>
+  posts: Array<
+    Maybe<{
+      __typename?: 'Post'
+      id?: Maybe<string>
+      title?: Maybe<string>
+      slug?: Maybe<string>
+      updated_at?: Maybe<string>
+      published_at?: Maybe<string>
+      excerpt?: Maybe<string>
+      feature_image?: Maybe<string>
+      html?: Maybe<string>
+    }>
+  >
 }
 
 export type GetPostQueryVariables = Exact<{
@@ -480,7 +621,17 @@ export type GetPostQueryVariables = Exact<{
 
 export type GetPostQuery = {
   __typename?: 'Query'
-  post?: Maybe<{ __typename?: 'Post' } & PostInfoFragment>
+  post?: Maybe<{
+    __typename?: 'Post'
+    id?: Maybe<string>
+    title?: Maybe<string>
+    slug?: Maybe<string>
+    updated_at?: Maybe<string>
+    published_at?: Maybe<string>
+    excerpt?: Maybe<string>
+    feature_image?: Maybe<string>
+    html?: Maybe<string>
+  }>
 }
 
 export const AmaInfoFragmentDoc = gql`
@@ -1517,7 +1668,14 @@ export type GetEpisodesQueryResult = Apollo.QueryResult<
 >
 export const GetHomeDocument = gql`
   query GetHome {
-    posts(first: 3) {
+    recent: posts(first: 16) {
+      ...PostInfo
+    }
+    popular: posts(
+      first: 16
+      filter: "tag:popular"
+      order: "published_at ASC"
+    ) {
       ...PostInfo
     }
     episodes {
