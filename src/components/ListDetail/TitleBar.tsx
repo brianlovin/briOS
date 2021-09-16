@@ -89,7 +89,7 @@ export default function TitleBar({
 
   return (
     <>
-      <div className="sticky top-0 z-10 flex items-center flex-none px-3 py-2 bg-white border-b border-gray-200 dark:bg-black dark:border-gray-900 h-14 bg-opacity-80 filter-blur dark:bg-opacity-60">
+      <div className="sticky top-0 z-10 flex items-center flex-none px-3 py-2 bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-gray-800 h-14 bg-opacity-80 filter-blur">
         {globalMenu && (
           <span
             onClick={() => setIsOpen(!isOpen)}

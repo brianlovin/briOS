@@ -196,7 +196,7 @@ export default function Sidebar() {
           })}
         </ul>
 
-        <div className="sticky bottom-0 z-10 flex items-center px-3 py-2 space-x-3 bg-white border-t border-gray-200 dark:bg-black dark:border-gray-900 h-14 bg-opacity-80 filter-blur dark:bg-opacity-60">
+        <div className="sticky bottom-0 z-10 flex items-center px-3 py-2 space-x-3 bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800 h-14 bg-opacity-80 filter-blur dark:bg-opacity-60">
           <SmallButton href="/login" className="w-full">
             Sign in
           </SmallButton>
