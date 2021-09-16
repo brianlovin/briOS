@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Menu } from 'react-feather'
+import { ArrowLeft, Menu, X } from 'react-feather'
 import { GlobalNavigationContext } from '~/components/Providers'
 
 interface Props {
@@ -12,6 +12,8 @@ interface Props {
   titleRef?: React.MutableRefObject<HTMLParagraphElement>
   scrollContainerRef?: React.MutableRefObject<HTMLDivElement>
   children?: React.ReactNode
+  leadingAccessory?: React.ReactNode
+  trailingAccessory?: React.ReactNode
 }
 
 export default function TitleBar({
@@ -22,6 +24,8 @@ export default function TitleBar({
   magicTitle = false,
   titleRef = null,
   scrollContainerRef = null,
+  leadingAccessory = null,
+  trailingAccessory = null,
   children,
 }: Props) {
   const { isOpen, setIsOpen } = React.useContext(GlobalNavigationContext)
@@ -85,13 +89,17 @@ export default function TitleBar({
 
   return (
     <>
-      <div className="sticky top-0 z-10 flex items-center px-3 py-2 space-x-3 bg-white border-b border-gray-200 dark:bg-black dark:border-gray-900 h-14 bg-opacity-80 filter-blur dark:bg-opacity-60">
+      <div className="sticky top-0 z-10 flex items-center flex-none px-3 py-2 bg-white border-b border-gray-200 dark:bg-black dark:border-gray-900 h-14 bg-opacity-80 filter-blur dark:bg-opacity-60">
         {globalMenu && (
           <span
             onClick={() => setIsOpen(!isOpen)}
             className="flex items-center justify-center p-2 rounded-md cursor-pointer lg:hidden hover:bg-gray-200 dark:hover:bg-gray-800"
           >
-            <Menu size={16} className="text-primary" />
+            {isOpen ? (
+              <X size={16} className="text-primary" />
+            ) : (
+              <Menu size={16} className="text-primary" />
+            )}
           </span>
         )}
 
@@ -102,6 +110,8 @@ export default function TitleBar({
             </a>
           </Link>
         )}
+
+        {leadingAccessory && <>{leadingAccessory}</>}
 
         <p
           style={
@@ -117,6 +127,8 @@ export default function TitleBar({
           {title}
         </p>
         {children}
+
+        {trailingAccessory && <>{trailingAccessory}</>}
       </div>
     </>
   )

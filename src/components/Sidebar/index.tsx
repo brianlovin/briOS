@@ -19,6 +19,9 @@ import {
 } from '../Icon'
 import NavigationLink from './NavigationLink'
 import { GlobalNavigationContext } from '../Providers'
+import TitleBar from '../ListDetail/TitleBar'
+import Image from 'next/image'
+import { SmallButton } from '../Button'
 
 export default function Sidebar() {
   const router = useRouter()
@@ -152,14 +155,22 @@ export default function Sidebar() {
           isOpen
             ? 'absolute inset-y-0 left-0 translate-x-0 shadow-lg'
             : 'absolute -translate-x-full'
-        } lg:relative lg:translate-x-0 w-64 h-full z-30 max-h-screen min-h-screen overflow-y-auto transition duration-200 ease-in-out transform bg-white border-r border-gray-200 dark:bg-gray-900 dark:border-gray-800`}
+        } lg:relative flex flex-col lg:translate-x-0 w-64 h-full z-30 max-h-screen min-h-screen overflow-y-auto transition duration-200 ease-in-out transform bg-white border-r border-gray-200 dark:bg-gray-900 dark:border-gray-800`}
       >
-        <div
-          onClick={() => setIsOpen(!isOpen)}
-          className="sticky top-0 flex items-center px-3 py-2 bg-white border-b border-gray-200 dark:border-gray-800 dark:bg-gray-900 h-14 bg-opacity-80 filter-blur dark:bg-opacity-60"
+        <TitleBar
+          leadingAccessory={
+            <Image
+              src="/static/img/avatar.jpeg"
+              width="32"
+              height="32"
+              layout="fixed"
+              className="rounded-full"
+            />
+          }
+          title="Brian Lovin"
         />
 
-        <ul className="px-3 py-3 space-y-1">
+        <ul className="flex-1 px-3 py-3 space-y-1">
           {links.map((link, i) => {
             if (typeof link === 'string') {
               return (
@@ -184,6 +195,12 @@ export default function Sidebar() {
             )
           })}
         </ul>
+
+        <div className="sticky bottom-0 z-10 flex items-center px-3 py-2 space-x-3 bg-white border-t border-gray-200 dark:bg-black dark:border-gray-900 h-14 bg-opacity-80 filter-blur dark:bg-opacity-60">
+          <SmallButton href="/login" className="w-full">
+            Sign in
+          </SmallButton>
+        </div>
       </div>
       <div
         className={`fixed bg-black bg-opacity-5 transition duration-200 ease-in-out inset-0 z-20 ${

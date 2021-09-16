@@ -71,7 +71,7 @@ export default function Intro() {
             href="https://github.com/mobile"
             className="flex items-center space-x-4 group"
           >
-            <span className="font-medium text-gray-1000 group-hover:underline group-hover:text-red-600 dark:group-hover:text-red-500 dark:text-gray-100">
+            <span className="font-medium text-gray-1000 group-hover:underline group-hover:text-blue-600 dark:group-hover:text-blue-500 dark:text-gray-100">
               GitHub
             </span>
             <span className="flex-shrink w-full border-t border-gray-300 border-dashed dark:border-gray-800" />
@@ -85,7 +85,7 @@ export default function Intro() {
             href="https://designdetails.fm"
             className="flex items-center space-x-4 group"
           >
-            <span className="flex-none font-medium text-gray-1000 group-hover:underline group-hover:text-red-600 dark:group-hover:text-red-500 dark:text-gray-100">
+            <span className="flex-none font-medium text-gray-1000 group-hover:underline group-hover:text-blue-600 dark:group-hover:text-blue-500 dark:text-gray-100">
               Design Details Podcast
             </span>
             <span className="flex-shrink w-full border-t border-gray-300 border-dashed dark:border-gray-800" />
@@ -98,7 +98,7 @@ export default function Intro() {
             href="https://github.com/withspectrum/spectrum"
             className="flex items-center space-x-4 group"
           >
-            <span className="font-medium text-gray-1000 group-hover:underline group-hover:text-red-600 dark:group-hover:text-red-500 dark:text-gray-100">
+            <span className="font-medium text-gray-1000 group-hover:underline group-hover:text-blue-600 dark:group-hover:text-blue-500 dark:text-gray-100">
               Spectrum.chat
             </span>
             <span className="flex-shrink w-full border-t border-gray-300 border-dashed dark:border-gray-800" />
@@ -115,7 +115,7 @@ export default function Intro() {
             href="https://buffer.com"
             className="flex items-center space-x-4 group"
           >
-            <span className="font-medium text-gray-1000 group-hover:underline group-hover:text-red-600 dark:group-hover:text-red-500 dark:text-gray-100">
+            <span className="font-medium text-gray-1000 group-hover:underline group-hover:text-blue-600 dark:group-hover:text-blue-500 dark:text-gray-100">
               Buffer
             </span>
             <span className="flex-shrink w-full border-t border-gray-300 border-dashed dark:border-gray-800" />
@@ -129,7 +129,7 @@ export default function Intro() {
           <div className="prose">
             <p>
               Get updates about new posts, new projects, or other meaningful
-              updates to this site delivered to your inbox.
+              updates to this site deliveblue to your inbox.
             </p>
           </div>
           <NewsletterSubscriptionBox />
