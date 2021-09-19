@@ -97,8 +97,6 @@ export default gql`
   }
 
   type Mutation {
-    login(password: String!): Boolean
-    logout: Boolean
     addBookmark(
       url: String!
       notes: String

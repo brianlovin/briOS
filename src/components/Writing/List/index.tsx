@@ -4,6 +4,8 @@ import { useRouter } from 'next/router'
 import ListItem from '~/components/ListDetail/ListItem'
 import TitleBar from '~/components/ListDetail/TitleBar'
 import ListContainer from '~/components/ListDetail/ListContainer'
+import { SmallButton } from '~/components/Button'
+import { Rss } from 'react-feather'
 
 interface Props {
   posts: Post[]
@@ -16,7 +18,14 @@ export default function PostsList({ posts }: Props) {
 
   return (
     <ListContainer>
-      <TitleBar title="Writing" />
+      <TitleBar
+        title="Writing"
+        trailingAccessory={
+          <SmallButton>
+            <Rss size={12} />
+          </SmallButton>
+        }
+      />
 
       <div className="lg:p-3 lg:space-y-1">
         {posts.map((post) => {

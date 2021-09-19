@@ -1,4 +1,3 @@
-import { login, logout } from '~/graphql/resolvers/mutations/auth'
 import {
   addBookmark,
   editBookmark,
@@ -16,8 +15,6 @@ import {
 } from '~/graphql/resolvers/mutations/ama'
 
 export default {
-  login,
-  logout,
   addBookmark: requiresMe(addBookmark),
   editBookmark: requiresMe(editBookmark),
   deleteBookmark: requiresMe(deleteBookmark),

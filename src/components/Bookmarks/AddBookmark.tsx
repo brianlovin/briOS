@@ -1,13 +1,15 @@
 import * as React from 'react'
+import toast from 'react-hot-toast'
+import { v4 as uuidv4 } from 'uuid'
 import { useAddBookmarkMutation } from '~/graphql/types.generated'
 import { GET_BOOKMARKS } from '~/graphql/queries'
 import { Input, Textarea } from '~/components/Input'
 import { useRouter } from 'next/router'
 import Button from '../Button'
 import { ErrorAlert } from '../Alert'
-import toast from 'react-hot-toast'
+import LoadingSpinner from '~/components/LoadingSpinner'
 
-export default function AddBookmark() {
+export default function AddBookmark({ onCloseDialog }) {
   const router = useRouter()
   const [url, setUrl] = React.useState('')
   const [notes, setNotes] = React.useState('')
@@ -17,6 +19,7 @@ export default function AddBookmark() {
       ? router.query.category
       : 'reading'
   )
+  const [isSaving, setIsSaving] = React.useState(false)
   const [error, setError] = React.useState('')
   const query = GET_BOOKMARKS
 
@@ -31,7 +34,7 @@ export default function AddBookmark() {
       __typename: 'Mutation',
       addBookmark: {
         __typename: 'Bookmark',
-        id: url,
+        id: uuidv4(),
         title: 'Saving...',
         url,
         notes,
@@ -41,11 +44,9 @@ export default function AddBookmark() {
         reactions: 0,
       },
     },
-    onCompleted: () => {
-      setUrl('')
-      setNotes('')
-      setTwitterHandle('')
+    onCompleted: ({ addBookmark: { id } }) => {
       toast.success('Saved!')
+      return onCloseDialog(id)
     },
     update(cache, { data: { addBookmark } }) {
       const { bookmarks } = cache.readQuery({
@@ -64,11 +65,13 @@ export default function AddBookmark() {
       const clean = message.replace('GraphQL error:', '')
       setError(clean)
       setUrl('')
+      setIsSaving(false)
     },
   })
 
   function onSubmit(e) {
     e.preventDefault()
+    setIsSaving(true)
     return handleAddBookmark({
       variables: { url, notes, category, twitterHandle },
     })
@@ -106,40 +109,36 @@ export default function AddBookmark() {
         onChange={onUrlChange}
         onKeyDown={onKeyDown}
       />
-      {url.length > 0 && (
-        <React.Fragment>
-          <Textarea
-            placeholder="Notes..."
-            onChange={onNotesChange}
-            onKeyDown={onKeyDown}
-          />
-          <div className="grid grid-cols-2 gap-3">
-            <Input
-              type="text"
-              placeholder="@handle"
-              value={twitterHandle}
-              onChange={onTwitterHandleChange}
-              onKeyDown={onKeyDown}
-            />
+      <Textarea
+        placeholder="Notes..."
+        onChange={onNotesChange}
+        onKeyDown={onKeyDown}
+      />
+      <div className="grid grid-cols-2 gap-3">
+        <Input
+          type="text"
+          placeholder="@handle"
+          value={twitterHandle}
+          onChange={onTwitterHandleChange}
+          onKeyDown={onKeyDown}
+        />
 
-            <select
-              name="category"
-              id="category"
-              value={category}
-              onChange={onCategoryChange}
-            >
-              <option value="reading">Reading</option>
-              <option value="portfolio">Portfolio</option>
-              <option value="website">Personal Site / Blog</option>
-            </select>
-          </div>
-          <div className="self-end">
-            <Button disabled={!url} onClick={onSubmit}>
-              Save
-            </Button>
-          </div>
-        </React.Fragment>
-      )}
+        <select
+          name="category"
+          id="category"
+          value={category}
+          onChange={onCategoryChange}
+        >
+          <option value="reading">Reading</option>
+          <option value="portfolio">Portfolio</option>
+          <option value="website">Personal Site / Blog</option>
+        </select>
+      </div>
+      <div className="self-end">
+        <Button disabled={!url} onClick={onSubmit}>
+          {isSaving ? <LoadingSpinner /> : 'Save'}
+        </Button>
+      </div>
       {error && <ErrorAlert>{error}</ErrorAlert>}
     </form>
   )

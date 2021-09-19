@@ -1,7 +1,8 @@
 import * as React from 'react'
+import { IdProvider } from '@radix-ui/react-id'
+import { UserProvider } from '@auth0/nextjs-auth0'
 import Fathom from './Fathom'
 import SEO from './SEO'
-import { createClient } from '@liveblocks/client'
 import Toast from './Toaster'
 
 interface Props {
@@ -35,9 +36,13 @@ export default function Providers({ children }: Props) {
       <Fathom />
       <Toast />
 
-      <GlobalNavigationContext.Provider value={state}>
-        {children}
-      </GlobalNavigationContext.Provider>
+      <UserProvider>
+        <IdProvider>
+          <GlobalNavigationContext.Provider value={state}>
+            {children}
+          </GlobalNavigationContext.Provider>
+        </IdProvider>
+      </UserProvider>
     </>
   )
 }

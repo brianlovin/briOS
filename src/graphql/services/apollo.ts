@@ -24,7 +24,7 @@ function createIsomorphLink() {
     const { SchemaLink } = require('@apollo/link-schema')
     // eslint-disable-next-line
     const { schema } = require('~/graphql/schema')
-    return new SchemaLink({ schema, context: { isMe: false, cookie: null } })
+    return new SchemaLink({ schema, context: { isMe: false } })
   } else {
     return new HttpLink({
       uri: endpoint,

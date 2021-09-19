@@ -15,10 +15,10 @@ export default function NavigationLink({
     <li onClick={() => setIsOpen(false)}>
       <Link href={href}>
         <a
-          className={`flex items-center space-x-3 px-2 py-2 text-sm font-medium rounded-md  ${
+          className={`flex items-center space-x-3 px-2 py-1.5 text-sm font-medium rounded-md  ${
             isActive
               ? 'bg-gray-200 text-black hover:bg-gray-200 hover:text-black dark:bg-gray-700 dark:hover:bg-gray-700 dark:text-white dark:hover:text-white'
-              : 'text-gray-700 dark:text-gray-200 dark:hover:text-gray-200 hover:text-gray-900 dark:hover:bg-gray-700 hover:bg-gray-100'
+              : 'text-gray-700 dark:text-gray-200 dark:hover:text-gray-200 hover:text-gray-900 dark:hover:bg-gray-700 hover:bg-gray-200'
           }`}
         >
           <span className="flex items-center justify-center">

@@ -28,7 +28,7 @@ export default function Button({ className, href, children, ...rest }: Props) {
 }
 
 export function SmallButton({ className, href, children, ...rest }: Props) {
-  const classes = `flex font-sans text-xs 2xl:text-sm text-gray-700 hover:text-gray-1000 items-center shadow-xs rounded-md justify-center flex-none px-6 py-1.5 space-x-3 font-medium bg-white border border-gray-400 border-opacity-30 dark:border-gray-700 dark:hover:border-gray-600 disabled:opacity-50 dark:bg-white dark:bg-opacity-10 dark:text-gray-200 dark:hover:text-white leading-none disabled:bg-opacity-0 disabled:opacity-0 hover:border-opacity-50 hover:shadow-sm transition-shadow focus:border-gray-1000 dark:focus:border-gray-600 focus:ring-0 focus:outline-none cursor-pointer ${className}`
+  const classes = `flex font-sans text-sm text-gray-700 hover:text-gray-1000 items-center shadow-xs rounded-md justify-center flex-none px-2 py-1.5 space-x-3 font-medium bg-white border border-gray-400 border-opacity-30 dark:border-gray-700 dark:hover:border-gray-600 disabled:opacity-50 dark:bg-white dark:bg-opacity-10 dark:text-gray-200 dark:hover:text-white leading-none disabled:bg-opacity-0 disabled:opacity-0 hover:border-opacity-50 hover:shadow-sm transition-shadow focus:border-gray-1000 dark:focus:border-gray-600 focus:ring-0 focus:outline-none cursor-pointer ${className}`
 
   if (href) {
     if (href.startsWith('/')) {

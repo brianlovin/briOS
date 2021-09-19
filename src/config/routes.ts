@@ -77,15 +77,6 @@ const routes = {
       url: 'ama',
     }),
   },
-  login: {
-    label: 'Login',
-    path: '/login',
-    seo: extendSEO({
-      title: 'Login',
-      description: 'What do you think you’re doing?',
-      url: 'login',
-    }),
-  },
   security: {
     label: 'Security Checklist',
     path: '/security',

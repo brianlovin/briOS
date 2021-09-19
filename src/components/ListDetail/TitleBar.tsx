@@ -89,44 +89,46 @@ export default function TitleBar({
 
   return (
     <>
-      <div className="sticky top-0 z-10 flex items-center flex-none px-3 py-2 bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-gray-800 h-14 bg-opacity-80 filter-blur">
-        {globalMenu && (
-          <span
-            onClick={() => setIsOpen(!isOpen)}
-            className="flex items-center justify-center p-2 rounded-md cursor-pointer lg:hidden hover:bg-gray-200 dark:hover:bg-gray-800"
+      <div className="sticky top-0 z-10 flex items-center justify-between flex-none px-3 py-2 bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-gray-800 h-14 bg-opacity-80 filter-blur">
+        <span className="flex items-center space-x-3">
+          {globalMenu && (
+            <span
+              onClick={() => setIsOpen(!isOpen)}
+              className="flex items-center justify-center p-2 rounded-md cursor-pointer lg:hidden hover:bg-gray-200 dark:hover:bg-gray-800"
+            >
+              {isOpen ? (
+                <X size={16} className="text-primary" />
+              ) : (
+                <Menu size={16} className="text-primary" />
+              )}
+            </span>
+          )}
+
+          {backButton && (
+            <Link href={backButtonHref}>
+              <a className="flex items-center justify-center p-2 rounded-md dark:hover:bg-gray-800 text-primary md:hidden hover:bg-gray-200">
+                <ArrowLeft size={16} className="text-primary" />
+              </a>
+            </Link>
+          )}
+
+          {leadingAccessory && <>{leadingAccessory}</>}
+
+          <p
+            style={
+              magicTitle
+                ? {
+                    transform: `translateY(${offset}%)`,
+                    opacity: `${opacity}`,
+                  }
+                : {}
+            }
+            className="text-sm font-semibold transform-gpu text-primary line-clamp-1"
           >
-            {isOpen ? (
-              <X size={16} className="text-primary" />
-            ) : (
-              <Menu size={16} className="text-primary" />
-            )}
-          </span>
-        )}
-
-        {backButton && (
-          <Link href={backButtonHref}>
-            <a className="flex items-center justify-center p-2 rounded-md text-primary md:hidden hover:bg-gray-200">
-              <ArrowLeft size={16} />
-            </a>
-          </Link>
-        )}
-
-        {leadingAccessory && <>{leadingAccessory}</>}
-
-        <p
-          style={
-            magicTitle
-              ? {
-                  transform: `translateY(${offset}%)`,
-                  opacity: `${opacity}`,
-                }
-              : {}
-          }
-          className="ml-3 text-sm font-semibold transform-gpu text-primary line-clamp-1"
-        >
-          {title}
-        </p>
-        {children}
+            {title}
+          </p>
+          {children}
+        </span>
 
         {trailingAccessory && <>{trailingAccessory}</>}
       </div>

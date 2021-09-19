@@ -1,21 +1,18 @@
-import Cryptr from 'cryptr'
+import { getSession } from '@auth0/nextjs-auth0'
 
-function isAuthenticated(req) {
-  const { session } = req?.cookies
-  if (!session || session.length < 32) {
-    return false
-  }
+function isAuthenticated(req, res) {
+  const session = getSession(req, res)
+  return session?.user
+}
 
-  const secret = process.env.PASSWORD_TOKEN
-  const validated = process.env.PASSWORD
-  const cryptr = new Cryptr(secret)
-  const decrypted = cryptr.decrypt(session)
-  return decrypted === validated
+function isMe(user) {
+  return user.sub === 'twitter|465068802'
 }
 
 export default function context(ctx) {
+  const user = isAuthenticated(ctx.req, ctx.res)
+
   return {
-    cookie: ctx.res.cookie,
-    isMe: isAuthenticated(ctx.req),
+    isMe: user && isMe(user),
   }
 }

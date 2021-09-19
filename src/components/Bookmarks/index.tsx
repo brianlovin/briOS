@@ -4,11 +4,14 @@ import { useAuth } from '~/hooks/useAuth'
 import { PAGINATION_AMOUNT } from '~/graphql/constants'
 import LoadingSpinner from '~/components/LoadingSpinner'
 import FullscreenLoading from '~/components/FullscreenLoading'
-import Button from '~/components/Button'
+import Button, { SmallButton } from '~/components/Button'
 import ListContainer from '~/components/ListDetail/ListContainer'
 import TitleBar from '~/components/ListDetail/TitleBar'
 import ListItem from '~/components/ListDetail/ListItem'
 import { useRouter } from 'next/router'
+import { Plus } from 'react-feather'
+import Tooltip from '../Tooltip'
+import { BookmarksTitlebar } from './Titlebar'
 
 export default function BookmarksList({ category = undefined }) {
   const { isMe } = useAuth()
@@ -66,10 +69,10 @@ export default function BookmarksList({ category = undefined }) {
 
   return (
     <ListContainer>
-      <TitleBar title="Bookmarks" />
+      <BookmarksTitlebar />
 
       <div className="lg:p-3 lg:space-y-1">
-        {bookmarks.map((bookmark, index) => {
+        {bookmarks.map((bookmark) => {
           const active = router.query?.id === bookmark.id
           return (
             <ListItem
