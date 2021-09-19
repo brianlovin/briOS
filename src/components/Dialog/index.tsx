@@ -14,7 +14,7 @@ export function Dialog({ children, ...props }) {
 export const DialogContent = React.forwardRef(
   ({ children, title, ...props }, forwardedRef) => (
     <DialogPrimitive.Content
-      className="fixed -translate-x-1/2 -translate-y-1/2 bg-white rounded-md shadow-lg animate-modalEnter left-1/2 top-1/2 transform-gpu w-96 focus:outline-none"
+      className="fixed bottom-0 w-full pb-16 bg-white shadow-lg sm:bottom-auto sm:pb-0 rounded-t-md sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-md sm:animate-modalEnter sm:left-1/2 sm:top-1/2 transform-gpu sm:max-w-sm md:max-w-md lg:max-w-lg focus:outline-none"
       {...props}
       ref={forwardedRef}
     >

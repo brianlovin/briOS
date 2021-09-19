@@ -27,7 +27,11 @@ export function BookmarksTitlebar() {
               <Plus size={16} />
             </div>
           </DialogTrigger>
-          <DialogContent title="New bookmark">
+          <DialogContent
+            onPointerDownOutside={setIsOpen}
+            onEscapeKeyDown={setIsOpen}
+            title="New bookmark"
+          >
             <div className="p-4">
               <AddBookmark onCloseDialog={onClose} />
             </div>
