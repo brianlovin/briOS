@@ -35,7 +35,7 @@
     "cheerio": "^1.0.0-rc.10",
     "cookie": "^0.4.1",
     "cryptr": "^6.0.2",
-    "date-fns": "^2.23.0",
+    "date-fns": "^2.24.0",
     "firebase-admin": "^9.11.1",
     "graphql": "^15.5.3",
     "isomorphic-unfetch": "^3.1.0",
