@@ -84,6 +84,7 @@ export default gql`
   }
 
   type Query {
+    bookmark(id: ID!): Bookmark
     bookmarks(skip: Int, category: String): [Bookmark]!
     episodes: [Episode]!
     posts(first: Int, filter: String, order: String): [Post]!

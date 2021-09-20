@@ -14,17 +14,17 @@ export function Dialog({ children, ...props }) {
 export const DialogContent = React.forwardRef(
   ({ children, title, ...props }, forwardedRef) => (
     <DialogPrimitive.Content
-      className="fixed bottom-0 w-full pb-16 bg-white shadow-lg sm:bottom-auto sm:pb-0 rounded-t-md sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-md sm:animate-modalEnter sm:left-1/2 sm:top-1/2 transform-gpu sm:max-w-sm md:max-w-md lg:max-w-lg focus:outline-none"
+      className="fixed bottom-0 w-full pb-16 bg-white shadow-lg dark:bg-gray-800 sm:bottom-auto sm:pb-0 rounded-t-md sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-md sm:animate-modalEnter sm:left-1/2 sm:top-1/2 transform-gpu sm:max-w-sm md:max-w-md lg:max-w-lg focus:outline-none"
       {...props}
       ref={forwardedRef}
     >
       <div className="flex flex-col">
-        <div className="flex justify-between w-full p-3 border-b border-gray-200">
+        <div className="flex justify-between w-full p-3 border-b border-gray-200 dark:border-gray-700">
           <DialogPrimitive.Title className="text-sm font-semibold transform-gpu text-primary line-clamp-1">
             {title}
           </DialogPrimitive.Title>
           <DialogPrimitive.Close>
-            <X size={16} />
+            <X size={16} className="text-primary" />
           </DialogPrimitive.Close>
         </div>
         {children}

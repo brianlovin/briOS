@@ -171,6 +171,7 @@ export type Post = {
 export type Query = {
   __typename?: 'Query'
   amaQuestions: Array<Maybe<Ama>>
+  bookmark?: Maybe<Bookmark>
   bookmarks: Array<Maybe<Bookmark>>
   episodes: Array<Maybe<Episode>>
   isMe?: Maybe<Scalars['Boolean']>
@@ -185,6 +186,10 @@ export type Query = {
 export type QueryAmaQuestionsArgs = {
   skip?: Maybe<Scalars['Int']>
   status?: Maybe<AmaStatus>
+}
+
+export type QueryBookmarkArgs = {
+  id: Scalars['ID']
 }
 
 export type QueryBookmarksArgs = {
@@ -508,6 +513,25 @@ export type GetBookmarksQuery = {
       twitterHandle?: Maybe<string>
     }>
   >
+}
+
+export type GetBookmarkQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type GetBookmarkQuery = {
+  __typename?: 'Query'
+  bookmark?: Maybe<{
+    __typename: 'Bookmark'
+    id: string
+    title?: Maybe<string>
+    url: string
+    host?: Maybe<string>
+    reactions?: Maybe<number>
+    notes?: Maybe<string>
+    category?: Maybe<string>
+    twitterHandle?: Maybe<string>
+  }>
 }
 
 export type GetEpisodesQueryVariables = Exact<{ [key: string]: never }>
@@ -1503,6 +1527,63 @@ export type GetBookmarksLazyQueryHookResult = ReturnType<
 export type GetBookmarksQueryResult = Apollo.QueryResult<
   GetBookmarksQuery,
   GetBookmarksQueryVariables
+>
+export const GetBookmarkDocument = gql`
+  query GetBookmark($id: ID!) {
+    bookmark(id: $id) {
+      ...BookmarkInfo
+    }
+  }
+  ${BookmarkInfoFragmentDoc}
+`
+
+/**
+ * __useGetBookmarkQuery__
+ *
+ * To run a query within a React component, call `useGetBookmarkQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBookmarkQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBookmarkQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetBookmarkQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetBookmarkQuery,
+    GetBookmarkQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetBookmarkQuery, GetBookmarkQueryVariables>(
+    GetBookmarkDocument,
+    options
+  )
+}
+export function useGetBookmarkLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetBookmarkQuery,
+    GetBookmarkQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetBookmarkQuery, GetBookmarkQueryVariables>(
+    GetBookmarkDocument,
+    options
+  )
+}
+export type GetBookmarkQueryHookResult = ReturnType<typeof useGetBookmarkQuery>
+export type GetBookmarkLazyQueryHookResult = ReturnType<
+  typeof useGetBookmarkLazyQuery
+>
+export type GetBookmarkQueryResult = Apollo.QueryResult<
+  GetBookmarkQuery,
+  GetBookmarkQueryVariables
 >
 export const GetEpisodesDocument = gql`
   query GetEpisodes {

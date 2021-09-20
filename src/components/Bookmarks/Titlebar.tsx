@@ -24,7 +24,7 @@ export function BookmarksTitlebar() {
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger>
             <div className="flex items-center justify-center p-2 rounded-md cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800">
-              <Plus size={16} />
+              <Plus size={16} className="text-primary" />
             </div>
           </DialogTrigger>
           <DialogContent

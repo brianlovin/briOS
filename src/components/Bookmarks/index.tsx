@@ -1,70 +1,10 @@
 import * as React from 'react'
-import { useGetBookmarksQuery } from '~/graphql/types.generated'
-import { useAuth } from '~/hooks/useAuth'
-import { PAGINATION_AMOUNT } from '~/graphql/constants'
-import LoadingSpinner from '~/components/LoadingSpinner'
-import FullscreenLoading from '~/components/FullscreenLoading'
-import Button, { SmallButton } from '~/components/Button'
 import ListContainer from '~/components/ListDetail/ListContainer'
-import TitleBar from '~/components/ListDetail/TitleBar'
 import ListItem from '~/components/ListDetail/ListItem'
 import { useRouter } from 'next/router'
-import { Plus } from 'react-feather'
-import Tooltip from '../Tooltip'
 import { BookmarksTitlebar } from './Titlebar'
 
-export default function BookmarksList({ category = undefined }) {
-  const { isMe } = useAuth()
-  const [showLoadMore, setShowLoadMore] = React.useState(true)
-  const [loading, setLoading] = React.useState(false)
-
-  React.useEffect(() => {
-    setShowLoadMore(true)
-  }, [category])
-
-  // pre-populate bookmarks from the cache, but check for any new ones after
-  // the page loads
-  const { data, fetchMore, error } = useGetBookmarksQuery({
-    variables: { category },
-  })
-
-  // this can happen if the route is navigated to from the client or if the
-  // cache fails to populate for whatever reason
-  if (!data || !data.bookmarks) return <FullscreenLoading />
-  if (error) return null
-
-  const { bookmarks } = data
-
-  function handleLoadMore() {
-    if (loading) return
-
-    setLoading(true)
-
-    try {
-      fetchMore({
-        variables: {
-          skip: bookmarks.length,
-        },
-        updateQuery: (prev, { fetchMoreResult }) => {
-          setLoading(false)
-
-          if (!fetchMoreResult) return prev
-
-          if (fetchMoreResult.bookmarks.length < PAGINATION_AMOUNT) {
-            // at the end of the list
-            setShowLoadMore(false)
-          }
-
-          return Object.assign({}, prev, {
-            bookmarks: [...prev.bookmarks, ...fetchMoreResult.bookmarks],
-          })
-        },
-      })
-    } catch (err) {
-      setLoading(false)
-    }
-  }
-
+export default function BookmarksList({ bookmarks }) {
   const router = useRouter()
 
   return (
@@ -86,11 +26,6 @@ export default function BookmarksList({ category = undefined }) {
             />
           )
         })}
-        {showLoadMore && (
-          <Button className="w-full" onClick={handleLoadMore}>
-            {loading ? <LoadingSpinner /> : 'Load more'}
-          </Button>
-        )}
       </div>
     </ListContainer>
   )

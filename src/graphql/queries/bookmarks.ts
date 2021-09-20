@@ -9,3 +9,12 @@ export const GET_BOOKMARKS = gql`
   }
   ${BookmarkInfoFragment}
 `
+
+export const GET_BOOKMARK = gql`
+  query GetBookmark($id: ID!) {
+    bookmark(id: $id) {
+      ...BookmarkInfo
+    }
+  }
+  ${BookmarkInfoFragment}
+`

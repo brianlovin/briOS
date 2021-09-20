@@ -43,3 +43,14 @@ export async function getBookmarks(_, { skip = 0, category = undefined }) {
 
   return data
 }
+
+export async function getBookmark(_, { id }) {
+  const ref = await db.collection(BOOKMARKS_COLLECTION)
+  return await ref
+    .doc(id)
+    .get()
+    .then((snapshot) => snapshot.data())
+    .then((bookmark) => {
+      return { ...bookmark, id }
+    })
+}

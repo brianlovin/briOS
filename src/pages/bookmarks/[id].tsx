@@ -2,32 +2,42 @@ import * as React from 'react'
 import { GET_BOOKMARKS } from '~/graphql/queries'
 import { initApolloClient } from '~/graphql/services/apollo'
 import { withApollo } from '~/components/withApollo'
-import BookmarksPage from '~/components/Bookmarks/Page'
+import { ListDetailView } from '~/components/Layouts'
+import BookmarksList from '~/components/Bookmarks'
+import { GET_BOOKMARK } from '~/graphql/queries/bookmarks'
+import { BookmarkDetail } from '~/components/Bookmarks/BookmarkDetail'
 
-function Bookmarks() {
-  return <BookmarksPage category={undefined} />
+function Bookmarks({ data }) {
+  console.log({ data })
+  return (
+    <ListDetailView
+      list={<BookmarksList bookmarks={data.bookmarks} />}
+      detail={<BookmarkDetail bookmark={data.bookmark} />}
+    />
+  )
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps({ params: { id } }) {
   const client = await initApolloClient({})
-  await client.query({
+
+  const { data: bookmarksData } = await client.query({
     query: GET_BOOKMARKS,
     variables: { category: undefined },
   })
-  /*
-    Because this is using withApollo, the data from this query will be
-    pre-populated in the Apollo cache at build time. When the user first
-    visits this page, we can retreive the data from the cache like this:
 
-    const { data } = useGetBookmarksQuery({ fetchPolicy: 'cache-and-network' })
+  const { data: bookmarkData } = await client.query({
+    query: GET_BOOKMARK,
+    variables: { id },
+  })
 
-    This preserves the ability for the page to render all bookmarks instantly,
-    then get progressively updated if any new bookmarks come in over the wire.
-  */
-  const apolloStaticCache = client.cache.extract()
+  console.log({ bookmarkData })
+
   return {
     props: {
-      apolloStaticCache,
+      data: {
+        bookmarks: bookmarksData.bookmarks,
+        bookmark: bookmarkData.bookmark,
+      },
     },
   }
 }

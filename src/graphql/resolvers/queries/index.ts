@@ -1,4 +1,7 @@
-import { getBookmarks } from '~/graphql/resolvers/queries/bookmarks'
+import {
+  getBookmarks,
+  getBookmark,
+} from '~/graphql/resolvers/queries/bookmarks'
 import { getPosts, getPost } from '~/graphql/resolvers/queries/writing'
 import { getEpisodes } from '~/graphql/resolvers/queries/podcast'
 import { getRepos } from '~/graphql/resolvers/queries/repos'
@@ -11,6 +14,7 @@ import {
 } from '~/graphql/resolvers/queries/ama'
 
 export default {
+  bookmark: getBookmark,
   bookmarks: getBookmarks,
   episodes: getEpisodes,
   posts: getPosts,
