@@ -3263,7 +3263,7 @@ axe-core@^4.0.2:
   resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.3.2.tgz#fcf8777b82c62cfc69c7e9f32c0d2226287680e7"
   integrity sha512-5LMaDRWm8ZFPAEdzTYmgjjEdj1YnQcpfrVajO/sn/LhbpGp0Y0H64c2hLZI1gRMxfA+w1S71Uc/nHaOXgcCvGg==
 
-axios@^0.21.1:
+axios@^0.21.1, axios@^0.21.4:
   version "0.21.4"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.4.tgz#c67b90dc0568e5c1cf2b0b858c43ba28e2eda575"
   integrity sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==
@@ -9791,12 +9791,12 @@ postcss@^8.1.6, postcss@^8.2.1, postcss@^8.3.6:
     nanoid "^3.1.23"
     source-map-js "^0.6.2"
 
-postmark@^2.7.7:
-  version "2.7.7"
-  resolved "https://registry.yarnpkg.com/postmark/-/postmark-2.7.7.tgz#ccbcfd713d76fe389e5c5c6c79e0fea9a86a5cae"
-  integrity sha512-X9zy6GQhezLRN5AAqeh4OXCh0Db1ET2zkNSFcNZW5m7Oho9UNCQYy9ZTXG/wbJ7WLCXCs983AS+dC3/22klOyA==
+postmark@^2.7.8:
+  version "2.7.8"
+  resolved "https://registry.yarnpkg.com/postmark/-/postmark-2.7.8.tgz#4f490e544bf441c3a2134a6f4b2d4114f984ff60"
+  integrity sha512-DvOLcgYSM5+NEKrdQsrpnkX9tAP/apZRMEL9Z0UjY2Fh9kBBhLMCAKm9hANSUeTugrmOiKe3DWu/tSSUIu2CIw==
   dependencies:
-    axios "^0.21.1"
+    axios "^0.21.4"
 
 prelude-ls@^1.2.1:
   version "1.2.1"
