@@ -13,7 +13,6 @@ export function BookmarksTitlebar() {
   const router = useRouter()
 
   function onClose(id) {
-    console.log('ON CLOSE', id)
     router.push(`/bookmarks/${id}`)
     setIsOpen(false)
   }

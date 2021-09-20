@@ -8,7 +8,6 @@ import { GET_BOOKMARK } from '~/graphql/queries/bookmarks'
 import { BookmarkDetail } from '~/components/Bookmarks/BookmarkDetail'
 
 function Bookmarks({ data }) {
-  console.log({ data })
   return (
     <ListDetailView
       list={<BookmarksList bookmarks={data.bookmarks} />}
@@ -29,8 +28,6 @@ export async function getServerSideProps({ params: { id } }) {
     query: GET_BOOKMARK,
     variables: { id },
   })
-
-  console.log({ bookmarkData })
 
   return {
     props: {
