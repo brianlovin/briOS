@@ -8,17 +8,19 @@ import { SidebarNavigation } from './Navigation'
 
 export default function Sidebar() {
   const { isOpen } = React.useContext(GlobalNavigationContext)
-
+  const scrollContainerRef = React.useRef(null)
   return (
     <>
       <div
+        ref={scrollContainerRef}
         className={`${
           isOpen
             ? 'absolute inset-y-0 left-0 translate-x-0 shadow-lg'
             : 'absolute -translate-x-full'
-        } lg:relative flex flex-col lg:translate-x-0 w-56 h-full z-30 max-h-screen min-h-screen overflow-y-auto transition duration-200 ease-in-out transform bg-white border-r border-gray-200 dark:bg-gray-900 dark:border-gray-800`}
+        } lg:relative flex flex-col lg:translate-x-0 w-56 h-full z-30 max-h-screen min-h-screen overflow-y-auto transition duration-200 ease-in-out transform bg-white border-r border-gray-150 dark:bg-gray-900 dark:border-gray-800`}
       >
         <TitleBar
+          scrollContainerRef={scrollContainerRef}
           leadingAccessory={
             <Image
               src="/static/img/avatar.jpeg"

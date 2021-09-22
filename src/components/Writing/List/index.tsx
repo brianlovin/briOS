@@ -15,11 +15,13 @@ export default function PostsList({ posts }: Props) {
   if (!posts || posts.length === 0) return null
 
   const router = useRouter()
+  let [scrollContainerRef, setScrollContainerRef] = React.useState(null)
 
   return (
-    <ListContainer>
+    <ListContainer onRef={setScrollContainerRef}>
       <TitleBar
         title="Writing"
+        scrollContainerRef={scrollContainerRef}
         trailingAccessory={
           <SmallButton>
             <Rss size={12} />

@@ -10,13 +10,13 @@ interface Props {
   posts: HNPost[]
 }
 
-const PostList = React.memo((props: Props) => {
-  const { posts } = props
+const PostList = React.memo(({ posts }: Props) => {
   const router = useRouter()
+  let [scrollContainerRef, setScrollContainerRef] = React.useState(null)
 
   return (
-    <ListContainer>
-      <TitleBar title="Hacker News" />
+    <ListContainer onRef={setScrollContainerRef}>
+      <TitleBar scrollContainerRef={scrollContainerRef} title="Hacker News" />
 
       <div className="lg:p-3 lg:space-y-1">
         {posts.map((post) => {
@@ -36,9 +36,9 @@ const PostList = React.memo((props: Props) => {
               description={null}
               byline={
                 <span className="flex space-x-2">
-                  <p>{post.comments_count} comments</p>
-                  <p>·</p>
-                  <p>{timeAgo}</p>
+                  <span>{post.comments_count} comments</span>
+                  <span>·</span>
+                  <span>{timeAgo}</span>
                 </span>
               }
               active={active}

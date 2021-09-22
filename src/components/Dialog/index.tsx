@@ -19,7 +19,7 @@ export const DialogContent = React.forwardRef(
       ref={forwardedRef}
     >
       <div className="flex flex-col">
-        <div className="flex justify-between w-full p-3 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex justify-between w-full p-3 border-b border-gray-150 dark:border-gray-700">
           <DialogPrimitive.Title className="text-sm font-semibold transform-gpu text-primary line-clamp-1">
             {title}
           </DialogPrimitive.Title>

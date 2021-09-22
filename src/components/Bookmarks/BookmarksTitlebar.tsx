@@ -1,13 +1,13 @@
 import * as React from 'react'
-import { useAuth } from '~/hooks/useAuth'
 import TitleBar from '~/components/ListDetail/TitleBar'
 import { Plus } from 'react-feather'
 import { Dialog, DialogTrigger, DialogContent } from '~/components/Dialog'
 import AddBookmark from './AddBookmark'
 import { useRouter } from 'next/router'
+import useSWR from 'swr'
 
-export function BookmarksTitlebar() {
-  const { isMe } = useAuth()
+export function BookmarksTitlebar({ scrollContainerRef }) {
+  const { data, error } = useSWR('/api/isMe')
 
   const [isOpen, setIsOpen] = React.useState(false)
   const router = useRouter()
@@ -18,7 +18,7 @@ export function BookmarksTitlebar() {
   }
 
   function trailingAccessory() {
-    if (isMe) {
+    if (data?.isMe) {
       return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger>
@@ -40,5 +40,11 @@ export function BookmarksTitlebar() {
     }
     return null
   }
-  return <TitleBar title="Bookmarks" trailingAccessory={trailingAccessory()} />
+  return (
+    <TitleBar
+      scrollContainerRef={scrollContainerRef}
+      title="Bookmarks"
+      trailingAccessory={trailingAccessory()}
+    />
+  )
 }

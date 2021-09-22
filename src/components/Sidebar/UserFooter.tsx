@@ -4,7 +4,7 @@ import LoadingSpinner from '~/components/LoadingSpinner'
 
 function Container({ children }) {
   return (
-    <div className="sticky bottom-0 z-10 flex items-center p-2 space-x-3 bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800 bg-opacity-80 filter-blur dark:bg-opacity-60">
+    <div className="sticky bottom-0 z-10 flex items-center p-2 space-x-3 bg-white border-t border-gray-150 dark:bg-gray-900 dark:border-gray-800 bg-opacity-80 filter-blur dark:bg-opacity-60">
       {children}
     </div>
   )
