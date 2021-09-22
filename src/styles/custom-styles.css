@@ -34,6 +34,21 @@
     background-repeat: repeat;
     background-opacity: 50%;
   }
+
+  .bg-dots {
+    background: linear-gradient(90deg, #f9fafb 15px, transparent 1%) center,
+      linear-gradient(#f9fafb 15px, transparent 1%) center, rgba(0, 0, 0, 0.24);
+    background-size: 16px 16px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .bg-dots {
+      background: linear-gradient(90deg, #050505 15px, transparent 1%) center,
+        linear-gradient(#050505 15px, transparent 1%) center,
+        rgba(255, 255, 255, 0.16);
+      background-size: 16px 16px;
+    }
+  }
 }
 
 /* Your own custom utilities */

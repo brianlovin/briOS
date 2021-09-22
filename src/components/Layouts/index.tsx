@@ -10,7 +10,7 @@ export function ListViewOnly({ list }) {
   return (
     <div className="flex w-full">
       {list}
-      <div className="w-full min-h-screen" />
+      <div className="w-full min-h-screen bg-dots" />
     </div>
   )
 }
