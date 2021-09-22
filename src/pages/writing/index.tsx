@@ -2,19 +2,13 @@ import * as React from 'react'
 import { Post } from '~/graphql/types.generated'
 import PostsList from '~/components/Writing/List'
 import { GET_POSTS } from '~/graphql/queries'
-import { initApolloClient } from '~/graphql/services/apollo'
 import { ListViewOnly } from '~/components/Layouts'
 import Head from 'next/head'
 import { NextSeo } from 'next-seo'
 import routes from '~/config/routes'
+import { addApolloState, initApolloClient } from '~/lib/apollo/client'
 
-interface Props {
-  data: {
-    posts: Post[]
-  }
-}
-
-function Writing({ data }: Props) {
+export default function WritingPage() {
   return (
     <>
       <Head>
@@ -32,21 +26,15 @@ function Writing({ data }: Props) {
         openGraph={routes.writing.seo.openGraph}
       />
 
-      <ListViewOnly list={<PostsList posts={data.posts} />} />
+      <ListViewOnly list={<PostsList />} />
     </>
   )
 }
 
-export async function getStaticProps() {
-  const client = await initApolloClient({})
-  const { data } = await client.query({ query: GET_POSTS })
-  return {
-    // because this data is slightly more dynamic, update it every hour
-    revalidate: 60 * 60,
-    props: {
-      data,
-    },
-  }
+export async function getServerSideProps() {
+  const apolloClient = await initApolloClient()
+  await apolloClient.query({ query: GET_POSTS })
+  return addApolloState(apolloClient, {
+    props: {},
+  })
 }
-
-export default Writing

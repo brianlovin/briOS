@@ -1,25 +1,39 @@
 import * as React from 'react'
-import { Post } from '~/graphql/types.generated'
 import SyntaxHighlighter from '~/components/SyntaxHighlighter'
 import SEO from './SEO'
-import Link from 'next/link'
-import { ArrowLeft, Maximize2, X } from 'react-feather'
-import { GlobalNavigationContext } from '~/components/Providers'
 import TitleBar from '~/components/ListDetail/TitleBar'
+import { useGetPostQuery } from '~/graphql/types.generated'
 
-interface Props {
-  post: Post
-}
+export default function PostView({ slug }) {
+  const scrollContainerRef = React.useRef(null)
+  const titleRef = React.useRef(null)
+  const { data, error, loading } = useGetPostQuery({ variables: { slug } })
 
-export default function PostView({ post }: Props) {
+  if (error || loading) {
+    return (
+      <div
+        ref={scrollContainerRef}
+        className="w-full max-h-screen overflow-y-auto bg-white dark:bg-black"
+      />
+    )
+  }
+
+  if (!data?.post) {
+    return (
+      <div
+        ref={scrollContainerRef}
+        className="w-full max-h-screen overflow-y-auto bg-white dark:bg-black"
+      />
+    )
+  }
+
+  const { post } = data
+
   const date = new Date(post.published_at).toLocaleDateString('en-us', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
   })
-
-  const scrollContainerRef = React.useRef(null)
-  const titleRef = React.useRef(null)
 
   return (
     <React.Fragment>

@@ -1,21 +1,28 @@
 import * as React from 'react'
-import { Post } from '~/graphql/types.generated'
 import { useRouter } from 'next/router'
 import ListItem from '~/components/ListDetail/ListItem'
 import TitleBar from '~/components/ListDetail/TitleBar'
 import ListContainer from '~/components/ListDetail/ListContainer'
 import { SmallButton } from '~/components/Button'
 import { Rss } from 'react-feather'
+import { useGetPostsQuery } from '~/graphql/types.generated'
 
-interface Props {
-  posts: Post[]
-}
-
-export default function PostsList({ posts }: Props) {
-  if (!posts || posts.length === 0) return null
-
+export default function PostsList() {
   const router = useRouter()
   let [scrollContainerRef, setScrollContainerRef] = React.useState(null)
+  const { data, error, loading } = useGetPostsQuery()
+
+  if (error || loading) {
+    return (
+      <ListContainer onRef={setScrollContainerRef}>
+        <div />
+      </ListContainer>
+    )
+  }
+
+  const { posts } = data
+
+  if (!posts || posts.length === 0) return null
 
   return (
     <ListContainer onRef={setScrollContainerRef}>

@@ -134,7 +134,7 @@ export default function TitleBar({
                   }
                 : {}
             }
-            className="text-sm font-semibold transform-gpu text-primary line-clamp-1"
+            className="text-sm font-bold transform-gpu text-primary line-clamp-1"
           >
             {title}
           </p>

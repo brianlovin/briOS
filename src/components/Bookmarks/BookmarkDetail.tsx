@@ -1,23 +1,24 @@
 import * as React from 'react'
 import { useRouter } from 'next/router'
-import { Bookmark } from '~/graphql/types.generated'
+import { useGetBookmarkQuery } from '~/graphql/types.generated'
 import TitleBar from '~/components/ListDetail/TitleBar'
 import { BookmarkActions } from './BookmarkActions'
 
-interface Props {
-  bookmark: Bookmark
-}
-
-export function BookmarkDetail({ bookmark }: Props) {
+export function BookmarkDetail({ id }) {
   const scrollContainerRef = React.useRef(null)
   const titleRef = React.useRef(null)
   const router = useRouter()
+  const { data, loading, error } = useGetBookmarkQuery({ variables: { id } })
 
   React.useEffect(() => {
-    if (!bookmark) router.push('/bookmarks')
-  }, [])
+    if (!loading && !data?.bookmark) router.push('/bookmarks')
+  }, [loading])
 
-  if (!bookmark) {
+  if (error || loading) {
+    return null
+  }
+
+  if (!data || !data.bookmark) {
     return null
   }
 
@@ -32,7 +33,7 @@ export function BookmarkDetail({ bookmark }: Props) {
           globalMenu={false}
           backButtonHref={'/writing'}
           magicTitle
-          title={bookmark.title}
+          title={data.bookmark.title}
           titleRef={titleRef}
           scrollContainerRef={scrollContainerRef}
         />
@@ -44,12 +45,12 @@ export function BookmarkDetail({ bookmark }: Props) {
                 ref={titleRef}
                 className="font-sans text-2xl font-bold md:text-3xl text-primary"
               >
-                {bookmark.title}
+                {data.bookmark.title}
               </h1>
               <span className="inline-block leading-snug text-tertiary">
-                {bookmark.host}
+                {data.bookmark.host}
               </span>
-              <BookmarkActions bookmark={bookmark} />
+              <BookmarkActions bookmark={data.bookmark} />
             </div>
           </div>
         </div>

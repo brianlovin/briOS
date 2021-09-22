@@ -2,12 +2,11 @@ import * as React from 'react'
 import { NextSeo } from 'next-seo'
 import JobsList from '~/components/JobsList'
 import Page, { PageHeader } from '~/components/Page'
-import { withApollo } from '~/components/withApollo'
 import { CenteredColumn } from '~/components/Layouts'
 import routes from '~/config/routes'
 import Link from 'next/link'
 
-function Startups() {
+export default function StartupsPage() {
   return (
     <Page>
       <NextSeo
@@ -45,5 +44,3 @@ function Startups() {
     </Page>
   )
 }
-
-export default withApollo(Startups)

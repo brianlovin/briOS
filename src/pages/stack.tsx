@@ -2,13 +2,12 @@ import * as React from 'react'
 import { NextSeo } from 'next-seo'
 import StackList from '~/components/Stack'
 import Page, { PageHeader } from '~/components/Page'
-import { withApollo } from '~/components/withApollo'
 import { CenteredColumn } from '~/components/Layouts'
 import Recommendations from '~/components/Stack/Recommendations'
 import routes from '~/config/routes'
 import Link from 'next/link'
 
-function Stack() {
+export default function StackPage() {
   return (
     <Page>
       <NextSeo
@@ -54,5 +53,3 @@ function Stack() {
     </Page>
   )
 }
-
-export default withApollo(Stack)

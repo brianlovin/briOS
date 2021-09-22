@@ -1,37 +1,22 @@
 import * as React from 'react'
-import { Post } from '~/graphql/types.generated'
 import { GET_POST, GET_POSTS } from '~/graphql/queries'
-import Page from '~/components/Page'
 import PostContainer from '~/components/Writing/Post'
-import NotFound from '~/components/Writing/NotFound'
-import { initApolloClient } from '~/graphql/services/apollo'
 import PostsList from '~/components/Writing/List'
 import { ListDetailView } from '~/components/Layouts'
+import { addApolloState, initApolloClient } from '~/lib/apollo/client'
 
-interface Props {
-  slug: string
-  data: {
-    post: Post
-    posts: Post[]
-  }
-}
-
-function PostView({ data }: Props) {
-  const post = data?.post
-
-  if (!post) return <NotFound />
-
+function PostView({ slug }) {
   return (
     <ListDetailView
-      list={<PostsList posts={data.posts} />}
-      detail={<PostContainer post={post} />}
+      list={<PostsList />}
+      detail={<PostContainer slug={slug} />}
     />
   )
 }
 
 export async function getStaticPaths() {
-  const client = await initApolloClient({})
-  const { data } = await client.query({ query: GET_POSTS })
+  const apolloClient = await initApolloClient({})
+  const { data } = await apolloClient.query({ query: GET_POSTS })
 
   if (!data) return { paths: [], fallback: true }
 
@@ -43,25 +28,21 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params: { slug } }) {
-  const client = await initApolloClient({})
-  const { data: postData } = await client.query({
-    query: GET_POST,
-    variables: { slug },
-  })
+  const apolloClient = await initApolloClient({})
 
-  const { data: postsData } = await client.query({ query: GET_POSTS })
+  await Promise.all([
+    apolloClient.query({
+      query: GET_POST,
+      variables: { slug },
+    }),
+    apolloClient.query({ query: GET_POSTS }),
+  ])
 
-  return {
-    // because this data is slightly more dynamic, update it every hour
-    revalidate: 60 * 60,
+  return addApolloState(apolloClient, {
     props: {
       slug,
-      data: {
-        post: postData.post,
-        posts: postsData.posts,
-      },
     },
-  }
+  })
 }
 
 export default PostView

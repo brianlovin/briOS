@@ -9,7 +9,7 @@ import '~/styles/prose-styles.css'
 
 function MyApp({ Component, pageProps }) {
   return (
-    <Providers>
+    <Providers pageProps={pageProps}>
       <div className="relative flex w-full h-full">
         <Sidebar />
 

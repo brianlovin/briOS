@@ -39,6 +39,11 @@ module.exports = {
         destination: '/writing/:slug',
         permanent: true,
       },
+      {
+        source: '/projects',
+        destination: '/',
+        permanent: true,
+      },
     ]
   },
 }
