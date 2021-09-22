@@ -2,11 +2,12 @@ import * as React from 'react'
 import ListContainer from '~/components/ListDetail/ListContainer'
 import ListItem from '~/components/ListDetail/ListItem'
 import { useRouter } from 'next/router'
-import { BookmarksTitlebar } from './Titlebar'
+import { BookmarksTitlebar } from './BookmarksTitlebar'
 import { useGetBookmarksQuery } from '~/graphql/types.generated'
 
 export default function BookmarksList() {
   const router = useRouter()
+  const [scrollContainerRef, setScrollContainerRef] = React.useState(null)
 
   const { data, error } = useGetBookmarksQuery({
     variables: { category: undefined },
@@ -18,8 +19,8 @@ export default function BookmarksList() {
   const { bookmarks } = data
 
   return (
-    <ListContainer>
-      <BookmarksTitlebar />
+    <ListContainer onRef={setScrollContainerRef}>
+      <BookmarksTitlebar scrollContainerRef={scrollContainerRef} />
 
       <div className="lg:p-3 lg:space-y-1">
         {bookmarks.map((bookmark) => {
