@@ -4,11 +4,10 @@ import { Plus } from 'react-feather'
 import { Dialog, DialogTrigger, DialogContent } from '~/components/Dialog'
 import AddBookmark from './AddBookmark'
 import { useRouter } from 'next/router'
-import useSWR from 'swr'
+import { useIsMeQuery } from '~/graphql/types.generated'
 
 export function BookmarksTitlebar({ scrollContainerRef }) {
-  const { data, error } = useSWR('/api/isMe')
-
+  const { data } = useIsMeQuery()
   const [isOpen, setIsOpen] = React.useState(false)
   const router = useRouter()
 
