@@ -62,11 +62,6 @@ export function createApolloClient(initialState = {}) {
   const ssrMode = typeof window === 'undefined'
   const cache = new InMemoryCache({
     typePolicies: {
-      Query: {
-        fields: {
-          bookmarks: concatPagination(),
-        },
-      },
       Bookmark: {
         keyFields: ['id', 'url'],
         fields: {
