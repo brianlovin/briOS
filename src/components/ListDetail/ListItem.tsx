@@ -45,7 +45,7 @@ export default function ListItem({
         )}
         {byline && (
           <p
-            className={`${
+            className={`line-clamp-1 ${
               active
                 ? 'text-white text-opacity-60'
                 : 'text-gray-1000 dark:text-white text-opacity-40'

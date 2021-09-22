@@ -1,14 +1,12 @@
 import * as React from 'react'
-import Page, { PageHeader } from '~/components/Page'
 import { Post } from '~/graphql/types.generated'
 import PostsList from '~/components/Writing/List'
 import { GET_POSTS } from '~/graphql/queries'
 import { initApolloClient } from '~/graphql/services/apollo'
-import { CenteredColumn, ListViewOnly } from '~/components/Layouts'
+import { ListViewOnly } from '~/components/Layouts'
 import Head from 'next/head'
 import { NextSeo } from 'next-seo'
 import routes from '~/config/routes'
-import InlineNewsletterSubscribeBox from '~/components/Newsletter/InlineNewsletter'
 
 interface Props {
   data: {

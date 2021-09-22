@@ -3,9 +3,19 @@ import ListContainer from '~/components/ListDetail/ListContainer'
 import ListItem from '~/components/ListDetail/ListItem'
 import { useRouter } from 'next/router'
 import { BookmarksTitlebar } from './Titlebar'
+import { useGetBookmarksQuery } from '~/graphql/types.generated'
 
-export default function BookmarksList({ bookmarks }) {
+export default function BookmarksList() {
   const router = useRouter()
+
+  const { data, error } = useGetBookmarksQuery({
+    variables: { category: undefined },
+  })
+
+  if (!data || !data.bookmarks) return <p>loading...</p>
+  if (error) return null
+
+  const { bookmarks } = data
 
   return (
     <ListContainer>

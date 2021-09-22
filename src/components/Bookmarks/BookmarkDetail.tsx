@@ -1,6 +1,8 @@
 import * as React from 'react'
+import { useRouter } from 'next/router'
 import { Bookmark } from '~/graphql/types.generated'
 import TitleBar from '~/components/ListDetail/TitleBar'
+import { BookmarkActions } from './BookmarkActions'
 
 interface Props {
   bookmark: Bookmark
@@ -9,6 +11,15 @@ interface Props {
 export function BookmarkDetail({ bookmark }: Props) {
   const scrollContainerRef = React.useRef(null)
   const titleRef = React.useRef(null)
+  const router = useRouter()
+
+  React.useEffect(() => {
+    if (!bookmark) router.push('/bookmarks')
+  }, [])
+
+  if (!bookmark) {
+    return null
+  }
 
   return (
     <React.Fragment>
@@ -38,6 +49,7 @@ export function BookmarkDetail({ bookmark }: Props) {
               <span className="inline-block leading-snug text-tertiary">
                 {bookmark.host}
               </span>
+              <BookmarkActions bookmark={bookmark} />
             </div>
           </div>
         </div>

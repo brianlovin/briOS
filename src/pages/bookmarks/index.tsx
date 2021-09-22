@@ -9,17 +9,20 @@ function Bookmarks({ data }) {
   return <ListViewOnly list={<BookmarksList bookmarks={data.bookmarks} />} />
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const client = await initApolloClient({})
+
   const { data } = await client.query({
     query: GET_BOOKMARKS,
     variables: { category: undefined },
   })
 
+  const apolloStaticCache = client.cache.extract()
+
   return {
-    revalidate: 60 * 60,
     props: {
       data,
+      apolloStaticCache,
     },
   }
 }

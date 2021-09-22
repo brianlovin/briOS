@@ -2,6 +2,8 @@ import * as React from 'react'
 import { ApolloProvider } from '@apollo/client'
 import { initApolloClient } from '~/graphql/services/apollo'
 
+export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__'
+
 /*
   This wrapper helps to provide Apollo functionality during SSR, while rehydrating
   on the client with a pre-populated cache of the query results.

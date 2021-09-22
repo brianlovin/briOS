@@ -14,7 +14,7 @@ interface Props {
   onDone: any
 }
 
-export default function EditingBookmarkListItem(props: Props) {
+export function EditBookmark(props: Props) {
   const { bookmark, onDone } = props
   const router = useRouter()
 
@@ -96,6 +96,7 @@ export default function EditingBookmarkListItem(props: Props) {
     variables: { id: bookmark.id },
     optimisticResponse: {
       __typename: 'Mutation',
+      deleteBookmark: true,
     },
     update(cache) {
       const { bookmarks } = cache.readQuery({

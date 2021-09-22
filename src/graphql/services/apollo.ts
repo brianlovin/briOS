@@ -59,9 +59,19 @@ export function createApolloClient(initialState = {}) {
   const ssrMode = typeof window === 'undefined'
   const cache = new InMemoryCache({
     typePolicies: {
-      Bookmark: {
-        keyFields: ['url'],
+      Query: {
         fields: {
+          bookmarks: {
+            merge: false,
+          },
+        },
+      },
+      Bookmark: {
+        keyFields: ['id', 'url'],
+        fields: {
+          id: {
+            merge: false,
+          },
           url: {
             merge: false,
           },

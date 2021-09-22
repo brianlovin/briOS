@@ -51,6 +51,7 @@ export async function getBookmark(_, { id }) {
     .get()
     .then((snapshot) => snapshot.data())
     .then((bookmark) => {
+      if (!bookmark) return null
       return { ...bookmark, id }
     })
 }

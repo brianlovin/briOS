@@ -29,12 +29,15 @@ export async function getServerSideProps({ params: { id } }) {
     variables: { id },
   })
 
+  const apolloStaticCache = client.cache.extract()
+
   return {
     props: {
       data: {
         bookmarks: bookmarksData.bookmarks,
         bookmark: bookmarkData.bookmark,
       },
+      apolloStaticCache,
     },
   }
 }
