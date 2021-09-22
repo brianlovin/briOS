@@ -43,13 +43,15 @@ export default function DesignDetailView(props: Props) {
           </div>
         </div>
 
-        <div className="prose">
-          <MarkdownRenderer>{post.description}</MarkdownRenderer>
-        </div>
+        <div className="flex flex-col space-y-12">
+          <div className="prose">
+            <MarkdownRenderer>{post.description}</MarkdownRenderer>
+          </div>
 
-        {post.details.map((detail, i) => (
-          <DesignDetailMedia detail={detail} key={`${detail.title}-${i}`} />
-        ))}
+          {post.details.map((detail, i) => (
+            <DesignDetailMedia detail={detail} key={`${detail.title}-${i}`} />
+          ))}
+        </div>
       </div>
     </CenteredColumn>
   )

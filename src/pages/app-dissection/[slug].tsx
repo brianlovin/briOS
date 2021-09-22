@@ -1,18 +1,19 @@
 import * as React from 'react'
 import { NextSeo } from 'next-seo'
-import Page from '~/components/Page'
 import designDetailsPosts from '~/data/appDissections'
-import DesignDetailView from '~/components/DesignDetailView'
 import { DesignDetailsPost } from '~/data/appDissections'
 import { useRouter } from 'next/router'
 import removeMd from 'remove-markdown'
 import { baseUrl } from '~/config/seo'
+import { ListDetailView } from '~/components/Layouts'
+import { AppDissectionList } from '~/components/AppDissection/AppDissectionList'
+import { AppDissectionDetail } from '~/components/AppDissection/AppDissectionDetail'
 
 interface Props {
   post: DesignDetailsPost
 }
 
-export default function DesignDetail({ post }: Props) {
+export default function AppDissectionPage({ post }: Props) {
   const router = useRouter()
 
   React.useEffect(() => {
@@ -24,7 +25,7 @@ export default function DesignDetail({ post }: Props) {
 
   if (post) {
     return (
-      <Page>
+      <>
         <NextSeo
           title={`${post.title} · App Dissection`}
           description={post.description}
@@ -41,8 +42,11 @@ export default function DesignDetail({ post }: Props) {
             ],
           }}
         />
-        <DesignDetailView post={post} />
-      </Page>
+        <ListDetailView
+          list={<AppDissectionList />}
+          detail={<AppDissectionDetail post={post} />}
+        />
+      </>
     )
   }
 

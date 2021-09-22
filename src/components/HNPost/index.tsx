@@ -1,12 +1,9 @@
 import * as React from 'react'
-import Link from 'next/link'
 import { NextSeo } from 'next-seo'
 import { Comment } from './Comment'
 import Byline from './Byline'
 import { HNPost as HNPostType } from '~/pages/hn'
-import HNSubscribeBox from '../HNSubscribe'
 import { baseUrl } from '~/config/seo'
-import { ArrowLeft } from 'react-feather'
 import TitleBar from '../ListDetail/TitleBar'
 
 interface Props {
@@ -16,7 +13,6 @@ interface Props {
 export function HNPost(props: Props) {
   const { post } = props
 
-  // trim things down to a readable amount
   const comments = post.comments.slice(0, 8)
 
   const scrollContainerRef = React.useRef(null)
