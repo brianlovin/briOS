@@ -2,7 +2,7 @@ import * as React from 'react'
 import { NextSeo } from 'next-seo'
 import BookmarksList from '~/components/Bookmarks'
 import { useAuth } from '~/hooks/useAuth'
-import { ListViewOnly } from '~/components/Layouts'
+import { ListDetailView } from '~/components/Layouts'
 import routes from '~/config/routes'
 
 export default function BookmarksPage({ category }) {
@@ -16,7 +16,7 @@ export default function BookmarksPage({ category }) {
         openGraph={routes.bookmarks.seo.openGraph}
       />
 
-      <ListViewOnly list={<BookmarksList category={category} />} />
+      <ListDetailView detail={null} list={<BookmarksList />} />
     </>
   )
 }

@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { NextSeo } from 'next-seo'
 import { AppDissectionList } from '~/components/AppDissection/AppDissectionList'
-import { ListViewOnly } from '~/components/Layouts'
 import routes from '~/config/routes'
+import { ListDetailView } from '~/components/Layouts'
 
 export default function AppDissectionsPage() {
   return (
@@ -13,7 +13,7 @@ export default function AppDissectionsPage() {
         openGraph={routes.appDissection.seo.openGraph}
       />
 
-      <ListViewOnly list={<AppDissectionList />} />
+      <ListDetailView detail={null} list={<AppDissectionList />} />
     </>
   )
 }

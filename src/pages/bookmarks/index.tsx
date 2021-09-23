@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { GET_BOOKMARKS } from '~/graphql/queries'
-import { ListViewOnly } from '~/components/Layouts'
 import BookmarksList from '~/components/Bookmarks'
 import { addApolloState, initApolloClient } from '~/lib/apollo/client'
+import { ListDetailView } from '~/components/Layouts'
 
 export default function BookmarksPage() {
-  return <ListViewOnly list={<BookmarksList />} />
+  return <ListDetailView detail={null} list={<BookmarksList />} />
 }
 
 export async function getServerSideProps() {

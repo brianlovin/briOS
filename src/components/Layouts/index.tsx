@@ -1,4 +1,5 @@
 import * as React from 'react'
+import Sidebar from '../Sidebar'
 
 export function CenteredColumn({ children }) {
   return (
@@ -6,24 +7,29 @@ export function CenteredColumn({ children }) {
   )
 }
 
-export function ListViewOnly({ list }) {
-  return (
-    <div className="flex w-full">
-      {list}
-      <div className="w-full min-h-screen bg-dots" />
-    </div>
-  )
-}
-
 export function ListDetailView({ list, detail }) {
   return (
     <div className="flex w-full">
-      <div className="hidden md:flex">{list}</div>
+      {list && (
+        <div
+          className={`bg-dots ${
+            detail ? 'hidden md:flex' : 'w-full min-h-screen'
+          }`}
+        >
+          {list}
+        </div>
+      )}
       {detail}
     </div>
   )
 }
 
-export function DetailViewOnly({ children }) {
-  return <div className="flex w-full">{children}</div>
+export function SiteLayout({ children }) {
+  return (
+    <div className="relative flex w-full h-full">
+      <Sidebar />
+
+      <div className="flex flex-1">{children}</div>
+    </div>
+  )
 }

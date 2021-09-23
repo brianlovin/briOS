@@ -623,7 +623,6 @@ export type GetPostsQuery = {
 
 export type GetPostQueryVariables = Exact<{
   slug: Scalars['String']
-  first?: Maybe<Scalars['Int']>
 }>
 
 export type GetPostQuery = {
@@ -1793,7 +1792,7 @@ export type GetPostsQueryResult = Apollo.QueryResult<
   GetPostsQueryVariables
 >
 export const GetPostDocument = gql`
-  query GetPost($slug: String!, $first: Int) {
+  query GetPost($slug: String!) {
     post(slug: $slug) {
       ...PostInfo
     }
@@ -1814,7 +1813,6 @@ export const GetPostDocument = gql`
  * const { data, loading, error } = useGetPostQuery({
  *   variables: {
  *      slug: // value for 'slug'
- *      first: // value for 'first'
  *   },
  * });
  */

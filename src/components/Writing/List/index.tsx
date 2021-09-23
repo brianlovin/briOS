@@ -7,7 +7,7 @@ import { SmallButton } from '~/components/Button'
 import { Rss } from 'react-feather'
 import { useGetPostsQuery } from '~/graphql/types.generated'
 
-export default function PostsList() {
+export function PostsList() {
   const router = useRouter()
   let [scrollContainerRef, setScrollContainerRef] = React.useState(null)
   const { data, error, loading } = useGetPostsQuery()

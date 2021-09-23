@@ -1,8 +1,7 @@
 import * as React from 'react'
-import { Post } from '~/graphql/types.generated'
-import PostsList from '~/components/Writing/List'
+import { PostsList } from '~/components/Writing/List'
 import { GET_POSTS } from '~/graphql/queries'
-import { ListViewOnly } from '~/components/Layouts'
+import { ListDetailView } from '~/components/Layouts'
 import Head from 'next/head'
 import { NextSeo } from 'next-seo'
 import routes from '~/config/routes'
@@ -26,7 +25,7 @@ export default function WritingPage() {
         openGraph={routes.writing.seo.openGraph}
       />
 
-      <ListViewOnly list={<PostsList />} />
+      <ListDetailView list={<PostsList />} detail={null} />
     </>
   )
 }

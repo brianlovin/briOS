@@ -4,7 +4,7 @@ import HNPosts from '~/components/HNPosts'
 import { HNComment } from '~/components/HNPost/Comment'
 import { getHNPosts } from '~/graphql/services/hn'
 import routes from '~/config/routes'
-import { ListDetailView, ListViewOnly } from '~/components/Layouts'
+import { ListDetailView } from '~/components/Layouts'
 
 export interface HNPost {
   id: string
@@ -34,7 +34,7 @@ export default function HNTop(props: Props) {
         openGraph={routes.hn.seo.openGraph}
       />
 
-      <ListViewOnly list={<HNPosts posts={posts} />} />
+      <ListDetailView detail={null} list={<HNPosts posts={posts} />} />
     </>
   )
 }

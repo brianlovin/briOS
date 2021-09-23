@@ -11,7 +11,7 @@ export default function Sidebar() {
   const scrollContainerRef = React.useRef(null)
   return (
     <>
-      <div
+      <nav
         ref={scrollContainerRef}
         className={`${
           isOpen
@@ -34,7 +34,7 @@ export default function Sidebar() {
         />
         <SidebarNavigation />
         <UserFooter />
-      </div>
+      </nav>
 
       <SidebarOverlay />
     </>

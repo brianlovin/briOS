@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { GET_POST, GET_POSTS } from '~/graphql/queries'
 import PostContainer from '~/components/Writing/Post'
-import PostsList from '~/components/Writing/List'
+import { PostsList } from '~/components/Writing/List'
 import { ListDetailView } from '~/components/Layouts'
 import { addApolloState, initApolloClient } from '~/lib/apollo/client'
 
-function PostView({ slug }) {
+export default function PostView({ slug }) {
   return (
     <ListDetailView
       list={<PostsList />}
@@ -44,5 +44,3 @@ export async function getStaticProps({ params: { slug } }) {
     },
   })
 }
-
-export default PostView

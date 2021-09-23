@@ -21,7 +21,7 @@ export default function ListItem({
   leadingAccessory,
 }: Props) {
   return (
-    <Link href={href} as={as} passHref>
+    <Link href={href} as={as}>
       <a
         className={`flex py-3 lg:py-2 px-3.5 space-x-3 border-b lg:border-none border-gray-100 dark:border-gray-900 text-sm lg:rounded-lg ${
           active ? 'bg-blue-500' : 'hover:bg-gray-200 dark:hover:bg-gray-800'

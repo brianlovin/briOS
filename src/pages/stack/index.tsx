@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { NextSeo } from 'next-seo'
 import { StackList } from '~/components/Stack/StackList'
-import { ListViewOnly } from '~/components/Layouts'
 import routes from '~/config/routes'
+import { ListDetailView } from '~/components/Layouts'
 
 export default function StackPage() {
   return (
@@ -13,7 +13,7 @@ export default function StackPage() {
         openGraph={routes.stack.seo.openGraph}
       />
 
-      <ListViewOnly list={<StackList />} />
+      <ListDetailView detail={null} list={<StackList />} />
     </>
   )
 }

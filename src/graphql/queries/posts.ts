@@ -11,7 +11,7 @@ export const GET_POSTS = gql`
 `
 
 export const GET_POST = gql`
-  query GetPost($slug: String!, $first: Int) {
+  query GetPost($slug: String!) {
     post(slug: $slug) {
       ...PostInfo
     }
