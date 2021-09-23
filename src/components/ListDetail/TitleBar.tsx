@@ -32,7 +32,7 @@ export default function TitleBar({
 
   const [offset, setOffset] = React.useState(200)
   const [opacity, _setOpacity] = React.useState(0)
-  const [hasScrolled, setHasScrolled] = React.useState(false)
+  const [currentScrollOffset, _setCurrentScrollOffset] = React.useState(0)
 
   const [initialTitleOffsets, _setInitialTitleOffsets] = React.useState({
     top: 0,
@@ -51,12 +51,15 @@ export default function TitleBar({
     _setOpacity(data)
   }
 
+  const currentScrollOffsetRef = React.useRef(currentScrollOffset)
+  const setCurrentScrollOffset = (data) => {
+    currentScrollOffsetRef.current = data
+    _setCurrentScrollOffset(data)
+  }
+
   const handler = React.useCallback(() => {
-    if (scrollContainerRef?.current?.scrollTop > 16) {
-      setHasScrolled(true)
-    } else {
-      setHasScrolled(false)
-    }
+    const shadowOpacity = scrollContainerRef.current.scrollTop / 200
+    setCurrentScrollOffset(shadowOpacity > 0.12 ? 0.12 : shadowOpacity)
 
     if (!titleRef?.current || !initialTitleOffsetsRef?.current) return
 
@@ -97,10 +100,10 @@ export default function TitleBar({
   return (
     <>
       <div
-        style={{ opacity: magicTitle ? `${opacity + 0.9}` : '1' }}
-        className={`sticky top-0 z-10 flex items-center justify-between flex-none px-3 py-2 dark:bg-gray-900 dark:bg-opacity-80 bg-white h-14 bg-opacity-90 filter-blur dark:border-b dark:border-gray-900 ${
-          hasScrolled && 'shadow'
-        }`}
+        style={{
+          boxShadow: `0 1px 3px rgba(0,0,0,${currentScrollOffset})`,
+        }}
+        className={`sticky top-0 z-10 flex items-center justify-between flex-none px-3 py-2 dark:bg-gray-900 dark:bg-opacity-80 bg-white h-14 bg-opacity-90 filter-blur dark:border-b dark:border-gray-900`}
       >
         <span className="flex items-center space-x-3">
           {globalMenu && (
