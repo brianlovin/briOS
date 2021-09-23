@@ -1,5 +1,4 @@
 import * as React from 'react'
-import Providers from '../Providers'
 import Sidebar from '../Sidebar'
 
 export function CenteredColumn({ children }) {
@@ -8,13 +7,13 @@ export function CenteredColumn({ children }) {
   )
 }
 
-export function ListDetailView({ list, detail }) {
+export function ListDetailView({ list, detail, hasDetail }) {
   return (
     <div className="flex w-full">
       {list && (
         <div
           className={`bg-dots ${
-            detail ? 'hidden md:flex' : 'w-full min-h-screen'
+            hasDetail ? 'hidden md:flex' : 'w-full min-h-screen'
           }`}
         >
           {list}
@@ -25,14 +24,12 @@ export function ListDetailView({ list, detail }) {
   )
 }
 
-export function SiteLayout({ children, pageProps }) {
+export function SiteLayout({ children }) {
   return (
-    <Providers pageProps={pageProps}>
-      <div className="relative flex w-full h-full">
-        <Sidebar />
+    <div className="relative flex w-full h-full">
+      <Sidebar />
 
-        <div className="flex flex-1">{children}</div>
-      </div>
-    </Providers>
+      <div className="flex flex-1">{children}</div>
+    </div>
   )
 }

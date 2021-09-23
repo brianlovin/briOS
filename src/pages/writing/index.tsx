@@ -6,6 +6,7 @@ import Head from 'next/head'
 import { NextSeo } from 'next-seo'
 import routes from '~/config/routes'
 import { addApolloState, initApolloClient } from '~/lib/apollo/client'
+import { withProviders } from '~/components/Providers/withProviders'
 
 function WritingPage() {
   return (
@@ -36,12 +37,12 @@ export async function getServerSideProps() {
   })
 }
 
-WritingPage.getLayout = function getLayout(page) {
+WritingPage.getLayout = withProviders(function getLayout(page) {
   return (
-    <SiteLayout pageProps={page.props}>
-      <ListDetailView list={<PostsList />} detail={page} />
+    <SiteLayout>
+      <ListDetailView list={<PostsList />} hasDetail={false} detail={page} />
     </SiteLayout>
   )
-}
+})
 
 export default WritingPage

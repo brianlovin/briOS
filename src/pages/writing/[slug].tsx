@@ -4,6 +4,7 @@ import PostContainer from '~/components/Writing/Post'
 import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { addApolloState, initApolloClient } from '~/lib/apollo/client'
 import { PostsList } from '~/components/Writing/List'
+import { withProviders } from '~/components/Providers/withProviders'
 
 function WritingPostPage({ slug }) {
   return <PostContainer slug={slug} />
@@ -40,12 +41,12 @@ export async function getStaticProps({ params: { slug } }) {
   })
 }
 
-WritingPostPage.getLayout = function getLayout(page) {
+WritingPostPage.getLayout = withProviders(function getLayout(page) {
   return (
-    <SiteLayout pageProps={page.props}>
-      <ListDetailView list={<PostsList />} detail={page} />
+    <SiteLayout>
+      <ListDetailView list={<PostsList />} hasDetail detail={page} />
     </SiteLayout>
   )
-}
+})
 
 export default WritingPostPage

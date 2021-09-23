@@ -4,12 +4,17 @@ import 'tailwindcss/utilities.css'
 import '~/styles/custom-styles.css'
 import '~/styles/syntax-highlighting.css'
 import '~/styles/prose-styles.css'
+import Providers from '~/components/Providers'
 import { SiteLayout } from '~/components/Layouts'
 
 export default function App({ Component, pageProps }) {
   const getLayout =
     Component.getLayout ||
-    ((page) => <SiteLayout pageProps={page.props}>{page}</SiteLayout>)
+    ((page) => (
+      <Providers pageProps={pageProps}>
+        <SiteLayout>{page}</SiteLayout>
+      </Providers>
+    ))
 
   return getLayout(<Component {...pageProps} />)
 }
