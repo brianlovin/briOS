@@ -28,7 +28,7 @@ export default function ListItem({
         }`}
       >
         {leadingAccessory && <>{leadingAccessory}</>}
-        <div className="flex flex-col space-y-1">
+        <div className="flex flex-col justify-center space-y-1">
           <p
             className={`font-medium ${
               active ? 'text-white' : 'text-gray-1000 dark:text-gray-100'

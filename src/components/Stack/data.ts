@@ -1,4 +1,6 @@
-export default [
+import slugify from 'slugify'
+
+const data = [
   {
     name: '1Password',
     url: 'https://1password.com',
@@ -393,3 +395,16 @@ export default [
       'Game over. They solved coffee. Once you try it, you’see what I mean (I’m on the light/medium roast variety subscription).',
   },
 ]
+
+const dataWithSlugs = data
+  .map((o) => ({
+    ...o,
+    slug: slugify(o.name, { lower: true, remove: /[.]/g }),
+  }))
+  .sort(function (a, b) {
+    if (a.slug < b.slug) return -1
+    if (a.slug > b.slug) return 1
+    return 0
+  })
+
+export const stackData = dataWithSlugs
