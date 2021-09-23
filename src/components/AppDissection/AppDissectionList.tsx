@@ -6,7 +6,7 @@ import ListContainer from '../ListDetail/ListContainer'
 import { summaries } from '~/data/appDissections'
 import Image from 'next/image'
 
-export function AppDissectionList() {
+export const AppDissectionList = React.memo(() => {
   const router = useRouter()
   let [scrollContainerRef, setScrollContainerRef] = React.useState(null)
 
@@ -56,4 +56,4 @@ export function AppDissectionList() {
       </div>
     </ListContainer>
   )
-}
+})

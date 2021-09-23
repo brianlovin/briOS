@@ -97,8 +97,9 @@ export default function TitleBar({
   return (
     <>
       <div
-        className={`sticky top-0 z-10 flex items-center justify-between flex-none px-3 py-2 bg-white  dark:bg-gray-900 h-14 bg-opacity-90 filter-blur dark:border-b dark:border-gray-900 ${
-          hasScrolled && 'shadow-sm'
+        style={{ opacity: magicTitle ? `${opacity + 0.9}` : '1' }}
+        className={`sticky top-0 z-10 flex items-center justify-between flex-none px-3 py-2 dark:bg-gray-900 dark:bg-opacity-80 bg-white h-14 bg-opacity-90 filter-blur dark:border-b dark:border-gray-900 ${
+          hasScrolled && 'shadow'
         }`}
       >
         <span className="flex items-center space-x-3">
