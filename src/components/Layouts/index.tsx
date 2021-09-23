@@ -1,4 +1,5 @@
 import * as React from 'react'
+import Providers from '../Providers'
 import Sidebar from '../Sidebar'
 
 export function CenteredColumn({ children }) {
@@ -24,12 +25,14 @@ export function ListDetailView({ list, detail }) {
   )
 }
 
-export function SiteLayout({ children }) {
+export function SiteLayout({ children, pageProps }) {
   return (
-    <div className="relative flex w-full h-full">
-      <Sidebar />
+    <Providers pageProps={pageProps}>
+      <div className="relative flex w-full h-full">
+        <Sidebar />
 
-      <div className="flex flex-1">{children}</div>
-    </div>
+        <div className="flex flex-1">{children}</div>
+      </div>
+    </Providers>
   )
 }

@@ -1,13 +1,13 @@
 import * as React from 'react'
 import { PostsList } from '~/components/Writing/List'
 import { GET_POSTS } from '~/graphql/queries'
-import { ListDetailView } from '~/components/Layouts'
+import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import Head from 'next/head'
 import { NextSeo } from 'next-seo'
 import routes from '~/config/routes'
 import { addApolloState, initApolloClient } from '~/lib/apollo/client'
 
-export default function WritingPage() {
+function WritingPage() {
   return (
     <>
       <Head>
@@ -24,8 +24,6 @@ export default function WritingPage() {
         description={routes.writing.seo.description}
         openGraph={routes.writing.seo.openGraph}
       />
-
-      <ListDetailView list={<PostsList />} detail={null} />
     </>
   )
 }
@@ -37,3 +35,13 @@ export async function getServerSideProps() {
     props: {},
   })
 }
+
+WritingPage.getLayout = function getLayout(page) {
+  return (
+    <SiteLayout pageProps={page.props}>
+      <ListDetailView list={<PostsList />} detail={page} />
+    </SiteLayout>
+  )
+}
+
+export default WritingPage

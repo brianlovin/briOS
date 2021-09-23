@@ -1,17 +1,12 @@
 import * as React from 'react'
 import { GET_POST, GET_POSTS } from '~/graphql/queries'
 import PostContainer from '~/components/Writing/Post'
-import { PostsList } from '~/components/Writing/List'
-import { ListDetailView } from '~/components/Layouts'
+import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { addApolloState, initApolloClient } from '~/lib/apollo/client'
+import { PostsList } from '~/components/Writing/List'
 
-export default function PostView({ slug }) {
-  return (
-    <ListDetailView
-      list={<PostsList />}
-      detail={<PostContainer slug={slug} />}
-    />
-  )
+function WritingPostPage({ slug }) {
+  return <PostContainer slug={slug} />
 }
 
 export async function getStaticPaths() {
@@ -44,3 +39,13 @@ export async function getStaticProps({ params: { slug } }) {
     },
   })
 }
+
+WritingPostPage.getLayout = function getLayout(page) {
+  return (
+    <SiteLayout pageProps={page.props}>
+      <ListDetailView list={<PostsList />} detail={page} />
+    </SiteLayout>
+  )
+}
+
+export default WritingPostPage
