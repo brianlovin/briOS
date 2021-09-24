@@ -2,9 +2,10 @@ import * as React from 'react'
 import { NextSeo } from 'next-seo'
 import { AppDissectionList } from '~/components/AppDissection/AppDissectionList'
 import routes from '~/config/routes'
-import { ListDetailView } from '~/components/Layouts'
+import { ListDetailView, SiteLayout } from '~/components/Layouts'
+import { withProviders } from '~/components/Providers/withProviders'
 
-export default function AppDissectionsPage() {
+function AppDissectionsPage() {
   return (
     <>
       <NextSeo
@@ -12,8 +13,20 @@ export default function AppDissectionsPage() {
         description={routes.appDissection.seo.description}
         openGraph={routes.appDissection.seo.openGraph}
       />
-
-      <ListDetailView detail={null} list={<AppDissectionList />} />
     </>
   )
 }
+
+AppDissectionsPage.getLayout = withProviders(function getLayout(page) {
+  return (
+    <SiteLayout>
+      <ListDetailView
+        list={<AppDissectionList />}
+        hasDetail={false}
+        detail={page}
+      />
+    </SiteLayout>
+  )
+})
+
+export default AppDissectionsPage

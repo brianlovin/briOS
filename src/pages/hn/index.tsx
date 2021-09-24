@@ -4,7 +4,8 @@ import HNPosts from '~/components/HNPosts'
 import { HNComment } from '~/components/HNPost/Comment'
 import { getHNPosts } from '~/graphql/services/hn'
 import routes from '~/config/routes'
-import { ListDetailView } from '~/components/Layouts'
+import { ListDetailView, SiteLayout } from '~/components/Layouts'
+import { withProviders } from '~/components/Providers/withProviders'
 
 export interface HNPost {
   id: string
@@ -23,7 +24,7 @@ interface Props {
   posts: HNPost[]
 }
 
-export default function HNTop(props: Props) {
+function HNPage(props: Props) {
   const { posts } = props
 
   return (
@@ -33,8 +34,6 @@ export default function HNTop(props: Props) {
         description={routes.hn.seo.description}
         openGraph={routes.hn.seo.openGraph}
       />
-
-      <ListDetailView detail={null} list={<HNPosts posts={posts} />} />
     </>
   )
 }
@@ -49,3 +48,17 @@ export async function getStaticProps() {
     },
   }
 }
+
+HNPage.getLayout = withProviders(function getLayout(page) {
+  return (
+    <SiteLayout>
+      <ListDetailView
+        list={<HNPosts posts={page.props.posts} />}
+        hasDetail={false}
+        detail={page}
+      />
+    </SiteLayout>
+  )
+})
+
+export default HNPage

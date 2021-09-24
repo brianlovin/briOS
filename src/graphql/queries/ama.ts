@@ -10,6 +10,15 @@ export const GET_AMA_QUESTIONS = gql`
   ${AMAInfoFragment}
 `
 
+export const GET_AMA_QUESTION = gql`
+  query GetAMAQuestion($id: ID!) {
+    amaQuestion(id: $id) {
+      ...AMAInfo
+    }
+  }
+  ${AMAInfoFragment}
+`
+
 export const GET_SIGNED_UPLOAD_URL = gql`
   query signedUploadUrl($id: ID!) {
     signedUploadUrl(id: $id)

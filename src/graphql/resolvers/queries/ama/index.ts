@@ -29,6 +29,19 @@ async function fetchAudioPlaybackUrl(id) {
   return await Promise.resolve(url)
 }
 
+export async function getAMAQuestion(_, { id }) {
+  const ref = await db.collection(AMA_QUESTIONS_COLLECTION)
+  return await ref
+    .doc(id)
+    .get()
+    .then((snapshot) => snapshot.data())
+    .then(async (ama) => {
+      if (!ama) return null
+      const sanitizedAmaDocument = await sanitizeAmaDocument(ama, id)
+      return { ...ama, id, ...sanitizedAmaDocument }
+    })
+}
+
 export async function getAMAQuestions(
   _,
   args: QueryAmaQuestionsArgs,

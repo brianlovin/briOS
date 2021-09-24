@@ -5,15 +5,16 @@ import { DesignDetailsPost } from '~/data/appDissections'
 import { useRouter } from 'next/router'
 import removeMd from 'remove-markdown'
 import { baseUrl } from '~/config/seo'
-import { ListDetailView } from '~/components/Layouts'
+import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { AppDissectionList } from '~/components/AppDissection/AppDissectionList'
 import { AppDissectionDetail } from '~/components/AppDissection/AppDissectionDetail'
+import { withProviders } from '~/components/Providers/withProviders'
 
 interface Props {
   post: DesignDetailsPost
 }
 
-export default function AppDissectionPage({ post }: Props) {
+function AppDissectionPage({ post }: Props) {
   const router = useRouter()
 
   React.useEffect(() => {
@@ -42,10 +43,8 @@ export default function AppDissectionPage({ post }: Props) {
             ],
           }}
         />
-        <ListDetailView
-          list={<AppDissectionList />}
-          detail={<AppDissectionDetail post={post} />}
-        />
+
+        <AppDissectionDetail post={post} />
       </>
     )
   }
@@ -68,3 +67,13 @@ export async function getStaticProps({ params: { slug } }) {
     },
   }
 }
+
+AppDissectionPage.getLayout = withProviders(function getLayout(page) {
+  return (
+    <SiteLayout>
+      <ListDetailView list={<AppDissectionList />} hasDetail detail={page} />
+    </SiteLayout>
+  )
+})
+
+export default AppDissectionPage

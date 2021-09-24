@@ -4,6 +4,7 @@ import { GET_HOME } from './home'
 import { GET_POSTS, GET_POST } from './posts'
 import { IS_ME } from './isMe'
 import {
+  GET_AMA_QUESTION,
   GET_AMA_QUESTIONS,
   GET_SIGNED_UPLOAD_URL,
   GET_SIGNED_PLAYBACK_URL,
@@ -16,6 +17,7 @@ export {
   GET_POSTS,
   GET_POST,
   IS_ME,
+  GET_AMA_QUESTION,
   GET_AMA_QUESTIONS,
   GET_SIGNED_UPLOAD_URL,
   GET_SIGNED_PLAYBACK_URL,

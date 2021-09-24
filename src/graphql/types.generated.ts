@@ -170,6 +170,7 @@ export type Post = {
 
 export type Query = {
   __typename?: 'Query'
+  amaQuestion?: Maybe<Ama>
   amaQuestions: Array<Maybe<Ama>>
   bookmark?: Maybe<Bookmark>
   bookmarks: Array<Maybe<Bookmark>>
@@ -181,6 +182,10 @@ export type Query = {
   signedPlaybackUrl?: Maybe<Scalars['String']>
   signedUploadUrl?: Maybe<Scalars['String']>
   transcription?: Maybe<Scalars['String']>
+}
+
+export type QueryAmaQuestionArgs = {
+  id: Scalars['ID']
 }
 
 export type QueryAmaQuestionsArgs = {
@@ -464,6 +469,27 @@ export type GetAmaQuestionsQuery = {
       audioWaveform?: Maybe<Array<Maybe<number>>>
     }>
   >
+}
+
+export type GetAmaQuestionQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type GetAmaQuestionQuery = {
+  __typename?: 'Query'
+  amaQuestion?: Maybe<{
+    __typename?: 'AMA'
+    id: string
+    createdAt?: Maybe<string>
+    updatedAt?: Maybe<string>
+    question: string
+    answer?: Maybe<string>
+    status?: Maybe<AmaStatus>
+    reactions?: Maybe<number>
+    audioUrl?: Maybe<string>
+    audioPlayCount?: Maybe<number>
+    audioWaveform?: Maybe<Array<Maybe<number>>>
+  }>
 }
 
 export type SignedUploadUrlQueryVariables = Exact<{
@@ -1298,6 +1324,65 @@ export type GetAmaQuestionsLazyQueryHookResult = ReturnType<
 export type GetAmaQuestionsQueryResult = Apollo.QueryResult<
   GetAmaQuestionsQuery,
   GetAmaQuestionsQueryVariables
+>
+export const GetAmaQuestionDocument = gql`
+  query GetAMAQuestion($id: ID!) {
+    amaQuestion(id: $id) {
+      ...AMAInfo
+    }
+  }
+  ${AmaInfoFragmentDoc}
+`
+
+/**
+ * __useGetAmaQuestionQuery__
+ *
+ * To run a query within a React component, call `useGetAmaQuestionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAmaQuestionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAmaQuestionQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetAmaQuestionQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetAmaQuestionQuery,
+    GetAmaQuestionQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetAmaQuestionQuery, GetAmaQuestionQueryVariables>(
+    GetAmaQuestionDocument,
+    options
+  )
+}
+export function useGetAmaQuestionLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetAmaQuestionQuery,
+    GetAmaQuestionQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetAmaQuestionQuery, GetAmaQuestionQueryVariables>(
+    GetAmaQuestionDocument,
+    options
+  )
+}
+export type GetAmaQuestionQueryHookResult = ReturnType<
+  typeof useGetAmaQuestionQuery
+>
+export type GetAmaQuestionLazyQueryHookResult = ReturnType<
+  typeof useGetAmaQuestionLazyQuery
+>
+export type GetAmaQuestionQueryResult = Apollo.QueryResult<
+  GetAmaQuestionQuery,
+  GetAmaQuestionQueryVariables
 >
 export const SignedUploadUrlDocument = gql`
   query signedUploadUrl($id: ID!) {

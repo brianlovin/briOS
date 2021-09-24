@@ -1,12 +1,13 @@
 import * as React from 'react'
 import { NextSeo } from 'next-seo'
 import routes from '~/config/routes'
-import { ListDetailView } from '~/components/Layouts'
+import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { stackData } from '~/components/Stack/data'
 import { StackList } from '~/components/Stack/StackList'
 import { StackDetail } from '~/components/Stack/StackDetail'
+import { withProviders } from '~/components/Providers/withProviders'
 
-export default function StackDetailPage({ stack }) {
+function StackDetailPage({ stack }) {
   if (stack) {
     return (
       <>
@@ -15,10 +16,8 @@ export default function StackDetailPage({ stack }) {
           description={routes.stack.seo.description}
           openGraph={routes.stack.seo.openGraph}
         />
-        <ListDetailView
-          list={<StackList />}
-          detail={<StackDetail stack={stack} />}
-        />
+
+        <StackDetail stack={stack} />
       </>
     )
   }
@@ -41,3 +40,13 @@ export async function getStaticProps({ params: { slug } }) {
     },
   }
 }
+
+StackDetailPage.getLayout = withProviders(function getLayout(page) {
+  return (
+    <SiteLayout>
+      <ListDetailView list={<StackList />} hasDetail detail={page} />
+    </SiteLayout>
+  )
+})
+
+export default StackDetailPage

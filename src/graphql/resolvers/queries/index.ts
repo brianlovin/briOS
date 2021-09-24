@@ -7,6 +7,7 @@ import { getEpisodes } from '~/graphql/resolvers/queries/podcast'
 import { getRepos } from '~/graphql/resolvers/queries/repos'
 import { isMe } from '~/graphql/resolvers/queries/isMe'
 import {
+  getAMAQuestion,
   getAMAQuestions,
   getSignedUploadUrl,
   getSignedPlaybackUrl,
@@ -21,6 +22,7 @@ export default {
   post: getPost,
   repos: getRepos,
   isMe: isMe,
+  amaQuestion: getAMAQuestion,
   amaQuestions: getAMAQuestions,
   signedUploadUrl: getSignedUploadUrl,
   signedPlaybackUrl: getSignedPlaybackUrl,

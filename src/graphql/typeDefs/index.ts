@@ -89,6 +89,7 @@ export default gql`
     episodes: [Episode]!
     posts(first: Int, filter: String, order: String): [Post]!
     post(slug: String!): Post
+    amaQuestion(id: ID!): AMA
     amaQuestions(skip: Int, status: AMAStatus): [AMA]!
     repos: [Repo]!
     isMe: Boolean
