@@ -1,5 +1,4 @@
 import { handleAuth, handleLogin, handleLogout } from '@auth0/nextjs-auth0'
-import { CLIENT_URL } from '~/graphql/constants'
 
 export default handleAuth({
   async logout(req, res) {
