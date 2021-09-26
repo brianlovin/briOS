@@ -9,9 +9,7 @@ export default function BookmarksList() {
   const router = useRouter()
   const [scrollContainerRef, setScrollContainerRef] = React.useState(null)
 
-  const { data, error, loading } = useGetBookmarksQuery({
-    variables: { category: undefined },
-  })
+  const { data, error, loading } = useGetBookmarksQuery()
 
   if (loading) {
     return (

@@ -1,13 +1,10 @@
 import * as React from 'react'
 import { NextSeo } from 'next-seo'
 import BookmarksList from '~/components/Bookmarks'
-import { useAuth } from '~/hooks/useAuth'
 import { ListDetailView } from '~/components/Layouts'
 import routes from '~/config/routes'
 
-export default function BookmarksPage({ category }) {
-  const { isMe } = useAuth()
-
+export default function BookmarksPage() {
   return (
     <>
       <NextSeo

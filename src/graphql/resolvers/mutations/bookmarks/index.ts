@@ -3,6 +3,7 @@ import { UserInputError } from 'apollo-server-micro'
 import { db } from '~/graphql/services/firebase'
 import getBookmarkMetaData from './getBookmarkMetaData'
 import { BOOKMARKS_COLLECTION } from '~/graphql/constants'
+import { prisma } from '~/lib/prisma/client'
 
 function isValidUrl(string) {
   try {
@@ -13,65 +14,45 @@ function isValidUrl(string) {
   }
 }
 
-export async function editBookmark(
-  _,
-  { id, title, notes = '', category, twitterHandle }
-) {
+export async function editBookmark(_, { id, title }) {
   if (!title || title.length === 0)
     throw new UserInputError('Bookmark must have a title')
 
-  await db
-    .collection(BOOKMARKS_COLLECTION)
-    .doc(id)
-    .update({ title, notes, category, twitterHandle })
-
-  return await db
-    .collection(BOOKMARKS_COLLECTION)
-    .doc(id)
-    .get()
-    .then((doc) => doc.data())
-    .then((res) => ({ ...res, reactions: res.reactions || 0, id }))
+  return await prisma.bookmark.update({
+    where: {
+      id,
+    },
+    data: {
+      title,
+    },
+  })
 }
 
-export async function addBookmark(_, { url, notes, category, twitterHandle }) {
+export async function addBookmark(_, { url }) {
   if (!isValidUrl(url)) throw new UserInputError('URL was invalid')
 
-  const existingRef = await db
-    .collection(BOOKMARKS_COLLECTION)
-    .where('url', '==', url)
-    .get()
-    .then((snapshot) => !snapshot.empty)
-
-  if (existingRef) throw new UserInputError('URL already exists')
-
   const metadata = await getBookmarkMetaData(url)
-
-  const id = await db
-    .collection(BOOKMARKS_COLLECTION)
-    .add({
-      createdAt: new Date(),
-      ...metadata,
-      notes,
-      category,
-      twitterHandle,
-      reactions: 0,
-    })
-    .then(({ id }) => id)
-
-  return await db
-    .collection(BOOKMARKS_COLLECTION)
-    .doc(id)
-    .get()
-    .then((doc) => doc.data())
-    .then((res) => ({ ...res, id }))
+  const { host, title, image, siteName, description } = metadata
+  return await prisma.bookmark.create({
+    data: {
+      url,
+      host,
+      title,
+      image,
+      siteName,
+      description,
+    },
+  })
 }
 
 export async function deleteBookmark(_, { id }) {
-  return await db
-    .collection(BOOKMARKS_COLLECTION)
-    .doc(id)
-    .delete()
-    .then(() => true)
+  await prisma.bookmark.delete({
+    where: {
+      id,
+    },
+  })
+
+  return true
 }
 
 export async function addBookmarkReaction(_, { id }) {

@@ -14,7 +14,6 @@ export async function getServerSideProps() {
 
   await apolloClient.query({
     query: GET_BOOKMARKS,
-    variables: { category: undefined },
   })
 
   return addApolloState(apolloClient, {

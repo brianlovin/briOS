@@ -15,9 +15,9 @@ export function BookmarkActions({ bookmark }: Props) {
 
   const [isOpen, setIsOpen] = React.useState(false)
 
-  function onDone() {
+  function onDone(id) {
     setIsOpen(false)
-    router.push('/bookmarks')
+    if (!id) return router.push('/bookmarks')
   }
 
   if (isMe) {

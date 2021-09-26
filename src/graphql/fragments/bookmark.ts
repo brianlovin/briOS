@@ -4,12 +4,12 @@ export const BookmarkInfoFragment = gql`
   fragment BookmarkInfo on Bookmark {
     __typename
     id
-    title
+    createdAt
     url
     host
-    reactions
-    notes
-    category
-    twitterHandle
+    title
+    image
+    siteName
+    description
   }
 `

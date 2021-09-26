@@ -45,18 +45,14 @@ export enum AmaStatus {
 
 export type Bookmark = {
   __typename?: 'Bookmark'
-  author?: Maybe<Scalars['String']>
-  category?: Maybe<Scalars['String']>
-  creator?: Maybe<Scalars['String']>
+  createdAt: Scalars['String']
   description?: Maybe<Scalars['String']>
-  host?: Maybe<Scalars['String']>
+  host: Scalars['String']
   id: Scalars['ID']
   image?: Maybe<Scalars['String']>
-  notes?: Maybe<Scalars['String']>
-  reactions?: Maybe<Scalars['Int']>
-  site_name?: Maybe<Scalars['String']>
+  siteName?: Maybe<Scalars['String']>
   title?: Maybe<Scalars['String']>
-  twitterHandle?: Maybe<Scalars['String']>
+  updatedAt: Scalars['String']
   url: Scalars['String']
 }
 
@@ -99,9 +95,6 @@ export type MutationAddAmaReactionArgs = {
 }
 
 export type MutationAddBookmarkArgs = {
-  category?: Maybe<Scalars['String']>
-  notes?: Maybe<Scalars['String']>
-  twitterHandle?: Maybe<Scalars['String']>
   url: Scalars['String']
 }
 
@@ -126,11 +119,8 @@ export type MutationEditAmaQuestionArgs = {
 }
 
 export type MutationEditBookmarkArgs = {
-  category?: Maybe<Scalars['String']>
   id: Scalars['ID']
-  notes?: Maybe<Scalars['String']>
   title: Scalars['String']
-  twitterHandle?: Maybe<Scalars['String']>
 }
 
 export type MutationTranscribeAudioArgs = {
@@ -198,7 +188,6 @@ export type QueryBookmarkArgs = {
 }
 
 export type QueryBookmarksArgs = {
-  category?: Maybe<Scalars['String']>
   skip?: Maybe<Scalars['Int']>
 }
 
@@ -249,13 +238,13 @@ export type AmaInfoFragment = {
 export type BookmarkInfoFragment = {
   __typename: 'Bookmark'
   id: string
-  title?: Maybe<string>
+  createdAt: string
   url: string
-  host?: Maybe<string>
-  reactions?: Maybe<number>
-  notes?: Maybe<string>
-  category?: Maybe<string>
-  twitterHandle?: Maybe<string>
+  host: string
+  title?: Maybe<string>
+  image?: Maybe<string>
+  siteName?: Maybe<string>
+  description?: Maybe<string>
 }
 
 export type EpisodeInfoFragment = {
@@ -377,9 +366,6 @@ export type TranscribeAudioMutation = {
 export type EditBookmarkMutationVariables = Exact<{
   id: Scalars['ID']
   title: Scalars['String']
-  notes?: Maybe<Scalars['String']>
-  category?: Maybe<Scalars['String']>
-  twitterHandle?: Maybe<Scalars['String']>
 }>
 
 export type EditBookmarkMutation = {
@@ -387,13 +373,13 @@ export type EditBookmarkMutation = {
   editBookmark?: Maybe<{
     __typename: 'Bookmark'
     id: string
-    title?: Maybe<string>
+    createdAt: string
     url: string
-    host?: Maybe<string>
-    reactions?: Maybe<number>
-    notes?: Maybe<string>
-    category?: Maybe<string>
-    twitterHandle?: Maybe<string>
+    host: string
+    title?: Maybe<string>
+    image?: Maybe<string>
+    siteName?: Maybe<string>
+    description?: Maybe<string>
   }>
 }
 
@@ -408,9 +394,6 @@ export type DeleteBookmarkMutation = {
 
 export type AddBookmarkMutationVariables = Exact<{
   url: Scalars['String']
-  notes?: Maybe<Scalars['String']>
-  category?: Maybe<Scalars['String']>
-  twitterHandle?: Maybe<Scalars['String']>
 }>
 
 export type AddBookmarkMutation = {
@@ -418,13 +401,13 @@ export type AddBookmarkMutation = {
   addBookmark?: Maybe<{
     __typename: 'Bookmark'
     id: string
-    title?: Maybe<string>
+    createdAt: string
     url: string
-    host?: Maybe<string>
-    reactions?: Maybe<number>
-    notes?: Maybe<string>
-    category?: Maybe<string>
-    twitterHandle?: Maybe<string>
+    host: string
+    title?: Maybe<string>
+    image?: Maybe<string>
+    siteName?: Maybe<string>
+    description?: Maybe<string>
   }>
 }
 
@@ -437,13 +420,13 @@ export type AddBookmarkReactionMutation = {
   addBookmarkReaction?: Maybe<{
     __typename: 'Bookmark'
     id: string
-    title?: Maybe<string>
+    createdAt: string
     url: string
-    host?: Maybe<string>
-    reactions?: Maybe<number>
-    notes?: Maybe<string>
-    category?: Maybe<string>
-    twitterHandle?: Maybe<string>
+    host: string
+    title?: Maybe<string>
+    image?: Maybe<string>
+    siteName?: Maybe<string>
+    description?: Maybe<string>
   }>
 }
 
@@ -521,7 +504,6 @@ export type TranscriptionQuery = {
 
 export type GetBookmarksQueryVariables = Exact<{
   skip?: Maybe<Scalars['Int']>
-  category?: Maybe<Scalars['String']>
 }>
 
 export type GetBookmarksQuery = {
@@ -530,13 +512,13 @@ export type GetBookmarksQuery = {
     Maybe<{
       __typename: 'Bookmark'
       id: string
-      title?: Maybe<string>
+      createdAt: string
       url: string
-      host?: Maybe<string>
-      reactions?: Maybe<number>
-      notes?: Maybe<string>
-      category?: Maybe<string>
-      twitterHandle?: Maybe<string>
+      host: string
+      title?: Maybe<string>
+      image?: Maybe<string>
+      siteName?: Maybe<string>
+      description?: Maybe<string>
     }>
   >
 }
@@ -550,13 +532,13 @@ export type GetBookmarkQuery = {
   bookmark?: Maybe<{
     __typename: 'Bookmark'
     id: string
-    title?: Maybe<string>
+    createdAt: string
     url: string
-    host?: Maybe<string>
-    reactions?: Maybe<number>
-    notes?: Maybe<string>
-    category?: Maybe<string>
-    twitterHandle?: Maybe<string>
+    host: string
+    title?: Maybe<string>
+    image?: Maybe<string>
+    siteName?: Maybe<string>
+    description?: Maybe<string>
   }>
 }
 
@@ -684,13 +666,13 @@ export const BookmarkInfoFragmentDoc = gql`
   fragment BookmarkInfo on Bookmark {
     __typename
     id
-    title
+    createdAt
     url
     host
-    reactions
-    notes
-    category
-    twitterHandle
+    title
+    image
+    siteName
+    description
   }
 `
 export const EpisodeInfoFragmentDoc = gql`
@@ -1036,20 +1018,8 @@ export type TranscribeAudioMutationOptions = Apollo.BaseMutationOptions<
   TranscribeAudioMutationVariables
 >
 export const EditBookmarkDocument = gql`
-  mutation editBookmark(
-    $id: ID!
-    $title: String!
-    $notes: String
-    $category: String
-    $twitterHandle: String
-  ) {
-    editBookmark(
-      id: $id
-      title: $title
-      notes: $notes
-      category: $category
-      twitterHandle: $twitterHandle
-    ) {
+  mutation editBookmark($id: ID!, $title: String!) {
+    editBookmark(id: $id, title: $title) {
       ...BookmarkInfo
     }
   }
@@ -1075,9 +1045,6 @@ export type EditBookmarkMutationFn = Apollo.MutationFunction<
  *   variables: {
  *      id: // value for 'id'
  *      title: // value for 'title'
- *      notes: // value for 'notes'
- *      category: // value for 'category'
- *      twitterHandle: // value for 'twitterHandle'
  *   },
  * });
  */
@@ -1151,18 +1118,8 @@ export type DeleteBookmarkMutationOptions = Apollo.BaseMutationOptions<
   DeleteBookmarkMutationVariables
 >
 export const AddBookmarkDocument = gql`
-  mutation addBookmark(
-    $url: String!
-    $notes: String
-    $category: String
-    $twitterHandle: String
-  ) {
-    addBookmark(
-      url: $url
-      notes: $notes
-      category: $category
-      twitterHandle: $twitterHandle
-    ) {
+  mutation addBookmark($url: String!) {
+    addBookmark(url: $url) {
       ...BookmarkInfo
     }
   }
@@ -1187,9 +1144,6 @@ export type AddBookmarkMutationFn = Apollo.MutationFunction<
  * const [addBookmarkMutation, { data, loading, error }] = useAddBookmarkMutation({
  *   variables: {
  *      url: // value for 'url'
- *      notes: // value for 'notes'
- *      category: // value for 'category'
- *      twitterHandle: // value for 'twitterHandle'
  *   },
  * });
  */
@@ -1553,8 +1507,8 @@ export type TranscriptionQueryResult = Apollo.QueryResult<
   TranscriptionQueryVariables
 >
 export const GetBookmarksDocument = gql`
-  query GetBookmarks($skip: Int, $category: String) {
-    bookmarks(skip: $skip, category: $category) {
+  query GetBookmarks($skip: Int) {
+    bookmarks(skip: $skip) {
       ...BookmarkInfo
     }
   }
@@ -1574,7 +1528,6 @@ export const GetBookmarksDocument = gql`
  * const { data, loading, error } = useGetBookmarksQuery({
  *   variables: {
  *      skip: // value for 'skip'
- *      category: // value for 'category'
  *   },
  * });
  */

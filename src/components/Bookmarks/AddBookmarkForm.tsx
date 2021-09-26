@@ -10,24 +10,11 @@ import { ErrorAlert } from '../Alert'
 import LoadingSpinner from '~/components/LoadingSpinner'
 
 export function AddBookmarkForm({ onCloseDialog }) {
-  const router = useRouter()
   const [url, setUrl] = React.useState('')
-  const [notes, setNotes] = React.useState('')
-  const [twitterHandle, setTwitterHandle] = React.useState('')
-  const [category, setCategory] = React.useState(
-    typeof router.query.category === 'string'
-      ? router.query.category
-      : 'reading'
-  )
   const [isSaving, setIsSaving] = React.useState(false)
   const [error, setError] = React.useState('')
-  const query = GET_BOOKMARKS
 
-  React.useEffect(() => {
-    if (typeof router.query.category === 'string') {
-      setCategory(router.query.category)
-    }
-  }, [router.query.category])
+  const query = GET_BOOKMARKS
 
   const [handleAddBookmark] = useAddBookmarkMutation({
     optimisticResponse: {
@@ -35,13 +22,13 @@ export function AddBookmarkForm({ onCloseDialog }) {
       addBookmark: {
         __typename: 'Bookmark',
         id: uuidv4(),
-        title: 'Saving...',
         url,
-        notes,
-        twitterHandle,
-        category,
-        host: url,
-        reactions: 0,
+        createdAt: '',
+        title: 'Saving...',
+        host: null,
+        image: null,
+        siteName: null,
+        description: null,
       },
     },
     onCompleted: ({ addBookmark: { id } }) => {
@@ -51,11 +38,9 @@ export function AddBookmarkForm({ onCloseDialog }) {
     update(cache, { data: { addBookmark } }) {
       const { bookmarks } = cache.readQuery({
         query,
-        variables: { category: router.query.category },
       })
       cache.writeQuery({
         query,
-        variables: { category: router.query.category },
         data: {
           bookmarks: [addBookmark, ...bookmarks],
         },
@@ -73,25 +58,13 @@ export function AddBookmarkForm({ onCloseDialog }) {
     e.preventDefault()
     setIsSaving(true)
     return handleAddBookmark({
-      variables: { url, notes, category, twitterHandle },
+      variables: { url },
     })
   }
 
   function onUrlChange(e) {
     error && setError('')
     return setUrl(e.target.value)
-  }
-
-  function onNotesChange(e) {
-    return setNotes(e.target.value)
-  }
-
-  function onCategoryChange(e) {
-    return setCategory(e.target.value)
-  }
-
-  function onTwitterHandleChange(e) {
-    return setTwitterHandle(e.target.value)
   }
 
   function onKeyDown(e) {
@@ -109,31 +82,6 @@ export function AddBookmarkForm({ onCloseDialog }) {
         onChange={onUrlChange}
         onKeyDown={onKeyDown}
       />
-      <Textarea
-        placeholder="Notes..."
-        onChange={onNotesChange}
-        onKeyDown={onKeyDown}
-      />
-      <div className="grid grid-cols-2 gap-3">
-        <Input
-          type="text"
-          placeholder="@handle"
-          value={twitterHandle}
-          onChange={onTwitterHandleChange}
-          onKeyDown={onKeyDown}
-        />
-
-        <select
-          name="category"
-          id="category"
-          value={category}
-          onChange={onCategoryChange}
-        >
-          <option value="reading">Reading</option>
-          <option value="portfolio">Portfolio</option>
-          <option value="website">Personal Site / Blog</option>
-        </select>
-      </div>
       <div className="self-end">
         <Button disabled={!url} onClick={onSubmit}>
           {isSaving ? <LoadingSpinner /> : 'Save'}

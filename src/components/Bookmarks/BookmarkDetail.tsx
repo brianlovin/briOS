@@ -11,6 +11,7 @@ export function BookmarkDetail({ id }) {
   const { data, loading, error } = useGetBookmarkQuery({ variables: { id } })
 
   React.useEffect(() => {
+    console.log({ data, loading, error })
     if (!loading && !data?.bookmark) router.push('/bookmarks')
   }, [loading])
 

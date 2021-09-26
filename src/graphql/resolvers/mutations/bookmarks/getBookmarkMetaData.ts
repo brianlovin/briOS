@@ -19,10 +19,10 @@ export default async function getBookmarkMetaData(url) {
     url,
     host,
     title: $('title').first().text(),
-    description: getMetavalue('description'),
     image: getMetavalue('image'),
+    siteName: getMetavalue('site_name'),
+    description: getMetavalue('description'),
     author: getMetavalue('author'),
     creator: getMetavalue('creator'),
-    site_name: getMetavalue('site_name'),
   }
 }

@@ -17,7 +17,6 @@ export async function getServerSideProps({ params: { id } }) {
   await Promise.all([
     apolloClient.query({
       query: GET_BOOKMARKS,
-      variables: { category: undefined },
     }),
 
     apolloClient.query({

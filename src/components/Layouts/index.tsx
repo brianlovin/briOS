@@ -7,7 +7,13 @@ export function CenteredColumn({ children }) {
   )
 }
 
-export function ListDetailView({ list, detail, hasDetail }) {
+interface Props {
+  list: React.ReactElement | null
+  detail: React.ReactElement | null
+  hasDetail?: boolean
+}
+
+export function ListDetailView({ list, detail, hasDetail = false }: Props) {
   return (
     <div className="flex w-full">
       {list && (
