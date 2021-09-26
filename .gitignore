@@ -1,12 +1,12 @@
 node_modules
-.next
-.DS_Store
+# Keep environment variables out of version control
 .env
 .env.build
 .env.local
+.next
+.DS_Store
 .vscode
 yarn-error.log
-.now
 .vercel
 cors.json
 src/data/local/*
