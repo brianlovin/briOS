@@ -5,14 +5,13 @@ function isAuthenticated(req, res) {
   return session?.user
 }
 
-function isMe(user) {
-  return user.sub === 'twitter|465068802'
-}
-
-export default function context(ctx) {
+export default async function context(ctx) {
   const user = isAuthenticated(ctx.req, ctx.res)
-
+  let viewer = null
+  if (user) {
+    viewer = await prisma.user.findUnique({ where: { twitterId: user.sub } })
+  }
   return {
-    isMe: user && isMe(user),
+    viewer,
   }
 }

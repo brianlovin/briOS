@@ -1,3 +1,3 @@
-export function isMe(_, __, { isMe }) {
-  return isMe
+export function isMe(_, __, { viewer }) {
+  return viewer && viewer.role === 'ADMIN'
 }

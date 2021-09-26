@@ -4,7 +4,7 @@ import {
   deleteBookmark,
   addBookmarkReaction,
 } from '~/graphql/resolvers/mutations/bookmarks'
-import { requiresMe } from '~/graphql/helpers/requiresMe'
+import { requiresAdmin } from '~/graphql/helpers/requiresAdmin'
 import {
   addAMAQuestion,
   editAMAQuestion,
@@ -15,14 +15,14 @@ import {
 } from '~/graphql/resolvers/mutations/ama'
 
 export default {
-  addBookmark: requiresMe(addBookmark),
-  editBookmark: requiresMe(editBookmark),
-  deleteBookmark: requiresMe(deleteBookmark),
+  addBookmark: requiresAdmin(addBookmark),
+  editBookmark: requiresAdmin(editBookmark),
+  deleteBookmark: requiresAdmin(deleteBookmark),
   addBookmarkReaction,
   addAMAQuestion,
-  editAMAQuestion: requiresMe(editAMAQuestion),
-  deleteAMAQuestion: requiresMe(deleteAMAQuestion),
+  editAMAQuestion: requiresAdmin(editAMAQuestion),
+  deleteAMAQuestion: requiresAdmin(deleteAMAQuestion),
   addAMAReaction,
   addAMAAudioPlay,
-  transcribeAudio: requiresMe(transcribeAudio),
+  transcribeAudio: requiresAdmin(transcribeAudio),
 }
