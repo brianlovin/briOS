@@ -9,9 +9,9 @@ export default function AppOffer({ offer }: Props) {
   return (
     <a
       href={offer.url}
-      className="flex items-center px-4 py-2 mt-3 space-x-3 text-center highlight-link "
+      className="flex items-center px-4 py-2 mt-3 space-x-3 text-center rounded bg-yellow-50 hover:bg-yellow-100"
     >
-      <p className="pl-2 text-sm font-medium">{offer.label}</p>
+      <p className="text-sm font-medium">{offer.label}</p>
     </a>
   )
 }

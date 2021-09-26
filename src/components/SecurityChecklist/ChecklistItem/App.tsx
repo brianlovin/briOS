@@ -116,7 +116,7 @@ export const AppRow = ({ app }: Props) => {
   }
 
   return (
-    <div className="p-4 pr-6 -mx-4 rounded-md md:hover:bg-gray-100 md:dark:hover:bg-gray-800">
+    <div className="p-4 md:hover:bg-gray-100 md:dark:hover:bg-gray-800">
       <div className="flex items-center justify-between">
         <a
           className="flex items-center h-full space-x-3"

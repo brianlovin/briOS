@@ -9,8 +9,8 @@ type Props = {
 export function Resources({ resource }: Props) {
   if (!resource.resources) return null
   return (
-    <div className="space-y-0 ">
-      <p className="mb-4 text-sm font-medium tracking-wider uppercase text-tertiary">
+    <div className="pb-4 -mx-4 overflow-hidden border md:rounded-lg shadow-subtle border-gray-150">
+      <p className="p-4 text-sm font-medium tracking-wider uppercase text-tertiary">
         Resources
       </p>
       <div className="space-y-3">
