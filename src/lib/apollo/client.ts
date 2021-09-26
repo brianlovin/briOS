@@ -7,7 +7,6 @@ import {
   ServerError,
 } from '@apollo/client'
 import { onError } from '@apollo/client/link/error'
-import { concatPagination } from '@apollo/client/utilities'
 import toast from 'react-hot-toast'
 import { CLIENT_URL, APOLLO_STATE_PROP_NAME } from '~/graphql/constants'
 import merge from 'deepmerge'
