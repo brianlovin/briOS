@@ -9,7 +9,7 @@ import Button from '../Button'
 import { ErrorAlert } from '../Alert'
 import LoadingSpinner from '~/components/LoadingSpinner'
 
-export default function AddBookmark({ onCloseDialog }) {
+export function AddBookmarkForm({ onCloseDialog }) {
   const router = useRouter()
   const [url, setUrl] = React.useState('')
   const [notes, setNotes] = React.useState('')

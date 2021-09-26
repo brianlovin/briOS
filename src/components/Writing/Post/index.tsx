@@ -11,19 +11,13 @@ export default function PostView({ slug }) {
 
   if (error || loading) {
     return (
-      <div
-        ref={scrollContainerRef}
-        className="w-full max-h-screen overflow-y-auto bg-white dark:bg-black"
-      />
+      <div className="w-full max-h-screen overflow-y-auto bg-white dark:bg-black" />
     )
   }
 
   if (!data?.post) {
     return (
-      <div
-        ref={scrollContainerRef}
-        className="w-full max-h-screen overflow-y-auto bg-white dark:bg-black"
-      />
+      <div className="w-full max-h-screen overflow-y-auto bg-white dark:bg-black" />
     )
   }
 

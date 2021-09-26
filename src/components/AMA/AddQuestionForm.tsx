@@ -3,8 +3,9 @@ import { useAddAmaQuestionMutation } from '~/graphql/types.generated'
 import { Textarea } from '~/components/Input'
 import { ErrorAlert, SuccessAlert } from '../Alert'
 import Button from '../Button'
+import toast from 'react-hot-toast'
 
-export default function AddBookmark() {
+export function AddQuestionForm({ onCloseDialog }) {
   const [question, setQuestion] = React.useState('')
   const [error, setError] = React.useState('')
   const [success, setSuccess] = React.useState(false)
@@ -13,6 +14,8 @@ export default function AddBookmark() {
     onCompleted: () => {
       setQuestion('')
       setSuccess(true)
+      toast.success('Saved!')
+      return onCloseDialog()
     },
     onError({ message }) {
       const clean = message.replace('GraphQL error:', '')

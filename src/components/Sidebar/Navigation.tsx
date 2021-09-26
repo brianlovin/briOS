@@ -16,33 +16,50 @@ import {
   WritingIcon,
 } from '../Icon'
 import NavigationLink from './NavigationLink'
+import { useIsMeQuery } from '~/graphql/types.generated'
+import { AddBookmarkDialog } from '../Bookmarks/AddBookmarkDialog'
+import { Plus } from 'react-feather'
+
+function ThisAddBookmarkDialog() {
+  return (
+    <AddBookmarkDialog>
+      <div className="flex items-center justify-center p-2.5 rounded-md cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700">
+        <Plus size={16} className="text-primary" />
+      </div>
+    </AddBookmarkDialog>
+  )
+}
 
 export function SidebarNavigation() {
   const router = useRouter()
+  const { data } = useIsMeQuery()
 
   const links = [
     {
       href: '/',
       label: 'Home',
       icon: HomeIcon,
-      accesory: null,
+      trailingAccessory: null,
       isActive: router.asPath === '/',
+      trailingAction: null,
     },
 
     {
       href: '/writing',
       label: 'Writing',
       icon: WritingIcon,
-      accesory: null,
+      trailingAccessory: null,
       isActive: router.asPath.indexOf('/writing') >= 0,
+      trailingAction: null,
     },
 
     {
       href: '/design-details',
       label: 'Podcast',
       icon: PodcastIcon,
-      accesory: null,
+      trailingAccessory: null,
       isActive: router.asPath.indexOf('/design-details') >= 0,
+      trailingAction: null,
     },
 
     'Me',
@@ -51,24 +68,27 @@ export function SidebarNavigation() {
       href: '/bookmarks',
       label: 'Bookmarks',
       icon: BookmarksIcon,
-      accesory: null,
+      trailingAccessory: null,
       isActive: router.asPath.indexOf('/bookmarks') >= 0,
+      trailingAction: data?.isMe ? ThisAddBookmarkDialog : null,
     },
 
     {
       href: '/ama',
       label: 'AMA',
       icon: AMAIcon,
-      accesory: null,
+      trailingAccessory: null,
       isActive: router.asPath.indexOf('/ama') >= 0,
+      trailingAction: null,
     },
 
     {
       href: '/stack',
       label: 'Stack',
       icon: StackIcon,
-      accesory: null,
+      trailingAccessory: null,
       isActive: router.asPath.indexOf('/stack') >= 0,
+      trailingAction: null,
     },
 
     'Projects',
@@ -77,32 +97,36 @@ export function SidebarNavigation() {
       href: '/staff-design',
       label: 'Staff Design',
       icon: StaffDesignIcon,
-      accesory: null,
+      trailingAccessory: null,
       isActive: router.asPath.indexOf('/staff-design') >= 0,
+      trailingAction: null,
     },
 
     {
       href: '/security',
       label: 'Security Checklist',
       icon: SecurityChecklistIcon,
-      accesory: null,
+      trailingAccessory: null,
       isActive: router.asPath.indexOf('/security') >= 0,
+      trailingAction: null,
     },
 
     {
       href: '/app-dissection',
       label: 'App Dissection',
       icon: AppDissectionIcon,
-      accesory: null,
+      trailingAccessory: null,
       isActive: router.asPath.indexOf('/app-dissection') >= 0,
+      trailingAction: null,
     },
 
     {
       href: '/hn',
       label: 'Hacker News',
       icon: HackerNewsIcon,
-      accesory: null,
+      trailingAccessory: null,
       isActive: router.asPath.indexOf('/hn') >= 0,
+      trailingAction: null,
     },
 
     'Online',
@@ -111,16 +135,18 @@ export function SidebarNavigation() {
       href: 'https://twitter.com/brian_lovin',
       label: 'Twitter',
       icon: TwitterIcon,
-      accesory: ExternalLinkIcon,
+      trailingAccessory: ExternalLinkIcon,
       isActive: false,
+      trailingAction: null,
     },
 
     {
       href: 'https://github.com/brianlovin',
       label: 'GitHub',
       icon: GitHubIcon,
-      accesory: ExternalLinkIcon,
+      trailingAccessory: ExternalLinkIcon,
       isActive: false,
+      trailingAction: null,
     },
   ]
 
@@ -144,8 +170,9 @@ export function SidebarNavigation() {
             href={link.href}
             label={link.label}
             icon={link.icon}
-            accessory={link.accesory}
+            trailingAccessory={link.trailingAccessory}
             isActive={link.isActive}
+            trailingAction={link.trailingAction}
           />
         )
       })}
