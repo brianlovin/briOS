@@ -1,57 +1,21 @@
-import { db } from '~/graphql/services/firebase'
-import { BOOKMARKS_COLLECTION, PAGINATION_AMOUNT } from '~/graphql/constants'
+import { prisma } from '~/lib/prisma/client'
 
-export async function getBookmarks(_, { skip = 0, category = undefined }) {
-  const data = []
-  const ref = db.collection(BOOKMARKS_COLLECTION)
-  if (category) {
-    await ref
-      .where('category', '==', category)
-      .orderBy('createdAt', 'desc')
-      .limit(PAGINATION_AMOUNT)
-      .offset(skip)
-      .get()
-      .then((snapshot) => {
-        snapshot.forEach((doc) => {
-          const d = doc.data()
-          const id = doc.id
-          data.push({
-            ...d,
-            reactions: d.reactions || 0,
-            id,
-          })
-        })
-      })
-  } else {
-    await ref
-      .orderBy('createdAt', 'desc')
-      .limit(PAGINATION_AMOUNT)
-      .offset(skip)
-      .get()
-      .then((snapshot) => {
-        snapshot.forEach((doc) => {
-          const d = doc.data()
-          const id = doc.id
-          data.push({
-            ...d,
-            reactions: d.reactions || 0,
-            id,
-          })
-        })
-      })
+export async function getBookmarks() {
+  try {
+    return await prisma.bookmark.findMany()
+  } catch (e) {
+    return []
   }
-
-  return data
 }
 
 export async function getBookmark(_, { id }) {
-  const ref = await db.collection(BOOKMARKS_COLLECTION)
-  return await ref
-    .doc(id)
-    .get()
-    .then((snapshot) => snapshot.data())
-    .then((bookmark) => {
-      if (!bookmark) return null
-      return { ...bookmark, id }
+  try {
+    return await prisma.bookmark.findUnique({
+      where: {
+        id,
+      },
     })
+  } catch (e) {
+    return null
+  }
 }

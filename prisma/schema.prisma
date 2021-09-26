@@ -1,0 +1,169 @@
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  shadowDatabaseUrl    = env("SHADOW_DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+model User {
+  id          String     @id @default(cuid())
+  createdAt   DateTime   @default(now())
+  role        Role       @default(USER)
+  username    String     @unique
+  twitterId   String     @unique
+  email       String?    @unique
+  avatar      String?
+  description String?
+  location    String?
+  name        String?
+  nickname    String?
+  comments    Comment[]
+  questions   Question[]
+  reactions   Reaction[]
+  posts       Post[]
+}
+
+enum Role {
+  BLOCKED
+  USER
+  ADMIN
+}
+
+model Bookmark {
+  id            String     @id @default(cuid())
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  url           String     @unique
+  host          String
+  title         String
+  image         String?
+  siteName      String?
+  description   String?
+  twitterHandle String?
+  comments      Comment[]
+  reactions     Reaction[]
+}
+
+model Question {
+  id        String     @id @default(cuid())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  author    User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  text      String
+  userId    String
+  comments  Comment[]
+  reactions Reaction[]
+}
+
+model Comment {
+  id         String     @id @default(cuid())
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  text       String?
+  audio      Audio?
+  reactions  Reaction[]
+  author     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+  bookmark   Bookmark?  @relation(fields: [bookmarkId], references: [id], onDelete: Cascade)
+  question   Question?  @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  post       Post?      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  stack      Stack?     @relation(fields: [stackId], references: [id], onDelete: Cascade)
+  bookmarkId String?
+  questionId String?
+  postId     String?
+  stackId    String?
+
+  @@index([bookmarkId])
+  @@index([questionId])
+  @@index([postId])
+  @@index([stackId])
+}
+
+model Audio {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  plays         Int
+  waveform      Json
+  url           String
+  transcription String
+  comment       Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId     String
+}
+
+model Post {
+  id           String     @id @default(cuid())
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  publishedAt  DateTime?
+  author       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  slug         String     @unique
+  title        String
+  text         String
+  excerpt      String
+  featureImage String?
+  comments     Comment[]
+  reactions    Reaction[]
+  history      PostEdit[]
+  tags         Tag[]
+  userId       String
+}
+
+model PostEdit {
+  id           String   @id @default(cuid())
+  createdAt    DateTime @default(now())
+  text         String
+  title        String
+  excerpt      String
+  featureImage String?
+  post         Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId       String?
+
+  @@index([postId])
+}
+
+model Tag {
+  name   String  @id @unique
+  posts  Post[]
+  stacks Stack[]
+}
+
+model Stack {
+  id          String     @id @default(cuid())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  name        String
+  description String
+  image       String
+  tags        Tag[]
+  comments    Comment[]
+  reactions   Reaction[]
+}
+
+model Reaction {
+  id         String    @id @default(cuid())
+  createdAt  DateTime  @default(now())
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+  bookmark   Bookmark? @relation(fields: [bookmarkId], references: [id], onDelete: Cascade)
+  question   Question? @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  comment    Comment?  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  post       Post?     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  stack      Stack?    @relation(fields: [stackId], references: [id], onDelete: Cascade)
+  commentId  String?
+  bookmarkId String?
+  questionId String?
+  postId     String?
+  stackId    String?
+
+  @@index([commentId])
+  @@index([bookmarkId])
+  @@index([questionId])
+  @@index([postId])
+  @@index([stackId])
+}
