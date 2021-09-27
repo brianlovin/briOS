@@ -81,7 +81,7 @@ export function CommentForm({ refId, type }: Props) {
       >
         <div className="flex items-center flex-none">
           <Image
-            src={user.picture}
+            src={user.picture.replace('_normal', '_400x400')}
             width={40}
             height={40}
             quality={100}
