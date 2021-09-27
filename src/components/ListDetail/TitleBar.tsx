@@ -67,9 +67,6 @@ export default function TitleBar({
     const titleBottom = titleRef.current.getBoundingClientRect().bottom - 56
     const initialOffsets = initialTitleOffsetsRef.current
 
-    // when opacity is one, it's fully scrolled in
-    if (titleBottom < initialOffsets.bottom * -1) return
-
     let offsetAmount =
       parseFloat((titleBottom / initialOffsets.bottom).toFixed(2)) * 100
 

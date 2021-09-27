@@ -13,7 +13,7 @@ import {
   getSignedPlaybackUrl,
   getTranscription,
 } from '~/graphql/resolvers/queries/ama'
-import { getComment } from '~/graphql/resolvers/queries/comment'
+import { getComment, getComments } from '~/graphql/resolvers/queries/comment'
 
 export default {
   bookmark: getBookmark,
@@ -29,4 +29,5 @@ export default {
   signedPlaybackUrl: getSignedPlaybackUrl,
   transcription: getTranscription,
   comment: getComment,
+  comments: getComments,
 }

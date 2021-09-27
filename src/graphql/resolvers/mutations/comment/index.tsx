@@ -36,6 +36,11 @@ export async function addComment(
   const { refId, type, text } = args
   const { viewer, prisma } = ctx
 
+  const trimmedText = text.trim()
+
+  if (trimmedText.length === 0)
+    throw new UserInputError('Comments can’t be blank')
+
   let field
   switch (type) {
     case CommentType.Bookmark: {

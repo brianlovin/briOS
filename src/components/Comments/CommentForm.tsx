@@ -5,16 +5,16 @@ import { Input } from '~/components/Input'
 import { CommentType, useAddCommentMutation } from '~/graphql/types.generated'
 import Image from 'next/image'
 import { useUser } from '@auth0/nextjs-auth0'
+import { GET_COMMENTS } from '~/graphql/queries/comments'
 
 interface Props {
   refId: string
   type: CommentType
-  refetch: Function
 }
 
-export function CommentForm({ refId, type, refetch }: Props) {
+export function CommentForm({ refId, type }: Props) {
+  const { user, isLoading } = useUser()
   const [text, setText] = React.useState('')
-  const [isSaving, setIsSaving] = React.useState(false)
   const [error, setError] = React.useState(null)
   const [handleAddComment] = useAddCommentMutation({
     optimisticResponse: {
@@ -23,29 +23,42 @@ export function CommentForm({ refId, type, refetch }: Props) {
         __typename: 'Comment',
         id: uuidv4(),
         text,
-        createdAt: '',
-        updatedAt: '',
+        createdAt: new Date().toLocaleDateString('en-us', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+        }),
+        updatedAt: null,
+        viewerCanDelete: true,
+        viewerCanEdit: true,
         author: {
           __typename: 'User',
           id: uuidv4(),
-          username: 'foobar',
-          avatar: 'brian',
-          name: 'brian lovin',
+          username: user?.name,
+          avatar: user?.picture,
+          name: user?.name,
         },
       },
     },
-    onCompleted() {
-      setIsSaving(false)
-      refetch()
+    update(cache, { data: { addComment } }) {
+      const { comments } = cache.readQuery({
+        query: GET_COMMENTS,
+        variables: { refId, type },
+      })
+
+      cache.writeQuery({
+        query: GET_COMMENTS,
+        variables: { refId, type },
+        data: {
+          comments: [...comments, addComment],
+        },
+      })
     },
   })
 
   function onSubmit(e) {
     e.preventDefault()
-    if (isSaving) return
-
     setText('')
-    setIsSaving(true)
     return handleAddComment({
       variables: { refId, type, text },
     })
@@ -57,7 +70,8 @@ export function CommentForm({ refId, type, refetch }: Props) {
     }
   }
 
-  const { user, isLoading } = useUser()
+  if (isLoading) return null
+  if (!user) return null
 
   return (
     <div className="sticky bottom-0 flex flex-col bg-white border-t dark:border-gray-800 dark:bg-gray-900 filter-blur bg-opacity-90 border-gray-150">
@@ -65,18 +79,16 @@ export function CommentForm({ refId, type, refetch }: Props) {
         className="flex items-center flex-none w-full max-w-3xl px-4 py-4 mx-auto space-x-4 md:px-6"
         onSubmit={onSubmit}
       >
-        {!isLoading && user && (
-          <div className="flex items-center flex-none">
-            <Image
-              src={user.picture}
-              width={40}
-              height={40}
-              quality={100}
-              layout="fixed"
-              className="rounded-full "
-            />
-          </div>
-        )}
+        <div className="flex items-center flex-none">
+          <Image
+            src={user.picture}
+            width={40}
+            height={40}
+            quality={100}
+            layout="fixed"
+            className="rounded-full "
+          />
+        </div>
         <Input
           placeholder="Leave a comment..."
           value={text}

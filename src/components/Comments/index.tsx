@@ -1,40 +1,61 @@
-import { AnimateSharedLayout, motion } from 'framer-motion'
 import * as React from 'react'
-import {
-  Comment as CommentPropType,
-  CommentType,
-} from '~/graphql/types.generated'
+import { CommentType, useGetCommentsQuery } from '~/graphql/types.generated'
 import { Comment } from './Comment'
 import { CommentForm } from './CommentForm'
 
 interface Props {
-  comments: CommentPropType[]
   refId: string
-  refetch: Function
+  type: CommentType
 }
 
-export function Comments({ comments, refId, refetch }: Props) {
+export function Comments({ refId, type }: Props) {
+  const [initialCommentsCount, setInitialCommentsCount] = React.useState(null)
+  const messagesEndRef: React.RefObject<HTMLDivElement> = React.useRef(null)
+
+  const { data, loading, error } = useGetCommentsQuery({
+    variables: {
+      refId,
+      type,
+    },
+  })
+
+  function scrollToBottom() {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  React.useEffect(() => {
+    if (data?.comments) {
+      if (!initialCommentsCount) {
+        return setInitialCommentsCount(data.comments.length)
+      } else {
+        if (data.comments.length > initialCommentsCount) {
+          scrollToBottom()
+        }
+      }
+    }
+  }, [data.comments])
+
+  if (loading) return <p>Loading ...</p>
+  if (error) return <p>Error...</p>
+
+  const { comments } = data
+
   return (
     <div className="relative flex flex-col flex-1">
-      <div className="flex flex-col flex-1 w-full max-w-3xl px-4 py-8 mx-auto space-y-3 md:px-6">
-        <AnimateSharedLayout>
-          <div className="flex flex-col space-y-6">
-            {comments.map((comment) => (
-              <motion.div key={comment.id} layout>
-                <Comment comment={comment} />
-              </motion.div>
+      <div className="flex flex-col flex-1 w-full max-w-3xl px-4 pt-8 pb-4 mx-auto space-y-3 md:px-6">
+        <div className="flex flex-col space-y-6">
+          {comments &&
+            comments.length > 0 &&
+            comments.map((comment) => (
+              <Comment key={comment.id} comment={comment} />
             ))}
-            {comments.length === 0 && (
-              <p className="text-quaternary">No comments yet...</p>
-            )}
-          </div>
-        </AnimateSharedLayout>
+          {comments.length === 0 && (
+            <p className="text-quaternary">No comments yet...</p>
+          )}
+        </div>
       </div>
-      <CommentForm
-        refId={refId}
-        refetch={refetch}
-        type={CommentType.Bookmark}
-      />
+      <div ref={messagesEndRef} />
+      <CommentForm refId={refId} type={CommentType.Bookmark} />
     </div>
   )
 }

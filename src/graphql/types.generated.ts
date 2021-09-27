@@ -686,25 +686,34 @@ export type GetBookmarkQuery = {
     image?: Maybe<string>
     siteName?: Maybe<string>
     description?: Maybe<string>
-    comments: Array<
-      Maybe<{
-        __typename: 'Comment'
-        id: string
-        createdAt: string
-        updatedAt?: Maybe<string>
-        text?: Maybe<string>
-        viewerCanEdit?: Maybe<boolean>
-        viewerCanDelete?: Maybe<boolean>
-        author: {
-          __typename: 'User'
-          id: string
-          username?: Maybe<string>
-          avatar?: Maybe<string>
-          name?: Maybe<string>
-        }
-      }>
-    >
   }>
+}
+
+export type GetCommentsQueryVariables = Exact<{
+  refId?: Maybe<Scalars['String']>
+  type?: Maybe<CommentType>
+}>
+
+export type GetCommentsQuery = {
+  __typename?: 'Query'
+  comments: Array<
+    Maybe<{
+      __typename: 'Comment'
+      id: string
+      createdAt: string
+      updatedAt?: Maybe<string>
+      text?: Maybe<string>
+      viewerCanEdit?: Maybe<boolean>
+      viewerCanDelete?: Maybe<boolean>
+      author: {
+        __typename: 'User'
+        id: string
+        username?: Maybe<string>
+        avatar?: Maybe<string>
+        name?: Maybe<string>
+      }
+    }>
+  >
 }
 
 export type GetEpisodesQueryVariables = Exact<{ [key: string]: never }>
@@ -1910,13 +1919,9 @@ export const GetBookmarkDocument = gql`
   query GetBookmark($id: ID!) {
     bookmark(id: $id) {
       ...BookmarkInfo
-      comments {
-        ...CommentInfo
-      }
     }
   }
   ${BookmarkInfoFragmentDoc}
-  ${CommentInfoFragmentDoc}
 `
 
 /**
@@ -1966,6 +1971,64 @@ export type GetBookmarkLazyQueryHookResult = ReturnType<
 export type GetBookmarkQueryResult = Apollo.QueryResult<
   GetBookmarkQuery,
   GetBookmarkQueryVariables
+>
+export const GetCommentsDocument = gql`
+  query getComments($refId: String, $type: CommentType) {
+    comments(refId: $refId, type: $type) {
+      ...CommentInfo
+    }
+  }
+  ${CommentInfoFragmentDoc}
+`
+
+/**
+ * __useGetCommentsQuery__
+ *
+ * To run a query within a React component, call `useGetCommentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCommentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCommentsQuery({
+ *   variables: {
+ *      refId: // value for 'refId'
+ *      type: // value for 'type'
+ *   },
+ * });
+ */
+export function useGetCommentsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetCommentsQuery,
+    GetCommentsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetCommentsQuery, GetCommentsQueryVariables>(
+    GetCommentsDocument,
+    options
+  )
+}
+export function useGetCommentsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetCommentsQuery,
+    GetCommentsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetCommentsQuery, GetCommentsQueryVariables>(
+    GetCommentsDocument,
+    options
+  )
+}
+export type GetCommentsQueryHookResult = ReturnType<typeof useGetCommentsQuery>
+export type GetCommentsLazyQueryHookResult = ReturnType<
+  typeof useGetCommentsLazyQuery
+>
+export type GetCommentsQueryResult = Apollo.QueryResult<
+  GetCommentsQuery,
+  GetCommentsQueryVariables
 >
 export const GetEpisodesDocument = gql`
   query GetEpisodes {

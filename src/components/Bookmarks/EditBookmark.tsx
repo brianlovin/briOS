@@ -7,6 +7,7 @@ import {
 import { GET_BOOKMARKS } from '~/graphql/queries'
 import { Input } from '~/components/Input'
 import Button, { DeleteButton } from '../Button'
+import { GET_BOOKMARK } from '~/graphql/queries/bookmarks'
 
 interface Props {
   bookmark: Bookmark
@@ -72,6 +73,15 @@ export function EditBookmark(props: Props) {
       const { bookmarks } = cache.readQuery({
         query: GET_BOOKMARKS,
       })
+
+      cache.writeQuery({
+        query: GET_BOOKMARK,
+        variables: { id: bookmark.id },
+        data: {
+          bookmark: null,
+        },
+      })
+
       cache.writeQuery({
         query: GET_BOOKMARKS,
         data: {
@@ -116,8 +126,8 @@ export function EditBookmark(props: Props) {
         <DeleteButton
           className="text-red-500"
           onClick={() => {
-            handleDelete()
             onDone()
+            handleDelete()
           }}
         >
           Delete
