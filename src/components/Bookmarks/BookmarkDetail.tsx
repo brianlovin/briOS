@@ -38,7 +38,7 @@ export function BookmarkDetail({ id }) {
         <TitleBar
           backButton
           globalMenu={false}
-          backButtonHref={'/writing'}
+          backButtonHref={'/bookmarks'}
           magicTitle
           title={data.bookmark.title}
           titleRef={titleRef}
