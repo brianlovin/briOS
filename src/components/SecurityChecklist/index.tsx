@@ -1,4 +1,3 @@
-// @flow
 import React from 'react'
 import routes from '~/config/routes'
 import data from '~/data/security'
