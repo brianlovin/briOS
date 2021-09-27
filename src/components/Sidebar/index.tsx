@@ -21,15 +21,7 @@ export default function Sidebar() {
       >
         <TitleBar
           scrollContainerRef={scrollContainerRef}
-          leadingAccessory={
-            <Image
-              src="/static/img/avatar.jpeg"
-              width="28"
-              height="28"
-              layout="fixed"
-              className="rounded-full"
-            />
-          }
+          leadingAccessory={null}
           title="Brian Lovin"
         />
         <SidebarNavigation />
