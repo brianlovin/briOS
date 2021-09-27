@@ -31,10 +31,9 @@ async function getToken() {
 
 async function getUserDetails(id) {
   const token = await getToken()
-  const url = `${BASE_URL}/api/v2/users`
+  const url = `${BASE_URL}/api/v2/users/${id}`
   const options = {
     method: 'GET',
-    params: { q: `user_id:"${id}"`, search_engine: 'v3' },
     headers: {
       authorization: `Bearer ${token}`,
     },
@@ -48,7 +47,7 @@ export async function afterCallback(_, __, session) {
   const { sub: id } = user
   const details = await getUserDetails(id)
   const { description, location, name, nickname, picture, screen_name } =
-    details[0]
+    details
   try {
     await prisma.user.upsert({
       where: {
@@ -59,14 +58,14 @@ export async function afterCallback(_, __, session) {
         location,
         name,
         nickname,
-        avatar: picture,
+        avatar: picture.replace('_normal', '_400x400'),
       },
       create: {
         description,
         location,
         name,
         nickname,
-        avatar: picture,
+        avatar: picture.replace('_normal', '_400x400'),
         username: screen_name,
         twitterId: id,
       },
