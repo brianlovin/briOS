@@ -4,6 +4,7 @@ import ListItem from '~/components/ListDetail/ListItem'
 import { useRouter } from 'next/router'
 import { BookmarksTitlebar } from './BookmarksTitlebar'
 import { useGetBookmarksQuery } from '~/graphql/types.generated'
+import { AnimateSharedLayout, motion } from 'framer-motion'
 
 export default function BookmarksList() {
   const router = useRouter()
@@ -27,22 +28,25 @@ export default function BookmarksList() {
     <ListContainer onRef={setScrollContainerRef}>
       <BookmarksTitlebar scrollContainerRef={scrollContainerRef} />
 
-      <div className="lg:p-3 lg:space-y-1">
-        {bookmarks.map((bookmark) => {
-          const active = router.query?.id === bookmark.id
-          return (
-            <ListItem
-              key={bookmark.id}
-              title={bookmark.title}
-              description={bookmark.notes}
-              byline={bookmark.host}
-              active={active}
-              href="/bookmarks/[id]"
-              as={`/bookmarks/${bookmark.id}`}
-            />
-          )
-        })}
-      </div>
+      <AnimateSharedLayout>
+        <div className="lg:p-3 lg:space-y-1">
+          {bookmarks.map((bookmark) => {
+            const active = router.query?.id === bookmark.id
+            return (
+              <motion.div layout key={bookmark.id}>
+                <ListItem
+                  key={bookmark.id}
+                  title={bookmark.title}
+                  byline={bookmark.host}
+                  active={active}
+                  href="/bookmarks/[id]"
+                  as={`/bookmarks/${bookmark.id}`}
+                />
+              </motion.div>
+            )
+          })}
+        </div>
+      </AnimateSharedLayout>
     </ListContainer>
   )
 }

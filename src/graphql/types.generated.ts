@@ -45,6 +45,7 @@ export enum AmaStatus {
 
 export type Bookmark = {
   __typename?: 'Bookmark'
+  comments: Array<Maybe<Comment>>
   createdAt: Scalars['String']
   description?: Maybe<Scalars['String']>
   host: Scalars['String']
@@ -54,6 +55,24 @@ export type Bookmark = {
   title?: Maybe<Scalars['String']>
   updatedAt: Scalars['String']
   url: Scalars['String']
+}
+
+export type Comment = {
+  __typename?: 'Comment'
+  author: User
+  createdAt: Scalars['String']
+  id: Scalars['ID']
+  text?: Maybe<Scalars['String']>
+  updatedAt?: Maybe<Scalars['String']>
+  viewerCanDelete?: Maybe<Scalars['Boolean']>
+  viewerCanEdit?: Maybe<Scalars['Boolean']>
+}
+
+export enum CommentType {
+  Bookmark = 'BOOKMARK',
+  Post = 'POST',
+  Question = 'QUESTION',
+  Stack = 'STACK',
 }
 
 export type Episode = {
@@ -75,10 +94,13 @@ export type Mutation = {
   addAMAReaction?: Maybe<Ama>
   addBookmark?: Maybe<Bookmark>
   addBookmarkReaction?: Maybe<Bookmark>
+  addComment?: Maybe<Comment>
   deleteAMAQuestion?: Maybe<Scalars['Boolean']>
   deleteBookmark?: Maybe<Scalars['Boolean']>
+  deleteComment?: Maybe<Scalars['Boolean']>
   editAMAQuestion?: Maybe<Ama>
   editBookmark?: Maybe<Bookmark>
+  editComment?: Maybe<Comment>
   transcribeAudio?: Maybe<Scalars['String']>
 }
 
@@ -102,11 +124,21 @@ export type MutationAddBookmarkReactionArgs = {
   id: Scalars['ID']
 }
 
+export type MutationAddCommentArgs = {
+  refId: Scalars['String']
+  text: Scalars['String']
+  type: CommentType
+}
+
 export type MutationDeleteAmaQuestionArgs = {
   id: Scalars['ID']
 }
 
 export type MutationDeleteBookmarkArgs = {
+  id: Scalars['ID']
+}
+
+export type MutationDeleteCommentArgs = {
   id: Scalars['ID']
 }
 
@@ -123,6 +155,11 @@ export type MutationEditBookmarkArgs = {
   title: Scalars['String']
 }
 
+export type MutationEditCommentArgs = {
+  id: Scalars['ID']
+  text?: Maybe<Scalars['String']>
+}
+
 export type MutationTranscribeAudioArgs = {
   url: Scalars['String']
 }
@@ -130,8 +167,6 @@ export type MutationTranscribeAudioArgs = {
 export type Post = {
   __typename?: 'Post'
   canonical_url?: Maybe<Scalars['String']>
-  codeinjection_foot?: Maybe<Scalars['String']>
-  codeinjection_head?: Maybe<Scalars['String']>
   comment_id?: Maybe<Scalars['String']>
   created_at?: Maybe<Scalars['String']>
   custom_excerpt?: Maybe<Scalars['String']>
@@ -164,6 +199,8 @@ export type Query = {
   amaQuestions: Array<Maybe<Ama>>
   bookmark?: Maybe<Bookmark>
   bookmarks: Array<Maybe<Bookmark>>
+  comment?: Maybe<Comment>
+  comments: Array<Maybe<Comment>>
   episodes: Array<Maybe<Episode>>
   isMe?: Maybe<Scalars['Boolean']>
   post?: Maybe<Post>
@@ -189,6 +226,15 @@ export type QueryBookmarkArgs = {
 
 export type QueryBookmarksArgs = {
   skip?: Maybe<Scalars['Int']>
+}
+
+export type QueryCommentArgs = {
+  id: Scalars['ID']
+}
+
+export type QueryCommentsArgs = {
+  refId?: Maybe<Scalars['String']>
+  type?: Maybe<CommentType>
 }
 
 export type QueryPostArgs = {
@@ -221,6 +267,22 @@ export type Repo = {
   stars?: Maybe<Scalars['Int']>
 }
 
+export type User = {
+  __typename?: 'User'
+  avatar?: Maybe<Scalars['String']>
+  createdAt?: Maybe<Scalars['String']>
+  id: Scalars['ID']
+  name?: Maybe<Scalars['String']>
+  role?: Maybe<UserRole>
+  username?: Maybe<Scalars['String']>
+}
+
+export enum UserRole {
+  Admin = 'ADMIN',
+  Blocked = 'BLOCKED',
+  User = 'USER',
+}
+
 export type AmaInfoFragment = {
   __typename?: 'AMA'
   id: string
@@ -245,6 +307,23 @@ export type BookmarkInfoFragment = {
   image?: Maybe<string>
   siteName?: Maybe<string>
   description?: Maybe<string>
+}
+
+export type CommentInfoFragment = {
+  __typename: 'Comment'
+  id: string
+  createdAt: string
+  updatedAt?: Maybe<string>
+  text?: Maybe<string>
+  viewerCanEdit?: Maybe<boolean>
+  viewerCanDelete?: Maybe<boolean>
+  author: {
+    __typename: 'User'
+    id: string
+    username?: Maybe<string>
+    avatar?: Maybe<string>
+    name?: Maybe<string>
+  }
 }
 
 export type EpisodeInfoFragment = {
@@ -277,6 +356,14 @@ export type RepoInfoFragment = {
   name?: Maybe<string>
   description?: Maybe<string>
   stars?: Maybe<number>
+}
+
+export type UserInfoFragment = {
+  __typename: 'User'
+  id: string
+  username?: Maybe<string>
+  avatar?: Maybe<string>
+  name?: Maybe<string>
 }
 
 export type EditAmaQuestionMutationVariables = Exact<{
@@ -430,6 +517,66 @@ export type AddBookmarkReactionMutation = {
   }>
 }
 
+export type AddCommentMutationVariables = Exact<{
+  refId: Scalars['String']
+  type: CommentType
+  text: Scalars['String']
+}>
+
+export type AddCommentMutation = {
+  __typename?: 'Mutation'
+  addComment?: Maybe<{
+    __typename: 'Comment'
+    id: string
+    createdAt: string
+    updatedAt?: Maybe<string>
+    text?: Maybe<string>
+    viewerCanEdit?: Maybe<boolean>
+    viewerCanDelete?: Maybe<boolean>
+    author: {
+      __typename: 'User'
+      id: string
+      username?: Maybe<string>
+      avatar?: Maybe<string>
+      name?: Maybe<string>
+    }
+  }>
+}
+
+export type EditCommentMutationVariables = Exact<{
+  id: Scalars['ID']
+  text: Scalars['String']
+}>
+
+export type EditCommentMutation = {
+  __typename?: 'Mutation'
+  editComment?: Maybe<{
+    __typename: 'Comment'
+    id: string
+    createdAt: string
+    updatedAt?: Maybe<string>
+    text?: Maybe<string>
+    viewerCanEdit?: Maybe<boolean>
+    viewerCanDelete?: Maybe<boolean>
+    author: {
+      __typename: 'User'
+      id: string
+      username?: Maybe<string>
+      avatar?: Maybe<string>
+      name?: Maybe<string>
+    }
+  }>
+}
+
+export type DeleteCommentMutationVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type DeleteCommentMutation = {
+  __typename?: 'Mutation'
+  deleteComment?: Maybe<boolean>
+}
+
 export type GetAmaQuestionsQueryVariables = Exact<{
   skip?: Maybe<Scalars['Int']>
   status?: Maybe<AmaStatus>
@@ -539,6 +686,24 @@ export type GetBookmarkQuery = {
     image?: Maybe<string>
     siteName?: Maybe<string>
     description?: Maybe<string>
+    comments: Array<
+      Maybe<{
+        __typename: 'Comment'
+        id: string
+        createdAt: string
+        updatedAt?: Maybe<string>
+        text?: Maybe<string>
+        viewerCanEdit?: Maybe<boolean>
+        viewerCanDelete?: Maybe<boolean>
+        author: {
+          __typename: 'User'
+          id: string
+          username?: Maybe<string>
+          avatar?: Maybe<string>
+          name?: Maybe<string>
+        }
+      }>
+    >
   }>
 }
 
@@ -674,6 +839,30 @@ export const BookmarkInfoFragmentDoc = gql`
     siteName
     description
   }
+`
+export const UserInfoFragmentDoc = gql`
+  fragment UserInfo on User {
+    __typename
+    id
+    username
+    avatar
+    name
+  }
+`
+export const CommentInfoFragmentDoc = gql`
+  fragment CommentInfo on Comment {
+    __typename
+    id
+    createdAt
+    updatedAt
+    text
+    viewerCanEdit
+    viewerCanDelete
+    author {
+      ...UserInfo
+    }
+  }
+  ${UserInfoFragmentDoc}
 `
 export const EpisodeInfoFragmentDoc = gql`
   fragment EpisodeInfo on Episode {
@@ -1219,6 +1408,158 @@ export type AddBookmarkReactionMutationOptions = Apollo.BaseMutationOptions<
   AddBookmarkReactionMutation,
   AddBookmarkReactionMutationVariables
 >
+export const AddCommentDocument = gql`
+  mutation addComment($refId: String!, $type: CommentType!, $text: String!) {
+    addComment(refId: $refId, type: $type, text: $text) {
+      ...CommentInfo
+    }
+  }
+  ${CommentInfoFragmentDoc}
+`
+export type AddCommentMutationFn = Apollo.MutationFunction<
+  AddCommentMutation,
+  AddCommentMutationVariables
+>
+
+/**
+ * __useAddCommentMutation__
+ *
+ * To run a mutation, you first call `useAddCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addCommentMutation, { data, loading, error }] = useAddCommentMutation({
+ *   variables: {
+ *      refId: // value for 'refId'
+ *      type: // value for 'type'
+ *      text: // value for 'text'
+ *   },
+ * });
+ */
+export function useAddCommentMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    AddCommentMutation,
+    AddCommentMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<AddCommentMutation, AddCommentMutationVariables>(
+    AddCommentDocument,
+    options
+  )
+}
+export type AddCommentMutationHookResult = ReturnType<
+  typeof useAddCommentMutation
+>
+export type AddCommentMutationResult = Apollo.MutationResult<AddCommentMutation>
+export type AddCommentMutationOptions = Apollo.BaseMutationOptions<
+  AddCommentMutation,
+  AddCommentMutationVariables
+>
+export const EditCommentDocument = gql`
+  mutation editComment($id: ID!, $text: String!) {
+    editComment(id: $id, text: $text) {
+      ...CommentInfo
+    }
+  }
+  ${CommentInfoFragmentDoc}
+`
+export type EditCommentMutationFn = Apollo.MutationFunction<
+  EditCommentMutation,
+  EditCommentMutationVariables
+>
+
+/**
+ * __useEditCommentMutation__
+ *
+ * To run a mutation, you first call `useEditCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editCommentMutation, { data, loading, error }] = useEditCommentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      text: // value for 'text'
+ *   },
+ * });
+ */
+export function useEditCommentMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    EditCommentMutation,
+    EditCommentMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<EditCommentMutation, EditCommentMutationVariables>(
+    EditCommentDocument,
+    options
+  )
+}
+export type EditCommentMutationHookResult = ReturnType<
+  typeof useEditCommentMutation
+>
+export type EditCommentMutationResult =
+  Apollo.MutationResult<EditCommentMutation>
+export type EditCommentMutationOptions = Apollo.BaseMutationOptions<
+  EditCommentMutation,
+  EditCommentMutationVariables
+>
+export const DeleteCommentDocument = gql`
+  mutation deleteComment($id: ID!) {
+    deleteComment(id: $id)
+  }
+`
+export type DeleteCommentMutationFn = Apollo.MutationFunction<
+  DeleteCommentMutation,
+  DeleteCommentMutationVariables
+>
+
+/**
+ * __useDeleteCommentMutation__
+ *
+ * To run a mutation, you first call `useDeleteCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCommentMutation, { data, loading, error }] = useDeleteCommentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteCommentMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteCommentMutation,
+    DeleteCommentMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    DeleteCommentMutation,
+    DeleteCommentMutationVariables
+  >(DeleteCommentDocument, options)
+}
+export type DeleteCommentMutationHookResult = ReturnType<
+  typeof useDeleteCommentMutation
+>
+export type DeleteCommentMutationResult =
+  Apollo.MutationResult<DeleteCommentMutation>
+export type DeleteCommentMutationOptions = Apollo.BaseMutationOptions<
+  DeleteCommentMutation,
+  DeleteCommentMutationVariables
+>
 export const GetAmaQuestionsDocument = gql`
   query GetAMAQuestions($skip: Int, $status: AMAStatus) {
     amaQuestions(skip: $skip, status: $status) {
@@ -1569,9 +1910,13 @@ export const GetBookmarkDocument = gql`
   query GetBookmark($id: ID!) {
     bookmark(id: $id) {
       ...BookmarkInfo
+      comments {
+        ...CommentInfo
+      }
     }
   }
   ${BookmarkInfoFragmentDoc}
+  ${CommentInfoFragmentDoc}
 `
 
 /**

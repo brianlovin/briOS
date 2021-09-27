@@ -3,8 +3,6 @@ import { gql } from 'apollo-server-micro'
 export default gql`
   type Post {
     canonical_url: String
-    codeinjection_foot: String
-    codeinjection_head: String
     comment_id: String
     created_at: String
     custom_excerpt: String
@@ -41,6 +39,7 @@ export default gql`
     image: String
     siteName: String
     description: String
+    comments: [Comment]!
   }
 
   type Episode {
@@ -79,9 +78,43 @@ export default gql`
     audioWaveform: [Float]
   }
 
+  enum CommentType {
+    BOOKMARK
+    QUESTION
+    STACK
+    POST
+  }
+
+  enum UserRole {
+    BLOCKED
+    USER
+    ADMIN
+  }
+
+  type User {
+    id: ID!
+    createdAt: String
+    role: UserRole
+    username: String
+    avatar: String
+    name: String
+  }
+
+  type Comment {
+    id: ID!
+    createdAt: String!
+    updatedAt: String
+    text: String
+    author: User!
+    viewerCanEdit: Boolean
+    viewerCanDelete: Boolean
+  }
+
   type Query {
     bookmark(id: ID!): Bookmark
     bookmarks(skip: Int): [Bookmark]!
+    comment(id: ID!): Comment
+    comments(refId: String, type: CommentType): [Comment]!
     episodes: [Episode]!
     posts(first: Int, filter: String, order: String): [Post]!
     post(slug: String!): Post
@@ -111,5 +144,8 @@ export default gql`
     addAMAReaction(id: ID!): AMA
     addAMAAudioPlay(id: ID!): Boolean
     transcribeAudio(url: String!): String
+    addComment(refId: String!, type: CommentType!, text: String!): Comment
+    editComment(id: ID!, text: String): Comment
+    deleteComment(id: ID!): Boolean
   }
 `

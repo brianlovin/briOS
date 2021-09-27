@@ -39,6 +39,7 @@
     "apollo-server-micro": "^2.25.2",
     "cheerio": "^1.0.0-rc.10",
     "cryptr": "^6.0.2",
+    "dataloader": "^2.0.0",
     "date-fns": "^2.24.0",
     "deepmerge": "^4.2.2",
     "firebase-admin": "^9.11.1",

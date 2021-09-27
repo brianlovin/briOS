@@ -1,6 +1,7 @@
-import { prisma } from '~/lib/prisma/client'
+import { Context } from '~/graphql/context'
+export async function getBookmarks(_, __, ctx: Context) {
+  const { prisma } = ctx
 
-export async function getBookmarks() {
   try {
     return await prisma.bookmark.findMany()
   } catch (e) {
@@ -8,7 +9,9 @@ export async function getBookmarks() {
   }
 }
 
-export async function getBookmark(_, { id }) {
+export async function getBookmark(_, { id }, ctx: Context) {
+  const { prisma } = ctx
+
   try {
     return await prisma.bookmark.findUnique({
       where: {

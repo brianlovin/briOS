@@ -68,9 +68,6 @@ export function EditBookmark(props: Props) {
       __typename: 'Mutation',
       deleteBookmark: true,
     },
-    onCompleted() {
-      return onDone()
-    },
     update(cache) {
       const { bookmarks } = cache.readQuery({
         query: GET_BOOKMARKS,
@@ -106,7 +103,7 @@ export function EditBookmark(props: Props) {
   }
 
   return (
-    <form className="mb-4 space-y-3 " onSubmit={handleSave}>
+    <form className="space-y-3 " onSubmit={handleSave}>
       <Input
         placeholder="Title"
         value={state.title}
@@ -116,7 +113,13 @@ export function EditBookmark(props: Props) {
       {state.error && <p className="text-red-500">{state.error}</p>}
 
       <div className="flex justify-between">
-        <DeleteButton className="text-red-500" onClick={() => handleDelete()}>
+        <DeleteButton
+          className="text-red-500"
+          onClick={() => {
+            handleDelete()
+            onDone()
+          }}
+        >
           Delete
         </DeleteButton>
         <div className="flex space-x-3">

@@ -12,7 +12,7 @@ function AMAQuestionDetailPage({ id }) {
 }
 
 export async function getServerSideProps({ params: { id } }) {
-  const apolloClient = initApolloClient()
+  const apolloClient = initApolloClient({})
 
   await Promise.all([
     apolloClient.query({

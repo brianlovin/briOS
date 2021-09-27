@@ -3,7 +3,12 @@ import { UserInputError } from 'apollo-server-micro'
 import { db } from '~/graphql/services/firebase'
 import getBookmarkMetaData from './getBookmarkMetaData'
 import { BOOKMARKS_COLLECTION } from '~/graphql/constants'
-import { prisma } from '~/lib/prisma/client'
+import {
+  MutationAddBookmarkArgs,
+  MutationDeleteBookmarkArgs,
+  MutationEditBookmarkArgs,
+} from '~/graphql/types.generated'
+import { Context } from '~/graphql/context'
 
 function isValidUrl(string) {
   try {
@@ -14,7 +19,14 @@ function isValidUrl(string) {
   }
 }
 
-export async function editBookmark(_, { id, title }) {
+export async function editBookmark(
+  _,
+  args: MutationEditBookmarkArgs,
+  ctx: Context
+) {
+  const { id, title } = args
+  const { prisma } = ctx
+
   if (!title || title.length === 0)
     throw new UserInputError('Bookmark must have a title')
 
@@ -28,7 +40,14 @@ export async function editBookmark(_, { id, title }) {
   })
 }
 
-export async function addBookmark(_, { url }) {
+export async function addBookmark(
+  _,
+  args: MutationAddBookmarkArgs,
+  ctx: Context
+) {
+  const { url } = args
+  const { prisma } = ctx
+
   if (!isValidUrl(url)) throw new UserInputError('URL was invalid')
 
   const metadata = await getBookmarkMetaData(url)
@@ -45,7 +64,14 @@ export async function addBookmark(_, { url }) {
   })
 }
 
-export async function deleteBookmark(_, { id }) {
+export async function deleteBookmark(
+  _,
+  args: MutationDeleteBookmarkArgs,
+  ctx: Context
+) {
+  const { id } = args
+  const { prisma } = ctx
+
   await prisma.bookmark.delete({
     where: {
       id,

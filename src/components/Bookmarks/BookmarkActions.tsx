@@ -25,7 +25,7 @@ export function BookmarkActions({ bookmark }: Props) {
       <div>
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger>
-            <div className="flex items-center justify-center p-2 rounded-md cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800">
+            <div className="flex items-center justify-center p-2 px-4 text-sm font-medium rounded-md cursor-pointer text-primary hover:bg-gray-200 dark:hover:bg-gray-800">
               Edit
             </div>
           </DialogTrigger>

@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 type Props = {
   className?: string
-  onClick?: any
+  onClick?: Function
   disabled?: boolean
   children: React.ReactChild | string | string[]
   type?: string

@@ -30,7 +30,7 @@ function WritingPage() {
 }
 
 export async function getServerSideProps() {
-  const apolloClient = await initApolloClient()
+  const apolloClient = await initApolloClient({})
   await apolloClient.query({ query: GET_POSTS })
   return addApolloState(apolloClient, {
     props: {},

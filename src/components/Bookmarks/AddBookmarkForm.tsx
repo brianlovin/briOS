@@ -3,10 +3,9 @@ import toast from 'react-hot-toast'
 import { v4 as uuidv4 } from 'uuid'
 import { useAddBookmarkMutation } from '~/graphql/types.generated'
 import { GET_BOOKMARKS } from '~/graphql/queries'
-import { Input, Textarea } from '~/components/Input'
-import { useRouter } from 'next/router'
+import { Input } from '~/components/Input'
 import Button from '../Button'
-import { ErrorAlert } from '../Alert'
+import { ErrorAlert } from '~/components/Alert'
 import LoadingSpinner from '~/components/LoadingSpinner'
 
 export function AddBookmarkForm({ onCloseDialog }) {
@@ -17,20 +16,6 @@ export function AddBookmarkForm({ onCloseDialog }) {
   const query = GET_BOOKMARKS
 
   const [handleAddBookmark] = useAddBookmarkMutation({
-    optimisticResponse: {
-      __typename: 'Mutation',
-      addBookmark: {
-        __typename: 'Bookmark',
-        id: uuidv4(),
-        url,
-        createdAt: '',
-        title: 'Saving...',
-        host: null,
-        image: null,
-        siteName: null,
-        description: null,
-      },
-    },
     onCompleted: ({ addBookmark: { id } }) => {
       toast.success('Saved!')
       return onCloseDialog(id)
@@ -82,7 +67,7 @@ export function AddBookmarkForm({ onCloseDialog }) {
         onChange={onUrlChange}
         onKeyDown={onKeyDown}
       />
-      <div className="self-end">
+      <div className="flex justify-end">
         <Button disabled={!url} onClick={onSubmit}>
           {isSaving ? <LoadingSpinner /> : 'Save'}
         </Button>

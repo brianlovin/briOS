@@ -17,7 +17,7 @@ const GRAPHQL_ENDPOINT = `${CLIENT_URL}/api/graphql`
 global.fetch = require('node-fetch')
 let apolloClient
 
-function createIsomorphLink() {
+function createIsomorphLink({ viewer }) {
   if (typeof window === 'undefined') {
     // These have to imported dynamically, instead of at the root of the page,
     // in order to make sure that we're not shipping server-side code to the client
@@ -25,7 +25,8 @@ function createIsomorphLink() {
     const { SchemaLink } = require('@apollo/link-schema')
     // eslint-disable-next-line
     const { schema } = require('~/graphql/schema')
-    return new SchemaLink({ schema, context: { isMe: false } })
+    const { prisma } = require('~/lib/prisma/client')
+    return new SchemaLink({ schema, context: { viewer, prisma } })
   } else {
     return new HttpLink({
       uri: GRAPHQL_ENDPOINT,
@@ -55,9 +56,8 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   }
 })
 
-const link = ApolloLink.from([errorLink, createIsomorphLink()])
-
-export function createApolloClient(initialState = {}) {
+export function createApolloClient({ initialState = {}, viewer = null }) {
+  const link = ApolloLink.from([errorLink, createIsomorphLink({ viewer })])
   const ssrMode = typeof window === 'undefined'
   const cache = new InMemoryCache({
     typePolicies: {
@@ -82,8 +82,9 @@ export function createApolloClient(initialState = {}) {
   })
 }
 
-export function initApolloClient(initialState = null) {
-  const _apolloClient = apolloClient ?? createApolloClient()
+export function initApolloClient({ initialState = null, viewer = null }) {
+  const _apolloClient =
+    apolloClient ?? createApolloClient({ initialState, viewer })
 
   // If your page has Next.js data fetching methods that use Apollo Client, the initial state
   // gets hydrated here
@@ -123,7 +124,10 @@ export function addApolloState(client, pageProps) {
 }
 
 export function useApollo(pageProps) {
-  const state = pageProps[APOLLO_STATE_PROP_NAME]
-  const store = useMemo(() => initApolloClient(state), [state])
+  const initialState = pageProps[APOLLO_STATE_PROP_NAME]
+  const store = useMemo(
+    () => initApolloClient({ initialState }),
+    [initialState]
+  )
   return store
 }

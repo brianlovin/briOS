@@ -10,7 +10,7 @@ function BookmarksPage() {
 }
 
 export async function getServerSideProps() {
-  const apolloClient = initApolloClient()
+  const apolloClient = initApolloClient({})
 
   await apolloClient.query({
     query: GET_BOOKMARKS,
