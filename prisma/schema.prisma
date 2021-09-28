@@ -40,10 +40,10 @@ model Bookmark {
   updatedAt     DateTime   @updatedAt
   url           String     @unique
   host          String
-  title         String
+  title         String     @db.VarChar(280)
   image         String?
   siteName      String?
-  description   String?
+  description   String     @db.VarChar(2000)
   twitterHandle String?
   comments      Comment[]
   reactions     Reaction[]
@@ -54,7 +54,7 @@ model Question {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   author    User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  text      String
+  text      String     @db.VarChar(280)
   userId    String
   comments  Comment[]
   reactions Reaction[]
@@ -64,7 +64,7 @@ model Comment {
   id         String     @id @default(cuid())
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
-  text       String?
+  text       String     @db.VarChar(2000)
   audio      Audio?
   reactions  Reaction[]
   author     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -103,9 +103,9 @@ model Post {
   publishedAt  DateTime?
   author       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   slug         String     @unique
-  title        String
-  text         String
-  excerpt      String
+  title        String     @db.VarChar(280)
+  text         String     @db.Text
+  excerpt      String     @db.VarChar(280)
   featureImage String?
   comments     Comment[]
   reactions    Reaction[]
@@ -117,9 +117,9 @@ model Post {
 model PostEdit {
   id           String   @id @default(cuid())
   createdAt    DateTime @default(now())
-  text         String
-  title        String
-  excerpt      String
+  text         String   @db.Text
+  title        String   @db.VarChar(280)
+  excerpt      String   @db.VarChar(280)
   featureImage String?
   post         Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId       String?
@@ -138,7 +138,7 @@ model Stack {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   name        String
-  description String
+  description String     @db.VarChar(280)
   image       String
   tags        Tag[]
   comments    Comment[]
