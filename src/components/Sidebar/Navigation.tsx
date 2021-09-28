@@ -53,15 +53,6 @@ export function SidebarNavigation() {
       trailingAction: null,
     },
 
-    {
-      href: '/design-details',
-      label: 'Podcast',
-      icon: PodcastIcon,
-      trailingAccessory: null,
-      isActive: router.asPath.indexOf('/design-details') >= 0,
-      trailingAction: null,
-    },
-
     'Me',
 
     {
