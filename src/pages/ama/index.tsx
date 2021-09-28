@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { AMAQuestionsList } from '~/components/AMA/AmaQuestionsList'
+import { AMAQuestionsList } from '~/components/AMA/QuestionsList'
 import { NextSeo } from 'next-seo'
 import routes from '~/config/routes'
 import { withProviders } from '~/components/Providers/withProviders'

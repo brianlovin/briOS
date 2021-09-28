@@ -4,7 +4,7 @@ import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { addApolloState, initApolloClient } from '~/lib/apollo/client'
 import { withProviders } from '~/components/Providers/withProviders'
 import { AmaStatus } from '~/graphql/types.generated'
-import { AMAQuestionsList } from '~/components/AMA/AmaQuestionsList'
+import { AMAQuestionsList } from '~/components/AMA/QuestionsList'
 import { AMADetail } from '~/components/AMA/AMADetail'
 
 function AMAQuestionDetailPage({ id }) {

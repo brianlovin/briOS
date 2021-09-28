@@ -1,10 +1,9 @@
 import * as React from 'react'
-import { useGetAmaQuestionsQuery, AmaStatus } from '~/graphql/types.generated'
-import FullscreenLoading from '../FullscreenLoading'
-import ListContainer from '../ListDetail/ListContainer'
-import TitleBar from '../ListDetail/TitleBar'
 import { useRouter } from 'next/router'
-import ListItem from '../ListDetail/ListItem'
+import { useGetAmaQuestionsQuery, AmaStatus } from '~/graphql/types.generated'
+import ListContainer from '~/components/ListDetail/ListContainer'
+import ListItem from '~/components/ListDetail/ListItem'
+import { AMATitlebar } from './AMATitlebar'
 
 export function AMAQuestionsList() {
   let [scrollContainerRef, setScrollContainerRef] = React.useState(null)
@@ -16,19 +15,16 @@ export function AMAQuestionsList() {
 
   if (error) return null
 
-  if (!data || !data.amaQuestions) return <FullscreenLoading />
+  if (!data || !data.amaQuestions) return null
 
   const { amaQuestions: questions } = data
-
   return (
     <ListContainer onRef={setScrollContainerRef}>
-      <TitleBar
-        scrollContainerRef={scrollContainerRef}
-        title="Ask Me Anything"
-      />
+      <AMATitlebar scrollContainerRef={scrollContainerRef} />
 
       <div className="lg:p-3 lg:space-y-1">
         {questions.map((question) => {
+          console.log({ questions })
           const active = router.query?.id === question.id.toString() // post ids are numbers
 
           return (
