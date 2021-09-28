@@ -23,7 +23,7 @@ export default function SecurityChecklist() {
       />
 
       <div className="justify-center py-24">
-        <div className="max-w-screen-md px-4 mx-auto space-y-16">
+        <div className="max-w-screen-md px-4 mx-auto space-y-24">
           <div className="space-y-2">
             <h1
               ref={titleRef}
