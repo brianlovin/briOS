@@ -1,4 +1,5 @@
 import React from 'react'
+import { DeleteButton } from '../Button'
 
 export function UserSettings() {
   return (
@@ -10,6 +11,7 @@ export function UserSettings() {
               Settings
             </h1>
           </div>
+          <DeleteButton href="/api/auth/logout">Log out</DeleteButton>
         </div>
       </div>
     </div>

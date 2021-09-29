@@ -24,6 +24,7 @@ export default function Button({ className, href, children, ...rest }: Props) {
 
     return <a className={classes} children={children} />
   }
+
   return <button className={classes} children={children} {...rest} />
 }
 
@@ -41,16 +42,25 @@ export function SmallButton({ className, href, children, ...rest }: Props) {
 
     return <a className={classes} children={children} />
   }
+
   return <button className={classes} children={children} {...rest} />
 }
 
-export function DeleteButton({ className, ...rest }: Props) {
-  return (
-    <button
-      className={`flex items-center rounded-md justify-center flex-none px-4 py-1.5 space-x-3 font-medium bg-white border border-gray-200 dark:border-red-500 dark:hover:border-red-500 disabled:opacity-50 dark:bg-red-500 dark:border-opacity-20 dark:bg-opacity-10 disabled:bg-opacity-0 text-red-500 hover:border-red-500 hover:text-white hover:bg-red-600 focus:border-red-900 focus:ring-0 focus:outline-none ${className}`}
-      {...rest}
-    />
-  )
+export function DeleteButton({ className, href, children, ...rest }: Props) {
+  const classes = `flex items-center rounded-md justify-center flex-none px-4 py-1.5 space-x-3 font-medium bg-white border border-gray-200 dark:border-red-500 dark:hover:border-red-500 disabled:opacity-50 dark:bg-red-500 dark:border-opacity-20 dark:bg-opacity-10 disabled:bg-opacity-0 text-red-500 hover:border-red-500 hover:text-white hover:bg-red-600 focus:border-red-900 focus:ring-0 focus:outline-none ${className}`
+  if (href) {
+    if (href.startsWith('/')) {
+      return (
+        <Link href={href}>
+          <a className={classes} children={children} />
+        </Link>
+      )
+    }
+
+    return <a className={classes} children={children} />
+  }
+
+  return <button className={classes} children={children} {...rest} />
 }
 
 export function RecordingButton({ className, ...rest }: Props) {
@@ -62,11 +72,19 @@ export function RecordingButton({ className, ...rest }: Props) {
   )
 }
 
-export function LinkButton({ className, ...rest }: Props) {
-  return (
-    <button
-      className={`flex items-center rounded-md justify-center flex-none px-4 py-1.5 space-x-3 font-medium bg-transparent disabled:opacity-50 dark:bg-opacity-10 disabled:bg-opacity-0 text-gray-800 dark:text-gray-300 dark:hover:text-gray-200 hover:text-black hover:bg-gray-200 dark:hover:bg-gray-800 focus:ring-0 focus:outline-none border border-transparent focus:border-gray-200 dark:focus:border-gray-800 ${className}`}
-      {...rest}
-    />
-  )
+export function LinkButton({ className, href, children, ...rest }: Props) {
+  const classes = `flex items-center rounded-md justify-center flex-none px-4 py-1.5 space-x-3 font-medium bg-transparent disabled:opacity-50 dark:bg-opacity-10 disabled:bg-opacity-0 text-gray-800 dark:text-gray-300 dark:hover:text-gray-200 hover:text-black hover:bg-gray-200 dark:hover:bg-gray-800 focus:ring-0 focus:outline-none border border-transparent focus:border-gray-200 dark:focus:border-gray-800 ${className}`
+  if (href) {
+    if (href.startsWith('/')) {
+      return (
+        <Link href={href}>
+          <a className={classes} children={children} />
+        </Link>
+      )
+    }
+
+    return <a className={classes} children={children} />
+  }
+
+  return <button className={classes} children={children} {...rest} />
 }
