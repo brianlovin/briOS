@@ -10,6 +10,7 @@ import {
   MutationTranscribeAudioArgs,
 } from '~/graphql/types.generated'
 import { sanitizeAmaDocument } from '~/graphql/helpers/sanitizeAmaDocument'
+import { Context } from '~/graphql/context'
 
 export async function editAMAQuestion(_, args: MutationEditAmaQuestionArgs) {
   const { id, question, answer, status, audioWaveform } = args
@@ -30,22 +31,23 @@ export async function editAMAQuestion(_, args: MutationEditAmaQuestionArgs) {
 
 export async function addAMAQuestion(
   _,
-  { question }: MutationAddAmaQuestionArgs
+  args: MutationAddAmaQuestionArgs,
+  ctx: Context
 ) {
+  const { text } = args
+  const { viewer, prisma } = ctx
+
   emailMe({
-    subject: `AMA: ${question}`,
-    body: `${question}\n\n${baseUrl}/ama`,
+    subject: `AMA: ${text}`,
+    body: `${text}\n\n${baseUrl}/ama`,
   })
 
-  return await db
-    .collection(AMA_QUESTIONS_COLLECTION)
-    .add({
-      question,
-      answer: null,
-      status: 'PENDING',
-      updatedAt: new Date(),
-      createdAt: new Date(),
-      reactions: 0,
+  return await prisma.question
+    .create({
+      data: {
+        text,
+        userId: viewer.id,
+      },
     })
     .then(() => true)
 }

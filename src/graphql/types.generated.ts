@@ -26,15 +26,11 @@ export type Scalars = {
 
 export type Ama = {
   __typename?: 'AMA'
-  answer?: Maybe<Scalars['String']>
-  audioPlayCount?: Maybe<Scalars['Int']>
-  audioUrl?: Maybe<Scalars['String']>
-  audioWaveform?: Maybe<Array<Maybe<Scalars['Float']>>>
-  createdAt?: Maybe<Scalars['String']>
+  author?: Maybe<User>
+  comments: Array<Maybe<Comment>>
+  createdAt: Scalars['String']
   id: Scalars['String']
-  question: Scalars['String']
-  reactions?: Maybe<Scalars['Int']>
-  status?: Maybe<AmaStatus>
+  text?: Maybe<Scalars['String']>
   updatedAt?: Maybe<Scalars['String']>
 }
 
@@ -109,7 +105,7 @@ export type MutationAddAmaAudioPlayArgs = {
 }
 
 export type MutationAddAmaQuestionArgs = {
-  question: Scalars['String']
+  text: Scalars['String']
 }
 
 export type MutationAddAmaReactionArgs = {
@@ -286,15 +282,34 @@ export enum UserRole {
 export type AmaInfoFragment = {
   __typename?: 'AMA'
   id: string
-  createdAt?: Maybe<string>
+  createdAt: string
   updatedAt?: Maybe<string>
-  question: string
-  answer?: Maybe<string>
-  status?: Maybe<AmaStatus>
-  reactions?: Maybe<number>
-  audioUrl?: Maybe<string>
-  audioPlayCount?: Maybe<number>
-  audioWaveform?: Maybe<Array<Maybe<number>>>
+  text?: Maybe<string>
+  author?: Maybe<{
+    __typename: 'User'
+    id: string
+    username?: Maybe<string>
+    avatar?: Maybe<string>
+    name?: Maybe<string>
+  }>
+  comments: Array<
+    Maybe<{
+      __typename: 'Comment'
+      id: string
+      createdAt: string
+      updatedAt?: Maybe<string>
+      text?: Maybe<string>
+      viewerCanEdit?: Maybe<boolean>
+      viewerCanDelete?: Maybe<boolean>
+      author: {
+        __typename: 'User'
+        id: string
+        username?: Maybe<string>
+        avatar?: Maybe<string>
+        name?: Maybe<string>
+      }
+    }>
+  >
 }
 
 export type BookmarkInfoFragment = {
@@ -381,15 +396,34 @@ export type EditAmaQuestionMutation = {
   editAMAQuestion?: Maybe<{
     __typename?: 'AMA'
     id: string
-    createdAt?: Maybe<string>
+    createdAt: string
     updatedAt?: Maybe<string>
-    question: string
-    answer?: Maybe<string>
-    status?: Maybe<AmaStatus>
-    reactions?: Maybe<number>
-    audioUrl?: Maybe<string>
-    audioPlayCount?: Maybe<number>
-    audioWaveform?: Maybe<Array<Maybe<number>>>
+    text?: Maybe<string>
+    author?: Maybe<{
+      __typename: 'User'
+      id: string
+      username?: Maybe<string>
+      avatar?: Maybe<string>
+      name?: Maybe<string>
+    }>
+    comments: Array<
+      Maybe<{
+        __typename: 'Comment'
+        id: string
+        createdAt: string
+        updatedAt?: Maybe<string>
+        text?: Maybe<string>
+        viewerCanEdit?: Maybe<boolean>
+        viewerCanDelete?: Maybe<boolean>
+        author: {
+          __typename: 'User'
+          id: string
+          username?: Maybe<string>
+          avatar?: Maybe<string>
+          name?: Maybe<string>
+        }
+      }>
+    >
   }>
 }
 
@@ -403,7 +437,7 @@ export type DeleteAmaQuestionMutation = {
 }
 
 export type AddAmaQuestionMutationVariables = Exact<{
-  question: Scalars['String']
+  text: Scalars['String']
 }>
 
 export type AddAmaQuestionMutation = {
@@ -420,15 +454,34 @@ export type AddAmaReactionMutation = {
   addAMAReaction?: Maybe<{
     __typename?: 'AMA'
     id: string
-    createdAt?: Maybe<string>
+    createdAt: string
     updatedAt?: Maybe<string>
-    question: string
-    answer?: Maybe<string>
-    status?: Maybe<AmaStatus>
-    reactions?: Maybe<number>
-    audioUrl?: Maybe<string>
-    audioPlayCount?: Maybe<number>
-    audioWaveform?: Maybe<Array<Maybe<number>>>
+    text?: Maybe<string>
+    author?: Maybe<{
+      __typename: 'User'
+      id: string
+      username?: Maybe<string>
+      avatar?: Maybe<string>
+      name?: Maybe<string>
+    }>
+    comments: Array<
+      Maybe<{
+        __typename: 'Comment'
+        id: string
+        createdAt: string
+        updatedAt?: Maybe<string>
+        text?: Maybe<string>
+        viewerCanEdit?: Maybe<boolean>
+        viewerCanDelete?: Maybe<boolean>
+        author: {
+          __typename: 'User'
+          id: string
+          username?: Maybe<string>
+          avatar?: Maybe<string>
+          name?: Maybe<string>
+        }
+      }>
+    >
   }>
 }
 
@@ -588,15 +641,34 @@ export type GetAmaQuestionsQuery = {
     Maybe<{
       __typename?: 'AMA'
       id: string
-      createdAt?: Maybe<string>
+      createdAt: string
       updatedAt?: Maybe<string>
-      question: string
-      answer?: Maybe<string>
-      status?: Maybe<AmaStatus>
-      reactions?: Maybe<number>
-      audioUrl?: Maybe<string>
-      audioPlayCount?: Maybe<number>
-      audioWaveform?: Maybe<Array<Maybe<number>>>
+      text?: Maybe<string>
+      author?: Maybe<{
+        __typename: 'User'
+        id: string
+        username?: Maybe<string>
+        avatar?: Maybe<string>
+        name?: Maybe<string>
+      }>
+      comments: Array<
+        Maybe<{
+          __typename: 'Comment'
+          id: string
+          createdAt: string
+          updatedAt?: Maybe<string>
+          text?: Maybe<string>
+          viewerCanEdit?: Maybe<boolean>
+          viewerCanDelete?: Maybe<boolean>
+          author: {
+            __typename: 'User'
+            id: string
+            username?: Maybe<string>
+            avatar?: Maybe<string>
+            name?: Maybe<string>
+          }
+        }>
+      >
     }>
   >
 }
@@ -610,15 +682,34 @@ export type GetAmaQuestionQuery = {
   amaQuestion?: Maybe<{
     __typename?: 'AMA'
     id: string
-    createdAt?: Maybe<string>
+    createdAt: string
     updatedAt?: Maybe<string>
-    question: string
-    answer?: Maybe<string>
-    status?: Maybe<AmaStatus>
-    reactions?: Maybe<number>
-    audioUrl?: Maybe<string>
-    audioPlayCount?: Maybe<number>
-    audioWaveform?: Maybe<Array<Maybe<number>>>
+    text?: Maybe<string>
+    author?: Maybe<{
+      __typename: 'User'
+      id: string
+      username?: Maybe<string>
+      avatar?: Maybe<string>
+      name?: Maybe<string>
+    }>
+    comments: Array<
+      Maybe<{
+        __typename: 'Comment'
+        id: string
+        createdAt: string
+        updatedAt?: Maybe<string>
+        text?: Maybe<string>
+        viewerCanEdit?: Maybe<boolean>
+        viewerCanDelete?: Maybe<boolean>
+        author: {
+          __typename: 'User'
+          id: string
+          username?: Maybe<string>
+          avatar?: Maybe<string>
+          name?: Maybe<string>
+        }
+      }>
+    >
   }>
 }
 
@@ -822,33 +913,6 @@ export type GetPostQuery = {
   }>
 }
 
-export const AmaInfoFragmentDoc = gql`
-  fragment AMAInfo on AMA {
-    id
-    createdAt
-    updatedAt
-    question
-    answer
-    status
-    reactions
-    audioUrl
-    audioPlayCount
-    audioWaveform
-  }
-`
-export const BookmarkInfoFragmentDoc = gql`
-  fragment BookmarkInfo on Bookmark {
-    __typename
-    id
-    createdAt
-    url
-    host
-    title
-    image
-    siteName
-    description
-  }
-`
 export const UserInfoFragmentDoc = gql`
   fragment UserInfo on User {
     __typename
@@ -872,6 +936,35 @@ export const CommentInfoFragmentDoc = gql`
     }
   }
   ${UserInfoFragmentDoc}
+`
+export const AmaInfoFragmentDoc = gql`
+  fragment AMAInfo on AMA {
+    id
+    createdAt
+    updatedAt
+    text
+    author {
+      ...UserInfo
+    }
+    comments {
+      ...CommentInfo
+    }
+  }
+  ${UserInfoFragmentDoc}
+  ${CommentInfoFragmentDoc}
+`
+export const BookmarkInfoFragmentDoc = gql`
+  fragment BookmarkInfo on Bookmark {
+    __typename
+    id
+    createdAt
+    url
+    host
+    title
+    image
+    siteName
+    description
+  }
 `
 export const EpisodeInfoFragmentDoc = gql`
   fragment EpisodeInfo on Episode {
@@ -1021,8 +1114,8 @@ export type DeleteAmaQuestionMutationOptions = Apollo.BaseMutationOptions<
   DeleteAmaQuestionMutationVariables
 >
 export const AddAmaQuestionDocument = gql`
-  mutation addAMAQuestion($question: String!) {
-    addAMAQuestion(question: $question)
+  mutation addAMAQuestion($text: String!) {
+    addAMAQuestion(text: $text)
   }
 `
 export type AddAmaQuestionMutationFn = Apollo.MutationFunction<
@@ -1043,7 +1136,7 @@ export type AddAmaQuestionMutationFn = Apollo.MutationFunction<
  * @example
  * const [addAmaQuestionMutation, { data, loading, error }] = useAddAmaQuestionMutation({
  *   variables: {
- *      question: // value for 'question'
+ *      text: // value for 'text'
  *   },
  * });
  */

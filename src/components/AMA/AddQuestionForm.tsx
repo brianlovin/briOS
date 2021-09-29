@@ -6,13 +6,13 @@ import Button from '../Button'
 import toast from 'react-hot-toast'
 
 export function AddQuestionForm({ closeModal }) {
-  const [question, setQuestion] = React.useState('')
+  const [text, setText] = React.useState('')
   const [error, setError] = React.useState('')
   const [success, setSuccess] = React.useState(false)
 
   const [handleAddAMAQuestion] = useAddAmaQuestionMutation({
     onCompleted: () => {
-      setQuestion('')
+      setText('')
       setSuccess(true)
       toast.success('Saved!')
       return closeModal()
@@ -20,19 +20,24 @@ export function AddQuestionForm({ closeModal }) {
     onError({ message }) {
       const clean = message.replace('GraphQL error:', '')
       setError(clean)
-      setQuestion('')
+      setText('')
     },
   })
 
   function onSubmit(e) {
     e.preventDefault()
     setSuccess(false)
-    return handleAddAMAQuestion({ variables: { question } })
+    if (text.length === 0) {
+      setError('Question can’t be blank')
+      return
+    }
+
+    return handleAddAMAQuestion({ variables: { text } })
   }
 
-  function onQuestionChange(e) {
+  function onTextChange(e) {
     error && setError('')
-    return setQuestion(e.target.value)
+    return setText(e.target.value)
   }
 
   function onKeyDown(e) {
@@ -44,16 +49,14 @@ export function AddQuestionForm({ closeModal }) {
   return (
     <form className="items-stretch space-y-4" onSubmit={onSubmit}>
       <Textarea
-        value={question}
+        value={text}
         placeholder="Ask me anything..."
-        onChange={onQuestionChange}
+        onChange={onTextChange}
         onKeyDown={onKeyDown}
       />
-      {question.length > 0 && (
-        <div className="flex self-end">
-          <Button onClick={onSubmit}>Ask away!</Button>
-        </div>
-      )}
+      <div className="flex justify-end">
+        <Button onClick={onSubmit}>Ask</Button>
+      </div>
       {error && <ErrorAlert>{error}</ErrorAlert>}
       {success && (
         <SuccessAlert>

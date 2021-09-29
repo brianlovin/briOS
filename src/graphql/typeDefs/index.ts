@@ -67,15 +67,11 @@ export default gql`
 
   type AMA {
     id: String!
-    question: String!
-    status: AMAStatus
-    answer: String
-    createdAt: String
+    createdAt: String!
     updatedAt: String
-    reactions: Int
-    audioUrl: String
-    audioPlayCount: Int
-    audioWaveform: [Float]
+    author: User
+    text: String
+    comments: [Comment]!
   }
 
   enum CommentType {
@@ -132,7 +128,7 @@ export default gql`
     editBookmark(id: ID!, title: String!): Bookmark
     deleteBookmark(id: ID!): Boolean
     addBookmarkReaction(id: ID!): Bookmark
-    addAMAQuestion(question: String!): Boolean
+    addAMAQuestion(text: String!): Boolean
     deleteAMAQuestion(id: ID!): Boolean
     editAMAQuestion(
       id: ID!

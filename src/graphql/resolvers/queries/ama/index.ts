@@ -1,17 +1,15 @@
-import { db, storage } from '~/graphql/services/firebase'
+import { storage } from '~/graphql/services/firebase'
 import {
   Ama,
+  QueryAmaQuestionArgs,
   QueryAmaQuestionsArgs,
   QuerySignedPlaybackUrlArgs,
   QuerySignedUploadUrlArgs,
   QueryTranscriptionArgs,
 } from '~/graphql/types.generated'
-import {
-  AMA_QUESTIONS_COLLECTION,
-  AUDIO_STORAGE_BUCKET,
-  PAGINATION_AMOUNT,
-} from '~/graphql/constants'
+import { AUDIO_STORAGE_BUCKET } from '~/graphql/constants'
 import { sanitizeAmaDocument } from '~/graphql/helpers/sanitizeAmaDocument'
+import { Context } from '~/graphql/context'
 
 async function fetchAudioPlaybackUrl(id) {
   const bucket = storage.bucket(AUDIO_STORAGE_BUCKET)
@@ -29,56 +27,23 @@ async function fetchAudioPlaybackUrl(id) {
   return await Promise.resolve(url)
 }
 
-export async function getAMAQuestion(_, { id }) {
-  const ref = await db.collection(AMA_QUESTIONS_COLLECTION)
-  return await ref
-    .doc(id)
-    .get()
-    .then((snapshot) => snapshot.data())
-    .then(async (ama) => {
-      if (!ama) return null
-      const sanitizedAmaDocument = await sanitizeAmaDocument(ama, id)
-      return { ...ama, id, ...sanitizedAmaDocument }
-    })
+export async function getAMAQuestion(
+  _,
+  { id }: QueryAmaQuestionArgs,
+  ctx: Context
+) {
+  const { prisma } = ctx
+  return await prisma.question.findUnique({ where: { id } })
 }
 
 export async function getAMAQuestions(
   _,
   args: QueryAmaQuestionsArgs,
-  { isMe }
+  ctx: Context
 ) {
-  const { skip = 0, status = 'ANSWERED' } = args
-
-  if (status === 'PENDING' && !isMe) return []
-
-  const data = []
-
-  async function processQuestions() {
-    let collection = db.collection(AMA_QUESTIONS_COLLECTION)
-    let questionsRef = await collection
-      .where('status', '==', status)
-      .orderBy('updatedAt', 'desc')
-      .limit(PAGINATION_AMOUNT)
-      .offset(skip)
-      .get()
-    for (let question of questionsRef.docs) {
-      const d = question.data()
-      const id = question.id
-
-      const sanitizedAmaDocument = await sanitizeAmaDocument(d, id)
-
-      const record = {
-        ...d,
-        id,
-        ...sanitizedAmaDocument,
-      } as Ama
-
-      data.push(record)
-    }
-  }
-
-  await processQuestions()
-  return data
+  const { skip, status } = args
+  const { viewer, prisma } = ctx
+  return await prisma.question.findMany()
 }
 
 export async function getSignedUploadUrl(
@@ -144,4 +109,18 @@ export async function getTranscription(
     .trim()
 
   return cleanedText
+}
+
+export async function getQuestionAuthor(parent: Ama, _, ctx: Context) {
+  const { id } = parent
+  const { prisma } = ctx
+
+  return await prisma.question.findUnique({ where: { id } }).author()
+}
+
+export async function getQuestionComments(parent: Ama, _, ctx: Context) {
+  const { id } = parent
+  const { prisma } = ctx
+
+  return await prisma.question.findUnique({ where: { id } }).comments()
 }

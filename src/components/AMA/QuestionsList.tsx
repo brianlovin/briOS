@@ -24,7 +24,6 @@ export function AMAQuestionsList() {
 
       <div className="lg:p-3 lg:space-y-1">
         {questions.map((question) => {
-          console.log({ questions })
           const active = router.query?.id === question.id.toString() // post ids are numbers
 
           return (
@@ -32,9 +31,9 @@ export function AMAQuestionsList() {
               key={question.id}
               href="/ama/[id]"
               as={`/ama/${question.id}`}
-              title={question.question}
+              title={question.text}
               description={null}
-              byline={question.updatedAt}
+              byline={`${question.author.name} · ${question.updatedAt}`}
               active={active}
             />
           )

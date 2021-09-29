@@ -25,7 +25,7 @@ export default {
   editBookmark: requiresAdmin(editBookmark),
   deleteBookmark: requiresAdmin(deleteBookmark),
   addBookmarkReaction,
-  addAMAQuestion,
+  addAMAQuestion: requiresUser(addAMAQuestion),
   editAMAQuestion: requiresAdmin(editAMAQuestion),
   deleteAMAQuestion: requiresAdmin(deleteAMAQuestion),
   addAMAReaction,

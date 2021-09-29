@@ -33,7 +33,7 @@ export function Comments({ refId, type }: Props) {
         }
       }
     }
-  }, [data.comments])
+  }, [data])
 
   if (loading) return <p>Loading ...</p>
   if (error) return <p>Error...</p>
@@ -55,7 +55,7 @@ export function Comments({ refId, type }: Props) {
         </div>
       </div>
       <div ref={messagesEndRef} />
-      <CommentForm refId={refId} type={CommentType.Bookmark} />
+      <CommentForm refId={refId} type={type} />
     </div>
   )
 }

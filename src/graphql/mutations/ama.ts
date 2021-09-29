@@ -29,8 +29,8 @@ export const DELETE_AMA_QUESTION = gql`
 `
 
 export const ADD_AMA_QUESTION = gql`
-  mutation addAMAQuestion($question: String!) {
-    addAMAQuestion(question: $question)
+  mutation addAMAQuestion($text: String!) {
+    addAMAQuestion(text: $text)
   }
   ${AMAInfoFragment}
 `

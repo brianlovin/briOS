@@ -5,6 +5,10 @@ import {
   getCommentAuthor,
   getBookmarkComments,
 } from '~/graphql/resolvers/queries/comment'
+import {
+  getQuestionAuthor,
+  getQuestionComments,
+} from '~/graphql/resolvers/queries/ama'
 
 export default {
   Query,
@@ -26,5 +30,15 @@ export default {
   },
   Bookmark: {
     comments: getBookmarkComments,
+  },
+  AMA: {
+    author: getQuestionAuthor,
+    comments: getQuestionComments,
+    updatedAt: ({ updatedAt }) =>
+      new Date(updatedAt).toLocaleDateString('en-us', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      }),
   },
 }

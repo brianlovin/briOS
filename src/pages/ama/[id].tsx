@@ -3,9 +3,10 @@ import { GET_AMA_QUESTIONS, GET_AMA_QUESTION } from '~/graphql/queries'
 import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { addApolloState, initApolloClient } from '~/lib/apollo/client'
 import { withProviders } from '~/components/Providers/withProviders'
-import { AmaStatus } from '~/graphql/types.generated'
+import { AmaStatus, CommentType } from '~/graphql/types.generated'
 import { AMAQuestionsList } from '~/components/AMA/QuestionsList'
 import { AMADetail } from '~/components/AMA/AMADetail'
+import { GET_COMMENTS } from '~/graphql/queries/comments'
 
 function AMAQuestionDetailPage({ id }) {
   return <AMADetail id={id} />
@@ -23,6 +24,11 @@ export async function getServerSideProps({ params: { id } }) {
     apolloClient.query({
       query: GET_AMA_QUESTION,
       variables: { id },
+    }),
+
+    apolloClient.query({
+      query: GET_COMMENTS,
+      variables: { refId: id, type: CommentType.Question },
     }),
   ])
 
