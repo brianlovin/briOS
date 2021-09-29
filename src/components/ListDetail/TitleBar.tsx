@@ -81,18 +81,17 @@ export default function TitleBar({
     scrollContainerRef?.current?.addEventListener('scroll', handler)
     return () =>
       scrollContainerRef?.current?.removeEventListener('scroll', handler)
-  }, [titleRef, scrollContainerRef])
+  }, [title, titleRef, scrollContainerRef])
 
   React.useEffect(() => {
     if (!titleRef?.current || !scrollContainerRef?.current) return
-
     scrollContainerRef.current.scrollTop = 0
     setOpacity(0)
     setInitialTitleOffsets({
       bottom: titleRef.current.getBoundingClientRect().bottom - 56,
       top: titleRef.current.getBoundingClientRect().top - 48,
     })
-  }, [title, titleRef])
+  }, [title, titleRef, scrollContainerRef])
 
   return (
     <>
