@@ -3,7 +3,7 @@ export async function getBookmarks(_, __, ctx: Context) {
   const { prisma } = ctx
 
   try {
-    return await prisma.bookmark.findMany()
+    return await prisma.bookmark.findMany({ orderBy: { createdAt: 'desc' } })
   } catch (e) {
     return []
   }
