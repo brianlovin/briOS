@@ -81,16 +81,6 @@ export function CommentForm({ refId, type }: Props) {
         className="flex items-center flex-none w-full max-w-3xl px-4 py-4 mx-auto space-x-4 md:px-6"
         onSubmit={onSubmit}
       >
-        <div className="flex items-center flex-none">
-          <Image
-            src={'/static/img/avatar.png'}
-            width={40}
-            height={40}
-            quality={100}
-            layout="fixed"
-            className="rounded-full "
-          />
-        </div>
         <Input
           placeholder="Leave a comment..."
           value={text}
