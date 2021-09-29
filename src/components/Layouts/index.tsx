@@ -32,7 +32,7 @@ export function ListDetailView({ list, detail, hasDetail = false }: Props) {
 
 export function SiteLayout({ children }) {
   return (
-    <div className="relative flex w-full h-full">
+    <div className="relative flex w-full h-full min-h-screen">
       <Sidebar />
 
       <div className="flex flex-1">{children}</div>
