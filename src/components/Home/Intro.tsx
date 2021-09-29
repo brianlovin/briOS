@@ -2,9 +2,127 @@ import * as React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { MapPin } from 'react-feather'
-import { SmallButton } from '~/components/Button'
+import Button from '~/components/Button'
 import NewsletterSubscriptionBox from '../Newsletter'
 import TitleBar from '../ListDetail/TitleBar'
+
+function SectionTitle(props) {
+  return (
+    <p
+      className="col-span-2 pt-8 text-lg font-extrabold text-black dark:text-white md:font-normal md:text-base md:pt-0 md:text-right md:text-opacity-40"
+      {...props}
+    />
+  )
+}
+
+function SectionContent(props) {
+  return <div className="col-span-10" {...props} />
+}
+
+function TableRow({ href, title, subtitle, date }) {
+  return (
+    <a href={href} className="flex items-center space-x-4 group">
+      <span className="flex-none font-medium text-gray-1000 group-hover:underline group-hover:text-blue-600 dark:group-hover:text-blue-500 dark:text-gray-100">
+        {title}
+      </span>
+      <span className="flex-shrink w-full border-t border-gray-300 border-dashed dark:border-gray-800" />
+      {subtitle && <span className="flex-none text-tertiary">{subtitle}</span>}
+      {date && (
+        <span className="flex-none font-mono text-quaternary">{date}</span>
+      )}
+    </a>
+  )
+}
+
+function SectionContainer(props) {
+  return (
+    <div
+      className="grid items-start grid-cols-1 gap-6 md:grid-cols-12"
+      {...props}
+    />
+  )
+}
+
+const workHistory = [
+  {
+    href: 'https://github.com/mobile',
+    title: 'GitHub',
+    subtitle: 'Product Designer',
+    date: '2018—\u00a0\u00a0',
+  },
+  {
+    href: 'https://designdetails.fm',
+    title: 'Design Details Podcast',
+    subtitle: 'Co-host',
+    date: '2014—\u00a0\u00a0',
+  },
+  {
+    href: 'https://github.com/withspectrum/spectrum',
+    title: 'Spectrum.chat',
+    subtitle: 'Co-founder',
+    date: '2017—18',
+  },
+  {
+    href: 'https://facebook.com',
+    title: 'Facebook',
+    subtitle: 'Product Designer',
+    date: '2015—17',
+  },
+  {
+    href: 'https://buffer.com',
+    title: 'Buffer',
+    subtitle: 'Product Designer',
+    date: '2013—15',
+  },
+]
+
+const speakingData = [
+  {
+    href: 'https://progressionapp.com/blog/podcast-26-brian-lovin-github-spectrum-design-details-on-the-rise-of-the-senior-ic/',
+    title: 'Progression Podcast',
+    date: "Jun '21",
+  },
+  {
+    href: 'https://layout.fm/episodes/194/',
+    title: 'Layout.fm',
+    date: "Jan '21",
+  },
+  {
+    href: "https://softwareengineeringdaily.com/'20/07/15/github-mobile-with-brian-lovin-and-ryan-nystrom/",
+    title: 'Software Engineering Daily',
+    date: "Jul '20",
+  },
+  {
+    href: 'https://avocode.com/blog/brian-lovin-product-designer-github-interview',
+    title: 'The Grit',
+    date: "Jul '20",
+  },
+  {
+    href: 'https://www.swiftbysundell.com/podcast/67/',
+    title: 'Swift by Sundell',
+    date: "Feb '20",
+  },
+  {
+    href: 'https://www.youtube.com/watch?v=SyS3h3kmBnY',
+    title: 'Figma Config',
+    date: "Feb '20",
+  },
+  {
+    href: 'https://www.loversmagazine.com/interviews/brian-lovin',
+    title: 'Lovers Magazine',
+    date: "Jan '18",
+  },
+  {
+    href: 'https://www.youtube.com/watch?v=6MBBTdu8v6E',
+    title: 'GraphQL Summit',
+    date: "Nov '17",
+  },
+  {
+    href: 'https://designdetails.fm/episodes/3e342ac0',
+    title: 'Design Details',
+    date: "Aug '17",
+  },
+]
 
 export default function Intro() {
   const scrollContainerRef = React.useRef(null)
@@ -16,134 +134,133 @@ export default function Intro() {
       className="relative flex flex-col w-full max-h-screen overflow-y-auto bg-white dark:bg-black"
     >
       <TitleBar
-        title="Home"
         magicTitle
-        scrollContainerRef={scrollContainerRef}
         titleRef={titleRef}
+        scrollContainerRef={scrollContainerRef}
+        title="Home"
       />
 
-      <div className="grid items-start max-w-screen-md grid-cols-12 gap-6 px-4 py-24 mx-auto">
-        <p
-          ref={titleRef}
-          className="col-span-2 leading-relaxed text-right text-quaternary"
-        >
-          What
-        </p>
-        <div className="col-span-10 prose text-primary">
-          <p>
-            I’m a designer, <a href="https://designdetails.fm">podcaster</a>,{' '}
-            <Link href="/writing" passHref>
-              <a>writer</a>
-            </Link>
-            , and <a href="https://github.com/brianlovin">software tinkerer</a>.
-            I’m currently building{' '}
-            <a href="https://github.com/mobile">native mobile apps at GitHub</a>
-            .
-          </p>
+      {/* Keep this div to trigger the magic scroll */}
+      <div className="p-4" ref={titleRef} />
 
-          <p>
-            In the past I co-founded{' '}
-            <a href="https://github.com/withspectrum/spectrum">Spectrum</a>, a
-            platform for online communities. Before that, I worked at Facebook
-            building payments systems, and cut my teeth as a product designer at{' '}
-            <a href="https://buffer.com">Buffer</a>.
-          </p>
-        </div>
+      <div className="flex flex-col max-w-screen-md px-4 pt-0 pb-24 mx-auto space-y-8 md:pt-8 md:space-y-20">
+        <SectionContainer>
+          <SectionTitle />
+          <SectionContent>
+            <div className="prose text-primary">
+              <p>
+                Hey, I&apos;m Brian. I&apos;m a designer,{' '}
+                <a href="https://designdetails.fm">podcaster</a>,{' '}
+                <Link href="/writing" passHref>
+                  <a>writer</a>
+                </Link>
+                , and{' '}
+                <a href="https://github.com/brianlovin">software tinkerer</a>.
+                I&apos;m currently building{' '}
+                <a href="https://github.com/mobile">
+                  native mobile apps at GitHub
+                </a>
+                .
+              </p>
+              <p>
+                Before GitHub, I co-founded{' '}
+                <a href="https://spectrum.chat">Spectrum</a>, a platform for
+                large-scale communities to have better public conversations.
+                Spectrum was acquired by GitHub in November, 2018.
+              </p>
+              <p>
+                Before Spectrum I designed payments experiences at Facebook,
+                working across Facebook, Messenger, WhatsApp, and Instagram. I
+                originally cut my teeth as the first product designer at{' '}
+                <a href="https://buffer.com">Buffer</a>.
+              </p>
+              <p>
+                I also co-host the{' '}
+                <a href="https://designdetails.fm">Design Details Podcast</a>, a
+                weekly conversation about design process and culture. Design
+                Details is part of <a href="https://spec.fm">Spec.fm</a>, a
+                podcast network for designers and developers, which I co-founded
+                in 2015.
+              </p>
+              <p>
+                You can find me on{' '}
+                <a href="https://twitter.com/brian_lovin">Twitter</a> where I
+                talk about design and development, or on{' '}
+                <a href="https://github.com/brianlovin">GitHub</a> where I’m
+                building in the open, or on{' '}
+                <a href="https://figma.com/@brian">Figma</a> where I’m exploring
+                how plugins can automate the tedious parts of interface design.
+              </p>
+            </div>
+            <div className="flex pt-6">
+              <Button href="https://changelog.brianlovin.com">
+                View changelog
+              </Button>
+            </div>
+          </SectionContent>
+        </SectionContainer>
 
-        <div className="col-span-2" />
-        <div className="flex col-span-10 space-x-4">
-          <SmallButton href="/about">
-            <span>Learn more</span>
-          </SmallButton>
-          <SmallButton href="https://changelog.brianlovin.com">
-            <span>View changelog</span>
-          </SmallButton>
-        </div>
-
-        <p className="col-span-2 text-right text-quaternary">Where</p>
-        <div className="col-span-10 pt-2">
-          <Image
-            src="/static/img/nyc.png"
-            width={800}
-            height={350}
-            layout="responsive"
-            className="rounded-2xl"
-          />
-          <p className="flex items-center justify-end pt-2 space-x-2 text-sm text-right text-quaternary">
-            <MapPin size={12} />
-            <span>Brooklyn, New York</span>
-          </p>
-        </div>
-
-        <p className="col-span-2 text-right text-quaternary">Work</p>
-        <div className="flex flex-col col-span-10 space-y-3">
-          <a
-            href="https://github.com/mobile"
-            className="flex items-center space-x-4 group"
-          >
-            <span className="font-medium text-gray-1000 group-hover:underline group-hover:text-blue-600 dark:group-hover:text-blue-500 dark:text-gray-100">
-              GitHub
-            </span>
-            <span className="flex-shrink w-full border-t border-gray-300 border-dashed dark:border-gray-800" />
-            <span className="flex-none text-tertiary">Product Designer</span>
-            <span className="flex-none font-mono text-quaternary">
-              2018-&nbsp;&nbsp;
-            </span>
-          </a>
-
-          <a
-            href="https://designdetails.fm"
-            className="flex items-center space-x-4 group"
-          >
-            <span className="flex-none font-medium text-gray-1000 group-hover:underline group-hover:text-blue-600 dark:group-hover:text-blue-500 dark:text-gray-100">
-              Design Details Podcast
-            </span>
-            <span className="flex-shrink w-full border-t border-gray-300 border-dashed dark:border-gray-800" />
-            <span className="flex-none text-tertiary">Co-host</span>
-            <span className="flex-none font-mono text-quaternary">
-              2014-&nbsp;&nbsp;
-            </span>
-          </a>
-          <a
-            href="https://github.com/withspectrum/spectrum"
-            className="flex items-center space-x-4 group"
-          >
-            <span className="font-medium text-gray-1000 group-hover:underline group-hover:text-blue-600 dark:group-hover:text-blue-500 dark:text-gray-100">
-              Spectrum.chat
-            </span>
-            <span className="flex-shrink w-full border-t border-gray-300 border-dashed dark:border-gray-800" />
-            <span className="flex-none text-tertiary">Co-founder</span>
-            <span className="flex-none font-mono text-quaternary">2017-18</span>
-          </a>
-          <div className="flex items-center col-span-10 space-x-4">
-            <span className="font-medium text-primary">Facebook</span>
-            <span className="flex-shrink w-full border-t border-gray-300 border-dashed dark:border-gray-800" />
-            <span className="flex-none text-tertiary">Product Designer</span>
-            <span className="flex-none font-mono text-quaternary">2015-17</span>
-          </div>
-          <a
-            href="https://buffer.com"
-            className="flex items-center space-x-4 group"
-          >
-            <span className="font-medium text-gray-1000 group-hover:underline group-hover:text-blue-600 dark:group-hover:text-blue-500 dark:text-gray-100">
-              Buffer
-            </span>
-            <span className="flex-shrink w-full border-t border-gray-300 border-dashed dark:border-gray-800" />
-            <span className="flex-none text-tertiary">Product Designer</span>
-            <span className="flex-none font-mono text-quaternary">2013-15</span>
-          </a>
-        </div>
-
-        <p className="col-span-2 text-right text-quaternary">Newsletter</p>
-        <div className="grid grid-cols-1 col-span-10">
-          <div className="prose">
-            <p>
-              Get updates about new posts, new projects, or other meaningful
-              updates to this site deliveblue to your inbox.
+        <SectionContainer>
+          <SectionTitle>Where</SectionTitle>
+          <SectionContent>
+            <Image
+              src="/static/img/nyc.png"
+              width={800}
+              height={350}
+              layout="responsive"
+              className="rounded-2xl"
+            />
+            <p className="flex items-center justify-end pt-2 space-x-2 text-sm md:text-right text-quaternary">
+              <MapPin size={12} />
+              <span>Brooklyn, New York</span>
             </p>
-          </div>
-          <NewsletterSubscriptionBox />
-        </div>
+          </SectionContent>
+        </SectionContainer>
+
+        <SectionContainer>
+          <SectionTitle>Work</SectionTitle>
+          <SectionContent>
+            <div className="flex flex-col space-y-3">
+              {workHistory.map((job) => (
+                <TableRow
+                  href={job.href}
+                  title={job.title}
+                  subtitle={job.subtitle}
+                  date={job.date}
+                />
+              ))}
+            </div>
+          </SectionContent>
+        </SectionContainer>
+
+        <SectionContainer>
+          <SectionTitle>Speaking</SectionTitle>
+          <SectionContent>
+            <div className="flex flex-col space-y-3">
+              {speakingData.map((s) => (
+                <TableRow
+                  href={s.href}
+                  title={s.title}
+                  subtitle={s.subtitle}
+                  date={s.date}
+                />
+              ))}
+            </div>
+          </SectionContent>
+        </SectionContainer>
+
+        <SectionContainer>
+          <SectionTitle>Newsletter</SectionTitle>
+          <SectionContent>
+            <div className="prose">
+              <p>
+                Get updates about new posts, new projects, or other meaningful
+                updates to this site deliveblue to your inbox.
+              </p>
+            </div>
+            <NewsletterSubscriptionBox />
+          </SectionContent>
+        </SectionContainer>
       </div>
     </div>
   )
