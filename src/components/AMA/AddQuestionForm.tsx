@@ -5,7 +5,7 @@ import { ErrorAlert, SuccessAlert } from '../Alert'
 import Button from '../Button'
 import toast from 'react-hot-toast'
 
-export function AddQuestionForm({ onCloseDialog }) {
+export function AddQuestionForm({ closeModal }) {
   const [question, setQuestion] = React.useState('')
   const [error, setError] = React.useState('')
   const [success, setSuccess] = React.useState(false)
@@ -15,7 +15,7 @@ export function AddQuestionForm({ onCloseDialog }) {
       setQuestion('')
       setSuccess(true)
       toast.success('Saved!')
-      return onCloseDialog()
+      return closeModal()
     },
     onError({ message }) {
       const clean = message.replace('GraphQL error:', '')

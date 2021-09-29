@@ -1,6 +1,5 @@
 import * as React from 'react'
 import {
-  Bookmark,
   useDeleteBookmarkMutation,
   useEditBookmarkMutation,
 } from '~/graphql/types.generated'
@@ -8,14 +7,10 @@ import { GET_BOOKMARKS } from '~/graphql/queries'
 import { Input } from '~/components/Input'
 import Button, { DeleteButton } from '../Button'
 import { GET_BOOKMARK } from '~/graphql/queries/bookmarks'
+import { useRouter } from 'next/router'
 
-interface Props {
-  bookmark: Bookmark
-  onDone: (id?: string) => void
-}
-
-export function EditBookmark(props: Props) {
-  const { bookmark, onDone } = props
+export function EditBookmarkForm({ closeModal, bookmark }) {
+  const router = useRouter()
 
   const initialState = {
     error: '',
@@ -99,7 +94,7 @@ export function EditBookmark(props: Props) {
     }
 
     editBookmark()
-    return onDone(bookmark.id)
+    return closeModal()
   }
 
   function onTitleChange(e) {
@@ -126,14 +121,15 @@ export function EditBookmark(props: Props) {
         <DeleteButton
           className="text-red-500"
           onClick={() => {
-            onDone()
+            closeModal()
             handleDelete()
+            router.push('/bookmarks')
           }}
         >
           Delete
         </DeleteButton>
         <div className="flex space-x-3">
-          <Button onClick={onDone}>Cancel</Button>
+          <Button onClick={closeModal}>Cancel</Button>
           <Button onClick={handleSave}>Save</Button>
         </div>
       </div>

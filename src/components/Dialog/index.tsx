@@ -1,37 +1,80 @@
-import React from 'react'
-import * as DialogPrimitive from '@radix-ui/react-dialog'
+import * as React from 'react'
+import { Dialog, Transition } from '@headlessui/react'
+import { Fragment, useState } from 'react'
 import { X } from 'react-feather'
 
-export function Dialog({ children, ...props }) {
+export default function DialogComponent({ trigger, title, children }) {
+  let [isOpen, setIsOpen] = useState(false)
+  let closeButtonRef = React.useRef(null)
+
+  function closeModal() {
+    setIsOpen(false)
+  }
+
+  function openModal() {
+    setIsOpen(true)
+  }
+
   return (
-    <DialogPrimitive.Root {...props}>
-      <DialogPrimitive.Overlay className="fixed inset-0 z-20 flex items-center justify-center transition-opacity duration-200 ease-in-out bg-black bg-opacity-40 dark:bg-opacity-50" />
-      {children}
-    </DialogPrimitive.Root>
+    <>
+      <button type="button" onClick={openModal}>
+        {trigger}
+      </button>
+
+      <Transition appear show={isOpen} as={Fragment}>
+        <Dialog
+          as="div"
+          className="fixed inset-0 z-10 overflow-y-auto"
+          onClose={closeModal}
+          initialFocus={closeButtonRef}
+        >
+          <div className="min-h-screen px-4 text-center">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-100"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="ease-in duration-100"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-10 dark:bg-opacity-40" />
+            </Transition.Child>
+
+            <Transition.Child
+              as={'div'}
+              enter="ease-out duration-100"
+              enterFrom="opacity-0 scale-30"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-100"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
+              <div className="fixed bottom-0 left-0 w-full pb-4 bg-white rounded-t-lg shadow-2xl dark:bg-gray-800 sm:bottom-auto sm:pb-0 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-lg sm:left-1/2 sm:top-1/2 transform-gpu sm:max-w-sm md:max-w-md lg:max-w-lg">
+                <div className="flex flex-col">
+                  <div className="flex items-center justify-between w-full py-2 pl-4 pr-2 border-b border-gray-150 dark:border-gray-700">
+                    <Dialog.Title
+                      as="h3"
+                      className="text-sm font-semibold text-left text-primary"
+                    >
+                      {title}
+                    </Dialog.Title>
+                    <button
+                      onClick={closeModal}
+                      ref={closeButtonRef}
+                      className="flex items-center justify-center p-2 rounded-md cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800"
+                    >
+                      <X size={16} className="text-primary" />
+                    </button>
+                  </div>
+
+                  <div className="p-4">{children({ closeModal })}</div>
+                </div>
+              </div>
+            </Transition.Child>
+          </div>
+        </Dialog>
+      </Transition>
+    </>
   )
 }
-
-export const DialogContent = React.forwardRef(
-  ({ children, title, ...props }, forwardedRef) => (
-    <DialogPrimitive.Content
-      className="fixed bottom-0 w-full pb-16 bg-white shadow-lg dark:bg-gray-800 sm:bottom-auto sm:pb-0 rounded-t-md sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-md sm:animate-modalEnter sm:left-1/2 sm:top-1/2 transform-gpu sm:max-w-sm md:max-w-md lg:max-w-lg focus:outline-none"
-      {...props}
-      ref={forwardedRef}
-    >
-      <div className="flex flex-col">
-        <div className="flex justify-between w-full p-4 border-b border-opacity-50 border-gray-150 dark:border-gray-700 ">
-          <DialogPrimitive.Title className="text-sm font-semibold transform-gpu text-primary line-clamp-1">
-            {title}
-          </DialogPrimitive.Title>
-          <DialogPrimitive.Close>
-            <X size={16} className="text-primary" />
-          </DialogPrimitive.Close>
-        </div>
-        {children}
-      </div>
-    </DialogPrimitive.Content>
-  )
-)
-
-export const DialogTrigger = DialogPrimitive.Trigger
-export const DialogClose = DialogPrimitive.Close

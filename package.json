@@ -25,6 +25,7 @@
     "@apollo/link-schema": "^2.0.0-beta.3",
     "@auth0/nextjs-auth0": "^1.5.0",
     "@graphql-tools/schema": "^8.2.0",
+    "@headlessui/react": "^1.4.1",
     "@liveblocks/client": "^0.10.0",
     "@liveblocks/node": "^0.3.0",
     "@liveblocks/react": "^0.10.0",

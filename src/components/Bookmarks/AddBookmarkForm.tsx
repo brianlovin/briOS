@@ -7,18 +7,21 @@ import { Input } from '~/components/Input'
 import Button from '../Button'
 import { ErrorAlert } from '~/components/Alert'
 import LoadingSpinner from '~/components/LoadingSpinner'
+import { useRouter } from 'next/router'
 
-export function AddBookmarkForm({ onCloseDialog }) {
+export function AddBookmarkForm({ closeModal }) {
   const [url, setUrl] = React.useState('')
   const [isSaving, setIsSaving] = React.useState(false)
   const [error, setError] = React.useState('')
+  const router = useRouter()
 
   const query = GET_BOOKMARKS
 
   const [handleAddBookmark] = useAddBookmarkMutation({
     onCompleted: ({ addBookmark: { id } }) => {
       toast.success('Saved!')
-      return onCloseDialog(id)
+      closeModal()
+      return router.push(`/bookmarks/${id}`)
     },
     update(cache, { data: { addBookmark } }) {
       const { bookmarks } = cache.readQuery({
