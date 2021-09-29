@@ -5,7 +5,7 @@ import {
 import { getPosts, getPost } from '~/graphql/resolvers/queries/writing'
 import { getEpisodes } from '~/graphql/resolvers/queries/podcast'
 import { getRepos } from '~/graphql/resolvers/queries/repos'
-import { isMe } from '~/graphql/resolvers/queries/isMe'
+import { viewer } from '~/graphql/resolvers/queries/viewer'
 import {
   getAMAQuestion,
   getAMAQuestions,
@@ -14,20 +14,21 @@ import {
   getTranscription,
 } from '~/graphql/resolvers/queries/ama'
 import { getComment, getComments } from '~/graphql/resolvers/queries/comment'
+import { requiresAdmin } from '~/graphql/helpers/requiresAdmin'
 
 export default {
+  viewer: viewer,
   bookmark: getBookmark,
   bookmarks: getBookmarks,
   episodes: getEpisodes,
   posts: getPosts,
   post: getPost,
   repos: getRepos,
-  isMe: isMe,
   amaQuestion: getAMAQuestion,
   amaQuestions: getAMAQuestions,
-  signedUploadUrl: getSignedUploadUrl,
-  signedPlaybackUrl: getSignedPlaybackUrl,
-  transcription: getTranscription,
+  signedUploadUrl: requiresAdmin(getSignedUploadUrl),
+  signedPlaybackUrl: requiresAdmin(getSignedPlaybackUrl),
+  transcription: requiresAdmin(getTranscription),
   comment: getComment,
   comments: getComments,
 }

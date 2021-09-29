@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { ApolloProvider } from '@apollo/client'
-import { UserProvider } from '@auth0/nextjs-auth0'
 import Fathom from './Fathom'
 import SEO from './SEO'
 import Toast from './Toaster'
@@ -42,11 +41,9 @@ export default function Providers({ children, pageProps }: Props) {
       <Toast />
 
       <ApolloProvider client={apolloClient}>
-        <UserProvider>
-          <GlobalNavigationContext.Provider value={state}>
-            {children}
-          </GlobalNavigationContext.Provider>
-        </UserProvider>
+        <GlobalNavigationContext.Provider value={state}>
+          {children}
+        </GlobalNavigationContext.Provider>
       </ApolloProvider>
     </>
   )

@@ -2,9 +2,12 @@ import * as React from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { ErrorAlert } from '~/components/Alert'
 import { Input } from '~/components/Input'
-import { CommentType, useAddCommentMutation } from '~/graphql/types.generated'
+import {
+  CommentType,
+  useAddCommentMutation,
+  useViewerQuery,
+} from '~/graphql/types.generated'
 import Image from 'next/image'
-import { useUser } from '@auth0/nextjs-auth0'
 import { GET_COMMENTS } from '~/graphql/queries/comments'
 
 interface Props {
@@ -13,7 +16,7 @@ interface Props {
 }
 
 export function CommentForm({ refId, type }: Props) {
-  const { user, isLoading } = useUser()
+  const { data } = useViewerQuery()
   const [text, setText] = React.useState('')
   const [error, setError] = React.useState(null)
   const [handleAddComment] = useAddCommentMutation({
@@ -34,9 +37,9 @@ export function CommentForm({ refId, type }: Props) {
         author: {
           __typename: 'User',
           id: uuidv4(),
-          username: user?.name,
-          avatar: user?.picture,
-          name: user?.name,
+          username: data.viewer.username,
+          avatar: data.viewer.avatar,
+          name: data.viewer.name,
         },
       },
     },
@@ -70,8 +73,7 @@ export function CommentForm({ refId, type }: Props) {
     }
   }
 
-  if (isLoading) return null
-  if (!user) return null
+  if (!data?.viewer) return null
 
   return (
     <div className="sticky bottom-0 flex flex-col bg-white border-t dark:border-gray-800 dark:bg-gray-900 filter-blur bg-opacity-90 border-gray-150">
@@ -81,7 +83,7 @@ export function CommentForm({ refId, type }: Props) {
       >
         <div className="flex items-center flex-none">
           <Image
-            src={user.picture.replace('_normal', '_400x400')}
+            src={'/static/img/avatar.png'}
             width={40}
             height={40}
             quality={100}

@@ -107,6 +107,7 @@ export default gql`
   }
 
   type Query {
+    viewer: User
     bookmark(id: ID!): Bookmark
     bookmarks(skip: Int): [Bookmark]!
     comment(id: ID!): Comment
@@ -117,7 +118,6 @@ export default gql`
     amaQuestion(id: ID!): AMA
     amaQuestions(skip: Int, status: AMAStatus): [AMA]!
     repos: [Repo]!
-    isMe: Boolean
     signedUploadUrl(id: ID!): String
     signedPlaybackUrl(id: ID!): String
     transcription(transcriptionId: ID!): String

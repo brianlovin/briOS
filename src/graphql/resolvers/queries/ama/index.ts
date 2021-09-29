@@ -6,6 +6,7 @@ import {
   QuerySignedPlaybackUrlArgs,
   QuerySignedUploadUrlArgs,
   QueryTranscriptionArgs,
+  UserRole,
 } from '~/graphql/types.generated'
 import { AUDIO_STORAGE_BUCKET } from '~/graphql/constants'
 import { sanitizeAmaDocument } from '~/graphql/helpers/sanitizeAmaDocument'
@@ -46,13 +47,7 @@ export async function getAMAQuestions(
   return await prisma.question.findMany()
 }
 
-export async function getSignedUploadUrl(
-  _,
-  { id }: QuerySignedUploadUrlArgs,
-  { isMe }
-) {
-  if (!isMe) return null
-
+export async function getSignedUploadUrl(_, { id }: QuerySignedUploadUrlArgs) {
   const bucket = storage.bucket(AUDIO_STORAGE_BUCKET)
   const file = bucket.file(id)
   const options = {
@@ -73,11 +68,8 @@ export async function getSignedPlaybackUrl(
 
 export async function getTranscription(
   _,
-  { transcriptionId }: QueryTranscriptionArgs,
-  { isMe }
+  { transcriptionId }: QueryTranscriptionArgs
 ) {
-  if (!isMe) return null
-
   const baseUrl = `https://api.assemblyai.com/v2/transcript/${transcriptionId}`
   const headers = {
     authorization: process.env.ASSEMBLY_API_KEY,

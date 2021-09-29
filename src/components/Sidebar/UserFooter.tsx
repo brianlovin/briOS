@@ -1,9 +1,9 @@
 import * as React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useUser } from '@auth0/nextjs-auth0'
 import LoadingSpinner from '~/components/LoadingSpinner'
 import { Settings } from 'react-feather'
+import { useViewerQuery } from '~/graphql/types.generated'
 
 function Container({ children }) {
   return (
@@ -14,9 +14,9 @@ function Container({ children }) {
 }
 
 export function UserFooter() {
-  const { user, error, isLoading } = useUser()
+  const { data, loading, error } = useViewerQuery()
 
-  if (isLoading) {
+  if (loading) {
     return (
       <Container>
         <div className="flex items-center justify-center w-full py-1">
@@ -39,12 +39,12 @@ export function UserFooter() {
     )
   }
 
-  if (user) {
+  if (data?.viewer) {
     return (
       <Container>
         <div className="flex items-center flex-none">
           <Image
-            src={user.picture}
+            src={data.viewer.avatar}
             width={24}
             height={24}
             layout="fixed"

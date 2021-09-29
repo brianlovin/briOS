@@ -198,13 +198,13 @@ export type Query = {
   comment?: Maybe<Comment>
   comments: Array<Maybe<Comment>>
   episodes: Array<Maybe<Episode>>
-  isMe?: Maybe<Scalars['Boolean']>
   post?: Maybe<Post>
   posts: Array<Maybe<Post>>
   repos: Array<Maybe<Repo>>
   signedPlaybackUrl?: Maybe<Scalars['String']>
   signedUploadUrl?: Maybe<Scalars['String']>
   transcription?: Maybe<Scalars['String']>
+  viewer?: Maybe<User>
 }
 
 export type QueryAmaQuestionArgs = {
@@ -291,6 +291,7 @@ export type AmaInfoFragment = {
     username?: Maybe<string>
     avatar?: Maybe<string>
     name?: Maybe<string>
+    role?: Maybe<UserRole>
   }>
   comments: Array<
     Maybe<{
@@ -307,6 +308,7 @@ export type AmaInfoFragment = {
         username?: Maybe<string>
         avatar?: Maybe<string>
         name?: Maybe<string>
+        role?: Maybe<UserRole>
       }
     }>
   >
@@ -338,6 +340,7 @@ export type CommentInfoFragment = {
     username?: Maybe<string>
     avatar?: Maybe<string>
     name?: Maybe<string>
+    role?: Maybe<UserRole>
   }
 }
 
@@ -379,6 +382,7 @@ export type UserInfoFragment = {
   username?: Maybe<string>
   avatar?: Maybe<string>
   name?: Maybe<string>
+  role?: Maybe<UserRole>
 }
 
 export type EditAmaQuestionMutationVariables = Exact<{
@@ -405,6 +409,7 @@ export type EditAmaQuestionMutation = {
       username?: Maybe<string>
       avatar?: Maybe<string>
       name?: Maybe<string>
+      role?: Maybe<UserRole>
     }>
     comments: Array<
       Maybe<{
@@ -421,6 +426,7 @@ export type EditAmaQuestionMutation = {
           username?: Maybe<string>
           avatar?: Maybe<string>
           name?: Maybe<string>
+          role?: Maybe<UserRole>
         }
       }>
     >
@@ -463,6 +469,7 @@ export type AddAmaReactionMutation = {
       username?: Maybe<string>
       avatar?: Maybe<string>
       name?: Maybe<string>
+      role?: Maybe<UserRole>
     }>
     comments: Array<
       Maybe<{
@@ -479,6 +486,7 @@ export type AddAmaReactionMutation = {
           username?: Maybe<string>
           avatar?: Maybe<string>
           name?: Maybe<string>
+          role?: Maybe<UserRole>
         }
       }>
     >
@@ -592,6 +600,7 @@ export type AddCommentMutation = {
       username?: Maybe<string>
       avatar?: Maybe<string>
       name?: Maybe<string>
+      role?: Maybe<UserRole>
     }
   }>
 }
@@ -617,6 +626,7 @@ export type EditCommentMutation = {
       username?: Maybe<string>
       avatar?: Maybe<string>
       name?: Maybe<string>
+      role?: Maybe<UserRole>
     }
   }>
 }
@@ -650,6 +660,7 @@ export type GetAmaQuestionsQuery = {
         username?: Maybe<string>
         avatar?: Maybe<string>
         name?: Maybe<string>
+        role?: Maybe<UserRole>
       }>
       comments: Array<
         Maybe<{
@@ -666,6 +677,7 @@ export type GetAmaQuestionsQuery = {
             username?: Maybe<string>
             avatar?: Maybe<string>
             name?: Maybe<string>
+            role?: Maybe<UserRole>
           }
         }>
       >
@@ -691,6 +703,7 @@ export type GetAmaQuestionQuery = {
       username?: Maybe<string>
       avatar?: Maybe<string>
       name?: Maybe<string>
+      role?: Maybe<UserRole>
     }>
     comments: Array<
       Maybe<{
@@ -707,6 +720,7 @@ export type GetAmaQuestionQuery = {
           username?: Maybe<string>
           avatar?: Maybe<string>
           name?: Maybe<string>
+          role?: Maybe<UserRole>
         }
       }>
     >
@@ -802,6 +816,7 @@ export type GetCommentsQuery = {
         username?: Maybe<string>
         avatar?: Maybe<string>
         name?: Maybe<string>
+        role?: Maybe<UserRole>
       }
     }>
   >
@@ -871,10 +886,6 @@ export type GetHomeQuery = {
   >
 }
 
-export type IsMeQueryVariables = Exact<{ [key: string]: never }>
-
-export type IsMeQuery = { __typename?: 'Query'; isMe?: Maybe<boolean> }
-
 export type GetPostsQueryVariables = Exact<{ [key: string]: never }>
 
 export type GetPostsQuery = {
@@ -913,6 +924,20 @@ export type GetPostQuery = {
   }>
 }
 
+export type ViewerQueryVariables = Exact<{ [key: string]: never }>
+
+export type ViewerQuery = {
+  __typename?: 'Query'
+  viewer?: Maybe<{
+    __typename: 'User'
+    id: string
+    username?: Maybe<string>
+    avatar?: Maybe<string>
+    name?: Maybe<string>
+    role?: Maybe<UserRole>
+  }>
+}
+
 export const UserInfoFragmentDoc = gql`
   fragment UserInfo on User {
     __typename
@@ -920,6 +945,7 @@ export const UserInfoFragmentDoc = gql`
     username
     avatar
     name
+    role
   }
 `
 export const CommentInfoFragmentDoc = gql`
@@ -2238,45 +2264,6 @@ export type GetHomeQueryResult = Apollo.QueryResult<
   GetHomeQuery,
   GetHomeQueryVariables
 >
-export const IsMeDocument = gql`
-  query IsMe {
-    isMe
-  }
-`
-
-/**
- * __useIsMeQuery__
- *
- * To run a query within a React component, call `useIsMeQuery` and pass it any options that fit your needs.
- * When your component renders, `useIsMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useIsMeQuery({
- *   variables: {
- *   },
- * });
- */
-export function useIsMeQuery(
-  baseOptions?: Apollo.QueryHookOptions<IsMeQuery, IsMeQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<IsMeQuery, IsMeQueryVariables>(IsMeDocument, options)
-}
-export function useIsMeLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<IsMeQuery, IsMeQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<IsMeQuery, IsMeQueryVariables>(
-    IsMeDocument,
-    options
-  )
-}
-export type IsMeQueryHookResult = ReturnType<typeof useIsMeQuery>
-export type IsMeLazyQueryHookResult = ReturnType<typeof useIsMeLazyQuery>
-export type IsMeQueryResult = Apollo.QueryResult<IsMeQuery, IsMeQueryVariables>
 export const GetPostsDocument = gql`
   query GetPosts {
     posts {
@@ -2378,4 +2365,52 @@ export type GetPostLazyQueryHookResult = ReturnType<typeof useGetPostLazyQuery>
 export type GetPostQueryResult = Apollo.QueryResult<
   GetPostQuery,
   GetPostQueryVariables
+>
+export const ViewerDocument = gql`
+  query viewer {
+    viewer {
+      ...UserInfo
+    }
+  }
+  ${UserInfoFragmentDoc}
+`
+
+/**
+ * __useViewerQuery__
+ *
+ * To run a query within a React component, call `useViewerQuery` and pass it any options that fit your needs.
+ * When your component renders, `useViewerQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useViewerQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useViewerQuery(
+  baseOptions?: Apollo.QueryHookOptions<ViewerQuery, ViewerQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<ViewerQuery, ViewerQueryVariables>(
+    ViewerDocument,
+    options
+  )
+}
+export function useViewerLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<ViewerQuery, ViewerQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<ViewerQuery, ViewerQueryVariables>(
+    ViewerDocument,
+    options
+  )
+}
+export type ViewerQueryHookResult = ReturnType<typeof useViewerQuery>
+export type ViewerLazyQueryHookResult = ReturnType<typeof useViewerLazyQuery>
+export type ViewerQueryResult = Apollo.QueryResult<
+  ViewerQuery,
+  ViewerQueryVariables
 >

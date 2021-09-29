@@ -16,9 +16,9 @@ import {
   WritingIcon,
 } from '../Icon'
 import NavigationLink from './NavigationLink'
-import { useIsMeQuery } from '~/graphql/types.generated'
 import { AddBookmarkDialog } from '../Bookmarks/AddBookmarkDialog'
 import { Plus } from 'react-feather'
+import { UserRole, useViewerQuery } from '~/graphql/types.generated'
 
 function ThisAddBookmarkDialog() {
   return (
@@ -32,7 +32,7 @@ function ThisAddBookmarkDialog() {
 
 export function SidebarNavigation() {
   const router = useRouter()
-  const { data } = useIsMeQuery()
+  const { data } = useViewerQuery()
 
   const links = [
     {
@@ -61,7 +61,8 @@ export function SidebarNavigation() {
       icon: BookmarksIcon,
       trailingAccessory: null,
       isActive: router.asPath.indexOf('/bookmarks') >= 0,
-      trailingAction: data?.isMe ? ThisAddBookmarkDialog : null,
+      trailingAction:
+        data?.viewer?.role === UserRole.Admin ? ThisAddBookmarkDialog : null,
     },
 
     {
