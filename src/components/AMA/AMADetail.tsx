@@ -1,10 +1,6 @@
 import * as React from 'react'
 import { useRouter } from 'next/router'
-import {
-  CommentType,
-  useGetAmaQuestionQuery,
-  useGetBookmarkQuery,
-} from '~/graphql/types.generated'
+import { CommentType, useGetAmaQuestionQuery } from '~/graphql/types.generated'
 import TitleBar from '~/components/ListDetail/TitleBar'
 import { Comments } from '../Comments'
 

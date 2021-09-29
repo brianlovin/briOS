@@ -14,7 +14,7 @@ export default function NavigationLink({
 
   return (
     <li
-      className="flex items-center space-x-1"
+      className="flex items-stretch space-x-1"
       onClick={() => setIsOpen(false)}
     >
       <Link href={href}>

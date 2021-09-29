@@ -21,6 +21,7 @@ export async function getViewer(req, res) {
 
 export default async function context(ctx) {
   const viewer = await getViewer(ctx.req, ctx.res)
+  console.log({ context: viewer })
   return {
     viewer,
     prisma,

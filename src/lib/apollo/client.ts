@@ -18,6 +18,7 @@ global.fetch = require('node-fetch')
 let apolloClient
 
 function createIsomorphLink({ viewer }) {
+  console.log({ createIsomorphLink: viewer })
   if (typeof window === 'undefined') {
     // These have to imported dynamically, instead of at the root of the page,
     // in order to make sure that we're not shipping server-side code to the client

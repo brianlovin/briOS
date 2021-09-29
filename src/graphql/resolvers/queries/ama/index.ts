@@ -7,6 +7,7 @@ import {
   QuerySignedUploadUrlArgs,
   QueryTranscriptionArgs,
   UserRole,
+  AmaStatus,
 } from '~/graphql/types.generated'
 import { AUDIO_STORAGE_BUCKET } from '~/graphql/constants'
 import { sanitizeAmaDocument } from '~/graphql/helpers/sanitizeAmaDocument'
@@ -42,9 +43,32 @@ export async function getAMAQuestions(
   args: QueryAmaQuestionsArgs,
   ctx: Context
 ) {
-  const { skip, status } = args
-  const { viewer, prisma } = ctx
-  return await prisma.question.findMany()
+  const { status } = args
+  const { prisma, viewer } = ctx
+
+  console.log({ viewer })
+
+  if (status === AmaStatus.Answered) {
+    return await prisma.question.findMany({
+      where: {
+        comments: {
+          some: {},
+        },
+      },
+    })
+  } else if (status === AmaStatus.Pending) {
+    // if (viewer.role !== UserRole.Admin) return []
+
+    return await prisma.question.findMany({
+      where: {
+        comments: {
+          none: {},
+        },
+      },
+    })
+  } else {
+    return []
+  }
 }
 
 export async function getSignedUploadUrl(_, { id }: QuerySignedUploadUrlArgs) {

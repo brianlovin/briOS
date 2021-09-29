@@ -37,9 +37,10 @@ export function CommentForm({ refId, type }: Props) {
         author: {
           __typename: 'User',
           id: uuidv4(),
-          username: data.viewer.username,
-          avatar: data.viewer.avatar,
-          name: data.viewer.name,
+          username: data?.viewer.username,
+          avatar: data?.viewer.avatar,
+          name: data?.viewer.name,
+          role: data?.viewer.role,
         },
       },
     },

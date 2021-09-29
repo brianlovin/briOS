@@ -18,7 +18,7 @@ export async function getServerSideProps({ params: { id } }) {
   await Promise.all([
     apolloClient.query({
       query: GET_AMA_QUESTIONS,
-      variables: { status: AmaStatus.Answered },
+      variables: { status: AmaStatus.Pending },
     }),
 
     apolloClient.query({
@@ -43,7 +43,7 @@ AMAQuestionDetailPage.getLayout = withProviders(function getLayout(page) {
   return (
     <SiteLayout>
       <ListDetailView
-        list={<AMAQuestionsList status={AmaStatus.Answered} />}
+        list={<AMAQuestionsList status={AmaStatus.Pending} />}
         hasDetail
         detail={page}
       />

@@ -2,8 +2,9 @@ import * as React from 'react'
 import TitleBar from '~/components/ListDetail/TitleBar'
 import { Plus } from 'react-feather'
 import { AddQuestionDialog } from './AddQuestionDialog'
+import { AmaStatus } from '~/graphql/types.generated'
 
-export function AMATitlebar({ scrollContainerRef }) {
+export function AMATitlebar({ scrollContainerRef, status }) {
   function trailingAccessory() {
     return (
       <AddQuestionDialog>
@@ -17,7 +18,7 @@ export function AMATitlebar({ scrollContainerRef }) {
   return (
     <TitleBar
       scrollContainerRef={scrollContainerRef}
-      title="Ask me anything"
+      title={status === AmaStatus.Answered ? 'Ask me anything' : 'Pending'}
       trailingAccessory={trailingAccessory()}
     />
   )

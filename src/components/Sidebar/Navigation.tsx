@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 import {
   AMAIcon,
   AppDissectionIcon,
@@ -18,7 +19,12 @@ import {
 import NavigationLink from './NavigationLink'
 import { AddBookmarkDialog } from '../Bookmarks/AddBookmarkDialog'
 import { Plus } from 'react-feather'
-import { UserRole, useViewerQuery } from '~/graphql/types.generated'
+import {
+  AmaStatus,
+  useGetAmaQuestionsQuery,
+  UserRole,
+  useViewerQuery,
+} from '~/graphql/types.generated'
 
 function ThisAddBookmarkDialog() {
   return (
@@ -30,10 +36,33 @@ function ThisAddBookmarkDialog() {
   )
 }
 
+function PendingQuestionsCount() {
+  const router = useRouter()
+  const { data, loading, error } = useGetAmaQuestionsQuery({
+    variables: { status: AmaStatus.Pending },
+  })
+  if (loading || error) return null
+  if (!data) return null
+  const isActive = router.asPath.startsWith('/ama/pending')
+  return (
+    <Link href="/ama/pending">
+      <a
+        className={`flex flex-none flex-col items-center justify-center text-sm font-medium rounded-md cursor-pointer w-9 h-9 ${
+          data.amaQuestions.length === 0 ? 'text-quaternary' : 'text-primary'
+        } ${
+          isActive && 'bg-gray-200 dark:bg-gray-700'
+        } hover:bg-gray-200 dark:hover:bg-gray-700`}
+      >
+        {data.amaQuestions.length}
+      </a>
+    </Link>
+  )
+}
+
 export function SidebarNavigation() {
   const router = useRouter()
   const { data } = useViewerQuery()
-
+  const isAdmin = data?.viewer?.role === UserRole.Admin
   const links = [
     {
       href: '/',
@@ -61,8 +90,7 @@ export function SidebarNavigation() {
       icon: BookmarksIcon,
       trailingAccessory: null,
       isActive: router.asPath.indexOf('/bookmarks') >= 0,
-      trailingAction:
-        data?.viewer?.role === UserRole.Admin ? ThisAddBookmarkDialog : null,
+      trailingAction: isAdmin ? ThisAddBookmarkDialog : null,
     },
 
     {
@@ -70,8 +98,10 @@ export function SidebarNavigation() {
       label: 'AMA',
       icon: AMAIcon,
       trailingAccessory: null,
-      isActive: router.asPath.indexOf('/ama') >= 0,
-      trailingAction: null,
+      isActive:
+        router.asPath.indexOf('/ama') >= 0 &&
+        !router.asPath.startsWith('/ama/pending'),
+      trailingAction: isAdmin ? PendingQuestionsCount : null,
     },
 
     {

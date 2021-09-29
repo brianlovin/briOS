@@ -5,12 +5,12 @@ import ListContainer from '~/components/ListDetail/ListContainer'
 import ListItem from '~/components/ListDetail/ListItem'
 import { AMATitlebar } from './AMATitlebar'
 
-export function AMAQuestionsList() {
+export function AMAQuestionsList({ status }) {
   let [scrollContainerRef, setScrollContainerRef] = React.useState(null)
   const router = useRouter()
 
   const { data, error } = useGetAmaQuestionsQuery({
-    variables: { status: AmaStatus.Answered },
+    variables: { status },
   })
 
   if (error) return null
@@ -18,9 +18,10 @@ export function AMAQuestionsList() {
   if (!data || !data.amaQuestions) return null
 
   const { amaQuestions: questions } = data
+
   return (
     <ListContainer onRef={setScrollContainerRef}>
-      <AMATitlebar scrollContainerRef={scrollContainerRef} />
+      <AMATitlebar status={status} scrollContainerRef={scrollContainerRef} />
 
       <div className="lg:p-3 lg:space-y-1">
         {questions.map((question) => {
@@ -29,8 +30,16 @@ export function AMAQuestionsList() {
           return (
             <ListItem
               key={question.id}
-              href="/ama/[id]"
-              as={`/ama/${question.id}`}
+              href={
+                status === AmaStatus.Answered
+                  ? `/ama/[id]`
+                  : `/ama/pending/[id]`
+              }
+              as={
+                status === AmaStatus.Answered
+                  ? `/ama/${question.id}`
+                  : `/ama/pending/${question.id}`
+              }
               title={question.text}
               description={null}
               byline={`${question.author.name} · ${question.updatedAt}`}

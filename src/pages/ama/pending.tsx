@@ -8,7 +8,7 @@ import { addApolloState, initApolloClient } from '~/lib/apollo/client'
 import { GET_AMA_QUESTIONS } from '~/graphql/queries'
 import { AmaStatus } from '~/graphql/types.generated'
 
-function AmaPage() {
+function PendingAmaPage() {
   return (
     <>
       <NextSeo
@@ -25,7 +25,7 @@ export async function getServerSideProps() {
 
   await apolloClient.query({
     query: GET_AMA_QUESTIONS,
-    variables: { status: AmaStatus.Answered },
+    variables: { status: AmaStatus.Pending },
   })
 
   return addApolloState(apolloClient, {
@@ -33,11 +33,11 @@ export async function getServerSideProps() {
   })
 }
 
-AmaPage.getLayout = withProviders(function getLayout(page) {
+PendingAmaPage.getLayout = withProviders(function getLayout(page) {
   return (
     <SiteLayout>
       <ListDetailView
-        list={<AMAQuestionsList status={AmaStatus.Answered} />}
+        list={<AMAQuestionsList status={AmaStatus.Pending} />}
         hasDetail={false}
         detail={page}
       />
@@ -45,4 +45,4 @@ AmaPage.getLayout = withProviders(function getLayout(page) {
   )
 })
 
-export default AmaPage
+export default PendingAmaPage
