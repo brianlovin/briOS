@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { ApolloProvider } from '@apollo/client'
-import { IdProvider } from '@radix-ui/react-id'
 import { UserProvider } from '@auth0/nextjs-auth0'
 import Fathom from './Fathom'
 import SEO from './SEO'
@@ -44,11 +43,9 @@ export default function Providers({ children, pageProps }: Props) {
 
       <ApolloProvider client={apolloClient}>
         <UserProvider>
-          <IdProvider>
-            <GlobalNavigationContext.Provider value={state}>
-              {children}
-            </GlobalNavigationContext.Provider>
-          </IdProvider>
+          <GlobalNavigationContext.Provider value={state}>
+            {children}
+          </GlobalNavigationContext.Provider>
         </UserProvider>
       </ApolloProvider>
     </>
