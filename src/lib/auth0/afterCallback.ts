@@ -8,44 +8,12 @@ name, and description
 */
 
 import { prisma } from '~/lib/prisma/client'
-
-const BASE_URL = process.env.AUTH0_ISSUER_BASE_URL
-
-async function getToken() {
-  const client_id = process.env.AUTH0_MANAGEMENT_CLIENT_ID
-  const client_secret = process.env.AUTH0_MANAGEMENT_CLIENT_SECRET
-  const url = `${BASE_URL}/oauth/token`
-  const options = {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({
-      client_id,
-      client_secret,
-      audience: `${BASE_URL}/api/v2/`,
-      grant_type: 'client_credentials',
-    }),
-  }
-  const token = await fetch(url, options).then((r) => r.json())
-  return token.access_token
-}
-
-async function getUserDetails(id) {
-  const token = await getToken()
-  const url = `${BASE_URL}/api/v2/users/${id}`
-  const options = {
-    method: 'GET',
-    headers: {
-      authorization: `Bearer ${token}`,
-    },
-  }
-
-  return await fetch(url, options).then((r) => r.json())
-}
+import { getUser } from './getUser'
 
 export async function afterCallback(_, __, session) {
   const { user } = session
   const { sub: id } = user
-  const details = await getUserDetails(id)
+  const details = await getUser(id)
   const { description, location, name, nickname, picture, screen_name } =
     details
   try {
