@@ -46,14 +46,15 @@ export async function getAMAQuestions(
   const { status } = args
   const { prisma, viewer } = ctx
 
-  console.log({ viewer })
-
   if (status === AmaStatus.Answered) {
     return await prisma.question.findMany({
       where: {
         comments: {
           some: {},
         },
+      },
+      orderBy: {
+        updatedAt: 'desc',
       },
     })
   } else if (status === AmaStatus.Pending) {
@@ -64,6 +65,9 @@ export async function getAMAQuestions(
         comments: {
           none: {},
         },
+      },
+      orderBy: {
+        updatedAt: 'desc',
       },
     })
   } else {
