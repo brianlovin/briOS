@@ -116,11 +116,11 @@ export function SidebarNavigation() {
     'Projects',
 
     {
-      href: '/staff-design',
+      href: 'https://staff.design',
       label: 'Staff Design',
       icon: StaffDesignIcon,
-      trailingAccessory: null,
-      isActive: router.asPath.indexOf('/staff-design') >= 0,
+      trailingAccessory: ExternalLinkIcon,
+      isActive: false,
       trailingAction: null,
     },
 
