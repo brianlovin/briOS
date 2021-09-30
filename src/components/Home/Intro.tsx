@@ -19,7 +19,14 @@ function SectionContent(props) {
   return <div className="col-span-10" {...props} />
 }
 
-function TableRow({ href, title, subtitle, date }) {
+interface TableRowProps {
+  href: string
+  title: string
+  date: string
+  subtitle?: string
+}
+
+function TableRow({ href, title, subtitle, date }: TableRowProps) {
   return (
     <a href={href} className="flex items-center space-x-4 group">
       <span className="flex-none font-medium text-gray-1000 group-hover:underline group-hover:text-blue-600 dark:group-hover:text-blue-500 dark:text-gray-100">
@@ -227,6 +234,7 @@ export default function Intro() {
                   title={job.title}
                   subtitle={job.subtitle}
                   date={job.date}
+                  key={job.href}
                 />
               ))}
             </div>
@@ -241,8 +249,8 @@ export default function Intro() {
                 <TableRow
                   href={s.href}
                   title={s.title}
-                  subtitle={s.subtitle}
                   date={s.date}
+                  key={s.href}
                 />
               ))}
             </div>
