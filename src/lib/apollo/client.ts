@@ -17,8 +17,7 @@ const GRAPHQL_ENDPOINT = `${CLIENT_URL}/api/graphql`
 global.fetch = require('node-fetch')
 let apolloClient
 
-function createIsomorphLink({ viewer }) {
-  console.log({ createIsomorphLink: viewer })
+function createIsomorphLink({ context }) {
   if (typeof window === 'undefined') {
     // These have to imported dynamically, instead of at the root of the page,
     // in order to make sure that we're not shipping server-side code to the client
@@ -27,7 +26,7 @@ function createIsomorphLink({ viewer }) {
     // eslint-disable-next-line
     const { schema } = require('~/graphql/schema')
     const { prisma } = require('~/lib/prisma/client')
-    return new SchemaLink({ schema, context: { viewer, prisma } })
+    return new SchemaLink({ schema, context })
   } else {
     return new HttpLink({
       uri: GRAPHQL_ENDPOINT,
@@ -57,8 +56,8 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   }
 })
 
-export function createApolloClient({ initialState = {}, viewer = null }) {
-  const link = ApolloLink.from([errorLink, createIsomorphLink({ viewer })])
+export function createApolloClient({ initialState = {}, context = {} }) {
+  const link = ApolloLink.from([errorLink, createIsomorphLink({ context })])
   const ssrMode = typeof window === 'undefined'
   const cache = new InMemoryCache({
     typePolicies: {
@@ -83,9 +82,9 @@ export function createApolloClient({ initialState = {}, viewer = null }) {
   })
 }
 
-export function initApolloClient({ initialState = null, viewer = null }) {
+export function initApolloClient({ initialState = null, context = {} }) {
   const _apolloClient =
-    apolloClient ?? createApolloClient({ initialState, viewer })
+    apolloClient ?? createApolloClient({ initialState, context })
 
   // If your page has Next.js data fetching methods that use Apollo Client, the initial state
   // gets hydrated here

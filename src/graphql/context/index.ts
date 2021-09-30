@@ -19,13 +19,17 @@ export async function getViewer(req, res) {
   return viewer
 }
 
-export default async function context(ctx) {
-  const viewer = await getViewer(ctx.req, ctx.res)
-  console.log({ context: viewer })
+export async function getContext(req, res) {
+  const viewer = await getViewer(req, res)
+
   return {
     viewer,
     prisma,
   }
+}
+
+export default async function context(ctx) {
+  return await getContext(ctx.req, ctx.res)
 }
 
 export type Context = {
