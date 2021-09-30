@@ -1,5 +1,6 @@
 import React from 'react'
 import { DeleteButton } from '../Button'
+import { DeleteUserDialog } from './DeleteUserDialog'
 
 export function UserSettings() {
   return (
@@ -12,6 +13,9 @@ export function UserSettings() {
             </h1>
           </div>
           <DeleteButton href="/api/auth/logout">Log out</DeleteButton>
+          <DeleteUserDialog>
+            <DeleteButton>Delete account</DeleteButton>
+          </DeleteUserDialog>
         </div>
       </div>
     </div>

@@ -143,5 +143,6 @@ export default gql`
     addComment(refId: String!, type: CommentType!, text: String!): Comment
     editComment(id: ID!, text: String): Comment
     deleteComment(id: ID!): Boolean
+    deleteUser: Boolean
   }
 `

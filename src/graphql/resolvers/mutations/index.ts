@@ -19,6 +19,7 @@ import {
   editComment,
   deleteComment,
 } from '~/graphql/resolvers/mutations/comment'
+import { deleteUser } from '~/graphql/resolvers/mutations/user'
 
 export default {
   addBookmark: requiresAdmin(addBookmark),
@@ -34,4 +35,5 @@ export default {
   addComment: requiresUser(addComment),
   editComment: requiresUser(editComment),
   deleteComment: requiresUser(deleteComment),
+  deleteUser: requiresUser(deleteUser),
 }
