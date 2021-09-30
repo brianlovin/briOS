@@ -1,10 +1,7 @@
 import Query from '~/graphql/resolvers/queries'
 import Mutation from '~/graphql/resolvers/mutations'
 import { UserRole } from '~/graphql/types.generated'
-import {
-  getCommentAuthor,
-  getBookmarkComments,
-} from '~/graphql/resolvers/queries/comment'
+import { getCommentAuthor } from '~/graphql/resolvers/queries/comment'
 import {
   getQuestionAuthor,
   getQuestionComments,
@@ -27,9 +24,6 @@ export default {
         month: 'short',
         day: 'numeric',
       }),
-  },
-  Bookmark: {
-    comments: getBookmarkComments,
   },
   AMA: {
     author: getQuestionAuthor,
