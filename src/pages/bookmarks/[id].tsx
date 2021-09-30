@@ -6,7 +6,7 @@ import { GET_BOOKMARK } from '~/graphql/queries/bookmarks'
 import { BookmarkDetail } from '~/components/Bookmarks/BookmarkDetail'
 import { addApolloState, initApolloClient } from '~/lib/apollo/client'
 import { withProviders } from '~/components/Providers/withProviders'
-import { getViewer } from '~/graphql/context'
+import { getContext, getViewer } from '~/graphql/context'
 import { GET_COMMENTS } from '~/graphql/queries/comments'
 import { CommentType } from '~/graphql/types.generated'
 
@@ -15,8 +15,8 @@ function BookmarkPage({ id }) {
 }
 
 export async function getServerSideProps({ params: { id }, req, res }) {
-  const viewer = await getViewer(req, res)
-  const apolloClient = initApolloClient({ viewer })
+  const context = await getContext(req, res)
+  const apolloClient = initApolloClient({ context })
 
   await Promise.all([
     apolloClient.query({

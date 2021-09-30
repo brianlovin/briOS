@@ -7,13 +7,15 @@ import { AmaStatus, CommentType } from '~/graphql/types.generated'
 import { AMAQuestionsList } from '~/components/AMA/QuestionsList'
 import { AMADetail } from '~/components/AMA/AMADetail'
 import { GET_COMMENTS } from '~/graphql/queries/comments'
+import { getContext } from '~/graphql/context'
 
 function AMAQuestionDetailPage({ id }) {
   return <AMADetail id={id} />
 }
 
-export async function getServerSideProps({ params: { id } }) {
-  const apolloClient = initApolloClient({})
+export async function getServerSideProps({ params: { id }, req, res }) {
+  const context = await getContext(req, res)
+  const apolloClient = initApolloClient({ context })
 
   await Promise.all([
     apolloClient.query({

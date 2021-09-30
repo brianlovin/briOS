@@ -7,6 +7,7 @@ import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { addApolloState, initApolloClient } from '~/lib/apollo/client'
 import { GET_AMA_QUESTIONS } from '~/graphql/queries'
 import { AmaStatus } from '~/graphql/types.generated'
+import { getContext } from '~/graphql/context'
 
 function PendingAmaPage() {
   return (
@@ -20,8 +21,9 @@ function PendingAmaPage() {
   )
 }
 
-export async function getServerSideProps() {
-  const apolloClient = initApolloClient({})
+export async function getServerSideProps({ req, res }) {
+  const context = await getContext(req, res)
+  const apolloClient = initApolloClient({ context })
 
   await apolloClient.query({
     query: GET_AMA_QUESTIONS,
