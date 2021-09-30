@@ -12,13 +12,6 @@ export async function getComment(_, args: QueryCommentArgs, ctx: Context) {
   return await prisma.comment.findUnique({ where: { id } })
 }
 
-export async function getBookmarkComments(parent: Bookmark, _, ctx: Context) {
-  const { id } = parent
-  const { prisma } = ctx
-
-  return await prisma.bookmark.findUnique({ where: { id } }).comments()
-}
-
 export async function getCommentAuthor(parent: Bookmark, _, ctx: Context) {
   const { id } = parent
   const { prisma } = ctx
@@ -33,6 +26,13 @@ export async function getComments(_, args, ctx: Context) {
   switch (type) {
     case CommentType.Bookmark: {
       const results = await prisma.bookmark
+        .findUnique({ where: { id: refId } })
+        .comments()
+
+      return results || []
+    }
+    case CommentType.Question: {
+      const results = await prisma.question
         .findUnique({ where: { id: refId } })
         .comments()
 
