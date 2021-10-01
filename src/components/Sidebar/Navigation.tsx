@@ -41,9 +41,12 @@ function PendingQuestionsCount() {
   const { data, loading, error } = useGetAmaQuestionsQuery({
     variables: { status: AmaStatus.Pending },
   })
+
   if (loading || error) return null
-  if (!data) return null
+  if (!data || data.amaQuestions.length === 0) return null
+
   const isActive = router.asPath.startsWith('/ama/pending')
+
   return (
     <Link href="/ama/pending">
       <a

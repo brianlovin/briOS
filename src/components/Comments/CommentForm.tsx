@@ -7,7 +7,6 @@ import {
   useAddCommentMutation,
   useViewerQuery,
 } from '~/graphql/types.generated'
-import Image from 'next/image'
 import { GET_COMMENTS } from '~/graphql/queries/comments'
 
 interface Props {
