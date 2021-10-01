@@ -1,6 +1,7 @@
 import React from 'react'
 import routes from '~/config/routes'
 import data from '~/data/security'
+import { Detail } from '../ListDetail/Detail'
 import TitleBar from '../ListDetail/TitleBar'
 import ChecklistItem from './ChecklistItem'
 
@@ -11,10 +12,7 @@ export default function SecurityChecklist() {
   const keys = Object.keys(data)
   const resources = keys.map((k) => data[k])
   return (
-    <div
-      ref={scrollContainerRef}
-      className="w-full max-h-screen overflow-y-auto"
-    >
+    <Detail.Container ref={scrollContainerRef}>
       <TitleBar
         magicTitle
         title={'Security Checklist'}
@@ -22,25 +20,22 @@ export default function SecurityChecklist() {
         scrollContainerRef={scrollContainerRef}
       />
 
-      <div className="justify-center py-24">
-        <div className="max-w-screen-md px-4 mx-auto space-y-24">
-          <div className="space-y-2">
-            <h1
-              ref={titleRef}
-              className="text-2xl font-bold md:text-3xl text-primary"
-            >
-              {routes.security.seo.title}
-            </h1>
-            <p className="text-xl text-tertiary">
-              {routes.security.seo.description}
-            </p>
-          </div>
+      <Detail.ContentContainer>
+        <Detail.Header>
+          <Detail.Title ref={titleRef}>
+            {routes.security.seo.title}
+          </Detail.Title>
+          <p className="text-xl text-tertiary">
+            {routes.security.seo.description}
+          </p>
+        </Detail.Header>
 
+        <div className="space-y-24">
           {resources.map((resource) => (
             <ChecklistItem key={resource.id} resource={resource} />
           ))}
         </div>
-      </div>
-    </div>
+      </Detail.ContentContainer>
+    </Detail.Container>
   )
 }

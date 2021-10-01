@@ -8,10 +8,15 @@ import {
 import TitleBar from '~/components/ListDetail/TitleBar'
 import { Comments } from '~/components/Comments'
 import { BookmarkActions } from './BookmarkActions'
+import {
+  Detail,
+  DetailContainer,
+  DetailContentContainer,
+} from '../ListDetail/Detail'
 
 export function BookmarkDetail({ id }) {
   const scrollContainerRef: React.RefObject<HTMLDivElement> = React.useRef(null)
-  const titleRef = React.useRef(null)
+  const titleRef: React.RefObject<HTMLHeadingElement> = React.useRef(null)
   const router = useRouter()
   const { data, loading, error } = useGetBookmarkQuery({
     variables: { id },
@@ -30,10 +35,7 @@ export function BookmarkDetail({ id }) {
   }
 
   return (
-    <div
-      ref={scrollContainerRef}
-      className="relative flex flex-col w-full max-h-screen overflow-y-auto bg-white dark:bg-black"
-    >
+    <Detail.Container ref={scrollContainerRef}>
       <TitleBar
         backButton
         globalMenu={false}
@@ -45,26 +47,19 @@ export function BookmarkDetail({ id }) {
         trailingAccessory={<BookmarkActions bookmark={data.bookmark} />}
       />
 
-      <div className="w-full max-w-3xl px-4 py-8 mx-auto border-b dark:border-gray-800 border-gray-150 md:px-6">
-        <div data-cy="post" className="space-y-8">
-          <div className="space-y-2">
-            <h1
-              ref={titleRef}
-              className="font-sans text-2xl font-bold md:text-3xl text-primary"
-            >
-              {data.bookmark.title}
-            </h1>
-            <span className="inline-block leading-snug text-tertiary">
-              {data.bookmark.host}
-            </span>
-            {data.bookmark.description && (
-              <p className="prose text-primary">{data.bookmark.description}</p>
-            )}
-          </div>
-        </div>
-      </div>
+      <Detail.ContentContainer>
+        <Detail.Header>
+          <Detail.Title ref={titleRef}>{data.bookmark.title}</Detail.Title>
+          <span className="inline-block leading-snug text-tertiary">
+            {data.bookmark.host}
+          </span>
+          {data.bookmark.description && (
+            <p className="prose text-primary">{data.bookmark.description}</p>
+          )}
+        </Detail.Header>
+      </Detail.ContentContainer>
 
       <Comments refId={data.bookmark.id} type={CommentType.Bookmark} />
-    </div>
+    </Detail.Container>
   )
 }

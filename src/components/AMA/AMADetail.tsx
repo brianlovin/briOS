@@ -2,6 +2,11 @@ import * as React from 'react'
 import { useRouter } from 'next/router'
 import { CommentType, useGetAmaQuestionQuery } from '~/graphql/types.generated'
 import TitleBar from '~/components/ListDetail/TitleBar'
+import {
+  Detail,
+  DetailContainer,
+  DetailContentContainer,
+} from '~/components/ListDetail/Detail'
 import { Comments } from '../Comments'
 
 export function AMADetail({ id }) {
@@ -23,39 +28,27 @@ export function AMADetail({ id }) {
   }
 
   return (
-    <React.Fragment>
-      <div
-        ref={scrollContainerRef}
-        className="relative flex flex-col w-full max-h-screen overflow-y-auto bg-white dark:bg-black"
-      >
-        <TitleBar
-          backButton
-          globalMenu={false}
-          backButtonHref={'/writing'}
-          magicTitle
-          title={data?.amaQuestion.text}
-          titleRef={titleRef}
-          scrollContainerRef={scrollContainerRef}
-        />
+    <Detail.Container ref={scrollContainerRef}>
+      <TitleBar
+        backButton
+        globalMenu={false}
+        backButtonHref={'/writing'}
+        magicTitle
+        title={data?.amaQuestion.text}
+        titleRef={titleRef}
+        scrollContainerRef={scrollContainerRef}
+      />
 
-        <div className="w-full max-w-3xl px-4 py-8 mx-auto border-b dark:border-gray-800 border-gray-150 md:px-6">
-          <div data-cy="post" className="space-y-8">
-            <div className="space-y-4">
-              <h1
-                ref={titleRef}
-                className="font-sans text-2xl font-bold md:text-3xl text-primary"
-              >
-                {data?.amaQuestion.text}
-              </h1>
-              <span className="inline-block leading-snug text-tertiary">
-                {data?.amaQuestion.updatedAt}
-              </span>
-            </div>
-          </div>
-        </div>
+      <Detail.ContentContainer>
+        <Detail.Header>
+          <Detail.Title ref={titleRef}>{data?.amaQuestion.text}</Detail.Title>
+          <span className="inline-block leading-snug text-tertiary">
+            {data?.amaQuestion.updatedAt}
+          </span>
+        </Detail.Header>
+      </Detail.ContentContainer>
 
-        <Comments refId={data.amaQuestion.id} type={CommentType.Question} />
-      </div>
-    </React.Fragment>
+      <Comments refId={data.amaQuestion.id} type={CommentType.Question} />
+    </Detail.Container>
   )
 }

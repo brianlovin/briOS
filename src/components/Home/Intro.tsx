@@ -5,6 +5,7 @@ import { MapPin } from 'react-feather'
 import Button from '~/components/Button'
 import NewsletterSubscriptionBox from '../Newsletter'
 import TitleBar from '../ListDetail/TitleBar'
+import { Detail } from '../ListDetail/Detail'
 
 function SectionTitle(props) {
   return (
@@ -136,10 +137,7 @@ export default function Intro() {
   const titleRef = React.useRef(null)
 
   return (
-    <div
-      ref={scrollContainerRef}
-      className="relative flex flex-col w-full max-h-screen overflow-y-auto bg-white dark:bg-black"
-    >
+    <Detail.Container ref={scrollContainerRef}>
       <TitleBar
         magicTitle
         titleRef={titleRef}
@@ -150,126 +148,129 @@ export default function Intro() {
       {/* Keep this div to trigger the magic scroll */}
       <div className="p-4" ref={titleRef} />
 
-      <div className="flex flex-col max-w-screen-md px-4 pt-0 pb-24 mx-auto space-y-8 md:pt-8 md:space-y-20">
-        <SectionContainer>
-          <SectionTitle />
-          <SectionContent>
-            <div className="prose text-primary">
-              <p>
-                Hey, I&apos;m Brian. I&apos;m a designer,{' '}
-                <a href="https://designdetails.fm">podcaster</a>,{' '}
-                <Link href="/writing" passHref>
-                  <a>writer</a>
-                </Link>
-                , and{' '}
-                <a href="https://github.com/brianlovin">software tinkerer</a>.
-                I&apos;m currently building{' '}
-                <a href="https://github.com/mobile">
-                  native mobile apps at GitHub
-                </a>
-                .
-              </p>
-              <p>
-                Before GitHub, I co-founded{' '}
-                <a href="https://spectrum.chat">Spectrum</a>, a platform for
-                large-scale communities to have better public conversations.
-                Spectrum was acquired by GitHub in November, 2018.
-              </p>
-              <p>
-                Before Spectrum I designed payments experiences at Facebook,
-                working across Facebook, Messenger, WhatsApp, and Instagram. I
-                originally cut my teeth as the first product designer at{' '}
-                <a href="https://buffer.com">Buffer</a>.
-              </p>
-              <p>
-                I also co-host the{' '}
-                <a href="https://designdetails.fm">Design Details Podcast</a>, a
-                weekly conversation about design process and culture. Design
-                Details is part of <a href="https://spec.fm">Spec.fm</a>, a
-                podcast network for designers and developers, which I co-founded
-                in 2015.
-              </p>
-              <p>
-                You can find me on{' '}
-                <a href="https://twitter.com/brian_lovin">Twitter</a> where I
-                talk about design and development, or on{' '}
-                <a href="https://github.com/brianlovin">GitHub</a> where I’m
-                building in the open, or on{' '}
-                <a href="https://figma.com/@brian">Figma</a> where I’m exploring
-                how plugins can automate the tedious parts of interface design.
-              </p>
-            </div>
-            <div className="flex pt-6">
-              <Button href="https://changelog.brianlovin.com">
-                View changelog
-              </Button>
-            </div>
-          </SectionContent>
-        </SectionContainer>
+      <Detail.ContentContainer>
+        <div className="space-y-16">
+          <SectionContainer>
+            <SectionTitle />
+            <SectionContent>
+              <div className="prose text-primary">
+                <p>
+                  Hey, I&apos;m Brian. I&apos;m a designer,{' '}
+                  <a href="https://designdetails.fm">podcaster</a>,{' '}
+                  <Link href="/writing" passHref>
+                    <a>writer</a>
+                  </Link>
+                  , and{' '}
+                  <a href="https://github.com/brianlovin">software tinkerer</a>.
+                  I&apos;m currently building{' '}
+                  <a href="https://github.com/mobile">
+                    native mobile apps at GitHub
+                  </a>
+                  .
+                </p>
+                <p>
+                  Before GitHub, I co-founded{' '}
+                  <a href="https://spectrum.chat">Spectrum</a>, a platform for
+                  large-scale communities to have better public conversations.
+                  Spectrum was acquired by GitHub in November, 2018.
+                </p>
+                <p>
+                  Before Spectrum I designed payments experiences at Facebook,
+                  working across Facebook, Messenger, WhatsApp, and Instagram. I
+                  originally cut my teeth as the first product designer at{' '}
+                  <a href="https://buffer.com">Buffer</a>.
+                </p>
+                <p>
+                  I also co-host the{' '}
+                  <a href="https://designdetails.fm">Design Details Podcast</a>,
+                  a weekly conversation about design process and culture. Design
+                  Details is part of <a href="https://spec.fm">Spec.fm</a>, a
+                  podcast network for designers and developers, which I
+                  co-founded in 2015.
+                </p>
+                <p>
+                  You can find me on{' '}
+                  <a href="https://twitter.com/brian_lovin">Twitter</a> where I
+                  talk about design and development, or on{' '}
+                  <a href="https://github.com/brianlovin">GitHub</a> where I’m
+                  building in the open, or on{' '}
+                  <a href="https://figma.com/@brian">Figma</a> where I’m
+                  exploring how plugins can automate the tedious parts of
+                  interface design.
+                </p>
+              </div>
+              <div className="flex pt-6">
+                <Button href="https://changelog.brianlovin.com">
+                  View changelog
+                </Button>
+              </div>
+            </SectionContent>
+          </SectionContainer>
 
-        <SectionContainer>
-          <SectionTitle>Where</SectionTitle>
-          <SectionContent>
-            <Image
-              src="/static/img/nyc.png"
-              width={800}
-              height={350}
-              layout="responsive"
-              className="rounded-2xl"
-            />
-            <p className="flex items-center justify-end pt-2 space-x-2 text-sm md:text-right text-quaternary">
-              <MapPin size={12} />
-              <span>Brooklyn, New York</span>
-            </p>
-          </SectionContent>
-        </SectionContainer>
-
-        <SectionContainer>
-          <SectionTitle>Work</SectionTitle>
-          <SectionContent>
-            <div className="flex flex-col space-y-3">
-              {workHistory.map((job) => (
-                <TableRow
-                  href={job.href}
-                  title={job.title}
-                  subtitle={job.subtitle}
-                  date={job.date}
-                  key={job.href}
-                />
-              ))}
-            </div>
-          </SectionContent>
-        </SectionContainer>
-
-        <SectionContainer>
-          <SectionTitle>Speaking</SectionTitle>
-          <SectionContent>
-            <div className="flex flex-col space-y-3">
-              {speakingData.map((s) => (
-                <TableRow
-                  href={s.href}
-                  title={s.title}
-                  date={s.date}
-                  key={s.href}
-                />
-              ))}
-            </div>
-          </SectionContent>
-        </SectionContainer>
-
-        <SectionContainer>
-          <SectionTitle>Newsletter</SectionTitle>
-          <SectionContent>
-            <div className="prose">
-              <p>
-                Get updates about new posts, new projects, or other meaningful
-                updates to this site deliveblue to your inbox.
+          <SectionContainer>
+            <SectionTitle>Where</SectionTitle>
+            <SectionContent>
+              <Image
+                src="/static/img/nyc.png"
+                width={800}
+                height={350}
+                layout="responsive"
+                className="rounded-2xl"
+              />
+              <p className="flex items-center justify-end pt-2 space-x-2 text-sm md:text-right text-quaternary">
+                <MapPin size={12} />
+                <span>Brooklyn, New York</span>
               </p>
-            </div>
-            <NewsletterSubscriptionBox />
-          </SectionContent>
-        </SectionContainer>
-      </div>
-    </div>
+            </SectionContent>
+          </SectionContainer>
+
+          <SectionContainer>
+            <SectionTitle>Work</SectionTitle>
+            <SectionContent>
+              <div className="flex flex-col space-y-3">
+                {workHistory.map((job) => (
+                  <TableRow
+                    href={job.href}
+                    title={job.title}
+                    subtitle={job.subtitle}
+                    date={job.date}
+                    key={job.href}
+                  />
+                ))}
+              </div>
+            </SectionContent>
+          </SectionContainer>
+
+          <SectionContainer>
+            <SectionTitle>Speaking</SectionTitle>
+            <SectionContent>
+              <div className="flex flex-col space-y-3">
+                {speakingData.map((s) => (
+                  <TableRow
+                    href={s.href}
+                    title={s.title}
+                    date={s.date}
+                    key={s.href}
+                  />
+                ))}
+              </div>
+            </SectionContent>
+          </SectionContainer>
+
+          <SectionContainer>
+            <SectionTitle>Newsletter</SectionTitle>
+            <SectionContent>
+              <div className="prose">
+                <p>
+                  Get updates about new posts, new projects, or other meaningful
+                  updates to this site deliveblue to your inbox.
+                </p>
+              </div>
+              <NewsletterSubscriptionBox />
+            </SectionContent>
+          </SectionContainer>
+        </div>
+      </Detail.ContentContainer>
+    </Detail.Container>
   )
 }

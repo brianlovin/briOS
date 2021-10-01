@@ -5,6 +5,7 @@ import Byline from './Byline'
 import { HNPost as HNPostType } from '~/pages/hn'
 import { baseUrl } from '~/config/seo'
 import TitleBar from '../ListDetail/TitleBar'
+import { Detail } from '../ListDetail/Detail'
 
 interface Props {
   post: HNPostType
@@ -37,10 +38,7 @@ export function HNPost(props: Props) {
         }}
       />
 
-      <div
-        ref={scrollContainerRef}
-        className="w-full max-h-screen overflow-y-auto bg-white dark:bg-black"
-      >
+      <Detail.Container ref={scrollContainerRef}>
         <TitleBar
           backButtonHref="/hn"
           backButton
@@ -51,32 +49,29 @@ export function HNPost(props: Props) {
           scrollContainerRef={scrollContainerRef}
         />
 
-        <div className="max-w-3xl px-4 py-8 mx-auto md:px-8 xl:py-16">
-          <div data-cy="post" className="space-y-8">
-            <div className="space-y-4">
-              <h1
-                ref={titleRef}
-                className="font-sans text-2xl font-bold md:text-3xl text-primary"
-              >
-                {post.title}
-              </h1>
-              <Byline post={post} />
-            </div>
-            {post.content && (
-              <div
-                className={'prose lg:prose-lg'}
-                style={{
-                  display: 'grid',
-                }}
-                dangerouslySetInnerHTML={{ __html: post.content }}
-              />
-            )}
+        <Detail.ContentContainer>
+          <Detail.Header>
+            <Detail.Title ref={titleRef}>{post.title}</Detail.Title>
+            <Byline post={post} />
+          </Detail.Header>
+
+          {post.content && (
+            <div
+              className={'prose lg:prose-lg'}
+              style={{
+                display: 'grid',
+              }}
+              dangerouslySetInnerHTML={{ __html: post.content }}
+            />
+          )}
+
+          <div className="py-8">
             {comments.map((comment) => (
               <Comment key={comment.id} comment={comment} />
             ))}
           </div>
-        </div>
-      </div>
+        </Detail.ContentContainer>
+      </Detail.Container>
     </React.Fragment>
   )
 }
