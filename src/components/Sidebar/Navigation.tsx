@@ -119,6 +119,15 @@ export function SidebarNavigation() {
     'Projects',
 
     {
+      href: 'https://designdetails.fm',
+      label: 'Design Details',
+      icon: PodcastIcon,
+      trailingAccessory: ExternalLinkIcon,
+      isActive: false,
+      trailingAction: null,
+    },
+
+    {
       href: 'https://staff.design',
       label: 'Staff Design',
       icon: StaffDesignIcon,
@@ -137,20 +146,20 @@ export function SidebarNavigation() {
     },
 
     {
-      href: '/app-dissection',
-      label: 'App Dissection',
-      icon: AppDissectionIcon,
-      trailingAccessory: null,
-      isActive: router.asPath.indexOf('/app-dissection') >= 0,
-      trailingAction: null,
-    },
-
-    {
       href: '/hn',
       label: 'Hacker News',
       icon: HackerNewsIcon,
       trailingAccessory: null,
       isActive: router.asPath.indexOf('/hn') >= 0,
+      trailingAction: null,
+    },
+
+    {
+      href: '/app-dissection',
+      label: 'App Dissection',
+      icon: AppDissectionIcon,
+      trailingAccessory: null,
+      isActive: router.asPath.indexOf('/app-dissection') >= 0,
       trailingAction: null,
     },
 
