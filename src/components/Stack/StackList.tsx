@@ -5,8 +5,6 @@ import ListItem from '../ListDetail/ListItem'
 import { useRouter } from 'next/router'
 import ListContainer from '../ListDetail/ListContainer'
 import TitleBar from '../ListDetail/TitleBar'
-import { SmallButton } from '../Button'
-import { Rss } from 'react-feather'
 
 export const StackList = React.memo(() => {
   const router = useRouter()
@@ -14,15 +12,7 @@ export const StackList = React.memo(() => {
 
   return (
     <ListContainer onRef={setScrollContainerRef}>
-      <TitleBar
-        title="My Stack"
-        scrollContainerRef={scrollContainerRef}
-        trailingAccessory={
-          <SmallButton>
-            <Rss size={12} />
-          </SmallButton>
-        }
-      />
+      <TitleBar title="My Stack" scrollContainerRef={scrollContainerRef} />
 
       <div className="lg:p-3 lg:space-y-1">
         {stackData.map((stack) => {

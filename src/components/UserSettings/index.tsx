@@ -10,10 +10,12 @@ export function UserSettings() {
         <Detail.Header>
           <Detail.Title>Settings</Detail.Title>
         </Detail.Header>
-        <DeleteButton href="/api/auth/logout">Log out</DeleteButton>
-        <DeleteUserDialog>
-          <DeleteButton>Delete account</DeleteButton>
-        </DeleteUserDialog>
+        <div className="flex space-x-4">
+          <DeleteButton href="/api/auth/logout">Log out</DeleteButton>
+          <DeleteUserDialog>
+            <DeleteButton>Delete account</DeleteButton>
+          </DeleteUserDialog>
+        </div>
       </Detail.ContentContainer>
     </Detail.Container>
   )

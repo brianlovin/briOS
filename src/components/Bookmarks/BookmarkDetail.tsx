@@ -1,18 +1,11 @@
 import * as React from 'react'
 import { useRouter } from 'next/router'
-import {
-  CommentType,
-  useGetBookmarkQuery,
-  useGetCommentsQuery,
-} from '~/graphql/types.generated'
+import { CommentType, useGetBookmarkQuery } from '~/graphql/types.generated'
 import TitleBar from '~/components/ListDetail/TitleBar'
 import { Comments } from '~/components/Comments'
 import { BookmarkActions } from './BookmarkActions'
-import {
-  Detail,
-  DetailContainer,
-  DetailContentContainer,
-} from '../ListDetail/Detail'
+import { Detail } from '../ListDetail/Detail'
+import Button from '../Button'
 
 export function BookmarkDetail({ id }) {
   const scrollContainerRef: React.RefObject<HTMLDivElement> = React.useRef(null)
@@ -56,6 +49,11 @@ export function BookmarkDetail({ id }) {
           {data.bookmark.description && (
             <p className="prose text-primary">{data.bookmark.description}</p>
           )}
+          <div className="space-x-3">
+            <Button size="large" href={data.bookmark.url}>
+              View
+            </Button>
+          </div>
         </Detail.Header>
       </Detail.ContentContainer>
 

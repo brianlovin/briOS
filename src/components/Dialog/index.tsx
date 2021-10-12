@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useState } from 'react'
 import { X } from 'react-feather'
+import { GhostButton } from '../Button'
 
 export default function DialogComponent({ trigger, title, children }) {
   let [isOpen, setIsOpen] = useState(false)
@@ -59,13 +60,13 @@ export default function DialogComponent({ trigger, title, children }) {
                     >
                       {title}
                     </Dialog.Title>
-                    <button
+                    <GhostButton
+                      size="small-square"
                       onClick={closeModal}
                       ref={closeButtonRef}
-                      className="flex items-center justify-center p-2 rounded-md cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800"
                     >
-                      <X size={16} className="text-primary" />
-                    </button>
+                      <X size={16} />
+                    </GhostButton>
                   </div>
 
                   <div className="p-4">{children({ closeModal })}</div>

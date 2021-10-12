@@ -5,7 +5,7 @@ import QuestionReaction from './QuestionReaction'
 import EditQuestion from './EditQuestion'
 import { MarkdownRenderer } from '../MarkdownRenderer'
 import AudioPlayer from '../AudioPlayer'
-import { LinkButton } from '../Button'
+import Button from '../Button'
 
 interface Props {
   editable: boolean
@@ -41,7 +41,7 @@ export const QuestionItem = React.memo((props: Props) => {
             />
           </div>
           <div className="pb-2">
-            <LinkButton
+            <Button
               onClick={() => setTranscriptionIsVisible(!transcriptionIsVisible)}
             >
               <div className="flex items-center space-x-2">
@@ -76,7 +76,7 @@ export const QuestionItem = React.memo((props: Props) => {
                   {transcriptionIsVisible ? 'Hide' : 'Show'} transcript (beta)
                 </span>
               </div>
-            </LinkButton>
+            </Button>
           </div>
         </>
       )}

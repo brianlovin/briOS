@@ -3,8 +3,6 @@ import { useRouter } from 'next/router'
 import ListItem from '~/components/ListDetail/ListItem'
 import TitleBar from '~/components/ListDetail/TitleBar'
 import ListContainer from '~/components/ListDetail/ListContainer'
-import { SmallButton } from '~/components/Button'
-import { Rss } from 'react-feather'
 import { useGetPostsQuery } from '~/graphql/types.generated'
 
 export function PostsList() {
@@ -26,15 +24,7 @@ export function PostsList() {
 
   return (
     <ListContainer onRef={setScrollContainerRef}>
-      <TitleBar
-        title="Writing"
-        scrollContainerRef={scrollContainerRef}
-        trailingAccessory={
-          <SmallButton>
-            <Rss size={12} />
-          </SmallButton>
-        }
-      />
+      <TitleBar title="Writing" scrollContainerRef={scrollContainerRef} />
 
       <div className="lg:p-3 lg:space-y-1">
         {posts.map((post) => {

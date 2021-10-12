@@ -54,12 +54,7 @@ export default function NewsletterSubscriptionBox() {
               name="email"
             />
           </label>
-          <Button
-            onClick={submit}
-            disabled={status === 'submitting' || !email}
-            type="submit"
-            className="w-full"
-          >
+          <Button onClick={submit} type="submit">
             Subscribe
           </Button>
         </form>

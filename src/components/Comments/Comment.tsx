@@ -2,6 +2,7 @@ import * as React from 'react'
 import Image from 'next/image'
 import { Comment as CommentProp } from '~/graphql/types.generated'
 import { MoreHorizontal } from 'react-feather'
+import { GhostButton } from '../Button'
 
 interface Props {
   comment: CommentProp
@@ -29,9 +30,9 @@ export const Comment = React.memo(function MemoComment({ comment }: Props) {
         </div>
 
         {(comment.viewerCanDelete || comment.viewerCanEdit) && (
-          <div className="flex items-center justify-center p-2 text-gray-500 rounded-md cursor-pointer hover:text-gray-700 hover:bg-gray-200 dark:hover:bg-gray-800">
+          <GhostButton size="small-square">
             <MoreHorizontal size={16} />
-          </div>
+          </GhostButton>
         )}
       </div>
 

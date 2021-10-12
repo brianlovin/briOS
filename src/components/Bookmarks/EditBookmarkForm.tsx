@@ -119,7 +119,6 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
 
       <div className="flex justify-between">
         <DeleteButton
-          className="text-red-500"
           onClick={() => {
             closeModal()
             handleDelete()

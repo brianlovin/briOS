@@ -25,13 +25,14 @@ import {
   UserRole,
   useViewerQuery,
 } from '~/graphql/types.generated'
+import { GhostButton } from '../Button'
 
 function ThisAddBookmarkDialog() {
   return (
     <AddBookmarkDialog>
-      <div className="flex items-center justify-center p-2.5 rounded-md cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700">
-        <Plus size={16} className="text-primary" />
-      </div>
+      <GhostButton size="small-square">
+        <Plus size={16} />
+      </GhostButton>
     </AddBookmarkDialog>
   )
 }
@@ -48,17 +49,13 @@ function PendingQuestionsCount() {
   const isActive = router.asPath.startsWith('/ama/pending')
 
   return (
-    <Link href="/ama/pending">
-      <a
-        className={`flex flex-none flex-col items-center justify-center text-sm font-medium rounded-md cursor-pointer w-9 h-9 ${
-          data.amaQuestions.length === 0 ? 'text-quaternary' : 'text-primary'
-        } ${
-          isActive && 'bg-gray-200 dark:bg-gray-700'
-        } hover:bg-gray-200 dark:hover:bg-gray-700`}
-      >
-        {data.amaQuestions.length}
-      </a>
-    </Link>
+    <GhostButton
+      style={{ minWidth: '32px' }}
+      size="small-square"
+      href="/ama/pending"
+    >
+      {data.amaQuestions.length}
+    </GhostButton>
   )
 }
 

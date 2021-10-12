@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { UserRole, useViewerQuery, Bookmark } from '~/graphql/types.generated'
 import { EditBookmarkDialog } from '~/components/Bookmarks/EditBookmarkDialog'
+import Button from '../Button'
 
 interface Props {
   bookmark: Bookmark
@@ -12,9 +13,7 @@ export function BookmarkActions({ bookmark }: Props) {
     return (
       <div>
         <EditBookmarkDialog bookmark={bookmark}>
-          <div className="flex items-center justify-center p-2 px-4 text-sm font-semibold rounded-md cursor-pointer text-primary hover:bg-gray-200 dark:hover:bg-gray-800">
-            Edit
-          </div>
+          <Button>Edit</Button>
         </EditBookmarkDialog>
       </div>
     )

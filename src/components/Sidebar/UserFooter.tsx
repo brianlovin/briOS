@@ -4,6 +4,7 @@ import Link from 'next/link'
 import LoadingSpinner from '~/components/LoadingSpinner'
 import { Settings } from 'react-feather'
 import { useViewerQuery } from '~/graphql/types.generated'
+import { GhostButton } from '../Button'
 
 function Container({ children }) {
   return (
@@ -29,12 +30,7 @@ export function UserFooter() {
   if (error) {
     return (
       <Container>
-        <a
-          className="w-full text-sm font-medium py-1.5 text-center rounded-md text-primary hover:bg-gray-200 dark:hover:bg-gray-700"
-          href="/api/auth/login"
-        >
-          Sign in
-        </a>
+        <GhostButton href="/api/auth/login">Sign in</GhostButton>
       </Container>
     )
   }
@@ -53,23 +49,18 @@ export function UserFooter() {
             />
           </a>
         </Link>
-        <Link href="/settings">
-          <a className="p-2 text-center rounded-md text-primary hover:bg-gray-200 dark:hover:bg-gray-700">
-            <Settings size={16} />
-          </a>
-        </Link>
+        <GhostButton size="small-square" href="/settings">
+          <Settings size={16} />
+        </GhostButton>
       </Container>
     )
   }
 
   return (
     <Container>
-      <a
-        className="w-full text-sm font-medium py-1.5 text-center rounded-md text-primary hover:bg-gray-200 dark:hover:bg-gray-700"
-        href="/api/auth/login"
-      >
+      <GhostButton style={{ width: '100%' }} href="/api/auth/login">
         Sign in
-      </a>
+      </GhostButton>
     </Container>
   )
 }
