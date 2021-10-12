@@ -8,5 +8,6 @@ export const UserInfoFragment = gql`
     avatar
     name
     role
+    isViewer
   }
 `

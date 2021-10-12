@@ -6,16 +6,17 @@ import {
   getQuestionAuthor,
   getQuestionComments,
 } from '~/graphql/resolvers/queries/ama'
+import { Context } from '~/graphql/context'
 
 export default {
   Query,
   Mutation,
   Comment: {
     author: getCommentAuthor,
-    viewerCanEdit: ({ userId }, _, { viewer }) => {
+    viewerCanEdit: ({ userId }, _, { viewer }: Context) => {
       return userId === viewer?.id
     },
-    viewerCanDelete: ({ userId }, _, { viewer }) => {
+    viewerCanDelete: ({ userId }, _, { viewer }: Context) => {
       return userId === viewer?.id || viewer?.role === UserRole.Admin
     },
     createdAt: ({ createdAt }) =>
@@ -34,5 +35,10 @@ export default {
         month: 'short',
         day: 'numeric',
       }),
+  },
+  User: {
+    isViewer: ({ id }, _, { viewer }: Context) => {
+      return viewer && viewer.id === id
+    },
   },
 }

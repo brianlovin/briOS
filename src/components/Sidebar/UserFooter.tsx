@@ -42,17 +42,19 @@ export function UserFooter() {
   if (data?.viewer) {
     return (
       <Container>
-        <div className="flex items-center flex-none">
-          <Image
-            src={data.viewer.avatar}
-            width={24}
-            height={24}
-            layout="fixed"
-            className="rounded-full"
-          />
-        </div>
+        <Link href={`/u/${data.viewer.username}`}>
+          <a className="flex items-center flex-none">
+            <Image
+              src={data.viewer.avatar}
+              width={24}
+              height={24}
+              layout="fixed"
+              className="rounded-full"
+            />
+          </a>
+        </Link>
         <Link href="/settings">
-          <a className="p-2 text-center rounded-md text-tertiary hover:bg-gray-200 dark:hover:bg-gray-700">
+          <a className="p-2 text-center rounded-md text-primary hover:bg-gray-200 dark:hover:bg-gray-700">
             <Settings size={16} />
           </a>
         </Link>

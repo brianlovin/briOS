@@ -94,6 +94,7 @@ export default gql`
     username: String
     avatar: String
     name: String
+    isViewer: Boolean
   }
 
   type Comment {
@@ -108,6 +109,7 @@ export default gql`
 
   type Query {
     viewer: User
+    user(username: String!): User
     bookmark(id: ID!): Bookmark
     bookmarks(skip: Int): [Bookmark]!
     comment(id: ID!): Comment

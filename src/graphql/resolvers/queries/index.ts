@@ -15,9 +15,11 @@ import {
 } from '~/graphql/resolvers/queries/ama'
 import { getComment, getComments } from '~/graphql/resolvers/queries/comment'
 import { requiresAdmin } from '~/graphql/helpers/requiresAdmin'
+import { getUser } from '~/graphql/resolvers/queries/user'
 
 export default {
   viewer: viewer,
+  user: getUser,
   bookmark: getBookmark,
   bookmarks: getBookmarks,
   episodes: getEpisodes,
