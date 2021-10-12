@@ -290,36 +290,41 @@ export type AmaInfoFragment = {
   __typename?: 'AMA'
   id: string
   createdAt: string
-  updatedAt?: Maybe<string>
-  text?: Maybe<string>
-  author?: Maybe<{
-    __typename: 'User'
-    id: string
-    username?: Maybe<string>
-    avatar?: Maybe<string>
-    name?: Maybe<string>
-    role?: Maybe<UserRole>
-    isViewer?: Maybe<boolean>
-  }>
-  comments: Array<
-    Maybe<{
-      __typename: 'Comment'
-      id: string
-      createdAt: string
-      updatedAt?: Maybe<string>
-      text?: Maybe<string>
-      viewerCanEdit?: Maybe<boolean>
-      viewerCanDelete?: Maybe<boolean>
-      author: {
+  updatedAt?: string | null | undefined
+  text?: string | null | undefined
+  author?:
+    | {
         __typename: 'User'
         id: string
-        username?: Maybe<string>
-        avatar?: Maybe<string>
-        name?: Maybe<string>
-        role?: Maybe<UserRole>
-        isViewer?: Maybe<boolean>
+        username?: string | null | undefined
+        avatar?: string | null | undefined
+        name?: string | null | undefined
+        role?: UserRole | null | undefined
+        isViewer?: boolean | null | undefined
       }
-    }>
+    | null
+    | undefined
+  comments: Array<
+    | {
+        __typename: 'Comment'
+        id: string
+        createdAt: string
+        updatedAt?: string | null | undefined
+        text?: string | null | undefined
+        viewerCanEdit?: boolean | null | undefined
+        viewerCanDelete?: boolean | null | undefined
+        author: {
+          __typename: 'User'
+          id: string
+          username?: string | null | undefined
+          avatar?: string | null | undefined
+          name?: string | null | undefined
+          role?: UserRole | null | undefined
+          isViewer?: boolean | null | undefined
+        }
+      }
+    | null
+    | undefined
   >
 }
 
@@ -329,71 +334,71 @@ export type BookmarkInfoFragment = {
   createdAt: string
   url: string
   host: string
-  title?: Maybe<string>
-  image?: Maybe<string>
-  siteName?: Maybe<string>
-  description?: Maybe<string>
+  title?: string | null | undefined
+  image?: string | null | undefined
+  siteName?: string | null | undefined
+  description?: string | null | undefined
 }
 
 export type CommentInfoFragment = {
   __typename: 'Comment'
   id: string
   createdAt: string
-  updatedAt?: Maybe<string>
-  text?: Maybe<string>
-  viewerCanEdit?: Maybe<boolean>
-  viewerCanDelete?: Maybe<boolean>
+  updatedAt?: string | null | undefined
+  text?: string | null | undefined
+  viewerCanEdit?: boolean | null | undefined
+  viewerCanDelete?: boolean | null | undefined
   author: {
     __typename: 'User'
     id: string
-    username?: Maybe<string>
-    avatar?: Maybe<string>
-    name?: Maybe<string>
-    role?: Maybe<UserRole>
-    isViewer?: Maybe<boolean>
+    username?: string | null | undefined
+    avatar?: string | null | undefined
+    name?: string | null | undefined
+    role?: UserRole | null | undefined
+    isViewer?: boolean | null | undefined
   }
 }
 
 export type EpisodeInfoFragment = {
   __typename?: 'Episode'
-  id?: Maybe<string>
-  description?: Maybe<string>
-  legacy_id?: Maybe<string>
-  long_description?: Maybe<string>
-  published_at?: Maybe<string>
-  status?: Maybe<string>
-  title?: Maybe<string>
-  token?: Maybe<string>
+  id?: string | null | undefined
+  description?: string | null | undefined
+  legacy_id?: string | null | undefined
+  long_description?: string | null | undefined
+  published_at?: string | null | undefined
+  status?: string | null | undefined
+  title?: string | null | undefined
+  token?: string | null | undefined
 }
 
 export type PostInfoFragment = {
   __typename?: 'Post'
-  id?: Maybe<string>
-  title?: Maybe<string>
-  slug?: Maybe<string>
-  updated_at?: Maybe<string>
-  published_at?: Maybe<string>
-  excerpt?: Maybe<string>
-  feature_image?: Maybe<string>
-  html?: Maybe<string>
+  id?: string | null | undefined
+  title?: string | null | undefined
+  slug?: string | null | undefined
+  updated_at?: string | null | undefined
+  published_at?: string | null | undefined
+  excerpt?: string | null | undefined
+  feature_image?: string | null | undefined
+  html?: string | null | undefined
 }
 
 export type RepoInfoFragment = {
   __typename?: 'Repo'
-  org?: Maybe<string>
-  name?: Maybe<string>
-  description?: Maybe<string>
-  stars?: Maybe<number>
+  org?: string | null | undefined
+  name?: string | null | undefined
+  description?: string | null | undefined
+  stars?: number | null | undefined
 }
 
 export type UserInfoFragment = {
   __typename: 'User'
   id: string
-  username?: Maybe<string>
-  avatar?: Maybe<string>
-  name?: Maybe<string>
-  role?: Maybe<UserRole>
-  isViewer?: Maybe<boolean>
+  username?: string | null | undefined
+  avatar?: string | null | undefined
+  name?: string | null | undefined
+  role?: UserRole | null | undefined
+  isViewer?: boolean | null | undefined
 }
 
 export type EditAmaQuestionMutationVariables = Exact<{
@@ -408,42 +413,50 @@ export type EditAmaQuestionMutationVariables = Exact<{
 
 export type EditAmaQuestionMutation = {
   __typename?: 'Mutation'
-  editAMAQuestion?: Maybe<{
-    __typename?: 'AMA'
-    id: string
-    createdAt: string
-    updatedAt?: Maybe<string>
-    text?: Maybe<string>
-    author?: Maybe<{
-      __typename: 'User'
-      id: string
-      username?: Maybe<string>
-      avatar?: Maybe<string>
-      name?: Maybe<string>
-      role?: Maybe<UserRole>
-      isViewer?: Maybe<boolean>
-    }>
-    comments: Array<
-      Maybe<{
-        __typename: 'Comment'
+  editAMAQuestion?:
+    | {
+        __typename?: 'AMA'
         id: string
         createdAt: string
-        updatedAt?: Maybe<string>
-        text?: Maybe<string>
-        viewerCanEdit?: Maybe<boolean>
-        viewerCanDelete?: Maybe<boolean>
-        author: {
-          __typename: 'User'
-          id: string
-          username?: Maybe<string>
-          avatar?: Maybe<string>
-          name?: Maybe<string>
-          role?: Maybe<UserRole>
-          isViewer?: Maybe<boolean>
-        }
-      }>
-    >
-  }>
+        updatedAt?: string | null | undefined
+        text?: string | null | undefined
+        author?:
+          | {
+              __typename: 'User'
+              id: string
+              username?: string | null | undefined
+              avatar?: string | null | undefined
+              name?: string | null | undefined
+              role?: UserRole | null | undefined
+              isViewer?: boolean | null | undefined
+            }
+          | null
+          | undefined
+        comments: Array<
+          | {
+              __typename: 'Comment'
+              id: string
+              createdAt: string
+              updatedAt?: string | null | undefined
+              text?: string | null | undefined
+              viewerCanEdit?: boolean | null | undefined
+              viewerCanDelete?: boolean | null | undefined
+              author: {
+                __typename: 'User'
+                id: string
+                username?: string | null | undefined
+                avatar?: string | null | undefined
+                name?: string | null | undefined
+                role?: UserRole | null | undefined
+                isViewer?: boolean | null | undefined
+              }
+            }
+          | null
+          | undefined
+        >
+      }
+    | null
+    | undefined
 }
 
 export type DeleteAmaQuestionMutationVariables = Exact<{
@@ -452,7 +465,7 @@ export type DeleteAmaQuestionMutationVariables = Exact<{
 
 export type DeleteAmaQuestionMutation = {
   __typename?: 'Mutation'
-  deleteAMAQuestion?: Maybe<boolean>
+  deleteAMAQuestion?: boolean | null | undefined
 }
 
 export type AddAmaQuestionMutationVariables = Exact<{
@@ -461,7 +474,7 @@ export type AddAmaQuestionMutationVariables = Exact<{
 
 export type AddAmaQuestionMutation = {
   __typename?: 'Mutation'
-  addAMAQuestion?: Maybe<boolean>
+  addAMAQuestion?: boolean | null | undefined
 }
 
 export type AddAmaReactionMutationVariables = Exact<{
@@ -470,42 +483,50 @@ export type AddAmaReactionMutationVariables = Exact<{
 
 export type AddAmaReactionMutation = {
   __typename?: 'Mutation'
-  addAMAReaction?: Maybe<{
-    __typename?: 'AMA'
-    id: string
-    createdAt: string
-    updatedAt?: Maybe<string>
-    text?: Maybe<string>
-    author?: Maybe<{
-      __typename: 'User'
-      id: string
-      username?: Maybe<string>
-      avatar?: Maybe<string>
-      name?: Maybe<string>
-      role?: Maybe<UserRole>
-      isViewer?: Maybe<boolean>
-    }>
-    comments: Array<
-      Maybe<{
-        __typename: 'Comment'
+  addAMAReaction?:
+    | {
+        __typename?: 'AMA'
         id: string
         createdAt: string
-        updatedAt?: Maybe<string>
-        text?: Maybe<string>
-        viewerCanEdit?: Maybe<boolean>
-        viewerCanDelete?: Maybe<boolean>
-        author: {
-          __typename: 'User'
-          id: string
-          username?: Maybe<string>
-          avatar?: Maybe<string>
-          name?: Maybe<string>
-          role?: Maybe<UserRole>
-          isViewer?: Maybe<boolean>
-        }
-      }>
-    >
-  }>
+        updatedAt?: string | null | undefined
+        text?: string | null | undefined
+        author?:
+          | {
+              __typename: 'User'
+              id: string
+              username?: string | null | undefined
+              avatar?: string | null | undefined
+              name?: string | null | undefined
+              role?: UserRole | null | undefined
+              isViewer?: boolean | null | undefined
+            }
+          | null
+          | undefined
+        comments: Array<
+          | {
+              __typename: 'Comment'
+              id: string
+              createdAt: string
+              updatedAt?: string | null | undefined
+              text?: string | null | undefined
+              viewerCanEdit?: boolean | null | undefined
+              viewerCanDelete?: boolean | null | undefined
+              author: {
+                __typename: 'User'
+                id: string
+                username?: string | null | undefined
+                avatar?: string | null | undefined
+                name?: string | null | undefined
+                role?: UserRole | null | undefined
+                isViewer?: boolean | null | undefined
+              }
+            }
+          | null
+          | undefined
+        >
+      }
+    | null
+    | undefined
 }
 
 export type AddAmaAudioPlayMutationVariables = Exact<{
@@ -514,7 +535,7 @@ export type AddAmaAudioPlayMutationVariables = Exact<{
 
 export type AddAmaAudioPlayMutation = {
   __typename?: 'Mutation'
-  addAMAAudioPlay?: Maybe<boolean>
+  addAMAAudioPlay?: boolean | null | undefined
 }
 
 export type TranscribeAudioMutationVariables = Exact<{
@@ -523,7 +544,7 @@ export type TranscribeAudioMutationVariables = Exact<{
 
 export type TranscribeAudioMutation = {
   __typename?: 'Mutation'
-  transcribeAudio?: Maybe<string>
+  transcribeAudio?: string | null | undefined
 }
 
 export type EditBookmarkMutationVariables = Exact<{
@@ -533,17 +554,20 @@ export type EditBookmarkMutationVariables = Exact<{
 
 export type EditBookmarkMutation = {
   __typename?: 'Mutation'
-  editBookmark?: Maybe<{
-    __typename: 'Bookmark'
-    id: string
-    createdAt: string
-    url: string
-    host: string
-    title?: Maybe<string>
-    image?: Maybe<string>
-    siteName?: Maybe<string>
-    description?: Maybe<string>
-  }>
+  editBookmark?:
+    | {
+        __typename: 'Bookmark'
+        id: string
+        createdAt: string
+        url: string
+        host: string
+        title?: string | null | undefined
+        image?: string | null | undefined
+        siteName?: string | null | undefined
+        description?: string | null | undefined
+      }
+    | null
+    | undefined
 }
 
 export type DeleteBookmarkMutationVariables = Exact<{
@@ -552,7 +576,7 @@ export type DeleteBookmarkMutationVariables = Exact<{
 
 export type DeleteBookmarkMutation = {
   __typename?: 'Mutation'
-  deleteBookmark?: Maybe<boolean>
+  deleteBookmark?: boolean | null | undefined
 }
 
 export type AddBookmarkMutationVariables = Exact<{
@@ -561,17 +585,20 @@ export type AddBookmarkMutationVariables = Exact<{
 
 export type AddBookmarkMutation = {
   __typename?: 'Mutation'
-  addBookmark?: Maybe<{
-    __typename: 'Bookmark'
-    id: string
-    createdAt: string
-    url: string
-    host: string
-    title?: Maybe<string>
-    image?: Maybe<string>
-    siteName?: Maybe<string>
-    description?: Maybe<string>
-  }>
+  addBookmark?:
+    | {
+        __typename: 'Bookmark'
+        id: string
+        createdAt: string
+        url: string
+        host: string
+        title?: string | null | undefined
+        image?: string | null | undefined
+        siteName?: string | null | undefined
+        description?: string | null | undefined
+      }
+    | null
+    | undefined
 }
 
 export type AddBookmarkReactionMutationVariables = Exact<{
@@ -580,17 +607,20 @@ export type AddBookmarkReactionMutationVariables = Exact<{
 
 export type AddBookmarkReactionMutation = {
   __typename?: 'Mutation'
-  addBookmarkReaction?: Maybe<{
-    __typename: 'Bookmark'
-    id: string
-    createdAt: string
-    url: string
-    host: string
-    title?: Maybe<string>
-    image?: Maybe<string>
-    siteName?: Maybe<string>
-    description?: Maybe<string>
-  }>
+  addBookmarkReaction?:
+    | {
+        __typename: 'Bookmark'
+        id: string
+        createdAt: string
+        url: string
+        host: string
+        title?: string | null | undefined
+        image?: string | null | undefined
+        siteName?: string | null | undefined
+        description?: string | null | undefined
+      }
+    | null
+    | undefined
 }
 
 export type AddCommentMutationVariables = Exact<{
@@ -601,24 +631,27 @@ export type AddCommentMutationVariables = Exact<{
 
 export type AddCommentMutation = {
   __typename?: 'Mutation'
-  addComment?: Maybe<{
-    __typename: 'Comment'
-    id: string
-    createdAt: string
-    updatedAt?: Maybe<string>
-    text?: Maybe<string>
-    viewerCanEdit?: Maybe<boolean>
-    viewerCanDelete?: Maybe<boolean>
-    author: {
-      __typename: 'User'
-      id: string
-      username?: Maybe<string>
-      avatar?: Maybe<string>
-      name?: Maybe<string>
-      role?: Maybe<UserRole>
-      isViewer?: Maybe<boolean>
-    }
-  }>
+  addComment?:
+    | {
+        __typename: 'Comment'
+        id: string
+        createdAt: string
+        updatedAt?: string | null | undefined
+        text?: string | null | undefined
+        viewerCanEdit?: boolean | null | undefined
+        viewerCanDelete?: boolean | null | undefined
+        author: {
+          __typename: 'User'
+          id: string
+          username?: string | null | undefined
+          avatar?: string | null | undefined
+          name?: string | null | undefined
+          role?: UserRole | null | undefined
+          isViewer?: boolean | null | undefined
+        }
+      }
+    | null
+    | undefined
 }
 
 export type EditCommentMutationVariables = Exact<{
@@ -628,24 +661,27 @@ export type EditCommentMutationVariables = Exact<{
 
 export type EditCommentMutation = {
   __typename?: 'Mutation'
-  editComment?: Maybe<{
-    __typename: 'Comment'
-    id: string
-    createdAt: string
-    updatedAt?: Maybe<string>
-    text?: Maybe<string>
-    viewerCanEdit?: Maybe<boolean>
-    viewerCanDelete?: Maybe<boolean>
-    author: {
-      __typename: 'User'
-      id: string
-      username?: Maybe<string>
-      avatar?: Maybe<string>
-      name?: Maybe<string>
-      role?: Maybe<UserRole>
-      isViewer?: Maybe<boolean>
-    }
-  }>
+  editComment?:
+    | {
+        __typename: 'Comment'
+        id: string
+        createdAt: string
+        updatedAt?: string | null | undefined
+        text?: string | null | undefined
+        viewerCanEdit?: boolean | null | undefined
+        viewerCanDelete?: boolean | null | undefined
+        author: {
+          __typename: 'User'
+          id: string
+          username?: string | null | undefined
+          avatar?: string | null | undefined
+          name?: string | null | undefined
+          role?: UserRole | null | undefined
+          isViewer?: boolean | null | undefined
+        }
+      }
+    | null
+    | undefined
 }
 
 export type DeleteCommentMutationVariables = Exact<{
@@ -654,14 +690,14 @@ export type DeleteCommentMutationVariables = Exact<{
 
 export type DeleteCommentMutation = {
   __typename?: 'Mutation'
-  deleteComment?: Maybe<boolean>
+  deleteComment?: boolean | null | undefined
 }
 
 export type DeleteUserMutationVariables = Exact<{ [key: string]: never }>
 
 export type DeleteUserMutation = {
   __typename?: 'Mutation'
-  deleteUser?: Maybe<boolean>
+  deleteUser?: boolean | null | undefined
 }
 
 export type GetAmaQuestionsQueryVariables = Exact<{
@@ -672,42 +708,49 @@ export type GetAmaQuestionsQueryVariables = Exact<{
 export type GetAmaQuestionsQuery = {
   __typename?: 'Query'
   amaQuestions: Array<
-    Maybe<{
-      __typename?: 'AMA'
-      id: string
-      createdAt: string
-      updatedAt?: Maybe<string>
-      text?: Maybe<string>
-      author?: Maybe<{
-        __typename: 'User'
+    | {
+        __typename?: 'AMA'
         id: string
-        username?: Maybe<string>
-        avatar?: Maybe<string>
-        name?: Maybe<string>
-        role?: Maybe<UserRole>
-        isViewer?: Maybe<boolean>
-      }>
-      comments: Array<
-        Maybe<{
-          __typename: 'Comment'
-          id: string
-          createdAt: string
-          updatedAt?: Maybe<string>
-          text?: Maybe<string>
-          viewerCanEdit?: Maybe<boolean>
-          viewerCanDelete?: Maybe<boolean>
-          author: {
-            __typename: 'User'
-            id: string
-            username?: Maybe<string>
-            avatar?: Maybe<string>
-            name?: Maybe<string>
-            role?: Maybe<UserRole>
-            isViewer?: Maybe<boolean>
-          }
-        }>
-      >
-    }>
+        createdAt: string
+        updatedAt?: string | null | undefined
+        text?: string | null | undefined
+        author?:
+          | {
+              __typename: 'User'
+              id: string
+              username?: string | null | undefined
+              avatar?: string | null | undefined
+              name?: string | null | undefined
+              role?: UserRole | null | undefined
+              isViewer?: boolean | null | undefined
+            }
+          | null
+          | undefined
+        comments: Array<
+          | {
+              __typename: 'Comment'
+              id: string
+              createdAt: string
+              updatedAt?: string | null | undefined
+              text?: string | null | undefined
+              viewerCanEdit?: boolean | null | undefined
+              viewerCanDelete?: boolean | null | undefined
+              author: {
+                __typename: 'User'
+                id: string
+                username?: string | null | undefined
+                avatar?: string | null | undefined
+                name?: string | null | undefined
+                role?: UserRole | null | undefined
+                isViewer?: boolean | null | undefined
+              }
+            }
+          | null
+          | undefined
+        >
+      }
+    | null
+    | undefined
   >
 }
 
@@ -717,42 +760,50 @@ export type GetAmaQuestionQueryVariables = Exact<{
 
 export type GetAmaQuestionQuery = {
   __typename?: 'Query'
-  amaQuestion?: Maybe<{
-    __typename?: 'AMA'
-    id: string
-    createdAt: string
-    updatedAt?: Maybe<string>
-    text?: Maybe<string>
-    author?: Maybe<{
-      __typename: 'User'
-      id: string
-      username?: Maybe<string>
-      avatar?: Maybe<string>
-      name?: Maybe<string>
-      role?: Maybe<UserRole>
-      isViewer?: Maybe<boolean>
-    }>
-    comments: Array<
-      Maybe<{
-        __typename: 'Comment'
+  amaQuestion?:
+    | {
+        __typename?: 'AMA'
         id: string
         createdAt: string
-        updatedAt?: Maybe<string>
-        text?: Maybe<string>
-        viewerCanEdit?: Maybe<boolean>
-        viewerCanDelete?: Maybe<boolean>
-        author: {
-          __typename: 'User'
-          id: string
-          username?: Maybe<string>
-          avatar?: Maybe<string>
-          name?: Maybe<string>
-          role?: Maybe<UserRole>
-          isViewer?: Maybe<boolean>
-        }
-      }>
-    >
-  }>
+        updatedAt?: string | null | undefined
+        text?: string | null | undefined
+        author?:
+          | {
+              __typename: 'User'
+              id: string
+              username?: string | null | undefined
+              avatar?: string | null | undefined
+              name?: string | null | undefined
+              role?: UserRole | null | undefined
+              isViewer?: boolean | null | undefined
+            }
+          | null
+          | undefined
+        comments: Array<
+          | {
+              __typename: 'Comment'
+              id: string
+              createdAt: string
+              updatedAt?: string | null | undefined
+              text?: string | null | undefined
+              viewerCanEdit?: boolean | null | undefined
+              viewerCanDelete?: boolean | null | undefined
+              author: {
+                __typename: 'User'
+                id: string
+                username?: string | null | undefined
+                avatar?: string | null | undefined
+                name?: string | null | undefined
+                role?: UserRole | null | undefined
+                isViewer?: boolean | null | undefined
+              }
+            }
+          | null
+          | undefined
+        >
+      }
+    | null
+    | undefined
 }
 
 export type SignedUploadUrlQueryVariables = Exact<{
@@ -761,7 +812,7 @@ export type SignedUploadUrlQueryVariables = Exact<{
 
 export type SignedUploadUrlQuery = {
   __typename?: 'Query'
-  signedUploadUrl?: Maybe<string>
+  signedUploadUrl?: string | null | undefined
 }
 
 export type SignedPlaybackUrlQueryVariables = Exact<{
@@ -770,7 +821,7 @@ export type SignedPlaybackUrlQueryVariables = Exact<{
 
 export type SignedPlaybackUrlQuery = {
   __typename?: 'Query'
-  signedPlaybackUrl?: Maybe<string>
+  signedPlaybackUrl?: string | null | undefined
 }
 
 export type TranscriptionQueryVariables = Exact<{
@@ -779,7 +830,7 @@ export type TranscriptionQueryVariables = Exact<{
 
 export type TranscriptionQuery = {
   __typename?: 'Query'
-  transcription?: Maybe<string>
+  transcription?: string | null | undefined
 }
 
 export type GetBookmarksQueryVariables = Exact<{
@@ -789,17 +840,19 @@ export type GetBookmarksQueryVariables = Exact<{
 export type GetBookmarksQuery = {
   __typename?: 'Query'
   bookmarks: Array<
-    Maybe<{
-      __typename: 'Bookmark'
-      id: string
-      createdAt: string
-      url: string
-      host: string
-      title?: Maybe<string>
-      image?: Maybe<string>
-      siteName?: Maybe<string>
-      description?: Maybe<string>
-    }>
+    | {
+        __typename: 'Bookmark'
+        id: string
+        createdAt: string
+        url: string
+        host: string
+        title?: string | null | undefined
+        image?: string | null | undefined
+        siteName?: string | null | undefined
+        description?: string | null | undefined
+      }
+    | null
+    | undefined
   >
 }
 
@@ -809,17 +862,20 @@ export type GetBookmarkQueryVariables = Exact<{
 
 export type GetBookmarkQuery = {
   __typename?: 'Query'
-  bookmark?: Maybe<{
-    __typename: 'Bookmark'
-    id: string
-    createdAt: string
-    url: string
-    host: string
-    title?: Maybe<string>
-    image?: Maybe<string>
-    siteName?: Maybe<string>
-    description?: Maybe<string>
-  }>
+  bookmark?:
+    | {
+        __typename: 'Bookmark'
+        id: string
+        createdAt: string
+        url: string
+        host: string
+        title?: string | null | undefined
+        image?: string | null | undefined
+        siteName?: string | null | undefined
+        description?: string | null | undefined
+      }
+    | null
+    | undefined
 }
 
 export type GetCommentsQueryVariables = Exact<{
@@ -830,24 +886,26 @@ export type GetCommentsQueryVariables = Exact<{
 export type GetCommentsQuery = {
   __typename?: 'Query'
   comments: Array<
-    Maybe<{
-      __typename: 'Comment'
-      id: string
-      createdAt: string
-      updatedAt?: Maybe<string>
-      text?: Maybe<string>
-      viewerCanEdit?: Maybe<boolean>
-      viewerCanDelete?: Maybe<boolean>
-      author: {
-        __typename: 'User'
+    | {
+        __typename: 'Comment'
         id: string
-        username?: Maybe<string>
-        avatar?: Maybe<string>
-        name?: Maybe<string>
-        role?: Maybe<UserRole>
-        isViewer?: Maybe<boolean>
+        createdAt: string
+        updatedAt?: string | null | undefined
+        text?: string | null | undefined
+        viewerCanEdit?: boolean | null | undefined
+        viewerCanDelete?: boolean | null | undefined
+        author: {
+          __typename: 'User'
+          id: string
+          username?: string | null | undefined
+          avatar?: string | null | undefined
+          name?: string | null | undefined
+          role?: UserRole | null | undefined
+          isViewer?: boolean | null | undefined
+        }
       }
-    }>
+    | null
+    | undefined
   >
 }
 
@@ -856,17 +914,19 @@ export type GetEpisodesQueryVariables = Exact<{ [key: string]: never }>
 export type GetEpisodesQuery = {
   __typename?: 'Query'
   episodes: Array<
-    Maybe<{
-      __typename?: 'Episode'
-      id?: Maybe<string>
-      description?: Maybe<string>
-      legacy_id?: Maybe<string>
-      long_description?: Maybe<string>
-      published_at?: Maybe<string>
-      status?: Maybe<string>
-      title?: Maybe<string>
-      token?: Maybe<string>
-    }>
+    | {
+        __typename?: 'Episode'
+        id?: string | null | undefined
+        description?: string | null | undefined
+        legacy_id?: string | null | undefined
+        long_description?: string | null | undefined
+        published_at?: string | null | undefined
+        status?: string | null | undefined
+        title?: string | null | undefined
+        token?: string | null | undefined
+      }
+    | null
+    | undefined
   >
 }
 
@@ -875,43 +935,49 @@ export type GetHomeQueryVariables = Exact<{ [key: string]: never }>
 export type GetHomeQuery = {
   __typename?: 'Query'
   recent: Array<
-    Maybe<{
-      __typename?: 'Post'
-      id?: Maybe<string>
-      title?: Maybe<string>
-      slug?: Maybe<string>
-      updated_at?: Maybe<string>
-      published_at?: Maybe<string>
-      excerpt?: Maybe<string>
-      feature_image?: Maybe<string>
-      html?: Maybe<string>
-    }>
+    | {
+        __typename?: 'Post'
+        id?: string | null | undefined
+        title?: string | null | undefined
+        slug?: string | null | undefined
+        updated_at?: string | null | undefined
+        published_at?: string | null | undefined
+        excerpt?: string | null | undefined
+        feature_image?: string | null | undefined
+        html?: string | null | undefined
+      }
+    | null
+    | undefined
   >
   popular: Array<
-    Maybe<{
-      __typename?: 'Post'
-      id?: Maybe<string>
-      title?: Maybe<string>
-      slug?: Maybe<string>
-      updated_at?: Maybe<string>
-      published_at?: Maybe<string>
-      excerpt?: Maybe<string>
-      feature_image?: Maybe<string>
-      html?: Maybe<string>
-    }>
+    | {
+        __typename?: 'Post'
+        id?: string | null | undefined
+        title?: string | null | undefined
+        slug?: string | null | undefined
+        updated_at?: string | null | undefined
+        published_at?: string | null | undefined
+        excerpt?: string | null | undefined
+        feature_image?: string | null | undefined
+        html?: string | null | undefined
+      }
+    | null
+    | undefined
   >
   episodes: Array<
-    Maybe<{
-      __typename?: 'Episode'
-      id?: Maybe<string>
-      description?: Maybe<string>
-      legacy_id?: Maybe<string>
-      long_description?: Maybe<string>
-      published_at?: Maybe<string>
-      status?: Maybe<string>
-      title?: Maybe<string>
-      token?: Maybe<string>
-    }>
+    | {
+        __typename?: 'Episode'
+        id?: string | null | undefined
+        description?: string | null | undefined
+        legacy_id?: string | null | undefined
+        long_description?: string | null | undefined
+        published_at?: string | null | undefined
+        status?: string | null | undefined
+        title?: string | null | undefined
+        token?: string | null | undefined
+      }
+    | null
+    | undefined
   >
 }
 
@@ -920,17 +986,19 @@ export type GetPostsQueryVariables = Exact<{ [key: string]: never }>
 export type GetPostsQuery = {
   __typename?: 'Query'
   posts: Array<
-    Maybe<{
-      __typename?: 'Post'
-      id?: Maybe<string>
-      title?: Maybe<string>
-      slug?: Maybe<string>
-      updated_at?: Maybe<string>
-      published_at?: Maybe<string>
-      excerpt?: Maybe<string>
-      feature_image?: Maybe<string>
-      html?: Maybe<string>
-    }>
+    | {
+        __typename?: 'Post'
+        id?: string | null | undefined
+        title?: string | null | undefined
+        slug?: string | null | undefined
+        updated_at?: string | null | undefined
+        published_at?: string | null | undefined
+        excerpt?: string | null | undefined
+        feature_image?: string | null | undefined
+        html?: string | null | undefined
+      }
+    | null
+    | undefined
   >
 }
 
@@ -940,17 +1008,20 @@ export type GetPostQueryVariables = Exact<{
 
 export type GetPostQuery = {
   __typename?: 'Query'
-  post?: Maybe<{
-    __typename?: 'Post'
-    id?: Maybe<string>
-    title?: Maybe<string>
-    slug?: Maybe<string>
-    updated_at?: Maybe<string>
-    published_at?: Maybe<string>
-    excerpt?: Maybe<string>
-    feature_image?: Maybe<string>
-    html?: Maybe<string>
-  }>
+  post?:
+    | {
+        __typename?: 'Post'
+        id?: string | null | undefined
+        title?: string | null | undefined
+        slug?: string | null | undefined
+        updated_at?: string | null | undefined
+        published_at?: string | null | undefined
+        excerpt?: string | null | undefined
+        feature_image?: string | null | undefined
+        html?: string | null | undefined
+      }
+    | null
+    | undefined
 }
 
 export type GetUserQueryVariables = Exact<{
@@ -959,30 +1030,36 @@ export type GetUserQueryVariables = Exact<{
 
 export type GetUserQuery = {
   __typename?: 'Query'
-  user?: Maybe<{
-    __typename: 'User'
-    id: string
-    username?: Maybe<string>
-    avatar?: Maybe<string>
-    name?: Maybe<string>
-    role?: Maybe<UserRole>
-    isViewer?: Maybe<boolean>
-  }>
+  user?:
+    | {
+        __typename: 'User'
+        id: string
+        username?: string | null | undefined
+        avatar?: string | null | undefined
+        name?: string | null | undefined
+        role?: UserRole | null | undefined
+        isViewer?: boolean | null | undefined
+      }
+    | null
+    | undefined
 }
 
 export type ViewerQueryVariables = Exact<{ [key: string]: never }>
 
 export type ViewerQuery = {
   __typename?: 'Query'
-  viewer?: Maybe<{
-    __typename: 'User'
-    id: string
-    username?: Maybe<string>
-    avatar?: Maybe<string>
-    name?: Maybe<string>
-    role?: Maybe<UserRole>
-    isViewer?: Maybe<boolean>
-  }>
+  viewer?:
+    | {
+        __typename: 'User'
+        id: string
+        username?: string | null | undefined
+        avatar?: string | null | undefined
+        name?: string | null | undefined
+        role?: UserRole | null | undefined
+        isViewer?: boolean | null | undefined
+      }
+    | null
+    | undefined
 }
 
 export const UserInfoFragmentDoc = gql`
