@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { ErrorAlert } from '~/components/Alert'
-import { Input } from '~/components/Input'
+import { Input, Textarea } from '~/components/Input'
 import {
   CommentType,
   useAddCommentMutation,
@@ -40,6 +40,7 @@ export function CommentForm({ refId, type }: Props) {
           avatar: data?.viewer?.avatar,
           name: data?.viewer?.name,
           role: data?.viewer?.role,
+          isViewer: true,
         },
       },
     },
@@ -81,7 +82,7 @@ export function CommentForm({ refId, type }: Props) {
         className="flex items-center flex-none w-full max-w-3xl px-4 py-4 mx-auto space-x-4 md:px-6"
         onSubmit={onSubmit}
       >
-        <Input
+        <Textarea
           placeholder="Leave a comment..."
           value={text}
           onChange={(e) => setText(e.target.value)}

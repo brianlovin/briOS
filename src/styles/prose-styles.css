@@ -23,7 +23,38 @@
 }
 
 .prose table {
-  @apply text-gray-1000 dark:text-gray-50;
+  @apply my-2 border border-gray-200 rounded-md text-gray-1000 dark:text-gray-50 dark:border-gray-800;
+}
+
+.prose.comment table {
+  @apply my-2;
+}
+
+.prose thead {
+  @apply text-gray-800 dark:text-gray-200;
+}
+
+.prose thead th {
+  @apply p-2;
+  padding-left: 1rem !important;
+}
+
+.prose thead th,
+.prose tbody td {
+  @apply p-2 border-r border-gray-200 dark:border-gray-800;
+  padding-left: 1rem !important;
+}
+
+.prose tbody tr {
+  @apply border-b border-gray-200 dark:border-gray-800;
+}
+
+.prose thead tr {
+  @apply border-b-2 border-gray-200 dark:border-gray-800;
+}
+
+.prose tbody tr:nth-child(2) {
+  @apply bg-gray-100 dark:bg-gray-900;
 }
 
 .prose b,
@@ -64,7 +95,15 @@
 }
 
 .prose pre {
-  @apply px-8 py-6 space-y-4 text-sm text-gray-800 bg-gray-400 border-gray-300 rounded bg-opacity-5 dark:border-gray-800 dark:text-gray-200;
+  @apply px-8 py-6 space-y-4 text-sm text-gray-800 bg-gray-400 border-gray-300 rounded-md bg-opacity-5 dark:border-gray-800 dark:text-gray-200;
+}
+
+.prose.comment {
+  @apply max-w-none;
+}
+
+.prose.comment pre {
+  @apply px-3 py-2 my-2;
 }
 
 /* this is needed to avoid HN comments from overflowing off the right edge of the screen */
@@ -73,15 +112,29 @@
   word-break: break-word;
 }
 
+.prose.comment p,
+.prose.comment ul,
+.prose.comment ol {
+  @apply my-3;
+}
+
+.prose.comment p + p {
+  margin-top: 0;
+}
+
+.prose.comment pre {
+  @apply my-3;
+}
+
 .prose p + p {
   margin-top: 0;
 }
 
 .prose code {
-  @apply text-gray-800 dark:text-gray-200 px-1 py-0.5 border-gray-100 dark:border-gray-800 bg-gray-100 dark:bg-gray-900;
+  @apply text-gray-800 dark:text-gray-200 px-1 py-0.5 border-gray-100 dark:border-gray-800 bg-gray-100 rounded-md dark:bg-gray-900;
 }
 
 .prose code,
 .prose pre {
-  @apply text-base;
+  @apply text-sm font-medium;
 }

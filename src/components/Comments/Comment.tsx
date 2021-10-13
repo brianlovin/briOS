@@ -3,12 +3,21 @@ import Image from 'next/image'
 import { Comment as CommentProp } from '~/graphql/types.generated'
 import { MoreHorizontal } from 'react-feather'
 import { GhostButton } from '../Button'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+import deepmerge from 'deepmerge'
+import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
+import SyntaxHighlighter from '../SyntaxHighlighter'
 
 interface Props {
   comment: CommentProp
 }
 
 export const Comment = React.memo(function MemoComment({ comment }: Props) {
+  const schema = deepmerge(defaultSchema, {
+    attributes: { '*': ['className'] },
+  })
+
   return (
     <div className="flex flex-col space-y-1">
       <div className="flex items-center justify-between space-x-4">
@@ -36,7 +45,27 @@ export const Comment = React.memo(function MemoComment({ comment }: Props) {
         )}
       </div>
 
-      <div className="prose pl-14">{comment.text}</div>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        rehypePlugins={[[rehypeSanitize, schema]]}
+        children={comment.text}
+        components={{
+          h1: 'strong',
+          h2: 'strong',
+          h3: 'strong',
+          h4: 'strong',
+          h5: 'strong',
+          h6: 'strong',
+          code({ node, inline, className, children, ...props }) {
+            return (
+              <code className={className} {...props}>
+                {children}
+              </code>
+            )
+          },
+        }}
+        className="flex-grow prose comment pl-14"
+      />
     </div>
   )
 })
