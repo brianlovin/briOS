@@ -14,12 +14,12 @@ model User {
   id          String     @id @default(cuid())
   createdAt   DateTime   @default(now())
   role        Role       @default(USER)
-  username    String     @unique
+  username    String     @unique @db.VarChar(16)
   twitterId   String     @unique
   email       String?    @unique
   avatar      String?
-  description String?
-  location    String?
+  description String?    @db.VarChar(256)
+  location    String?    @db.VarChar(32)
   name        String?
   nickname    String?
   comments    Comment[]
@@ -43,7 +43,7 @@ model Bookmark {
   title         String     @db.VarChar(280)
   image         String?
   siteName      String?
-  description   String     @db.VarChar(2000)
+  description   String     @db.VarChar(2048)
   twitterHandle String?
   comments      Comment[]
   reactions     Reaction[]
@@ -64,7 +64,7 @@ model Comment {
   id         String     @id @default(cuid())
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
-  text       String     @db.VarChar(2000)
+  text       String     @db.Text
   audio      Audio?
   reactions  Reaction[]
   author     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -93,7 +93,7 @@ model Audio {
   url           String
   transcription String
   comment       Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
-  commentId     String
+  commentId     String   @unique
 }
 
 model Post {
