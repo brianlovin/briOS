@@ -64,7 +64,7 @@ export function RecordingButton(props) {
 }
 
 export function GhostButton(props) {
-  const classes = `text-gray-700 hover:text-gray-1000 bg-gray-200 bg-opacity-0 hover:bg-opacity-100 dark:bg-gray-800 dark:hover:text-white focus:border-gray-1000 dark:focus:border-gray-600`
+  const classes = `text-gray-700 hover:text-gray-1000 bg-gray-200 bg-opacity-0 hover:bg-opacity-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:text-white focus:border-gray-1000 dark:focus:border-gray-600`
   const size = composer.getSize(props.size)
   const composed = `${baseClasses} ${size} ${classes}`
   return <BaseButton className={composed} {...props} />
