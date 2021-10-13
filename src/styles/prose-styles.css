@@ -115,7 +115,11 @@
 .prose.comment p,
 .prose.comment ul,
 .prose.comment ol {
-  @apply my-3;
+  @apply my-2;
+}
+
+.prose.comment p:first-of-type {
+  margin-top: 0 !important;
 }
 
 .prose.comment p + p {

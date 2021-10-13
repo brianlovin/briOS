@@ -50,12 +50,12 @@ export const Comment = React.memo(function MemoComment({ comment }: Props) {
         rehypePlugins={[[rehypeSanitize, schema]]}
         children={comment.text}
         components={{
-          h1: 'strong',
-          h2: 'strong',
-          h3: 'strong',
-          h4: 'strong',
-          h5: 'strong',
-          h6: 'strong',
+          h1: 'p',
+          h2: 'p',
+          h3: 'p',
+          h4: 'p',
+          h5: 'p',
+          h6: 'p',
           code({ node, inline, className, children, ...props }) {
             return (
               <code className={className} {...props}>
