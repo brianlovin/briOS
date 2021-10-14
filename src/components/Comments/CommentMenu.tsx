@@ -6,37 +6,7 @@ import { useDeleteCommentMutation } from '~/graphql/types.generated'
 import { GET_COMMENTS } from '~/graphql/queries/comments'
 import toast from 'react-hot-toast'
 
-export function CommentMenu({ id, type, refId }) {
-  const [deleteComment, { error }] = useDeleteCommentMutation({
-    variables: { id },
-    optimisticResponse: {
-      __typename: 'Mutation',
-      deleteComment: true,
-    },
-    update(cache) {
-      const { comments } = cache.readQuery({
-        query: GET_COMMENTS,
-        variables: { refId, type },
-      })
-
-      cache.writeQuery({
-        query: GET_COMMENTS,
-        variables: { refId, type },
-        data: {
-          comments: comments.filter((o) => o.id !== id),
-        },
-      })
-    },
-    onError(error) {},
-    onCompleted() {
-      toast.success('Comment deleted')
-    },
-  })
-
-  async function handleDelete() {
-    deleteComment()
-  }
-
+export function CommentMenu({ handleDelete, handleEdit }) {
   return (
     <div className="flex items-center justify-center">
       <div className="relative inline-block text-left">
@@ -66,6 +36,7 @@ export function CommentMenu({ id, type, refId }) {
                     <Menu.Item>
                       {({ active }) => (
                         <a
+                          onClick={handleEdit}
                           className={`${
                             active
                               ? 'bg-gray-100 dark:text-white text-gray-900 dark:bg-gray-700'

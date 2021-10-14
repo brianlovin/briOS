@@ -14,10 +14,24 @@ export async function editComment(
   ctx: Context
 ) {
   const { id, text } = args
-  const { prisma } = ctx
+  const { prisma, viewer } = ctx
 
   if (!text || text.length === 0)
     throw new UserInputError('Comment can’t be blank')
+
+  const comment = await prisma.comment.findUnique({
+    where: {
+      id,
+    },
+  })
+
+  // comment doesn't exist, already deleted
+  if (!comment) throw new UserInputError('Comment doesn’t exist')
+
+  // no permission
+  if (comment.userId !== viewer?.id) {
+    throw new UserInputError('You can’t edit this comment')
+  }
 
   return await prisma.comment.update({
     where: {
