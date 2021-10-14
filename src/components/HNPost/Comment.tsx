@@ -16,7 +16,7 @@ interface Props {
 
 function LevelZeroComment({ comment }) {
   return (
-    <div className="px-4 pt-12">
+    <div className="px-4 pt-8 md:pt-12 md:px-8">
       <a
         className="inline-block font-normal"
         id={comment.id}
