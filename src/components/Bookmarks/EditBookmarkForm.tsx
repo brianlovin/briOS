@@ -128,7 +128,6 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
           Delete
         </DeleteButton>
         <div className="flex space-x-3">
-          <Button onClick={closeModal}>Cancel</Button>
           <Button onClick={handleSave}>Save</Button>
         </div>
       </div>
