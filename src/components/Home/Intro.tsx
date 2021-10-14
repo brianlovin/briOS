@@ -211,15 +211,16 @@ export default function Intro() {
             <SectionTitle>Where</SectionTitle>
             <SectionContent>
               <Image
-                src="/static/img/nyc.png"
+                src="/static/img/sf.png"
                 width={800}
-                height={350}
+                height={400}
                 layout="responsive"
                 className="rounded-2xl"
+                quality={100}
               />
               <p className="flex items-center justify-end pt-2 space-x-2 text-sm md:text-right text-quaternary">
                 <MapPin size={12} />
-                <span>Brooklyn, New York</span>
+                <span>San Francisco, CA</span>
               </p>
             </SectionContent>
           </SectionContainer>
