@@ -21,12 +21,8 @@ export default function Byline(props: Props) {
   }, [])
 
   return (
-    <div className="space-x-2 text-tertiary">
-      <span>
-        <Link href={`/hn/[id]`} as={`/hn/${post.id}`}>
-          <a className="font-normal text-primary highlight-link-hover">{`${post.comments_count} comments`}</a>
-        </Link>
-      </span>
+    <div className="flex space-x-2 text-tertiary">
+      <p className="font-normal text-primary">{`${post.comments_count} comments`}</p>
 
       <span className="text-quaternary">·</span>
 
