@@ -49,12 +49,10 @@ export function BookmarkDetail({ id }) {
           {data.bookmark.description && (
             <p className="prose text-primary">{data.bookmark.description}</p>
           )}
-          <div className="space-x-3">
-            <Button size="large" href={data.bookmark.url}>
-              View
-            </Button>
-          </div>
         </Detail.Header>
+        <div className="mt-6">
+          <Button href={data.bookmark.url}>Visit bookmark</Button>
+        </div>
       </Detail.ContentContainer>
 
       <Comments refId={data.bookmark.id} type={CommentType.Bookmark} />
