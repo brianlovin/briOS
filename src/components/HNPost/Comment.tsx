@@ -37,18 +37,18 @@ function LevelZeroComment({ comment }) {
 }
 
 function ChildComment({ comment, level }) {
-  let color = 'border-gray-300'
+  let color
   switch (level) {
     case 2: {
-      color = 'border-gray-200'
+      color = 'border-gray-200 dark:border-gray-700'
       break
     }
     case 3: {
-      color = 'border-gray-150'
+      color = 'border-gray-150 dark:border-gray-800'
       break
     }
     default: {
-      color = 'border-gray-300'
+      color = 'border-gray-300 dark:border-gray-600'
     }
   }
   return (
