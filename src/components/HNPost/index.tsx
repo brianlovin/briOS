@@ -1,11 +1,12 @@
 import * as React from 'react'
 import { NextSeo } from 'next-seo'
-import { Comment } from './Comment'
-import Byline from './Byline'
 import { HNPost as HNPostType } from '~/pages/hn'
 import { baseUrl } from '~/config/seo'
 import TitleBar from '../ListDetail/TitleBar'
 import { Detail } from '../ListDetail/Detail'
+import Button from '../Button'
+import { HNComments } from './Comments'
+import Byline from './Byline'
 
 interface Props {
   post: HNPostType
@@ -13,8 +14,7 @@ interface Props {
 
 export function HNPost(props: Props) {
   const { post } = props
-
-  const comments = post.comments.slice(0, 8)
+  const { comments } = post
 
   const scrollContainerRef = React.useRef(null)
   const titleRef = React.useRef(null)
@@ -55,6 +55,12 @@ export function HNPost(props: Props) {
             <Byline post={post} />
           </Detail.Header>
 
+          {post.url && (
+            <div className="mt-6">
+              <Button href={post.url}>Visit</Button>
+            </div>
+          )}
+
           {post.content && (
             <div
               className={'prose lg:prose-lg'}
@@ -64,13 +70,9 @@ export function HNPost(props: Props) {
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
           )}
-
-          <div className="py-8">
-            {comments.map((comment) => (
-              <Comment key={comment.id} comment={comment} />
-            ))}
-          </div>
         </Detail.ContentContainer>
+
+        <HNComments comments={comments} />
       </Detail.Container>
     </React.Fragment>
   )

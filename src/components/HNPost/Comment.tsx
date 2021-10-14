@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { LeftDivider } from './style'
 
 export interface HNComment {
   id: string
@@ -15,80 +14,78 @@ interface Props {
   comment: HNComment
 }
 
-const ConditionalWrapper = ({ condition, wrapper, children }) =>
-  condition ? wrapper(children) : children
+function LevelZeroComment({ comment }) {
+  return (
+    <div className="px-4 pt-12">
+      <a
+        className="inline-block font-normal"
+        id={comment.id}
+        href={`#${comment.id}`}
+      >
+        <p className="text-sm text-quaternary">{`${comment.user} · ${comment.time_ago}`}</p>
+      </a>
+      <div
+        className={'prose pt-1'}
+        dangerouslySetInnerHTML={{ __html: comment.content }}
+      />
+      {comment.comments.length > 0 &&
+        comment.comments.map((comment) => (
+          <HNComment comment={comment} key={comment.id} />
+        ))}
+    </div>
+  )
+}
 
-export const Comment = React.memo((props: Props) => {
-  const [collapsed, setCollapsed] = React.useState(false)
+function ChildComment({ comment, level }) {
+  let color = 'border-gray-300'
+  switch (level) {
+    case 2: {
+      color = 'border-gray-200'
+      break
+    }
+    case 3: {
+      color = 'border-gray-150'
+      break
+    }
+    default: {
+      color = 'border-gray-300'
+    }
+  }
+  return (
+    <>
+      <div
+        className={`border-l-2 ${color} flex flex-shrink flex-col pl-4 mt-4`}
+      >
+        <a
+          className="inline-block font-normal"
+          id={comment.id}
+          href={`#${comment.id}`}
+        >
+          <p className="text-sm text-quaternary">{`${comment.user} · ${comment.time_ago}`}</p>
+        </a>
+        <div
+          className={'prose pt-1'}
+          dangerouslySetInnerHTML={{ __html: comment.content }}
+        />
+        {comment.comments.length > 0 &&
+          comment.comments.map((comment) => (
+            <HNComment comment={comment} key={comment.id} />
+          ))}
+      </div>
+    </>
+  )
+}
 
+export const HNComment = React.memo((props: Props) => {
   const { comment } = props
 
   if (!comment) return null
 
   const { level } = comment
 
-  if (collapsed) {
-    return (
-      <div className={`${level > 0 ? 'pl-5' : 'pl-0'} relative mb-4`}>
-        {level > 0 && (
-          <LeftDivider level={level} onClick={() => setCollapsed(!collapsed)} />
-        )}
-
-        <div className="relative">
-          {level === 0 && (
-            <LeftDivider
-              level={level}
-              onClick={() => setCollapsed(!collapsed)}
-            />
-          )}
-          <p className="mb-3 text-sm text-quaternary">{`${comment.time_ago} by ${comment.user}`}</p>
-          <p
-            className="text-tertiary hover:text-gray-700 dark:hover:text-gray-300"
-            style={{ cursor: 'pointer', marginTop: '4px' }}
-            onClick={() => setCollapsed(!collapsed)}
-          >
-            <em>Collapsed</em>
-          </p>
-        </div>
-      </div>
-    )
+  if (level === 0) {
+    return <LevelZeroComment comment={comment} />
+  } else {
+    return <ChildComment level={level} comment={comment} />
   }
-
-  return (
-    <div className={`${level > 0 ? 'pl-5' : 'pl-0'} relative block mb-4`}>
-      {level > 0 && (
-        <LeftDivider level={level} onClick={() => setCollapsed(!collapsed)} />
-      )}
-
-      <div className="relative mb-4">
-        {level === 0 && (
-          <LeftDivider level={level} onClick={() => setCollapsed(!collapsed)} />
-        )}
-
-        <ConditionalWrapper
-          condition={level === 0}
-          wrapper={(children) => (
-            <a
-              className="font-normal black-link"
-              id={comment.id}
-              href={`#${comment.id}`}
-            >
-              {children}
-            </a>
-          )}
-        >
-          <p className="mb-3 text-sm text-quaternary">{`${comment.time_ago} by ${comment.user}`}</p>
-        </ConditionalWrapper>
-        <div
-          className={'prose'}
-          dangerouslySetInnerHTML={{ __html: comment.content }}
-        />
-      </div>
-
-      {comment.comments.length > 0 &&
-        comment.comments.map((comment) => (
-          <Comment comment={comment} key={comment.id} />
-        ))}
-    </div>
-  )
 })

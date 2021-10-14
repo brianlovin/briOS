@@ -47,7 +47,7 @@ export async function getPostById(id, includeComments = false) {
 
     return Object.assign(comment, {
       ...comment,
-      comments: comment.comments.slice(0, 4).map(trimComments).filter(Boolean),
+      comments: comment.comments.slice(0, 8).map(trimComments).filter(Boolean),
     })
   }
 
