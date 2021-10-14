@@ -5,6 +5,7 @@ import {
   MutationAddCommentArgs,
   MutationDeleteCommentArgs,
   MutationEditCommentArgs,
+  UserRole,
 } from '~/graphql/types.generated'
 
 export async function editComment(
@@ -78,7 +79,20 @@ export async function deleteComment(
   ctx: Context
 ) {
   const { id } = args
-  const { prisma } = ctx
+  const { prisma, viewer } = ctx
+
+  const comment = await prisma.comment.findUnique({
+    where: {
+      id,
+    },
+  })
+
+  // comment doesn't exist, already deleted
+  if (!comment) return true
+  // no permission
+  if (comment.userId !== viewer?.id || viewer?.role !== UserRole.Admin) {
+    throw new UserInputError('You can’t delete this comment')
+  }
 
   await prisma.comment.delete({
     where: {

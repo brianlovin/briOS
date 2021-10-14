@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Image from 'next/image'
-import { Comment as CommentProp } from '~/graphql/types.generated'
+import { Comment as CommentProp, CommentType } from '~/graphql/types.generated'
 import { MoreHorizontal } from 'react-feather'
 import { GhostButton } from '../Button'
 import ReactMarkdown from 'react-markdown'
@@ -8,12 +8,19 @@ import remarkGfm from 'remark-gfm'
 import deepmerge from 'deepmerge'
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
 import SyntaxHighlighter from '../SyntaxHighlighter'
+import { CommentMenu } from './CommentMenu'
 
 interface Props {
   comment: CommentProp
+  refId: string
+  type: CommentType
 }
 
-export const Comment = React.memo(function MemoComment({ comment }: Props) {
+export const Comment = React.memo(function MemoComment({
+  comment,
+  refId,
+  type,
+}: Props) {
   const schema = deepmerge(defaultSchema, {
     attributes: { '*': ['className'] },
   })
@@ -39,9 +46,7 @@ export const Comment = React.memo(function MemoComment({ comment }: Props) {
         </div>
 
         {(comment.viewerCanDelete || comment.viewerCanEdit) && (
-          <GhostButton size="small-square">
-            <MoreHorizontal size={16} />
-          </GhostButton>
+          <CommentMenu refId={refId} type={type} id={comment.id} />
         )}
       </div>
 

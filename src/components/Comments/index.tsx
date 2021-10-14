@@ -50,7 +50,12 @@ export function Comments({ refId, type }: Props) {
             {comments &&
               comments.length > 0 &&
               comments.map((comment) => (
-                <Comment key={comment.id} comment={comment} />
+                <Comment
+                  key={comment.id}
+                  refId={refId}
+                  type={type}
+                  comment={comment}
+                />
               ))}
             {comments.length === 0 && (
               <p className="text-quaternary">No comments yet...</p>
