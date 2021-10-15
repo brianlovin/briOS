@@ -76,6 +76,7 @@ export function CommentForm({ refId, type, openModal }: Props) {
     }
 
     setText('')
+    localStorage.removeItem(refId)
     return handleAddComment({
       variables: { refId, type, text },
     })
