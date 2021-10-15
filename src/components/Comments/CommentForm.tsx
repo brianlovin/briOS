@@ -8,6 +8,7 @@ import {
   useViewerQuery,
 } from '~/graphql/types.generated'
 import { GET_COMMENTS } from '~/graphql/queries/comments'
+import { CommentButton } from '../Button'
 
 interface Props {
   refId: string
@@ -82,12 +83,24 @@ export function CommentForm({ refId, type }: Props) {
         className="flex items-center flex-none w-full max-w-3xl px-4 py-4 mx-auto space-x-4 md:px-6"
         onSubmit={onSubmit}
       >
-        <Textarea
-          placeholder="Leave a comment..."
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          onKeyDown={onKeyDown}
-        />
+        <div className="relative flex flex-none w-full">
+          <Textarea
+            placeholder="Leave a comment..."
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            onKeyDown={onKeyDown}
+          />
+
+          <div className="absolute bottom-1 right-1">
+            <CommentButton
+              type="submit"
+              disabled={text.trim().length === 0}
+              size="small-square"
+            >
+              ↑
+            </CommentButton>
+          </div>
+        </div>
         {error && <ErrorAlert>{error}</ErrorAlert>}
       </form>
     </div>

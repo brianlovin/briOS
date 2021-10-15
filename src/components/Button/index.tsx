@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Link from 'next/link'
 
-function BaseButton({ href, ...rest }) {
+function BaseButton({ href = null, ...rest }) {
   if (href && href.startsWith('/')) {
     return (
       <Link href={href}>
@@ -18,7 +18,7 @@ function BaseButton({ href, ...rest }) {
 }
 
 const baseClasses =
-  'flex items-center justify-center rounded-md cursor-pointer leading-none transition-all font-semibold focus:outline-none'
+  'flex items-center justify-center cursor-pointer leading-none transition-all font-semibold'
 
 function getSize(size = null) {
   switch (size) {
@@ -42,14 +42,14 @@ const composer = {
 }
 
 export default function Button(props) {
-  const classes = `text-gray-700 hover:text-gray-1000 shadow-xs bg-white border border-gray-400 border-opacity-30 dark:border-gray-700 dark:hover:border-gray-600 dark:bg-white dark:bg-opacity-10 dark:text-gray-200 dark:hover:text-white hover:border-opacity-50 hover:shadow-sm focus:border-gray-1000 dark:focus:border-gray-600`
+  const classes = `rounded-md text-gray-700 hover:text-gray-1000 shadow-xs bg-white border border-gray-400 border-opacity-30 dark:border-gray-700 dark:hover:border-gray-600 dark:bg-white dark:bg-opacity-10 dark:text-gray-200 dark:hover:text-white hover:border-opacity-50 hover:shadow-sm`
   const size = composer.getSize(props.size)
   const composed = `${baseClasses} ${size} ${classes}`
   return <BaseButton className={composed} {...props} />
 }
 
 export function DeleteButton(props) {
-  const classes = `bg-white border border-gray-200 dark:border-red-500 dark:hover:border-red-500  dark:bg-red-500 dark:border-opacity-20 dark:bg-opacity-10 text-red-500 hover:border-red-500 hover:text-white hover:bg-red-600 focus:border-red-900`
+  const classes = `rounded-md bg-white border border-gray-200 dark:border-red-500 dark:hover:border-red-500  dark:bg-red-500 dark:border-opacity-20 dark:bg-opacity-10 text-red-500 hover:border-red-500 hover:text-white hover:bg-red-600`
 
   const size = composer.getSize(props.size)
   const composed = `${baseClasses} ${size} ${classes}`
@@ -57,15 +57,32 @@ export function DeleteButton(props) {
 }
 
 export function RecordingButton(props) {
-  const classes = `bg-green-500 border border-green-600 dark:border-green-500 dark:hover:border-green-500 dark:bg-green-500 dark:border-opacity-20 dark:bg-opacity-10  text-white hover:bg-green-600 focus:border-green-900`
+  const classes = `rounded-md bg-green-500 border border-green-600 dark:border-green-500 dark:hover:border-green-500 dark:bg-green-500 dark:border-opacity-20 dark:bg-opacity-10  text-white hover:bg-green-600`
   const size = composer.getSize(props.size)
   const composed = `${baseClasses} ${size} ${classes}`
   return <BaseButton className={composed} {...props} />
 }
 
 export function GhostButton(props) {
-  const classes = `text-gray-700 hover:text-gray-1000 bg-gray-200 bg-opacity-0 hover:bg-opacity-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:text-white focus:border-gray-1000 dark:focus:border-gray-600`
+  const classes = `rounded-md text-gray-700 hover:text-gray-1000 bg-gray-200 bg-opacity-0 hover:bg-opacity-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:text-white`
   const size = composer.getSize(props.size)
   const composed = `${baseClasses} ${size} ${classes}`
   return <BaseButton className={composed} {...props} />
+}
+
+export function CommentButton(props) {
+  const classes = `${
+    props.disabled
+      ? 'text-gray-500 border-gray-400 bg-white dark:border-gray-700'
+      : 'border-blue-600 bg-blue-500 dark:bg-opacity-100 text-white hover:bg-blue-600 dark:border-blue-400'
+  } shadow-xs bg-white border border-opacity-30 dark:bg-opacity-10 hover:border-opacity-50 hover:shadow-sm w-8 rounded`
+  const size = composer.getSize(props.size)
+  const composed = `${baseClasses} ${size} ${classes}`
+  return (
+    <BaseButton
+      style={{ transform: 'translateY(-1px) translateX(-1px)' }}
+      className={composed}
+      {...props}
+    />
+  )
 }
