@@ -11,11 +11,13 @@ export function BookmarksTitlebar({ scrollContainerRef }) {
   function trailingAccessory() {
     if (data?.viewer?.role === UserRole.Admin) {
       return (
-        <AddBookmarkDialog>
-          <GhostButton size="small-square">
-            <Plus size={16} />
-          </GhostButton>
-        </AddBookmarkDialog>
+        <AddBookmarkDialog
+          trigger={
+            <GhostButton size="small-square">
+              <Plus size={16} />
+            </GhostButton>
+          }
+        />
       )
     }
     return null

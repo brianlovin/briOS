@@ -12,9 +12,9 @@ export function UserSettings() {
         </Detail.Header>
         <div className="flex space-x-4">
           <DeleteButton href="/api/auth/logout">Log out</DeleteButton>
-          <DeleteUserDialog>
-            <DeleteButton>Delete account</DeleteButton>
-          </DeleteUserDialog>
+          <DeleteUserDialog
+            trigger={<DeleteButton>Delete account</DeleteButton>}
+          />
         </div>
       </Detail.ContentContainer>
     </Detail.Container>

@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { CommentType, useGetCommentsQuery } from '~/graphql/types.generated'
+import { SignInDialog } from '../SignIn'
 import SyntaxHighlighter from '../SyntaxHighlighter'
 import { Comment } from './Comment'
 import { CommentForm } from './CommentForm'
@@ -63,7 +64,12 @@ export function Comments({ refId, type }: Props) {
           </div>
         </div>
         <div ref={messagesEndRef} />
-        <CommentForm refId={refId} type={type} />
+
+        <SignInDialog>
+          {({ openModal }) => (
+            <CommentForm refId={refId} type={type} openModal={openModal} />
+          )}
+        </SignInDialog>
       </div>
     </>
   )

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { ErrorAlert } from '~/components/Alert'
-import { Input, Textarea } from '~/components/Input'
+import { Textarea } from '~/components/Input'
 import {
   CommentType,
   useAddCommentMutation,
@@ -9,16 +9,19 @@ import {
 } from '~/graphql/types.generated'
 import { GET_COMMENTS } from '~/graphql/queries/comments'
 import { CommentButton } from '../Button'
+import { useDebounce } from '~/hooks/useDebounce'
 
 interface Props {
   refId: string
   type: CommentType
+  openModal: Function
 }
 
-export function CommentForm({ refId, type }: Props) {
+export function CommentForm({ refId, type, openModal }: Props) {
   const { data } = useViewerQuery()
   const [text, setText] = React.useState('')
   const [error, setError] = React.useState(null)
+
   const [handleAddComment] = useAddCommentMutation({
     optimisticResponse: {
       __typename: 'Mutation',
@@ -63,6 +66,15 @@ export function CommentForm({ refId, type }: Props) {
 
   function onSubmit(e) {
     e.preventDefault()
+
+    // not signed in, save to localstorage
+    if (!data?.viewer) {
+      // persist everything to local storage so we don't lose it
+      localStorage.setItem(refId, text)
+      // pop the sign in modal
+      return openModal()
+    }
+
     setText('')
     return handleAddComment({
       variables: { refId, type, text },
@@ -75,7 +87,22 @@ export function CommentForm({ refId, type }: Props) {
     }
   }
 
-  if (!data?.viewer) return null
+  React.useEffect(() => {
+    const localText = localStorage.getItem(refId)
+    if (localText) {
+      setText(localText)
+    }
+  }, [])
+
+  const debouncedText = useDebounce(text, 500)
+
+  React.useEffect(() => {
+    localStorage.setItem(refId, debouncedText)
+  }, [debouncedText])
+
+  function handleChange(e) {
+    return setText(e.target.value)
+  }
 
   return (
     <div className="sticky bottom-0 flex flex-col bg-white border-t dark:border-gray-800 dark:bg-gray-900 filter-blur bg-opacity-90 border-gray-150">
@@ -87,7 +114,7 @@ export function CommentForm({ refId, type }: Props) {
           <Textarea
             placeholder="Leave a comment..."
             value={text}
-            onChange={(e) => setText(e.target.value)}
+            onChange={handleChange}
             onKeyDown={onKeyDown}
           />
 

@@ -1,7 +1,20 @@
 import * as React from 'react'
 import Link from 'next/link'
 
-function BaseButton({ href = null, ...rest }) {
+interface BaseButtonProps {
+  [key: string]: unknown
+  size: string
+}
+
+type ButtonAsButton = BaseButtonProps &
+  React.ButtonHTMLAttributes<HTMLButtonElement>
+
+type ButtonAsLink = BaseButtonProps &
+  React.AnchorHTMLAttributes<HTMLAnchorElement>
+
+type ButtonProps = ButtonAsButton | ButtonAsLink
+
+function BaseButton({ href = null, forwardedRef = null, ...rest }) {
   if (href && href.startsWith('/')) {
     return (
       <Link href={href}>
@@ -11,10 +24,10 @@ function BaseButton({ href = null, ...rest }) {
   }
 
   if (href) {
-    return <a href={href} {...rest} />
+    return <a ref={forwardedRef} href={href} {...rest} />
   }
 
-  return <button {...rest} />
+  return <button ref={forwardedRef} {...rest} />
 }
 
 const baseClasses =
@@ -41,36 +54,38 @@ const composer = {
   getSize,
 }
 
-export default function Button(props) {
+export const Button = React.forwardRef((props: ButtonProps, ref) => {
   const classes = `rounded-md text-gray-700 hover:text-gray-1000 shadow-xs bg-white border border-gray-400 border-opacity-30 dark:border-gray-700 dark:hover:border-gray-600 dark:bg-white dark:bg-opacity-10 dark:text-gray-200 dark:hover:text-white hover:border-opacity-50 hover:shadow-sm`
   const size = composer.getSize(props.size)
   const composed = `${baseClasses} ${size} ${classes}`
-  return <BaseButton className={composed} {...props} />
-}
+  return <BaseButton forwardedRef={ref} className={composed} {...props} />
+})
 
-export function DeleteButton(props) {
+export default Button
+
+export const DeleteButton = React.forwardRef((props: ButtonProps, ref) => {
   const classes = `rounded-md bg-white border border-gray-200 dark:border-red-500 dark:hover:border-red-500  dark:bg-red-500 dark:border-opacity-20 dark:bg-opacity-10 text-red-500 hover:border-red-500 hover:text-white hover:bg-red-600`
 
   const size = composer.getSize(props.size)
   const composed = `${baseClasses} ${size} ${classes}`
-  return <BaseButton className={composed} {...props} />
-}
+  return <BaseButton forwardedRef={ref} className={composed} {...props} />
+})
 
-export function RecordingButton(props) {
+export const RecordingButton = React.forwardRef((props: ButtonProps, ref) => {
   const classes = `rounded-md bg-green-500 border border-green-600 dark:border-green-500 dark:hover:border-green-500 dark:bg-green-500 dark:border-opacity-20 dark:bg-opacity-10  text-white hover:bg-green-600`
   const size = composer.getSize(props.size)
   const composed = `${baseClasses} ${size} ${classes}`
-  return <BaseButton className={composed} {...props} />
-}
+  return <BaseButton forwardedRef={ref} className={composed} {...props} />
+})
 
-export function GhostButton(props) {
+export const GhostButton = React.forwardRef((props: ButtonProps, ref) => {
   const classes = `rounded-md text-gray-700 hover:text-gray-1000 bg-gray-200 bg-opacity-0 hover:bg-opacity-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:text-white`
   const size = composer.getSize(props.size)
   const composed = `${baseClasses} ${size} ${classes}`
-  return <BaseButton className={composed} {...props} />
-}
+  return <BaseButton forwardedRef={ref} className={composed} {...props} />
+})
 
-export function CommentButton(props) {
+export const CommentButton = React.forwardRef((props: ButtonProps, ref) => {
   const classes = `${
     props.disabled
       ? 'text-gray-500 border-gray-400 bg-white dark:border-gray-700'
@@ -82,7 +97,8 @@ export function CommentButton(props) {
     <BaseButton
       style={{ transform: 'translateY(-1px) translateX(-1px)' }}
       className={composed}
+      forwardedRef={ref}
       {...props}
     />
   )
-}
+})

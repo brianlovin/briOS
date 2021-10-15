@@ -12,9 +12,10 @@ export function BookmarkActions({ bookmark }: Props) {
   if (data?.viewer?.role === UserRole.Admin) {
     return (
       <div>
-        <EditBookmarkDialog bookmark={bookmark}>
-          <Button>Edit</Button>
-        </EditBookmarkDialog>
+        <EditBookmarkDialog
+          bookmark={bookmark}
+          trigger={<Button>Edit</Button>}
+        />
       </div>
     )
   }

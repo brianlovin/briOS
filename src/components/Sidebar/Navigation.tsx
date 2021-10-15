@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { useRouter } from 'next/router'
-import Link from 'next/link'
 import {
   AMAIcon,
   AppDissectionIcon,
@@ -29,11 +28,13 @@ import { GhostButton } from '../Button'
 
 function ThisAddBookmarkDialog() {
   return (
-    <AddBookmarkDialog>
-      <GhostButton size="small-square">
-        <Plus size={16} />
-      </GhostButton>
-    </AddBookmarkDialog>
+    <AddBookmarkDialog
+      trigger={
+        <GhostButton size="small-square">
+          <Plus size={16} />
+        </GhostButton>
+      }
+    />
   )
 }
 
