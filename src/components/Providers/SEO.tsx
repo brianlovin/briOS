@@ -35,6 +35,16 @@ export default function SEO() {
           title="RSS feed"
           href={`${baseUrl}/writing/rss`}
         />
+        <meta
+          name="theme-color"
+          content="#fff"
+          media="(prefers-color-scheme: light)"
+        />
+        <meta
+          name="theme-color"
+          content="rgb(23, 23, 23)"
+          media="(prefers-color-scheme: dark)"
+        />
       </Head>
     </React.Fragment>
   )
