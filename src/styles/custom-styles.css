@@ -21,7 +21,7 @@
 
   button,
   a {
-    @apply focus:ring-2 ring-offset-2 ring-offset-white dark:ring-offset-black ring-blue-200 dark:ring-blue-100 dark:ring-opacity-50 focus:outline-none;
+    @apply outline-none focus:ring-2 ring-offset-2 ring-offset-white dark:ring-offset-black ring-blue-200 dark:ring-blue-100 dark:ring-opacity-50 focus:outline-none;
   }
 }
 

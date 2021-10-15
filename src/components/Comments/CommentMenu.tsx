@@ -2,9 +2,6 @@ import * as React from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { GhostButton } from '../Button'
 import { MoreHorizontal } from 'react-feather'
-import { useDeleteCommentMutation } from '~/graphql/types.generated'
-import { GET_COMMENTS } from '~/graphql/queries/comments'
-import toast from 'react-hot-toast'
 
 export function CommentMenu({ handleDelete, handleEdit }) {
   return (
@@ -13,7 +10,7 @@ export function CommentMenu({ handleDelete, handleEdit }) {
         <Menu>
           {({ open }) => (
             <>
-              <Menu.Button className="z-0 inline-flex">
+              <Menu.Button as="div" className="z-0 inline-flex">
                 <GhostButton size="small-square">
                   <MoreHorizontal size={16} />
                 </GhostButton>

@@ -18,9 +18,7 @@ export default function DialogComponent({ trigger, title, children }) {
 
   return (
     <>
-      <button type="button" onClick={openModal}>
-        {trigger}
-      </button>
+      <div onClick={openModal}>{trigger}</div>
 
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog
