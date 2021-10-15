@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { NextSeo } from 'next-seo'
-import Head from 'next/head'
 import { Post } from '~/graphql/types.generated'
 import { baseUrl } from '~/config/seo'
 
@@ -11,15 +10,6 @@ interface Props {
 export default function SEO({ post }: Props) {
   return (
     <React.Fragment>
-      <Head>
-        <link
-          rel="alternate"
-          type="application/rss+xml"
-          title="RSS feed"
-          href={`${baseUrl}/writing/rss`}
-        />
-      </Head>
-
       <NextSeo
         title={post.title}
         description={post.custom_excerpt || post.excerpt}
