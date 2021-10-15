@@ -3,7 +3,7 @@ import * as React from 'react'
 function ContentContainer(props) {
   return (
     <div
-      className="w-full max-w-3xl px-4 py-8 mx-auto md:py-12 lg:py-16 md:px-8"
+      className="w-full max-w-3xl px-4 py-8 mx-auto md:py-12 md:px-8"
       {...props}
     />
   )
