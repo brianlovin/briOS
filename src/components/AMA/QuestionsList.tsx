@@ -42,7 +42,7 @@ export function AMAQuestionsList({ status }) {
               }
               title={question.text}
               description={null}
-              byline={`${question.author.name} · ${question.updatedAt}`}
+              byline={`${question.author.name}`}
               active={active}
             />
           )

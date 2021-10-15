@@ -34,13 +34,7 @@ const PostList = React.memo(({ posts }: Props) => {
               as={`/hn/${post.id}`}
               title={post.title}
               description={null}
-              byline={
-                <span className="flex space-x-2">
-                  <span>{post.comments_count} comments</span>
-                  <span>·</span>
-                  <span>{timeAgo}</span>
-                </span>
-              }
+              byline={`${post.comments_count} comments`}
               active={active}
             />
           )

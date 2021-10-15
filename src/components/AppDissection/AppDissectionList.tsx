@@ -42,13 +42,7 @@ export const AppDissectionList = React.memo(() => {
                   src={`/static/img/app-dissection/${summary.slug}.jpeg`}
                 />
               }
-              byline={
-                <span className="flex space-x-2">
-                  <span>{summary.detailsCount} details</span>
-                  <span>·</span>
-                  <span>{date}</span>
-                </span>
-              }
+              byline={`${summary.detailsCount} details`}
               active={active}
             />
           )

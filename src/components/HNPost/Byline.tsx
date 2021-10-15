@@ -22,7 +22,7 @@ export default function Byline(props: Props) {
 
   return (
     <div className="flex space-x-2 text-tertiary">
-      <p className="font-normal text-primary">{`${post.comments_count} comments`}</p>
+      <p className="font-normal">{`${post.comments_count} comments`}</p>
 
       <span className="text-quaternary">·</span>
 
