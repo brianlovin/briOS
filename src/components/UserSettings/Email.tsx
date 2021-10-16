@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import { GET_VIEWER_QUERY } from '~/graphql/queries'
 import { useEditUserMutation, useViewerQuery } from '~/graphql/types.generated'
 import { WarnAlert } from '../Alert'

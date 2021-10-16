@@ -1,5 +1,5 @@
-import { useRouter } from 'next/router'
 import * as React from 'react'
+import { useRouter } from 'next/router'
 import Dialog from '~/components/Dialog'
 import { useDeleteUserMutation } from '~/graphql/types.generated'
 import { DeleteButton } from '../Button'

@@ -6,7 +6,7 @@ import { Context } from '~/graphql/context'
 import { client as postmark } from '~/graphql/services/postmark'
 import { MutationEditUserArgs, UserRole } from '~/graphql/types.generated'
 import { deleteUser as deleteUserFromAuth0 } from '~/lib/auth0/deleteUser'
-import { validEmail } from '~/pages/api/hn/unsubscribe'
+import { validEmail, validUsername } from '~/lib/validators'
 
 export async function deleteUser(_, __, ctx: Context) {
   const { prisma, viewer } = ctx
@@ -31,6 +31,10 @@ export async function editUser(_, args: MutationEditUserArgs, ctx: Context) {
   const { username, email } = data
 
   if (username) {
+    if (!validUsername(username)) {
+      throw new UserInputError('Usernames can be 16 characters long')
+    }
+
     const user = await prisma.user.findUnique({
       where: { username },
     })

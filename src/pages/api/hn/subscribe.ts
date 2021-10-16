@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { db } from '~/graphql/services/firebase'
-import { validEmail } from './unsubscribe'
+import { validEmail } from '~/lib/validators'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { email } = req.body

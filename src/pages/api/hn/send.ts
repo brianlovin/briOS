@@ -4,8 +4,8 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { getHNPostsForDigest } from '~/graphql/services/hn'
 import { client as postmark } from '~/graphql/services/postmark'
 import { db } from '~/graphql/services/firebase'
-import { validEmail } from './unsubscribe'
 import { baseEmail, baseUrl } from '~/config/seo'
+import { validEmail } from '~/lib/validators'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const COLLECTION = 'hnsubscribers'

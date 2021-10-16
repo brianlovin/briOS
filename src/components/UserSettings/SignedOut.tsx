@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import { TwitterButton } from '../Button'
 import { Detail } from '../ListDetail/Detail'
 import TitleBar from '../ListDetail/TitleBar'

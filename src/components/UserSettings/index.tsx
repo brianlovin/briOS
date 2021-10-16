@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import { useViewerQuery } from '~/graphql/types.generated'
 import { Detail } from '../ListDetail/Detail'
 import TitleBar from '../ListDetail/TitleBar'
@@ -6,6 +6,7 @@ import { LoadingSpinner } from '../LoadingSpinner'
 import { EmailForm } from './Email'
 import { UserSettingsFooter } from './Footer'
 import { SignedOut } from './SignedOut'
+import { UsernameForm } from './Username'
 
 export function UserSettings() {
   const { data, loading } = useViewerQuery()
@@ -39,8 +40,9 @@ export function UserSettings() {
           <Detail.Title ref={titleRef}>Settings</Detail.Title>
         </Detail.Header>
 
-        <div className="py-16">
+        <div className="py-16 space-y-8">
           <EmailForm />
+          <UsernameForm />
         </div>
 
         <UserSettingsFooter />
