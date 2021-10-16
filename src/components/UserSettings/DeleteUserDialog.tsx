@@ -18,7 +18,7 @@ export function DeleteUserDialog({ trigger }) {
       trigger={trigger}
       title={'Delete account'}
       modalContent={({ closeModal }) => (
-        <div className="flex flex-col space-y-4 text-left text-primary">
+        <div className="flex flex-col p-4 space-y-4 text-left text-primary">
           <p>All comments, reactions, and AMA questions will be deleted.</p>
 
           <DeleteButton onClick={onClick}>Delete my account</DeleteButton>

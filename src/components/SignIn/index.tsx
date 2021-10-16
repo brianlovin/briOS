@@ -2,14 +2,14 @@ import * as React from 'react'
 import Dialog from '~/components/Dialog'
 import { SignInDialogContent } from './SignInDialogContent'
 
-export function SignInDialog({ children }) {
+export function SignInDialog({ children, trigger }) {
   return (
     <Dialog
-      trigger={null}
+      trigger={trigger}
       title={'Sign In'}
       modalContent={() => <SignInDialogContent />}
     >
-      {({ openModal }) => children({ openModal })}
+      {children ? ({ openModal }) => children({ openModal }) : null}
     </Dialog>
   )
 }

@@ -47,8 +47,9 @@ export function AddQuestionForm({ closeModal }) {
   }
 
   return (
-    <form className="items-stretch space-y-4" onSubmit={onSubmit}>
+    <form className="items-stretch p-4 space-y-4" onSubmit={onSubmit}>
       <Textarea
+        rows={4}
         value={text}
         placeholder="Ask me anything..."
         onChange={onTextChange}

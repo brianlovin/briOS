@@ -26,7 +26,7 @@
 
   button:focus:not(:focus-visible),
   a:focus:not(:focus-visible) {
-    @apply ring-0;
+    @apply outline-none ring-0;
   }
 }
 
