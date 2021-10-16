@@ -2,7 +2,6 @@ import React from 'react'
 import { useViewerQuery } from '~/graphql/types.generated'
 import { DeleteButton } from '../Button'
 import { Detail } from '../ListDetail/Detail'
-import { SignInDialog } from '../SignIn'
 import { SignInDialogContent } from '../SignIn/SignInDialogContent'
 import { DeleteUserDialog } from './DeleteUserDialog'
 
