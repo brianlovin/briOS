@@ -102,3 +102,10 @@ export const CommentButton = React.forwardRef((props: ButtonProps, ref) => {
     />
   )
 })
+
+export const TwitterButton = React.forwardRef((props: ButtonProps, ref) => {
+  const classes = `rounded-md bg-twitter text-white space-x-4 items-center`
+  const size = composer.getSize(props.size)
+  const composed = `${baseClasses} ${size} ${classes}`
+  return <BaseButton forwardedRef={ref} className={composed} {...props} />
+})
