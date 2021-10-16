@@ -8,7 +8,7 @@ import {
 } from '~/graphql/queries/ama'
 import AudioPlayer from '../AudioPlayer'
 import Button, { DeleteButton, RecordingButton } from '../Button'
-import Spinner from '../LoadingSpinner'
+import { LoadingSpinner } from '../LoadingSpinner'
 import { ErrorAlert } from '../Alert'
 import { Trash } from 'react-feather'
 
@@ -335,14 +335,14 @@ export default function AudioRecorder(props: Props) {
 
       {state.status === 'uploading' && (
         <div className="flex items-center justify-center">
-          <Spinner />
+          <LoadingSpinner />
           <p className="text-primary">Uploading...</p>
         </div>
       )}
 
       {state.status === 'transcribing' && (
         <div className="flex items-center justify-center">
-          <Spinner />
+          <LoadingSpinner />
           <p className="text-primary">Transcribing...</p>
         </div>
       )}

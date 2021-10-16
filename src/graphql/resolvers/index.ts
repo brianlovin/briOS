@@ -40,5 +40,11 @@ export default {
     isViewer: ({ id }, _, { viewer }: Context) => {
       return viewer && viewer.id === id
     },
+    email: ({ id }, _, { viewer }: Context) => {
+      return viewer && viewer.id === id ? viewer.email : null
+    },
+    pendingEmail: ({ id }, _, { viewer }: Context) => {
+      return viewer && viewer.id === id ? viewer.pendingEmail : null
+    },
   },
 }

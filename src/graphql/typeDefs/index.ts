@@ -95,6 +95,8 @@ export default gql`
     avatar: String
     name: String
     isViewer: Boolean
+    email: String
+    pendingEmail: String
   }
 
   type Comment {
@@ -125,6 +127,11 @@ export default gql`
     transcription(transcriptionId: ID!): String
   }
 
+  input EditUserInput {
+    username: String
+    email: String
+  }
+
   type Mutation {
     addBookmark(url: String!): Bookmark
     editBookmark(id: ID!, title: String!): Bookmark
@@ -146,5 +153,6 @@ export default gql`
     editComment(id: ID!, text: String): Comment
     deleteComment(id: ID!): Boolean
     deleteUser: Boolean
+    editUser(data: EditUserInput): User
   }
 `

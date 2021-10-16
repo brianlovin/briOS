@@ -1,37 +1,49 @@
 import React from 'react'
 import { useViewerQuery } from '~/graphql/types.generated'
-import { DeleteButton } from '../Button'
 import { Detail } from '../ListDetail/Detail'
-import { SignInDialogContent } from '../SignIn/SignInDialogContent'
-import { DeleteUserDialog } from './DeleteUserDialog'
+import TitleBar from '../ListDetail/TitleBar'
+import { LoadingSpinner } from '../LoadingSpinner'
+import { EmailForm } from './Email'
+import { UserSettingsFooter } from './Footer'
+import { SignedOut } from './SignedOut'
 
 export function UserSettings() {
-  const { data } = useViewerQuery()
+  const { data, loading } = useViewerQuery()
+  const titleRef = React.useRef(null)
+  const scrollContainerRef = React.useRef(null)
+
+  if (loading) {
+    return (
+      <Detail.Container>
+        <div className="flex flex-col items-center justify-center flex-1">
+          <LoadingSpinner />
+        </div>
+      </Detail.Container>
+    )
+  }
+
+  if (!data.viewer) {
+    return <SignedOut />
+  }
+
   return (
-    <Detail.Container>
+    <Detail.Container ref={scrollContainerRef}>
+      <TitleBar
+        magicTitle
+        title={'Settings'}
+        titleRef={titleRef}
+        scrollContainerRef={scrollContainerRef}
+      />
       <Detail.ContentContainer>
-        {data?.viewer ? (
-          <>
-            <Detail.Header>
-              <Detail.Title>Settings</Detail.Title>
-            </Detail.Header>
-            <div className="flex space-x-4">
-              <DeleteButton href="/api/auth/logout">Log out</DeleteButton>
-              <DeleteUserDialog
-                trigger={<DeleteButton>Delete account</DeleteButton>}
-              />
-            </div>
-          </>
-        ) : (
-          <>
-            <Detail.Header>
-              <Detail.Title>Sign in</Detail.Title>
-            </Detail.Header>
-            <div className="mt-12 -mx-4 md:-mx-6">
-              <SignInDialogContent />
-            </div>
-          </>
-        )}
+        <Detail.Header>
+          <Detail.Title ref={titleRef}>Settings</Detail.Title>
+        </Detail.Header>
+
+        <div className="py-16">
+          <EmailForm />
+        </div>
+
+        <UserSettingsFooter />
       </Detail.ContentContainer>
     </Detail.Container>
   )

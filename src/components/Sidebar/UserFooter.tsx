@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import LoadingSpinner from '~/components/LoadingSpinner'
+import { LoadingSpinner } from '~/components/LoadingSpinner'
 import { Settings } from 'react-feather'
 import { useViewerQuery } from '~/graphql/types.generated'
 import { GhostButton } from '../Button'

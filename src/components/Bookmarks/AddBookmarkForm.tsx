@@ -6,7 +6,7 @@ import { GET_BOOKMARKS } from '~/graphql/queries'
 import { Input } from '~/components/Input'
 import Button from '../Button'
 import { ErrorAlert } from '~/components/Alert'
-import LoadingSpinner from '~/components/LoadingSpinner'
+import { LoadingSpinner } from '~/components/LoadingSpinner'
 import { useRouter } from 'next/router'
 
 export function AddBookmarkForm({ closeModal }) {
