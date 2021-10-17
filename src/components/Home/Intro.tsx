@@ -3,7 +3,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { MapPin } from 'react-feather'
 import Button from '~/components/Button'
-import NewsletterSubscriptionBox from '../Newsletter'
 import TitleBar from '../ListDetail/TitleBar'
 import { Detail } from '../ListDetail/Detail'
 
@@ -149,7 +148,7 @@ export default function Intro() {
       <div className="p-4" ref={titleRef} />
 
       <Detail.ContentContainer>
-        <div className="space-y-16">
+        <div className="pb-24 space-y-8 md:space-y-16">
           <SectionContainer>
             <SectionTitle />
             <SectionContent>
@@ -255,19 +254,6 @@ export default function Intro() {
                   />
                 ))}
               </div>
-            </SectionContent>
-          </SectionContainer>
-
-          <SectionContainer>
-            <SectionTitle>Newsletter</SectionTitle>
-            <SectionContent>
-              <div className="prose">
-                <p>
-                  Get updates about new posts, new projects, or other meaningful
-                  updates to this site deliveblue to your inbox.
-                </p>
-              </div>
-              <NewsletterSubscriptionBox />
             </SectionContent>
           </SectionContainer>
         </div>

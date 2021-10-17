@@ -1,9 +1,7 @@
 import * as React from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
 import { Post } from '~/graphql/types.generated'
 import { ArrowRight } from 'react-feather'
-import NewsletterSubscriptionBox from '../Newsletter'
 
 interface Props {
   posts: Post[]
