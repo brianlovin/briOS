@@ -1,12 +1,13 @@
 import Query from '~/graphql/resolvers/queries'
 import Mutation from '~/graphql/resolvers/mutations'
-import { UserRole } from '~/graphql/types.generated'
+import { UserRole, EmailSubscriptionType } from '~/graphql/types.generated'
 import { getCommentAuthor } from '~/graphql/resolvers/queries/comment'
 import {
   getQuestionAuthor,
   getQuestionComments,
 } from '~/graphql/resolvers/queries/ama'
 import { Context } from '~/graphql/context'
+import { revue } from '~/lib/revue'
 
 export default {
   Query,
@@ -45,6 +46,29 @@ export default {
     },
     pendingEmail: ({ id }, _, { viewer }: Context) => {
       return viewer && viewer.id === id ? viewer.pendingEmail : null
+    },
+    emailSubscriptions: async ({ id }, _, { viewer, prisma }: Context) => {
+      if (!viewer || !viewer.email || viewer.id !== id) return []
+
+      const [hn, newsletter] = await Promise.all([
+        prisma.emailSubscription.findUnique({
+          where: {
+            email: viewer.email,
+          },
+        }),
+        // revue.getSubscriber({ email: viewer.email }),
+      ])
+
+      return [
+        // {
+        //   type: EmailSubscriptionType.Newsletter,
+        //   subscribed: !!newsletter,
+        // },
+        {
+          type: EmailSubscriptionType.HackerNews,
+          subscribed: !!hn,
+        },
+      ]
     },
   },
 }

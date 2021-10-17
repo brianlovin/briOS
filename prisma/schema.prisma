@@ -168,3 +168,14 @@ model Reaction {
   @@index([postId])
   @@index([stackId])
 }
+
+enum EmailSubscriptionType {
+  HACKER_NEWS
+}
+
+model EmailSubscription {
+  email String                @id @unique
+  type  EmailSubscriptionType
+
+  @@index([email, type])
+}

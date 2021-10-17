@@ -1,13 +1,16 @@
 import * as React from 'react'
 import { GET_VIEWER_QUERY } from '~/graphql/queries'
-import { useEditUserMutation, useViewerQuery } from '~/graphql/types.generated'
+import {
+  useEditUserMutation,
+  useGetViewerWithSettingsQuery,
+} from '~/graphql/types.generated'
 import { validUsername } from '~/lib/validators'
 import Button from '../Button'
 import { Input } from '../Input'
 import { LoadingSpinner } from '../LoadingSpinner'
 
 export function UsernameForm() {
-  const { data } = useViewerQuery()
+  const { data } = useGetViewerWithSettingsQuery()
   const { viewer } = data
   const [username, setUsername] = React.useState(data?.viewer?.username || '')
   const [isEditing, setIsEditing] = React.useState(false)
@@ -60,7 +63,7 @@ export function UsernameForm() {
     <div className="space-y-2">
       <p className="text-sm font-semibold text-primary">Username</p>
 
-      {viewer.email && (
+      {viewer.username && (
         <div className="flex space-x-2">
           <span>@{viewer.username}</span>
           <span>·</span>

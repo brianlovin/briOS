@@ -87,6 +87,16 @@ export default gql`
     ADMIN
   }
 
+  enum EmailSubscriptionType {
+    HACKER_NEWS
+    NEWSLETTER
+  }
+
+  type EmailSubscription {
+    type: EmailSubscriptionType
+    subscribed: Boolean
+  }
+
   type User {
     id: ID!
     createdAt: String
@@ -97,6 +107,7 @@ export default gql`
     isViewer: Boolean
     email: String
     pendingEmail: String
+    emailSubscriptions: [EmailSubscription]
   }
 
   type Comment {
@@ -132,6 +143,12 @@ export default gql`
     email: String
   }
 
+  input EmailSubscriptionInput {
+    type: EmailSubscriptionType!
+    subscribed: Boolean!
+    email: String
+  }
+
   type Mutation {
     addBookmark(url: String!): Bookmark
     editBookmark(id: ID!, title: String!): Bookmark
@@ -154,5 +171,6 @@ export default gql`
     deleteComment(id: ID!): Boolean
     deleteUser: Boolean
     editUser(data: EditUserInput): User
+    editEmailSubscription(data: EmailSubscriptionInput): User
   }
 `

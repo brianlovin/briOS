@@ -76,6 +76,23 @@ export type EditUserInput = {
   username?: Maybe<Scalars['String']>
 }
 
+export type EmailSubscription = {
+  __typename?: 'EmailSubscription'
+  subscribed?: Maybe<Scalars['Boolean']>
+  type?: Maybe<EmailSubscriptionType>
+}
+
+export type EmailSubscriptionInput = {
+  email?: Maybe<Scalars['String']>
+  subscribed: Scalars['Boolean']
+  type: EmailSubscriptionType
+}
+
+export enum EmailSubscriptionType {
+  HackerNews = 'HACKER_NEWS',
+  Newsletter = 'NEWSLETTER',
+}
+
 export type Episode = {
   __typename?: 'Episode'
   description?: Maybe<Scalars['String']>
@@ -103,6 +120,7 @@ export type Mutation = {
   editAMAQuestion?: Maybe<Ama>
   editBookmark?: Maybe<Bookmark>
   editComment?: Maybe<Comment>
+  editEmailSubscription?: Maybe<User>
   editUser?: Maybe<User>
   transcribeAudio?: Maybe<Scalars['String']>
 }
@@ -161,6 +179,10 @@ export type MutationEditBookmarkArgs = {
 export type MutationEditCommentArgs = {
   id: Scalars['ID']
   text?: Maybe<Scalars['String']>
+}
+
+export type MutationEditEmailSubscriptionArgs = {
+  data?: Maybe<EmailSubscriptionInput>
 }
 
 export type MutationEditUserArgs = {
@@ -284,6 +306,7 @@ export type User = {
   avatar?: Maybe<Scalars['String']>
   createdAt?: Maybe<Scalars['String']>
   email?: Maybe<Scalars['String']>
+  emailSubscriptions?: Maybe<Array<Maybe<EmailSubscription>>>
   id: Scalars['ID']
   isViewer?: Maybe<Scalars['Boolean']>
   name?: Maybe<Scalars['String']>
@@ -313,8 +336,6 @@ export type AmaInfoFragment = {
         name?: string | null | undefined
         role?: UserRole | null | undefined
         isViewer?: boolean | null | undefined
-        email?: string | null | undefined
-        pendingEmail?: string | null | undefined
       }
     | null
     | undefined
@@ -335,8 +356,6 @@ export type AmaInfoFragment = {
           name?: string | null | undefined
           role?: UserRole | null | undefined
           isViewer?: boolean | null | undefined
-          email?: string | null | undefined
-          pendingEmail?: string | null | undefined
         }
       }
     | null
@@ -372,8 +391,6 @@ export type CommentInfoFragment = {
     name?: string | null | undefined
     role?: UserRole | null | undefined
     isViewer?: boolean | null | undefined
-    email?: string | null | undefined
-    pendingEmail?: string | null | undefined
   }
 }
 
@@ -417,8 +434,24 @@ export type UserInfoFragment = {
   name?: string | null | undefined
   role?: UserRole | null | undefined
   isViewer?: boolean | null | undefined
+}
+
+export type UserSettingsFragment = {
+  __typename?: 'User'
   email?: string | null | undefined
   pendingEmail?: string | null | undefined
+  emailSubscriptions?:
+    | Array<
+        | {
+            __typename?: 'EmailSubscription'
+            type?: EmailSubscriptionType | null | undefined
+            subscribed?: boolean | null | undefined
+          }
+        | null
+        | undefined
+      >
+    | null
+    | undefined
 }
 
 export type EditAmaQuestionMutationVariables = Exact<{
@@ -449,8 +482,6 @@ export type EditAmaQuestionMutation = {
               name?: string | null | undefined
               role?: UserRole | null | undefined
               isViewer?: boolean | null | undefined
-              email?: string | null | undefined
-              pendingEmail?: string | null | undefined
             }
           | null
           | undefined
@@ -471,8 +502,6 @@ export type EditAmaQuestionMutation = {
                 name?: string | null | undefined
                 role?: UserRole | null | undefined
                 isViewer?: boolean | null | undefined
-                email?: string | null | undefined
-                pendingEmail?: string | null | undefined
               }
             }
           | null
@@ -523,8 +552,6 @@ export type AddAmaReactionMutation = {
               name?: string | null | undefined
               role?: UserRole | null | undefined
               isViewer?: boolean | null | undefined
-              email?: string | null | undefined
-              pendingEmail?: string | null | undefined
             }
           | null
           | undefined
@@ -545,8 +572,6 @@ export type AddAmaReactionMutation = {
                 name?: string | null | undefined
                 role?: UserRole | null | undefined
                 isViewer?: boolean | null | undefined
-                email?: string | null | undefined
-                pendingEmail?: string | null | undefined
               }
             }
           | null
@@ -676,8 +701,6 @@ export type AddCommentMutation = {
           name?: string | null | undefined
           role?: UserRole | null | undefined
           isViewer?: boolean | null | undefined
-          email?: string | null | undefined
-          pendingEmail?: string | null | undefined
         }
       }
     | null
@@ -708,8 +731,6 @@ export type EditCommentMutation = {
           name?: string | null | undefined
           role?: UserRole | null | undefined
           isViewer?: boolean | null | undefined
-          email?: string | null | undefined
-          pendingEmail?: string | null | undefined
         }
       }
     | null
@@ -723,6 +744,32 @@ export type DeleteCommentMutationVariables = Exact<{
 export type DeleteCommentMutation = {
   __typename?: 'Mutation'
   deleteComment?: boolean | null | undefined
+}
+
+export type EditEmailSubscriptionMutationVariables = Exact<{
+  data?: Maybe<EmailSubscriptionInput>
+}>
+
+export type EditEmailSubscriptionMutation = {
+  __typename?: 'Mutation'
+  editEmailSubscription?:
+    | {
+        __typename?: 'User'
+        emailSubscriptions?:
+          | Array<
+              | {
+                  __typename?: 'EmailSubscription'
+                  subscribed?: boolean | null | undefined
+                  type?: EmailSubscriptionType | null | undefined
+                }
+              | null
+              | undefined
+            >
+          | null
+          | undefined
+      }
+    | null
+    | undefined
 }
 
 export type DeleteUserMutationVariables = Exact<{ [key: string]: never }>
@@ -747,8 +794,6 @@ export type EditUserMutation = {
         name?: string | null | undefined
         role?: UserRole | null | undefined
         isViewer?: boolean | null | undefined
-        email?: string | null | undefined
-        pendingEmail?: string | null | undefined
       }
     | null
     | undefined
@@ -777,8 +822,6 @@ export type GetAmaQuestionsQuery = {
               name?: string | null | undefined
               role?: UserRole | null | undefined
               isViewer?: boolean | null | undefined
-              email?: string | null | undefined
-              pendingEmail?: string | null | undefined
             }
           | null
           | undefined
@@ -799,8 +842,6 @@ export type GetAmaQuestionsQuery = {
                 name?: string | null | undefined
                 role?: UserRole | null | undefined
                 isViewer?: boolean | null | undefined
-                email?: string | null | undefined
-                pendingEmail?: string | null | undefined
               }
             }
           | null
@@ -834,8 +875,6 @@ export type GetAmaQuestionQuery = {
               name?: string | null | undefined
               role?: UserRole | null | undefined
               isViewer?: boolean | null | undefined
-              email?: string | null | undefined
-              pendingEmail?: string | null | undefined
             }
           | null
           | undefined
@@ -856,8 +895,6 @@ export type GetAmaQuestionQuery = {
                 name?: string | null | undefined
                 role?: UserRole | null | undefined
                 isViewer?: boolean | null | undefined
-                email?: string | null | undefined
-                pendingEmail?: string | null | undefined
               }
             }
           | null
@@ -964,8 +1001,6 @@ export type GetCommentsQuery = {
           name?: string | null | undefined
           role?: UserRole | null | undefined
           isViewer?: boolean | null | undefined
-          email?: string | null | undefined
-          pendingEmail?: string | null | undefined
         }
       }
     | null
@@ -1103,8 +1138,6 @@ export type GetUserQuery = {
         name?: string | null | undefined
         role?: UserRole | null | undefined
         isViewer?: boolean | null | undefined
-        email?: string | null | undefined
-        pendingEmail?: string | null | undefined
       }
     | null
     | undefined
@@ -1123,8 +1156,40 @@ export type ViewerQuery = {
         name?: string | null | undefined
         role?: UserRole | null | undefined
         isViewer?: boolean | null | undefined
+      }
+    | null
+    | undefined
+}
+
+export type GetViewerWithSettingsQueryVariables = Exact<{
+  [key: string]: never
+}>
+
+export type GetViewerWithSettingsQuery = {
+  __typename?: 'Query'
+  viewer?:
+    | {
+        __typename: 'User'
+        id: string
+        username?: string | null | undefined
+        avatar?: string | null | undefined
+        name?: string | null | undefined
+        role?: UserRole | null | undefined
+        isViewer?: boolean | null | undefined
         email?: string | null | undefined
         pendingEmail?: string | null | undefined
+        emailSubscriptions?:
+          | Array<
+              | {
+                  __typename?: 'EmailSubscription'
+                  type?: EmailSubscriptionType | null | undefined
+                  subscribed?: boolean | null | undefined
+                }
+              | null
+              | undefined
+            >
+          | null
+          | undefined
       }
     | null
     | undefined
@@ -1139,8 +1204,6 @@ export const UserInfoFragmentDoc = gql`
     name
     role
     isViewer
-    email
-    pendingEmail
   }
 `
 export const CommentInfoFragmentDoc = gql`
@@ -1217,6 +1280,16 @@ export const RepoInfoFragmentDoc = gql`
     name
     description
     stars
+  }
+`
+export const UserSettingsFragmentDoc = gql`
+  fragment UserSettings on User {
+    email
+    pendingEmail
+    emailSubscriptions {
+      type
+      subscribed
+    }
   }
 `
 export const EditAmaQuestionDocument = gql`
@@ -1882,6 +1955,59 @@ export type DeleteCommentMutationResult =
 export type DeleteCommentMutationOptions = Apollo.BaseMutationOptions<
   DeleteCommentMutation,
   DeleteCommentMutationVariables
+>
+export const EditEmailSubscriptionDocument = gql`
+  mutation editEmailSubscription($data: EmailSubscriptionInput) {
+    editEmailSubscription(data: $data) {
+      emailSubscriptions {
+        subscribed
+        type
+      }
+    }
+  }
+`
+export type EditEmailSubscriptionMutationFn = Apollo.MutationFunction<
+  EditEmailSubscriptionMutation,
+  EditEmailSubscriptionMutationVariables
+>
+
+/**
+ * __useEditEmailSubscriptionMutation__
+ *
+ * To run a mutation, you first call `useEditEmailSubscriptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditEmailSubscriptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editEmailSubscriptionMutation, { data, loading, error }] = useEditEmailSubscriptionMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useEditEmailSubscriptionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    EditEmailSubscriptionMutation,
+    EditEmailSubscriptionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    EditEmailSubscriptionMutation,
+    EditEmailSubscriptionMutationVariables
+  >(EditEmailSubscriptionDocument, options)
+}
+export type EditEmailSubscriptionMutationHookResult = ReturnType<
+  typeof useEditEmailSubscriptionMutation
+>
+export type EditEmailSubscriptionMutationResult =
+  Apollo.MutationResult<EditEmailSubscriptionMutation>
+export type EditEmailSubscriptionMutationOptions = Apollo.BaseMutationOptions<
+  EditEmailSubscriptionMutation,
+  EditEmailSubscriptionMutationVariables
 >
 export const DeleteUserDocument = gql`
   mutation deleteUser {
@@ -2751,4 +2877,64 @@ export type ViewerLazyQueryHookResult = ReturnType<typeof useViewerLazyQuery>
 export type ViewerQueryResult = Apollo.QueryResult<
   ViewerQuery,
   ViewerQueryVariables
+>
+export const GetViewerWithSettingsDocument = gql`
+  query getViewerWithSettings {
+    viewer {
+      ...UserInfo
+      ...UserSettings
+    }
+  }
+  ${UserInfoFragmentDoc}
+  ${UserSettingsFragmentDoc}
+`
+
+/**
+ * __useGetViewerWithSettingsQuery__
+ *
+ * To run a query within a React component, call `useGetViewerWithSettingsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetViewerWithSettingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetViewerWithSettingsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetViewerWithSettingsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetViewerWithSettingsQuery,
+    GetViewerWithSettingsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    GetViewerWithSettingsQuery,
+    GetViewerWithSettingsQueryVariables
+  >(GetViewerWithSettingsDocument, options)
+}
+export function useGetViewerWithSettingsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetViewerWithSettingsQuery,
+    GetViewerWithSettingsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    GetViewerWithSettingsQuery,
+    GetViewerWithSettingsQueryVariables
+  >(GetViewerWithSettingsDocument, options)
+}
+export type GetViewerWithSettingsQueryHookResult = ReturnType<
+  typeof useGetViewerWithSettingsQuery
+>
+export type GetViewerWithSettingsLazyQueryHookResult = ReturnType<
+  typeof useGetViewerWithSettingsLazyQuery
+>
+export type GetViewerWithSettingsQueryResult = Apollo.QueryResult<
+  GetViewerWithSettingsQuery,
+  GetViewerWithSettingsQueryVariables
 >

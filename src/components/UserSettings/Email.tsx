@@ -1,13 +1,16 @@
 import * as React from 'react'
-import { GET_VIEWER_QUERY } from '~/graphql/queries'
-import { useEditUserMutation, useViewerQuery } from '~/graphql/types.generated'
+import { GET_VIEWER_SETTINGS } from '~/graphql/queries/viewer'
+import {
+  useEditUserMutation,
+  useGetViewerWithSettingsQuery,
+} from '~/graphql/types.generated'
 import { WarnAlert } from '../Alert'
 import Button from '../Button'
 import { Input } from '../Input'
 import { LoadingSpinner } from '../LoadingSpinner'
 
 export function EmailForm() {
-  const { data } = useViewerQuery()
+  const { data } = useGetViewerWithSettingsQuery()
   const { viewer } = data
   const isNew = !viewer.email && !viewer.pendingEmail
 
@@ -22,11 +25,11 @@ export function EmailForm() {
     },
     update(cache) {
       const { viewer } = cache.readQuery({
-        query: GET_VIEWER_QUERY,
+        query: GET_VIEWER_SETTINGS,
       })
 
       cache.writeQuery({
-        query: GET_VIEWER_QUERY,
+        query: GET_VIEWER_SETTINGS,
         data: {
           viewer: {
             ...viewer,
@@ -49,11 +52,11 @@ export function EmailForm() {
     },
     update(cache) {
       const { viewer } = cache.readQuery({
-        query: GET_VIEWER_QUERY,
+        query: GET_VIEWER_SETTINGS,
       })
 
       cache.writeQuery({
-        query: GET_VIEWER_QUERY,
+        query: GET_VIEWER_SETTINGS,
         data: {
           viewer: {
             ...viewer,
@@ -76,11 +79,11 @@ export function EmailForm() {
     },
     update(cache) {
       const { viewer } = cache.readQuery({
-        query: GET_VIEWER_QUERY,
+        query: GET_VIEWER_SETTINGS,
       })
 
       cache.writeQuery({
-        query: GET_VIEWER_QUERY,
+        query: GET_VIEWER_SETTINGS,
         data: {
           viewer,
         },

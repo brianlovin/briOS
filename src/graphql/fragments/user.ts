@@ -9,7 +9,16 @@ export const UserInfoFragment = gql`
     name
     role
     isViewer
+  }
+`
+
+export const UserSettingsFragment = gql`
+  fragment UserSettings on User {
     email
     pendingEmail
+    emailSubscriptions {
+      type
+      subscribed
+    }
   }
 `

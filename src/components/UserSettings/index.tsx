@@ -1,15 +1,16 @@
 import * as React from 'react'
-import { useViewerQuery } from '~/graphql/types.generated'
+import { useGetViewerWithSettingsQuery } from '~/graphql/types.generated'
 import { Detail } from '../ListDetail/Detail'
 import TitleBar from '../ListDetail/TitleBar'
 import { LoadingSpinner } from '../LoadingSpinner'
 import { EmailForm } from './Email'
+import { EmailPreferences } from './EmailPreferences'
 import { UserSettingsFooter } from './Footer'
 import { SignedOut } from './SignedOut'
 import { UsernameForm } from './Username'
 
 export function UserSettings() {
-  const { data, loading } = useViewerQuery()
+  const { data, loading } = useGetViewerWithSettingsQuery()
   const titleRef = React.useRef(null)
   const scrollContainerRef = React.useRef(null)
 
@@ -40,12 +41,20 @@ export function UserSettings() {
           <Detail.Title ref={titleRef}>Settings</Detail.Title>
         </Detail.Header>
 
-        <div className="py-16 space-y-8">
-          <EmailForm />
-          <UsernameForm />
-        </div>
+        <div className="py-12 divide-y divide-gray-200 dark:divide-gray-800">
+          <div className="py-12 space-y-8">
+            <h3 className="text-lg font-bold">Account</h3>
+            <EmailForm />
+            <UsernameForm />
+          </div>
 
-        <UserSettingsFooter />
+          <div className="py-12 space-y-8">
+            <h3 className="text-lg font-bold">Emails</h3>
+            <EmailPreferences />
+          </div>
+
+          <UserSettingsFooter />
+        </div>
       </Detail.ContentContainer>
     </Detail.Container>
   )
