@@ -26,7 +26,7 @@ const Container = React.forwardRef<HTMLDivElement, DetailContainerProps>(
 )
 
 function Header(props) {
-  return <div className="space-y-4" {...props} />
+  return <div className="space-y-3" {...props} />
 }
 
 interface TitleProps {

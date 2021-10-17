@@ -30,7 +30,7 @@ export default function SecurityChecklist() {
           </p>
         </Detail.Header>
 
-        <div className="space-y-24">
+        <div className="pt-16 space-y-24">
           {resources.map((resource) => (
             <ChecklistItem key={resource.id} resource={resource} />
           ))}
