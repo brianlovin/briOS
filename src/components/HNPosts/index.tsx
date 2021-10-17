@@ -17,6 +17,14 @@ const PostList = React.memo(({ posts }: Props) => {
   const router = useRouter()
   let [scrollContainerRef, setScrollContainerRef] = React.useState(null)
 
+  function handleClick(e, post) {
+    if (e.metaKey) {
+      e.preventDefault()
+      e.stopPropagation()
+      window.open(post.url, '_blank').focus()
+    }
+  }
+
   return (
     <ListContainer onRef={setScrollContainerRef}>
       <TitleBar
@@ -47,8 +55,9 @@ const PostList = React.memo(({ posts }: Props) => {
               as={`/hn/${post.id}`}
               title={post.title}
               description={null}
-              byline={`${post.comments_count} comments`}
+              byline={post.domain}
               active={active}
+              onClick={(e) => handleClick(e, post)}
             />
           )
         })}
