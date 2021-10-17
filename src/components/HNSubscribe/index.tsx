@@ -4,15 +4,19 @@ import { SuccessAlert, ErrorAlert } from '~/components/Alert'
 import {
   EmailSubscriptionType,
   useEditEmailSubscriptionMutation,
+  useEditUserMutation,
   useGetViewerWithSettingsQuery,
 } from '~/graphql/types.generated'
 import Button from '../Button'
 import { LoadingSpinner } from '../LoadingSpinner'
 import { EmailSubscriptionForm } from '../UserSettings/EmailPreferences'
 import { validEmail } from '~/lib/validators'
+import { GET_VIEWER_SETTINGS } from '~/graphql/queries/viewer'
 
 export default function HNSubscribeBox() {
-  const { data, loading } = useGetViewerWithSettingsQuery()
+  const { data, loading } = useGetViewerWithSettingsQuery({
+    fetchPolicy: 'cache-and-network',
+  })
   const [email, setEmail] = React.useState('')
   const [status, setStatus] = React.useState('default')
 
@@ -29,11 +33,40 @@ export default function HNSubscribeBox() {
       },
     })
 
+  const [setPendingEmail, setPendingEmailResponse] = useEditUserMutation({
+    update(cache) {
+      const { viewer } = cache.readQuery({
+        query: GET_VIEWER_SETTINGS,
+      })
+
+      cache.writeQuery({
+        query: GET_VIEWER_SETTINGS,
+        data: {
+          viewer: {
+            ...viewer,
+            pendingEmail: email === viewer.email ? null : email,
+          },
+        },
+      })
+    },
+    onError() {},
+  })
+
   async function submit(e) {
     e.preventDefault()
 
     if (!validEmail(email)) {
       return setStatus('invalid-email')
+    }
+
+    if (data.viewer && !data.viewer.email) {
+      setPendingEmail({
+        variables: {
+          data: {
+            email,
+          },
+        },
+      })
     }
 
     editEmailSubscription({
@@ -55,15 +88,9 @@ export default function HNSubscribeBox() {
     )
   }
 
-  return (
-    <div className="p-4 space-y-4" data-cy="hn-subscribe-box">
-      {data.viewer ? (
-        <EmailSubscriptionForm
-          subscription={data.viewer.emailSubscriptions.find(
-            (s) => s.type === EmailSubscriptionType.HackerNews
-          )}
-        />
-      ) : (
+  if (!data.viewer || !data.viewer.email) {
+    return (
+      <div className="p-4 space-y-4" data-cy="hn-subscribe-box">
         <div className="flex flex-col space-y-4">
           <p className="text-secondary">
             Get a daily email with the the top stories from Hacker News. No
@@ -97,7 +124,17 @@ export default function HNSubscribeBox() {
             </SuccessAlert>
           )}
         </div>
-      )}
+      </div>
+    )
+  }
+
+  return (
+    <div className="p-4">
+      <EmailSubscriptionForm
+        subscription={data.viewer.emailSubscriptions.find(
+          (s) => s.type === EmailSubscriptionType.HackerNews
+        )}
+      />
     </div>
   )
 }

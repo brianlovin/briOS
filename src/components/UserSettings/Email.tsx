@@ -15,7 +15,7 @@ export function EmailForm() {
   const isNew = !viewer.email && !viewer.pendingEmail
 
   const [isEditing, setIsEditing] = React.useState(isNew)
-  const [email, setEmail] = React.useState(data?.viewer?.email || '')
+  const [email, setEmail] = React.useState('')
 
   const [setPendingEmail, setPendingEmailResponse] = useEditUserMutation({
     variables: {
@@ -109,7 +109,7 @@ export function EmailForm() {
 
   return (
     <div className="space-y-2">
-      <p className="text-sm font-semibold text-primary">Email</p>
+      <p className="font-semibold text-primary">Email</p>
 
       {viewer.email && (
         <div className="flex space-x-2">
@@ -126,6 +126,12 @@ export function EmailForm() {
 
       {(isNew || isEditing) && (
         <form className="space-y-2" onSubmit={onSubmit}>
+          {isNew && (
+            <p className="text-sm text-quaternary">
+              Adding your email will allow you to turn on replies for comments
+              or AMA questions.
+            </p>
+          )}
           <Input
             type="email"
             placeholder={
@@ -135,14 +141,7 @@ export function EmailForm() {
             autoFocus
             onChange={handleEmailChange}
           />
-          {isNew && (
-            <p className="pb-2 text-xs text-quaternary">
-              Adding your email will allow you to turn on replies for comments
-              or AMA questions.
-            </p>
-          )}
           <div className="flex justify-between">
-            <span />
             <Button type="submit">
               {setPendingEmailResponse.loading ? (
                 <LoadingSpinner />

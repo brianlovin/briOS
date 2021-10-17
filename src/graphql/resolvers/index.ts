@@ -48,7 +48,13 @@ export default {
       return viewer && viewer.id === id ? viewer.pendingEmail : null
     },
     emailSubscriptions: async ({ id }, _, { viewer, prisma }: Context) => {
-      if (!viewer || !viewer.email || viewer.id !== id) return []
+      if (!viewer || !viewer.email || viewer.id !== id)
+        return [
+          {
+            type: EmailSubscriptionType.HackerNews,
+            subscribed: false,
+          },
+        ]
 
       const [hn, newsletter] = await Promise.all([
         prisma.emailSubscription.findUnique({

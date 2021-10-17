@@ -12,7 +12,7 @@ import { LoadingSpinner } from '../LoadingSpinner'
 export function UsernameForm() {
   const { data } = useGetViewerWithSettingsQuery()
   const { viewer } = data
-  const [username, setUsername] = React.useState(data?.viewer?.username || '')
+  const [username, setUsername] = React.useState('')
   const [isEditing, setIsEditing] = React.useState(false)
   const [error, setError] = React.useState(null)
 
@@ -21,21 +21,6 @@ export function UsernameForm() {
       data: {
         username,
       },
-    },
-    update(cache) {
-      const { viewer } = cache.readQuery({
-        query: GET_VIEWER_QUERY,
-      })
-
-      cache.writeQuery({
-        query: GET_VIEWER_QUERY,
-        data: {
-          viewer: {
-            ...viewer,
-            username,
-          },
-        },
-      })
     },
     onError() {},
     onCompleted() {
@@ -54,14 +39,11 @@ export function UsernameForm() {
   function handleUsernameChange(e) {
     setError(false)
     setUsername(e.target.value)
-    if (!validUsername(e.target.value)) {
-      setError(true)
-    }
   }
 
   return (
     <div className="space-y-2">
-      <p className="text-sm font-semibold text-primary">Username</p>
+      <p className="font-semibold text-primary">Username</p>
 
       {viewer.username && (
         <div className="flex space-x-2">
@@ -96,7 +78,6 @@ export function UsernameForm() {
             profile, so you know, don’t do it too often.
           </p>
           <div className="flex justify-between">
-            <span />
             <Button type="submit">
               {editUserResponse.loading ? <LoadingSpinner /> : 'Save username'}
             </Button>

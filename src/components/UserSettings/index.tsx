@@ -10,11 +10,14 @@ import { SignedOut } from './SignedOut'
 import { UsernameForm } from './Username'
 
 export function UserSettings() {
-  const { data, loading } = useGetViewerWithSettingsQuery()
+  const { data, loading } = useGetViewerWithSettingsQuery({
+    fetchPolicy: 'network-only',
+  })
+
   const titleRef = React.useRef(null)
   const scrollContainerRef = React.useRef(null)
 
-  if (loading) {
+  if (!data?.viewer && loading) {
     return (
       <Detail.Container>
         <div className="flex flex-col items-center justify-center flex-1">
@@ -48,10 +51,12 @@ export function UserSettings() {
             <UsernameForm />
           </div>
 
-          <div className="py-12 space-y-8">
-            <h3 className="text-lg font-bold">Emails</h3>
-            <EmailPreferences />
-          </div>
+          {data.viewer.email && (
+            <div className="py-12 space-y-8">
+              <h3 className="text-lg font-bold">Emails</h3>
+              <EmailPreferences />
+            </div>
+          )}
 
           <UserSettingsFooter />
         </div>

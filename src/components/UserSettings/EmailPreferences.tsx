@@ -81,14 +81,6 @@ export function EmailPreferences() {
   const { data } = useGetViewerWithSettingsQuery()
   const { viewer } = data
 
-  if (!viewer.email) {
-    return (
-      <div className="p-6 bg-gray-200 rounded-lg dark:bg-gray-800">
-        Add an email address first
-      </div>
-    )
-  }
-
   return (
     <div className="flex flex-col space-y-8">
       {viewer.emailSubscriptions.map((subscription) => (

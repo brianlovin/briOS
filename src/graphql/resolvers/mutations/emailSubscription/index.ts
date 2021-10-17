@@ -24,7 +24,7 @@ export async function editEmailSubscription(
     throw new UserInputError('Invalid email')
   }
 
-  const emailToUse = viewer ? viewer.email : email
+  const emailToUse = viewer && viewer.email ? viewer.email : email
 
   if (type === EmailSubscriptionType.HackerNews) {
     if (subscribed) {
@@ -36,6 +36,7 @@ export async function editEmailSubscription(
           },
         })
       } catch (err) {
+        console.error({ err })
         // nothing to do here
       }
     } else {
@@ -46,6 +47,7 @@ export async function editEmailSubscription(
           },
         })
       } catch (err) {
+        console.error({ err })
         // nothing to do here
       }
     }
