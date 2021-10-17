@@ -1,4 +1,5 @@
 import * as React from 'react'
+import toast from 'react-hot-toast'
 import {
   EmailSubscription,
   EmailSubscriptionType,
@@ -12,7 +13,11 @@ interface Props {
 
 function EmailSubscriptionForm({ subscription }: Props) {
   const [subscribed, setSubscribed] = React.useState(subscription.subscribed)
-  const [editEmailSubscription] = useEditEmailSubscriptionMutation({})
+  const [editEmailSubscription] = useEditEmailSubscriptionMutation({
+    onCompleted() {
+      toast.success('Saved')
+    },
+  })
 
   function onChange() {
     setSubscribed((state) => {
