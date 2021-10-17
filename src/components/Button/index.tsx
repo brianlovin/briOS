@@ -31,7 +31,7 @@ function BaseButton({ href = null, forwardedRef = null, ...rest }) {
 }
 
 const baseClasses =
-  'flex items-center justify-center cursor-pointer leading-none transition-all font-semibold'
+  'flex space-x-2 flex-none items-center justify-center cursor-pointer leading-none transition-all font-semibold'
 
 function getSize(size = null) {
   switch (size) {
@@ -39,7 +39,7 @@ function getSize(size = null) {
       return 'px-5 py-4 text-base'
     }
     case 'small': {
-      return 'px-3 py-2 text-sm'
+      return 'px-2.5 py-1.5 text-xs'
     }
     case 'small-square': {
       return 'p-2 text-sm'

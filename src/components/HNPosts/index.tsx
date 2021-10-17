@@ -2,9 +2,12 @@ import * as React from 'react'
 import { HNPost } from '~/pages/hn'
 import ListItem from '../ListDetail/ListItem'
 import { useRouter } from 'next/router'
-import { format } from 'timeago.js'
 import TitleBar from '../ListDetail/TitleBar'
 import ListContainer from '../ListDetail/ListContainer'
+import Button from '../Button'
+import { Radio } from 'react-feather'
+import DialogComponent from '../Dialog'
+import HNSubscribeBox from '../HNSubscribe'
 
 interface Props {
   posts: HNPost[]
@@ -16,16 +19,26 @@ const PostList = React.memo(({ posts }: Props) => {
 
   return (
     <ListContainer onRef={setScrollContainerRef}>
-      <TitleBar scrollContainerRef={scrollContainerRef} title="Hacker News" />
+      <TitleBar
+        scrollContainerRef={scrollContainerRef}
+        trailingAccessory={
+          <DialogComponent
+            title="Subscribe"
+            trigger={
+              <Button size="small">
+                <Radio size={16} />
+                <span>Subscribe</span>
+              </Button>
+            }
+            modalContent={() => <HNSubscribeBox />}
+          />
+        }
+        title="HN"
+      />
 
       <div className="lg:p-3 lg:space-y-1">
         {posts.map((post) => {
           const active = router.query?.id === post.id.toString() // post ids are numbers
-          const [timeAgo, setTimeAgo] = React.useState(format(post.time * 1000))
-
-          React.useEffect(() => {
-            setTimeAgo(format(post.time * 1000))
-          }, [])
 
           return (
             <ListItem

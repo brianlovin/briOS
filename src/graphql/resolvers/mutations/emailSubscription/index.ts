@@ -28,12 +28,16 @@ export async function editEmailSubscription(
 
   if (type === EmailSubscriptionType.HackerNews) {
     if (subscribed) {
-      await prisma.emailSubscription.create({
-        data: {
-          email: emailToUse,
-          type: type,
-        },
-      })
+      try {
+        await prisma.emailSubscription.create({
+          data: {
+            email: emailToUse,
+            type: type,
+          },
+        })
+      } catch (err) {
+        // nothing to do here
+      }
     } else {
       try {
         await prisma.emailSubscription.delete({

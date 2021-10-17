@@ -11,7 +11,7 @@ interface Props {
   subscription: EmailSubscription
 }
 
-function EmailSubscriptionForm({ subscription }: Props) {
+export function EmailSubscriptionForm({ subscription }: Props) {
   const [subscribed, setSubscribed] = React.useState(subscription.subscribed)
   const [editEmailSubscription] = useEditEmailSubscriptionMutation({
     onCompleted() {
@@ -62,16 +62,16 @@ function EmailSubscriptionForm({ subscription }: Props) {
   const { title, subtitle } = getTitleSubtitle(subscription.type)
 
   return (
-    <label className="flex items-start space-x-4">
+    <label className="flex items-start space-x-3">
       <input
         type="checkbox"
         onChange={onChange}
         defaultChecked={subscribed}
-        className="relative w-5 h-5 border border-gray-300 rounded top-0.5 dark:border-gray-700"
+        className="relative w-4 h-4 border border-gray-300 rounded top-1 dark:border-gray-700"
       />
       <div className="flex flex-col">
         <p className="font-medium text-primary">{title}</p>
-        <p className="text-tertiary">{subtitle}</p>
+        <p className="text-sm text-tertiary">{subtitle}</p>
       </div>
     </label>
   )

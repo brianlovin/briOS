@@ -1,77 +1,103 @@
 import * as React from 'react'
 import { Input } from '~/components/Input'
-import { ErrorAlert, SuccessAlert } from '../Alert'
+import { SuccessAlert, ErrorAlert } from '~/components/Alert'
+import {
+  EmailSubscriptionType,
+  useEditEmailSubscriptionMutation,
+  useGetViewerWithSettingsQuery,
+} from '~/graphql/types.generated'
 import Button from '../Button'
+import { LoadingSpinner } from '../LoadingSpinner'
+import { EmailSubscriptionForm } from '../UserSettings/EmailPreferences'
+import { validEmail } from '~/lib/validators'
 
 export default function HNSubscribeBox() {
+  const { data, loading } = useGetViewerWithSettingsQuery()
   const [email, setEmail] = React.useState('')
-  const [status, setStatus] = React.useState('pending')
-  const [errorMessage, setErrorMessage] = React.useState('')
+  const [status, setStatus] = React.useState('default')
 
   function onChange(e) {
-    if (status !== 'pending') setStatus('pending')
+    setStatus('default')
     return setEmail(e.target.value.trim())
   }
+
+  const [editEmailSubscription, { loading: saving }] =
+    useEditEmailSubscriptionMutation({
+      onCompleted() {
+        setStatus('success')
+        setEmail('')
+      },
+    })
 
   async function submit(e) {
     e.preventDefault()
 
-    const res = await fetch('/api/hn/subscribe', {
-      body: JSON.stringify({ email }),
-      headers: { 'Content-Type': 'application/json' },
-      method: 'POST',
-    })
-
-    const { error } = await res.json()
-
-    if (error) {
-      setStatus('error')
-      setErrorMessage(error)
-      return
+    if (!validEmail(email)) {
+      return setStatus('invalid-email')
     }
 
-    setEmail('')
-    setStatus('succeeded')
+    editEmailSubscription({
+      variables: {
+        data: {
+          type: EmailSubscriptionType.HackerNews,
+          subscribed: true,
+          email: email,
+        },
+      },
+    })
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center p-12">
+        <LoadingSpinner />
+      </div>
+    )
   }
 
   return (
-    <div
-      className="p-8 -mx-4 space-y-4 border-t border-b border-gray-300 border-dashed md:-mx-8 bg-elevated dark:border-gray-700"
-      data-cy="hn-subscribe-box"
-    >
-      <p className="font-semibold text-primary">Daily digest email</p>
-      <p className="text-tertiary">
-        Get a daily email with the the top stories from Hacker News. No spam,
-        unsubscribe at any time.
-      </p>
-      {status === 'succeeded' ? (
-        <SuccessAlert>Subscribed!</SuccessAlert>
+    <div className="p-4 space-y-4" data-cy="hn-subscribe-box">
+      {data.viewer ? (
+        <EmailSubscriptionForm
+          subscription={data.viewer.emailSubscriptions.find(
+            (s) => s.type === EmailSubscriptionType.HackerNews
+          )}
+        />
       ) : (
-        <form
-          onSubmit={submit}
-          className="grid grid-cols-1 gap-2 mt-2 md:grid-cols-3"
-        >
-          <label className="md:col-span-2">
-            <span className="sr-only">Email address</span>
-            <Input
-              value={email}
-              disabled={status === 'loading'}
-              onChange={onChange}
-              placeholder="Email address"
-              type="email"
-              name="email"
-            />
-          </label>
-          <Button
-            onClick={submit}
-            disabled={status === 'submitting' || !email}
-            type="submit"
+        <div className="flex flex-col space-y-4">
+          <p className="text-secondary">
+            Get a daily email with the the top stories from Hacker News. No
+            spam, unsubscribe at any time.
+          </p>
+          <form
+            onSubmit={submit}
+            className="grid grid-cols-1 gap-2 mt-2 md:grid-cols-3"
           >
-            Subscribe
-          </Button>
-        </form>
+            <label className="md:col-span-2">
+              <span className="sr-only">Email address</span>
+              <Input
+                value={email}
+                disabled={status === 'loading'}
+                onChange={onChange}
+                placeholder="Email address"
+                type="email"
+                name="email"
+              />
+            </label>
+            <Button onClick={submit} disabled={saving || !email} type="submit">
+              {saving ? <LoadingSpinner /> : 'Subscribe'}
+            </Button>
+          </form>
+          {status === 'invalid-email' && (
+            <ErrorAlert>That email doesn’t look valid.</ErrorAlert>
+          )}
+          {status === 'success' && (
+            <SuccessAlert>
+              Subscribed! Catch you in the next digest.
+            </SuccessAlert>
+          )}
+        </div>
       )}
-      {status === 'error' && <ErrorAlert>{errorMessage}</ErrorAlert>}
     </div>
   )
 }

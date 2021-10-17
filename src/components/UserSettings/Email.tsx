@@ -104,7 +104,7 @@ export function EmailForm() {
   }
 
   function handleEmailChange(e) {
-    setEmail(e.target.value)
+    setEmail(e.target.value.trim())
   }
 
   return (
