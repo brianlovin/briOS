@@ -5796,10 +5796,10 @@ find-up@^4.0.0, find-up@^4.1.0:
     locate-path "^5.0.0"
     path-exists "^4.0.0"
 
-firebase-admin@^9.12.0:
-  version "9.12.0"
-  resolved "https://registry.yarnpkg.com/firebase-admin/-/firebase-admin-9.12.0.tgz#d7e889e97c9c31610efbcd131bb6d06a783af757"
-  integrity sha512-AtA7OH5RbIFGoc0gZOQgaYC6cdjdhZv4w3XgWoupkPKO1HY+0GzixOuXDa75kFeoVyhIyo4PkLg/GAC1dC1P6w==
+firebase-admin@^10.0.0:
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/firebase-admin/-/firebase-admin-10.0.0.tgz#0638cd50d2395fddc9d8af4e1699d0a10b1b22d8"
+  integrity sha512-EOAk5ZaqXhBBvx9ZyXd28kw8glMTt3xl0g3BepGRCy0RSSUPGOzfAqjGhc65guSKgFOpT5mAUycYcJbqullKUQ==
   dependencies:
     "@firebase/database-compat" "^0.1.1"
     "@firebase/database-types" "^0.7.2"
