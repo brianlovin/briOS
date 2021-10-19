@@ -141,6 +141,7 @@ model Stack {
   name        String
   description String     @db.VarChar(280)
   image       String
+  url         String
   tags        Tag[]
   comments    Comment[]
   reactions   Reaction[]
