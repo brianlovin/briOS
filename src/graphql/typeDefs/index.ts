@@ -162,10 +162,27 @@ export default gql`
     email: String
   }
 
+  input AddStackInput {
+    name: String!
+    url: String!
+    image: String!
+    description: String!
+  }
+
+  input EditStackInput {
+    name: String!
+    url: String!
+    description: String!
+    image: String!
+  }
+
   type Mutation {
     addBookmark(url: String!): Bookmark
     editBookmark(id: ID!, title: String!): Bookmark
     deleteBookmark(id: ID!): Boolean
+    addStack(data: AddStackInput!): Stack
+    editStack(id: ID!, data: EditStackInput!): Stack
+    deleteStack(id: ID!): Boolean
     addBookmarkReaction(id: ID!): Bookmark
     addAMAQuestion(text: String!): Boolean
     deleteAMAQuestion(id: ID!): Boolean

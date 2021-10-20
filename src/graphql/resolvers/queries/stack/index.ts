@@ -5,7 +5,7 @@ export async function getStacks(_, __, ctx: Context) {
   const { prisma } = ctx
 
   try {
-    return await prisma.stack.findMany({ orderBy: { createdAt: 'desc' } })
+    return await prisma.stack.findMany({ orderBy: { name: 'asc' } })
   } catch (e) {
     return []
   }

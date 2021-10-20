@@ -27,6 +27,8 @@ export function BookmarkDetail({ id }) {
     return null
   }
 
+  const { bookmark } = data
+
   return (
     <Detail.Container ref={scrollContainerRef}>
       <TitleBar
@@ -34,28 +36,28 @@ export function BookmarkDetail({ id }) {
         globalMenu={false}
         backButtonHref={'/bookmarks'}
         magicTitle
-        title={data.bookmark.title}
+        title={bookmark.title}
         titleRef={titleRef}
         scrollContainerRef={scrollContainerRef}
-        trailingAccessory={<BookmarkActions bookmark={data.bookmark} />}
+        trailingAccessory={<BookmarkActions bookmark={bookmark} />}
       />
 
       <Detail.ContentContainer>
         <Detail.Header>
-          <Detail.Title ref={titleRef}>{data.bookmark.title}</Detail.Title>
+          <Detail.Title ref={titleRef}>{bookmark.title}</Detail.Title>
           <span className="inline-block leading-snug text-tertiary">
-            {data.bookmark.host}
+            {bookmark.host}
           </span>
-          {data.bookmark.description && (
-            <p className="prose text-primary">{data.bookmark.description}</p>
+          {bookmark.description && (
+            <p className="prose text-primary">{bookmark.description}</p>
           )}
         </Detail.Header>
         <div className="mt-6">
-          <Button href={data.bookmark.url}>Visit bookmark</Button>
+          <Button href={bookmark.url}>Visit bookmark</Button>
         </div>
       </Detail.ContentContainer>
 
-      <Comments refId={data.bookmark.id} type={CommentType.Bookmark} />
+      <Comments refId={bookmark.id} type={CommentType.Bookmark} />
     </Detail.Container>
   )
 }

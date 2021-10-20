@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import ListContainer from '../ListDetail/ListContainer'
 import TitleBar from '../ListDetail/TitleBar'
 import { useGetStacksQuery } from '~/graphql/types.generated'
+import { StackTitlebar } from './StackTitlebar'
 
 export const StackList = React.memo(() => {
   const router = useRouter()
@@ -18,7 +19,7 @@ export const StackList = React.memo(() => {
 
   return (
     <ListContainer onRef={setScrollContainerRef}>
-      <TitleBar title="My Stack" scrollContainerRef={scrollContainerRef} />
+      <StackTitlebar scrollContainerRef={scrollContainerRef} />
 
       <div className="lg:p-3 lg:space-y-1">
         {data.stacks.map((stack) => {

@@ -108,7 +108,7 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
   }
 
   return (
-    <form className="space-y-3 " onSubmit={handleSave}>
+    <form className="p-4 space-y-3" onSubmit={handleSave}>
       <Input
         placeholder="Title"
         value={state.title}

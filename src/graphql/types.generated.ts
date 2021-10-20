@@ -39,6 +39,13 @@ export enum AmaStatus {
   Pending = 'PENDING',
 }
 
+export type AddStackInput = {
+  description: Scalars['String']
+  image: Scalars['String']
+  name: Scalars['String']
+  url: Scalars['String']
+}
+
 export type Bookmark = {
   __typename?: 'Bookmark'
   comments: Array<Maybe<Comment>>
@@ -69,6 +76,13 @@ export enum CommentType {
   Post = 'POST',
   Question = 'QUESTION',
   Stack = 'STACK',
+}
+
+export type EditStackInput = {
+  description: Scalars['String']
+  image: Scalars['String']
+  name: Scalars['String']
+  url: Scalars['String']
 }
 
 export type EditUserInput = {
@@ -113,14 +127,17 @@ export type Mutation = {
   addBookmark?: Maybe<Bookmark>
   addBookmarkReaction?: Maybe<Bookmark>
   addComment?: Maybe<Comment>
+  addStack?: Maybe<Stack>
   deleteAMAQuestion?: Maybe<Scalars['Boolean']>
   deleteBookmark?: Maybe<Scalars['Boolean']>
   deleteComment?: Maybe<Scalars['Boolean']>
+  deleteStack?: Maybe<Scalars['Boolean']>
   deleteUser?: Maybe<Scalars['Boolean']>
   editAMAQuestion?: Maybe<Ama>
   editBookmark?: Maybe<Bookmark>
   editComment?: Maybe<Comment>
   editEmailSubscription?: Maybe<User>
+  editStack?: Maybe<Stack>
   editUser?: Maybe<User>
   transcribeAudio?: Maybe<Scalars['String']>
 }
@@ -151,6 +168,10 @@ export type MutationAddCommentArgs = {
   type: CommentType
 }
 
+export type MutationAddStackArgs = {
+  data: AddStackInput
+}
+
 export type MutationDeleteAmaQuestionArgs = {
   id: Scalars['ID']
 }
@@ -160,6 +181,10 @@ export type MutationDeleteBookmarkArgs = {
 }
 
 export type MutationDeleteCommentArgs = {
+  id: Scalars['ID']
+}
+
+export type MutationDeleteStackArgs = {
   id: Scalars['ID']
 }
 
@@ -183,6 +208,11 @@ export type MutationEditCommentArgs = {
 
 export type MutationEditEmailSubscriptionArgs = {
   data?: Maybe<EmailSubscriptionInput>
+}
+
+export type MutationEditStackArgs = {
+  data: EditStackInput
+  id: Scalars['ID']
 }
 
 export type MutationEditUserArgs = {
@@ -734,6 +764,58 @@ export type EditEmailSubscriptionMutation = {
             >
           | null
           | undefined
+      }
+    | null
+    | undefined
+}
+
+export type EditStackMutationVariables = Exact<{
+  id: Scalars['ID']
+  data: EditStackInput
+}>
+
+export type EditStackMutation = {
+  __typename?: 'Mutation'
+  editStack?:
+    | {
+        __typename: 'Stack'
+        id: string
+        createdAt: string
+        updatedAt?: string | null | undefined
+        name: string
+        description?: string | null | undefined
+        url: string
+        image?: string | null | undefined
+      }
+    | null
+    | undefined
+}
+
+export type DeleteStackMutationVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type DeleteStackMutation = {
+  __typename?: 'Mutation'
+  deleteStack?: boolean | null | undefined
+}
+
+export type AddStackMutationVariables = Exact<{
+  data: AddStackInput
+}>
+
+export type AddStackMutation = {
+  __typename?: 'Mutation'
+  addStack?:
+    | {
+        __typename: 'Stack'
+        id: string
+        createdAt: string
+        updatedAt?: string | null | undefined
+        name: string
+        description?: string | null | undefined
+        url: string
+        image?: string | null | undefined
       }
     | null
     | undefined
@@ -1980,6 +2062,153 @@ export type EditEmailSubscriptionMutationResult =
 export type EditEmailSubscriptionMutationOptions = Apollo.BaseMutationOptions<
   EditEmailSubscriptionMutation,
   EditEmailSubscriptionMutationVariables
+>
+export const EditStackDocument = gql`
+  mutation editStack($id: ID!, $data: EditStackInput!) {
+    editStack(id: $id, data: $data) {
+      ...StackInfo
+    }
+  }
+  ${StackInfoFragmentDoc}
+`
+export type EditStackMutationFn = Apollo.MutationFunction<
+  EditStackMutation,
+  EditStackMutationVariables
+>
+
+/**
+ * __useEditStackMutation__
+ *
+ * To run a mutation, you first call `useEditStackMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditStackMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editStackMutation, { data, loading, error }] = useEditStackMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useEditStackMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    EditStackMutation,
+    EditStackMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<EditStackMutation, EditStackMutationVariables>(
+    EditStackDocument,
+    options
+  )
+}
+export type EditStackMutationHookResult = ReturnType<
+  typeof useEditStackMutation
+>
+export type EditStackMutationResult = Apollo.MutationResult<EditStackMutation>
+export type EditStackMutationOptions = Apollo.BaseMutationOptions<
+  EditStackMutation,
+  EditStackMutationVariables
+>
+export const DeleteStackDocument = gql`
+  mutation deleteStack($id: ID!) {
+    deleteStack(id: $id)
+  }
+`
+export type DeleteStackMutationFn = Apollo.MutationFunction<
+  DeleteStackMutation,
+  DeleteStackMutationVariables
+>
+
+/**
+ * __useDeleteStackMutation__
+ *
+ * To run a mutation, you first call `useDeleteStackMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteStackMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteStackMutation, { data, loading, error }] = useDeleteStackMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteStackMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteStackMutation,
+    DeleteStackMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<DeleteStackMutation, DeleteStackMutationVariables>(
+    DeleteStackDocument,
+    options
+  )
+}
+export type DeleteStackMutationHookResult = ReturnType<
+  typeof useDeleteStackMutation
+>
+export type DeleteStackMutationResult =
+  Apollo.MutationResult<DeleteStackMutation>
+export type DeleteStackMutationOptions = Apollo.BaseMutationOptions<
+  DeleteStackMutation,
+  DeleteStackMutationVariables
+>
+export const AddStackDocument = gql`
+  mutation addStack($data: AddStackInput!) {
+    addStack(data: $data) {
+      ...StackInfo
+    }
+  }
+  ${StackInfoFragmentDoc}
+`
+export type AddStackMutationFn = Apollo.MutationFunction<
+  AddStackMutation,
+  AddStackMutationVariables
+>
+
+/**
+ * __useAddStackMutation__
+ *
+ * To run a mutation, you first call `useAddStackMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddStackMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addStackMutation, { data, loading, error }] = useAddStackMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useAddStackMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    AddStackMutation,
+    AddStackMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<AddStackMutation, AddStackMutationVariables>(
+    AddStackDocument,
+    options
+  )
+}
+export type AddStackMutationHookResult = ReturnType<typeof useAddStackMutation>
+export type AddStackMutationResult = Apollo.MutationResult<AddStackMutation>
+export type AddStackMutationOptions = Apollo.BaseMutationOptions<
+  AddStackMutation,
+  AddStackMutationVariables
 >
 export const DeleteUserDocument = gql`
   mutation deleteUser {
