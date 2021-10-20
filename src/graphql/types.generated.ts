@@ -236,6 +236,8 @@ export type Query = {
   repos: Array<Maybe<Repo>>
   signedPlaybackUrl?: Maybe<Scalars['String']>
   signedUploadUrl?: Maybe<Scalars['String']>
+  stack?: Maybe<Stack>
+  stacks: Array<Maybe<Stack>>
   transcription?: Maybe<Scalars['String']>
   user?: Maybe<User>
   viewer?: Maybe<User>
@@ -285,6 +287,14 @@ export type QuerySignedUploadUrlArgs = {
   id: Scalars['ID']
 }
 
+export type QueryStackArgs = {
+  id: Scalars['ID']
+}
+
+export type QueryStacksArgs = {
+  skip?: Maybe<Scalars['Int']>
+}
+
 export type QueryTranscriptionArgs = {
   transcriptionId: Scalars['ID']
 }
@@ -299,6 +309,18 @@ export type Repo = {
   name?: Maybe<Scalars['String']>
   org?: Maybe<Scalars['String']>
   stars?: Maybe<Scalars['Int']>
+}
+
+export type Stack = {
+  __typename?: 'Stack'
+  comments: Array<Maybe<Comment>>
+  createdAt: Scalars['String']
+  description?: Maybe<Scalars['String']>
+  id: Scalars['ID']
+  image?: Maybe<Scalars['String']>
+  name: Scalars['String']
+  updatedAt?: Maybe<Scalars['String']>
+  url: Scalars['String']
 }
 
 export type User = {
@@ -339,28 +361,6 @@ export type AmaInfoFragment = {
       }
     | null
     | undefined
-  comments: Array<
-    | {
-        __typename: 'Comment'
-        id: string
-        createdAt: string
-        updatedAt?: string | null | undefined
-        text?: string | null | undefined
-        viewerCanEdit?: boolean | null | undefined
-        viewerCanDelete?: boolean | null | undefined
-        author: {
-          __typename: 'User'
-          id: string
-          username?: string | null | undefined
-          avatar?: string | null | undefined
-          name?: string | null | undefined
-          role?: UserRole | null | undefined
-          isViewer?: boolean | null | undefined
-        }
-      }
-    | null
-    | undefined
-  >
 }
 
 export type BookmarkInfoFragment = {
@@ -426,6 +426,17 @@ export type RepoInfoFragment = {
   stars?: number | null | undefined
 }
 
+export type StackInfoFragment = {
+  __typename: 'Stack'
+  id: string
+  createdAt: string
+  updatedAt?: string | null | undefined
+  name: string
+  description?: string | null | undefined
+  url: string
+  image?: string | null | undefined
+}
+
 export type UserInfoFragment = {
   __typename: 'User'
   id: string
@@ -485,28 +496,6 @@ export type EditAmaQuestionMutation = {
             }
           | null
           | undefined
-        comments: Array<
-          | {
-              __typename: 'Comment'
-              id: string
-              createdAt: string
-              updatedAt?: string | null | undefined
-              text?: string | null | undefined
-              viewerCanEdit?: boolean | null | undefined
-              viewerCanDelete?: boolean | null | undefined
-              author: {
-                __typename: 'User'
-                id: string
-                username?: string | null | undefined
-                avatar?: string | null | undefined
-                name?: string | null | undefined
-                role?: UserRole | null | undefined
-                isViewer?: boolean | null | undefined
-              }
-            }
-          | null
-          | undefined
-        >
       }
     | null
     | undefined
@@ -555,28 +544,6 @@ export type AddAmaReactionMutation = {
             }
           | null
           | undefined
-        comments: Array<
-          | {
-              __typename: 'Comment'
-              id: string
-              createdAt: string
-              updatedAt?: string | null | undefined
-              text?: string | null | undefined
-              viewerCanEdit?: boolean | null | undefined
-              viewerCanDelete?: boolean | null | undefined
-              author: {
-                __typename: 'User'
-                id: string
-                username?: string | null | undefined
-                avatar?: string | null | undefined
-                name?: string | null | undefined
-                role?: UserRole | null | undefined
-                isViewer?: boolean | null | undefined
-              }
-            }
-          | null
-          | undefined
-        >
       }
     | null
     | undefined
@@ -825,28 +792,6 @@ export type GetAmaQuestionsQuery = {
             }
           | null
           | undefined
-        comments: Array<
-          | {
-              __typename: 'Comment'
-              id: string
-              createdAt: string
-              updatedAt?: string | null | undefined
-              text?: string | null | undefined
-              viewerCanEdit?: boolean | null | undefined
-              viewerCanDelete?: boolean | null | undefined
-              author: {
-                __typename: 'User'
-                id: string
-                username?: string | null | undefined
-                avatar?: string | null | undefined
-                name?: string | null | undefined
-                role?: UserRole | null | undefined
-                isViewer?: boolean | null | undefined
-              }
-            }
-          | null
-          | undefined
-        >
       }
     | null
     | undefined
@@ -878,28 +823,6 @@ export type GetAmaQuestionQuery = {
             }
           | null
           | undefined
-        comments: Array<
-          | {
-              __typename: 'Comment'
-              id: string
-              createdAt: string
-              updatedAt?: string | null | undefined
-              text?: string | null | undefined
-              viewerCanEdit?: boolean | null | undefined
-              viewerCanDelete?: boolean | null | undefined
-              author: {
-                __typename: 'User'
-                id: string
-                username?: string | null | undefined
-                avatar?: string | null | undefined
-                name?: string | null | undefined
-                role?: UserRole | null | undefined
-                isViewer?: boolean | null | undefined
-              }
-            }
-          | null
-          | undefined
-        >
       }
     | null
     | undefined
@@ -1123,6 +1046,47 @@ export type GetPostQuery = {
     | undefined
 }
 
+export type GetStacksQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetStacksQuery = {
+  __typename?: 'Query'
+  stacks: Array<
+    | {
+        __typename: 'Stack'
+        id: string
+        createdAt: string
+        updatedAt?: string | null | undefined
+        name: string
+        description?: string | null | undefined
+        url: string
+        image?: string | null | undefined
+      }
+    | null
+    | undefined
+  >
+}
+
+export type GetStackQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type GetStackQuery = {
+  __typename?: 'Query'
+  stack?:
+    | {
+        __typename: 'Stack'
+        id: string
+        createdAt: string
+        updatedAt?: string | null | undefined
+        name: string
+        description?: string | null | undefined
+        url: string
+        image?: string | null | undefined
+      }
+    | null
+    | undefined
+}
+
 export type GetUserQueryVariables = Exact<{
   username: Scalars['String']
 }>
@@ -1206,6 +1170,31 @@ export const UserInfoFragmentDoc = gql`
     isViewer
   }
 `
+export const AmaInfoFragmentDoc = gql`
+  fragment AMAInfo on AMA {
+    id
+    createdAt
+    updatedAt
+    text
+    author {
+      ...UserInfo
+    }
+  }
+  ${UserInfoFragmentDoc}
+`
+export const BookmarkInfoFragmentDoc = gql`
+  fragment BookmarkInfo on Bookmark {
+    __typename
+    id
+    createdAt
+    url
+    host
+    title
+    image
+    siteName
+    description
+  }
+`
 export const CommentInfoFragmentDoc = gql`
   fragment CommentInfo on Comment {
     __typename
@@ -1220,35 +1209,6 @@ export const CommentInfoFragmentDoc = gql`
     }
   }
   ${UserInfoFragmentDoc}
-`
-export const AmaInfoFragmentDoc = gql`
-  fragment AMAInfo on AMA {
-    id
-    createdAt
-    updatedAt
-    text
-    author {
-      ...UserInfo
-    }
-    comments {
-      ...CommentInfo
-    }
-  }
-  ${UserInfoFragmentDoc}
-  ${CommentInfoFragmentDoc}
-`
-export const BookmarkInfoFragmentDoc = gql`
-  fragment BookmarkInfo on Bookmark {
-    __typename
-    id
-    createdAt
-    url
-    host
-    title
-    image
-    siteName
-    description
-  }
 `
 export const EpisodeInfoFragmentDoc = gql`
   fragment EpisodeInfo on Episode {
@@ -1280,6 +1240,18 @@ export const RepoInfoFragmentDoc = gql`
     name
     description
     stars
+  }
+`
+export const StackInfoFragmentDoc = gql`
+  fragment StackInfo on Stack {
+    __typename
+    id
+    createdAt
+    updatedAt
+    name
+    description
+    url
+    image
   }
 `
 export const UserSettingsFragmentDoc = gql`
@@ -2780,6 +2752,113 @@ export type GetPostLazyQueryHookResult = ReturnType<typeof useGetPostLazyQuery>
 export type GetPostQueryResult = Apollo.QueryResult<
   GetPostQuery,
   GetPostQueryVariables
+>
+export const GetStacksDocument = gql`
+  query getStacks {
+    stacks {
+      ...StackInfo
+    }
+  }
+  ${StackInfoFragmentDoc}
+`
+
+/**
+ * __useGetStacksQuery__
+ *
+ * To run a query within a React component, call `useGetStacksQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetStacksQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetStacksQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetStacksQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetStacksQuery, GetStacksQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetStacksQuery, GetStacksQueryVariables>(
+    GetStacksDocument,
+    options
+  )
+}
+export function useGetStacksLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetStacksQuery,
+    GetStacksQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetStacksQuery, GetStacksQueryVariables>(
+    GetStacksDocument,
+    options
+  )
+}
+export type GetStacksQueryHookResult = ReturnType<typeof useGetStacksQuery>
+export type GetStacksLazyQueryHookResult = ReturnType<
+  typeof useGetStacksLazyQuery
+>
+export type GetStacksQueryResult = Apollo.QueryResult<
+  GetStacksQuery,
+  GetStacksQueryVariables
+>
+export const GetStackDocument = gql`
+  query getStack($id: ID!) {
+    stack(id: $id) {
+      ...StackInfo
+    }
+  }
+  ${StackInfoFragmentDoc}
+`
+
+/**
+ * __useGetStackQuery__
+ *
+ * To run a query within a React component, call `useGetStackQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetStackQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetStackQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetStackQuery(
+  baseOptions: Apollo.QueryHookOptions<GetStackQuery, GetStackQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetStackQuery, GetStackQueryVariables>(
+    GetStackDocument,
+    options
+  )
+}
+export function useGetStackLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetStackQuery,
+    GetStackQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetStackQuery, GetStackQueryVariables>(
+    GetStackDocument,
+    options
+  )
+}
+export type GetStackQueryHookResult = ReturnType<typeof useGetStackQuery>
+export type GetStackLazyQueryHookResult = ReturnType<
+  typeof useGetStackLazyQuery
+>
+export type GetStackQueryResult = Apollo.QueryResult<
+  GetStackQuery,
+  GetStackQueryVariables
 >
 export const GetUserDocument = gql`
   query getUser($username: String!) {

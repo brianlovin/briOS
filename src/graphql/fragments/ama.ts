@@ -11,9 +11,6 @@ export const AMAInfoFragment = gql`
     author {
       ...UserInfo
     }
-    comments {
-      ...CommentInfo
-    }
   }
   ${UserInfoFragment}
   ${CommentInfoFragment}

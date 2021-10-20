@@ -137,10 +137,3 @@ export async function getQuestionAuthor(parent: Ama, _, ctx: Context) {
 
   return await prisma.question.findUnique({ where: { id } }).author()
 }
-
-export async function getQuestionComments(parent: Ama, _, ctx: Context) {
-  const { id } = parent
-  const { prisma } = ctx
-
-  return await prisma.question.findUnique({ where: { id } }).comments()
-}

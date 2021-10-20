@@ -38,6 +38,13 @@ export async function getComments(_, args, ctx: Context) {
 
       return results || []
     }
+    case CommentType.Stack: {
+      const results = await prisma.stack
+        .findUnique({ where: { id: refId } })
+        .comments()
+
+      return results || []
+    }
     default: {
       return []
     }

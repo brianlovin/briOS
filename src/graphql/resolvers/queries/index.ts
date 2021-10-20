@@ -16,6 +16,7 @@ import {
 import { getComment, getComments } from '~/graphql/resolvers/queries/comment'
 import { requiresAdmin } from '~/graphql/helpers/requiresAdmin'
 import { getUser } from '~/graphql/resolvers/queries/user'
+import { getStack, getStacks } from './stack'
 
 export default {
   viewer: viewer,
@@ -33,4 +34,6 @@ export default {
   transcription: requiresAdmin(getTranscription),
   comment: getComment,
   comments: getComments,
+  stacks: getStacks,
+  stack: getStack,
 }

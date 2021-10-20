@@ -2,11 +2,7 @@ import * as React from 'react'
 import { useRouter } from 'next/router'
 import { CommentType, useGetAmaQuestionQuery } from '~/graphql/types.generated'
 import TitleBar from '~/components/ListDetail/TitleBar'
-import {
-  Detail,
-  DetailContainer,
-  DetailContentContainer,
-} from '~/components/ListDetail/Detail'
+import { Detail } from '~/components/ListDetail/Detail'
 import { Comments } from '../Comments'
 
 export function AMADetail({ id }) {

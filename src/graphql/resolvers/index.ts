@@ -2,10 +2,7 @@ import Query from '~/graphql/resolvers/queries'
 import Mutation from '~/graphql/resolvers/mutations'
 import { UserRole, EmailSubscriptionType } from '~/graphql/types.generated'
 import { getCommentAuthor } from '~/graphql/resolvers/queries/comment'
-import {
-  getQuestionAuthor,
-  getQuestionComments,
-} from '~/graphql/resolvers/queries/ama'
+import { getQuestionAuthor } from '~/graphql/resolvers/queries/ama'
 import { Context } from '~/graphql/context'
 import { revue } from '~/lib/revue'
 
@@ -29,7 +26,6 @@ export default {
   },
   AMA: {
     author: getQuestionAuthor,
-    comments: getQuestionComments,
     updatedAt: ({ updatedAt }) =>
       new Date(updatedAt).toLocaleDateString('en-us', {
         year: 'numeric',

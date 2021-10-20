@@ -81,6 +81,17 @@ export default gql`
     POST
   }
 
+  type Stack {
+    id: ID!
+    createdAt: String!
+    updatedAt: String
+    name: String!
+    description: String
+    image: String
+    url: String!
+    comments: [Comment]!
+  }
+
   enum UserRole {
     BLOCKED
     USER
@@ -125,6 +136,8 @@ export default gql`
     user(username: String!): User
     bookmark(id: ID!): Bookmark
     bookmarks(skip: Int): [Bookmark]!
+    stack(id: ID!): Stack
+    stacks(skip: Int): [Stack]!
     comment(id: ID!): Comment
     comments(refId: String, type: CommentType): [Comment]!
     episodes: [Episode]!
