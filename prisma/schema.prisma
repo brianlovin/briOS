@@ -27,6 +27,7 @@ model User {
   questions    Question[]
   reactions    Reaction[]
   posts        Post[]
+  stacks       Stack[]
 }
 
 enum Role {
@@ -145,6 +146,7 @@ model Stack {
   tags        Tag[]
   comments    Comment[]
   reactions   Reaction[]
+  users       User[]
 }
 
 model Reaction {

@@ -10,6 +10,7 @@ import {
   addStack,
   editStack,
   deleteStack,
+  toggleStackUser,
 } from '~/graphql/resolvers/mutations/stack'
 import {
   addAMAQuestion,
@@ -34,6 +35,7 @@ export default {
   addStack: requiresAdmin(addStack),
   editStack: requiresAdmin(editStack),
   deleteStack: requiresAdmin(deleteStack),
+  toggleStackUser: requiresUser(toggleStackUser),
   addBookmarkReaction,
   addAMAQuestion: requiresUser(addAMAQuestion),
   editAMAQuestion: requiresAdmin(editAMAQuestion),

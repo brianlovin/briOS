@@ -5,6 +5,7 @@ import {
   MutationAddStackArgs,
   MutationDeleteStackArgs,
   MutationEditStackArgs,
+  MutationToggleStackUserArgs,
 } from '~/graphql/types.generated'
 import { Context } from '~/graphql/context'
 
@@ -107,4 +108,60 @@ export async function deleteStack(
   })
 
   return true
+}
+
+export async function toggleStackUser(
+  _,
+  args: MutationToggleStackUserArgs,
+  ctx: Context
+) {
+  const { id } = args
+  const { prisma, viewer } = ctx
+
+  const stackUsers = await prisma.stack.findUnique({
+    where: { id },
+    include: { users: true },
+  })
+
+  if (stackUsers.users.find((s) => s.id === viewer.id)) {
+    const data = await prisma.stack.update({
+      where: { id },
+      data: {
+        users: {
+          disconnect: { id: viewer.id },
+        },
+      },
+      include: { users: true },
+    })
+
+    const usedBy = data.users
+    const usedByViewer =
+      viewer?.id && data.users.some((s) => s.id === viewer.id)
+
+    return {
+      ...data,
+      usedBy,
+      usedByViewer,
+    }
+  } else {
+    const data = await prisma.stack.update({
+      where: { id },
+      data: {
+        users: {
+          connect: { id: viewer.id },
+        },
+      },
+      include: { users: true },
+    })
+
+    const usedBy = data.users
+    const usedByViewer =
+      viewer?.id && data.users.some((s) => s.id === viewer.id)
+
+    return {
+      ...data,
+      usedBy,
+      usedByViewer,
+    }
+  }
 }

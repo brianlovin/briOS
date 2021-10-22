@@ -112,7 +112,7 @@ export function EmailForm() {
       <p className="font-semibold text-primary">Email</p>
 
       {viewer.email && (
-        <div className="flex space-x-2">
+        <div className="flex space-x-2 text-primary">
           <span>{viewer.email}</span>
           <span>·</span>
           <button

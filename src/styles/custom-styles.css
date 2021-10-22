@@ -29,9 +29,13 @@
     @apply outline-none ring-0 ring-offset-0;
   }
 
-  input,
+  input[type='text'],
   textarea {
     @apply border-none outline-none;
+  }
+
+  input[type='checkbox'] {
+    @apply dark:bg-gray-700 dark:border-gray-600;
   }
 
   input:focus,

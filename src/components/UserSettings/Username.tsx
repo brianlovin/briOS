@@ -46,7 +46,7 @@ export function UsernameForm() {
       <p className="font-semibold text-primary">Username</p>
 
       {viewer.username && (
-        <div className="flex space-x-2">
+        <div className="flex space-x-2 text-primary">
           <span>@{viewer.username}</span>
           <span>·</span>
           <button

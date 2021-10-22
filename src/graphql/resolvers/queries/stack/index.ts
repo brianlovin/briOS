@@ -1,5 +1,6 @@
 import { Context } from '~/graphql/context'
 import { GetStackQueryVariables, Stack } from '~/graphql/types.generated'
+import { viewer } from '../viewer'
 
 export async function getStacks(_, __, ctx: Context) {
   const { prisma } = ctx
@@ -16,14 +17,23 @@ export async function getStack(
   { id }: GetStackQueryVariables,
   ctx: Context
 ) {
-  const { prisma } = ctx
+  const { prisma, viewer } = ctx
 
   try {
-    return await prisma.stack.findUnique({
-      where: {
-        id,
-      },
+    const data = await prisma.stack.findUnique({
+      where: { id },
+      include: { users: true },
     })
+
+    const usedBy = data.users
+    const usedByViewer =
+      viewer?.id && data.users.some((s) => s.id === viewer.id)
+
+    return {
+      ...data,
+      usedBy,
+      usedByViewer,
+    }
   } catch (e) {
     return null
   }

@@ -139,6 +139,7 @@ export type Mutation = {
   editEmailSubscription?: Maybe<User>
   editStack?: Maybe<Stack>
   editUser?: Maybe<User>
+  toggleStackUser?: Maybe<Stack>
   transcribeAudio?: Maybe<Scalars['String']>
 }
 
@@ -217,6 +218,10 @@ export type MutationEditStackArgs = {
 
 export type MutationEditUserArgs = {
   data?: Maybe<EditUserInput>
+}
+
+export type MutationToggleStackUserArgs = {
+  id: Scalars['ID']
 }
 
 export type MutationTranscribeAudioArgs = {
@@ -351,6 +356,8 @@ export type Stack = {
   name: Scalars['String']
   updatedAt?: Maybe<Scalars['String']>
   url: Scalars['String']
+  usedBy: Array<Maybe<User>>
+  usedByViewer?: Maybe<Scalars['Boolean']>
 }
 
 export type User = {
@@ -821,6 +828,34 @@ export type AddStackMutation = {
     | undefined
 }
 
+export type ToggleStackUserMutationVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type ToggleStackUserMutation = {
+  __typename?: 'Mutation'
+  toggleStackUser?:
+    | {
+        __typename?: 'Stack'
+        id: string
+        usedBy: Array<
+          | {
+              __typename: 'User'
+              id: string
+              username?: string | null | undefined
+              avatar?: string | null | undefined
+              name?: string | null | undefined
+              role?: UserRole | null | undefined
+              isViewer?: boolean | null | undefined
+            }
+          | null
+          | undefined
+        >
+      }
+    | null
+    | undefined
+}
+
 export type DeleteUserMutationVariables = Exact<{ [key: string]: never }>
 
 export type DeleteUserMutation = {
@@ -1157,6 +1192,7 @@ export type GetStackQuery = {
   stack?:
     | {
         __typename: 'Stack'
+        usedByViewer?: boolean | null | undefined
         id: string
         createdAt: string
         updatedAt?: string | null | undefined
@@ -1164,6 +1200,19 @@ export type GetStackQuery = {
         description?: string | null | undefined
         url: string
         image?: string | null | undefined
+        usedBy: Array<
+          | {
+              __typename: 'User'
+              id: string
+              username?: string | null | undefined
+              avatar?: string | null | undefined
+              name?: string | null | undefined
+              role?: UserRole | null | undefined
+              isViewer?: boolean | null | undefined
+            }
+          | null
+          | undefined
+        >
       }
     | null
     | undefined
@@ -2210,6 +2259,60 @@ export type AddStackMutationOptions = Apollo.BaseMutationOptions<
   AddStackMutation,
   AddStackMutationVariables
 >
+export const ToggleStackUserDocument = gql`
+  mutation toggleStackUser($id: ID!) {
+    toggleStackUser(id: $id) {
+      id
+      usedBy {
+        ...UserInfo
+      }
+    }
+  }
+  ${UserInfoFragmentDoc}
+`
+export type ToggleStackUserMutationFn = Apollo.MutationFunction<
+  ToggleStackUserMutation,
+  ToggleStackUserMutationVariables
+>
+
+/**
+ * __useToggleStackUserMutation__
+ *
+ * To run a mutation, you first call `useToggleStackUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useToggleStackUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [toggleStackUserMutation, { data, loading, error }] = useToggleStackUserMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useToggleStackUserMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    ToggleStackUserMutation,
+    ToggleStackUserMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    ToggleStackUserMutation,
+    ToggleStackUserMutationVariables
+  >(ToggleStackUserDocument, options)
+}
+export type ToggleStackUserMutationHookResult = ReturnType<
+  typeof useToggleStackUserMutation
+>
+export type ToggleStackUserMutationResult =
+  Apollo.MutationResult<ToggleStackUserMutation>
+export type ToggleStackUserMutationOptions = Apollo.BaseMutationOptions<
+  ToggleStackUserMutation,
+  ToggleStackUserMutationVariables
+>
 export const DeleteUserDocument = gql`
   mutation deleteUser {
     deleteUser
@@ -3039,9 +3142,14 @@ export const GetStackDocument = gql`
   query getStack($id: ID!) {
     stack(id: $id) {
       ...StackInfo
+      usedByViewer
+      usedBy {
+        ...UserInfo
+      }
     }
   }
   ${StackInfoFragmentDoc}
+  ${UserInfoFragmentDoc}
 `
 
 /**

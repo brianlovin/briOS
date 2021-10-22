@@ -90,6 +90,8 @@ export default gql`
     image: String
     url: String!
     comments: [Comment]!
+    usedBy: [User]!
+    usedByViewer: Boolean
   }
 
   enum UserRole {
@@ -183,6 +185,7 @@ export default gql`
     addStack(data: AddStackInput!): Stack
     editStack(id: ID!, data: EditStackInput!): Stack
     deleteStack(id: ID!): Boolean
+    toggleStackUser(id: ID!): Stack
     addBookmarkReaction(id: ID!): Bookmark
     addAMAQuestion(text: String!): Boolean
     deleteAMAQuestion(id: ID!): Boolean

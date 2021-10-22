@@ -6,6 +6,8 @@ import { Comments } from '../Comments'
 import { Detail } from '../ListDetail/Detail'
 import Button from '../Button'
 import { StackActions } from './StackActions'
+import { Link } from 'react-feather'
+import { StackUsedBy } from './StackUsedBy'
 
 export function StackDetail({ id }) {
   const scrollContainerRef = React.useRef(null)
@@ -57,8 +59,13 @@ export function StackDetail({ id }) {
           <p className="prose text-primary">{stack.description}</p>
 
           <div className="mt-6">
-            <Button href={stack.url}>Get</Button>
+            <Button href={stack.url}>
+              <Link size={14} />
+              <span>Visit</span>
+            </Button>
           </div>
+
+          <StackUsedBy stack={stack} />
         </Detail.Header>
       </Detail.ContentContainer>
 

@@ -104,14 +104,7 @@ export const CommentButton = React.forwardRef((props: ButtonProps, ref) => {
   const size = composer.getSize(props.size)
   const opacity = composer.getOpacity(props.disabled)
   const composed = `${baseClasses} ${size} ${opacity} ${classes}`
-  return (
-    <BaseButton
-      style={{ transform: 'translateY(-1px) translateX(-1px)' }}
-      className={composed}
-      forwardedRef={ref}
-      {...props}
-    />
-  )
+  return <BaseButton className={composed} forwardedRef={ref} {...props} />
 })
 
 export const TwitterButton = React.forwardRef((props: ButtonProps, ref) => {

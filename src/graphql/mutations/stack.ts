@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client'
+import { UserInfoFragment } from '../fragments'
 import { StackInfoFragment } from '../fragments/stack'
 
 export const EDIT_STACK = gql`
@@ -23,4 +24,16 @@ export const ADD_STACK = gql`
     }
   }
   ${StackInfoFragment}
+`
+
+export const TOGGLE_STACK_USER = gql`
+  mutation toggleStackUser($id: ID!) {
+    toggleStackUser(id: $id) {
+      id
+      usedBy {
+        ...UserInfo
+      }
+    }
+  }
+  ${UserInfoFragment}
 `
