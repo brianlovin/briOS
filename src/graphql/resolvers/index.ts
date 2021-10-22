@@ -55,7 +55,10 @@ export default {
       const [hn, newsletter] = await Promise.all([
         prisma.emailSubscription.findUnique({
           where: {
-            email: viewer.email,
+            emailAndType: {
+              email: viewer.email,
+              type: EmailSubscriptionType.HackerNews,
+            },
           },
         }),
         // revue.getSubscriber({ email: viewer.email }),

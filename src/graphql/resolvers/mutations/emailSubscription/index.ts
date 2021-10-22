@@ -25,14 +25,13 @@ export async function editEmailSubscription(
   }
 
   const emailToUse = viewer && viewer.email ? viewer.email : email
-
   if (type === EmailSubscriptionType.HackerNews) {
     if (subscribed) {
       try {
         await prisma.emailSubscription.create({
           data: {
             email: emailToUse,
-            type: type,
+            type: EmailSubscriptionType.HackerNews,
           },
         })
       } catch (err) {
@@ -43,7 +42,10 @@ export async function editEmailSubscription(
       try {
         await prisma.emailSubscription.delete({
           where: {
-            email: emailToUse,
+            emailAndType: {
+              email: emailToUse,
+              type: EmailSubscriptionType.HackerNews,
+            },
           },
         })
       } catch (err) {

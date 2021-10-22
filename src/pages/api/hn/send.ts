@@ -1,15 +1,14 @@
+import jwt from 'jsonwebtoken'
 import format from 'date-fns/format'
-import Cryptr from 'cryptr'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getHNPostsForDigest } from '~/graphql/services/hn'
 import { client as postmark } from '~/graphql/services/postmark'
-import { db } from '~/graphql/services/firebase'
-import { baseEmail, baseUrl } from '~/config/seo'
-import { validEmail } from '~/lib/validators'
+import { baseEmail } from '~/config/seo'
+import { CLIENT_URL, IS_PROD } from '~/graphql/constants'
+import { EmailSubscriptionType } from '.prisma/client'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const COLLECTION = 'hnsubscribers'
-  const { token, test, warmup } = req.query
+  const { token, warmup } = req.query
 
   /*
       This API route is triggered from a GitHub action. Sometimes the function
@@ -22,7 +21,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const secret = process.env.HN_TOKEN
-  const cryptr = new Cryptr(secret)
 
   if (!token || token !== secret) {
     return res.status(500).json({ error: 'Invalid token' })
@@ -36,30 +34,40 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   const date = format(new Date(), 'LLLL do, yyyy')
 
-  /* 
-      Allow a &test=true query parameter to be sent in order to only trigger emails
-      to myself. This is useful for debugging the API route in production. Alternatively,
-      make sure to never send production emails to everyone when testing things locally.
-    */
-  const ref =
-    test || process.env.NODE_ENV !== 'production'
-      ? db.collection(COLLECTION).where('email', '==', baseEmail)
-      : db.collection(COLLECTION)
+  const subscribers = IS_PROD
+    ? await prisma.emailSubscription.findMany({
+        where: { type: EmailSubscriptionType.HACKER_NEWS },
+      })
+    : await prisma.emailSubscription.findMany({
+        where: {
+          email: baseEmail,
+          type: EmailSubscriptionType.HACKER_NEWS,
+        },
+      })
 
-  let count = 0
-  const usersSnapshot = await ref.get()
+  for (const subscriber of subscribers) {
+    const unsubscribeToken = jwt.sign(
+      { email: subscriber.email },
+      process.env.JWT_SIGNING_KEY
+    )
 
-  for (const doc of usersSnapshot.docs) {
-    const user = doc.data()
+    const unsubscribe_url = `${CLIENT_URL}/api/hn/unsubscribe?token=${unsubscribeToken}`
 
-    if (validEmail(user.email)) {
-      const unsubscribeToken = cryptr.encrypt(user.email)
-      const unsubscribe_url = `${baseUrl}/api/hn/unsubscribe?token=${unsubscribeToken}`
-
-      count = count + 1
+    if (IS_PROD) {
       await postmark.sendEmailWithTemplate({
         From: baseEmail,
-        To: user.email,
+        To: subscriber.email,
+        TemplateId: 18037634,
+        TemplateModel: {
+          date,
+          posts,
+          unsubscribe_url,
+        },
+      })
+    } else {
+      console.log('Sending HN digest email', {
+        From: baseEmail,
+        To: subscriber.email,
         TemplateId: 18037634,
         TemplateModel: {
           date,
@@ -70,5 +78,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
   }
 
-  return res.status(200).json({ status: 'done', emailsSent: count })
+  return res
+    .status(200)
+    .json({ status: 'done', emailsSent: subscribers.length })
 }

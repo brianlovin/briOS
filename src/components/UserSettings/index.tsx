@@ -27,7 +27,7 @@ export function UserSettings() {
     )
   }
 
-  if (!data.viewer) {
+  if (!data?.viewer) {
     return <SignedOut />
   }
 

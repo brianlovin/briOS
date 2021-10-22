@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import Cryptr from 'cryptr'
-import { db } from '~/graphql/services/firebase'
+import jwt from 'jsonwebtoken'
+import { prisma } from '~/lib/prisma/client'
 import { baseUrl } from '~/config/seo'
 import { validEmail } from '~/lib/validators'
+import { EmailSubscriptionType } from '.prisma/client'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { token } = req.query
@@ -12,28 +13,38 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     res.end()
   }
 
+  function error(error) {
+    res.status(200).json({ error })
+  }
+
   if (!token) {
     return done()
   }
 
-  const secret = process.env.HN_TOKEN
-  const cryptr = new Cryptr(secret)
-  const decrypted = cryptr.decrypt(token)
+  try {
+    // @ts-ignore
+    const decoded = jwt.verify(token, process.env.JWT_SIGNING_KEY)
+    const { email } = decoded
 
-  if (!validEmail(decrypted)) {
-    return done()
-  }
+    if (!email) {
+      error('Invalid token')
+    }
 
-  await db
-    .collection('hnsubscribers')
-    .where('email', '==', decrypted)
-    .get()
-    .then((snapshot) => {
-      snapshot.forEach(async (doc) => {
-        const id = doc.id
-        await db.collection('hnsubscribers').doc(id).delete()
-      })
+    if (!validEmail(email)) {
+      error('Invalid email')
+    }
+
+    await prisma.emailSubscription.delete({
+      where: {
+        emailAndType: {
+          email,
+          type: EmailSubscriptionType.HACKER_NEWS,
+        },
+      },
     })
 
-  return done()
+    done()
+  } catch (err) {
+    error(err.message)
+  }
 }

@@ -177,8 +177,9 @@ enum EmailSubscriptionType {
 }
 
 model EmailSubscription {
-  email String                @id @unique
+  email String
   type  EmailSubscriptionType
 
-  @@index([email, type])
+  @@unique(fields: [email, type], name: "emailAndType")
+  @@index([email])
 }

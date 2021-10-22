@@ -61,7 +61,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       // if the user already had an existing email address, they are updating it
       // so make sure any of their existing email subscriptions reflect the
       // new address
-      await prisma.emailSubscription.update({
+      await prisma.emailSubscription.updateMany({
         where: {
           email: user.email,
         },

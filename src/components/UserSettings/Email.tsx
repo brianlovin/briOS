@@ -74,7 +74,7 @@ export function EmailForm() {
   const [resendPendingEmail, resendPendingEmailResponse] = useEditUserMutation({
     variables: {
       data: {
-        email,
+        email: viewer.pendingEmail,
       },
     },
     update(cache) {
