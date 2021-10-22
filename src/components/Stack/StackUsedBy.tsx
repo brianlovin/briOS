@@ -96,10 +96,10 @@ export function StackUsedBy(props) {
         )}
 
         {data.stack.usedBy.length > 0 && (
-          <div className="flex space-x-2">
+          <div className="flex flex-wrap -m-1">
             {data.stack.usedBy.map((u) => (
               <Tooltip key={u.id} content={u.name}>
-                <span>
+                <span className="inline-flex p-1">
                   <Image
                     src={u.avatar}
                     width={32}
