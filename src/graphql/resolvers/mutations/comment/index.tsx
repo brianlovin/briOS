@@ -104,14 +104,12 @@ export async function deleteComment(
   // comment doesn't exist, already deleted
   if (!comment) return true
   // no permission
-  if (comment.userId !== viewer?.id || viewer?.role !== UserRole.Admin) {
+  if (comment.userId !== viewer?.id && viewer?.role !== UserRole.Admin) {
     throw new UserInputError('You can’t delete this comment')
   }
 
   await prisma.comment.delete({
-    where: {
-      id,
-    },
+    where: { id },
   })
 
   return true

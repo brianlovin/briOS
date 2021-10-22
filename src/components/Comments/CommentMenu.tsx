@@ -3,9 +3,9 @@ import { Menu, Transition } from '@headlessui/react'
 import { GhostButton } from '../Button'
 import { MoreHorizontal } from 'react-feather'
 
-export function CommentMenu({ handleDelete, handleEdit }) {
+export function CommentMenu({ handleDelete, handleEdit, comment }) {
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center opacity-0 group-hover:opacity-100">
       <div className="relative inline-block text-left">
         <Menu>
           {({ open }) => (
@@ -29,39 +29,43 @@ export function CommentMenu({ handleDelete, handleEdit }) {
                   static
                   className="absolute right-0 z-10 w-56 mt-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-sm outline-none dark:divide-gray-700 dark:border-gray-700 dark:bg-gray-800"
                 >
-                  <div className="py-1">
-                    <Menu.Item>
-                      {({ active }) => (
-                        <a
-                          onClick={handleEdit}
-                          className={`${
-                            active
-                              ? 'bg-gray-100 dark:text-white text-gray-900 dark:bg-gray-700'
-                              : 'text-gray-900 dark:text-gray-200'
-                          } flex cursor-pointer justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
-                        >
-                          Edit
-                        </a>
-                      )}
-                    </Menu.Item>
-                  </div>
+                  {comment.viewerCanEdit && (
+                    <div className="py-1">
+                      <Menu.Item>
+                        {({ active }) => (
+                          <a
+                            onClick={handleEdit}
+                            className={`${
+                              active
+                                ? 'bg-gray-100 dark:text-white text-gray-900 dark:bg-gray-700'
+                                : 'text-gray-900 dark:text-gray-200'
+                            } flex cursor-pointer justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
+                          >
+                            Edit
+                          </a>
+                        )}
+                      </Menu.Item>
+                    </div>
+                  )}
 
-                  <div className="py-1">
-                    <Menu.Item>
-                      {({ active }) => (
-                        <a
-                          onClick={handleDelete}
-                          className={`${
-                            active
-                              ? 'bg-red-50 dark:text-red-500 text-red-500 dark:bg-red-500 dark:bg-opacity-10'
-                              : 'text-red-500 dark:text-red-500'
-                          } flex justify-between cursor-pointer w-full px-4 py-2 text-sm leading-5 text-left`}
-                        >
-                          Delete
-                        </a>
-                      )}
-                    </Menu.Item>
-                  </div>
+                  {comment.viewerCanDelete && (
+                    <div className="py-1">
+                      <Menu.Item>
+                        {({ active }) => (
+                          <a
+                            onClick={handleDelete}
+                            className={`${
+                              active
+                                ? 'bg-red-50 dark:text-red-500 text-red-500 dark:bg-red-500 dark:bg-opacity-10'
+                                : 'text-red-500 dark:text-red-500'
+                            } flex justify-between cursor-pointer w-full px-4 py-2 text-sm leading-5 text-left`}
+                          >
+                            Delete
+                          </a>
+                        )}
+                      </Menu.Item>
+                    </div>
+                  )}
                 </Menu.Items>
               </Transition>
             </>

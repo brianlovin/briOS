@@ -88,7 +88,7 @@ export const Comment = React.memo(function MemoComment({
   }
 
   return (
-    <div className="flex flex-col space-y-1">
+    <div className="flex flex-col space-y-1 group">
       <div className="flex items-center justify-between space-x-4">
         <div className="flex items-center space-x-4">
           <Image
@@ -108,7 +108,11 @@ export const Comment = React.memo(function MemoComment({
         </div>
 
         {(comment.viewerCanDelete || comment.viewerCanEdit) && (
-          <CommentMenu handleDelete={handleDelete} handleEdit={handleEdit} />
+          <CommentMenu
+            comment={comment}
+            handleDelete={handleDelete}
+            handleEdit={handleEdit}
+          />
         )}
       </div>
 
