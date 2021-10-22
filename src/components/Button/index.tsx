@@ -4,6 +4,7 @@ import Link from 'next/link'
 interface BaseButtonProps {
   [key: string]: unknown
   size: string
+  disabled?: boolean
 }
 
 type ButtonAsButton = BaseButtonProps &
@@ -50,38 +51,47 @@ function getSize(size = null) {
   }
 }
 
+function getOpacity(disabled = false) {
+  return disabled ? 'opacity-50 cursor-not-allowed' : 'opacity-100'
+}
+
 const composer = {
   getSize,
+  getOpacity,
 }
 
 export const Button = React.forwardRef((props: ButtonProps, ref) => {
   const classes = `rounded-md text-gray-700 hover:text-gray-1000 shadow-xs bg-white border border-gray-400 border-opacity-30 dark:border-gray-700 dark:hover:border-gray-600 dark:bg-white dark:bg-opacity-10 dark:text-gray-200 dark:hover:text-white hover:border-opacity-50 hover:shadow-sm`
   const size = composer.getSize(props.size)
-  const composed = `${baseClasses} ${size} ${classes}`
+  const opacity = composer.getOpacity(props.disabled)
+  const composed = `${baseClasses} ${size} ${opacity} ${classes}`
   return <BaseButton forwardedRef={ref} className={composed} {...props} />
 })
 
 export default Button
 
 export const DeleteButton = React.forwardRef((props: ButtonProps, ref) => {
-  const classes = `rounded-md bg-white border border-gray-200 dark:border-red-500 dark:hover:border-red-500  dark:bg-red-500 dark:border-opacity-20 dark:bg-opacity-10 text-red-500 hover:border-red-500 hover:text-white hover:bg-red-600`
+  const classes = `rounded-md bg-white border border-gray-200 dark:border-red-500 dark:hover:border-red-500  dark:bg-red-500 dark:border-opacity-20 dark:bg-opacity-10 text-red-500 hover:border-red-500 hover:text-white hover:bg-red-600 focus:bg-red-600 dark:focus:text-white`
 
   const size = composer.getSize(props.size)
-  const composed = `${baseClasses} ${size} ${classes}`
+  const opacity = composer.getOpacity(props.disabled)
+  const composed = `${baseClasses} ${size} ${opacity} ${classes}`
   return <BaseButton forwardedRef={ref} className={composed} {...props} />
 })
 
 export const RecordingButton = React.forwardRef((props: ButtonProps, ref) => {
   const classes = `rounded-md bg-green-500 border border-green-600 dark:border-green-500 dark:hover:border-green-500 dark:bg-green-500 dark:border-opacity-20 dark:bg-opacity-10  text-white hover:bg-green-600`
   const size = composer.getSize(props.size)
-  const composed = `${baseClasses} ${size} ${classes}`
+  const opacity = composer.getOpacity(props.disabled)
+  const composed = `${baseClasses} ${size} ${opacity} ${classes}`
   return <BaseButton forwardedRef={ref} className={composed} {...props} />
 })
 
 export const GhostButton = React.forwardRef((props: ButtonProps, ref) => {
   const classes = `rounded-md text-gray-700 hover:text-gray-1000 bg-gray-200 bg-opacity-0 hover:bg-opacity-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:text-white`
   const size = composer.getSize(props.size)
-  const composed = `${baseClasses} ${size} ${classes}`
+  const opacity = composer.getOpacity(props.disabled)
+  const composed = `${baseClasses} ${size} ${opacity} ${classes}`
   return <BaseButton forwardedRef={ref} className={composed} {...props} />
 })
 
@@ -92,7 +102,8 @@ export const CommentButton = React.forwardRef((props: ButtonProps, ref) => {
       : 'border-blue-600 bg-blue-500 dark:bg-opacity-100 text-white hover:bg-blue-600 dark:border-blue-400'
   } shadow-xs bg-white border border-opacity-30 dark:bg-opacity-10 hover:border-opacity-50 hover:shadow-sm w-8 rounded`
   const size = composer.getSize(props.size)
-  const composed = `${baseClasses} ${size} ${classes}`
+  const opacity = composer.getOpacity(props.disabled)
+  const composed = `${baseClasses} ${size} ${opacity} ${classes}`
   return (
     <BaseButton
       style={{ transform: 'translateY(-1px) translateX(-1px)' }}
@@ -106,6 +117,7 @@ export const CommentButton = React.forwardRef((props: ButtonProps, ref) => {
 export const TwitterButton = React.forwardRef((props: ButtonProps, ref) => {
   const classes = `rounded-md bg-twitter text-white space-x-4 items-center`
   const size = composer.getSize(props.size)
-  const composed = `${baseClasses} ${size} ${classes}`
+  const opacity = composer.getOpacity(props.disabled)
+  const composed = `${baseClasses} ${size} ${opacity} ${classes}`
   return <BaseButton forwardedRef={ref} className={composed} {...props} />
 })

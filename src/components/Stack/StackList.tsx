@@ -34,7 +34,7 @@ export const StackList = React.memo(() => {
               byline={null}
               leadingAccessory={
                 <Image
-                  src={`/static/img/stack/${stack.image}`}
+                  src={stack.image}
                   width={48}
                   height={48}
                   layout="fixed"

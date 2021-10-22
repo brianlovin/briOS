@@ -6,7 +6,7 @@ export function EditStackDialog({ trigger, stack }) {
   return (
     <Dialog
       trigger={trigger}
-      title={'Add bookmark'}
+      title={'Edit stack'}
       modalContent={({ closeModal }) => (
         <EditStackForm stack={stack} closeModal={closeModal} />
       )}

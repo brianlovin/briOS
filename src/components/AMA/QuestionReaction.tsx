@@ -27,10 +27,7 @@ export default function QuestionReaction(props: Props) {
   }
 
   return (
-    <button
-      className="flex items-center space-x-2 focus:ring-opacity-0"
-      onClick={handleReaction}
-    >
+    <button className="flex items-center space-x-2" onClick={handleReaction}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 16 16"

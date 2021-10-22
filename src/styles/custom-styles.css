@@ -21,12 +21,22 @@
 
   button:focus,
   a:focus {
-    @apply outline-none focus:outline-none ring-2 ring-offset-2 ring-offset-white dark:ring-offset-black ring-blue-200 dark:ring-blue-100 dark:ring-opacity-50;
+    @apply outline-none ring-2 ring-offset-2 ring-offset-white dark:ring-offset-black ring-blue-500 dark:ring-blue-500;
   }
 
   button:focus:not(:focus-visible),
   a:focus:not(:focus-visible) {
-    @apply outline-none ring-0;
+    @apply outline-none ring-0 ring-offset-0;
+  }
+
+  input,
+  textarea {
+    @apply border-none outline-none;
+  }
+
+  input:focus,
+  textarea:focus {
+    @apply outline-none ring-offset-white dark:ring-offset-black ring-2 ring-offset-2 ring-blue-500;
   }
 }
 

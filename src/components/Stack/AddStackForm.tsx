@@ -1,21 +1,19 @@
 import * as React from 'react'
 import toast from 'react-hot-toast'
-import {
-  useAddBookmarkMutation,
-  useAddStackMutation,
-} from '~/graphql/types.generated'
-import { GET_BOOKMARKS } from '~/graphql/queries'
+import { useAddStackMutation } from '~/graphql/types.generated'
 import { Input, Textarea } from '~/components/Input'
 import Button from '../Button'
 import { ErrorAlert } from '~/components/Alert'
 import { LoadingSpinner } from '~/components/LoadingSpinner'
 import { useRouter } from 'next/router'
 import { GET_STACKS } from '~/graphql/queries/stack'
+import { StackImageUploader } from './StackImageUploader'
 
 export function AddStackForm({ closeModal }) {
   const [url, setUrl] = React.useState('')
   const [name, setName] = React.useState('')
   const [description, setDescription] = React.useState('')
+  const [image, setImage] = React.useState('')
   const [isSaving, setIsSaving] = React.useState(false)
   const [error, setError] = React.useState('')
 
@@ -25,7 +23,6 @@ export function AddStackForm({ closeModal }) {
 
   const [handleAddStack] = useAddStackMutation({
     onCompleted: ({ addStack: { id } }) => {
-      toast.success('Saved!')
       closeModal()
       return router.push(`/stack/${id}`)
     },
@@ -52,7 +49,7 @@ export function AddStackForm({ closeModal }) {
     e.preventDefault()
     setIsSaving(true)
     return handleAddStack({
-      variables: { data: { url, name, description, image: '1111.png' } },
+      variables: { data: { url, name, description, image } },
     })
   }
 
@@ -77,35 +74,42 @@ export function AddStackForm({ closeModal }) {
     }
   }
 
+  function onImageUploaded(url) {
+    return setImage(url)
+  }
+
   return (
-    <form className="p-4 space-y-3" onSubmit={onSubmit}>
-      <Input
-        type="text"
-        placeholder="Add a url..."
-        value={url}
-        onChange={onUrlChange}
-        onKeyDown={onKeyDown}
-      />
-      <Input
-        type="text"
-        placeholder="Name"
-        value={name}
-        onChange={onNameChange}
-        onKeyDown={onKeyDown}
-      />
-      <Textarea
-        rows={4}
-        placeholder="Description"
-        value={description}
-        onChange={onDescriptionChange}
-        onKeyDown={onKeyDown}
-      />
-      <div className="flex justify-end">
-        <Button disabled={!url} onClick={onSubmit}>
-          {isSaving ? <LoadingSpinner /> : 'Save'}
-        </Button>
-      </div>
-      {error && <ErrorAlert>{error}</ErrorAlert>}
-    </form>
+    <div className="p-4 space-y-3">
+      <StackImageUploader stack={null} onImageUploaded={onImageUploaded} />
+      <form className="space-y-3" onSubmit={onSubmit}>
+        <Input
+          type="text"
+          placeholder="Add a url..."
+          value={url}
+          onChange={onUrlChange}
+          onKeyDown={onKeyDown}
+        />
+        <Input
+          type="text"
+          placeholder="Name"
+          value={name}
+          onChange={onNameChange}
+          onKeyDown={onKeyDown}
+        />
+        <Textarea
+          rows={4}
+          placeholder="Description"
+          value={description}
+          onChange={onDescriptionChange}
+          onKeyDown={onKeyDown}
+        />
+        <div className="flex justify-end">
+          <Button disabled={!url || !image} onClick={onSubmit}>
+            {isSaving ? <LoadingSpinner /> : 'Save'}
+          </Button>
+        </div>
+        {error && <ErrorAlert>{error}</ErrorAlert>}
+      </form>
+    </div>
   )
 }

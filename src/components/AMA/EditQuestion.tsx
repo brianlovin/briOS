@@ -143,9 +143,6 @@ export default function EditQuestion(props: Props) {
         },
       })
     },
-    onCompleted() {
-      toast.success('Saved!')
-    },
   })
 
   const [handleDelete] = useDeleteAmaQuestionMutation({

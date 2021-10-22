@@ -57,9 +57,6 @@ export const Comment = React.memo(function MemoComment({
       })
     },
     onError(error) {},
-    onCompleted() {
-      toast.success('Comment deleted')
-    },
   })
 
   const [editComment] = useEditCommentMutation({
@@ -79,7 +76,6 @@ export const Comment = React.memo(function MemoComment({
     onError(error) {},
     onCompleted() {
       setIsEditing(false)
-      toast.success('Comment updated')
     },
   })
 

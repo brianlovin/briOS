@@ -7,6 +7,7 @@ import { Input, Textarea } from '~/components/Input'
 import Button, { DeleteButton } from '../Button'
 import { useRouter } from 'next/router'
 import { GET_STACK, GET_STACKS } from '~/graphql/queries/stack'
+import { StackImageUploader } from './StackImageUploader'
 
 export function EditStackForm({ closeModal, stack }) {
   const router = useRouter()
@@ -40,6 +41,13 @@ export function EditStackForm({ closeModal, stack }) {
           ...state,
           error: '',
           url: action.value,
+        }
+      }
+      case 'edit-image': {
+        return {
+          ...state,
+          error: '',
+          image: action.value,
         }
       }
       case 'error': {
@@ -143,46 +151,59 @@ export function EditStackForm({ closeModal, stack }) {
     }
   }
 
+  function onImageUploaded(url) {
+    dispatch({
+      type: 'edit-image',
+      value: url,
+    })
+  }
+
   return (
-    <form className="p-4 space-y-3" onSubmit={handleSave}>
-      <Input
-        placeholder="URL"
-        value={state.url}
-        onChange={onURLChange}
-        onKeyDown={onKeyDown}
-      />
+    <div className="p-4 space-y-3">
+      <StackImageUploader stack={stack} onImageUploaded={onImageUploaded} />
 
-      <Input
-        placeholder="Title"
-        value={state.name}
-        onChange={onNameChange}
-        onKeyDown={onKeyDown}
-      />
+      <form className="space-y-3" onSubmit={handleSave}>
+        <Input
+          placeholder="URL"
+          value={state.url}
+          onChange={onURLChange}
+          onKeyDown={onKeyDown}
+        />
 
-      <Textarea
-        rows={4}
-        placeholder="Description"
-        value={state.description}
-        onChange={onDescriptionChange}
-        onKeyDown={onKeyDown}
-      />
+        <Input
+          placeholder="Title"
+          value={state.name}
+          onChange={onNameChange}
+          onKeyDown={onKeyDown}
+        />
 
-      {state.error && <p className="text-red-500">{state.error}</p>}
+        <Textarea
+          rows={4}
+          placeholder="Description"
+          value={state.description}
+          onChange={onDescriptionChange}
+          onKeyDown={onKeyDown}
+        />
 
-      <div className="flex justify-between">
-        <DeleteButton
-          onClick={() => {
-            closeModal()
-            handleDelete()
-            router.push('/stack')
-          }}
-        >
-          Delete
-        </DeleteButton>
-        <div className="flex space-x-3">
-          <Button onClick={handleSave}>Save</Button>
+        {state.error && <p className="text-red-500">{state.error}</p>}
+
+        <div className="flex justify-between">
+          <DeleteButton
+            onClick={() => {
+              closeModal()
+              handleDelete()
+              router.push('/stack')
+            }}
+          >
+            Delete
+          </DeleteButton>
+          <div className="flex space-x-3">
+            <Button disabled={!state.image} onClick={handleSave}>
+              Save
+            </Button>
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   )
 }

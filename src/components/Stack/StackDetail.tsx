@@ -44,7 +44,7 @@ export function StackDetail({ id }) {
         <Detail.Header>
           <div className="pb-4">
             <Image
-              src={`/static/img/stack/${stack.image}`}
+              src={stack.image}
               width={48}
               height={48}
               layout="fixed"

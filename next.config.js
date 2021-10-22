@@ -5,7 +5,7 @@ module.exports = {
     },
   },
   images: {
-    domains: ['pbs.twimg.com', 'overthought.ghost.io'],
+    domains: ['pbs.twimg.com', 'overthought.ghost.io', 'imagedelivery.net'],
   },
   async redirects() {
     return [

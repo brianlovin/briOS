@@ -19,7 +19,6 @@ export function AddBookmarkForm({ closeModal }) {
 
   const [handleAddBookmark] = useAddBookmarkMutation({
     onCompleted: ({ addBookmark: { id } }) => {
-      toast.success('Saved!')
       closeModal()
       return router.push(`/bookmarks/${id}`)
     },
