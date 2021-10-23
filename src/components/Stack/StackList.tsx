@@ -17,6 +17,14 @@ export const StackList = React.memo(() => {
     return null
   }
 
+  function handleClick(e, stack) {
+    if (e.metaKey) {
+      e.preventDefault()
+      e.stopPropagation()
+      window.open(stack.url, '_blank').focus()
+    }
+  }
+
   return (
     <ListContainer onRef={setScrollContainerRef}>
       <StackTitlebar scrollContainerRef={scrollContainerRef} />
@@ -43,6 +51,7 @@ export const StackList = React.memo(() => {
                 />
               }
               active={active}
+              onClick={(e) => handleClick(e, stack)}
             />
           )
         })}

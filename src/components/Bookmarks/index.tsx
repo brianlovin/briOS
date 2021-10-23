@@ -24,6 +24,14 @@ export default function BookmarksList() {
 
   const { bookmarks } = data
 
+  function handleClick(e, bookmark) {
+    if (e.metaKey) {
+      e.preventDefault()
+      e.stopPropagation()
+      window.open(bookmark.url, '_blank').focus()
+    }
+  }
+
   return (
     <ListContainer onRef={setScrollContainerRef}>
       <BookmarksTitlebar scrollContainerRef={scrollContainerRef} />
@@ -41,6 +49,7 @@ export default function BookmarksList() {
                   active={active}
                   href="/bookmarks/[id]"
                   as={`/bookmarks/${bookmark.id}`}
+                  onClick={(e) => handleClick(e, bookmark)}
                 />
               </motion.div>
             )
