@@ -5,7 +5,7 @@ import TitleBar from '~/components/ListDetail/TitleBar'
 import { CommentType, useGetStackQuery } from '~/graphql/types.generated'
 import { Comments } from '../Comments'
 import { Detail } from '../ListDetail/Detail'
-import Button from '../Button'
+import Button, { PrimaryButton } from '../Button'
 import { StackActions } from './StackActions'
 import { Link as LinkIcon } from 'react-feather'
 import { StackUsedBy } from './StackUsedBy'
@@ -72,10 +72,10 @@ export function StackDetail({ id }) {
             </div>
           )}
 
-          <Button href={stack.url}>
+          <PrimaryButton size="large" href={stack.url}>
             <LinkIcon size={14} />
             <span>Visit</span>
-          </Button>
+          </PrimaryButton>
 
           <StackUsedBy stack={stack} />
         </Detail.Header>

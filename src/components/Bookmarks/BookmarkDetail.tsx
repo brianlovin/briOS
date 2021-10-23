@@ -6,7 +6,8 @@ import TitleBar from '~/components/ListDetail/TitleBar'
 import { Comments } from '~/components/Comments'
 import { BookmarkActions } from './BookmarkActions'
 import { Detail } from '../ListDetail/Detail'
-import Button from '../Button'
+import { PrimaryButton } from '../Button'
+import { Link as LinkIcon } from 'react-feather'
 import { Tags } from '../Tag'
 
 export function BookmarkDetail({ id }) {
@@ -62,7 +63,10 @@ export function BookmarkDetail({ id }) {
           )}
         </Detail.Header>
         <div className="mt-6">
-          <Button href={bookmark.url}>Visit bookmark</Button>
+          <PrimaryButton size="large" href={bookmark.url}>
+            <LinkIcon size={14} />
+            <span>Visit</span>
+          </PrimaryButton>
         </div>
       </Detail.ContentContainer>
 

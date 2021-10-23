@@ -101,7 +101,6 @@ export function HomeIcon() {
       width="16"
       height="16"
       fill="currentColor"
-      className="text-gray-700 dark:text-gray-500"
     >
       <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
     </svg>
@@ -116,7 +115,6 @@ export function WritingIcon() {
       width="16"
       height="16"
       fill="currentColor"
-      className="text-gray-700 dark:text-gray-500"
     >
       <path
         fillRule="evenodd"
@@ -136,7 +134,6 @@ export function PodcastIcon() {
       width="16"
       height="16"
       fill="currentColor"
-      className="text-gray-700 dark:text-gray-500"
     >
       <path
         fillRule="evenodd"
@@ -161,7 +158,6 @@ export function NewsletterIcon() {
         clipRule="evenodd"
         d="M12.0469 17.4844C13.489 17.4844 14.872 16.9115 15.8918 15.8918C16.9115 14.872 17.4844 13.489 17.4844 12.0469C17.4844 10.6048 16.9115 9.22171 15.8918 8.20198C14.872 7.18225 13.489 6.60938 12.0469 6.60938C10.6048 6.60938 9.22171 7.18225 8.20198 8.20198C7.18225 9.22171 6.60938 10.6048 6.60938 12.0469C6.60938 13.489 7.18225 14.872 8.20198 15.8918C9.22171 16.9115 10.6048 17.4844 12.0469 17.4844V17.4844ZM12.7266 10.0078C12.7266 9.82755 12.655 9.65467 12.5275 9.5272C12.4 9.39973 12.2271 9.32812 12.0469 9.32812C11.8666 9.32812 11.6937 9.39973 11.5663 9.5272C11.4388 9.65467 11.3672 9.82755 11.3672 10.0078V11.3672H10.0078C9.82755 11.3672 9.65467 11.4388 9.5272 11.5663C9.39973 11.6937 9.32812 11.8666 9.32812 12.0469C9.32812 12.2271 9.39973 12.4 9.5272 12.5275C9.65467 12.655 9.82755 12.7266 10.0078 12.7266H11.3672V14.0859C11.3672 14.2662 11.4388 14.4391 11.5663 14.5665C11.6937 14.694 11.8666 14.7656 12.0469 14.7656C12.2271 14.7656 12.4 14.694 12.5275 14.5665C12.655 14.4391 12.7266 14.2662 12.7266 14.0859V12.7266H14.0859C14.2662 12.7266 14.4391 12.655 14.5665 12.5275C14.694 12.4 14.7656 12.2271 14.7656 12.0469C14.7656 11.8666 14.694 11.6937 14.5665 11.5663C14.4391 11.4388 14.2662 11.3672 14.0859 11.3672H12.7266V10.0078Z"
         fill="currentColor"
-        className="text-gray-700 dark:text-gray-500"
       />
     </svg>
   )
@@ -175,7 +171,6 @@ export function BookmarksIcon() {
       width="16"
       height="16"
       fill="currentColor"
-      className="text-gray-700 dark:text-gray-500"
     >
       <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
     </svg>
@@ -190,7 +185,6 @@ export function AMAIcon() {
       width="16"
       height="16"
       fill="currentColor"
-      className="text-gray-700 dark:text-gray-500"
     >
       <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z" />
       <path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z" />
@@ -206,7 +200,6 @@ export function StackIcon() {
       width="16"
       height="16"
       fill="currentColor"
-      className="text-gray-700 dark:text-gray-500"
     >
       <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
     </svg>
@@ -221,7 +214,6 @@ export function StaffDesignIcon() {
       viewBox="0 0 19 20"
       xmlns="http://www.w3.org/2000/svg"
       fill="currentColor"
-      className="text-gray-700 dark:text-gray-500"
     >
       <path
         fillRule="evenodd"
@@ -240,7 +232,6 @@ export function SecurityChecklistIcon() {
       width="16"
       height="16"
       fill="currentColor"
-      className="text-gray-700 dark:text-gray-500"
     >
       <path
         fillRule="evenodd"
@@ -259,7 +250,6 @@ export function AppDissectionIcon() {
       width="16"
       height="16"
       fill="currentColor"
-      className="text-gray-700 dark:text-gray-500"
     >
       <path
         fillRule="evenodd"
@@ -278,7 +268,6 @@ export function HackerNewsIcon() {
       width="16"
       height="16"
       fill="currentColor"
-      className="text-gray-700 dark:text-gray-500"
     >
       <path
         fillRule="evenodd"
@@ -297,7 +286,6 @@ export function TwitterIcon() {
       width="16"
       height="14"
       fill="currentColor"
-      className="text-gray-700 dark:text-gray-500"
     >
       <path d="M14.3617 3.35401C14.3687 3.49999 14.3713 3.64777 14.3713 3.79376C14.3713 8.29039 11.0696 13.4737 5.03217 13.4737C3.17739 13.4737 1.45304 12.9105 0 11.9445C0.859457 12.0522 1.73097 11.9833 2.56473 11.7418C3.39849 11.5003 4.17814 11.0908 4.85913 10.5369C4.17428 10.5235 3.51059 10.2886 2.96085 9.86516C2.41112 9.44169 2.00282 8.85078 1.79304 8.17505C2.28527 8.27044 2.79186 8.25042 3.27565 8.11647C2.53271 7.96035 1.8647 7.54285 1.38482 6.9347C0.904951 6.32655 0.642734 5.56518 0.642609 4.77959V4.73724C1.09843 5.00001 1.60823 5.14614 2.12957 5.16347C1.4338 4.6828 0.941284 3.94507 0.752536 3.10088C0.563788 2.25669 0.693041 1.36968 1.11391 0.620882C1.93808 1.67201 2.96639 2.53173 4.13207 3.14418C5.29774 3.75663 6.5747 4.10813 7.88 4.17584C7.82353 3.92137 7.79523 3.66107 7.79565 3.39996C7.79565 2.9534 7.88054 2.51121 8.04548 2.09865C8.21041 1.68609 8.45215 1.31124 8.7569 0.995511C9.06165 0.679784 9.42344 0.429363 9.82159 0.258552C10.2197 0.0877414 10.6465 -0.00011384 11.0774 4.51813e-06C11.5265 -0.000754465 11.9709 0.0941183 12.3832 0.278738C12.7954 0.463357 13.1667 0.733786 13.4739 1.07325C14.2088 0.922489 14.9136 0.643368 15.5583 0.247815C15.3131 1.03559 14.8001 1.70424 14.1148 2.12937C14.7654 2.04944 15.4009 1.86901 16 1.5941C15.5599 2.27755 15.005 2.87363 14.3617 3.35401V3.35401Z" />
     </svg>
@@ -312,7 +300,6 @@ export function GitHubIcon() {
       width="16"
       height="16"
       fill="currentColor"
-      className="text-gray-700 dark:text-gray-500"
     >
       <path
         fillRule="evenodd"

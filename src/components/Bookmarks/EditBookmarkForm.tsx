@@ -155,6 +155,7 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
         defaultValue={bookmark.description}
         onChange={onDescriptionChange}
         onKeyDown={onKeyDown}
+        placeholder={'Description...'}
       />
 
       <div className="flex justify-between pt-24">

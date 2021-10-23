@@ -9,7 +9,7 @@ interface Props {
   description?: string | React.ReactElement
   byline?: string | React.ReactElement
   leadingAccessory?: React.ReactElement
-  onClick?: Function
+  onClick?: () => void
 }
 
 export default function ListItem({
@@ -27,7 +27,9 @@ export default function ListItem({
       <a
         onClick={onClick && onClick}
         className={`flex py-3 lg:py-2 px-3.5 space-x-3 border-b lg:border-none border-gray-100 dark:border-gray-900 text-sm lg:rounded-lg ${
-          active ? 'bg-blue-500' : 'hover:bg-gray-200 dark:hover:bg-gray-800'
+          active
+            ? 'bg-black dark:bg-gray-700'
+            : 'hover:bg-gray-200 dark:hover:bg-gray-800'
         }`}
       >
         {leadingAccessory && <>{leadingAccessory}</>}

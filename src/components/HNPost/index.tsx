@@ -1,10 +1,11 @@
 import * as React from 'react'
 import { NextSeo } from 'next-seo'
+import { Link as LinkIcon } from 'react-feather'
 import { HNPost as HNPostType } from '~/pages/hn'
 import { baseUrl } from '~/config/seo'
 import TitleBar from '../ListDetail/TitleBar'
 import { Detail } from '../ListDetail/Detail'
-import Button from '../Button'
+import { PrimaryButton } from '../Button'
 import { HNComments } from './Comments'
 import Byline from './Byline'
 
@@ -57,7 +58,10 @@ export function HNPost(props: Props) {
 
           {post.url && (
             <div className="mt-6">
-              <Button href={post.url}>Visit</Button>
+              <PrimaryButton size="large" href={post.url}>
+                <LinkIcon size={14} />
+                <span>Visit</span>
+              </PrimaryButton>
             </div>
           )}
 
