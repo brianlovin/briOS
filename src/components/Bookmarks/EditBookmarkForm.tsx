@@ -1,4 +1,6 @@
 import * as React from 'react'
+import Link from 'next/link'
+import { Link as LinkIcon } from 'react-feather'
 import {
   useDeleteBookmarkMutation,
   useEditBookmarkMutation,
@@ -147,6 +149,16 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
         onKeyDown={onKeyDown}
       />
       {state.error && <p className="text-red-500">{state.error}</p>}
+      <Link href={bookmark.url}>
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center pb-2 space-x-1 text-sm opacity-70 hover:opacity-100 text-secondary"
+        >
+          <LinkIcon size={12} />
+          <span>{bookmark.url}</span>
+        </a>
+      </Link>
 
       <TagPicker defaultValue={bookmark.tags[0].name} onChange={onTagChange} />
 
