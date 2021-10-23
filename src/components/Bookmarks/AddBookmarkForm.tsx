@@ -60,6 +60,11 @@ export function AddBookmarkForm({ closeModal }) {
     }
   }
 
+  const tagFilter = (t) => {
+    const allowedBookmarkTags = ['website', 'reading', 'portfolio']
+    return allowedBookmarkTags.indexOf(t.name) >= 0
+  }
+
   return (
     <form className="p-4 space-y-3" onSubmit={onSubmit}>
       <Input
@@ -70,7 +75,7 @@ export function AddBookmarkForm({ closeModal }) {
         onKeyDown={onKeyDown}
       />
 
-      <TagPicker defaultValue={tag} onChange={setTag} />
+      <TagPicker filter={tagFilter} defaultValue={tag} onChange={setTag} />
 
       <div className="flex justify-end pt-24">
         <Button disabled={!url} onClick={onSubmit}>

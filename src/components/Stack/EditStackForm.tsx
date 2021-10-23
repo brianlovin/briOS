@@ -173,6 +173,11 @@ export function EditStackForm({ closeModal, stack }) {
     return dispatch({ type: 'edit-tag', value })
   }
 
+  const tagFilter = (t) => {
+    const allowedTags = ['Indie', 'Open source']
+    return allowedTags.indexOf(t.name) >= 0
+  }
+
   return (
     <div className="p-4 space-y-3">
       <StackImageUploader stack={stack} onImageUploaded={onImageUploaded} />
@@ -192,7 +197,11 @@ export function EditStackForm({ closeModal, stack }) {
           onKeyDown={onKeyDown}
         />
 
-        <TagPicker defaultValue={state.tag} onChange={handleTagChange} />
+        <TagPicker
+          filter={tagFilter}
+          defaultValue={state.tag}
+          onChange={handleTagChange}
+        />
 
         <Textarea
           rows={4}

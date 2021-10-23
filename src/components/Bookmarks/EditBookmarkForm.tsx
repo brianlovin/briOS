@@ -140,6 +140,11 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
     dispatch({ type: 'edit-tag', value: val })
   }
 
+  const tagFilter = (t) => {
+    const allowedBookmarkTags = ['website', 'reading', 'portfolio']
+    return allowedBookmarkTags.indexOf(t.name) >= 0
+  }
+
   return (
     <form className="p-4 space-y-3" onSubmit={handleSave}>
       <Input
@@ -160,7 +165,11 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
         </a>
       </Link>
 
-      <TagPicker defaultValue={bookmark.tags[0].name} onChange={onTagChange} />
+      <TagPicker
+        filter={tagFilter}
+        defaultValue={bookmark.tags[0].name}
+        onChange={onTagChange}
+      />
 
       <Textarea
         rows={4}

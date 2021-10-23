@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { XCircle } from 'react-feather'
 
 export function Tags({ tags }) {
   if (!tags || tags.length === 0) return null
@@ -14,7 +15,7 @@ export function Tags({ tags }) {
 
 export function Tag({ name }) {
   const baseClasses =
-    'flex-none cursor-pointer self-start border uppercase rounded-full hover:bg-opacity-10 dark:hover:bg-opacity-30 px-3 py-0.5 text-xs font-semibold leading-5 tracking-wide border-opacity-50 dark:border-opacity-10'
+    'flex-none justify-center flex items-center space-x-2 cursor-pointer self-start border uppercase rounded-full hover:bg-opacity-10 dark:hover:bg-opacity-30 px-3 py-0.5 text-xs font-semibold leading-5 tracking-wide border-opacity-50 dark:border-opacity-10'
 
   let specificClasses = ''
   if (name) {
@@ -53,7 +54,14 @@ export function Tag({ name }) {
   }
   return (
     <span className={`${baseClasses} ${specificClasses}`}>
-      {name === '__clear_tag_picker' ? '× Clear selection' : name}
+      {name === '__clear_tag_picker' ? (
+        <>
+          <XCircle size={16} />
+          <span>Clear selection</span>
+        </>
+      ) : (
+        name
+      )}
     </span>
   )
 }

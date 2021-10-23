@@ -82,11 +82,16 @@ export function AddStackForm({ closeModal }) {
     return setImage(url)
   }
 
+  const tagFilter = (t) => {
+    const allowedTags = ['Indie', 'Open source']
+    return allowedTags.indexOf(t.name) >= 0
+  }
+
   return (
     <div className="p-4 space-y-3">
       <StackImageUploader stack={null} onImageUploaded={onImageUploaded} />
       <form className="space-y-3" onSubmit={onSubmit}>
-        <TagPicker defaultValue={tag} onChange={setTag} />
+        <TagPicker filter={tagFilter} defaultValue={tag} onChange={setTag} />
         <Input
           type="text"
           placeholder="Add a url..."
