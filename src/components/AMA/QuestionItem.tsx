@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { Ama } from '~/graphql/types.generated'
 import { format } from 'timeago.js'
-import QuestionReaction from './QuestionReaction'
 import EditQuestion from './EditQuestion'
 import { MarkdownRenderer } from '../MarkdownRenderer'
 import AudioPlayer from '../AudioPlayer'
@@ -94,7 +93,6 @@ export const QuestionItem = React.memo((props: Props) => {
       )}
 
       <span className="flex items-center space-x-2 text-tertiary">
-        <QuestionReaction question={question} />
         <span className="text-quaternary">{' · '}</span>
 
         <p

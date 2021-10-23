@@ -3,7 +3,9 @@ export async function getBookmarks(_, __, ctx: Context) {
   const { prisma } = ctx
 
   try {
-    return await prisma.bookmark.findMany({ orderBy: { createdAt: 'desc' } })
+    return await prisma.bookmark.findMany({
+      orderBy: { createdAt: 'desc' },
+    })
   } catch (e) {
     return []
   }
@@ -14,9 +16,8 @@ export async function getBookmark(_, { id }, ctx: Context) {
 
   try {
     return await prisma.bookmark.findUnique({
-      where: {
-        id,
-      },
+      where: { id },
+      include: { tags: true },
     })
   } catch (e) {
     return null

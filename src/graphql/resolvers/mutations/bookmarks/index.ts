@@ -31,12 +31,9 @@ export async function editBookmark(
     throw new UserInputError('Bookmark must have a title')
 
   return await prisma.bookmark.update({
-    where: {
-      id,
-    },
-    data: {
-      title,
-    },
+    where: { id },
+    data: { title },
+    include: { tags: true },
   })
 }
 
@@ -51,16 +48,16 @@ export async function addBookmark(
   if (!isValidUrl(url)) throw new UserInputError('URL was invalid')
 
   const metadata = await getBookmarkMetaData(url)
-  const { host, title, image, siteName, description } = metadata
+  const { host, title, image, description } = metadata
   return await prisma.bookmark.create({
     data: {
       url,
       host,
       title,
       image,
-      siteName,
       description,
     },
+    include: { tags: true },
   })
 }
 
@@ -73,23 +70,8 @@ export async function deleteBookmark(
   const { prisma } = ctx
 
   await prisma.bookmark.delete({
-    where: {
-      id,
-    },
+    where: { id },
   })
 
   return true
-}
-
-export async function addBookmarkReaction(_, { id }) {
-  const docRef = db.collection(BOOKMARKS_COLLECTION).doc(id)
-  const doc = await docRef.get().then((doc) => doc.data())
-  const count = doc.reactions ? doc.reactions + 1 : 1
-
-  await docRef.update({
-    reactions: count,
-  })
-
-  const res = await docRef.get().then((doc) => doc.data())
-  return { ...res, id }
 }

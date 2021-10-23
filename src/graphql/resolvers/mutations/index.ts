@@ -4,7 +4,6 @@ import {
   addBookmark,
   editBookmark,
   deleteBookmark,
-  addBookmarkReaction,
 } from '~/graphql/resolvers/mutations/bookmarks'
 import {
   addStack,
@@ -16,7 +15,6 @@ import {
   addAMAQuestion,
   editAMAQuestion,
   deleteAMAQuestion,
-  addAMAReaction,
   addAMAAudioPlay,
   transcribeAudio,
 } from '~/graphql/resolvers/mutations/ama'
@@ -36,11 +34,9 @@ export default {
   editStack: requiresAdmin(editStack),
   deleteStack: requiresAdmin(deleteStack),
   toggleStackUser: requiresUser(toggleStackUser),
-  addBookmarkReaction,
   addAMAQuestion: requiresUser(addAMAQuestion),
   editAMAQuestion: requiresAdmin(editAMAQuestion),
   deleteAMAQuestion: requiresAdmin(deleteAMAQuestion),
-  addAMAReaction,
   addAMAAudioPlay,
   transcribeAudio: requiresAdmin(transcribeAudio),
   addComment: requiresUser(addComment),

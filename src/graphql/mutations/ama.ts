@@ -35,15 +35,6 @@ export const ADD_AMA_QUESTION = gql`
   ${AMAInfoFragment}
 `
 
-export const ADD_AMA_QUESTION_REACTION = gql`
-  mutation addAMAReaction($id: ID!) {
-    addAMAReaction(id: $id) {
-      ...AMAInfo
-    }
-  }
-  ${AMAInfoFragment}
-`
-
 export const ADD_AMA_AUDIO_PLAY = gql`
   mutation addAMAAudioPlay($id: ID!) {
     addAMAAudioPlay(id: $id)

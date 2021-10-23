@@ -1,6 +1,9 @@
 import { gql } from '@apollo/client'
 import { UserInfoFragment } from '../fragments'
-import { StackInfoFragment } from '../fragments/stack'
+import {
+  StackInfoFragment,
+  StackInfoWithTagsFragment,
+} from '../fragments/stack'
 
 export const GET_STACKS = gql`
   query getStacks {
@@ -14,13 +17,13 @@ export const GET_STACKS = gql`
 export const GET_STACK = gql`
   query getStack($id: ID!) {
     stack(id: $id) {
-      ...StackInfo
+      ...StackInfoWithTags
       usedByViewer
       usedBy {
         ...UserInfo
       }
     }
   }
-  ${StackInfoFragment}
+  ${StackInfoWithTagsFragment}
   ${UserInfoFragment}
 `

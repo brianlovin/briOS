@@ -60,21 +60,6 @@ export async function deleteAMAQuestion(
   return await docRef.delete().then(() => true)
 }
 
-export async function addAMAReaction(_, { id }) {
-  const docRef = db.collection(AMA_QUESTIONS_COLLECTION).doc(id)
-  const doc = await docRef.get().then((doc) => doc.data())
-
-  const count = doc.reactions ? doc.reactions + 1 : 1
-
-  await docRef.update({
-    reactions: count,
-  })
-
-  const res = await docRef.get().then((doc) => doc.data())
-  const sanitizedAmaDocument = await sanitizeAmaDocument(doc, id)
-  return { ...res, id, ...sanitizedAmaDocument }
-}
-
 export async function addAMAAudioPlay(_, { id }) {
   const docRef = db.collection(AMA_QUESTIONS_COLLECTION).doc(id)
   const doc = await docRef.get().then((doc) => doc.data())

@@ -40,15 +40,15 @@ model Bookmark {
   id            String     @id @default(cuid())
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
-  url           String     @unique
-  host          String
-  title         String     @db.VarChar(280)
-  image         String?
-  siteName      String?
-  description   String     @db.VarChar(2048)
+  url           String     @unique @db.VarChar(512)
+  host          String?
+  title         String?    @db.VarChar(280)
+  image         String?    @db.VarChar(512)
+  description   String?    @db.VarChar(2048)
   twitterHandle String?
   comments      Comment[]
   reactions     Reaction[]
+  tags          Tag[]
 }
 
 model Question {
@@ -130,9 +130,10 @@ model PostEdit {
 }
 
 model Tag {
-  name   String  @id @unique
-  posts  Post[]
-  stacks Stack[]
+  name      String     @id @unique
+  posts     Post[]
+  stacks    Stack[]
+  bookmarks Bookmark[]
 }
 
 model Stack {

@@ -54,7 +54,7 @@ export type Bookmark = {
   host: Scalars['String']
   id: Scalars['ID']
   image?: Maybe<Scalars['String']>
-  siteName?: Maybe<Scalars['String']>
+  tags: Array<Maybe<Tag>>
   title?: Maybe<Scalars['String']>
   updatedAt: Scalars['String']
   url: Scalars['String']
@@ -123,9 +123,7 @@ export type Mutation = {
   __typename?: 'Mutation'
   addAMAAudioPlay?: Maybe<Scalars['Boolean']>
   addAMAQuestion?: Maybe<Scalars['Boolean']>
-  addAMAReaction?: Maybe<Ama>
   addBookmark?: Maybe<Bookmark>
-  addBookmarkReaction?: Maybe<Bookmark>
   addComment?: Maybe<Comment>
   addStack?: Maybe<Stack>
   deleteAMAQuestion?: Maybe<Scalars['Boolean']>
@@ -151,16 +149,8 @@ export type MutationAddAmaQuestionArgs = {
   text: Scalars['String']
 }
 
-export type MutationAddAmaReactionArgs = {
-  id: Scalars['ID']
-}
-
 export type MutationAddBookmarkArgs = {
   url: Scalars['String']
-}
-
-export type MutationAddBookmarkReactionArgs = {
-  id: Scalars['ID']
 }
 
 export type MutationAddCommentArgs = {
@@ -354,10 +344,16 @@ export type Stack = {
   id: Scalars['ID']
   image?: Maybe<Scalars['String']>
   name: Scalars['String']
+  tags: Array<Maybe<Tag>>
   updatedAt?: Maybe<Scalars['String']>
   url: Scalars['String']
   usedBy: Array<Maybe<User>>
   usedByViewer?: Maybe<Scalars['Boolean']>
+}
+
+export type Tag = {
+  __typename?: 'Tag'
+  name: Scalars['String']
 }
 
 export type User = {
@@ -403,13 +399,20 @@ export type AmaInfoFragment = {
 export type BookmarkInfoFragment = {
   __typename: 'Bookmark'
   id: string
-  createdAt: string
   url: string
   host: string
   title?: string | null | undefined
-  image?: string | null | undefined
-  siteName?: string | null | undefined
   description?: string | null | undefined
+}
+
+export type BookmarkInfoWithTagsFragment = {
+  __typename: 'Bookmark'
+  id: string
+  url: string
+  host: string
+  title?: string | null | undefined
+  description?: string | null | undefined
+  tags: Array<{ __typename?: 'Tag'; name: string } | null | undefined>
 }
 
 export type CommentInfoFragment = {
@@ -472,6 +475,18 @@ export type StackInfoFragment = {
   description?: string | null | undefined
   url: string
   image?: string | null | undefined
+}
+
+export type StackInfoWithTagsFragment = {
+  __typename: 'Stack'
+  id: string
+  createdAt: string
+  updatedAt?: string | null | undefined
+  name: string
+  description?: string | null | undefined
+  url: string
+  image?: string | null | undefined
+  tags: Array<{ __typename?: 'Tag'; name: string } | null | undefined>
 }
 
 export type UserInfoFragment = {
@@ -556,36 +571,6 @@ export type AddAmaQuestionMutation = {
   addAMAQuestion?: boolean | null | undefined
 }
 
-export type AddAmaReactionMutationVariables = Exact<{
-  id: Scalars['ID']
-}>
-
-export type AddAmaReactionMutation = {
-  __typename?: 'Mutation'
-  addAMAReaction?:
-    | {
-        __typename?: 'AMA'
-        id: string
-        createdAt: string
-        updatedAt?: string | null | undefined
-        text?: string | null | undefined
-        author?:
-          | {
-              __typename: 'User'
-              id: string
-              username?: string | null | undefined
-              avatar?: string | null | undefined
-              name?: string | null | undefined
-              role?: UserRole | null | undefined
-              isViewer?: boolean | null | undefined
-            }
-          | null
-          | undefined
-      }
-    | null
-    | undefined
-}
-
 export type AddAmaAudioPlayMutationVariables = Exact<{
   id: Scalars['ID']
 }>
@@ -615,12 +600,9 @@ export type EditBookmarkMutation = {
     | {
         __typename: 'Bookmark'
         id: string
-        createdAt: string
         url: string
         host: string
         title?: string | null | undefined
-        image?: string | null | undefined
-        siteName?: string | null | undefined
         description?: string | null | undefined
       }
     | null
@@ -646,34 +628,9 @@ export type AddBookmarkMutation = {
     | {
         __typename: 'Bookmark'
         id: string
-        createdAt: string
         url: string
         host: string
         title?: string | null | undefined
-        image?: string | null | undefined
-        siteName?: string | null | undefined
-        description?: string | null | undefined
-      }
-    | null
-    | undefined
-}
-
-export type AddBookmarkReactionMutationVariables = Exact<{
-  id: Scalars['ID']
-}>
-
-export type AddBookmarkReactionMutation = {
-  __typename?: 'Mutation'
-  addBookmarkReaction?:
-    | {
-        __typename: 'Bookmark'
-        id: string
-        createdAt: string
-        url: string
-        host: string
-        title?: string | null | undefined
-        image?: string | null | undefined
-        siteName?: string | null | undefined
         description?: string | null | undefined
       }
     | null
@@ -982,12 +939,9 @@ export type GetBookmarksQuery = {
     | {
         __typename: 'Bookmark'
         id: string
-        createdAt: string
         url: string
         host: string
         title?: string | null | undefined
-        image?: string | null | undefined
-        siteName?: string | null | undefined
         description?: string | null | undefined
       }
     | null
@@ -1005,13 +959,11 @@ export type GetBookmarkQuery = {
     | {
         __typename: 'Bookmark'
         id: string
-        createdAt: string
         url: string
         host: string
         title?: string | null | undefined
-        image?: string | null | undefined
-        siteName?: string | null | undefined
         description?: string | null | undefined
+        tags: Array<{ __typename?: 'Tag'; name: string } | null | undefined>
       }
     | null
     | undefined
@@ -1213,6 +1165,7 @@ export type GetStackQuery = {
           | null
           | undefined
         >
+        tags: Array<{ __typename?: 'Tag'; name: string } | null | undefined>
       }
     | null
     | undefined
@@ -1317,14 +1270,20 @@ export const BookmarkInfoFragmentDoc = gql`
   fragment BookmarkInfo on Bookmark {
     __typename
     id
-    createdAt
     url
     host
     title
-    image
-    siteName
     description
   }
+`
+export const BookmarkInfoWithTagsFragmentDoc = gql`
+  fragment BookmarkInfoWithTags on Bookmark {
+    ...BookmarkInfo
+    tags {
+      name
+    }
+  }
+  ${BookmarkInfoFragmentDoc}
 `
 export const CommentInfoFragmentDoc = gql`
   fragment CommentInfo on Comment {
@@ -1384,6 +1343,15 @@ export const StackInfoFragmentDoc = gql`
     url
     image
   }
+`
+export const StackInfoWithTagsFragmentDoc = gql`
+  fragment StackInfoWithTags on Stack {
+    ...StackInfo
+    tags {
+      name
+    }
+  }
+  ${StackInfoFragmentDoc}
 `
 export const UserSettingsFragmentDoc = gql`
   fragment UserSettings on User {
@@ -1557,57 +1525,6 @@ export type AddAmaQuestionMutationResult =
 export type AddAmaQuestionMutationOptions = Apollo.BaseMutationOptions<
   AddAmaQuestionMutation,
   AddAmaQuestionMutationVariables
->
-export const AddAmaReactionDocument = gql`
-  mutation addAMAReaction($id: ID!) {
-    addAMAReaction(id: $id) {
-      ...AMAInfo
-    }
-  }
-  ${AmaInfoFragmentDoc}
-`
-export type AddAmaReactionMutationFn = Apollo.MutationFunction<
-  AddAmaReactionMutation,
-  AddAmaReactionMutationVariables
->
-
-/**
- * __useAddAmaReactionMutation__
- *
- * To run a mutation, you first call `useAddAmaReactionMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAddAmaReactionMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [addAmaReactionMutation, { data, loading, error }] = useAddAmaReactionMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useAddAmaReactionMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    AddAmaReactionMutation,
-    AddAmaReactionMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<
-    AddAmaReactionMutation,
-    AddAmaReactionMutationVariables
-  >(AddAmaReactionDocument, options)
-}
-export type AddAmaReactionMutationHookResult = ReturnType<
-  typeof useAddAmaReactionMutation
->
-export type AddAmaReactionMutationResult =
-  Apollo.MutationResult<AddAmaReactionMutation>
-export type AddAmaReactionMutationOptions = Apollo.BaseMutationOptions<
-  AddAmaReactionMutation,
-  AddAmaReactionMutationVariables
 >
 export const AddAmaAudioPlayDocument = gql`
   mutation addAMAAudioPlay($id: ID!) {
@@ -1855,57 +1772,6 @@ export type AddBookmarkMutationResult =
 export type AddBookmarkMutationOptions = Apollo.BaseMutationOptions<
   AddBookmarkMutation,
   AddBookmarkMutationVariables
->
-export const AddBookmarkReactionDocument = gql`
-  mutation addBookmarkReaction($id: ID!) {
-    addBookmarkReaction(id: $id) {
-      ...BookmarkInfo
-    }
-  }
-  ${BookmarkInfoFragmentDoc}
-`
-export type AddBookmarkReactionMutationFn = Apollo.MutationFunction<
-  AddBookmarkReactionMutation,
-  AddBookmarkReactionMutationVariables
->
-
-/**
- * __useAddBookmarkReactionMutation__
- *
- * To run a mutation, you first call `useAddBookmarkReactionMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAddBookmarkReactionMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [addBookmarkReactionMutation, { data, loading, error }] = useAddBookmarkReactionMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useAddBookmarkReactionMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    AddBookmarkReactionMutation,
-    AddBookmarkReactionMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<
-    AddBookmarkReactionMutation,
-    AddBookmarkReactionMutationVariables
-  >(AddBookmarkReactionDocument, options)
-}
-export type AddBookmarkReactionMutationHookResult = ReturnType<
-  typeof useAddBookmarkReactionMutation
->
-export type AddBookmarkReactionMutationResult =
-  Apollo.MutationResult<AddBookmarkReactionMutation>
-export type AddBookmarkReactionMutationOptions = Apollo.BaseMutationOptions<
-  AddBookmarkReactionMutation,
-  AddBookmarkReactionMutationVariables
 >
 export const AddCommentDocument = gql`
   mutation addComment($refId: String!, $type: CommentType!, $text: String!) {
@@ -2756,10 +2622,10 @@ export type GetBookmarksQueryResult = Apollo.QueryResult<
 export const GetBookmarkDocument = gql`
   query GetBookmark($id: ID!) {
     bookmark(id: $id) {
-      ...BookmarkInfo
+      ...BookmarkInfoWithTags
     }
   }
-  ${BookmarkInfoFragmentDoc}
+  ${BookmarkInfoWithTagsFragmentDoc}
 `
 
 /**
@@ -3141,14 +3007,14 @@ export type GetStacksQueryResult = Apollo.QueryResult<
 export const GetStackDocument = gql`
   query getStack($id: ID!) {
     stack(id: $id) {
-      ...StackInfo
+      ...StackInfoWithTags
       usedByViewer
       usedBy {
         ...UserInfo
       }
     }
   }
-  ${StackInfoFragmentDoc}
+  ${StackInfoWithTagsFragmentDoc}
   ${UserInfoFragmentDoc}
 `
 

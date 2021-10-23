@@ -4,12 +4,19 @@ export const BookmarkInfoFragment = gql`
   fragment BookmarkInfo on Bookmark {
     __typename
     id
-    createdAt
     url
     host
     title
-    image
-    siteName
     description
   }
+`
+
+export const BookmarkInfoWithTagsFragment = gql`
+  fragment BookmarkInfoWithTags on Bookmark {
+    ...BookmarkInfo
+    tags {
+      name
+    }
+  }
+  ${BookmarkInfoFragment}
 `

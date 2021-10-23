@@ -8,6 +8,10 @@ export default async function getBookmarkMetaData(url) {
 
   const { host } = URL.parse(url)
 
+  const TITLE_LIMIT = 280
+  const IMAGE_LIMIT = 512
+  const DESCRIPTION_LIMIT = 2048
+
   const getMetavalue = (name) =>
     $(`meta[name=${name}]`).attr('content') ||
     $(`meta[name="twitter:${name}"]`).attr('content') ||
@@ -15,14 +19,20 @@ export default async function getBookmarkMetaData(url) {
     $(`meta[property="twitter:${name}"]`).attr('content') ||
     null
 
+  const title = $('title').first().text().substr(0, TITLE_LIMIT)
+  const image =
+    getMetavalue('image').length > IMAGE_LIMIT ? null : getMetavalue('image')
+  const description = getMetavalue('description').substr(0, DESCRIPTION_LIMIT)
+  const author = getMetavalue('author')
+  const creator = getMetavalue('creator')
+
   return {
     url,
     host,
-    title: $('title').first().text(),
-    image: getMetavalue('image'),
-    siteName: getMetavalue('site_name'),
-    description: getMetavalue('description'),
-    author: getMetavalue('author'),
-    creator: getMetavalue('creator'),
+    title,
+    image,
+    description,
+    author,
+    creator,
   }
 }

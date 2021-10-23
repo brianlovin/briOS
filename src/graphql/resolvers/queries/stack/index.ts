@@ -6,7 +6,9 @@ export async function getStacks(_, __, ctx: Context) {
   const { prisma } = ctx
 
   try {
-    return await prisma.stack.findMany({ orderBy: { name: 'asc' } })
+    return await prisma.stack.findMany({
+      orderBy: { name: 'asc' },
+    })
   } catch (e) {
     return []
   }
@@ -22,7 +24,7 @@ export async function getStack(
   try {
     const data = await prisma.stack.findUnique({
       where: { id },
-      include: { users: true },
+      include: { users: true, tags: true },
     })
 
     const usedBy = data.users

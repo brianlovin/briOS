@@ -1,13 +1,15 @@
 import * as React from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import TitleBar from '~/components/ListDetail/TitleBar'
 import { CommentType, useGetStackQuery } from '~/graphql/types.generated'
 import { Comments } from '../Comments'
 import { Detail } from '../ListDetail/Detail'
 import Button from '../Button'
 import { StackActions } from './StackActions'
-import { Link } from 'react-feather'
+import { Link as LinkIcon } from 'react-feather'
 import { StackUsedBy } from './StackUsedBy'
+import { Tags } from '../Tag'
 
 export function StackDetail({ id }) {
   const scrollContainerRef = React.useRef(null)
@@ -44,26 +46,36 @@ export function StackDetail({ id }) {
 
       <Detail.ContentContainer>
         <Detail.Header>
-          <div className="pb-4">
-            <Image
-              src={stack.image}
-              width={48}
-              height={48}
-              layout="fixed"
-              alt={`${stack.name} icon`}
-              className={'rounded-xl'}
-            />
-          </div>
-          <Detail.Title ref={titleRef}>{stack.name}</Detail.Title>
+          <Link href={stack.url}>
+            <a className="inline-block">
+              <Image
+                src={stack.image}
+                width={72}
+                height={72}
+                layout="fixed"
+                alt={`${stack.name} icon`}
+                className={'rounded-2xl'}
+              />
+            </a>
+          </Link>
+          <Link href={stack.url}>
+            <a className="block">
+              <Detail.Title ref={titleRef}>{stack.name}</Detail.Title>
+            </a>
+          </Link>
 
           <p className="prose text-primary">{stack.description}</p>
 
-          <div className="mt-6">
-            <Button href={stack.url}>
-              <Link size={14} />
-              <span>Visit</span>
-            </Button>
-          </div>
+          {stack.tags && stack.tags.length > 0 && (
+            <div className="pb-4">
+              <Tags tags={stack.tags} />
+            </div>
+          )}
+
+          <Button href={stack.url}>
+            <LinkIcon size={14} />
+            <span>Visit</span>
+          </Button>
 
           <StackUsedBy stack={stack} />
         </Detail.Header>

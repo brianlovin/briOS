@@ -6,7 +6,7 @@ interface Props {
   active: boolean
   href: string
   as: string
-  description?: string
+  description?: string | React.ReactElement
   byline?: string | React.ReactElement
   leadingAccessory?: React.ReactElement
   onClick?: Function

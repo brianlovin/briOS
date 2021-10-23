@@ -12,3 +12,13 @@ export const StackInfoFragment = gql`
     image
   }
 `
+
+export const StackInfoWithTagsFragment = gql`
+  fragment StackInfoWithTags on Stack {
+    ...StackInfo
+    tags {
+      name
+    }
+  }
+  ${StackInfoFragment}
+`

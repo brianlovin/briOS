@@ -1,11 +1,13 @@
 import * as React from 'react'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 import { CommentType, useGetBookmarkQuery } from '~/graphql/types.generated'
 import TitleBar from '~/components/ListDetail/TitleBar'
 import { Comments } from '~/components/Comments'
 import { BookmarkActions } from './BookmarkActions'
 import { Detail } from '../ListDetail/Detail'
 import Button from '../Button'
+import { Tags } from '../Tag'
 
 export function BookmarkDetail({ id }) {
   const scrollContainerRef: React.RefObject<HTMLDivElement> = React.useRef(null)
@@ -44,10 +46,17 @@ export function BookmarkDetail({ id }) {
 
       <Detail.ContentContainer>
         <Detail.Header>
-          <Detail.Title ref={titleRef}>{bookmark.title}</Detail.Title>
-          <span className="inline-block leading-snug text-tertiary">
-            {bookmark.host}
-          </span>
+          <Tags tags={bookmark.tags} />
+          <Link href={bookmark.url}>
+            <a className="block">
+              <Detail.Title ref={titleRef}>{bookmark.title}</Detail.Title>
+            </a>
+          </Link>
+          <Link href={bookmark.url}>
+            <a className="inline-block leading-snug text-tertiary">
+              {bookmark.host}
+            </a>
+          </Link>
           {bookmark.description && (
             <p className="prose text-primary">{bookmark.description}</p>
           )}

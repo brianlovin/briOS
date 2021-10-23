@@ -37,9 +37,9 @@ export default gql`
     host: String!
     title: String
     image: String
-    siteName: String
     description: String
     comments: [Comment]!
+    tags: [Tag]!
   }
 
   type Episode {
@@ -81,6 +81,10 @@ export default gql`
     POST
   }
 
+  type Tag {
+    name: String!
+  }
+
   type Stack {
     id: ID!
     createdAt: String!
@@ -90,6 +94,7 @@ export default gql`
     image: String
     url: String!
     comments: [Comment]!
+    tags: [Tag]!
     usedBy: [User]!
     usedByViewer: Boolean
   }
@@ -186,7 +191,6 @@ export default gql`
     editStack(id: ID!, data: EditStackInput!): Stack
     deleteStack(id: ID!): Boolean
     toggleStackUser(id: ID!): Stack
-    addBookmarkReaction(id: ID!): Bookmark
     addAMAQuestion(text: String!): Boolean
     deleteAMAQuestion(id: ID!): Boolean
     editAMAQuestion(
@@ -196,7 +200,6 @@ export default gql`
       status: AMAStatus
       audioWaveform: [Float]
     ): AMA
-    addAMAReaction(id: ID!): AMA
     addAMAAudioPlay(id: ID!): Boolean
     transcribeAudio(url: String!): String
     addComment(refId: String!, type: CommentType!, text: String!): Comment
