@@ -8,6 +8,7 @@ import Button, { DeleteButton } from '../Button'
 import { useRouter } from 'next/router'
 import { GET_STACK, GET_STACKS } from '~/graphql/queries/stack'
 import { StackImageUploader } from './StackImageUploader'
+import { TagPicker } from '../Tag/TagPicker'
 
 export function EditStackForm({ closeModal, stack }) {
   const router = useRouter()
@@ -18,6 +19,7 @@ export function EditStackForm({ closeModal, stack }) {
     description: stack.description,
     url: stack.url,
     image: stack.image,
+    tag: stack.tags?.length > 0 ? stack.tags[0].name : null,
   }
 
   function reducer(state, action) {
@@ -50,6 +52,13 @@ export function EditStackForm({ closeModal, stack }) {
           image: action.value,
         }
       }
+      case 'edit-tag': {
+        return {
+          ...state,
+          error: '',
+          tag: action.value,
+        }
+      }
       case 'error': {
         return {
           ...state,
@@ -63,32 +72,7 @@ export function EditStackForm({ closeModal, stack }) {
 
   const [state, dispatch] = React.useReducer(reducer, initialState)
 
-  const [editStack] = useEditStackMutation({
-    variables: {
-      id: stack.id,
-      data: {
-        name: state.name,
-        description: state.description,
-        url: state.url,
-        image: state.image,
-      },
-    },
-    optimisticResponse: {
-      __typename: 'Mutation',
-      editStack: {
-        __typename: 'Stack',
-        ...stack,
-        name: state.name,
-        description: state.description,
-        url: state.url,
-        image: state.image,
-      },
-    },
-    onError({ message }) {
-      const value = message.replace('GraphQL error:', '')
-      dispatch({ type: 'error', value })
-    },
-  })
+  const [editStack] = useEditStackMutation()
 
   const [handleDelete] = useDeleteStackMutation({
     variables: { id: stack.id },
@@ -129,7 +113,34 @@ export function EditStackForm({ closeModal, stack }) {
       return dispatch({ type: 'error', value: 'Stack must have a URL' })
     }
 
-    editStack()
+    editStack({
+      variables: {
+        id: stack.id,
+        data: {
+          name: state.name,
+          description: state.description,
+          url: state.url,
+          image: state.image,
+          tag: state.tag,
+        },
+      },
+      optimisticResponse: {
+        __typename: 'Mutation',
+        editStack: {
+          __typename: 'Stack',
+          ...stack,
+          name: state.name,
+          description: state.description,
+          url: state.url,
+          image: state.image,
+          tags: state.tag ? [{ name: state.tag }] : [],
+        },
+      },
+      onError({ message }) {
+        const value = message.replace('GraphQL error:', '')
+        dispatch({ type: 'error', value })
+      },
+    })
     return closeModal()
   }
 
@@ -158,6 +169,10 @@ export function EditStackForm({ closeModal, stack }) {
     })
   }
 
+  function handleTagChange(value) {
+    return dispatch({ type: 'edit-tag', value })
+  }
+
   return (
     <div className="p-4 space-y-3">
       <StackImageUploader stack={stack} onImageUploaded={onImageUploaded} />
@@ -176,6 +191,8 @@ export function EditStackForm({ closeModal, stack }) {
           onChange={onNameChange}
           onKeyDown={onKeyDown}
         />
+
+        <TagPicker defaultValue={state.tag} onChange={handleTagChange} />
 
         <Textarea
           rows={4}

@@ -1,4 +1,4 @@
-import { CommentInfoFragment } from '../fragments'
+import { CommentInfoFragment } from '~/graphql/fragments/comment'
 import { gql } from '@apollo/client'
 
 export const GET_COMMENTS = gql`

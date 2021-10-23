@@ -4,10 +4,11 @@ import {
   useEditBookmarkMutation,
 } from '~/graphql/types.generated'
 import { GET_BOOKMARKS } from '~/graphql/queries'
-import { Input } from '~/components/Input'
+import { Input, Textarea } from '~/components/Input'
 import Button, { DeleteButton } from '../Button'
 import { GET_BOOKMARK } from '~/graphql/queries/bookmarks'
 import { useRouter } from 'next/router'
+import { TagPicker } from '../Tag/TagPicker'
 
 export function EditBookmarkForm({ closeModal, bookmark }) {
   const router = useRouter()
@@ -15,6 +16,8 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
   const initialState = {
     error: '',
     title: bookmark.title || bookmark.url,
+    description: bookmark.description || '',
+    tag: bookmark.tags[0].name,
   }
 
   function reducer(state, action) {
@@ -24,6 +27,20 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
           ...state,
           error: '',
           title: action.value,
+        }
+      }
+      case 'edit-description': {
+        return {
+          ...state,
+          error: '',
+          description: action.value,
+        }
+      }
+      case 'edit-tag': {
+        return {
+          ...state,
+          error: '',
+          tag: action.value,
         }
       }
       case 'error': {
@@ -41,8 +58,12 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
 
   const [editBookmark] = useEditBookmarkMutation({
     variables: {
-      title: state.title,
       id: bookmark.id,
+      data: {
+        title: state.title,
+        description: state.description,
+        tag: state.tag,
+      },
     },
     optimisticResponse: {
       __typename: 'Mutation',
@@ -50,6 +71,8 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
         __typename: 'Bookmark',
         ...bookmark,
         title: state.title,
+        description: state.description,
+        tags: [{ name: state.tag }],
       },
     },
     onError({ message }) {
@@ -107,6 +130,14 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
     }
   }
 
+  function onDescriptionChange(e) {
+    return dispatch({ type: 'edit-description', value: e.target.value })
+  }
+
+  function onTagChange(val) {
+    dispatch({ type: 'edit-tag', value: val })
+  }
+
   return (
     <form className="p-4 space-y-3" onSubmit={handleSave}>
       <Input
@@ -117,7 +148,16 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
       />
       {state.error && <p className="text-red-500">{state.error}</p>}
 
-      <div className="flex justify-between">
+      <TagPicker defaultValue={bookmark.tags[0].name} onChange={onTagChange} />
+
+      <Textarea
+        rows={4}
+        defaultValue={bookmark.description}
+        onChange={onDescriptionChange}
+        onKeyDown={onKeyDown}
+      />
+
+      <div className="flex justify-between pt-24">
         <DeleteButton
           onClick={() => {
             closeModal()

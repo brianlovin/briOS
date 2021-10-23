@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client'
-import { CommentInfoFragment } from '../fragments'
+import { CommentInfoFragment } from '~/graphql/fragments/comment'
 
 export const ADD_COMMENT = gql`
   mutation addComment($refId: String!, $type: CommentType!, $text: String!) {

@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client'
-import { UserInfoFragment } from '../fragments'
+import { UserInfoFragment } from '~/graphql/fragments/user'
 import {
   StackInfoFragment,
   StackInfoWithTagsFragment,

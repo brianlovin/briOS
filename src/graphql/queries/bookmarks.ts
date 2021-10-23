@@ -1,4 +1,4 @@
-import { BookmarkInfoFragment } from '../fragments'
+import { BookmarkInfoFragment } from '~/graphql/fragments/bookmark'
 import { gql } from '@apollo/client'
 import { BookmarkInfoWithTagsFragment } from '../fragments/bookmark'
 

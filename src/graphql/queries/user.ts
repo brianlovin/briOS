@@ -1,4 +1,4 @@
-import { UserInfoFragment } from '../fragments'
+import { UserInfoFragment } from '~/graphql/fragments/user'
 import { gql } from '@apollo/client'
 
 export const GET_USER = gql`

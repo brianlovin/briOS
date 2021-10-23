@@ -1,4 +1,4 @@
-import { AMAInfoFragment } from '../fragments'
+import { AMAInfoFragment } from '~/graphql/fragments/ama'
 import { gql } from '@apollo/client'
 
 export const GET_AMA_QUESTIONS = gql`

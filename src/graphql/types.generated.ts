@@ -39,10 +39,16 @@ export enum AmaStatus {
   Pending = 'PENDING',
 }
 
+export type AddBookmarkInput = {
+  tag: Scalars['String']
+  url: Scalars['String']
+}
+
 export type AddStackInput = {
   description: Scalars['String']
   image: Scalars['String']
   name: Scalars['String']
+  tag?: Maybe<Scalars['String']>
   url: Scalars['String']
 }
 
@@ -78,10 +84,17 @@ export enum CommentType {
   Stack = 'STACK',
 }
 
+export type EditBookmarkInput = {
+  description: Scalars['String']
+  tag: Scalars['String']
+  title: Scalars['String']
+}
+
 export type EditStackInput = {
   description: Scalars['String']
   image: Scalars['String']
   name: Scalars['String']
+  tag?: Maybe<Scalars['String']>
   url: Scalars['String']
 }
 
@@ -150,7 +163,7 @@ export type MutationAddAmaQuestionArgs = {
 }
 
 export type MutationAddBookmarkArgs = {
-  url: Scalars['String']
+  data: AddBookmarkInput
 }
 
 export type MutationAddCommentArgs = {
@@ -188,8 +201,8 @@ export type MutationEditAmaQuestionArgs = {
 }
 
 export type MutationEditBookmarkArgs = {
+  data: EditBookmarkInput
   id: Scalars['ID']
-  title: Scalars['String']
 }
 
 export type MutationEditCommentArgs = {
@@ -263,6 +276,7 @@ export type Query = {
   signedUploadUrl?: Maybe<Scalars['String']>
   stack?: Maybe<Stack>
   stacks: Array<Maybe<Stack>>
+  tags: Array<Maybe<Tag>>
   transcription?: Maybe<Scalars['String']>
   user?: Maybe<User>
   viewer?: Maybe<User>
@@ -591,7 +605,7 @@ export type TranscribeAudioMutation = {
 
 export type EditBookmarkMutationVariables = Exact<{
   id: Scalars['ID']
-  title: Scalars['String']
+  data: EditBookmarkInput
 }>
 
 export type EditBookmarkMutation = {
@@ -604,6 +618,7 @@ export type EditBookmarkMutation = {
         host: string
         title?: string | null | undefined
         description?: string | null | undefined
+        tags: Array<{ __typename?: 'Tag'; name: string } | null | undefined>
       }
     | null
     | undefined
@@ -619,7 +634,7 @@ export type DeleteBookmarkMutation = {
 }
 
 export type AddBookmarkMutationVariables = Exact<{
-  url: Scalars['String']
+  data: AddBookmarkInput
 }>
 
 export type AddBookmarkMutation = {
@@ -632,6 +647,7 @@ export type AddBookmarkMutation = {
         host: string
         title?: string | null | undefined
         description?: string | null | undefined
+        tags: Array<{ __typename?: 'Tag'; name: string } | null | undefined>
       }
     | null
     | undefined
@@ -750,6 +766,7 @@ export type EditStackMutation = {
         description?: string | null | undefined
         url: string
         image?: string | null | undefined
+        tags: Array<{ __typename?: 'Tag'; name: string } | null | undefined>
       }
     | null
     | undefined
@@ -780,6 +797,7 @@ export type AddStackMutation = {
         description?: string | null | undefined
         url: string
         image?: string | null | undefined
+        tags: Array<{ __typename?: 'Tag'; name: string } | null | undefined>
       }
     | null
     | undefined
@@ -1169,6 +1187,13 @@ export type GetStackQuery = {
       }
     | null
     | undefined
+}
+
+export type GetTagsQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetTagsQuery = {
+  __typename?: 'Query'
+  tags: Array<{ __typename?: 'Tag'; name: string } | null | undefined>
 }
 
 export type GetUserQueryVariables = Exact<{
@@ -1623,12 +1648,12 @@ export type TranscribeAudioMutationOptions = Apollo.BaseMutationOptions<
   TranscribeAudioMutationVariables
 >
 export const EditBookmarkDocument = gql`
-  mutation editBookmark($id: ID!, $title: String!) {
-    editBookmark(id: $id, title: $title) {
-      ...BookmarkInfo
+  mutation editBookmark($id: ID!, $data: EditBookmarkInput!) {
+    editBookmark(id: $id, data: $data) {
+      ...BookmarkInfoWithTags
     }
   }
-  ${BookmarkInfoFragmentDoc}
+  ${BookmarkInfoWithTagsFragmentDoc}
 `
 export type EditBookmarkMutationFn = Apollo.MutationFunction<
   EditBookmarkMutation,
@@ -1649,7 +1674,7 @@ export type EditBookmarkMutationFn = Apollo.MutationFunction<
  * const [editBookmarkMutation, { data, loading, error }] = useEditBookmarkMutation({
  *   variables: {
  *      id: // value for 'id'
- *      title: // value for 'title'
+ *      data: // value for 'data'
  *   },
  * });
  */
@@ -1723,12 +1748,12 @@ export type DeleteBookmarkMutationOptions = Apollo.BaseMutationOptions<
   DeleteBookmarkMutationVariables
 >
 export const AddBookmarkDocument = gql`
-  mutation addBookmark($url: String!) {
-    addBookmark(url: $url) {
-      ...BookmarkInfo
+  mutation addBookmark($data: AddBookmarkInput!) {
+    addBookmark(data: $data) {
+      ...BookmarkInfoWithTags
     }
   }
-  ${BookmarkInfoFragmentDoc}
+  ${BookmarkInfoWithTagsFragmentDoc}
 `
 export type AddBookmarkMutationFn = Apollo.MutationFunction<
   AddBookmarkMutation,
@@ -1748,7 +1773,7 @@ export type AddBookmarkMutationFn = Apollo.MutationFunction<
  * @example
  * const [addBookmarkMutation, { data, loading, error }] = useAddBookmarkMutation({
  *   variables: {
- *      url: // value for 'url'
+ *      data: // value for 'data'
  *   },
  * });
  */
@@ -1981,10 +2006,10 @@ export type EditEmailSubscriptionMutationOptions = Apollo.BaseMutationOptions<
 export const EditStackDocument = gql`
   mutation editStack($id: ID!, $data: EditStackInput!) {
     editStack(id: $id, data: $data) {
-      ...StackInfo
+      ...StackInfoWithTags
     }
   }
-  ${StackInfoFragmentDoc}
+  ${StackInfoWithTagsFragmentDoc}
 `
 export type EditStackMutationFn = Apollo.MutationFunction<
   EditStackMutation,
@@ -2080,10 +2105,10 @@ export type DeleteStackMutationOptions = Apollo.BaseMutationOptions<
 export const AddStackDocument = gql`
   mutation addStack($data: AddStackInput!) {
     addStack(data: $data) {
-      ...StackInfo
+      ...StackInfoWithTags
     }
   }
-  ${StackInfoFragmentDoc}
+  ${StackInfoWithTagsFragmentDoc}
 `
 export type AddStackMutationFn = Apollo.MutationFunction<
   AddStackMutation,
@@ -3062,6 +3087,53 @@ export type GetStackLazyQueryHookResult = ReturnType<
 export type GetStackQueryResult = Apollo.QueryResult<
   GetStackQuery,
   GetStackQueryVariables
+>
+export const GetTagsDocument = gql`
+  query getTags {
+    tags {
+      name
+    }
+  }
+`
+
+/**
+ * __useGetTagsQuery__
+ *
+ * To run a query within a React component, call `useGetTagsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTagsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTagsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetTagsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetTagsQuery, GetTagsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetTagsQuery, GetTagsQueryVariables>(
+    GetTagsDocument,
+    options
+  )
+}
+export function useGetTagsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetTagsQuery, GetTagsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetTagsQuery, GetTagsQueryVariables>(
+    GetTagsDocument,
+    options
+  )
+}
+export type GetTagsQueryHookResult = ReturnType<typeof useGetTagsQuery>
+export type GetTagsLazyQueryHookResult = ReturnType<typeof useGetTagsLazyQuery>
+export type GetTagsQueryResult = Apollo.QueryResult<
+  GetTagsQuery,
+  GetTagsQueryVariables
 >
 export const GetUserDocument = gql`
   query getUser($username: String!) {

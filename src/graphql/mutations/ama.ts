@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client'
-import { AMAInfoFragment } from '../fragments'
+import { AMAInfoFragment } from '~/graphql/fragments/ama'
 
 export const EDIT_AMA_QUESTION = gql`
   mutation editAMAQuestion(

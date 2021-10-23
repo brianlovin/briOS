@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client'
-import { UserInfoFragment } from '../fragments'
+import { UserInfoFragment } from '~/graphql/fragments/user'
 import { UserSettingsFragment } from '../fragments/user'
 
 export const GET_VIEWER_QUERY = gql`

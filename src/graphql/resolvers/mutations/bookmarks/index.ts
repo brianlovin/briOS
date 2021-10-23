@@ -1,8 +1,6 @@
 import { URL } from 'url'
 import { UserInputError } from 'apollo-server-micro'
-import { db } from '~/graphql/services/firebase'
 import getBookmarkMetaData from './getBookmarkMetaData'
-import { BOOKMARKS_COLLECTION } from '~/graphql/constants'
 import {
   MutationAddBookmarkArgs,
   MutationDeleteBookmarkArgs,
@@ -24,15 +22,36 @@ export async function editBookmark(
   args: MutationEditBookmarkArgs,
   ctx: Context
 ) {
-  const { id, title } = args
+  const { id, data } = args
+  const { title, description, tag } = data
   const { prisma } = ctx
 
   if (!title || title.length === 0)
     throw new UserInputError('Bookmark must have a title')
 
+  // reset tags
+  await prisma.bookmark.update({
+    where: { id },
+    data: {
+      tags: {
+        set: [],
+      },
+    },
+    include: { tags: true },
+  })
+
+  // update data
   return await prisma.bookmark.update({
     where: { id },
-    data: { title },
+    data: {
+      title,
+      description,
+      tags: {
+        connect: {
+          name: tag,
+        },
+      },
+    },
     include: { tags: true },
   })
 }
@@ -42,7 +61,8 @@ export async function addBookmark(
   args: MutationAddBookmarkArgs,
   ctx: Context
 ) {
-  const { url } = args
+  const { data } = args
+  const { url, tag } = data
   const { prisma } = ctx
 
   if (!isValidUrl(url)) throw new UserInputError('URL was invalid')
@@ -56,6 +76,16 @@ export async function addBookmark(
       title,
       image,
       description,
+      tags: {
+        connectOrCreate: {
+          create: {
+            name: tag,
+          },
+          where: {
+            name: tag,
+          },
+        },
+      },
     },
     include: { tags: true },
   })

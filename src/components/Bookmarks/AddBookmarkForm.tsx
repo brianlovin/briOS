@@ -1,6 +1,4 @@
 import * as React from 'react'
-import toast from 'react-hot-toast'
-import { v4 as uuidv4 } from 'uuid'
 import { useAddBookmarkMutation } from '~/graphql/types.generated'
 import { GET_BOOKMARKS } from '~/graphql/queries'
 import { Input } from '~/components/Input'
@@ -8,9 +6,11 @@ import Button from '../Button'
 import { ErrorAlert } from '~/components/Alert'
 import { LoadingSpinner } from '~/components/LoadingSpinner'
 import { useRouter } from 'next/router'
+import { TagPicker } from '../Tag/TagPicker'
 
 export function AddBookmarkForm({ closeModal }) {
   const [url, setUrl] = React.useState('')
+  const [tag, setTag] = React.useState('reading')
   const [isSaving, setIsSaving] = React.useState(false)
   const [error, setError] = React.useState('')
   const router = useRouter()
@@ -45,7 +45,7 @@ export function AddBookmarkForm({ closeModal }) {
     e.preventDefault()
     setIsSaving(true)
     return handleAddBookmark({
-      variables: { url },
+      variables: { data: { url, tag } },
     })
   }
 
@@ -69,7 +69,10 @@ export function AddBookmarkForm({ closeModal }) {
         onChange={onUrlChange}
         onKeyDown={onKeyDown}
       />
-      <div className="flex justify-end">
+
+      <TagPicker defaultValue={tag} onChange={setTag} />
+
+      <div className="flex justify-end pt-24">
         <Button disabled={!url} onClick={onSubmit}>
           {isSaving ? <LoadingSpinner /> : 'Save'}
         </Button>

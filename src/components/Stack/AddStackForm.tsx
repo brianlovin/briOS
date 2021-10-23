@@ -8,11 +8,13 @@ import { LoadingSpinner } from '~/components/LoadingSpinner'
 import { useRouter } from 'next/router'
 import { GET_STACKS } from '~/graphql/queries/stack'
 import { StackImageUploader } from './StackImageUploader'
+import { TagPicker } from '../Tag/TagPicker'
 
 export function AddStackForm({ closeModal }) {
   const [url, setUrl] = React.useState('')
   const [name, setName] = React.useState('')
   const [description, setDescription] = React.useState('')
+  const [tag, setTag] = React.useState(null)
   const [image, setImage] = React.useState('')
   const [isSaving, setIsSaving] = React.useState(false)
   const [error, setError] = React.useState('')
@@ -51,7 +53,7 @@ export function AddStackForm({ closeModal }) {
     e.preventDefault()
     setIsSaving(true)
     return handleAddStack({
-      variables: { data: { url, name, description, image } },
+      variables: { data: { url, name, description, image, tag } },
     })
   }
 
@@ -84,6 +86,7 @@ export function AddStackForm({ closeModal }) {
     <div className="p-4 space-y-3">
       <StackImageUploader stack={null} onImageUploaded={onImageUploaded} />
       <form className="space-y-3" onSubmit={onSubmit}>
+        <TagPicker defaultValue={tag} onChange={setTag} />
         <Input
           type="text"
           placeholder="Add a url..."

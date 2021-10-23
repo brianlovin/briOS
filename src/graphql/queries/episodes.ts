@@ -1,4 +1,4 @@
-import { EpisodeInfoFragment } from '../fragments'
+import { EpisodeInfoFragment } from '~/graphql/fragments/episode'
 import { gql } from '@apollo/client'
 
 export const GET_EPISODES = gql`

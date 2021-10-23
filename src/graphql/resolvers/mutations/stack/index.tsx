@@ -20,7 +20,7 @@ function isValidUrl(string) {
 
 export async function editStack(_, args: MutationEditStackArgs, ctx: Context) {
   const { id, data } = args
-  const { name, url } = data
+  const { name, url, tag, description, image } = data
   const { prisma } = ctx
 
   if (!name || name.length === 0)
@@ -33,6 +33,7 @@ export async function editStack(_, args: MutationEditStackArgs, ctx: Context) {
     Keep our image storage somewhat clean by deleting unused images
   */
   const old = await prisma.stack.findUnique({ where: { id } })
+
   if (old.image !== data.image) {
     try {
       const url = new URL(old.image)
@@ -54,23 +55,66 @@ export async function editStack(_, args: MutationEditStackArgs, ctx: Context) {
     }
   }
 
-  return await prisma.stack.update({
-    where: {
-      id,
+  await prisma.stack.update({
+    where: { id },
+    data: {
+      tags: {
+        set: [],
+      },
     },
-    data,
   })
+
+  if (tag) {
+    // set new tag
+    return await prisma.stack.update({
+      where: { id },
+      data: {
+        name,
+        url,
+        description,
+        image,
+        tags: {
+          connect: {
+            name: tag,
+          },
+        },
+      },
+      include: { tags: true },
+    })
+  } else {
+    return await prisma.stack.update({
+      where: { id },
+      data: {
+        name,
+        url,
+        description,
+        image,
+      },
+      include: { tags: true },
+    })
+  }
 }
 
 export async function addStack(_, args: MutationAddStackArgs, ctx: Context) {
   const { data } = args
-  const { url } = data
+  const { url, name, description, image, tag } = data
   const { prisma } = ctx
 
   if (!isValidUrl(url)) throw new UserInputError('URL was invalid')
 
   return await prisma.stack.create({
-    data,
+    data: {
+      name,
+      url,
+      description,
+      image,
+      tags: {
+        connect: {
+          name: tag,
+        },
+      },
+    },
+    include: { tags: true },
   })
 }
 

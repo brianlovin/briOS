@@ -1,14 +1,14 @@
 import { gql } from '@apollo/client'
-import { UserInfoFragment } from '../fragments'
-import { StackInfoFragment } from '../fragments/stack'
+import { UserInfoFragment } from '~/graphql/fragments/user'
+import { StackInfoWithTagsFragment } from '~/graphql/fragments/stack'
 
 export const EDIT_STACK = gql`
   mutation editStack($id: ID!, $data: EditStackInput!) {
     editStack(id: $id, data: $data) {
-      ...StackInfo
+      ...StackInfoWithTags
     }
   }
-  ${StackInfoFragment}
+  ${StackInfoWithTagsFragment}
 `
 
 export const DELETE_STACK = gql`
@@ -20,10 +20,10 @@ export const DELETE_STACK = gql`
 export const ADD_STACK = gql`
   mutation addStack($data: AddStackInput!) {
     addStack(data: $data) {
-      ...StackInfo
+      ...StackInfoWithTags
     }
   }
-  ${StackInfoFragment}
+  ${StackInfoWithTagsFragment}
 `
 
 export const TOGGLE_STACK_USER = gql`

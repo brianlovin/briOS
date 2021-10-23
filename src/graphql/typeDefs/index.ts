@@ -156,6 +156,7 @@ export default gql`
     signedUploadUrl(id: ID!): String
     signedPlaybackUrl(id: ID!): String
     transcription(transcriptionId: ID!): String
+    tags: [Tag]!
   }
 
   input EditUserInput {
@@ -174,18 +175,31 @@ export default gql`
     url: String!
     image: String!
     description: String!
+    tag: String
   }
 
   input EditStackInput {
     name: String!
     url: String!
-    description: String!
     image: String!
+    description: String!
+    tag: String
+  }
+
+  input AddBookmarkInput {
+    url: String!
+    tag: String!
+  }
+
+  input EditBookmarkInput {
+    title: String!
+    description: String!
+    tag: String!
   }
 
   type Mutation {
-    addBookmark(url: String!): Bookmark
-    editBookmark(id: ID!, title: String!): Bookmark
+    addBookmark(data: AddBookmarkInput!): Bookmark
+    editBookmark(id: ID!, data: EditBookmarkInput!): Bookmark
     deleteBookmark(id: ID!): Boolean
     addStack(data: AddStackInput!): Stack
     editStack(id: ID!, data: EditStackInput!): Stack
