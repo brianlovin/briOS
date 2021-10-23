@@ -14,9 +14,7 @@ export async function getServerSideProps({ req, res }) {
   const context = await getContext(req, res)
   const apolloClient = initApolloClient({ context })
 
-  await apolloClient.query({
-    query: GET_BOOKMARKS,
-  })
+  await apolloClient.query({ query: GET_BOOKMARKS })
 
   return addApolloState(apolloClient, {
     props: {},

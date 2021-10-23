@@ -296,7 +296,7 @@ export type QueryBookmarkArgs = {
 }
 
 export type QueryBookmarksArgs = {
-  skip?: Maybe<Scalars['Int']>
+  tag?: Maybe<Scalars['String']>
 }
 
 export type QueryCommentArgs = {
@@ -948,7 +948,7 @@ export type TranscriptionQuery = {
 }
 
 export type GetBookmarksQueryVariables = Exact<{
-  skip?: Maybe<Scalars['Int']>
+  tag?: Maybe<Scalars['String']>
 }>
 
 export type GetBookmarksQuery = {
@@ -961,6 +961,7 @@ export type GetBookmarksQuery = {
         host: string
         title?: string | null | undefined
         description?: string | null | undefined
+        tags: Array<{ __typename?: 'Tag'; name: string } | null | undefined>
       }
     | null
     | undefined
@@ -2586,12 +2587,12 @@ export type TranscriptionQueryResult = Apollo.QueryResult<
   TranscriptionQueryVariables
 >
 export const GetBookmarksDocument = gql`
-  query GetBookmarks($skip: Int) {
-    bookmarks(skip: $skip) {
-      ...BookmarkInfo
+  query GetBookmarks($tag: String) {
+    bookmarks(tag: $tag) {
+      ...BookmarkInfoWithTags
     }
   }
-  ${BookmarkInfoFragmentDoc}
+  ${BookmarkInfoWithTagsFragmentDoc}
 `
 
 /**
@@ -2606,7 +2607,7 @@ export const GetBookmarksDocument = gql`
  * @example
  * const { data, loading, error } = useGetBookmarksQuery({
  *   variables: {
- *      skip: // value for 'skip'
+ *      tag: // value for 'tag'
  *   },
  * });
  */

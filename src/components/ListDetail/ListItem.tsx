@@ -9,7 +9,7 @@ interface Props {
   description?: string | React.ReactElement
   byline?: string | React.ReactElement
   leadingAccessory?: React.ReactElement
-  onClick?: () => void
+  onClick?: (e: any) => void
 }
 
 export default function ListItem({

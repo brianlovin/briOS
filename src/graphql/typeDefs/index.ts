@@ -142,7 +142,7 @@ export default gql`
     viewer: User
     user(username: String!): User
     bookmark(id: ID!): Bookmark
-    bookmarks(skip: Int): [Bookmark]!
+    bookmarks(tag: String): [Bookmark]!
     stack(id: ID!): Stack
     stacks(skip: Int): [Stack]!
     comment(id: ID!): Comment

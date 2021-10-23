@@ -4,11 +4,12 @@ import { Plus } from 'react-feather'
 import { AddBookmarkDialog } from './AddBookmarkDialog'
 import { UserRole, useViewerQuery } from '~/graphql/types.generated'
 import { GhostButton } from '../Button'
+import { BookmarksFilterMenu } from './FilterMenu'
 
 export function BookmarksTitlebar({ scrollContainerRef }) {
   const { data } = useViewerQuery()
 
-  function trailingAccessory() {
+  function getAddButton() {
     if (data?.viewer?.role === UserRole.Admin) {
       return (
         <AddBookmarkDialog
@@ -21,6 +22,15 @@ export function BookmarksTitlebar({ scrollContainerRef }) {
       )
     }
     return null
+  }
+
+  function trailingAccessory() {
+    return (
+      <div className="flex space-x-2">
+        <BookmarksFilterMenu />
+        {getAddButton()}
+      </div>
+    )
   }
 
   return (

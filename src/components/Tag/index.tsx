@@ -14,7 +14,7 @@ export function Tags({ tags }) {
 
 export function Tag({ name }) {
   const baseClasses =
-    'flex-none self-start border uppercase rounded-full hover:bg-opacity-10 dark:hover:bg-opacity-30 px-3 py-0.5 text-xs font-semibold leading-5 tracking-wide border-opacity-50 dark:border-opacity-10'
+    'flex-none cursor-pointer self-start border uppercase rounded-full hover:bg-opacity-10 dark:hover:bg-opacity-30 px-3 py-0.5 text-xs font-semibold leading-5 tracking-wide border-opacity-50 dark:border-opacity-10'
 
   let specificClasses = ''
   if (name) {

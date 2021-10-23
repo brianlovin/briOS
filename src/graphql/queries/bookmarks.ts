@@ -1,14 +1,13 @@
-import { BookmarkInfoFragment } from '~/graphql/fragments/bookmark'
 import { gql } from '@apollo/client'
 import { BookmarkInfoWithTagsFragment } from '../fragments/bookmark'
 
 export const GET_BOOKMARKS = gql`
-  query GetBookmarks($skip: Int) {
-    bookmarks(skip: $skip) {
-      ...BookmarkInfo
+  query GetBookmarks($tag: String) {
+    bookmarks(tag: $tag) {
+      ...BookmarkInfoWithTags
     }
   }
-  ${BookmarkInfoFragment}
+  ${BookmarkInfoWithTagsFragment}
 `
 
 export const GET_BOOKMARK = gql`
