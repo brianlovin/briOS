@@ -97,11 +97,12 @@ export function StackUsedBy(props) {
 
         {data.stack.usedBy.length > 0 && (
           <div className="flex flex-wrap -m-1">
-            {data.stack.usedBy.map((u) => (
-              <Tooltip key={u.id} content={u.name}>
+            {data.stack.usedBy.map((user) => (
+              <Tooltip key={user.id} content={user.name}>
                 <span className="inline-flex p-1">
                   <Avatar
-                    src={u.avatar}
+                    user={user}
+                    src={user.avatar}
                     width={32}
                     height={32}
                     className="rounded-full"

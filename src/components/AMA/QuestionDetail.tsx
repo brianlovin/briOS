@@ -57,6 +57,7 @@ export function QuestionDetail({ id }) {
         <Detail.Header>
           <div className="flex items-center space-x-3">
             <Avatar
+              user={question.author}
               src={question.author.avatar}
               width={32}
               height={32}

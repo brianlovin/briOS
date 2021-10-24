@@ -59,6 +59,7 @@ export function QuestionsList() {
                       byline={
                         <div className="flex items-center space-x-2">
                           <Avatar
+                            user={question.author}
                             src={question.author.avatar}
                             width={16}
                             height={16}

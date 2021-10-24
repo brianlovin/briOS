@@ -41,6 +41,7 @@ export function UserFooter() {
         <Link href={`/u/${data.viewer.username}`}>
           <a className="flex items-center flex-none rounded-full">
             <Avatar
+              user={data.viewer}
               src={data.viewer.avatar}
               width={24}
               height={24}

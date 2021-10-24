@@ -108,6 +108,7 @@ export const Comment = React.memo(function MemoComment({
       <div className="flex items-center justify-between space-x-4">
         <div className="flex items-center space-x-4">
           <Avatar
+            user={comment.author}
             src={comment.author.avatar}
             width={40}
             height={40}

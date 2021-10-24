@@ -69,26 +69,31 @@ export async function addBookmark(
 
   const metadata = await getBookmarkMetaData(url)
   const { host, title, image, description } = metadata
-  return await prisma.bookmark.create({
-    data: {
-      url,
-      host,
-      title,
-      image,
-      description,
-      tags: {
-        connectOrCreate: {
-          create: {
-            name: tag,
-          },
-          where: {
-            name: tag,
+
+  try {
+    return await prisma.bookmark.create({
+      data: {
+        url,
+        host,
+        title,
+        image,
+        description,
+        tags: {
+          connectOrCreate: {
+            create: {
+              name: tag,
+            },
+            where: {
+              name: tag,
+            },
           },
         },
       },
-    },
-    include: { tags: true },
-  })
+      include: { tags: true },
+    })
+  } catch (err) {
+    throw new UserInputError('Unable to create bookmark')
+  }
 }
 
 export async function deleteBookmark(
