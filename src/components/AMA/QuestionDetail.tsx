@@ -47,7 +47,7 @@ export function QuestionDetail({ id }) {
       <TitleBar
         backButton
         globalMenu={false}
-        backButtonHref={'/writing'}
+        backButtonHref={'/ama'}
         magicTitle
         title={question.title}
         titleRef={titleRef}
