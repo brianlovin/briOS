@@ -19,10 +19,20 @@ export default async function getBookmarkMetaData(url) {
     $(`meta[property="twitter:${name}"]`).attr('content') ||
     null
 
-  const title = $('title').first().text().substr(0, TITLE_LIMIT)
-  const image =
-    getMetavalue('image')?.length > IMAGE_LIMIT ? null : getMetavalue('image')
-  const description = getMetavalue('description').substr(0, DESCRIPTION_LIMIT)
+  let title = $('title').first().text()
+  console.log({ title })
+  // it's possible that a url doesn't return a title
+  title = title ? title.substr(0, TITLE_LIMIT) : title
+
+  // it's possible that a url doesn't return a description
+  let description = getMetavalue('description')
+  description = description
+    ? description.substr(0, DESCRIPTION_LIMIT)
+    : description
+
+  let image = getMetavalue('image')
+  image = image ? (image.length > IMAGE_LIMIT ? null : image) : image
+
   const author = getMetavalue('author')
   const creator = getMetavalue('creator')
 
