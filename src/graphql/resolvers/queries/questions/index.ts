@@ -1,17 +1,28 @@
-import { UserRole, QueryQuestionArgs } from '~/graphql/types.generated'
+import {
+  UserRole,
+  QueryQuestionArgs,
+  Question,
+} from '~/graphql/types.generated'
 import { Context } from '~/graphql/context'
 
 export async function getQuestion(_, { id }: QueryQuestionArgs, ctx: Context) {
   const { prisma, viewer } = ctx
   const question = await prisma.question.findUnique({
     where: { id },
-    include: { comments: true },
+    include: {
+      comments: true,
+      _count: {
+        select: {
+          comments: true,
+        },
+      },
+    },
   })
 
   if (!question) return null
 
   // answered, good to view
-  if (question.comments && question.comments.length > 0) {
+  if (question.comments && question._count.comments > 0) {
     return question
   }
 
@@ -33,6 +44,13 @@ export async function getQuestions(_, __, ctx: Context) {
       orderBy: {
         updatedAt: 'desc',
       },
+      include: {
+        _count: {
+          select: {
+            comments: true,
+          },
+        },
+      },
     })
   }
 
@@ -45,10 +63,17 @@ export async function getQuestions(_, __, ctx: Context) {
     orderBy: {
       updatedAt: 'desc',
     },
+    include: {
+      _count: {
+        select: {
+          comments: true,
+        },
+      },
+    },
   })
 }
 
-export async function getQuestionAuthor(parent: Ama, _, ctx: Context) {
+export async function getQuestionAuthor(parent: Question, _, ctx: Context) {
   const { id } = parent
   const { prisma } = ctx
 

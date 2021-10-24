@@ -14,10 +14,11 @@ import { useDebounce } from '~/hooks/useDebounce'
 interface Props {
   refId: string
   type: CommentType
-  openModal: Function
+  openModal: () => void
+  refetch?: () => void
 }
 
-export function CommentForm({ refId, type, openModal }: Props) {
+export function CommentForm({ refId, type, openModal, refetch = null }: Props) {
   const { data } = useViewerQuery()
   const [text, setText] = React.useState('')
   const [error, setError] = React.useState(null)
@@ -61,6 +62,9 @@ export function CommentForm({ refId, type, openModal }: Props) {
           comments: [...comments, addComment],
         },
       })
+    },
+    onCompleted() {
+      refetch && refetch()
     },
   })
 
@@ -117,6 +121,7 @@ export function CommentForm({ refId, type, openModal }: Props) {
             value={text}
             onChange={handleChange}
             onKeyDown={onKeyDown}
+            style={{ paddingRight: '48px' }}
           />
 
           <div className="absolute bottom-1 right-1">

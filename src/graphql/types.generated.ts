@@ -322,6 +322,7 @@ export type QueryUserArgs = {
 export type Question = {
   __typename?: 'Question'
   author?: Maybe<User>
+  commentCount?: Maybe<Scalars['Int']>
   comments: Array<Maybe<Comment>>
   createdAt: Scalars['String']
   description?: Maybe<Scalars['String']>
@@ -447,6 +448,7 @@ export type QuestionInfoFragment = {
   updatedAt?: string | null | undefined
   title: string
   description?: string | null | undefined
+  commentCount?: number | null | undefined
   author?:
     | {
         __typename: 'User'
@@ -681,6 +683,7 @@ export type EditQuestionMutation = {
         updatedAt?: string | null | undefined
         title: string
         description?: string | null | undefined
+        commentCount?: number | null | undefined
         author?:
           | {
               __typename: 'User'
@@ -721,6 +724,7 @@ export type AddQuestionMutation = {
         updatedAt?: string | null | undefined
         title: string
         description?: string | null | undefined
+        commentCount?: number | null | undefined
         author?:
           | {
               __typename: 'User'
@@ -1046,6 +1050,7 @@ export type GetQuestionsQuery = {
         updatedAt?: string | null | undefined
         title: string
         description?: string | null | undefined
+        commentCount?: number | null | undefined
         author?:
           | {
               __typename: 'User'
@@ -1078,6 +1083,7 @@ export type GetQuestionQuery = {
         updatedAt?: string | null | undefined
         title: string
         description?: string | null | undefined
+        commentCount?: number | null | undefined
         author?:
           | {
               __typename: 'User'
@@ -1306,6 +1312,7 @@ export const QuestionInfoFragmentDoc = gql`
     updatedAt
     title
     description
+    commentCount
     author {
       ...UserInfo
     }

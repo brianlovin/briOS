@@ -9,6 +9,7 @@ export const QuestionInfoFragment = gql`
     updatedAt
     title
     description
+    commentCount
     author {
       ...UserInfo
     }

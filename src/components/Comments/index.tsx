@@ -8,9 +8,10 @@ import { CommentForm } from './CommentForm'
 interface Props {
   refId: string
   type: CommentType
+  refetch?: () => void
 }
 
-export function Comments({ refId, type }: Props) {
+export function Comments({ refId, type, refetch = null }: Props) {
   const [initialCommentsCount, setInitialCommentsCount] = React.useState(null)
   const messagesEndRef: React.RefObject<HTMLDivElement> = React.useRef(null)
 
@@ -67,7 +68,12 @@ export function Comments({ refId, type }: Props) {
 
         <SignInDialog>
           {({ openModal }) => (
-            <CommentForm refId={refId} type={type} openModal={openModal} />
+            <CommentForm
+              refetch={refetch}
+              refId={refId}
+              type={type}
+              openModal={openModal}
+            />
           )}
         </SignInDialog>
       </div>

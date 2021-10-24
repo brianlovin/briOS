@@ -26,6 +26,7 @@ export default {
   },
   Question: {
     author: getQuestionAuthor,
+    commentCount: ({ _count: { comments } }) => comments,
     updatedAt: ({ updatedAt }) =>
       new Date(updatedAt).toLocaleDateString('en-us', {
         year: 'numeric',

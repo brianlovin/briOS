@@ -11,7 +11,9 @@ export function QuestionDetail({ id }) {
   const scrollContainerRef = React.useRef(null)
   const titleRef = React.useRef(null)
   const router = useRouter()
-  const { data, loading, error } = useGetQuestionQuery({ variables: { id } })
+  const { data, loading, error, refetch } = useGetQuestionQuery({
+    variables: { id },
+  })
 
   React.useEffect(() => {
     if (!loading && !data?.question) router.push('/ama')
@@ -62,7 +64,11 @@ export function QuestionDetail({ id }) {
         </Detail.Header>
       </Detail.ContentContainer>
 
-      <Comments refId={question.id} type={CommentType.Question} />
+      <Comments
+        refetch={refetch}
+        refId={question.id}
+        type={CommentType.Question}
+      />
     </Detail.Container>
   )
 }

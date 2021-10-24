@@ -67,6 +67,7 @@ export default gql`
     author: User
     title: String!
     description: String
+    commentCount: Int
     comments: [Comment]!
   }
 

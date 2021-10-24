@@ -34,15 +34,15 @@ export default function ListItem({
       >
         {leadingAccessory && <>{leadingAccessory}</>}
         <div className="flex flex-col justify-center space-y-1">
-          <p
+          <div
             className={`font-medium ${
               active ? 'text-white' : 'text-gray-1000 dark:text-gray-100'
             }`}
           >
             {title}
-          </p>
+          </div>
           {description && (
-            <p
+            <div
               className={`line-clamp-2 ${
                 active
                   ? 'text-white text-opacity-80'
@@ -50,10 +50,10 @@ export default function ListItem({
               }`}
             >
               {description}
-            </p>
+            </div>
           )}
           {byline && (
-            <p
+            <div
               className={`line-clamp-1 ${
                 active
                   ? 'text-white text-opacity-60'
@@ -61,7 +61,7 @@ export default function ListItem({
               }`}
             >
               {byline}
-            </p>
+            </div>
           )}
         </div>
       </a>

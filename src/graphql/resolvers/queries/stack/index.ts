@@ -40,10 +40,3 @@ export async function getStack(
     return null
   }
 }
-
-export async function getStackComments(parent: Stack, _, ctx: Context) {
-  const { id } = parent
-  const { prisma } = ctx
-
-  return await prisma.stack.findUnique({ where: { id } }).comments()
-}
