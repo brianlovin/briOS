@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-export default function Card(props) {
+export function Card(props) {
   const { className, ...rest } = props
   return (
     <div

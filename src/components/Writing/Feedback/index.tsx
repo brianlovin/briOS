@@ -8,7 +8,7 @@ interface Props {
   post: Post
 }
 
-export default function Feedback({ post }: Props) {
+export function Feedback({ post }: Props) {
   const [message, setMessage] = React.useState('')
 
   const [serverState, setServerState] = React.useState({

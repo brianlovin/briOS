@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-export default function Fathom() {
+export function Fathom() {
   React.useEffect(() => {
     const tracker = window.document.createElement('script')
     const firstScript = window.document.getElementsByTagName('script')[0]

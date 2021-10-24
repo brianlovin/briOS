@@ -5,6 +5,7 @@ import {
   AppDissectionIcon,
   BookmarksIcon,
   ExternalLinkIcon,
+  FigmaIcon,
   GitHubIcon,
   HackerNewsIcon,
   HomeIcon,
@@ -14,12 +15,12 @@ import {
   StaffDesignIcon,
   TwitterIcon,
   WritingIcon,
-} from '../Icon'
-import NavigationLink from './NavigationLink'
-import { AddBookmarkDialog } from '../Bookmarks/AddBookmarkDialog'
+} from '~/components/Icon'
+import { NavigationLink } from './NavigationLink'
+import { AddBookmarkDialog } from '~/components/Bookmarks/AddBookmarkDialog'
 import { Plus } from 'react-feather'
 import { UserRole, useViewerQuery } from '~/graphql/types.generated'
-import { GhostButton } from '../Button'
+import { GhostButton } from '~/components/Button'
 
 function ThisAddBookmarkDialog() {
   return (
@@ -102,6 +103,15 @@ export function SidebarNavigation() {
       href: 'https://staff.design',
       label: 'Staff Design',
       icon: StaffDesignIcon,
+      trailingAccessory: ExternalLinkIcon,
+      isActive: false,
+      trailingAction: null,
+    },
+
+    {
+      href: 'https://figma.com/@brian',
+      label: 'Figma Plugins',
+      icon: FigmaIcon,
       trailingAccessory: ExternalLinkIcon,
       isActive: false,
       trailingAction: null,

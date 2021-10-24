@@ -3,11 +3,11 @@ import { NextSeo } from 'next-seo'
 import { Link as LinkIcon } from 'react-feather'
 import { HNPost as HNPostType } from '~/pages/hn'
 import { baseUrl } from '~/config/seo'
-import TitleBar from '../ListDetail/TitleBar'
-import { Detail } from '../ListDetail/Detail'
-import { PrimaryButton } from '../Button'
+import { TitleBar } from '~/components/ListDetail/TitleBar'
+import { Detail } from '~/components/ListDetail/Detail'
+import { PrimaryButton } from '~/components/Button'
 import { HNComments } from './Comments'
-import Byline from './Byline'
+import { Byline } from './Byline'
 
 interface Props {
   post: HNPostType

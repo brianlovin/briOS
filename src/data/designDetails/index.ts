@@ -4,7 +4,7 @@ export default {
   slug: 'design-details',
   description: 'A weekly conversation about design process and culture',
   simplecastId: 1034,
-  artworkUrl: '/static/img/shows/designdetails.jpg',
+  artworkUrl: '/static/img/design-details/designdetails.jpg',
   iTunesUrl: 'https://geo.itunes.apple.com/ca/podcast/feed/id947191070',
   overcastUrl: 'https://overcast.fm/itunes947191070',
   pocketCastsUrl: 'http://pca.st/itunes/947191070',

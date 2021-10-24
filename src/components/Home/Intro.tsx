@@ -3,8 +3,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { MapPin } from 'react-feather'
 import Button from '~/components/Button'
-import TitleBar from '../ListDetail/TitleBar'
-import { Detail } from '../ListDetail/Detail'
+import { TitleBar } from '~/components/ListDetail/TitleBar'
+import { Detail } from '~/components/ListDetail/Detail'
 
 function SectionTitle(props) {
   return (
@@ -131,7 +131,7 @@ const speakingData = [
   },
 ]
 
-export default function Intro() {
+export function Intro() {
   const scrollContainerRef = React.useRef(null)
   const titleRef = React.useRef(null)
 

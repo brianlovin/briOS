@@ -1,15 +1,15 @@
 import * as React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import TitleBar from '~/components/ListDetail/TitleBar'
+import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { CommentType, useGetStackQuery } from '~/graphql/types.generated'
-import { Comments } from '../Comments'
-import { Detail } from '../ListDetail/Detail'
-import Button, { PrimaryButton } from '../Button'
+import { Comments } from '~/components/Comments'
+import { Detail } from '~/components/ListDetail/Detail'
+import { PrimaryButton } from '~/components/Button'
 import { StackActions } from './StackActions'
 import { Link as LinkIcon } from 'react-feather'
 import { StackUsedBy } from './StackUsedBy'
-import { Tags } from '../Tag'
+import { Tags } from '~/components/Tag'
 
 export function StackDetail({ id }) {
   const scrollContainerRef = React.useRef(null)

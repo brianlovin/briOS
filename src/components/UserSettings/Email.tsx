@@ -4,10 +4,10 @@ import {
   useEditUserMutation,
   useGetViewerWithSettingsQuery,
 } from '~/graphql/types.generated'
-import { WarnAlert } from '../Alert'
-import Button from '../Button'
-import { Input } from '../Input'
-import { LoadingSpinner } from '../LoadingSpinner'
+import { WarnAlert } from '~/components/Alert'
+import Button from '~/components/Button'
+import { Input } from '~/components/Input'
+import { LoadingSpinner } from '~/components/LoadingSpinner'
 
 export function EmailForm() {
   const { data } = useGetViewerWithSettingsQuery()

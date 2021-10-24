@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { CommentType, useGetCommentsQuery } from '~/graphql/types.generated'
-import { SignInDialog } from '../SignIn'
-import SyntaxHighlighter from '../SyntaxHighlighter'
+import { SignInDialog } from '~/components/SignIn'
+import { SyntaxHighlighter } from '~/components/SyntaxHighlighter'
 import { Comment } from './Comment'
 import { CommentForm } from './CommentForm'
 

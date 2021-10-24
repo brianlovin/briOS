@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Menu, Transition } from '@headlessui/react'
-import { GhostButton } from '../Button'
-import { BookmarksContext } from '.'
+import { GhostButton } from '~/components/Button'
+import { BookmarksContext } from '~/components/Bookmarks/BookmarksList'
 import { useGetTagsQuery } from '~/graphql/types.generated'
 import { Check } from 'react-feather'
 

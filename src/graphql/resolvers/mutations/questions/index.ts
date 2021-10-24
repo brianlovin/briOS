@@ -1,6 +1,6 @@
 import { UserInputError } from 'apollo-server-micro'
 import { baseUrl } from '~/config/seo'
-import { emailMe } from '~/graphql/services/postmark'
+import { emailMe } from '~/lib/postmark'
 import {
   MutationAddQuestionArgs,
   MutationDeleteQuestionArgs,

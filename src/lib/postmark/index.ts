@@ -1,7 +1,7 @@
 import * as postmark from 'postmark'
 import { baseEmail } from '~/config/seo'
 import { HNPost } from '~/pages/hn'
-import { IS_PROD } from '../constants'
+import { IS_PROD } from '../../graphql/constants'
 
 export const client = new postmark.ServerClient(process.env.POSTMARK_CLIENT_ID)
 

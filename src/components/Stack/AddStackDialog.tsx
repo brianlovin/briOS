@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { AddStackForm } from './AddStackForm'
-import Dialog from '~/components/Dialog'
+import { DialogComponent } from '~/components/Dialog'
 
 export function AddStackDialog({ trigger }) {
   return (
-    <Dialog
+    <DialogComponent
       trigger={trigger}
       title={'New stack'}
       modalContent={({ closeModal }) => (

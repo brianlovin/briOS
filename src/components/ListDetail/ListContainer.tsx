@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-export default function ListContainer({ children, onRef }) {
+export function ListContainer({ children, onRef }) {
   const scrollContainerRef = React.useRef(null)
 
   React.useEffect(() => {

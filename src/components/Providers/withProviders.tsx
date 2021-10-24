@@ -1,4 +1,4 @@
-import Providers from '.'
+import { Providers } from '~/components/Providers'
 
 export function withProviders(fn) {
   return function withPage(page) {

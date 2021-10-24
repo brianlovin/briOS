@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import jwt from 'jsonwebtoken'
-import { prisma } from '~/lib/prisma/client'
+import { prisma } from '~/lib/prisma'
 import { baseUrl } from '~/config/seo'
 import { validEmail } from '~/lib/validators'
 import { EmailSubscriptionType } from '.prisma/client'

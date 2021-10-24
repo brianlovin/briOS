@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { TwitterButton } from '../Button'
+import { TwitterButton } from '~/components/Button'
 
 export function SignInDialogContent() {
   return (

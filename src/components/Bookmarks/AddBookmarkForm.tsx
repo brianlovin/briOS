@@ -6,10 +6,10 @@ import {
 } from '~/graphql/types.generated'
 import { GET_BOOKMARKS } from '~/graphql/queries/bookmarks'
 import { Input } from '~/components/Input'
-import Button from '../Button'
+import Button from '~/components/Button'
 import { LoadingSpinner } from '~/components/LoadingSpinner'
 import { useRouter } from 'next/router'
-import { TagPicker } from '../Tag/TagPicker'
+import { TagPicker } from '~/components/Tag/TagPicker'
 
 export function AddBookmarkForm({ closeModal }) {
   const [url, setUrl] = React.useState('')

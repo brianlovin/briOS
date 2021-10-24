@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useState } from 'react'
 import { X } from 'react-feather'
-import { GhostButton } from '../Button'
+import { GhostButton } from '~/components/Button'
 
 interface DialogProps {
   trigger?: React.ReactElement
@@ -11,7 +11,7 @@ interface DialogProps {
   modalContent: Function
 }
 
-export default function DialogComponent({
+export function DialogComponent({
   trigger = null,
   children = null,
   title,

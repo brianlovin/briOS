@@ -1,9 +1,8 @@
 import * as React from 'react'
 import Image from 'next/image'
-import ListItem from '../ListDetail/ListItem'
+import { ListItem } from '~/components/ListDetail/ListItem'
 import { useRouter } from 'next/router'
-import ListContainer from '../ListDetail/ListContainer'
-import TitleBar from '../ListDetail/TitleBar'
+import { ListContainer } from '~/components/ListDetail/ListContainer'
 import { useGetStacksQuery } from '~/graphql/types.generated'
 import { StackTitlebar } from './StackTitlebar'
 

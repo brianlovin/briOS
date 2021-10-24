@@ -1,11 +1,11 @@
 import React from 'react'
 import routes from '~/config/routes'
 import data from '~/data/security'
-import { Detail } from '../ListDetail/Detail'
-import TitleBar from '../ListDetail/TitleBar'
-import ChecklistItem from './ChecklistItem'
+import { Detail } from '~/components/ListDetail/Detail'
+import { TitleBar } from '~/components/ListDetail/TitleBar'
+import { ChecklistItem } from './ChecklistItem'
 
-export default function SecurityChecklist() {
+export function SecurityChecklist() {
   const scrollContainerRef = React.useRef(null)
   const titleRef = React.useRef(null)
 

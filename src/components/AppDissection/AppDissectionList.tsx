@@ -1,10 +1,10 @@
 import * as React from 'react'
-import ListItem from '../ListDetail/ListItem'
-import { useRouter } from 'next/router'
-import TitleBar from '../ListDetail/TitleBar'
-import ListContainer from '../ListDetail/ListContainer'
-import { summaries } from '~/data/appDissections'
 import Image from 'next/image'
+import { ListItem } from '~/components/ListDetail/ListItem'
+import { useRouter } from 'next/router'
+import { TitleBar } from '~/components/ListDetail/TitleBar'
+import { ListContainer } from '~/components/ListDetail/ListContainer'
+import { summaries } from '~/data/appDissections'
 
 export const AppDissectionList = React.memo(() => {
   const router = useRouter()

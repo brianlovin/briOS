@@ -1,9 +1,9 @@
 import * as React from 'react'
-import TitleBar from '~/components/ListDetail/TitleBar'
+import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { Plus } from 'react-feather'
 import { AddStackDialog } from './AddStackDialog'
 import { UserRole, useViewerQuery } from '~/graphql/types.generated'
-import { GhostButton } from '../Button'
+import { GhostButton } from '~/components/Button'
 
 export function StackTitlebar({ scrollContainerRef }) {
   const { data } = useViewerQuery()

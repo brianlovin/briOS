@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { useAddQuestionMutation } from '~/graphql/types.generated'
 import { Textarea } from '~/components/Input'
-import { ErrorAlert } from '../Alert'
-import { PrimaryButton } from '../Button'
-import { LoadingSpinner } from '../LoadingSpinner'
+import { ErrorAlert } from '~/components/Alert'
+import { PrimaryButton } from '~/components/Button'
+import { LoadingSpinner } from '~/components/LoadingSpinner'
 import { useRouter } from 'next/router'
 
 export function AddQuestionForm({ closeModal }) {

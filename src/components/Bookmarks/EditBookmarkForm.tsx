@@ -7,10 +7,10 @@ import {
 } from '~/graphql/types.generated'
 import { GET_BOOKMARKS } from '~/graphql/queries/bookmarks'
 import { Input, Textarea } from '~/components/Input'
-import Button, { DeleteButton } from '../Button'
+import Button, { DeleteButton } from '~/components/Button'
 import { GET_BOOKMARK } from '~/graphql/queries/bookmarks'
 import { useRouter } from 'next/router'
-import { TagPicker } from '../Tag/TagPicker'
+import { TagPicker } from '~/components/Tag/TagPicker'
 
 export function EditBookmarkForm({ closeModal, bookmark }) {
   const router = useRouter()

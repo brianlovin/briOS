@@ -6,7 +6,7 @@ interface Props {
   active: string
 }
 
-export default function Navigation(props: Props) {
+export function Navigation(props: Props) {
   const { active } = props
 
   return (

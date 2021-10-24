@@ -1,13 +1,13 @@
 import * as React from 'react'
 import { HNPost } from '~/pages/hn'
-import ListItem from '../ListDetail/ListItem'
+import { ListItem } from '~/components/ListDetail/ListItem'
 import { useRouter } from 'next/router'
-import TitleBar from '../ListDetail/TitleBar'
-import ListContainer from '../ListDetail/ListContainer'
-import Button from '../Button'
+import { TitleBar } from '~/components/ListDetail/TitleBar'
+import { ListContainer } from '~/components/ListDetail/ListContainer'
+import Button from '~/components/Button'
 import { Radio } from 'react-feather'
-import DialogComponent from '../Dialog'
-import HNSubscribeBox from '../HNSubscribe'
+import { DialogComponent } from '~/components/Dialog'
+import { HNSubscribeBox } from '~/components/HNSubscribe'
 
 interface Props {
   posts: HNPost[]

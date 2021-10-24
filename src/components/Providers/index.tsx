@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { ApolloProvider } from '@apollo/client'
-import Fathom from './Fathom'
-import SEO from './SEO'
-import Toast from './Toaster'
-import { useApollo } from '~/lib/apollo/client'
+import { Fathom } from './Fathom'
+import { SEO } from './SEO'
+import { Toast } from './Toaster'
+import { useApollo } from '~/lib/apollo'
 import { NextPageContext } from 'next'
 
 interface Props {
@@ -20,7 +20,7 @@ export const GlobalNavigationContext = React.createContext(
   globalNavigationContext
 )
 
-export default function Providers({ children, pageProps }: Props) {
+export function Providers({ children, pageProps }: Props) {
   const apolloClient = useApollo(pageProps)
 
   const initialState = {

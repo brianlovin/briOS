@@ -4,11 +4,11 @@ import {
   useEditStackMutation,
 } from '~/graphql/types.generated'
 import { Input, Textarea } from '~/components/Input'
-import Button, { DeleteButton } from '../Button'
+import Button, { DeleteButton } from '~/components/Button'
 import { useRouter } from 'next/router'
 import { GET_STACK, GET_STACKS } from '~/graphql/queries/stack'
 import { StackImageUploader } from './StackImageUploader'
-import { TagPicker } from '../Tag/TagPicker'
+import { TagPicker } from '~/components/Tag/TagPicker'
 
 export function EditStackForm({ closeModal, stack }) {
   const router = useRouter()

@@ -1,10 +1,8 @@
 import * as React from 'react'
-import SyntaxHighlighter from '~/components/SyntaxHighlighter'
-import TitleBar from '~/components/ListDetail/TitleBar'
-import { useGetPostQuery } from '~/graphql/types.generated'
-import { MarkdownRenderer } from '../MarkdownRenderer'
-import DesignDetailMedia from '../DesignDetailMedia'
-import { Detail } from '../ListDetail/Detail'
+import { TitleBar } from '~/components/ListDetail/TitleBar'
+import { MarkdownRenderer } from '~/components/MarkdownRenderer'
+import { DesignDetailMedia } from '~/components/DesignDetailMedia'
+import { Detail } from '~/components/ListDetail/Detail'
 
 export function AppDissectionDetail({ post }) {
   const scrollContainerRef = React.useRef(null)

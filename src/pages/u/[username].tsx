@@ -1,11 +1,11 @@
 import { NextSeo } from 'next-seo'
 import * as React from 'react'
 import { ListDetailView } from '~/components/Layouts'
-import UserDetail from '~/components/User/UserDetail'
+import { UserDetail } from '~/components/User/UserDetail'
 import routes from '~/config/routes'
 import { getContext } from '~/graphql/context'
 import { GET_USER } from '~/graphql/queries/user'
-import { addApolloState, initApolloClient } from '~/lib/apollo/client'
+import { addApolloState, initApolloClient } from '~/lib/apollo'
 
 export default function UserPage({ username }) {
   return (

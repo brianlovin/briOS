@@ -1,5 +1,4 @@
 import * as React from 'react'
-import Link from 'next/link'
 import { format } from 'timeago.js'
 import { HNPost } from '~/pages/hn'
 
@@ -7,7 +6,7 @@ interface Props {
   post: HNPost
 }
 
-export default function Byline(props: Props) {
+export function Byline(props: Props) {
   const { post } = props
 
   // the timestamp for the post will always be stale becuse we are statically

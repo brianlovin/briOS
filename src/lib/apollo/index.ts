@@ -25,7 +25,7 @@ function createIsomorphLink({ context }) {
     const { SchemaLink } = require('@apollo/link-schema')
     // eslint-disable-next-line
     const { schema } = require('~/graphql/schema')
-    const { prisma } = require('~/lib/prisma/client')
+    const { prisma } = require('~/lib/prisma/index')
     return new SchemaLink({ schema, context })
   } else {
     return new HttpLink({

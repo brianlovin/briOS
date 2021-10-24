@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { AddBookmarkForm } from './AddBookmarkForm'
-import Dialog from '~/components/Dialog'
+import { DialogComponent } from '~/components/Dialog'
 
 export function AddBookmarkDialog({ trigger }) {
   return (
-    <Dialog
+    <DialogComponent
       trigger={trigger}
       title={'Add bookmark'}
       modalContent={({ closeModal }) => (

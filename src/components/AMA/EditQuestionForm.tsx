@@ -1,16 +1,13 @@
 import * as React from 'react'
-import Link from 'next/link'
-import { Link as LinkIcon } from 'react-feather'
 import {
   useDeleteQuestionMutation,
   useEditQuestionMutation,
 } from '~/graphql/types.generated'
 import { GET_QUESTION, GET_QUESTIONS } from '~/graphql/queries/questions'
 import { Input, Textarea } from '~/components/Input'
-import Button, { DeleteButton, PrimaryButton } from '../Button'
+import { DeleteButton, PrimaryButton } from '~/components/Button'
 import { useRouter } from 'next/router'
-import { TagPicker } from '../Tag/TagPicker'
-import { LoadingSpinner } from '../LoadingSpinner'
+import { LoadingSpinner } from '~/components/LoadingSpinner'
 
 export function EditQuestionForm({ closeModal, question }) {
   const router = useRouter()

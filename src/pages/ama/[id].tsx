@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { GET_QUESTIONS, GET_QUESTION } from '~/graphql/queries/questions'
 import { ListDetailView, SiteLayout } from '~/components/Layouts'
-import { addApolloState, initApolloClient } from '~/lib/apollo/client'
+import { addApolloState, initApolloClient } from '~/lib/apollo'
 import { withProviders } from '~/components/Providers/withProviders'
 import { CommentType } from '~/graphql/types.generated'
 import { QuestionsList } from '~/components/AMA/QuestionsList'

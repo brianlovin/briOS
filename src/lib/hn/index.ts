@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-unfetch'
 import { baseUrl } from '~/config/seo'
 import { useLocalFiles } from '~/graphql/helpers/useLocalFiles'
-import { IS_PROD } from '../constants'
+import { IS_PROD } from '~/graphql/constants'
 
 const TOP_BASE_URL = 'https://hacker-news.firebaseio.com/v0'
 const ITEM_BASE_URL = 'https://api.hnpwa.com/v0'

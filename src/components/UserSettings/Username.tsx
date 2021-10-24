@@ -1,13 +1,12 @@
 import * as React from 'react'
-import { GET_VIEWER_QUERY } from '~/graphql/queries/viewer'
 import {
   useEditUserMutation,
   useGetViewerWithSettingsQuery,
 } from '~/graphql/types.generated'
 import { validUsername } from '~/lib/validators'
-import Button from '../Button'
-import { Input } from '../Input'
-import { LoadingSpinner } from '../LoadingSpinner'
+import Button from '~/components/Button'
+import { Input } from '~/components/Input'
+import { LoadingSpinner } from '~/components/LoadingSpinner'
 
 export function UsernameForm() {
   const { data } = useGetViewerWithSettingsQuery()

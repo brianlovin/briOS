@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { useRouter } from 'next/router'
 import { useGetQuestionsQuery } from '~/graphql/types.generated'
-import ListContainer from '~/components/ListDetail/ListContainer'
-import ListItem from '~/components/ListDetail/ListItem'
+import { ListContainer } from '~/components/ListDetail/ListContainer'
+import { ListItem } from '~/components/ListDetail/ListItem'
 import { AMATitlebar } from './AMATitlebar'
-import { Avatar } from '../Avatar'
+import { Avatar } from '~/components/Avatar'
 import { AnimateSharedLayout, motion } from 'framer-motion'
 
 export const QuestionsContext = React.createContext({

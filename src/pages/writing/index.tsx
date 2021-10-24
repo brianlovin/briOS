@@ -4,7 +4,7 @@ import { GET_POSTS } from '~/graphql/queries/posts'
 import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { NextSeo } from 'next-seo'
 import routes from '~/config/routes'
-import { addApolloState, initApolloClient } from '~/lib/apollo/client'
+import { addApolloState, initApolloClient } from '~/lib/apollo'
 import { withProviders } from '~/components/Providers/withProviders'
 
 function WritingPage() {

@@ -5,7 +5,7 @@ type Props = {
   offer: Offer
 }
 
-export default function AppOffer({ offer }: Props) {
+export function AppOffer({ offer }: Props) {
   return (
     <a
       href={offer.url}

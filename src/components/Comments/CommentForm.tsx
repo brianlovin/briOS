@@ -8,7 +8,7 @@ import {
   useViewerQuery,
 } from '~/graphql/types.generated'
 import { GET_COMMENTS } from '~/graphql/queries/comments'
-import { CommentButton } from '../Button'
+import { CommentButton } from '~/components/Button'
 import { useDebounce } from '~/hooks/useDebounce'
 
 interface Props {

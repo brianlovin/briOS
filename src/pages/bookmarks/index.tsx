@@ -1,13 +1,21 @@
 import * as React from 'react'
 import { GET_BOOKMARKS } from '~/graphql/queries/bookmarks'
-import BookmarksList from '~/components/Bookmarks'
-import { addApolloState, initApolloClient } from '~/lib/apollo/client'
+import { BookmarksList } from '~/components/Bookmarks/BookmarksList'
+import { addApolloState, initApolloClient } from '~/lib/apollo'
 import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { withProviders } from '~/components/Providers/withProviders'
 import { getContext } from '~/graphql/context'
+import { NextSeo } from 'next-seo'
+import routes from '~/config/routes'
 
 function BookmarksPage() {
-  return null
+  return (
+    <NextSeo
+      title={routes.bookmarks.seo.title}
+      description={routes.bookmarks.seo.description}
+      openGraph={routes.bookmarks.seo.openGraph}
+    />
+  )
 }
 
 export async function getServerSideProps({ req, res }) {

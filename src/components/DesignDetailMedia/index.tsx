@@ -8,7 +8,7 @@ interface Props {
   detail: DesignDetail
 }
 
-export default function DesignDetailMedia(props: Props) {
+export function DesignDetailMedia(props: Props) {
   const { detail } = props
   const [isVisible, setIsVisible] = useState(false)
 

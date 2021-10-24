@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import * as React from 'react'
 import type { App } from '../types'
-import Offer from './Offer'
+import { AppOffer } from './Offer'
 
 type Props = {
   app: App
@@ -141,7 +141,7 @@ export const AppRow = ({ app }: Props) => {
           </div>
         )}
       </div>
-      {app.offer && <Offer offer={app.offer} />}
+      {app.offer && <AppOffer offer={app.offer} />}
     </div>
   )
 }

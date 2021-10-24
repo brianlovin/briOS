@@ -1,10 +1,10 @@
 import * as React from 'react'
-import TitleBar from '~/components/ListDetail/TitleBar'
+import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { AddQuestionDialog } from './AddQuestionDialog'
 import { UserRole, useViewerQuery } from '~/graphql/types.generated'
-import { GhostButton } from '../Button'
+import { GhostButton } from '~/components/Button'
 import { Plus } from 'react-feather'
-import { SignInDialog } from '../SignIn'
+import { SignInDialog } from '~/components/SignIn'
 import { QuestionsFilterButton } from './FilterButton'
 import { QuestionsContext } from './QuestionsList'
 

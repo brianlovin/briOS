@@ -1,8 +1,8 @@
 import * as React from 'react'
 import Link from 'next/link'
-import { GlobalNavigationContext } from '../Providers'
+import { GlobalNavigationContext } from '~/components/Providers'
 
-export default function NavigationLink({
+export function NavigationLink({
   href,
   label,
   icon: Icon,

@@ -1,7 +1,7 @@
 import { UserInputError } from 'apollo-server-micro'
 import { CLIENT_URL } from '~/graphql/constants'
 import { Context } from '~/graphql/context'
-import { emailMe } from '~/graphql/services/postmark'
+import { emailMe } from '~/lib/postmark'
 import {
   CommentType,
   MutationAddCommentArgs,

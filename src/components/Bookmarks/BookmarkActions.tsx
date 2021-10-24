@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { UserRole, useViewerQuery, Bookmark } from '~/graphql/types.generated'
+import { UserRole, useViewerQuery } from '~/graphql/types.generated'
 import { EditBookmarkDialog } from '~/components/Bookmarks/EditBookmarkDialog'
-import Button from '../Button'
+import Button from '~/components/Button'
 
 export function BookmarkActions({ bookmark }) {
   const { data } = useViewerQuery()

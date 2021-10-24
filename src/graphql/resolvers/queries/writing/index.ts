@@ -1,6 +1,6 @@
 import { IS_PROD } from '~/graphql/constants'
 import { useLocalFiles } from '~/graphql/helpers/useLocalFiles'
-import { ghost } from '~/graphql/services/ghost'
+import { ghost } from '~/lib/ghost'
 
 export async function getPosts(_, args) {
   const { first = 'all', filter = null, order = 'published_at DESC' } = args

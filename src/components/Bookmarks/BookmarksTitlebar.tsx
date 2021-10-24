@@ -1,9 +1,9 @@
 import * as React from 'react'
-import TitleBar from '~/components/ListDetail/TitleBar'
+import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { Plus } from 'react-feather'
 import { AddBookmarkDialog } from './AddBookmarkDialog'
 import { UserRole, useViewerQuery } from '~/graphql/types.generated'
-import { GhostButton } from '../Button'
+import { GhostButton } from '~/components/Button'
 import { BookmarksFilterMenu } from './FilterMenu'
 
 export function BookmarksTitlebar({ scrollContainerRef }) {

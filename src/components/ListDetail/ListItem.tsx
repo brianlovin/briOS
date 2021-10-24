@@ -12,7 +12,7 @@ interface Props {
   onClick?: (e: any) => void
 }
 
-export default function ListItem({
+export function ListItem({
   title,
   description,
   byline,

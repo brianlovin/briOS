@@ -944,57 +944,6 @@ export type GetEpisodesQuery = {
   >
 }
 
-export type GetHomeQueryVariables = Exact<{ [key: string]: never }>
-
-export type GetHomeQuery = {
-  __typename?: 'Query'
-  recent: Array<
-    | {
-        __typename?: 'Post'
-        id?: string | null | undefined
-        title?: string | null | undefined
-        slug?: string | null | undefined
-        updated_at?: string | null | undefined
-        published_at?: string | null | undefined
-        excerpt?: string | null | undefined
-        feature_image?: string | null | undefined
-        html?: string | null | undefined
-      }
-    | null
-    | undefined
-  >
-  popular: Array<
-    | {
-        __typename?: 'Post'
-        id?: string | null | undefined
-        title?: string | null | undefined
-        slug?: string | null | undefined
-        updated_at?: string | null | undefined
-        published_at?: string | null | undefined
-        excerpt?: string | null | undefined
-        feature_image?: string | null | undefined
-        html?: string | null | undefined
-      }
-    | null
-    | undefined
-  >
-  episodes: Array<
-    | {
-        __typename?: 'Episode'
-        id?: string | null | undefined
-        description?: string | null | undefined
-        legacy_id?: string | null | undefined
-        long_description?: string | null | undefined
-        published_at?: string | null | undefined
-        status?: string | null | undefined
-        title?: string | null | undefined
-        token?: string | null | undefined
-      }
-    | null
-    | undefined
-  >
-}
-
 export type GetPostsQueryVariables = Exact<{ [key: string]: never }>
 
 export type GetPostsQuery = {
@@ -2389,65 +2338,6 @@ export type GetEpisodesLazyQueryHookResult = ReturnType<
 export type GetEpisodesQueryResult = Apollo.QueryResult<
   GetEpisodesQuery,
   GetEpisodesQueryVariables
->
-export const GetHomeDocument = gql`
-  query GetHome {
-    recent: posts(first: 12) {
-      ...PostInfo
-    }
-    popular: posts(
-      first: 12
-      filter: "tag:popular"
-      order: "published_at ASC"
-    ) {
-      ...PostInfo
-    }
-    episodes {
-      ...EpisodeInfo
-    }
-  }
-  ${PostInfoFragmentDoc}
-  ${EpisodeInfoFragmentDoc}
-`
-
-/**
- * __useGetHomeQuery__
- *
- * To run a query within a React component, call `useGetHomeQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetHomeQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetHomeQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetHomeQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetHomeQuery, GetHomeQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetHomeQuery, GetHomeQueryVariables>(
-    GetHomeDocument,
-    options
-  )
-}
-export function useGetHomeLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetHomeQuery, GetHomeQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetHomeQuery, GetHomeQueryVariables>(
-    GetHomeDocument,
-    options
-  )
-}
-export type GetHomeQueryHookResult = ReturnType<typeof useGetHomeQuery>
-export type GetHomeLazyQueryHookResult = ReturnType<typeof useGetHomeLazyQuery>
-export type GetHomeQueryResult = Apollo.QueryResult<
-  GetHomeQuery,
-  GetHomeQueryVariables
 >
 export const GetPostsDocument = gql`
   query GetPosts {

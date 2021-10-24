@@ -1,6 +1,6 @@
 import * as React from 'react'
-import ListContainer from '~/components/ListDetail/ListContainer'
-import ListItem from '~/components/ListDetail/ListItem'
+import { ListContainer } from '~/components/ListDetail/ListContainer'
+import { ListItem } from '~/components/ListDetail/ListItem'
 import { useRouter } from 'next/router'
 import { BookmarksTitlebar } from './BookmarksTitlebar'
 import { useGetBookmarksQuery } from '~/graphql/types.generated'
@@ -11,7 +11,7 @@ export const BookmarksContext = React.createContext({
   setTagFilter: (name: string) => {},
 })
 
-export default function BookmarksList() {
+export function BookmarksList() {
   const router = useRouter()
   const { tag } = router.query
   const [tagFilter, setTagFilter] = React.useState(tag)

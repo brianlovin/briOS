@@ -7,13 +7,13 @@ import {
   useEditUserMutation,
   useGetViewerWithSettingsQuery,
 } from '~/graphql/types.generated'
-import Button from '../Button'
-import { LoadingSpinner } from '../LoadingSpinner'
-import { EmailSubscriptionForm } from '../UserSettings/EmailPreferences'
+import Button from '~/components/Button'
+import { LoadingSpinner } from '~/components/LoadingSpinner'
+import { EmailSubscriptionForm } from '~/components/UserSettings/EmailPreferences'
 import { validEmail } from '~/lib/validators'
 import { GET_VIEWER_SETTINGS } from '~/graphql/queries/viewer'
 
-export default function HNSubscribeBox() {
+export function HNSubscribeBox() {
   const { data, loading } = useGetViewerWithSettingsQuery({
     fetchPolicy: 'cache-and-network',
   })

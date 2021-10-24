@@ -16,7 +16,7 @@ interface Props {
   trailingAccessory?: React.ReactNode
 }
 
-export default function TitleBar({
+export function TitleBar({
   title,
   globalMenu = true,
   backButton = false,

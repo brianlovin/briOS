@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from '@auth0/nextjs-auth0'
 import fetch from 'isomorphic-unfetch'
-import { prisma } from '~/lib/prisma/client'
+import { prisma } from '~/lib/prisma'
 import { UserRole } from '~/graphql/types.generated'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

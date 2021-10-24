@@ -1,16 +1,16 @@
 import * as React from 'react'
 import { useRouter } from 'next/router'
+import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import deepmerge from 'deepmerge'
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
 import { CommentType, useGetQuestionQuery } from '~/graphql/types.generated'
-import TitleBar from '~/components/ListDetail/TitleBar'
+import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { Detail } from '~/components/ListDetail/Detail'
-import { Comments } from '../Comments'
+import { Comments } from '~/components/Comments'
 import { QuestionActions } from './QuestionActions'
-import { Avatar } from '../Avatar'
-import ReactMarkdown from 'react-markdown'
-import SyntaxHighlighter from '../SyntaxHighlighter'
+import { Avatar } from '~/components/Avatar'
+import { SyntaxHighlighter } from '~/components/SyntaxHighlighter'
 
 export function QuestionDetail({ id }) {
   const scrollContainerRef = React.useRef(null)

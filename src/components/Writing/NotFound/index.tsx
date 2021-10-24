@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Link from 'next/link'
 
-export default function NotFound() {
+export function NotFound() {
   return (
     <div data-cy="post-not-found">
       <h1>Post not Found</h1>

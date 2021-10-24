@@ -3,13 +3,12 @@ import { NextSeo } from 'next-seo'
 import { HNPost } from '~/components/HNPost'
 import HNPosts from '~/components/HNPosts'
 import { useRouter } from 'next/router'
-import FullscreenLoading from '~/components/FullscreenLoading'
-import { getPostById, getPostIds } from '~/graphql/services/hn'
+import { getHNPosts, getPostById, getPostIds } from '~/lib/hn'
 import { HNPost as HNPostType } from '.'
 import { baseUrl } from '~/config/seo'
-import { getHNPosts } from '~/graphql/services/hn'
 import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { withProviders } from '~/components/Providers/withProviders'
+import { Detail } from '~/components/ListDetail/Detail'
 
 interface Props {
   post: HNPostType
@@ -22,7 +21,7 @@ function HNPostPage(props: Props) {
   const router = useRouter()
 
   if (router.isFallback) {
-    return <FullscreenLoading />
+    return <Detail.Loading />
   }
 
   return (

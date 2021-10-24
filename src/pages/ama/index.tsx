@@ -4,7 +4,7 @@ import { NextSeo } from 'next-seo'
 import routes from '~/config/routes'
 import { withProviders } from '~/components/Providers/withProviders'
 import { ListDetailView, SiteLayout } from '~/components/Layouts'
-import { addApolloState, initApolloClient } from '~/lib/apollo/client'
+import { addApolloState, initApolloClient } from '~/lib/apollo'
 import { GET_QUESTIONS } from '~/graphql/queries/questions'
 import { getContext } from '~/graphql/context'
 

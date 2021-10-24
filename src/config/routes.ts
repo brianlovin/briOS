@@ -36,7 +36,6 @@ const routes = {
   hn: {
     label: 'HN',
     path: '/hn',
-    icon: '/static/img/side-projects/hn.png',
     seo: extendSEO({
       title: 'HN',
       description: 'A better Hacker News.',
@@ -47,7 +46,6 @@ const routes = {
   bookmarks: {
     label: 'Bookmarks',
     path: '/bookmarks',
-    icon: '/static/img/side-projects/bookmarks.png',
     seo: extendSEO({
       title: 'Bookmarks',
       description: 'Internet things, saved for later.',
@@ -58,7 +56,6 @@ const routes = {
   appDissection: {
     label: 'App Dissection',
     path: '/app-dissection',
-    icon: '/static/img/side-projects/app-dissection.png',
     seo: extendSEO({
       title: 'App Dissection',
       description: 'In-depth design explorations.',
@@ -69,7 +66,6 @@ const routes = {
   ama: {
     label: 'AMA',
     path: '/ama',
-    icon: '/static/img/side-projects/ama.png',
     seo: extendSEO({
       title: 'AMA',
       description: 'Ask me anything.',
@@ -80,7 +76,6 @@ const routes = {
   security: {
     label: 'Security Checklist',
     path: '/security',
-    icon: '/static/img/side-projects/security.png',
     seo: extendSEO({
       title: 'Security Checklist',
       description: 'Staying safe on the internet.',
@@ -91,7 +86,6 @@ const routes = {
   stack: {
     label: 'Stack',
     path: '/stack',
-    icon: '/static/img/side-projects/stack.png',
     seo: extendSEO({
       title: 'Stack',
       description: 'My favorite tools and software.',

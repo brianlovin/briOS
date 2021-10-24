@@ -6,8 +6,8 @@ import {
   useToggleStackUserMutation,
   useViewerQuery,
 } from '~/graphql/types.generated'
-import { Avatar } from '../Avatar'
-import Tooltip from '../Tooltip'
+import { Avatar } from '~/components/Avatar'
+import { Tooltip } from '~/components/Tooltip'
 
 export function StackUsedBy(props) {
   const { data: viewerData } = useViewerQuery()

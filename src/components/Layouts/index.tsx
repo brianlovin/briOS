@@ -1,11 +1,5 @@
 import * as React from 'react'
-import Sidebar from '../Sidebar'
-
-export function CenteredColumn({ children }) {
-  return (
-    <div className="max-w-screen-sm mx-auto justify-content">{children}</div>
-  )
-}
+import { Sidebar } from '~/components/Sidebar'
 
 interface Props {
   list: React.ReactElement | null

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { UserRole, useViewerQuery } from '~/graphql/types.generated'
 import { EditQuestionDialog } from '~/components/AMA/EditQuestionDialog'
-import Button from '../Button'
+import Button from '~/components/Button'
 
 export function QuestionActions({ question }) {
   const { data } = useViewerQuery()

@@ -7,7 +7,7 @@ name, and description
 
 */
 
-import { prisma } from '~/lib/prisma/client'
+import { prisma } from '~/lib/prisma'
 import { getUser } from './getUser'
 
 export async function afterCallback(_, __, session) {

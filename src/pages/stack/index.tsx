@@ -5,7 +5,7 @@ import routes from '~/config/routes'
 import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { withProviders } from '~/components/Providers/withProviders'
 import { getContext } from '~/graphql/context'
-import { addApolloState, initApolloClient } from '~/lib/apollo/client'
+import { addApolloState, initApolloClient } from '~/lib/apollo'
 import { GET_STACKS } from '~/graphql/queries/stack'
 
 function StackPage() {

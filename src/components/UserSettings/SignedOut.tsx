@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { TwitterButton } from '../Button'
-import { Detail } from '../ListDetail/Detail'
-import TitleBar from '../ListDetail/TitleBar'
+import { TwitterButton } from '~/components/Button'
+import { Detail } from '~/components/ListDetail/Detail'
+import { TitleBar } from '~/components/ListDetail/TitleBar'
 
 export function SignedOut() {
   return (

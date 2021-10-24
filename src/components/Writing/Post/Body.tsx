@@ -12,7 +12,7 @@ interface Props {
   post: Post
 }
 
-export default function Body({ post }: Props) {
+export function Body({ post }: Props) {
   const md = unified()
     .use(parse)
     .use(rehype2remark)

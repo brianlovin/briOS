@@ -53,12 +53,6 @@
     display: none;
   }
 
-  .papyrus {
-    background-image: url('/static/img/papyrus.png');
-    background-repeat: repeat;
-    background-opacity: 50%;
-  }
-
   .bg-dots {
     background: linear-gradient(90deg, #f9fafb 15px, transparent 1%) center,
       linear-gradient(#f9fafb 15px, transparent 1%) center, rgba(0, 0, 0, 0.24);

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Input, Textarea } from '~/components/Input'
 
-export default function Recommendations() {
+export function Recommendations() {
   const [message, setMessage] = React.useState('')
 
   const [serverState, setServerState] = React.useState({

@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import jwt from 'jsonwebtoken'
-import { prisma } from '~/lib/prisma/client'
+import { prisma } from '~/lib/prisma'
 import { baseUrl } from '~/config/seo'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

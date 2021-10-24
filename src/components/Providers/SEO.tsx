@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { DefaultSeo } from 'next-seo'
 import { baseUrl, defaultSEO } from '~/config/seo'
 
-export default function SEO() {
+export function SEO() {
   const router = useRouter()
 
   let emoji = '👾'

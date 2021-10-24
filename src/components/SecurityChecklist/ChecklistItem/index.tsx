@@ -9,7 +9,7 @@ type Props = {
   resource: ChecklistResource
 }
 
-export default function ChecklistItem(props: Props) {
+export function ChecklistItem(props: Props) {
   const { resource } = props
 
   return (

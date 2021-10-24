@@ -1,14 +1,13 @@
 import * as React from 'react'
-import toast from 'react-hot-toast'
 import { useAddStackMutation } from '~/graphql/types.generated'
 import { Input, Textarea } from '~/components/Input'
-import Button from '../Button'
+import Button from '~/components/Button'
 import { ErrorAlert } from '~/components/Alert'
 import { LoadingSpinner } from '~/components/LoadingSpinner'
 import { useRouter } from 'next/router'
 import { GET_STACKS } from '~/graphql/queries/stack'
 import { StackImageUploader } from './StackImageUploader'
-import { TagPicker } from '../Tag/TagPicker'
+import { TagPicker } from '~/components/Tag/TagPicker'
 
 export function AddStackForm({ closeModal }) {
   const [url, setUrl] = React.useState('')

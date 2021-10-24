@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { AddQuestionForm } from './AddQuestionForm'
-import Dialog from '~/components/Dialog'
+import { DialogComponent } from '~/components/Dialog'
 
 export function AddQuestionDialog({ trigger }) {
   return (
-    <Dialog
+    <DialogComponent
       trigger={trigger}
       title={'Ask Me Anything'}
       modalContent={({ closeModal }) => (

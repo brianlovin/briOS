@@ -1,12 +1,11 @@
 import * as React from 'react'
-import { GlobalNavigationContext } from '../Providers'
-import TitleBar from '../ListDetail/TitleBar'
-import Image from 'next/image'
+import { GlobalNavigationContext } from '~/components/Providers'
+import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { UserFooter } from './UserFooter'
 import { SidebarOverlay } from './Overlay'
 import { SidebarNavigation } from './Navigation'
 
-export default function Sidebar() {
+export function Sidebar() {
   const { isOpen } = React.useContext(GlobalNavigationContext)
   const scrollContainerRef = React.useRef(null)
   return (

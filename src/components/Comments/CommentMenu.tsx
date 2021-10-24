@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Menu, Transition } from '@headlessui/react'
-import { GhostButton } from '../Button'
+import { GhostButton } from '~/components/Button'
 import { MoreHorizontal } from 'react-feather'
 
 export function CommentMenu({ handleDelete, handleEdit, comment }) {

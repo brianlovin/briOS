@@ -8,7 +8,7 @@ interface Props {
   children: any
 }
 
-export default function Tooltip(props: Props) {
+export function Tooltip(props: Props) {
   const { style = {}, content, ...rest } = props
 
   return (

@@ -7,7 +7,7 @@ interface Props {
   post: Post
 }
 
-export default function SEO({ post }: Props) {
+export function SEO({ post }: Props) {
   return (
     <React.Fragment>
       <NextSeo
