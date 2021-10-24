@@ -6,17 +6,15 @@ import {
   useDeleteCommentMutation,
   useEditCommentMutation,
 } from '~/graphql/types.generated'
-import { MoreHorizontal } from 'react-feather'
-import Button, { GhostButton } from '../Button'
+import Button, { PrimaryButton } from '../Button'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import deepmerge from 'deepmerge'
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
-import SyntaxHighlighter from '../SyntaxHighlighter'
 import { CommentMenu } from './CommentMenu'
 import { GET_COMMENTS } from '~/graphql/queries/comments'
-import toast from 'react-hot-toast'
 import { Textarea } from '../Input'
+import { LoadingSpinner } from '../LoadingSpinner'
 
 interface Props {
   comment: CommentProp
@@ -31,6 +29,7 @@ export const Comment = React.memo(function MemoComment({
 }: Props) {
   const [isEditing, setIsEditing] = React.useState(false)
   const [editText, setEditText] = React.useState(comment.text)
+  const [isSavingEdit, setIsSavingEdit] = React.useState(false)
 
   const schema = deepmerge(defaultSchema, {
     attributes: { '*': ['className'] },
@@ -75,6 +74,7 @@ export const Comment = React.memo(function MemoComment({
     },
     onError(error) {},
     onCompleted() {
+      setIsSavingEdit(false)
       setIsEditing(false)
     },
   })
@@ -85,6 +85,22 @@ export const Comment = React.memo(function MemoComment({
 
   function handleEdit() {
     setIsEditing(true)
+  }
+
+  function onKeyDown(e) {
+    if (e.keyCode === 13 && e.metaKey) {
+      if (editText.trim().length === 0 || isSavingEdit) return
+      return handleSaveEdit()
+    }
+    if (e.keyCode === 27 || e.key === 'Escape') {
+      setIsEditing(false)
+      setEditText(comment.text)
+    }
+  }
+
+  function handleSaveEdit() {
+    setIsSavingEdit(true)
+    editComment()
   }
 
   return (
@@ -121,10 +137,16 @@ export const Comment = React.memo(function MemoComment({
           <Textarea
             onChange={(e) => setEditText(e.target.value)}
             value={editText}
+            onKeyDown={onKeyDown}
           />
           <div className="flex justify-between">
             <Button onClick={() => setIsEditing(false)}>Cancel</Button>
-            <Button onClick={editComment}>Save</Button>
+            <PrimaryButton
+              disabled={editText.trim().length === 0 || isSavingEdit}
+              onClick={handleSaveEdit}
+            >
+              {isSavingEdit ? <LoadingSpinner /> : 'Save'}
+            </PrimaryButton>
           </div>
         </div>
       ) : (
