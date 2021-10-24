@@ -1,4 +1,5 @@
-import { handleAuth, handleLogin, handleCallback } from '@auth0/nextjs-auth0'
+import { handleAuth, handleCallback, handleLogin } from '@auth0/nextjs-auth0'
+
 import { afterCallback } from '~/lib/auth0/afterCallback'
 
 export default handleAuth({

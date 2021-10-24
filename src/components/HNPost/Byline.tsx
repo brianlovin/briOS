@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { format } from 'timeago.js'
+
 import { HNPost } from '~/pages/hn'
 
 interface Props {

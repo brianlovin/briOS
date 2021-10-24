@@ -1,8 +1,10 @@
-import * as React from 'react'
 import { Listbox } from '@headlessui/react'
-import { useGetTagsQuery } from '~/graphql/types.generated'
-import { Tag } from '.'
+import * as React from 'react'
 import { ChevronDown } from 'react-feather'
+
+import { useGetTagsQuery } from '~/graphql/types.generated'
+
+import { Tag } from '.'
 
 export function TagPicker({ filter, onChange, defaultValue = undefined }) {
   const { data, loading } = useGetTagsQuery()

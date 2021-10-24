@@ -2,26 +2,27 @@ import { requiresAdmin } from '~/graphql/helpers/requiresAdmin'
 import { requiresUser } from '~/graphql/helpers/requiresUser'
 import {
   addBookmark,
-  editBookmark,
   deleteBookmark,
+  editBookmark,
 } from '~/graphql/resolvers/mutations/bookmarks'
 import {
-  addStack,
-  editStack,
-  deleteStack,
-  toggleStackUser,
-} from '~/graphql/resolvers/mutations/stack'
+  addComment,
+  deleteComment,
+  editComment,
+} from '~/graphql/resolvers/mutations/comment'
 import {
   addQuestion,
-  editQuestion,
   deleteQuestion,
+  editQuestion,
 } from '~/graphql/resolvers/mutations/questions'
 import {
-  addComment,
-  editComment,
-  deleteComment,
-} from '~/graphql/resolvers/mutations/comment'
+  addStack,
+  deleteStack,
+  editStack,
+  toggleStackUser,
+} from '~/graphql/resolvers/mutations/stack'
 import { deleteUser, editUser } from '~/graphql/resolvers/mutations/user'
+
 import { editEmailSubscription } from './emailSubscription'
 
 export default {

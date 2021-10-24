@@ -1,14 +1,16 @@
-import * as React from 'react'
-import { useRouter } from 'next/router'
 import Link from 'next/link'
-import { CommentType, useGetBookmarkQuery } from '~/graphql/types.generated'
-import { TitleBar } from '~/components/ListDetail/TitleBar'
-import { Comments } from '~/components/Comments'
-import { BookmarkActions } from './BookmarkActions'
-import { Detail } from '~/components/ListDetail/Detail'
-import { PrimaryButton } from '~/components/Button'
+import { useRouter } from 'next/router'
+import * as React from 'react'
 import { Link as LinkIcon } from 'react-feather'
+
+import { PrimaryButton } from '~/components/Button'
+import { Comments } from '~/components/Comments'
+import { Detail } from '~/components/ListDetail/Detail'
+import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { Tags } from '~/components/Tag'
+import { CommentType, useGetBookmarkQuery } from '~/graphql/types.generated'
+
+import { BookmarkActions } from './BookmarkActions'
 
 export function BookmarkDetail({ id }) {
   const scrollContainerRef: React.RefObject<HTMLDivElement> = React.useRef(null)

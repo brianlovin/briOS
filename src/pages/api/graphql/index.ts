@@ -1,8 +1,9 @@
 import { ApolloServer } from 'apollo-server-micro'
-import typeDefs from '~/graphql/typeDefs'
-import resolvers from '~/graphql/resolvers'
+
 import context from '~/graphql/context'
 import withRateLimit from '~/graphql/helpers/withRateLimit'
+import resolvers from '~/graphql/resolvers'
+import typeDefs from '~/graphql/typeDefs'
 
 const apolloServer = new ApolloServer({
   typeDefs,

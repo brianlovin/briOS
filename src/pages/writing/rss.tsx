@@ -1,5 +1,5 @@
-import React from 'react'
 import Router from 'next/router'
+import React from 'react'
 
 export default class extends React.Component {
   static async getInitialProps({ res }) {

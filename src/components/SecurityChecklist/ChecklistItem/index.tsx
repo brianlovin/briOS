@@ -1,9 +1,11 @@
 import * as React from 'react'
-import type { ChecklistResource } from '../types'
-import { Heading } from './Heading'
-import { Apps } from './Apps'
-import { Resources } from './Resources'
+
 import { MarkdownRenderer } from '~/components/MarkdownRenderer'
+
+import type { ChecklistResource } from '../types'
+import { Apps } from './Apps'
+import { Heading } from './Heading'
+import { Resources } from './Resources'
 
 type Props = {
   resource: ChecklistResource

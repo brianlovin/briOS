@@ -1,6 +1,8 @@
 import * as React from 'react'
-import { AddBookmarkForm } from './AddBookmarkForm'
+
 import { DialogComponent } from '~/components/Dialog'
+
+import { AddBookmarkForm } from './AddBookmarkForm'
 
 export function AddBookmarkDialog({ trigger }) {
   return (

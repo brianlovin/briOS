@@ -1,16 +1,17 @@
-import { useMemo } from 'react'
 import {
   ApolloClient,
-  InMemoryCache,
   ApolloLink,
   HttpLink,
+  InMemoryCache,
   ServerError,
 } from '@apollo/client'
 import { onError } from '@apollo/client/link/error'
-import toast from 'react-hot-toast'
-import { CLIENT_URL, APOLLO_STATE_PROP_NAME } from '~/graphql/constants'
 import merge from 'deepmerge'
 import isEqual from 'lodash/isEqual'
+import { useMemo } from 'react'
+import toast from 'react-hot-toast'
+
+import { APOLLO_STATE_PROP_NAME, CLIENT_URL } from '~/graphql/constants'
 
 const GRAPHQL_ENDPOINT = `${CLIENT_URL}/api/graphql`
 

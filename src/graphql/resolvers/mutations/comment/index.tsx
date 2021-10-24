@@ -1,7 +1,7 @@
 import { UserInputError } from 'apollo-server-micro'
+
 import { CLIENT_URL } from '~/graphql/constants'
 import { Context } from '~/graphql/context'
-import { emailMe } from '~/lib/postmark'
 import {
   CommentType,
   MutationAddCommentArgs,
@@ -9,6 +9,7 @@ import {
   MutationEditCommentArgs,
   UserRole,
 } from '~/graphql/types.generated'
+import { emailMe } from '~/lib/postmark'
 
 export async function editComment(
   _,

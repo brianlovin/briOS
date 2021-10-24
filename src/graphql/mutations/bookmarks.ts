@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client'
+
 import { BookmarkInfoWithTagsFragment } from '~/graphql/fragments/bookmark'
 
 export const EDIT_BOOKMARK = gql`

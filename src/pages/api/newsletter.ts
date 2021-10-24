@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-unfetch'
 import { NextApiRequest, NextApiResponse } from 'next'
+
 import { baseEmail } from '~/config/seo'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

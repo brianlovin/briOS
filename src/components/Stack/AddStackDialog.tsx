@@ -1,6 +1,8 @@
 import * as React from 'react'
-import { AddStackForm } from './AddStackForm'
+
 import { DialogComponent } from '~/components/Dialog'
+
+import { AddStackForm } from './AddStackForm'
 
 export function AddStackDialog({ trigger }) {
   return (

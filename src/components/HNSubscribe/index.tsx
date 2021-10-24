@@ -1,17 +1,18 @@
 import * as React from 'react'
+
+import { ErrorAlert, SuccessAlert } from '~/components/Alert'
+import Button from '~/components/Button'
 import { Input } from '~/components/Input'
-import { SuccessAlert, ErrorAlert } from '~/components/Alert'
+import { LoadingSpinner } from '~/components/LoadingSpinner'
+import { EmailSubscriptionForm } from '~/components/UserSettings/EmailPreferences'
+import { GET_VIEWER_SETTINGS } from '~/graphql/queries/viewer'
 import {
   EmailSubscriptionType,
   useEditEmailSubscriptionMutation,
   useEditUserMutation,
   useGetViewerWithSettingsQuery,
 } from '~/graphql/types.generated'
-import Button from '~/components/Button'
-import { LoadingSpinner } from '~/components/LoadingSpinner'
-import { EmailSubscriptionForm } from '~/components/UserSettings/EmailPreferences'
 import { validEmail } from '~/lib/validators'
-import { GET_VIEWER_SETTINGS } from '~/graphql/queries/viewer'
 
 export function HNSubscribeBox() {
   const { data, loading } = useGetViewerWithSettingsQuery({

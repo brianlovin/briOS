@@ -1,5 +1,5 @@
-import * as React from 'react'
 import Prism from 'prismjs'
+import * as React from 'react'
 
 export function SyntaxHighlighter({ data }) {
   React.useEffect(() => {

@@ -1,10 +1,11 @@
+import { useRouter } from 'next/router'
 import * as React from 'react'
-import { useAddQuestionMutation } from '~/graphql/types.generated'
-import { Textarea } from '~/components/Input'
+
 import { ErrorAlert } from '~/components/Alert'
 import { PrimaryButton } from '~/components/Button'
+import { Textarea } from '~/components/Input'
 import { LoadingSpinner } from '~/components/LoadingSpinner'
-import { useRouter } from 'next/router'
+import { useAddQuestionMutation } from '~/graphql/types.generated'
 
 export function AddQuestionForm({ closeModal }) {
   const [title, setTitle] = React.useState('')

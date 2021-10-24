@@ -1,14 +1,15 @@
 import * as React from 'react'
-import { GET_BOOKMARKS } from '~/graphql/queries/bookmarks'
-import { ListDetailView, SiteLayout } from '~/components/Layouts'
-import { BookmarksList } from '~/components/Bookmarks/BookmarksList'
-import { GET_BOOKMARK } from '~/graphql/queries/bookmarks'
+
 import { BookmarkDetail } from '~/components/Bookmarks/BookmarkDetail'
-import { addApolloState, initApolloClient } from '~/lib/apollo'
+import { BookmarksList } from '~/components/Bookmarks/BookmarksList'
+import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { withProviders } from '~/components/Providers/withProviders'
 import { getContext } from '~/graphql/context'
+import { GET_BOOKMARKS } from '~/graphql/queries/bookmarks'
+import { GET_BOOKMARK } from '~/graphql/queries/bookmarks'
 import { GET_COMMENTS } from '~/graphql/queries/comments'
 import { CommentType } from '~/graphql/types.generated'
+import { addApolloState, initApolloClient } from '~/lib/apollo'
 
 function BookmarkPage({ id }) {
   return <BookmarkDetail id={id} />

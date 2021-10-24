@@ -1,6 +1,8 @@
 import * as React from 'react'
-import { EditStackForm } from './EditStackForm'
+
 import { DialogComponent } from '~/components/Dialog'
+
+import { EditStackForm } from './EditStackForm'
 
 export function EditStackDialog({ trigger, stack }) {
   return (

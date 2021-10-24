@@ -1,5 +1,6 @@
-import { PostInfoFragment } from '~/graphql/fragments/post'
 import { gql } from '@apollo/client'
+
+import { PostInfoFragment } from '~/graphql/fragments/post'
 
 export const GET_POSTS = gql`
   query GetPosts {

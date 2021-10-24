@@ -1,20 +1,22 @@
+import deepmerge from 'deepmerge'
 import * as React from 'react'
 import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-import deepmerge from 'deepmerge'
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
+import remarkGfm from 'remark-gfm'
+
+import { Avatar } from '~/components/Avatar'
+import Button, { PrimaryButton } from '~/components/Button'
+import { Textarea } from '~/components/Input'
+import { LoadingSpinner } from '~/components/LoadingSpinner'
+import { GET_COMMENTS } from '~/graphql/queries/comments'
 import {
   Comment as CommentProp,
   CommentType,
   useDeleteCommentMutation,
   useEditCommentMutation,
 } from '~/graphql/types.generated'
-import Button, { PrimaryButton } from '~/components/Button'
+
 import { CommentMenu } from './CommentMenu'
-import { GET_COMMENTS } from '~/graphql/queries/comments'
-import { Textarea } from '~/components/Input'
-import { LoadingSpinner } from '~/components/LoadingSpinner'
-import { Avatar } from '~/components/Avatar'
 
 interface Props {
   comment: CommentProp

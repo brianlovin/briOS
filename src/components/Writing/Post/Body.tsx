@@ -1,12 +1,13 @@
 import * as React from 'react'
-import { unified } from 'unified'
 import parse from 'rehype-parse'
-import rehype2remark from 'rehype-remark'
-import stringify from 'remark-stringify'
-import { Post } from '~/graphql/types.generated'
-import { MarkdownRenderer } from '~/components/MarkdownRenderer'
 import raw from 'rehype-raw'
+import rehype2remark from 'rehype-remark'
 import sanitize from 'rehype-sanitize'
+import stringify from 'remark-stringify'
+import { unified } from 'unified'
+
+import { MarkdownRenderer } from '~/components/MarkdownRenderer'
+import { Post } from '~/graphql/types.generated'
 
 interface Props {
   post: Post

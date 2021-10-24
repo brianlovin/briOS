@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client'
+
 import { UserInfoFragment } from './user'
 
 export const CommentInfoFragment = gql`

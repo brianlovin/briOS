@@ -1,4 +1,5 @@
 import { UserInputError } from 'apollo-server-errors'
+
 import { Context } from '~/graphql/context'
 import {
   EmailSubscriptionType,

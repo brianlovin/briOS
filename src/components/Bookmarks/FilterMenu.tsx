@@ -1,9 +1,10 @@
-import * as React from 'react'
 import { Menu, Transition } from '@headlessui/react'
-import { GhostButton } from '~/components/Button'
-import { BookmarksContext } from '~/components/Bookmarks/BookmarksList'
-import { useGetTagsQuery } from '~/graphql/types.generated'
+import * as React from 'react'
 import { Check } from 'react-feather'
+
+import { BookmarksContext } from '~/components/Bookmarks/BookmarksList'
+import { GhostButton } from '~/components/Button'
+import { useGetTagsQuery } from '~/graphql/types.generated'
 
 export function BookmarksFilterMenu() {
   const { data, loading } = useGetTagsQuery()

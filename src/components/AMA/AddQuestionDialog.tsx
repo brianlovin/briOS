@@ -1,6 +1,8 @@
 import * as React from 'react'
-import { AddQuestionForm } from './AddQuestionForm'
+
 import { DialogComponent } from '~/components/Dialog'
+
+import { AddQuestionForm } from './AddQuestionForm'
 
 export function AddQuestionDialog({ trigger }) {
   return (

@@ -1,6 +1,8 @@
 import * as React from 'react'
-import { UserRole, useViewerQuery } from '~/graphql/types.generated'
+
 import Button from '~/components/Button'
+import { UserRole, useViewerQuery } from '~/graphql/types.generated'
+
 import { EditStackDialog } from './EditStackDialog'
 
 export function StackActions({ stack }) {

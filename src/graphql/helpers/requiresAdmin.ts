@@ -1,4 +1,5 @@
 import { AuthenticationError } from 'apollo-server-micro'
+
 import { UserRole } from '../types.generated'
 
 export function requiresAdmin(fn) {

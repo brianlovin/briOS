@@ -1,4 +1,5 @@
 import * as React from 'react'
+
 import type { Offer } from '../types'
 
 type Props = {

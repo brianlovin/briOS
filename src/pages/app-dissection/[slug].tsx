@@ -1,14 +1,15 @@
-import * as React from 'react'
+import { useRouter } from 'next/router'
 import { NextSeo } from 'next-seo'
+import * as React from 'react'
+import removeMd from 'remove-markdown'
+
+import { AppDissectionDetail } from '~/components/AppDissection/AppDissectionDetail'
+import { AppDissectionList } from '~/components/AppDissection/AppDissectionList'
+import { ListDetailView, SiteLayout } from '~/components/Layouts'
+import { withProviders } from '~/components/Providers/withProviders'
+import { baseUrl } from '~/config/seo'
 import designDetailsPosts from '~/data/appDissections'
 import { DesignDetailsPost } from '~/data/appDissections'
-import { useRouter } from 'next/router'
-import removeMd from 'remove-markdown'
-import { baseUrl } from '~/config/seo'
-import { ListDetailView, SiteLayout } from '~/components/Layouts'
-import { AppDissectionList } from '~/components/AppDissection/AppDissectionList'
-import { AppDissectionDetail } from '~/components/AppDissection/AppDissectionDetail'
-import { withProviders } from '~/components/Providers/withProviders'
 
 interface Props {
   post: DesignDetailsPost

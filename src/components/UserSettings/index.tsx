@@ -1,7 +1,9 @@
 import * as React from 'react'
-import { useGetViewerWithSettingsQuery } from '~/graphql/types.generated'
+
 import { Detail } from '~/components/ListDetail/Detail'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
+import { useGetViewerWithSettingsQuery } from '~/graphql/types.generated'
+
 import { EmailForm } from './Email'
 import { EmailPreferences } from './EmailPreferences'
 import { UserSettingsFooter } from './Footer'

@@ -1,5 +1,7 @@
 import * as React from 'react'
+
 import Button, { DeleteButton } from '~/components/Button'
+
 import { DeleteUserDialog } from './DeleteUserDialog'
 
 export function UserSettingsFooter() {

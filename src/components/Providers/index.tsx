@@ -1,10 +1,12 @@
-import * as React from 'react'
 import { ApolloProvider } from '@apollo/client'
+import { NextPageContext } from 'next'
+import * as React from 'react'
+
+import { useApollo } from '~/lib/apollo'
+
 import { Fathom } from './Fathom'
 import { SEO } from './SEO'
 import { Toast } from './Toaster'
-import { useApollo } from '~/lib/apollo'
-import { NextPageContext } from 'next'
 
 interface Props {
   children?: any

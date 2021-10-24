@@ -1,5 +1,6 @@
 import { NextSeo } from 'next-seo'
 import * as React from 'react'
+
 import { ListDetailView } from '~/components/Layouts'
 import { UserDetail } from '~/components/User/UserDetail'
 import routes from '~/config/routes'

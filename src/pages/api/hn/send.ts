@@ -1,10 +1,12 @@
-import jwt from 'jsonwebtoken'
 import format from 'date-fns/format'
+import jwt from 'jsonwebtoken'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { getHNPostsForDigest } from '~/lib/hn'
-import { client as postmark } from '~/lib/postmark'
+
 import { baseEmail } from '~/config/seo'
 import { CLIENT_URL, IS_PROD } from '~/graphql/constants'
+import { getHNPostsForDigest } from '~/lib/hn'
+import { client as postmark } from '~/lib/postmark'
+
 import { EmailSubscriptionType } from '.prisma/client'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

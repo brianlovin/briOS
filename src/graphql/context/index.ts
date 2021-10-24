@@ -1,6 +1,8 @@
-import { PrismaClient } from '@prisma/client'
 import { getSession } from '@auth0/nextjs-auth0'
+import { PrismaClient } from '@prisma/client'
+
 import { prisma } from '~/lib/prisma'
+
 import { User } from '../types.generated'
 
 export function isAuthenticated(req, res) {

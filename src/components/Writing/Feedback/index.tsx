@@ -1,8 +1,9 @@
 import * as React from 'react'
-import { Post } from '~/graphql/types.generated'
-import { Input, Textarea } from '~/components/Input'
-import Button from '~/components/Button'
+
 import { ErrorAlert, SuccessAlert } from '~/components/Alert'
+import Button from '~/components/Button'
+import { Input, Textarea } from '~/components/Input'
+import { Post } from '~/graphql/types.generated'
 
 interface Props {
   post: Post

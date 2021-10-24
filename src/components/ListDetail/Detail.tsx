@@ -1,4 +1,5 @@
 import * as React from 'react'
+
 import { LoadingSpinner } from '~/components/LoadingSpinner'
 
 function ContentContainer(props) {

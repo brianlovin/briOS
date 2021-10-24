@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client'
+
 import { QuestionInfoFragment } from '~/graphql/fragments/question'
 
 export const EDIT_QUESTION = gql`

@@ -1,9 +1,11 @@
 import * as React from 'react'
-import { GlobalNavigationContext } from '~/components/Providers'
+
 import { TitleBar } from '~/components/ListDetail/TitleBar'
-import { UserFooter } from './UserFooter'
-import { SidebarOverlay } from './Overlay'
+import { GlobalNavigationContext } from '~/components/Providers'
+
 import { SidebarNavigation } from './Navigation'
+import { SidebarOverlay } from './Overlay'
+import { UserFooter } from './UserFooter'
 
 export function Sidebar() {
   const { isOpen } = React.useContext(GlobalNavigationContext)

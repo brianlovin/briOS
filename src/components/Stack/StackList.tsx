@@ -1,9 +1,11 @@
-import * as React from 'react'
 import Image from 'next/image'
-import { ListItem } from '~/components/ListDetail/ListItem'
 import { useRouter } from 'next/router'
+import * as React from 'react'
+
 import { ListContainer } from '~/components/ListDetail/ListContainer'
+import { ListItem } from '~/components/ListDetail/ListItem'
 import { useGetStacksQuery } from '~/graphql/types.generated'
+
 import { StackTitlebar } from './StackTitlebar'
 
 export const StackList = React.memo(() => {

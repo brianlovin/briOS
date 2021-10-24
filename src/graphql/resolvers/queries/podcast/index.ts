@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-unfetch'
+
 import { IS_PROD } from '~/graphql/constants'
 import { useLocalFiles } from '~/graphql/helpers/useLocalFiles'
 

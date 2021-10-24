@@ -1,8 +1,10 @@
 import React from 'react'
-import routes from '~/config/routes'
-import data from '~/data/security'
+
 import { Detail } from '~/components/ListDetail/Detail'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
+import routes from '~/config/routes'
+import data from '~/data/security'
+
 import { ChecklistItem } from './ChecklistItem'
 
 export function SecurityChecklist() {

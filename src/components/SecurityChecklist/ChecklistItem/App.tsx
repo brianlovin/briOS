@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import * as React from 'react'
+
 import type { App } from '../types'
 import { AppOffer } from './Offer'
 

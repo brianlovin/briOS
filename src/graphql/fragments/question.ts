@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client'
+
 import { CommentInfoFragment } from './comment'
 import { UserInfoFragment } from './user'
 

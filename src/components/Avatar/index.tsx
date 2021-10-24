@@ -1,5 +1,5 @@
-import * as React from 'react'
 import Image from 'next/image'
+import * as React from 'react'
 
 export function Avatar({ user, src, ...props }) {
   return (

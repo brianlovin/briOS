@@ -1,11 +1,13 @@
-import * as React from 'react'
+import { AnimateSharedLayout, motion } from 'framer-motion'
 import { useRouter } from 'next/router'
-import { useGetQuestionsQuery } from '~/graphql/types.generated'
+import * as React from 'react'
+
+import { Avatar } from '~/components/Avatar'
 import { ListContainer } from '~/components/ListDetail/ListContainer'
 import { ListItem } from '~/components/ListDetail/ListItem'
+import { useGetQuestionsQuery } from '~/graphql/types.generated'
+
 import { AMATitlebar } from './AMATitlebar'
-import { Avatar } from '~/components/Avatar'
-import { AnimateSharedLayout, motion } from 'framer-motion'
 
 export const QuestionsContext = React.createContext({
   filterPending: false,

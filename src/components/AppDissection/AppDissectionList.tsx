@@ -1,9 +1,10 @@
-import * as React from 'react'
 import Image from 'next/image'
-import { ListItem } from '~/components/ListDetail/ListItem'
 import { useRouter } from 'next/router'
-import { TitleBar } from '~/components/ListDetail/TitleBar'
+import * as React from 'react'
+
 import { ListContainer } from '~/components/ListDetail/ListContainer'
+import { ListItem } from '~/components/ListDetail/ListItem'
+import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { summaries } from '~/data/appDissections'
 
 export const AppDissectionList = React.memo(() => {

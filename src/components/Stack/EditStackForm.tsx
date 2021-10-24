@@ -1,14 +1,16 @@
+import { useRouter } from 'next/router'
 import * as React from 'react'
+
+import Button, { DeleteButton } from '~/components/Button'
+import { Input, Textarea } from '~/components/Input'
+import { TagPicker } from '~/components/Tag/TagPicker'
+import { GET_STACK, GET_STACKS } from '~/graphql/queries/stack'
 import {
   useDeleteStackMutation,
   useEditStackMutation,
 } from '~/graphql/types.generated'
-import { Input, Textarea } from '~/components/Input'
-import Button, { DeleteButton } from '~/components/Button'
-import { useRouter } from 'next/router'
-import { GET_STACK, GET_STACKS } from '~/graphql/queries/stack'
+
 import { StackImageUploader } from './StackImageUploader'
-import { TagPicker } from '~/components/Tag/TagPicker'
 
 export function EditStackForm({ closeModal, stack }) {
   const router = useRouter()

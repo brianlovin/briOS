@@ -1,4 +1,7 @@
 import * as React from 'react'
+
+import { Avatar } from '~/components/Avatar'
+import { Tooltip } from '~/components/Tooltip'
 import { GET_STACK } from '~/graphql/queries/stack'
 import {
   useGetStackQuery,
@@ -6,8 +9,6 @@ import {
   useToggleStackUserMutation,
   useViewerQuery,
 } from '~/graphql/types.generated'
-import { Avatar } from '~/components/Avatar'
-import { Tooltip } from '~/components/Tooltip'
 
 export function StackUsedBy(props) {
   const { data: viewerData } = useViewerQuery()

@@ -1,13 +1,14 @@
 import { UserInputError } from 'apollo-server-micro'
+
 import { baseUrl } from '~/config/seo'
-import { emailMe } from '~/lib/postmark'
+import { Context } from '~/graphql/context'
 import {
   MutationAddQuestionArgs,
   MutationDeleteQuestionArgs,
   MutationEditQuestionArgs,
   UserRole,
 } from '~/graphql/types.generated'
-import { Context } from '~/graphql/context'
+import { emailMe } from '~/lib/postmark'
 
 export async function editQuestion(
   _,

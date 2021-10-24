@@ -1,11 +1,12 @@
-import * as React from 'react'
 import { NextSeo } from 'next-seo'
-import HNPosts from '~/components/HNPosts'
+import * as React from 'react'
+
 import { HNComment } from '~/components/HNPost/Comment'
-import { getHNPosts } from '~/lib/hn'
-import routes from '~/config/routes'
+import HNPosts from '~/components/HNPosts'
 import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { withProviders } from '~/components/Providers/withProviders'
+import routes from '~/config/routes'
+import { getHNPosts } from '~/lib/hn'
 
 export interface HNPost {
   id: string

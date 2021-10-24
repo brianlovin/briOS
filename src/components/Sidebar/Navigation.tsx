@@ -1,5 +1,9 @@
-import * as React from 'react'
 import { useRouter } from 'next/router'
+import * as React from 'react'
+import { Plus } from 'react-feather'
+
+import { AddBookmarkDialog } from '~/components/Bookmarks/AddBookmarkDialog'
+import { GhostButton } from '~/components/Button'
 import {
   AMAIcon,
   AppDissectionIcon,
@@ -16,11 +20,9 @@ import {
   TwitterIcon,
   WritingIcon,
 } from '~/components/Icon'
-import { NavigationLink } from './NavigationLink'
-import { AddBookmarkDialog } from '~/components/Bookmarks/AddBookmarkDialog'
-import { Plus } from 'react-feather'
 import { UserRole, useViewerQuery } from '~/graphql/types.generated'
-import { GhostButton } from '~/components/Button'
+
+import { NavigationLink } from './NavigationLink'
 
 function ThisAddBookmarkDialog() {
   return (

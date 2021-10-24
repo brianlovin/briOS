@@ -1,5 +1,6 @@
 import { Context } from '~/graphql/context'
 import { GetStackQueryVariables, Stack } from '~/graphql/types.generated'
+
 import { viewer } from '../viewer'
 
 export async function getStacks(_, __, ctx: Context) {

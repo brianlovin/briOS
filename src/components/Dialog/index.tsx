@@ -1,7 +1,8 @@
-import * as React from 'react'
 import { Dialog, Transition } from '@headlessui/react'
+import * as React from 'react'
 import { Fragment, useState } from 'react'
 import { X } from 'react-feather'
+
 import { GhostButton } from '~/components/Button'
 
 interface DialogProps {

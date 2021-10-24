@@ -1,13 +1,14 @@
 import * as React from 'react'
-import { GET_QUESTIONS, GET_QUESTION } from '~/graphql/queries/questions'
-import { ListDetailView, SiteLayout } from '~/components/Layouts'
-import { addApolloState, initApolloClient } from '~/lib/apollo'
-import { withProviders } from '~/components/Providers/withProviders'
-import { CommentType } from '~/graphql/types.generated'
-import { QuestionsList } from '~/components/AMA/QuestionsList'
+
 import { QuestionDetail } from '~/components/AMA/QuestionDetail'
-import { GET_COMMENTS } from '~/graphql/queries/comments'
+import { QuestionsList } from '~/components/AMA/QuestionsList'
+import { ListDetailView, SiteLayout } from '~/components/Layouts'
+import { withProviders } from '~/components/Providers/withProviders'
 import { getContext } from '~/graphql/context'
+import { GET_COMMENTS } from '~/graphql/queries/comments'
+import { GET_QUESTION, GET_QUESTIONS } from '~/graphql/queries/questions'
+import { CommentType } from '~/graphql/types.generated'
+import { addApolloState, initApolloClient } from '~/lib/apollo'
 
 function QuestionDetailPage({ id }) {
   return <QuestionDetail id={id} />

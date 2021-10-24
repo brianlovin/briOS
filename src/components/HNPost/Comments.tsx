@@ -1,5 +1,7 @@
 import * as React from 'react'
+
 import { SyntaxHighlighter } from '~/components/SyntaxHighlighter'
+
 import { HNComment } from './Comment'
 
 export function HNComments({ comments }) {

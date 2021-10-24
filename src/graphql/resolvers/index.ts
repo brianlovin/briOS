@@ -1,9 +1,9 @@
-import Query from '~/graphql/resolvers/queries'
+import { Context } from '~/graphql/context'
 import Mutation from '~/graphql/resolvers/mutations'
-import { UserRole, EmailSubscriptionType } from '~/graphql/types.generated'
+import Query from '~/graphql/resolvers/queries'
 import { getCommentAuthor } from '~/graphql/resolvers/queries/comment'
 import { getQuestionAuthor } from '~/graphql/resolvers/queries/questions'
-import { Context } from '~/graphql/context'
+import { EmailSubscriptionType, UserRole } from '~/graphql/types.generated'
 import { revue } from '~/lib/revue'
 
 export default {

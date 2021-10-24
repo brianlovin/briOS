@@ -1,8 +1,9 @@
-import * as React from 'react'
 import { useRouter } from 'next/router'
+import * as React from 'react'
+
+import { ListContainer } from '~/components/ListDetail/ListContainer'
 import { ListItem } from '~/components/ListDetail/ListItem'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
-import { ListContainer } from '~/components/ListDetail/ListContainer'
 import { useGetPostsQuery } from '~/graphql/types.generated'
 
 export function PostsList() {

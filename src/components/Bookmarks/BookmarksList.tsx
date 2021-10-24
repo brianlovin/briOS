@@ -1,10 +1,12 @@
+import { AnimateSharedLayout, motion } from 'framer-motion'
+import { useRouter } from 'next/router'
 import * as React from 'react'
+
 import { ListContainer } from '~/components/ListDetail/ListContainer'
 import { ListItem } from '~/components/ListDetail/ListItem'
-import { useRouter } from 'next/router'
-import { BookmarksTitlebar } from './BookmarksTitlebar'
 import { useGetBookmarksQuery } from '~/graphql/types.generated'
-import { AnimateSharedLayout, motion } from 'framer-motion'
+
+import { BookmarksTitlebar } from './BookmarksTitlebar'
 
 export const BookmarksContext = React.createContext({
   tagFilter: null,

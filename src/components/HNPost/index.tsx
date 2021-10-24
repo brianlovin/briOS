@@ -1,13 +1,15 @@
-import * as React from 'react'
 import { NextSeo } from 'next-seo'
+import * as React from 'react'
 import { Link as LinkIcon } from 'react-feather'
-import { HNPost as HNPostType } from '~/pages/hn'
-import { baseUrl } from '~/config/seo'
-import { TitleBar } from '~/components/ListDetail/TitleBar'
-import { Detail } from '~/components/ListDetail/Detail'
+
 import { PrimaryButton } from '~/components/Button'
-import { HNComments } from './Comments'
+import { Detail } from '~/components/ListDetail/Detail'
+import { TitleBar } from '~/components/ListDetail/TitleBar'
+import { baseUrl } from '~/config/seo'
+import { HNPost as HNPostType } from '~/pages/hn'
+
 import { Byline } from './Byline'
+import { HNComments } from './Comments'
 
 interface Props {
   post: HNPostType

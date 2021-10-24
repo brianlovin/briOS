@@ -1,11 +1,12 @@
-import * as React from 'react'
-import { PostsList } from '~/components/Writing/List'
-import { GET_POSTS } from '~/graphql/queries/posts'
-import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { NextSeo } from 'next-seo'
-import routes from '~/config/routes'
-import { addApolloState, initApolloClient } from '~/lib/apollo'
+import * as React from 'react'
+
+import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { withProviders } from '~/components/Providers/withProviders'
+import { PostsList } from '~/components/Writing/List'
+import routes from '~/config/routes'
+import { GET_POSTS } from '~/graphql/queries/posts'
+import { addApolloState, initApolloClient } from '~/lib/apollo'
 
 function WritingPage() {
   return (

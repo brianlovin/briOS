@@ -1,11 +1,12 @@
 import { UserInputError } from 'apollo-server-errors'
 import jwt from 'jsonwebtoken'
+
 import { baseEmail } from '~/config/seo'
 import { CLIENT_URL, IS_PROD } from '~/graphql/constants'
 import { Context } from '~/graphql/context'
-import { client as postmark } from '~/lib/postmark'
 import { MutationEditUserArgs, UserRole } from '~/graphql/types.generated'
 import { deleteUser as deleteUserFromAuth0 } from '~/lib/auth0/deleteUser'
+import { client as postmark } from '~/lib/postmark'
 import { validEmail, validUsername } from '~/lib/validators'
 
 export async function deleteUser(_, __, ctx: Context) {

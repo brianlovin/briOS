@@ -1,4 +1,5 @@
 import * as React from 'react'
+
 import type { ChecklistResource } from '../types'
 import { ResourceRow } from './Resource'
 

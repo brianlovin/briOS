@@ -1,7 +1,8 @@
-import React, { useCallback, useState } from 'react'
 import Image from 'next/image'
+import React, { useCallback, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { Trash, Upload } from 'react-feather'
+
 import { LoadingSpinner } from '~/components/LoadingSpinner'
 import { CLOUDFLARE_IMAGE_DELIVERY_BASE_URL } from '~/lib/cloudflare'
 

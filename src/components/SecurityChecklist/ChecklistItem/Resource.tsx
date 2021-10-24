@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Link } from 'react-feather'
+
 import type { Resource } from '../types'
 
 type Props = {

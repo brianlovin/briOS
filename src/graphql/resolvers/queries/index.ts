@@ -1,19 +1,19 @@
 import {
-  getBookmarks,
   getBookmark,
+  getBookmarks,
 } from '~/graphql/resolvers/queries/bookmarks'
-import { getPosts, getPost } from '~/graphql/resolvers/queries/writing'
+import { getComment, getComments } from '~/graphql/resolvers/queries/comment'
 import { getEpisodes } from '~/graphql/resolvers/queries/podcast'
-import { getRepos } from '~/graphql/resolvers/queries/repos'
-import { viewer } from '~/graphql/resolvers/queries/viewer'
 import {
   getQuestion,
   getQuestions,
 } from '~/graphql/resolvers/queries/questions'
-import { getComment, getComments } from '~/graphql/resolvers/queries/comment'
-import { getUser } from '~/graphql/resolvers/queries/user'
+import { getRepos } from '~/graphql/resolvers/queries/repos'
 import { getStack, getStacks } from '~/graphql/resolvers/queries/stack'
 import { getTags } from '~/graphql/resolvers/queries/tags'
+import { getUser } from '~/graphql/resolvers/queries/user'
+import { viewer } from '~/graphql/resolvers/queries/viewer'
+import { getPost, getPosts } from '~/graphql/resolvers/queries/writing'
 
 export default {
   viewer: viewer,

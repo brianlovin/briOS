@@ -1,6 +1,6 @@
 {
   "extends": ["plugin:prettier/recommended"],
-  "plugins": ["react", "@typescript-eslint"],
+  "plugins": ["react", "@typescript-eslint", "simple-import-sort"],
   "env": {
     "node": true,
     "browser": true,
@@ -9,6 +9,8 @@
     "es6": true
   },
   "rules": {
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error",
     "prettier/prettier": [
       "error",
       {

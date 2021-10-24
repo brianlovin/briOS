@@ -1,14 +1,16 @@
-import * as React from 'react'
+import { useRouter } from 'next/router'
 import { NextSeo } from 'next-seo'
+import * as React from 'react'
+
 import { HNPost } from '~/components/HNPost'
 import HNPosts from '~/components/HNPosts'
-import { useRouter } from 'next/router'
-import { getHNPosts, getPostById, getPostIds } from '~/lib/hn'
-import { HNPost as HNPostType } from '.'
-import { baseUrl } from '~/config/seo'
 import { ListDetailView, SiteLayout } from '~/components/Layouts'
-import { withProviders } from '~/components/Providers/withProviders'
 import { Detail } from '~/components/ListDetail/Detail'
+import { withProviders } from '~/components/Providers/withProviders'
+import { baseUrl } from '~/config/seo'
+import { getHNPosts, getPostById, getPostIds } from '~/lib/hn'
+
+import { HNPost as HNPostType } from '.'
 
 interface Props {
   post: HNPostType

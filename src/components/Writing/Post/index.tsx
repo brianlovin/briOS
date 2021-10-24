@@ -1,9 +1,11 @@
 import * as React from 'react'
-import { SyntaxHighlighter } from '~/components/SyntaxHighlighter'
-import { SEO } from './SEO'
-import { TitleBar } from '~/components/ListDetail/TitleBar'
-import { useGetPostQuery } from '~/graphql/types.generated'
+
 import { Detail } from '~/components/ListDetail/Detail'
+import { TitleBar } from '~/components/ListDetail/TitleBar'
+import { SyntaxHighlighter } from '~/components/SyntaxHighlighter'
+import { useGetPostQuery } from '~/graphql/types.generated'
+
+import { SEO } from './SEO'
 
 export function PostContainer({ slug }) {
   const scrollContainerRef = React.useRef(null)

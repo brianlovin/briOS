@@ -1,13 +1,14 @@
 import * as React from 'react'
+
+import { WarnAlert } from '~/components/Alert'
+import Button from '~/components/Button'
+import { Input } from '~/components/Input'
+import { LoadingSpinner } from '~/components/LoadingSpinner'
 import { GET_VIEWER_SETTINGS } from '~/graphql/queries/viewer'
 import {
   useEditUserMutation,
   useGetViewerWithSettingsQuery,
 } from '~/graphql/types.generated'
-import { WarnAlert } from '~/components/Alert'
-import Button from '~/components/Button'
-import { Input } from '~/components/Input'
-import { LoadingSpinner } from '~/components/LoadingSpinner'
 
 export function EmailForm() {
   const { data } = useGetViewerWithSettingsQuery()

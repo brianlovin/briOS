@@ -1,12 +1,14 @@
-import { URL } from 'url'
 import { UserInputError } from 'apollo-server-micro'
-import getBookmarkMetaData from './getBookmarkMetaData'
+import { URL } from 'url'
+
+import { Context } from '~/graphql/context'
 import {
   MutationAddBookmarkArgs,
   MutationDeleteBookmarkArgs,
   MutationEditBookmarkArgs,
 } from '~/graphql/types.generated'
-import { Context } from '~/graphql/context'
+
+import getBookmarkMetaData from './getBookmarkMetaData'
 
 function isValidUrl(string) {
   try {

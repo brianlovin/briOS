@@ -1,12 +1,13 @@
-import * as React from 'react'
-import { QuestionsList } from '~/components/AMA/QuestionsList'
 import { NextSeo } from 'next-seo'
-import routes from '~/config/routes'
-import { withProviders } from '~/components/Providers/withProviders'
+import * as React from 'react'
+
+import { QuestionsList } from '~/components/AMA/QuestionsList'
 import { ListDetailView, SiteLayout } from '~/components/Layouts'
-import { addApolloState, initApolloClient } from '~/lib/apollo'
-import { GET_QUESTIONS } from '~/graphql/queries/questions'
+import { withProviders } from '~/components/Providers/withProviders'
+import routes from '~/config/routes'
 import { getContext } from '~/graphql/context'
+import { GET_QUESTIONS } from '~/graphql/queries/questions'
+import { addApolloState, initApolloClient } from '~/lib/apollo'
 
 function AmaPage() {
   return (

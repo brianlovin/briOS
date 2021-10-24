@@ -1,9 +1,9 @@
+import { Context } from '~/graphql/context'
 import {
-  UserRole,
   QueryQuestionArgs,
   Question,
+  UserRole,
 } from '~/graphql/types.generated'
-import { Context } from '~/graphql/context'
 
 export async function getQuestion(_, { id }: QueryQuestionArgs, ctx: Context) {
   const { prisma, viewer } = ctx

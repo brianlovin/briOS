@@ -1,12 +1,13 @@
+import { NextSeo } from 'next-seo'
 import * as React from 'react'
-import { GET_BOOKMARKS } from '~/graphql/queries/bookmarks'
+
 import { BookmarksList } from '~/components/Bookmarks/BookmarksList'
-import { addApolloState, initApolloClient } from '~/lib/apollo'
 import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { withProviders } from '~/components/Providers/withProviders'
-import { getContext } from '~/graphql/context'
-import { NextSeo } from 'next-seo'
 import routes from '~/config/routes'
+import { getContext } from '~/graphql/context'
+import { GET_BOOKMARKS } from '~/graphql/queries/bookmarks'
+import { addApolloState, initApolloClient } from '~/lib/apollo'
 
 function BookmarksPage() {
   return (

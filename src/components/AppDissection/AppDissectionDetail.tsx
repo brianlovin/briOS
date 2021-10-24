@@ -1,8 +1,9 @@
 import * as React from 'react'
-import { TitleBar } from '~/components/ListDetail/TitleBar'
-import { MarkdownRenderer } from '~/components/MarkdownRenderer'
+
 import { DesignDetailMedia } from '~/components/DesignDetailMedia'
 import { Detail } from '~/components/ListDetail/Detail'
+import { TitleBar } from '~/components/ListDetail/TitleBar'
+import { MarkdownRenderer } from '~/components/MarkdownRenderer'
 
 export function AppDissectionDetail({ post }) {
   const scrollContainerRef = React.useRef(null)

@@ -1,5 +1,6 @@
-import * as React from 'react'
 import Link from 'next/link'
+import * as React from 'react'
+
 import { GlobalNavigationContext } from '~/components/Providers'
 
 export function NavigationLink({
