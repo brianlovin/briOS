@@ -2,13 +2,13 @@ import * as React from 'react'
 
 import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { withProviders } from '~/components/Providers/withProviders'
-import { PostsList } from '~/components/Writing/List'
-import { PostContainer } from '~/components/Writing/Post'
+import { PostDetail } from '~/components/Writing/PostDetail'
+import { PostsList } from '~/components/Writing/PostsList'
 import { GET_POST, GET_POSTS } from '~/graphql/queries/posts'
 import { addApolloState, initApolloClient } from '~/lib/apollo'
 
 function WritingPostPage({ slug }) {
-  return <PostContainer slug={slug} />
+  return <PostDetail slug={slug} />
 }
 
 export async function getStaticPaths() {

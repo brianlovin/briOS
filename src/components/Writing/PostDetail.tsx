@@ -5,9 +5,9 @@ import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { SyntaxHighlighter } from '~/components/SyntaxHighlighter'
 import { useGetPostQuery } from '~/graphql/types.generated'
 
-import { SEO } from './SEO'
+import { PostSEO } from './PostSEO'
 
-export function PostContainer({ slug }) {
+export function PostDetail({ slug }) {
   const scrollContainerRef = React.useRef(null)
   const titleRef = React.useRef(null)
   const { data, error, loading } = useGetPostQuery({ variables: { slug } })
@@ -21,9 +21,7 @@ export function PostContainer({ slug }) {
   }
 
   if (!data?.post) {
-    return (
-      <div className="w-full max-h-screen overflow-y-auto bg-white dark:bg-black" />
-    )
+    return null
   }
 
   const { post } = data
@@ -37,7 +35,7 @@ export function PostContainer({ slug }) {
   return (
     <React.Fragment>
       <SyntaxHighlighter data={post} />
-      <SEO post={post} />
+      <PostSEO post={post} />
       <Detail.Container ref={scrollContainerRef}>
         <TitleBar
           backButton

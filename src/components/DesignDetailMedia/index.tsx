@@ -17,7 +17,7 @@ export function DesignDetailMedia(props: Props) {
       partialVisibility
       onChange={(visible: boolean) => !isVisible && setIsVisible(visible)}
     >
-      <div className="flex flex-col" data-cy="detail-media-container">
+      <div className="flex flex-col">
         <h5 className="mb-4 text-lg font-bold text-primary">{detail.title}</h5>
         <div className="prose">
           <MarkdownRenderer>{detail.description}</MarkdownRenderer>

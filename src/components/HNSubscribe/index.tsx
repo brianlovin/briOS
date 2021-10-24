@@ -91,7 +91,7 @@ export function HNSubscribeBox() {
 
   if (!data.viewer || !data.viewer.email) {
     return (
-      <div className="p-4 space-y-4" data-cy="hn-subscribe-box">
+      <div className="p-4 space-y-4">
         <div className="flex flex-col space-y-4">
           <p className="text-secondary">
             Get a daily email with the the top stories from Hacker News. No
