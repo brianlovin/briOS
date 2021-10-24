@@ -4,7 +4,7 @@ import { Radio } from 'react-feather'
 
 import Button from '~/components/Button'
 import { DialogComponent } from '~/components/Dialog'
-import { HNSubscribeBox } from '~/components/HNSubscribe'
+import { SubscriptionForm } from '~/components/HackerNews/SubscriptionForm'
 import { ListContainer } from '~/components/ListDetail/ListContainer'
 import { ListItem } from '~/components/ListDetail/ListItem'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
@@ -14,7 +14,7 @@ interface Props {
   posts: HNPost[]
 }
 
-const PostList = React.memo(({ posts }: Props) => {
+export const PostsList = React.memo(({ posts }: Props) => {
   const router = useRouter()
   let [scrollContainerRef, setScrollContainerRef] = React.useState(null)
 
@@ -39,7 +39,7 @@ const PostList = React.memo(({ posts }: Props) => {
                 <span>Subscribe</span>
               </Button>
             }
-            modalContent={() => <HNSubscribeBox />}
+            modalContent={() => <SubscriptionForm />}
           />
         }
         title="HN"
@@ -66,5 +66,3 @@ const PostList = React.memo(({ posts }: Props) => {
     </ListContainer>
   )
 })
-
-export default PostList

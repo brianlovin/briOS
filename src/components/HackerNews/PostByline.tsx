@@ -7,7 +7,7 @@ interface Props {
   post: HNPost
 }
 
-export function Byline(props: Props) {
+export function PostByline(props: Props) {
   const { post } = props
 
   // the timestamp for the post will always be stale becuse we are statically

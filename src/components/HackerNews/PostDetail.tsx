@@ -8,14 +8,14 @@ import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { baseUrl } from '~/config/seo'
 import { HNPost as HNPostType } from '~/pages/hn'
 
-import { Byline } from './Byline'
-import { HNComments } from './Comments'
+import { PostByline } from './PostByline'
+import { PostComments } from './PostComments'
 
 interface Props {
   post: HNPostType
 }
 
-export function HNPost(props: Props) {
+export function PostDetail(props: Props) {
   const { post } = props
   const { comments } = post
 
@@ -55,7 +55,7 @@ export function HNPost(props: Props) {
         <Detail.ContentContainer>
           <Detail.Header>
             <Detail.Title ref={titleRef}>{post.title}</Detail.Title>
-            <Byline post={post} />
+            <PostByline post={post} />
           </Detail.Header>
 
           {post.url && (
@@ -78,7 +78,7 @@ export function HNPost(props: Props) {
           )}
         </Detail.ContentContainer>
 
-        <HNComments comments={comments} />
+        <PostComments comments={comments} />
       </Detail.Container>
     </React.Fragment>
   )

@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { SignInDialog } from '~/components/SignIn'
+import { SignInDialog } from '~/components/SignInDialog'
 import { SyntaxHighlighter } from '~/components/SyntaxHighlighter'
 import { CommentType, useGetCommentsQuery } from '~/graphql/types.generated'
 

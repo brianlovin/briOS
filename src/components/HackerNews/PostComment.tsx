@@ -30,7 +30,7 @@ function LevelZeroComment({ comment }) {
       />
       {comment.comments.length > 0 &&
         comment.comments.map((comment) => (
-          <HNComment comment={comment} key={comment.id} />
+          <PostComment comment={comment} key={comment.id} />
         ))}
     </div>
   )
@@ -69,14 +69,14 @@ function ChildComment({ comment, level }) {
         />
         {comment.comments.length > 0 &&
           comment.comments.map((comment) => (
-            <HNComment comment={comment} key={comment.id} />
+            <PostComment comment={comment} key={comment.id} />
           ))}
       </div>
     </>
   )
 }
 
-export const HNComment = React.memo((props: Props) => {
+export const PostComment = React.memo((props: Props) => {
   const { comment } = props
 
   if (!comment) return null

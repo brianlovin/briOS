@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import * as React from 'react'
 
-import { DesignDetailMedia } from '~/components/DesignDetailMedia'
+import { DesignDetailMedia } from '~/components/AppDissection/DetailMedia'
 import { Detail } from '~/components/ListDetail/Detail'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { MarkdownRenderer } from '~/components/MarkdownRenderer'

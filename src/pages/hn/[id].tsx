@@ -2,8 +2,8 @@ import { useRouter } from 'next/router'
 import { NextSeo } from 'next-seo'
 import * as React from 'react'
 
-import { HNPost } from '~/components/HNPost'
-import HNPosts from '~/components/HNPosts'
+import { PostDetail } from '~/components/HackerNews/PostDetail'
+import { PostsList } from '~/components/HackerNews/PostsList'
 import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { Detail } from '~/components/ListDetail/Detail'
 import { withProviders } from '~/components/Providers/withProviders'
@@ -34,7 +34,7 @@ function HNPostPage(props: Props) {
         openGraph={routes.hn.seo.openGraph}
       />
 
-      <HNPost post={post} />
+      <PostDetail post={post} />
     </>
   )
 }
@@ -68,7 +68,7 @@ HNPostPage.getLayout = withProviders(function getLayout(page) {
   return (
     <SiteLayout>
       <ListDetailView
-        list={<HNPosts posts={page.props.posts} />}
+        list={<PostsList posts={page.props.posts} />}
         hasDetail
         detail={page}
       />

@@ -1,8 +1,8 @@
 import { NextSeo } from 'next-seo'
 import * as React from 'react'
 
-import { HNComment } from '~/components/HNPost/Comment'
-import HNPosts from '~/components/HNPosts'
+import { HNComment } from '~/components/HackerNews/PostComment'
+import { PostsList } from '~/components/HackerNews/PostsList'
 import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { withProviders } from '~/components/Providers/withProviders'
 import routes from '~/config/routes'
@@ -50,7 +50,7 @@ HNPage.getLayout = withProviders(function getLayout(page) {
   return (
     <SiteLayout>
       <ListDetailView
-        list={<HNPosts posts={page.props.posts} />}
+        list={<PostsList posts={page.props.posts} />}
         hasDetail={false}
         detail={page}
       />

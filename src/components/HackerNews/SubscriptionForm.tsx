@@ -14,7 +14,7 @@ import {
 } from '~/graphql/types.generated'
 import { validEmail } from '~/lib/validators'
 
-export function HNSubscribeBox() {
+export function SubscriptionForm() {
   const { data, loading } = useGetViewerWithSettingsQuery({
     fetchPolicy: 'cache-and-network',
   })

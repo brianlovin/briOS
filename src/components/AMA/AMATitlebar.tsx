@@ -3,7 +3,7 @@ import { Plus } from 'react-feather'
 
 import { GhostButton } from '~/components/Button'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
-import { SignInDialog } from '~/components/SignIn'
+import { SignInDialog } from '~/components/SignInDialog'
 import { UserRole, useViewerQuery } from '~/graphql/types.generated'
 
 import { AddQuestionDialog } from './AddQuestionDialog'

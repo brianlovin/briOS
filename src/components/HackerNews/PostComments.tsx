@@ -2,9 +2,9 @@ import * as React from 'react'
 
 import { SyntaxHighlighter } from '~/components/SyntaxHighlighter'
 
-import { HNComment } from './Comment'
+import { PostComment } from './PostComment'
 
-export function HNComments({ comments }) {
+export function PostComments({ comments }) {
   return (
     <>
       <SyntaxHighlighter data={comments} />
@@ -13,7 +13,7 @@ export function HNComments({ comments }) {
           {comments &&
             comments.length > 0 &&
             comments.map((comment) => (
-              <HNComment key={comment.id} comment={comment} />
+              <PostComment key={comment.id} comment={comment} />
             ))}
           {comments.length === 0 && (
             <p className="p-8 text-quaternary">No comments yet...</p>
