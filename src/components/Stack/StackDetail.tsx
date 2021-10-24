@@ -48,31 +48,32 @@ export function StackDetail({ id }) {
 
       <Detail.ContentContainer>
         <Detail.Header>
-          <Link href={stack.url}>
-            <a className="inline-block">
-              <Image
-                src={stack.image}
-                width={72}
-                height={72}
-                layout="fixed"
-                alt={`${stack.name} icon`}
-                className={'rounded-2xl'}
-              />
-            </a>
-          </Link>
-          <Link href={stack.url}>
-            <a className="block">
-              <Detail.Title ref={titleRef}>{stack.name}</Detail.Title>
-            </a>
-          </Link>
+          <div className="flex items-center space-x-6">
+            <Link href={stack.url}>
+              <a className="inline-block">
+                <Image
+                  src={stack.image}
+                  width={80}
+                  height={80}
+                  layout="fixed"
+                  alt={`${stack.name} icon`}
+                  className={'rounded-2xl'}
+                />
+              </a>
+            </Link>
+            <div className="flex flex-col space-y-1">
+              <Link href={stack.url}>
+                <a className="block">
+                  <Detail.Title ref={titleRef}>{stack.name}</Detail.Title>
+                </a>
+              </Link>
+              {stack.tags && stack.tags.length > 0 && (
+                <Tags tags={stack.tags} />
+              )}
+            </div>
+          </div>
 
           <p className="prose text-primary">{stack.description}</p>
-
-          {stack.tags && stack.tags.length > 0 && (
-            <div className="pb-4">
-              <Tags tags={stack.tags} />
-            </div>
-          )}
 
           <PrimaryButton size="large" href={stack.url}>
             <LinkIcon size={14} />

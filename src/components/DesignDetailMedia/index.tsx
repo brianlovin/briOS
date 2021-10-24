@@ -4,8 +4,6 @@ import VisibilitySensor from 'react-visibility-sensor'
 import { MarkdownRenderer } from '~/components/MarkdownRenderer'
 import { DesignDetail } from '~/data/appDissections'
 
-import { DetailContainer, DetailTitle, MediaContainer, Video } from './style'
-
 interface Props {
   detail: DesignDetail
 }
@@ -19,32 +17,38 @@ export function DesignDetailMedia(props: Props) {
       partialVisibility
       onChange={(visible: boolean) => !isVisible && setIsVisible(visible)}
     >
-      <DetailContainer data-cy="detail-media-container">
-        <DetailTitle className="font-sans font-bold text-primary">
-          {detail.title}
-        </DetailTitle>
+      <div className="flex flex-col" data-cy="detail-media-container">
+        <h5 className="mb-4 text-lg font-bold text-primary">{detail.title}</h5>
         <div className="prose">
           <MarkdownRenderer>{detail.description}</MarkdownRenderer>
         </div>
 
         {isVisible && (
-          <MediaContainer className="bg-gray-100 dark:bg-gray-900">
+          <div className="flex items-center justify-center p-2 mt-8 mb-4 -mx-4 bg-gray-100 rounded-none xl:rounded-md md:-mx-8 md:p-4 dark:bg-gray-900">
             {detail.media.map((src) => (
-              <Video
+              <video
                 playsInline
                 muted
                 loop
                 autoPlay
                 preload="metadata"
                 key={src}
-                landscape={detail.orientation === 'landscape'}
+                style={{
+                  minHeight: `${
+                    detail.orientation === 'landscape' ? '320px' : '680px'
+                  }`,
+                  maxWidth: `${
+                    detail.orientation === 'landscape' ? '100%' : '400px'
+                  }`,
+                }}
+                className="w-full h-full overflow-hidden rounded-md"
               >
                 <source src={`${src}#t=0.1`} />
-              </Video>
+              </video>
             ))}
-          </MediaContainer>
+          </div>
         )}
-      </DetailContainer>
+      </div>
     </VisibilitySensor>
   )
 }

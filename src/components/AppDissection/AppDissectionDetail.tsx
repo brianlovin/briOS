@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import * as React from 'react'
 
 import { DesignDetailMedia } from '~/components/DesignDetailMedia'
@@ -29,10 +30,22 @@ export function AppDissectionDetail({ post }) {
 
       <Detail.ContentContainer>
         <Detail.Header>
-          <Detail.Title ref={titleRef}>{post.title}</Detail.Title>
-          <span className="inline-block leading-snug text-tertiary">
-            {date}
-          </span>
+          <div className="flex items-center space-x-6">
+            <Image
+              src={`/static/img/app-dissection/${post.slug}.jpeg`}
+              width={80}
+              height={80}
+              layout="fixed"
+              alt={`${post.name} icon`}
+              className={'rounded-2xl'}
+            />
+            <div>
+              <Detail.Title ref={titleRef}>{post.title}</Detail.Title>
+              <span className="inline-block leading-snug text-tertiary">
+                {date}
+              </span>
+            </div>
+          </div>
         </Detail.Header>
 
         <div className="space-y-12">
