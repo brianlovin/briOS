@@ -60,17 +60,13 @@ export default gql`
     stars: Int
   }
 
-  enum AMAStatus {
-    PENDING
-    ANSWERED
-  }
-
-  type AMA {
+  type Question {
     id: String!
     createdAt: String!
     updatedAt: String
     author: User
-    text: String
+    title: String!
+    description: String
     comments: [Comment]!
   }
 
@@ -150,8 +146,8 @@ export default gql`
     episodes: [Episode]!
     posts(first: Int, filter: String, order: String): [Post]!
     post(slug: String!): Post
-    amaQuestion(id: ID!): AMA
-    amaQuestions(skip: Int, status: AMAStatus): [AMA]!
+    question(id: ID!): Question
+    questions: [Question]!
     repos: [Repo]!
     signedUploadUrl(id: ID!): String
     signedPlaybackUrl(id: ID!): String
@@ -197,6 +193,16 @@ export default gql`
     tag: String!
   }
 
+  input EditQuestionInput {
+    title: String!
+    description: String
+  }
+
+  input AddQuestionInput {
+    title: String!
+    description: String
+  }
+
   type Mutation {
     addBookmark(data: AddBookmarkInput!): Bookmark
     editBookmark(id: ID!, data: EditBookmarkInput!): Bookmark
@@ -205,22 +211,14 @@ export default gql`
     editStack(id: ID!, data: EditStackInput!): Stack
     deleteStack(id: ID!): Boolean
     toggleStackUser(id: ID!): Stack
-    addAMAQuestion(text: String!): Boolean
-    deleteAMAQuestion(id: ID!): Boolean
-    editAMAQuestion(
-      id: ID!
-      answer: String
-      question: String
-      status: AMAStatus
-      audioWaveform: [Float]
-    ): AMA
-    addAMAAudioPlay(id: ID!): Boolean
-    transcribeAudio(url: String!): String
+    addQuestion(data: AddQuestionInput!): Question
+    editQuestion(id: ID!, data: EditQuestionInput!): Question
+    deleteQuestion(id: ID!): Boolean
     addComment(refId: String!, type: CommentType!, text: String!): Comment
     editComment(id: ID!, text: String): Comment
     deleteComment(id: ID!): Boolean
-    deleteUser: Boolean
     editUser(data: EditUserInput): User
+    deleteUser: Boolean
     editEmailSubscription(data: EmailSubscriptionInput): User
   }
 `

@@ -2,24 +2,23 @@ import * as React from 'react'
 import Link from 'next/link'
 import { Link as LinkIcon } from 'react-feather'
 import {
-  useDeleteBookmarkMutation,
-  useEditBookmarkMutation,
+  useDeleteQuestionMutation,
+  useEditQuestionMutation,
 } from '~/graphql/types.generated'
-import { GET_BOOKMARKS } from '~/graphql/queries/bookmarks'
+import { GET_QUESTION, GET_QUESTIONS } from '~/graphql/queries/questions'
 import { Input, Textarea } from '~/components/Input'
-import Button, { DeleteButton } from '../Button'
-import { GET_BOOKMARK } from '~/graphql/queries/bookmarks'
+import Button, { DeleteButton, PrimaryButton } from '../Button'
 import { useRouter } from 'next/router'
 import { TagPicker } from '../Tag/TagPicker'
+import { LoadingSpinner } from '../LoadingSpinner'
 
-export function EditBookmarkForm({ closeModal, bookmark }) {
+export function EditQuestionForm({ closeModal, question }) {
   const router = useRouter()
 
   const initialState = {
     error: '',
-    title: bookmark.title || bookmark.url,
-    description: bookmark.description || '',
-    tag: bookmark.tags[0].name,
+    title: question.title || question.url,
+    description: question.description || '',
   }
 
   function reducer(state, action) {
@@ -38,13 +37,6 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
           description: action.value,
         }
       }
-      case 'edit-tag': {
-        return {
-          ...state,
-          error: '',
-          tag: action.value,
-        }
-      }
       case 'error': {
         return {
           ...state,
@@ -58,23 +50,21 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
 
   const [state, dispatch] = React.useReducer(reducer, initialState)
 
-  const [editBookmark] = useEditBookmarkMutation({
+  const [editQuestion, { loading }] = useEditQuestionMutation({
     variables: {
-      id: bookmark.id,
+      id: question.id,
       data: {
         title: state.title,
         description: state.description,
-        tag: state.tag,
       },
     },
     optimisticResponse: {
       __typename: 'Mutation',
-      editBookmark: {
-        __typename: 'Bookmark',
-        ...bookmark,
+      editQuestion: {
+        __typename: 'Question',
+        ...question,
         title: state.title,
         description: state.description,
-        tags: [{ name: state.tag }],
       },
     },
     onError({ message }) {
@@ -83,29 +73,29 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
     },
   })
 
-  const [handleDelete] = useDeleteBookmarkMutation({
-    variables: { id: bookmark.id },
+  const [handleDelete] = useDeleteQuestionMutation({
+    variables: { id: question.id },
     optimisticResponse: {
       __typename: 'Mutation',
-      deleteBookmark: true,
+      deleteQuestion: true,
     },
     update(cache) {
-      const { bookmarks } = cache.readQuery({
-        query: GET_BOOKMARKS,
+      const { questions } = cache.readQuery({
+        query: GET_QUESTIONS,
       })
 
       cache.writeQuery({
-        query: GET_BOOKMARK,
-        variables: { id: bookmark.id },
+        query: GET_QUESTION,
+        variables: { id: question.id },
         data: {
-          bookmark: null,
+          question: null,
         },
       })
 
       cache.writeQuery({
-        query: GET_BOOKMARKS,
+        query: GET_QUESTIONS,
         data: {
-          bookmarks: bookmarks.filter((o) => o.id !== bookmark.id),
+          questions: questions.filter((o) => o.id !== question.id),
         },
       })
     },
@@ -115,10 +105,10 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
     e.preventDefault()
 
     if (!state.title || state.title.length === 0) {
-      return dispatch({ type: 'error', value: 'Bookmark must have a title' })
+      return dispatch({ type: 'error', value: 'Gotta have a question' })
     }
 
-    editBookmark()
+    editQuestion()
     return closeModal()
   }
 
@@ -136,61 +126,41 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
     return dispatch({ type: 'edit-description', value: e.target.value })
   }
 
-  function onTagChange(val) {
-    dispatch({ type: 'edit-tag', value: val })
-  }
-
-  const tagFilter = (t) => {
-    const allowedBookmarkTags = ['website', 'reading', 'portfolio']
-    return allowedBookmarkTags.indexOf(t.name) >= 0
-  }
-
   return (
     <form className="p-4 space-y-3" onSubmit={handleSave}>
       <Input
-        placeholder="Title"
+        placeholder="Ask me anything..."
         value={state.title}
         onChange={onTitleChange}
         onKeyDown={onKeyDown}
       />
       {state.error && <p className="text-red-500">{state.error}</p>}
-      <Link href={bookmark.url}>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center pb-2 space-x-1 text-sm opacity-70 hover:opacity-100 text-secondary"
-        >
-          <LinkIcon size={12} />
-          <span>{bookmark.url}</span>
-        </a>
-      </Link>
-
-      <TagPicker
-        filter={tagFilter}
-        defaultValue={bookmark.tags[0].name}
-        onChange={onTagChange}
-      />
 
       <Textarea
         rows={4}
-        defaultValue={bookmark.description}
+        defaultValue={question.description}
         onChange={onDescriptionChange}
         onKeyDown={onKeyDown}
-        placeholder={'Description...'}
+        placeholder={'Add optional details'}
       />
 
-      <div className="flex justify-between pt-24">
+      <div className="flex justify-between">
         <DeleteButton
           onClick={() => {
             closeModal()
             handleDelete()
-            router.push('/bookmarks')
+            router.push('/ama')
           }}
         >
           Delete
         </DeleteButton>
         <div className="flex space-x-3">
-          <Button onClick={handleSave}>Save</Button>
+          <PrimaryButton
+            disabled={loading || state.title.trim().length === 0}
+            onClick={handleSave}
+          >
+            {loading ? <LoadingSpinner /> : 'Save'}
+          </PrimaryButton>
         </div>
       </div>
     </form>

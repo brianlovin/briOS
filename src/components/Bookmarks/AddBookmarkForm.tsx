@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useAddBookmarkMutation } from '~/graphql/types.generated'
-import { GET_BOOKMARKS } from '~/graphql/queries'
+import { GET_BOOKMARKS } from '~/graphql/queries/bookmarks'
 import { Input } from '~/components/Input'
 import Button from '../Button'
 import { ErrorAlert } from '~/components/Alert'

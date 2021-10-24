@@ -18,12 +18,7 @@ import {
 import NavigationLink from './NavigationLink'
 import { AddBookmarkDialog } from '../Bookmarks/AddBookmarkDialog'
 import { Plus } from 'react-feather'
-import {
-  AmaStatus,
-  useGetAmaQuestionsQuery,
-  UserRole,
-  useViewerQuery,
-} from '~/graphql/types.generated'
+import { UserRole, useViewerQuery } from '~/graphql/types.generated'
 import { GhostButton } from '../Button'
 
 function ThisAddBookmarkDialog() {
@@ -35,28 +30,6 @@ function ThisAddBookmarkDialog() {
         </GhostButton>
       }
     />
-  )
-}
-
-function PendingQuestionsCount() {
-  const router = useRouter()
-  const { data, loading, error } = useGetAmaQuestionsQuery({
-    variables: { status: AmaStatus.Pending },
-  })
-
-  if (loading || error) return null
-  if (!data || data.amaQuestions.length === 0) return null
-
-  const isActive = router.asPath.startsWith('/ama/pending')
-
-  return (
-    <GhostButton
-      style={{ minWidth: '32px' }}
-      size="small-square"
-      href="/ama/pending"
-    >
-      {data.amaQuestions.length}
-    </GhostButton>
   )
 }
 
@@ -102,7 +75,7 @@ export function SidebarNavigation() {
       isActive:
         router.asPath.indexOf('/ama') >= 0 &&
         !router.asPath.startsWith('/ama/pending'),
-      trailingAction: isAdmin ? PendingQuestionsCount : null,
+      trailingAction: null,
     },
 
     {

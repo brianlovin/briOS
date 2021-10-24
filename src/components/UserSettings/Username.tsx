@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { GET_VIEWER_QUERY } from '~/graphql/queries'
+import { GET_VIEWER_QUERY } from '~/graphql/queries/viewer'
 import {
   useEditUserMutation,
   useGetViewerWithSettingsQuery,

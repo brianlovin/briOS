@@ -24,24 +24,14 @@ export type Scalars = {
   Float: number
 }
 
-export type Ama = {
-  __typename?: 'AMA'
-  author?: Maybe<User>
-  comments: Array<Maybe<Comment>>
-  createdAt: Scalars['String']
-  id: Scalars['String']
-  text?: Maybe<Scalars['String']>
-  updatedAt?: Maybe<Scalars['String']>
-}
-
-export enum AmaStatus {
-  Answered = 'ANSWERED',
-  Pending = 'PENDING',
-}
-
 export type AddBookmarkInput = {
   tag: Scalars['String']
   url: Scalars['String']
+}
+
+export type AddQuestionInput = {
+  description?: Maybe<Scalars['String']>
+  title: Scalars['String']
 }
 
 export type AddStackInput = {
@@ -90,6 +80,11 @@ export type EditBookmarkInput = {
   title: Scalars['String']
 }
 
+export type EditQuestionInput = {
+  description?: Maybe<Scalars['String']>
+  title: Scalars['String']
+}
+
 export type EditStackInput = {
   description: Scalars['String']
   image: Scalars['String']
@@ -134,32 +129,22 @@ export type Episode = {
 
 export type Mutation = {
   __typename?: 'Mutation'
-  addAMAAudioPlay?: Maybe<Scalars['Boolean']>
-  addAMAQuestion?: Maybe<Scalars['Boolean']>
   addBookmark?: Maybe<Bookmark>
   addComment?: Maybe<Comment>
+  addQuestion?: Maybe<Question>
   addStack?: Maybe<Stack>
-  deleteAMAQuestion?: Maybe<Scalars['Boolean']>
   deleteBookmark?: Maybe<Scalars['Boolean']>
   deleteComment?: Maybe<Scalars['Boolean']>
+  deleteQuestion?: Maybe<Scalars['Boolean']>
   deleteStack?: Maybe<Scalars['Boolean']>
   deleteUser?: Maybe<Scalars['Boolean']>
-  editAMAQuestion?: Maybe<Ama>
   editBookmark?: Maybe<Bookmark>
   editComment?: Maybe<Comment>
   editEmailSubscription?: Maybe<User>
+  editQuestion?: Maybe<Question>
   editStack?: Maybe<Stack>
   editUser?: Maybe<User>
   toggleStackUser?: Maybe<Stack>
-  transcribeAudio?: Maybe<Scalars['String']>
-}
-
-export type MutationAddAmaAudioPlayArgs = {
-  id: Scalars['ID']
-}
-
-export type MutationAddAmaQuestionArgs = {
-  text: Scalars['String']
 }
 
 export type MutationAddBookmarkArgs = {
@@ -172,12 +157,12 @@ export type MutationAddCommentArgs = {
   type: CommentType
 }
 
-export type MutationAddStackArgs = {
-  data: AddStackInput
+export type MutationAddQuestionArgs = {
+  data: AddQuestionInput
 }
 
-export type MutationDeleteAmaQuestionArgs = {
-  id: Scalars['ID']
+export type MutationAddStackArgs = {
+  data: AddStackInput
 }
 
 export type MutationDeleteBookmarkArgs = {
@@ -188,16 +173,12 @@ export type MutationDeleteCommentArgs = {
   id: Scalars['ID']
 }
 
-export type MutationDeleteStackArgs = {
+export type MutationDeleteQuestionArgs = {
   id: Scalars['ID']
 }
 
-export type MutationEditAmaQuestionArgs = {
-  answer?: Maybe<Scalars['String']>
-  audioWaveform?: Maybe<Array<Maybe<Scalars['Float']>>>
+export type MutationDeleteStackArgs = {
   id: Scalars['ID']
-  question?: Maybe<Scalars['String']>
-  status?: Maybe<AmaStatus>
 }
 
 export type MutationEditBookmarkArgs = {
@@ -214,6 +195,11 @@ export type MutationEditEmailSubscriptionArgs = {
   data?: Maybe<EmailSubscriptionInput>
 }
 
+export type MutationEditQuestionArgs = {
+  data: EditQuestionInput
+  id: Scalars['ID']
+}
+
 export type MutationEditStackArgs = {
   data: EditStackInput
   id: Scalars['ID']
@@ -225,10 +211,6 @@ export type MutationEditUserArgs = {
 
 export type MutationToggleStackUserArgs = {
   id: Scalars['ID']
-}
-
-export type MutationTranscribeAudioArgs = {
-  url: Scalars['String']
 }
 
 export type Post = {
@@ -262,8 +244,6 @@ export type Post = {
 
 export type Query = {
   __typename?: 'Query'
-  amaQuestion?: Maybe<Ama>
-  amaQuestions: Array<Maybe<Ama>>
   bookmark?: Maybe<Bookmark>
   bookmarks: Array<Maybe<Bookmark>>
   comment?: Maybe<Comment>
@@ -271,6 +251,8 @@ export type Query = {
   episodes: Array<Maybe<Episode>>
   post?: Maybe<Post>
   posts: Array<Maybe<Post>>
+  question?: Maybe<Question>
+  questions: Array<Maybe<Question>>
   repos: Array<Maybe<Repo>>
   signedPlaybackUrl?: Maybe<Scalars['String']>
   signedUploadUrl?: Maybe<Scalars['String']>
@@ -280,15 +262,6 @@ export type Query = {
   transcription?: Maybe<Scalars['String']>
   user?: Maybe<User>
   viewer?: Maybe<User>
-}
-
-export type QueryAmaQuestionArgs = {
-  id: Scalars['ID']
-}
-
-export type QueryAmaQuestionsArgs = {
-  skip?: Maybe<Scalars['Int']>
-  status?: Maybe<AmaStatus>
 }
 
 export type QueryBookmarkArgs = {
@@ -318,6 +291,10 @@ export type QueryPostsArgs = {
   order?: Maybe<Scalars['String']>
 }
 
+export type QueryQuestionArgs = {
+  id: Scalars['ID']
+}
+
 export type QuerySignedPlaybackUrlArgs = {
   id: Scalars['ID']
 }
@@ -340,6 +317,17 @@ export type QueryTranscriptionArgs = {
 
 export type QueryUserArgs = {
   username: Scalars['String']
+}
+
+export type Question = {
+  __typename?: 'Question'
+  author?: Maybe<User>
+  comments: Array<Maybe<Comment>>
+  createdAt: Scalars['String']
+  description?: Maybe<Scalars['String']>
+  id: Scalars['String']
+  title: Scalars['String']
+  updatedAt?: Maybe<Scalars['String']>
 }
 
 export type Repo = {
@@ -388,26 +376,6 @@ export enum UserRole {
   Admin = 'ADMIN',
   Blocked = 'BLOCKED',
   User = 'USER',
-}
-
-export type AmaInfoFragment = {
-  __typename?: 'AMA'
-  id: string
-  createdAt: string
-  updatedAt?: string | null | undefined
-  text?: string | null | undefined
-  author?:
-    | {
-        __typename: 'User'
-        id: string
-        username?: string | null | undefined
-        avatar?: string | null | undefined
-        name?: string | null | undefined
-        role?: UserRole | null | undefined
-        isViewer?: boolean | null | undefined
-      }
-    | null
-    | undefined
 }
 
 export type BookmarkInfoFragment = {
@@ -472,6 +440,27 @@ export type PostInfoFragment = {
   html?: string | null | undefined
 }
 
+export type QuestionInfoFragment = {
+  __typename?: 'Question'
+  id: string
+  createdAt: string
+  updatedAt?: string | null | undefined
+  title: string
+  description?: string | null | undefined
+  author?:
+    | {
+        __typename: 'User'
+        id: string
+        username?: string | null | undefined
+        avatar?: string | null | undefined
+        name?: string | null | undefined
+        role?: UserRole | null | undefined
+        isViewer?: boolean | null | undefined
+      }
+    | null
+    | undefined
+}
+
 export type RepoInfoFragment = {
   __typename?: 'Repo'
   org?: string | null | undefined
@@ -529,78 +518,6 @@ export type UserSettingsFragment = {
       >
     | null
     | undefined
-}
-
-export type EditAmaQuestionMutationVariables = Exact<{
-  id: Scalars['ID']
-  question: Scalars['String']
-  answer: Scalars['String']
-  status: AmaStatus
-  audioWaveform?: Maybe<
-    Array<Maybe<Scalars['Float']>> | Maybe<Scalars['Float']>
-  >
-}>
-
-export type EditAmaQuestionMutation = {
-  __typename?: 'Mutation'
-  editAMAQuestion?:
-    | {
-        __typename?: 'AMA'
-        id: string
-        createdAt: string
-        updatedAt?: string | null | undefined
-        text?: string | null | undefined
-        author?:
-          | {
-              __typename: 'User'
-              id: string
-              username?: string | null | undefined
-              avatar?: string | null | undefined
-              name?: string | null | undefined
-              role?: UserRole | null | undefined
-              isViewer?: boolean | null | undefined
-            }
-          | null
-          | undefined
-      }
-    | null
-    | undefined
-}
-
-export type DeleteAmaQuestionMutationVariables = Exact<{
-  id: Scalars['ID']
-}>
-
-export type DeleteAmaQuestionMutation = {
-  __typename?: 'Mutation'
-  deleteAMAQuestion?: boolean | null | undefined
-}
-
-export type AddAmaQuestionMutationVariables = Exact<{
-  text: Scalars['String']
-}>
-
-export type AddAmaQuestionMutation = {
-  __typename?: 'Mutation'
-  addAMAQuestion?: boolean | null | undefined
-}
-
-export type AddAmaAudioPlayMutationVariables = Exact<{
-  id: Scalars['ID']
-}>
-
-export type AddAmaAudioPlayMutation = {
-  __typename?: 'Mutation'
-  addAMAAudioPlay?: boolean | null | undefined
-}
-
-export type TranscribeAudioMutationVariables = Exact<{
-  url: Scalars['String']
-}>
-
-export type TranscribeAudioMutation = {
-  __typename?: 'Mutation'
-  transcribeAudio?: string | null | undefined
 }
 
 export type EditBookmarkMutationVariables = Exact<{
@@ -749,6 +666,78 @@ export type EditEmailSubscriptionMutation = {
     | undefined
 }
 
+export type EditQuestionMutationVariables = Exact<{
+  id: Scalars['ID']
+  data: EditQuestionInput
+}>
+
+export type EditQuestionMutation = {
+  __typename?: 'Mutation'
+  editQuestion?:
+    | {
+        __typename?: 'Question'
+        id: string
+        createdAt: string
+        updatedAt?: string | null | undefined
+        title: string
+        description?: string | null | undefined
+        author?:
+          | {
+              __typename: 'User'
+              id: string
+              username?: string | null | undefined
+              avatar?: string | null | undefined
+              name?: string | null | undefined
+              role?: UserRole | null | undefined
+              isViewer?: boolean | null | undefined
+            }
+          | null
+          | undefined
+      }
+    | null
+    | undefined
+}
+
+export type DeleteQuestionMutationVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type DeleteQuestionMutation = {
+  __typename?: 'Mutation'
+  deleteQuestion?: boolean | null | undefined
+}
+
+export type AddQuestionMutationVariables = Exact<{
+  data: AddQuestionInput
+}>
+
+export type AddQuestionMutation = {
+  __typename?: 'Mutation'
+  addQuestion?:
+    | {
+        __typename?: 'Question'
+        id: string
+        createdAt: string
+        updatedAt?: string | null | undefined
+        title: string
+        description?: string | null | undefined
+        author?:
+          | {
+              __typename: 'User'
+              id: string
+              username?: string | null | undefined
+              avatar?: string | null | undefined
+              name?: string | null | undefined
+              role?: UserRole | null | undefined
+              isViewer?: boolean | null | undefined
+            }
+          | null
+          | undefined
+      }
+    | null
+    | undefined
+}
+
 export type EditStackMutationVariables = Exact<{
   id: Scalars['ID']
   data: EditStackInput
@@ -856,95 +845,6 @@ export type EditUserMutation = {
       }
     | null
     | undefined
-}
-
-export type GetAmaQuestionsQueryVariables = Exact<{
-  skip?: Maybe<Scalars['Int']>
-  status?: Maybe<AmaStatus>
-}>
-
-export type GetAmaQuestionsQuery = {
-  __typename?: 'Query'
-  amaQuestions: Array<
-    | {
-        __typename?: 'AMA'
-        id: string
-        createdAt: string
-        updatedAt?: string | null | undefined
-        text?: string | null | undefined
-        author?:
-          | {
-              __typename: 'User'
-              id: string
-              username?: string | null | undefined
-              avatar?: string | null | undefined
-              name?: string | null | undefined
-              role?: UserRole | null | undefined
-              isViewer?: boolean | null | undefined
-            }
-          | null
-          | undefined
-      }
-    | null
-    | undefined
-  >
-}
-
-export type GetAmaQuestionQueryVariables = Exact<{
-  id: Scalars['ID']
-}>
-
-export type GetAmaQuestionQuery = {
-  __typename?: 'Query'
-  amaQuestion?:
-    | {
-        __typename?: 'AMA'
-        id: string
-        createdAt: string
-        updatedAt?: string | null | undefined
-        text?: string | null | undefined
-        author?:
-          | {
-              __typename: 'User'
-              id: string
-              username?: string | null | undefined
-              avatar?: string | null | undefined
-              name?: string | null | undefined
-              role?: UserRole | null | undefined
-              isViewer?: boolean | null | undefined
-            }
-          | null
-          | undefined
-      }
-    | null
-    | undefined
-}
-
-export type SignedUploadUrlQueryVariables = Exact<{
-  id: Scalars['ID']
-}>
-
-export type SignedUploadUrlQuery = {
-  __typename?: 'Query'
-  signedUploadUrl?: string | null | undefined
-}
-
-export type SignedPlaybackUrlQueryVariables = Exact<{
-  id: Scalars['ID']
-}>
-
-export type SignedPlaybackUrlQuery = {
-  __typename?: 'Query'
-  signedPlaybackUrl?: string | null | undefined
-}
-
-export type TranscriptionQueryVariables = Exact<{
-  transcriptionId: Scalars['ID']
-}>
-
-export type TranscriptionQuery = {
-  __typename?: 'Query'
-  transcription?: string | null | undefined
 }
 
 export type GetBookmarksQueryVariables = Exact<{
@@ -1134,6 +1034,67 @@ export type GetPostQuery = {
     | undefined
 }
 
+export type GetQuestionsQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetQuestionsQuery = {
+  __typename?: 'Query'
+  questions: Array<
+    | {
+        __typename?: 'Question'
+        id: string
+        createdAt: string
+        updatedAt?: string | null | undefined
+        title: string
+        description?: string | null | undefined
+        author?:
+          | {
+              __typename: 'User'
+              id: string
+              username?: string | null | undefined
+              avatar?: string | null | undefined
+              name?: string | null | undefined
+              role?: UserRole | null | undefined
+              isViewer?: boolean | null | undefined
+            }
+          | null
+          | undefined
+      }
+    | null
+    | undefined
+  >
+}
+
+export type GetQuestionQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type GetQuestionQuery = {
+  __typename?: 'Query'
+  question?:
+    | {
+        __typename?: 'Question'
+        id: string
+        createdAt: string
+        updatedAt?: string | null | undefined
+        title: string
+        description?: string | null | undefined
+        author?:
+          | {
+              __typename: 'User'
+              id: string
+              username?: string | null | undefined
+              avatar?: string | null | undefined
+              name?: string | null | undefined
+              role?: UserRole | null | undefined
+              isViewer?: boolean | null | undefined
+            }
+          | null
+          | undefined
+      }
+    | null
+    | undefined
+}
+
 export type GetStacksQueryVariables = Exact<{ [key: string]: never }>
 
 export type GetStacksQuery = {
@@ -1269,29 +1230,6 @@ export type GetViewerWithSettingsQuery = {
     | undefined
 }
 
-export const UserInfoFragmentDoc = gql`
-  fragment UserInfo on User {
-    __typename
-    id
-    username
-    avatar
-    name
-    role
-    isViewer
-  }
-`
-export const AmaInfoFragmentDoc = gql`
-  fragment AMAInfo on AMA {
-    id
-    createdAt
-    updatedAt
-    text
-    author {
-      ...UserInfo
-    }
-  }
-  ${UserInfoFragmentDoc}
-`
 export const BookmarkInfoFragmentDoc = gql`
   fragment BookmarkInfo on Bookmark {
     __typename
@@ -1310,6 +1248,17 @@ export const BookmarkInfoWithTagsFragmentDoc = gql`
     }
   }
   ${BookmarkInfoFragmentDoc}
+`
+export const UserInfoFragmentDoc = gql`
+  fragment UserInfo on User {
+    __typename
+    id
+    username
+    avatar
+    name
+    role
+    isViewer
+  }
 `
 export const CommentInfoFragmentDoc = gql`
   fragment CommentInfo on Comment {
@@ -1350,6 +1299,19 @@ export const PostInfoFragmentDoc = gql`
     html
   }
 `
+export const QuestionInfoFragmentDoc = gql`
+  fragment QuestionInfo on Question {
+    id
+    createdAt
+    updatedAt
+    title
+    description
+    author {
+      ...UserInfo
+    }
+  }
+  ${UserInfoFragmentDoc}
+`
 export const RepoInfoFragmentDoc = gql`
   fragment RepoInfo on Repo {
     org
@@ -1389,265 +1351,6 @@ export const UserSettingsFragmentDoc = gql`
     }
   }
 `
-export const EditAmaQuestionDocument = gql`
-  mutation editAMAQuestion(
-    $id: ID!
-    $question: String!
-    $answer: String!
-    $status: AMAStatus!
-    $audioWaveform: [Float]
-  ) {
-    editAMAQuestion(
-      id: $id
-      question: $question
-      answer: $answer
-      status: $status
-      audioWaveform: $audioWaveform
-    ) {
-      ...AMAInfo
-    }
-  }
-  ${AmaInfoFragmentDoc}
-`
-export type EditAmaQuestionMutationFn = Apollo.MutationFunction<
-  EditAmaQuestionMutation,
-  EditAmaQuestionMutationVariables
->
-
-/**
- * __useEditAmaQuestionMutation__
- *
- * To run a mutation, you first call `useEditAmaQuestionMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useEditAmaQuestionMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [editAmaQuestionMutation, { data, loading, error }] = useEditAmaQuestionMutation({
- *   variables: {
- *      id: // value for 'id'
- *      question: // value for 'question'
- *      answer: // value for 'answer'
- *      status: // value for 'status'
- *      audioWaveform: // value for 'audioWaveform'
- *   },
- * });
- */
-export function useEditAmaQuestionMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    EditAmaQuestionMutation,
-    EditAmaQuestionMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<
-    EditAmaQuestionMutation,
-    EditAmaQuestionMutationVariables
-  >(EditAmaQuestionDocument, options)
-}
-export type EditAmaQuestionMutationHookResult = ReturnType<
-  typeof useEditAmaQuestionMutation
->
-export type EditAmaQuestionMutationResult =
-  Apollo.MutationResult<EditAmaQuestionMutation>
-export type EditAmaQuestionMutationOptions = Apollo.BaseMutationOptions<
-  EditAmaQuestionMutation,
-  EditAmaQuestionMutationVariables
->
-export const DeleteAmaQuestionDocument = gql`
-  mutation deleteAMAQuestion($id: ID!) {
-    deleteAMAQuestion(id: $id)
-  }
-`
-export type DeleteAmaQuestionMutationFn = Apollo.MutationFunction<
-  DeleteAmaQuestionMutation,
-  DeleteAmaQuestionMutationVariables
->
-
-/**
- * __useDeleteAmaQuestionMutation__
- *
- * To run a mutation, you first call `useDeleteAmaQuestionMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteAmaQuestionMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deleteAmaQuestionMutation, { data, loading, error }] = useDeleteAmaQuestionMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useDeleteAmaQuestionMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    DeleteAmaQuestionMutation,
-    DeleteAmaQuestionMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<
-    DeleteAmaQuestionMutation,
-    DeleteAmaQuestionMutationVariables
-  >(DeleteAmaQuestionDocument, options)
-}
-export type DeleteAmaQuestionMutationHookResult = ReturnType<
-  typeof useDeleteAmaQuestionMutation
->
-export type DeleteAmaQuestionMutationResult =
-  Apollo.MutationResult<DeleteAmaQuestionMutation>
-export type DeleteAmaQuestionMutationOptions = Apollo.BaseMutationOptions<
-  DeleteAmaQuestionMutation,
-  DeleteAmaQuestionMutationVariables
->
-export const AddAmaQuestionDocument = gql`
-  mutation addAMAQuestion($text: String!) {
-    addAMAQuestion(text: $text)
-  }
-`
-export type AddAmaQuestionMutationFn = Apollo.MutationFunction<
-  AddAmaQuestionMutation,
-  AddAmaQuestionMutationVariables
->
-
-/**
- * __useAddAmaQuestionMutation__
- *
- * To run a mutation, you first call `useAddAmaQuestionMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAddAmaQuestionMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [addAmaQuestionMutation, { data, loading, error }] = useAddAmaQuestionMutation({
- *   variables: {
- *      text: // value for 'text'
- *   },
- * });
- */
-export function useAddAmaQuestionMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    AddAmaQuestionMutation,
-    AddAmaQuestionMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<
-    AddAmaQuestionMutation,
-    AddAmaQuestionMutationVariables
-  >(AddAmaQuestionDocument, options)
-}
-export type AddAmaQuestionMutationHookResult = ReturnType<
-  typeof useAddAmaQuestionMutation
->
-export type AddAmaQuestionMutationResult =
-  Apollo.MutationResult<AddAmaQuestionMutation>
-export type AddAmaQuestionMutationOptions = Apollo.BaseMutationOptions<
-  AddAmaQuestionMutation,
-  AddAmaQuestionMutationVariables
->
-export const AddAmaAudioPlayDocument = gql`
-  mutation addAMAAudioPlay($id: ID!) {
-    addAMAAudioPlay(id: $id)
-  }
-`
-export type AddAmaAudioPlayMutationFn = Apollo.MutationFunction<
-  AddAmaAudioPlayMutation,
-  AddAmaAudioPlayMutationVariables
->
-
-/**
- * __useAddAmaAudioPlayMutation__
- *
- * To run a mutation, you first call `useAddAmaAudioPlayMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAddAmaAudioPlayMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [addAmaAudioPlayMutation, { data, loading, error }] = useAddAmaAudioPlayMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useAddAmaAudioPlayMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    AddAmaAudioPlayMutation,
-    AddAmaAudioPlayMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<
-    AddAmaAudioPlayMutation,
-    AddAmaAudioPlayMutationVariables
-  >(AddAmaAudioPlayDocument, options)
-}
-export type AddAmaAudioPlayMutationHookResult = ReturnType<
-  typeof useAddAmaAudioPlayMutation
->
-export type AddAmaAudioPlayMutationResult =
-  Apollo.MutationResult<AddAmaAudioPlayMutation>
-export type AddAmaAudioPlayMutationOptions = Apollo.BaseMutationOptions<
-  AddAmaAudioPlayMutation,
-  AddAmaAudioPlayMutationVariables
->
-export const TranscribeAudioDocument = gql`
-  mutation transcribeAudio($url: String!) {
-    transcribeAudio(url: $url)
-  }
-`
-export type TranscribeAudioMutationFn = Apollo.MutationFunction<
-  TranscribeAudioMutation,
-  TranscribeAudioMutationVariables
->
-
-/**
- * __useTranscribeAudioMutation__
- *
- * To run a mutation, you first call `useTranscribeAudioMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useTranscribeAudioMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [transcribeAudioMutation, { data, loading, error }] = useTranscribeAudioMutation({
- *   variables: {
- *      url: // value for 'url'
- *   },
- * });
- */
-export function useTranscribeAudioMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    TranscribeAudioMutation,
-    TranscribeAudioMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<
-    TranscribeAudioMutation,
-    TranscribeAudioMutationVariables
-  >(TranscribeAudioDocument, options)
-}
-export type TranscribeAudioMutationHookResult = ReturnType<
-  typeof useTranscribeAudioMutation
->
-export type TranscribeAudioMutationResult =
-  Apollo.MutationResult<TranscribeAudioMutation>
-export type TranscribeAudioMutationOptions = Apollo.BaseMutationOptions<
-  TranscribeAudioMutation,
-  TranscribeAudioMutationVariables
->
 export const EditBookmarkDocument = gql`
   mutation editBookmark($id: ID!, $data: EditBookmarkInput!) {
     editBookmark(id: $id, data: $data) {
@@ -2004,6 +1707,157 @@ export type EditEmailSubscriptionMutationOptions = Apollo.BaseMutationOptions<
   EditEmailSubscriptionMutation,
   EditEmailSubscriptionMutationVariables
 >
+export const EditQuestionDocument = gql`
+  mutation editQuestion($id: ID!, $data: EditQuestionInput!) {
+    editQuestion(id: $id, data: $data) {
+      ...QuestionInfo
+    }
+  }
+  ${QuestionInfoFragmentDoc}
+`
+export type EditQuestionMutationFn = Apollo.MutationFunction<
+  EditQuestionMutation,
+  EditQuestionMutationVariables
+>
+
+/**
+ * __useEditQuestionMutation__
+ *
+ * To run a mutation, you first call `useEditQuestionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditQuestionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editQuestionMutation, { data, loading, error }] = useEditQuestionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useEditQuestionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    EditQuestionMutation,
+    EditQuestionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    EditQuestionMutation,
+    EditQuestionMutationVariables
+  >(EditQuestionDocument, options)
+}
+export type EditQuestionMutationHookResult = ReturnType<
+  typeof useEditQuestionMutation
+>
+export type EditQuestionMutationResult =
+  Apollo.MutationResult<EditQuestionMutation>
+export type EditQuestionMutationOptions = Apollo.BaseMutationOptions<
+  EditQuestionMutation,
+  EditQuestionMutationVariables
+>
+export const DeleteQuestionDocument = gql`
+  mutation deleteQuestion($id: ID!) {
+    deleteQuestion(id: $id)
+  }
+`
+export type DeleteQuestionMutationFn = Apollo.MutationFunction<
+  DeleteQuestionMutation,
+  DeleteQuestionMutationVariables
+>
+
+/**
+ * __useDeleteQuestionMutation__
+ *
+ * To run a mutation, you first call `useDeleteQuestionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteQuestionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteQuestionMutation, { data, loading, error }] = useDeleteQuestionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteQuestionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteQuestionMutation,
+    DeleteQuestionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    DeleteQuestionMutation,
+    DeleteQuestionMutationVariables
+  >(DeleteQuestionDocument, options)
+}
+export type DeleteQuestionMutationHookResult = ReturnType<
+  typeof useDeleteQuestionMutation
+>
+export type DeleteQuestionMutationResult =
+  Apollo.MutationResult<DeleteQuestionMutation>
+export type DeleteQuestionMutationOptions = Apollo.BaseMutationOptions<
+  DeleteQuestionMutation,
+  DeleteQuestionMutationVariables
+>
+export const AddQuestionDocument = gql`
+  mutation addQuestion($data: AddQuestionInput!) {
+    addQuestion(data: $data) {
+      ...QuestionInfo
+    }
+  }
+  ${QuestionInfoFragmentDoc}
+`
+export type AddQuestionMutationFn = Apollo.MutationFunction<
+  AddQuestionMutation,
+  AddQuestionMutationVariables
+>
+
+/**
+ * __useAddQuestionMutation__
+ *
+ * To run a mutation, you first call `useAddQuestionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddQuestionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addQuestionMutation, { data, loading, error }] = useAddQuestionMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useAddQuestionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    AddQuestionMutation,
+    AddQuestionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<AddQuestionMutation, AddQuestionMutationVariables>(
+    AddQuestionDocument,
+    options
+  )
+}
+export type AddQuestionMutationHookResult = ReturnType<
+  typeof useAddQuestionMutation
+>
+export type AddQuestionMutationResult =
+  Apollo.MutationResult<AddQuestionMutation>
+export type AddQuestionMutationOptions = Apollo.BaseMutationOptions<
+  AddQuestionMutation,
+  AddQuestionMutationVariables
+>
 export const EditStackDocument = gql`
   mutation editStack($id: ID!, $data: EditStackInput!) {
     editStack(id: $id, data: $data) {
@@ -2298,293 +2152,6 @@ export type EditUserMutationResult = Apollo.MutationResult<EditUserMutation>
 export type EditUserMutationOptions = Apollo.BaseMutationOptions<
   EditUserMutation,
   EditUserMutationVariables
->
-export const GetAmaQuestionsDocument = gql`
-  query GetAMAQuestions($skip: Int, $status: AMAStatus) {
-    amaQuestions(skip: $skip, status: $status) {
-      ...AMAInfo
-    }
-  }
-  ${AmaInfoFragmentDoc}
-`
-
-/**
- * __useGetAmaQuestionsQuery__
- *
- * To run a query within a React component, call `useGetAmaQuestionsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAmaQuestionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAmaQuestionsQuery({
- *   variables: {
- *      skip: // value for 'skip'
- *      status: // value for 'status'
- *   },
- * });
- */
-export function useGetAmaQuestionsQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetAmaQuestionsQuery,
-    GetAmaQuestionsQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetAmaQuestionsQuery, GetAmaQuestionsQueryVariables>(
-    GetAmaQuestionsDocument,
-    options
-  )
-}
-export function useGetAmaQuestionsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetAmaQuestionsQuery,
-    GetAmaQuestionsQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<
-    GetAmaQuestionsQuery,
-    GetAmaQuestionsQueryVariables
-  >(GetAmaQuestionsDocument, options)
-}
-export type GetAmaQuestionsQueryHookResult = ReturnType<
-  typeof useGetAmaQuestionsQuery
->
-export type GetAmaQuestionsLazyQueryHookResult = ReturnType<
-  typeof useGetAmaQuestionsLazyQuery
->
-export type GetAmaQuestionsQueryResult = Apollo.QueryResult<
-  GetAmaQuestionsQuery,
-  GetAmaQuestionsQueryVariables
->
-export const GetAmaQuestionDocument = gql`
-  query GetAMAQuestion($id: ID!) {
-    amaQuestion(id: $id) {
-      ...AMAInfo
-    }
-  }
-  ${AmaInfoFragmentDoc}
-`
-
-/**
- * __useGetAmaQuestionQuery__
- *
- * To run a query within a React component, call `useGetAmaQuestionQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAmaQuestionQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAmaQuestionQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useGetAmaQuestionQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetAmaQuestionQuery,
-    GetAmaQuestionQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetAmaQuestionQuery, GetAmaQuestionQueryVariables>(
-    GetAmaQuestionDocument,
-    options
-  )
-}
-export function useGetAmaQuestionLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetAmaQuestionQuery,
-    GetAmaQuestionQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetAmaQuestionQuery, GetAmaQuestionQueryVariables>(
-    GetAmaQuestionDocument,
-    options
-  )
-}
-export type GetAmaQuestionQueryHookResult = ReturnType<
-  typeof useGetAmaQuestionQuery
->
-export type GetAmaQuestionLazyQueryHookResult = ReturnType<
-  typeof useGetAmaQuestionLazyQuery
->
-export type GetAmaQuestionQueryResult = Apollo.QueryResult<
-  GetAmaQuestionQuery,
-  GetAmaQuestionQueryVariables
->
-export const SignedUploadUrlDocument = gql`
-  query signedUploadUrl($id: ID!) {
-    signedUploadUrl(id: $id)
-  }
-`
-
-/**
- * __useSignedUploadUrlQuery__
- *
- * To run a query within a React component, call `useSignedUploadUrlQuery` and pass it any options that fit your needs.
- * When your component renders, `useSignedUploadUrlQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useSignedUploadUrlQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useSignedUploadUrlQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    SignedUploadUrlQuery,
-    SignedUploadUrlQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<SignedUploadUrlQuery, SignedUploadUrlQueryVariables>(
-    SignedUploadUrlDocument,
-    options
-  )
-}
-export function useSignedUploadUrlLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    SignedUploadUrlQuery,
-    SignedUploadUrlQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<
-    SignedUploadUrlQuery,
-    SignedUploadUrlQueryVariables
-  >(SignedUploadUrlDocument, options)
-}
-export type SignedUploadUrlQueryHookResult = ReturnType<
-  typeof useSignedUploadUrlQuery
->
-export type SignedUploadUrlLazyQueryHookResult = ReturnType<
-  typeof useSignedUploadUrlLazyQuery
->
-export type SignedUploadUrlQueryResult = Apollo.QueryResult<
-  SignedUploadUrlQuery,
-  SignedUploadUrlQueryVariables
->
-export const SignedPlaybackUrlDocument = gql`
-  query signedPlaybackUrl($id: ID!) {
-    signedPlaybackUrl(id: $id)
-  }
-`
-
-/**
- * __useSignedPlaybackUrlQuery__
- *
- * To run a query within a React component, call `useSignedPlaybackUrlQuery` and pass it any options that fit your needs.
- * When your component renders, `useSignedPlaybackUrlQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useSignedPlaybackUrlQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useSignedPlaybackUrlQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    SignedPlaybackUrlQuery,
-    SignedPlaybackUrlQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<
-    SignedPlaybackUrlQuery,
-    SignedPlaybackUrlQueryVariables
-  >(SignedPlaybackUrlDocument, options)
-}
-export function useSignedPlaybackUrlLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    SignedPlaybackUrlQuery,
-    SignedPlaybackUrlQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<
-    SignedPlaybackUrlQuery,
-    SignedPlaybackUrlQueryVariables
-  >(SignedPlaybackUrlDocument, options)
-}
-export type SignedPlaybackUrlQueryHookResult = ReturnType<
-  typeof useSignedPlaybackUrlQuery
->
-export type SignedPlaybackUrlLazyQueryHookResult = ReturnType<
-  typeof useSignedPlaybackUrlLazyQuery
->
-export type SignedPlaybackUrlQueryResult = Apollo.QueryResult<
-  SignedPlaybackUrlQuery,
-  SignedPlaybackUrlQueryVariables
->
-export const TranscriptionDocument = gql`
-  query transcription($transcriptionId: ID!) {
-    transcription(transcriptionId: $transcriptionId)
-  }
-`
-
-/**
- * __useTranscriptionQuery__
- *
- * To run a query within a React component, call `useTranscriptionQuery` and pass it any options that fit your needs.
- * When your component renders, `useTranscriptionQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useTranscriptionQuery({
- *   variables: {
- *      transcriptionId: // value for 'transcriptionId'
- *   },
- * });
- */
-export function useTranscriptionQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    TranscriptionQuery,
-    TranscriptionQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<TranscriptionQuery, TranscriptionQueryVariables>(
-    TranscriptionDocument,
-    options
-  )
-}
-export function useTranscriptionLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    TranscriptionQuery,
-    TranscriptionQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<TranscriptionQuery, TranscriptionQueryVariables>(
-    TranscriptionDocument,
-    options
-  )
-}
-export type TranscriptionQueryHookResult = ReturnType<
-  typeof useTranscriptionQuery
->
-export type TranscriptionLazyQueryHookResult = ReturnType<
-  typeof useTranscriptionLazyQuery
->
-export type TranscriptionQueryResult = Apollo.QueryResult<
-  TranscriptionQuery,
-  TranscriptionQueryVariables
 >
 export const GetBookmarksDocument = gql`
   query GetBookmarks($tag: String) {
@@ -2976,6 +2543,121 @@ export type GetPostLazyQueryHookResult = ReturnType<typeof useGetPostLazyQuery>
 export type GetPostQueryResult = Apollo.QueryResult<
   GetPostQuery,
   GetPostQueryVariables
+>
+export const GetQuestionsDocument = gql`
+  query getQuestions {
+    questions {
+      ...QuestionInfo
+    }
+  }
+  ${QuestionInfoFragmentDoc}
+`
+
+/**
+ * __useGetQuestionsQuery__
+ *
+ * To run a query within a React component, call `useGetQuestionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetQuestionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetQuestionsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetQuestionsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetQuestionsQuery,
+    GetQuestionsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetQuestionsQuery, GetQuestionsQueryVariables>(
+    GetQuestionsDocument,
+    options
+  )
+}
+export function useGetQuestionsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetQuestionsQuery,
+    GetQuestionsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetQuestionsQuery, GetQuestionsQueryVariables>(
+    GetQuestionsDocument,
+    options
+  )
+}
+export type GetQuestionsQueryHookResult = ReturnType<
+  typeof useGetQuestionsQuery
+>
+export type GetQuestionsLazyQueryHookResult = ReturnType<
+  typeof useGetQuestionsLazyQuery
+>
+export type GetQuestionsQueryResult = Apollo.QueryResult<
+  GetQuestionsQuery,
+  GetQuestionsQueryVariables
+>
+export const GetQuestionDocument = gql`
+  query getQuestion($id: ID!) {
+    question(id: $id) {
+      ...QuestionInfo
+    }
+  }
+  ${QuestionInfoFragmentDoc}
+`
+
+/**
+ * __useGetQuestionQuery__
+ *
+ * To run a query within a React component, call `useGetQuestionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetQuestionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetQuestionQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetQuestionQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetQuestionQuery,
+    GetQuestionQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetQuestionQuery, GetQuestionQueryVariables>(
+    GetQuestionDocument,
+    options
+  )
+}
+export function useGetQuestionLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetQuestionQuery,
+    GetQuestionQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetQuestionQuery, GetQuestionQueryVariables>(
+    GetQuestionDocument,
+    options
+  )
+}
+export type GetQuestionQueryHookResult = ReturnType<typeof useGetQuestionQuery>
+export type GetQuestionLazyQueryHookResult = ReturnType<
+  typeof useGetQuestionLazyQuery
+>
+export type GetQuestionQueryResult = Apollo.QueryResult<
+  GetQuestionQuery,
+  GetQuestionQueryVariables
 >
 export const GetStacksDocument = gql`
   query getStacks {

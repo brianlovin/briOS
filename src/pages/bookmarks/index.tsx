@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { GET_BOOKMARKS } from '~/graphql/queries'
+import { GET_BOOKMARKS } from '~/graphql/queries/bookmarks'
 import BookmarksList from '~/components/Bookmarks'
 import { addApolloState, initApolloClient } from '~/lib/apollo/client'
 import { ListDetailView, SiteLayout } from '~/components/Layouts'

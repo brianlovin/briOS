@@ -7,14 +7,10 @@ import { getEpisodes } from '~/graphql/resolvers/queries/podcast'
 import { getRepos } from '~/graphql/resolvers/queries/repos'
 import { viewer } from '~/graphql/resolvers/queries/viewer'
 import {
-  getAMAQuestion,
-  getAMAQuestions,
-  getSignedUploadUrl,
-  getSignedPlaybackUrl,
-  getTranscription,
-} from '~/graphql/resolvers/queries/ama'
+  getQuestion,
+  getQuestions,
+} from '~/graphql/resolvers/queries/questions'
 import { getComment, getComments } from '~/graphql/resolvers/queries/comment'
-import { requiresAdmin } from '~/graphql/helpers/requiresAdmin'
 import { getUser } from '~/graphql/resolvers/queries/user'
 import { getStack, getStacks } from '~/graphql/resolvers/queries/stack'
 import { getTags } from '~/graphql/resolvers/queries/tags'
@@ -28,11 +24,8 @@ export default {
   posts: getPosts,
   post: getPost,
   repos: getRepos,
-  amaQuestion: getAMAQuestion,
-  amaQuestions: getAMAQuestions,
-  signedUploadUrl: requiresAdmin(getSignedUploadUrl),
-  signedPlaybackUrl: requiresAdmin(getSignedPlaybackUrl),
-  transcription: requiresAdmin(getTranscription),
+  question: getQuestion,
+  questions: getQuestions,
   comment: getComment,
   comments: getComments,
   stacks: getStacks,

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { GET_BOOKMARKS } from '~/graphql/queries'
+import { GET_BOOKMARKS } from '~/graphql/queries/bookmarks'
 import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import BookmarksList from '~/components/Bookmarks'
 import { GET_BOOKMARK } from '~/graphql/queries/bookmarks'

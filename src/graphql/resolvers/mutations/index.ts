@@ -12,12 +12,10 @@ import {
   toggleStackUser,
 } from '~/graphql/resolvers/mutations/stack'
 import {
-  addAMAQuestion,
-  editAMAQuestion,
-  deleteAMAQuestion,
-  addAMAAudioPlay,
-  transcribeAudio,
-} from '~/graphql/resolvers/mutations/ama'
+  addQuestion,
+  editQuestion,
+  deleteQuestion,
+} from '~/graphql/resolvers/mutations/questions'
 import {
   addComment,
   editComment,
@@ -34,11 +32,9 @@ export default {
   editStack: requiresAdmin(editStack),
   deleteStack: requiresAdmin(deleteStack),
   toggleStackUser: requiresUser(toggleStackUser),
-  addAMAQuestion: requiresUser(addAMAQuestion),
-  editAMAQuestion: requiresAdmin(editAMAQuestion),
-  deleteAMAQuestion: requiresAdmin(deleteAMAQuestion),
-  addAMAAudioPlay,
-  transcribeAudio: requiresAdmin(transcribeAudio),
+  addQuestion: requiresUser(addQuestion),
+  editQuestion: requiresUser(editQuestion),
+  deleteQuestion: requiresUser(deleteQuestion),
   addComment: requiresUser(addComment),
   editComment: requiresUser(editComment),
   deleteComment: requiresUser(deleteComment),

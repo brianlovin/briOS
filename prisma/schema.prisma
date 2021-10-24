@@ -52,14 +52,15 @@ model Bookmark {
 }
 
 model Question {
-  id        String     @id @default(cuid())
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  author    User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  text      String     @db.VarChar(280)
-  userId    String
-  comments  Comment[]
-  reactions Reaction[]
+  id          String     @id @default(cuid())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  author      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String     @db.VarChar(64)
+  description String     @db.VarChar(1024)
+  userId      String
+  comments    Comment[]
+  reactions   Reaction[]
 }
 
 model Comment {

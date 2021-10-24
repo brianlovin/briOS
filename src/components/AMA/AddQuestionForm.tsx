@@ -1,43 +1,53 @@
 import * as React from 'react'
-import { useAddAmaQuestionMutation } from '~/graphql/types.generated'
+import { useAddQuestionMutation } from '~/graphql/types.generated'
 import { Textarea } from '~/components/Input'
-import { ErrorAlert, SuccessAlert } from '../Alert'
-import Button from '../Button'
-import toast from 'react-hot-toast'
+import { ErrorAlert } from '../Alert'
+import { PrimaryButton } from '../Button'
+import { LoadingSpinner } from '../LoadingSpinner'
+import { useRouter } from 'next/router'
 
 export function AddQuestionForm({ closeModal }) {
-  const [text, setText] = React.useState('')
+  const [title, setTitle] = React.useState('')
+  const [description, setDescription] = React.useState('')
   const [error, setError] = React.useState('')
-  const [success, setSuccess] = React.useState(false)
+  const router = useRouter()
 
-  const [handleAddAMAQuestion] = useAddAmaQuestionMutation({
-    onCompleted: () => {
-      setText('')
-      setSuccess(true)
-      toast.success('Saved!')
-      return closeModal()
+  const [handleAddQuestion, { loading }] = useAddQuestionMutation({
+    onCompleted: ({ addQuestion: { id } }) => {
+      closeModal()
+      return router.push(`/ama/${id}`)
     },
     onError({ message }) {
       const clean = message.replace('GraphQL error:', '')
       setError(clean)
-      setText('')
     },
   })
 
   function onSubmit(e) {
     e.preventDefault()
-    setSuccess(false)
-    if (text.length === 0) {
+    if (title.trim().length === 0) {
       setError('Question can’t be blank')
       return
     }
 
-    return handleAddAMAQuestion({ variables: { text } })
+    return handleAddQuestion({
+      variables: {
+        data: {
+          title,
+          description,
+        },
+      },
+    })
   }
 
-  function onTextChange(e) {
+  function onTitleChange(e) {
     error && setError('')
-    return setText(e.target.value)
+    return setTitle(e.target.value)
+  }
+
+  function onDescriptionChange(e) {
+    error && setError('')
+    return setDescription(e.target.value)
   }
 
   function onKeyDown(e) {
@@ -49,21 +59,28 @@ export function AddQuestionForm({ closeModal }) {
   return (
     <form className="items-stretch p-4 space-y-4" onSubmit={onSubmit}>
       <Textarea
-        rows={4}
-        value={text}
+        rows={2}
+        value={title}
         placeholder="Ask me anything..."
-        onChange={onTextChange}
+        onChange={onTitleChange}
+        onKeyDown={onKeyDown}
+      />
+      <Textarea
+        rows={4}
+        value={description}
+        placeholder="Optional: add a description with more details..."
+        onChange={onDescriptionChange}
         onKeyDown={onKeyDown}
       />
       <div className="flex justify-end">
-        <Button onClick={onSubmit}>Ask</Button>
+        <PrimaryButton
+          disabled={title.trim().length === 0 || loading}
+          onClick={onSubmit}
+        >
+          {loading ? <LoadingSpinner /> : 'Ask away'}
+        </PrimaryButton>
       </div>
       {error && <ErrorAlert>{error}</ErrorAlert>}
-      {success && (
-        <SuccessAlert>
-          Thanks for asking! I’ll reply soon, so feel free to check back 👋
-        </SuccessAlert>
-      )}
     </form>
   )
 }

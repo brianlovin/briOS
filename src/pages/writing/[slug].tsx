@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { GET_POST, GET_POSTS } from '~/graphql/queries'
+import { GET_POST, GET_POSTS } from '~/graphql/queries/posts'
 import PostContainer from '~/components/Writing/Post'
 import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { addApolloState, initApolloClient } from '~/lib/apollo/client'

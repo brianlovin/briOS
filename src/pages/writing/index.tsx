@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { PostsList } from '~/components/Writing/List'
-import { GET_POSTS } from '~/graphql/queries'
+import { GET_POSTS } from '~/graphql/queries/posts'
 import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { NextSeo } from 'next-seo'
 import routes from '~/config/routes'

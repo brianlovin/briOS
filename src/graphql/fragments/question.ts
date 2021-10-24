@@ -2,12 +2,13 @@ import { gql } from '@apollo/client'
 import { CommentInfoFragment } from './comment'
 import { UserInfoFragment } from './user'
 
-export const AMAInfoFragment = gql`
-  fragment AMAInfo on AMA {
+export const QuestionInfoFragment = gql`
+  fragment QuestionInfo on Question {
     id
     createdAt
     updatedAt
-    text
+    title
+    description
     author {
       ...UserInfo
     }
