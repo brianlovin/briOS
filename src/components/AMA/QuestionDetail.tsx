@@ -1,11 +1,11 @@
 import * as React from 'react'
-import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { CommentType, useGetQuestionQuery } from '~/graphql/types.generated'
 import TitleBar from '~/components/ListDetail/TitleBar'
 import { Detail } from '~/components/ListDetail/Detail'
 import { Comments } from '../Comments'
 import { QuestionActions } from './QuestionActions'
+import { Avatar } from '../Avatar'
 
 export function QuestionDetail({ id }) {
   const scrollContainerRef = React.useRef(null)
@@ -43,7 +43,7 @@ export function QuestionDetail({ id }) {
       <Detail.ContentContainer>
         <Detail.Header>
           <div className="flex items-center space-x-3">
-            <Image
+            <Avatar
               src={question.author.avatar}
               width={32}
               height={32}

@@ -1,10 +1,10 @@
 import * as React from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
 import { LoadingSpinner } from '~/components/LoadingSpinner'
 import { Settings } from 'react-feather'
 import { useViewerQuery } from '~/graphql/types.generated'
 import { GhostButton } from '../Button'
+import { Avatar } from '../Avatar'
 
 function Container({ children }) {
   return (
@@ -40,7 +40,7 @@ export function UserFooter() {
       <Container>
         <Link href={`/u/${data.viewer.username}`}>
           <a className="flex items-center flex-none rounded-full">
-            <Image
+            <Avatar
               src={data.viewer.avatar}
               width={24}
               height={24}

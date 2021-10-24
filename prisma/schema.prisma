@@ -56,8 +56,8 @@ model Question {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   author      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  title       String     @db.VarChar(64)
-  description String     @db.VarChar(1024)
+  title       String     @db.VarChar(256)
+  description String?    @db.VarChar(1024)
   userId      String
   comments    Comment[]
   reactions   Reaction[]

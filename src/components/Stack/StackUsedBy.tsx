@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import * as React from 'react'
 import { GET_STACK } from '~/graphql/queries/stack'
 import {
@@ -7,6 +6,7 @@ import {
   useToggleStackUserMutation,
   useViewerQuery,
 } from '~/graphql/types.generated'
+import { Avatar } from '../Avatar'
 import Tooltip from '../Tooltip'
 
 export function StackUsedBy(props) {
@@ -100,7 +100,7 @@ export function StackUsedBy(props) {
             {data.stack.usedBy.map((u) => (
               <Tooltip key={u.id} content={u.name}>
                 <span className="inline-flex p-1">
-                  <Image
+                  <Avatar
                     src={u.avatar}
                     width={32}
                     height={32}

@@ -1,10 +1,10 @@
 import * as React from 'react'
-import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useGetQuestionsQuery } from '~/graphql/types.generated'
 import ListContainer from '~/components/ListDetail/ListContainer'
 import ListItem from '~/components/ListDetail/ListItem'
 import { AMATitlebar } from './AMATitlebar'
+import { Avatar } from '../Avatar'
 
 export function QuestionsList() {
   let [scrollContainerRef, setScrollContainerRef] = React.useState(null)
@@ -35,7 +35,7 @@ export function QuestionsList() {
               description={null}
               byline={
                 <div className="flex items-center space-x-2">
-                  <Image
+                  <Avatar
                     src={question.author.avatar}
                     width={16}
                     height={16}

@@ -1,5 +1,4 @@
 import * as React from 'react'
-import Image from 'next/image'
 import {
   Comment as CommentProp,
   CommentType,
@@ -15,6 +14,7 @@ import { CommentMenu } from './CommentMenu'
 import { GET_COMMENTS } from '~/graphql/queries/comments'
 import { Textarea } from '../Input'
 import { LoadingSpinner } from '../LoadingSpinner'
+import { Avatar } from '../Avatar'
 
 interface Props {
   comment: CommentProp
@@ -107,7 +107,7 @@ export const Comment = React.memo(function MemoComment({
     <div className="flex flex-col space-y-1 group">
       <div className="flex items-center justify-between space-x-4">
         <div className="flex items-center space-x-4">
-          <Image
+          <Avatar
             src={comment.author.avatar}
             width={40}
             height={40}
