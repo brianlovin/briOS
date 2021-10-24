@@ -3,7 +3,13 @@
   "short_name": "Brian Lovin",
   "icons": [
     {
-      "src": "/static/meta/google-touch-icon.png",
+      "src": "/static/meta/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/static/meta/icon-512.png",
+      "type": "image/png",
       "sizes": "512x512"
     }
   ],
