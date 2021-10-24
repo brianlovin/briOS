@@ -6,6 +6,7 @@ import { GhostButton } from '../Button'
 import { Plus } from 'react-feather'
 import { SignInDialog } from '../SignIn'
 import { QuestionsFilterButton } from './FilterButton'
+import { QuestionsContext } from './QuestionsList'
 
 export function AMATitlebar({ scrollContainerRef }) {
   const { data } = useViewerQuery()
@@ -51,10 +52,24 @@ export function AMATitlebar({ scrollContainerRef }) {
   }
 
   return (
-    <TitleBar
-      scrollContainerRef={scrollContainerRef}
-      title={'Ask me anything'}
-      trailingAccessory={trailingAccessory()}
-    />
+    <QuestionsContext.Consumer>
+      {({ filterPending }) => {
+        const title = !data?.viewer
+          ? 'Ask me anything'
+          : data.viewer.role === UserRole.Admin
+          ? filterPending
+            ? 'Pending questions'
+            : 'Answered questions'
+          : 'Ask me anything'
+
+        return (
+          <TitleBar
+            scrollContainerRef={scrollContainerRef}
+            title={title}
+            trailingAccessory={trailingAccessory()}
+          />
+        )
+      }}
+    </QuestionsContext.Consumer>
   )
 }

@@ -43,7 +43,9 @@ export function QuestionsList() {
         <AnimateSharedLayout>
           <div className="lg:p-3 lg:space-y-1">
             {questions
-              .filter((q) => (filterPending ? q.commentCount === 0 : true))
+              .filter((q) =>
+                filterPending ? q.commentCount === 0 : q.commentCount > 0
+              )
               .map((question) => {
                 const active = router.query?.id === question.id.toString() // post ids are numbers
 
