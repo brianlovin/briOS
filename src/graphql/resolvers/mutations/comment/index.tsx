@@ -97,10 +97,12 @@ export async function addComment(
     throw new UserInputError('Commenting on something that doesn’t exist')
   }
 
-  emailMe({
-    subject: `New comment on ${table}`,
-    body: `${text}\n\n${route}`,
-  })
+  if (viewer.role !== UserRole.Admin) {
+    emailMe({
+      subject: `New comment on ${table}`,
+      body: `${text}\n\n${route}`,
+    })
+  }
 
   return await prisma.comment.create({
     data: {
