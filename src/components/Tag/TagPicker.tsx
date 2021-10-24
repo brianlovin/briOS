@@ -18,8 +18,12 @@ export function TagPicker({ filter, onChange, defaultValue = undefined }) {
   return (
     <Listbox value={selected} onChange={handleChange}>
       <div className="relative z-10 mt-1">
-        <Listbox.Button className="cursor-pointer relative w-full py-2.5 pl-4 pr-10 text-left bg-white shadow-sm border border-gray-200 dark:border-gray-700 rounded-md dark:bg-white bg-opacity-5 text-quaternary">
-          {selected ? <Tag name={selected} /> : 'Choose a tag...'}
+        <Listbox.Button
+          className={`cursor-pointer relative w-full py-2.5 pl-4 pr-10 text-left bg-white shadow-sm border border-gray-200 dark:border-gray-700 rounded-md dark:bg-white bg-opacity-5 ${
+            selected ? 'text-primary' : 'text-quaternary'
+          }`}
+        >
+          {selected ? <>{selected}</> : 'Choose a tag...'}
           <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
             <ChevronDown size={16} aria-hidden="true" />
           </span>

@@ -57,7 +57,7 @@ export function Tag({ name }) {
       {name === '__clear_tag_picker' ? (
         <>
           <XCircle size={16} />
-          <span>Clear selection</span>
+          <span>Clear tag</span>
         </>
       ) : (
         name
