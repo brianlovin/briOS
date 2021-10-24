@@ -21,7 +21,7 @@ export default async function getBookmarkMetaData(url) {
 
   const title = $('title').first().text().substr(0, TITLE_LIMIT)
   const image =
-    getMetavalue('image').length > IMAGE_LIMIT ? null : getMetavalue('image')
+    getMetavalue('image')?.length > IMAGE_LIMIT ? null : getMetavalue('image')
   const description = getMetavalue('description').substr(0, DESCRIPTION_LIMIT)
   const author = getMetavalue('author')
   const creator = getMetavalue('creator')
