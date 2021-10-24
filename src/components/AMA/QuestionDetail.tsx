@@ -1,11 +1,16 @@
 import * as React from 'react'
 import { useRouter } from 'next/router'
+import remarkGfm from 'remark-gfm'
+import deepmerge from 'deepmerge'
+import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
 import { CommentType, useGetQuestionQuery } from '~/graphql/types.generated'
 import TitleBar from '~/components/ListDetail/TitleBar'
 import { Detail } from '~/components/ListDetail/Detail'
 import { Comments } from '../Comments'
 import { QuestionActions } from './QuestionActions'
 import { Avatar } from '../Avatar'
+import ReactMarkdown from 'react-markdown'
+import SyntaxHighlighter from '../SyntaxHighlighter'
 
 export function QuestionDetail({ id }) {
   const scrollContainerRef = React.useRef(null)
@@ -13,6 +18,10 @@ export function QuestionDetail({ id }) {
   const router = useRouter()
   const { data, loading, error, refetch } = useGetQuestionQuery({
     variables: { id },
+  })
+
+  const schema = deepmerge(defaultSchema, {
+    attributes: { '*': ['className'] },
   })
 
   React.useEffect(() => {
@@ -31,6 +40,8 @@ export function QuestionDetail({ id }) {
 
   return (
     <Detail.Container ref={scrollContainerRef}>
+      <SyntaxHighlighter data={question} />
+
       <TitleBar
         backButton
         globalMenu={false}
@@ -59,7 +70,27 @@ export function QuestionDetail({ id }) {
           </div>
           <Detail.Title ref={titleRef}>{question.title}</Detail.Title>
           {question.description && (
-            <p className="prose text-primary">{question.description}</p>
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              rehypePlugins={[[rehypeSanitize, schema]]}
+              children={question.description}
+              components={{
+                h1: 'p',
+                h2: 'p',
+                h3: 'p',
+                h4: 'p',
+                h5: 'p',
+                h6: 'p',
+                code({ node, inline, className, children, ...props }) {
+                  return (
+                    <code className={className} {...props}>
+                      {children}
+                    </code>
+                  )
+                },
+              }}
+              className="prose comment"
+            />
           )}
         </Detail.Header>
       </Detail.ContentContainer>

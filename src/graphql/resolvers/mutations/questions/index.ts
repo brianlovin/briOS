@@ -23,7 +23,17 @@ export async function editQuestion(
   }
 
   if (viewer.role === UserRole.Admin || viewer.id === question.userId) {
-    return await prisma.question.update({ where: { id }, data })
+    return await prisma.question.update({
+      where: { id },
+      data,
+      include: {
+        _count: {
+          select: {
+            comments: true,
+          },
+        },
+      },
+    })
   }
 
   throw new UserInputError('No permission to delete this question')
@@ -48,6 +58,13 @@ export async function addQuestion(
       title,
       description,
       userId: viewer.id,
+    },
+    include: {
+      _count: {
+        select: {
+          comments: true,
+        },
+      },
     },
   })
 }
