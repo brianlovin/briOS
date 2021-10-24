@@ -81,7 +81,11 @@ export function BookmarksFilterMenu() {
                             <Menu.Item key={tag.name}>
                               {({ active }) => (
                                 <a
-                                  onClick={() => setTagFilter(tag.name)}
+                                  onClick={() =>
+                                    tagFilter === tag.name
+                                      ? setTagFilter(null)
+                                      : setTagFilter(tag.name)
+                                  }
                                   className={`${
                                     active
                                       ? 'bg-gray-100 dark:text-white text-gray-900 dark:bg-gray-700'
