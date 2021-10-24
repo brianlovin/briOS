@@ -1,5 +1,7 @@
 import { UserInputError } from 'apollo-server-micro'
+import { CLIENT_URL } from '~/graphql/constants'
 import { Context } from '~/graphql/context'
+import { emailMe } from '~/graphql/services/postmark'
 import {
   CommentType,
   MutationAddCommentArgs,
@@ -57,27 +59,49 @@ export async function addComment(
     throw new UserInputError('Comments can’t be blank')
 
   let field
+  let table
+  let route
   switch (type) {
     case CommentType.Bookmark: {
       field = 'bookmarkId'
+      table = 'bookmark'
+      route = `${CLIENT_URL}/bookmarks/${refId}`
       break
     }
     case CommentType.Post: {
       field = 'postId'
+      table = 'post'
+      route = `${CLIENT_URL}/writing/${refId}`
       break
     }
     case CommentType.Question: {
       field = 'questionId'
+      table = 'question'
+      route = `${CLIENT_URL}/ama/${refId}`
       break
     }
     case CommentType.Stack: {
       field = 'stackId'
+      table = 'stack'
+      route = `${CLIENT_URL}/stack/${refId}`
       break
     }
     default: {
       throw new UserInputError('Invalid comment type')
     }
   }
+
+  const parentObject = await prisma[table].findUnique({ where: { id: refId } })
+
+  if (!parentObject) {
+    throw new UserInputError('Commenting on something that doesn’t exist')
+  }
+
+  emailMe({
+    subject: `New comment on ${table}`,
+    body: `${text}\n\n${route}`,
+  })
+
   return await prisma.comment.create({
     data: {
       text,
