@@ -26,7 +26,6 @@ export function SEO({ post }: Props) {
               alt: post.title,
             },
           ],
-          site_name: 'Writing',
         }}
         twitter={{
           cardType: 'summary_large_image',

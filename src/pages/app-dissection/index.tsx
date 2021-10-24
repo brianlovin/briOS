@@ -8,13 +8,11 @@ import routes from '~/config/routes'
 
 function AppDissectionsPage() {
   return (
-    <>
-      <NextSeo
-        title={routes.appDissection.seo.title}
-        description={routes.appDissection.seo.description}
-        openGraph={routes.appDissection.seo.openGraph}
-      />
-    </>
+    <NextSeo
+      title={routes.appDissection.seo.title}
+      description={routes.appDissection.seo.description}
+      openGraph={routes.appDissection.seo.openGraph}
+    />
   )
 }
 

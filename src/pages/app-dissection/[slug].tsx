@@ -38,7 +38,7 @@ function AppDissectionPage({ post }: Props) {
             site_name: 'App Dissection',
             images: [
               {
-                url: `${baseUrl}/static/meta/app-dissection.png`,
+                url: `${baseUrl}/static/og/app-dissection.png`,
                 alt: 'App Dissection',
               },
             ],

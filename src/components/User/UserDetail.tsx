@@ -39,4 +39,6 @@ export function UserDetail({ username }) {
       </Detail.Container>
     )
   }
+
+  return null
 }

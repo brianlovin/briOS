@@ -10,19 +10,11 @@ import { addApolloState, initApolloClient } from '~/lib/apollo'
 
 export default function UserPage({ username }) {
   return (
-    <>
-      <NextSeo
-        title={routes.security.seo.title}
-        description={routes.security.seo.description}
-        openGraph={routes.security.seo.openGraph}
-      />
-
-      <ListDetailView
-        list={null}
-        hasDetail
-        detail={<UserDetail username={username} />}
-      />
-    </>
+    <ListDetailView
+      list={null}
+      hasDetail
+      detail={<UserDetail username={username} />}
+    />
   )
 }
 

@@ -11,13 +11,11 @@ import { addApolloState, initApolloClient } from '~/lib/apollo'
 
 function AmaPage() {
   return (
-    <>
-      <NextSeo
-        title={routes.ama.seo.title}
-        description={routes.ama.seo.description}
-        openGraph={routes.ama.seo.openGraph}
-      />
-    </>
+    <NextSeo
+      title={routes.ama.seo.title}
+      description={routes.ama.seo.description}
+      openGraph={routes.ama.seo.openGraph}
+    />
   )
 }
 

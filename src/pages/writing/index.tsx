@@ -10,13 +10,11 @@ import { addApolloState, initApolloClient } from '~/lib/apollo'
 
 function WritingPage() {
   return (
-    <>
-      <NextSeo
-        title={routes.writing.seo.title}
-        description={routes.writing.seo.description}
-        openGraph={routes.writing.seo.openGraph}
-      />
-    </>
+    <NextSeo
+      title={routes.writing.seo.title}
+      description={routes.writing.seo.description}
+      openGraph={routes.writing.seo.openGraph}
+    />
   )
 }
 

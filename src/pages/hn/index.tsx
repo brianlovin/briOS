@@ -25,17 +25,13 @@ interface Props {
   posts: HNPost[]
 }
 
-function HNPage(props: Props) {
-  const { posts } = props
-
+function HNPage() {
   return (
-    <>
-      <NextSeo
-        title={routes.hn.seo.title}
-        description={routes.hn.seo.description}
-        openGraph={routes.hn.seo.openGraph}
-      />
-    </>
+    <NextSeo
+      title={routes.hn.seo.title}
+      description={routes.hn.seo.description}
+      openGraph={routes.hn.seo.openGraph}
+    />
   )
 }
 

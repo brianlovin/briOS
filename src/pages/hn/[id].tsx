@@ -7,7 +7,7 @@ import HNPosts from '~/components/HNPosts'
 import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { Detail } from '~/components/ListDetail/Detail'
 import { withProviders } from '~/components/Providers/withProviders'
-import { baseUrl } from '~/config/seo'
+import routes from '~/config/routes'
 import { getHNPosts, getPostById, getPostIds } from '~/lib/hn'
 
 import { HNPost as HNPostType } from '.'
@@ -29,18 +29,9 @@ function HNPostPage(props: Props) {
   return (
     <>
       <NextSeo
-        title={'Hacker News'}
-        description={'My personal Hacker News reader.'}
-        openGraph={{
-          title: 'Hacker News',
-          description: 'My personal Hacker News reader.',
-          images: [
-            {
-              url: `${baseUrl}/static/meta/hn.png`,
-              alt: 'Hacker News',
-            },
-          ],
-        }}
+        title={routes.hn.seo.title}
+        description={routes.hn.seo.description}
+        openGraph={routes.hn.seo.openGraph}
       />
 
       <HNPost post={post} />
