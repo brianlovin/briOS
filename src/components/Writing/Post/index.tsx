@@ -10,10 +10,12 @@ export default function PostView({ slug }) {
   const titleRef = React.useRef(null)
   const { data, error, loading } = useGetPostQuery({ variables: { slug } })
 
-  if (error || loading) {
-    return (
-      <div className="w-full max-h-screen overflow-y-auto bg-white dark:bg-black" />
-    )
+  if (error) {
+    return null
+  }
+
+  if (loading) {
+    return <Detail.Loading />
   }
 
   if (!data?.post) {

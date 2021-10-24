@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { LoadingSpinner } from '../LoadingSpinner'
 
 function ContentContainer(props) {
   return (
@@ -40,9 +41,20 @@ const Title = React.forwardRef<HTMLHeadingElement, TitleProps>((props, ref) => {
   )
 })
 
+function Loading() {
+  return (
+    <Container>
+      <div className="flex flex-col items-center justify-center flex-1">
+        <LoadingSpinner />
+      </div>
+    </Container>
+  )
+}
+
 export const Detail = {
   Container,
   ContentContainer,
   Header,
   Title,
+  Loading,
 }

@@ -28,8 +28,8 @@ export function QuestionDetail({ id }) {
     if (!loading && !data?.question) router.push('/ama')
   }, [loading])
 
-  if (error || loading) {
-    return null
+  if (loading) {
+    return <Detail.Loading />
   }
 
   if (!data || !data?.question) {

@@ -22,8 +22,12 @@ export function BookmarkDetail({ id }) {
     if (!loading && !data?.bookmark) router.push('/bookmarks')
   }, [loading])
 
-  if (error || loading) {
+  if (error) {
     return null
+  }
+
+  if (loading) {
+    return <Detail.Loading />
   }
 
   if (!data || !data.bookmark) {

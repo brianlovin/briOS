@@ -2,7 +2,6 @@ import * as React from 'react'
 import { useGetViewerWithSettingsQuery } from '~/graphql/types.generated'
 import { Detail } from '../ListDetail/Detail'
 import TitleBar from '../ListDetail/TitleBar'
-import { LoadingSpinner } from '../LoadingSpinner'
 import { EmailForm } from './Email'
 import { EmailPreferences } from './EmailPreferences'
 import { UserSettingsFooter } from './Footer'
@@ -18,13 +17,7 @@ export function UserSettings() {
   const scrollContainerRef = React.useRef(null)
 
   if (!data?.viewer && loading) {
-    return (
-      <Detail.Container>
-        <div className="flex flex-col items-center justify-center flex-1">
-          <LoadingSpinner />
-        </div>
-      </Detail.Container>
-    )
+    return <Detail.Loading />
   }
 
   if (!data?.viewer) {

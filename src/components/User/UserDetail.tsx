@@ -10,8 +10,8 @@ export default function UserDetail({ username }) {
 
   const { data, loading, error } = useGetUserQuery({ variables: { username } })
 
-  if (loading) return null
   if (error) return null
+  if (loading) return <Detail.Loading />
 
   if (data?.user) {
     const { user } = data
@@ -22,13 +22,17 @@ export default function UserDetail({ username }) {
           title={user.name}
           titleRef={titleRef}
           scrollContainerRef={scrollContainerRef}
-          trailingAccessory={user.isViewer ? <Button>Settings</Button> : null}
+          trailingAccessory={
+            user.isViewer ? <Button href="/settings">Settings</Button> : null
+          }
         />
 
         <Detail.ContentContainer>
           <Detail.Header>
-            <Detail.Title ref={titleRef}>{user.name}</Detail.Title>
-            <p className="text-xl text-tertiary">@{user.username}</p>
+            <Detail.Title ref={titleRef}>Profiles are coming soon</Detail.Title>
+            <p className="text-xl text-tertiary">
+              Check back in the future to see questions, comments, and more...
+            </p>
           </Detail.Header>
         </Detail.ContentContainer>
       </Detail.Container>

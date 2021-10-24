@@ -22,7 +22,7 @@ export function StackDetail({ id }) {
   })
 
   if (loading) {
-    return null
+    return <Detail.Loading />
   }
 
   if (!data?.stack) {

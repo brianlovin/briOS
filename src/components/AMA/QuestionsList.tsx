@@ -19,7 +19,7 @@ export function QuestionsList() {
   const [scrollContainerRef, setScrollContainerRef] = React.useState(null)
   const router = useRouter()
 
-  const { data, error } = useGetQuestionsQuery()
+  const { data, error, loading } = useGetQuestionsQuery()
 
   React.useEffect(() => {
     if (data?.questions) {
@@ -27,7 +27,7 @@ export function QuestionsList() {
     }
   }, [data])
 
-  if (error) return null
+  if (error || loading) return null
 
   if (!data || !data.questions) return null
 
