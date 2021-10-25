@@ -27,14 +27,14 @@ export const PostsList = React.memo(({ posts }: Props) => {
   }
 
   return (
-    <ListContainer onRef={setScrollContainerRef}>
+    <ListContainer data-cy="posts-list" onRef={setScrollContainerRef}>
       <TitleBar
         scrollContainerRef={scrollContainerRef}
         trailingAccessory={
           <DialogComponent
             title="Subscribe"
             trigger={
-              <Button size="small">
+              <Button data-cy="open-subscribe-hn-dialog" size="small">
                 <Radio size={16} />
                 <span>Subscribe</span>
               </Button>

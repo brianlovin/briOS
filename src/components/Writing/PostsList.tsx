@@ -24,7 +24,7 @@ export function PostsList() {
   if (!posts || posts.length === 0) return null
 
   return (
-    <ListContainer onRef={setScrollContainerRef}>
+    <ListContainer data-cy="posts-list" onRef={setScrollContainerRef}>
       <TitleBar title="Writing" scrollContainerRef={scrollContainerRef} />
 
       <div className="lg:p-3 lg:space-y-1">

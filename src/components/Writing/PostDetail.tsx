@@ -36,7 +36,7 @@ export function PostDetail({ slug }) {
     <React.Fragment>
       <SyntaxHighlighter data={post} />
       <PostSEO post={post} />
-      <Detail.Container ref={scrollContainerRef}>
+      <Detail.Container data-cy="post-detail" ref={scrollContainerRef}>
         <TitleBar
           backButton
           globalMenu={false}

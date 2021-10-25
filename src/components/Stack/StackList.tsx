@@ -27,7 +27,7 @@ export const StackList = React.memo(() => {
   }
 
   return (
-    <ListContainer onRef={setScrollContainerRef}>
+    <ListContainer data-cy="stack-list" onRef={setScrollContainerRef}>
       <StackTitlebar scrollContainerRef={scrollContainerRef} />
 
       <div className="lg:p-3 lg:space-y-1">

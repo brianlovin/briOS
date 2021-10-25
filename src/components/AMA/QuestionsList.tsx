@@ -39,7 +39,7 @@ export function QuestionsList() {
 
   return (
     <QuestionsContext.Provider value={defaultContextValue}>
-      <ListContainer onRef={setScrollContainerRef}>
+      <ListContainer data-cy="questions-list" onRef={setScrollContainerRef}>
         <AMATitlebar scrollContainerRef={scrollContainerRef} />
 
         <AnimateSharedLayout>

@@ -12,7 +12,7 @@ export const AppDissectionList = React.memo(() => {
   let [scrollContainerRef, setScrollContainerRef] = React.useState(null)
 
   return (
-    <ListContainer onRef={setScrollContainerRef}>
+    <ListContainer data-cy="apps-list" onRef={setScrollContainerRef}>
       <TitleBar
         scrollContainerRef={scrollContainerRef}
         title="App Dissection"

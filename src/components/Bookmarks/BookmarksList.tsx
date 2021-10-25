@@ -52,7 +52,7 @@ export function BookmarksList() {
 
   return (
     <BookmarksContext.Provider value={defaultContextValue}>
-      <ListContainer onRef={setScrollContainerRef}>
+      <ListContainer data-cy="bookmarks-list" onRef={setScrollContainerRef}>
         <BookmarksTitlebar scrollContainerRef={scrollContainerRef} />
         <AnimateSharedLayout>
           <div className="lg:p-3 lg:space-y-1">

@@ -1,12 +1,12 @@
 /// <reference types="cypress" />
 /// <reference types="@testing-library/cypress" />
 
-describe('Home page', () => {
+describe('Sidebar', () => {
   before(() => {
     cy.visit('/')
   })
 
-  it('should render intro', () => {
-    cy.get('[data-cy="home-intro"]').should('be.visible')
+  it('should render sign in button', () => {
+    cy.get('[data-cy="sign-in-button"]').should('be.visible')
   })
 })

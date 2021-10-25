@@ -7,11 +7,12 @@ import { GhostButton } from '~/components/Button'
 import { LoadingSpinner } from '~/components/LoadingSpinner'
 import { useViewerQuery } from '~/graphql/types.generated'
 
-function Container({ children }) {
+function Container(props) {
   return (
-    <div className="sticky bottom-0 z-10 flex items-center justify-between p-2 space-x-3 bg-white border-t border-gray-150 dark:bg-gray-900 dark:border-gray-800 bg-opacity-80 filter-blur dark:bg-opacity-60">
-      {children}
-    </div>
+    <div
+      className="sticky bottom-0 z-10 flex items-center justify-between p-2 space-x-3 bg-white border-t border-gray-150 dark:bg-gray-900 dark:border-gray-800 bg-opacity-80 filter-blur dark:bg-opacity-60"
+      {...props}
+    />
   )
 }
 
@@ -59,7 +60,7 @@ export function UserFooter() {
   }
 
   return (
-    <Container>
+    <Container data-cy="sign-in-button">
       <GhostButton style={{ width: '100%' }} href="/api/auth/login">
         Sign in
       </GhostButton>

@@ -8,7 +8,10 @@ export function BookmarkActions({ bookmark }) {
   const { data } = useViewerQuery()
   if (data?.viewer?.role === UserRole.Admin) {
     return (
-      <EditBookmarkDialog bookmark={bookmark} trigger={<Button>Edit</Button>} />
+      <EditBookmarkDialog
+        bookmark={bookmark}
+        trigger={<Button data-cy="open-edit-bookmark-dialog">Edit</Button>}
+      />
     )
   }
 

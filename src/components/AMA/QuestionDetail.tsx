@@ -41,7 +41,7 @@ export function QuestionDetail({ id }) {
   const { question } = data
 
   return (
-    <Detail.Container ref={scrollContainerRef}>
+    <Detail.Container data-cy="question-detail" ref={scrollContainerRef}>
       <SyntaxHighlighter data={question} />
 
       <TitleBar

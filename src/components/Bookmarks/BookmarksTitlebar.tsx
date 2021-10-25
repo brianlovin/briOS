@@ -16,7 +16,7 @@ export function BookmarksTitlebar({ scrollContainerRef }) {
       return (
         <AddBookmarkDialog
           trigger={
-            <GhostButton size="small-square">
+            <GhostButton data-cy="open-add-bookmark-dialog" size="small-square">
               <Plus size={16} />
             </GhostButton>
           }

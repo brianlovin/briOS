@@ -39,7 +39,7 @@ export function BookmarkDetail({ id }) {
   const { bookmark } = data
 
   return (
-    <Detail.Container ref={scrollContainerRef}>
+    <Detail.Container data-cy="bookmark-detail" ref={scrollContainerRef}>
       <TitleBar
         backButton
         globalMenu={false}

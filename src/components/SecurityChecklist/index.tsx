@@ -14,7 +14,7 @@ export function SecurityChecklist() {
   const keys = Object.keys(data)
   const resources = keys.map((k) => data[k])
   return (
-    <Detail.Container ref={scrollContainerRef}>
+    <Detail.Container data-cy="security-checklist" ref={scrollContainerRef}>
       <TitleBar
         magicTitle
         title={'Security Checklist'}

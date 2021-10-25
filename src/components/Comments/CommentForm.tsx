@@ -118,6 +118,7 @@ export function CommentForm({ refId, type, openModal, refetch = null }: Props) {
       >
         <div className="relative flex flex-none w-full">
           <Textarea
+            data-cy="comment-form-textarea"
             placeholder="Leave a comment..."
             value={text}
             onChange={handleChange}
@@ -127,6 +128,7 @@ export function CommentForm({ refId, type, openModal, refetch = null }: Props) {
 
           <div className="absolute bottom-1 right-1">
             <CommentButton
+              data-cy="submit-comment-button"
               type="submit"
               disabled={text.trim().length === 0}
               size="small-square"

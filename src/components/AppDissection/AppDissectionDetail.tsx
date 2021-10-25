@@ -17,7 +17,7 @@ export function AppDissectionDetail({ post }) {
   })
 
   return (
-    <Detail.Container ref={scrollContainerRef}>
+    <Detail.Container data-cy="app-detail" ref={scrollContainerRef}>
       <TitleBar
         backButton
         globalMenu={false}

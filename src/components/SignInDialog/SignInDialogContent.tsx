@@ -4,7 +4,10 @@ import { TwitterButton } from '~/components/Button'
 
 export function SignInDialogContent() {
   return (
-    <div className="flex flex-col items-start p-4 space-y-6 md:p-6">
+    <div
+      data-cy="sign-in-dialog"
+      className="flex flex-col items-start p-4 space-y-6 md:p-6"
+    >
       <div className="grid w-full gap-4 sm:grid-cols-2 text-primary">
         <div className="flex flex-col items-center justify-center p-4 space-y-2 bg-gray-100 rounded-lg dark:bg-gray-700 dark:bg-opacity-70">
           <svg

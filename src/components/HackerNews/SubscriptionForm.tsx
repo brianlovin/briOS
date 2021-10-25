@@ -98,6 +98,7 @@ export function SubscriptionForm() {
             spam, unsubscribe at any time.
           </p>
           <form
+            data-cy="subscribe-hn-form"
             onSubmit={submit}
             className="grid grid-cols-1 gap-2 mt-2 md:grid-cols-3"
           >

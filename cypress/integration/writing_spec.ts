@@ -1,12 +1,12 @@
 /// <reference types="cypress" />
 /// <reference types="@testing-library/cypress" />
 
-describe('Posts index', () => {
+describe('Writing list', () => {
   before(() => {
     cy.visit('/writing')
   })
 
-  it('should render header', () => {
-    cy.get('[data-cy="writing"]').scrollIntoView().should('be.visible')
+  it('should render posts list', () => {
+    cy.get('[data-cy="posts-list"]').should('be.visible')
   })
 })

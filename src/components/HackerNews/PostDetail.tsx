@@ -41,7 +41,7 @@ export function PostDetail(props: Props) {
         }}
       />
 
-      <Detail.Container ref={scrollContainerRef}>
+      <Detail.Container data-cy="post-detail" ref={scrollContainerRef}>
         <TitleBar
           backButtonHref="/hn"
           backButton

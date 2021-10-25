@@ -34,7 +34,7 @@ export function StackDetail({ id }) {
   const { stack } = data
 
   return (
-    <Detail.Container ref={scrollContainerRef}>
+    <Detail.Container data-cy="stack-detail" ref={scrollContainerRef}>
       <TitleBar
         backButton
         globalMenu={false}

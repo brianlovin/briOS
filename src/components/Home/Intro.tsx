@@ -137,7 +137,7 @@ export function Intro() {
   const titleRef = React.useRef(null)
 
   return (
-    <Detail.Container ref={scrollContainerRef}>
+    <Detail.Container data-cy="home-intro" ref={scrollContainerRef}>
       <TitleBar
         magicTitle
         titleRef={titleRef}

@@ -9,7 +9,7 @@ export function QuestionsFilterButton() {
     <QuestionsContext.Consumer>
       {({ setFilterPending, filterPending, pendingCount }) => {
         return (
-          <div className="relative">
+          <div className="relative" data-cy="pending-filter-button">
             {!filterPending && pendingCount > 0 && (
               <div className="absolute top-0 right-0 w-3 h-3 bg-yellow-500 border-2 border-white rounded-full dark:border-gray-900" />
             )}
