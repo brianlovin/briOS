@@ -86,7 +86,7 @@
     "@typescript-eslint/parser": "^4.33.0",
     "autoprefixer": "^10.3.7",
     "babel-eslint": "^10.1.0",
-    "babel-plugin-styled-components": "^1.13.2",
+    "babel-plugin-styled-components": "^1.13.3",
     "cypress": "^8.6.0",
     "eslint": "^7.32.0",
     "eslint-config-next": "^11.1.2",
