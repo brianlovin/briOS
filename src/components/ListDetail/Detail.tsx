@@ -3,9 +3,7 @@ import * as React from 'react'
 import { LoadingSpinner } from '~/components/LoadingSpinner'
 
 function ContentContainer(props) {
-  return (
-    <div className="w-full max-w-3xl p-4 mx-auto md:p-8 2xl:p-12" {...props} />
-  )
+  return <div className="w-full max-w-3xl p-4 mx-auto md:p-8" {...props} />
 }
 
 interface DetailContainerProps {
