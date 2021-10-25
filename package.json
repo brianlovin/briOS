@@ -49,7 +49,7 @@
     "react-feather": "^2.0.9",
     "react-hot-toast": "^2.1.1",
     "react-linkify": "^1.0.0-alpha",
-    "react-markdown": "^7.0.1",
+    "react-markdown": "^7.1.0",
     "react-visibility-sensor": "^5.1.1",
     "rehype-parse": "^8.0.3",
     "rehype-raw": "^6.1.0",
