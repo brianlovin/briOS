@@ -47,6 +47,7 @@ export type Bookmark = {
   comments: Array<Maybe<Comment>>
   createdAt: Scalars['String']
   description?: Maybe<Scalars['String']>
+  faviconUrl?: Maybe<Scalars['String']>
   host: Scalars['String']
   id: Scalars['ID']
   image?: Maybe<Scalars['String']>
@@ -76,6 +77,7 @@ export enum CommentType {
 
 export type EditBookmarkInput = {
   description: Scalars['String']
+  faviconUrl: Scalars['String']
   tag: Scalars['String']
   title: Scalars['String']
 }
@@ -386,6 +388,7 @@ export type BookmarkInfoFragment = {
   host: string
   title?: string | null | undefined
   description?: string | null | undefined
+  faviconUrl?: string | null | undefined
 }
 
 export type BookmarkInfoWithTagsFragment = {
@@ -395,6 +398,7 @@ export type BookmarkInfoWithTagsFragment = {
   host: string
   title?: string | null | undefined
   description?: string | null | undefined
+  faviconUrl?: string | null | undefined
   tags: Array<{ __typename?: 'Tag'; name: string } | null | undefined>
 }
 
@@ -537,6 +541,7 @@ export type EditBookmarkMutation = {
         host: string
         title?: string | null | undefined
         description?: string | null | undefined
+        faviconUrl?: string | null | undefined
         tags: Array<{ __typename?: 'Tag'; name: string } | null | undefined>
       }
     | null
@@ -566,6 +571,7 @@ export type AddBookmarkMutation = {
         host: string
         title?: string | null | undefined
         description?: string | null | undefined
+        faviconUrl?: string | null | undefined
         tags: Array<{ __typename?: 'Tag'; name: string } | null | undefined>
       }
     | null
@@ -865,6 +871,7 @@ export type GetBookmarksQuery = {
         host: string
         title?: string | null | undefined
         description?: string | null | undefined
+        faviconUrl?: string | null | undefined
         tags: Array<{ __typename?: 'Tag'; name: string } | null | undefined>
       }
     | null
@@ -886,6 +893,7 @@ export type GetBookmarkQuery = {
         host: string
         title?: string | null | undefined
         description?: string | null | undefined
+        faviconUrl?: string | null | undefined
         tags: Array<{ __typename?: 'Tag'; name: string } | null | undefined>
       }
     | null
@@ -1193,6 +1201,7 @@ export const BookmarkInfoFragmentDoc = gql`
     host
     title
     description
+    faviconUrl
   }
 `
 export const BookmarkInfoWithTagsFragmentDoc = gql`

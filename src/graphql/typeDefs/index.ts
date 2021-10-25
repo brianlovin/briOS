@@ -37,6 +37,7 @@ export default gql`
     host: String!
     title: String
     image: String
+    faviconUrl: String
     description: String
     comments: [Comment]!
     tags: [Tag]!
@@ -192,6 +193,7 @@ export default gql`
     title: String!
     description: String!
     tag: String!
+    faviconUrl: String!
   }
 
   input EditQuestionInput {

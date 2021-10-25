@@ -8,6 +8,7 @@ export const BookmarkInfoFragment = gql`
     host
     title
     description
+    faviconUrl
   }
 `
 

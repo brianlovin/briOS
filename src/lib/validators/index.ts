@@ -1,3 +1,5 @@
+import { URL } from 'url'
+
 export function validEmail(email) {
   // eslint-disable-next-line
   const re =
@@ -9,4 +11,13 @@ export function validUsername(username) {
   // eslint-disable-next-line
   const re = /^(?=.{4,16}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/
   return re.test(String(username))
+}
+
+export function validUrl(string) {
+  try {
+    new URL(string)
+    return true
+  } catch (err) {
+    return false
+  }
 }

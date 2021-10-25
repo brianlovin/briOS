@@ -9,15 +9,7 @@ import {
   MutationEditStackArgs,
   MutationToggleStackUserArgs,
 } from '~/graphql/types.generated'
-
-function isValidUrl(string) {
-  try {
-    new URL(string)
-    return true
-  } catch (err) {
-    return false
-  }
-}
+import { validUrl } from '~/lib/validators'
 
 export async function editStack(_, args: MutationEditStackArgs, ctx: Context) {
   const { id, data } = args
@@ -38,7 +30,7 @@ export async function editStack(_, args: MutationEditStackArgs, ctx: Context) {
   if (old.image !== data.image) {
     try {
       const url = new URL(old.image)
-      if (isValidUrl(url)) {
+      if (validUrl(url)) {
         const [, , imageId] = url.pathname.split('/')
 
         await fetch(
@@ -102,7 +94,7 @@ export async function addStack(_, args: MutationAddStackArgs, ctx: Context) {
   const { url, name, description, image, tag } = data
   const { prisma } = ctx
 
-  if (!isValidUrl(url)) throw new UserInputError('URL was invalid')
+  if (!validUrl(url)) throw new UserInputError('URL was invalid')
 
   return await prisma.stack.create({
     data: {
@@ -133,7 +125,7 @@ export async function deleteStack(
   try {
     const url = new URL(old.image)
     const [, , imageId] = url.pathname.split('/')
-    if (isValidUrl(url)) {
+    if (validUrl(url)) {
       await fetch(
         `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ACCOUNT_ID}/images/v1/${imageId}`,
         {

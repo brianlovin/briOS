@@ -1,6 +1,7 @@
 import { AnimateSharedLayout, motion } from 'framer-motion'
 import { useRouter } from 'next/router'
 import * as React from 'react'
+import { Link } from 'react-feather'
 
 import { ListContainer } from '~/components/ListDetail/ListContainer'
 import { ListItem } from '~/components/ListDetail/ListItem'
@@ -67,7 +68,21 @@ export function BookmarksList() {
                     <ListItem
                       key={bookmark.id}
                       title={bookmark.title}
-                      byline={bookmark.host}
+                      byline={
+                        <div className="flex items-center space-x-2">
+                          {bookmark.faviconUrl ? (
+                            <img
+                              src={bookmark.faviconUrl}
+                              className="w-4 h-4 rounded"
+                            />
+                          ) : (
+                            <span className="flex items-center justify-center w-4 h-4">
+                              <Link size={12} />
+                            </span>
+                          )}
+                          <span>{bookmark.host}</span>
+                        </div>
+                      }
                       active={active}
                       href="/bookmarks/[id]"
                       as={`/bookmarks/${bookmark.id}`}

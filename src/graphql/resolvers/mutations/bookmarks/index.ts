@@ -7,17 +7,9 @@ import {
   MutationDeleteBookmarkArgs,
   MutationEditBookmarkArgs,
 } from '~/graphql/types.generated'
+import { validUrl } from '~/lib/validators'
 
 import getBookmarkMetaData from './getBookmarkMetaData'
-
-function isValidUrl(string) {
-  try {
-    new URL(string)
-    return true
-  } catch (err) {
-    return false
-  }
-}
 
 export async function editBookmark(
   _,
@@ -25,7 +17,7 @@ export async function editBookmark(
   ctx: Context
 ) {
   const { id, data } = args
-  const { title, description, tag } = data
+  const { title, description, tag, faviconUrl } = data
   const { prisma } = ctx
 
   if (!title || title.length === 0)
@@ -48,6 +40,7 @@ export async function editBookmark(
     data: {
       title,
       description,
+      faviconUrl,
       tags: {
         connectOrCreate: {
           where: { name: tag },
@@ -68,10 +61,10 @@ export async function addBookmark(
   const { url, tag } = data
   const { prisma } = ctx
 
-  if (!isValidUrl(url)) throw new UserInputError('URL was invalid')
+  if (!validUrl(url)) throw new UserInputError('URL was invalid')
 
   const metadata = await getBookmarkMetaData(url)
-  const { host, title, image, description } = metadata
+  const { host, title, image, description, faviconUrl } = metadata
 
   try {
     return await prisma.bookmark.create({
@@ -81,6 +74,7 @@ export async function addBookmark(
         title,
         image,
         description,
+        faviconUrl,
         tags: {
           connectOrCreate: {
             where: { name: tag },

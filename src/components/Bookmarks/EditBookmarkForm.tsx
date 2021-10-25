@@ -21,6 +21,7 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
     title: bookmark.title || bookmark.url,
     description: bookmark.description || '',
     tag: bookmark.tags[0]?.name || 'reading',
+    faviconUrl: bookmark.faviconUrl,
   }
 
   function reducer(state, action) {
@@ -30,6 +31,13 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
           ...state,
           error: '',
           title: action.value,
+        }
+      }
+      case 'edit-favicon': {
+        return {
+          ...state,
+          error: '',
+          faviconUrl: action.value,
         }
       }
       case 'edit-description': {
@@ -66,6 +74,7 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
         title: state.title,
         description: state.description,
         tag: state.tag,
+        faviconUrl: state.faviconUrl,
       },
     },
     optimisticResponse: {
@@ -76,6 +85,7 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
         title: state.title,
         description: state.description,
         tags: [{ name: state.tag }],
+        faviconUrl: state.faviconUrl,
       },
     },
     onError({ message }) {
@@ -127,6 +137,10 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
     return dispatch({ type: 'edit-title', value: e.target.value })
   }
 
+  function onFaviconChange(e) {
+    return dispatch({ type: 'edit-favicon', value: e.target.value })
+  }
+
   function onKeyDown(e) {
     if (e.keyCode === 13 && e.metaKey) {
       return handleSave(e)
@@ -147,39 +161,47 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
   }
 
   return (
-    <form className="p-4 space-y-3" onSubmit={handleSave}>
-      <Input
-        placeholder="Title"
-        value={state.title}
-        onChange={onTitleChange}
-        onKeyDown={onKeyDown}
-      />
-      {state.error && <p className="text-red-500">{state.error}</p>}
-      <Link href={bookmark.url}>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center pb-2 space-x-1 text-sm opacity-70 hover:opacity-100 text-secondary"
-        >
-          <LinkIcon size={12} />
-          <span>{bookmark.url}</span>
-        </a>
-      </Link>
+    <div className="p-4">
+      <form className="space-y-3" onSubmit={handleSave}>
+        <Input
+          placeholder="Title"
+          defaultValue={state.title}
+          onChange={onTitleChange}
+          onKeyDown={onKeyDown}
+        />
+        {state.error && <p className="text-red-500">{state.error}</p>}
+        <Link href={bookmark.url}>
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center pb-2 space-x-1 text-sm opacity-70 hover:opacity-100 text-secondary"
+          >
+            <LinkIcon size={12} />
+            <span>{bookmark.url}</span>
+          </a>
+        </Link>
 
-      <TagPicker
-        filter={tagFilter}
-        defaultValue={initialState.tag}
-        onChange={onTagChange}
-      />
+        <TagPicker
+          filter={tagFilter}
+          defaultValue={initialState.tag}
+          onChange={onTagChange}
+        />
 
-      <Textarea
-        rows={4}
-        defaultValue={bookmark.description}
-        onChange={onDescriptionChange}
-        onKeyDown={onKeyDown}
-        placeholder={'Description...'}
-      />
+        <Textarea
+          rows={4}
+          defaultValue={bookmark.description}
+          onChange={onDescriptionChange}
+          onKeyDown={onKeyDown}
+          placeholder={'Description...'}
+        />
 
+        <Input
+          placeholder="Favicon URL"
+          defaultValue={state.faviconUrl}
+          onChange={onFaviconChange}
+          onKeyDown={onKeyDown}
+        />
+      </form>
       <div className="flex justify-between pt-24">
         <DeleteButton
           onClick={() => {
@@ -194,6 +216,6 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
           <Button onClick={handleSave}>Save</Button>
         </div>
       </div>
-    </form>
+    </div>
   )
 }

@@ -60,8 +60,11 @@ export function BookmarkDetail({ id }) {
             </a>
           </Link>
           <Link href={bookmark.url}>
-            <a className="inline-block leading-snug text-tertiary">
-              {bookmark.host}
+            <a className="flex items-center space-x-2 leading-snug text-tertiary">
+              {bookmark.faviconUrl && (
+                <img src={bookmark.faviconUrl} className="w-4 h-4" />
+              )}
+              <span>{bookmark.host}</span>
             </a>
           </Link>
           {bookmark.description && (
