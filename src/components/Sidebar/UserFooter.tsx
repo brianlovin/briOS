@@ -7,6 +7,8 @@ import { GhostButton } from '~/components/Button'
 import { LoadingSpinner } from '~/components/LoadingSpinner'
 import { useViewerQuery } from '~/graphql/types.generated'
 
+import { GlobalNavigationContext } from '../Providers'
+
 function Container(props) {
   return (
     <div
@@ -18,6 +20,7 @@ function Container(props) {
 
 export function UserFooter() {
   const { data, loading, error } = useViewerQuery()
+  const { setIsOpen } = React.useContext(GlobalNavigationContext)
 
   if (loading) {
     return (
@@ -41,7 +44,10 @@ export function UserFooter() {
     return (
       <Container>
         <Link href={`/u/${data.viewer.username}`}>
-          <a className="flex items-center flex-none rounded-full">
+          <a
+            onClick={() => setIsOpen(false)}
+            className="flex items-center flex-none rounded-full"
+          >
             <Avatar
               user={data.viewer}
               src={data.viewer.avatar}
@@ -52,7 +58,11 @@ export function UserFooter() {
             />
           </a>
         </Link>
-        <GhostButton size="small-square" href="/settings">
+        <GhostButton
+          onClick={() => setIsOpen(false)}
+          size="small-square"
+          href="/settings"
+        >
           <Settings size={16} />
         </GhostButton>
       </Container>
