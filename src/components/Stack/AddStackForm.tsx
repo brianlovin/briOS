@@ -84,7 +84,7 @@ export function AddStackForm({ closeModal }) {
   }
 
   const tagFilter = (t) => {
-    const allowedTags = ['Indie', 'Open source']
+    const allowedTags = ['indie', 'open source']
     return allowedTags.indexOf(t.name) >= 0
   }
 

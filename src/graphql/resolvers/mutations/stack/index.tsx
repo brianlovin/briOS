@@ -75,8 +75,9 @@ export async function editStack(_, args: MutationEditStackArgs, ctx: Context) {
         description,
         image,
         tags: {
-          connect: {
-            name: tag,
+          connectOrCreate: {
+            where: { name: tag },
+            create: { name: tag },
           },
         },
       },
@@ -110,8 +111,9 @@ export async function addStack(_, args: MutationAddStackArgs, ctx: Context) {
       description,
       image,
       tags: {
-        connect: {
-          name: tag,
+        connectOrCreate: {
+          where: { name: tag },
+          create: { name: tag },
         },
       },
     },
@@ -147,9 +149,7 @@ export async function deleteStack(
   }
 
   await prisma.stack.delete({
-    where: {
-      id,
-    },
+    where: { id },
   })
 
   return true

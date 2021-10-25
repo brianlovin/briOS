@@ -113,7 +113,6 @@ model Post {
   comments     Comment[]
   reactions    Reaction[]
   history      PostEdit[]
-  tags         Tag[]
   userId       String
 }
 
@@ -131,8 +130,8 @@ model PostEdit {
 }
 
 model Tag {
-  name      String     @id @unique
-  posts     Post[]
+  id        String     @id @default(cuid())
+  name      String     @unique
   stacks    Stack[]
   bookmarks Bookmark[]
 }

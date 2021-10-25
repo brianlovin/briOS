@@ -49,8 +49,9 @@ export async function editBookmark(
       title,
       description,
       tags: {
-        connect: {
-          name: tag,
+        connectOrCreate: {
+          where: { name: tag },
+          create: { name: tag },
         },
       },
     },
@@ -82,12 +83,8 @@ export async function addBookmark(
         description,
         tags: {
           connectOrCreate: {
-            create: {
-              name: tag,
-            },
-            where: {
-              name: tag,
-            },
+            where: { name: tag },
+            create: { name: tag },
           },
         },
       },

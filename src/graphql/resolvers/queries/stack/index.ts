@@ -25,7 +25,10 @@ export async function getStack(
   try {
     const data = await prisma.stack.findUnique({
       where: { id },
-      include: { users: true, tags: true },
+      include: {
+        users: true,
+        tags: true,
+      },
     })
 
     const usedBy = data.users

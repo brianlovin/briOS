@@ -20,7 +20,7 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
     error: '',
     title: bookmark.title || bookmark.url,
     description: bookmark.description || '',
-    tag: bookmark.tags[0].name,
+    tag: bookmark.tags[0]?.name || 'reading',
   }
 
   function reducer(state, action) {
@@ -168,7 +168,7 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
 
       <TagPicker
         filter={tagFilter}
-        defaultValue={bookmark.tags[0].name}
+        defaultValue={initialState.tag}
         onChange={onTagChange}
       />
 
