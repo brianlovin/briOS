@@ -10,6 +10,7 @@ import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { Tags } from '~/components/Tag'
 import { CommentType, useGetStackQuery } from '~/graphql/types.generated'
 
+import { SignInDialog } from '../SignInDialog'
 import { StackActions } from './StackActions'
 import { StackUsedBy } from './StackUsedBy'
 
@@ -80,7 +81,11 @@ export function StackDetail({ id }) {
             <span>Visit</span>
           </PrimaryButton>
 
-          <StackUsedBy stack={stack} />
+          <SignInDialog>
+            {({ openModal }) => (
+              <StackUsedBy triggerSignIn={openModal} stack={stack} />
+            )}
+          </SignInDialog>
         </Detail.Header>
       </Detail.ContentContainer>
 

@@ -11,6 +11,7 @@ import {
 } from '~/graphql/types.generated'
 
 export function StackUsedBy(props) {
+  const { triggerSignIn } = props
   const { data: viewerData } = useViewerQuery()
   const { data, loading, error, refetch } = useGetStackQuery({
     variables: {
@@ -74,14 +75,18 @@ export function StackUsedBy(props) {
     })
   }
 
+  function handleToggle() {
+    if (viewerData?.viewer) {
+      return handleChange()
+    } else {
+      return triggerSignIn()
+    }
+  }
+
   return (
-    <div className="flex flex-col rounded-md">
+    <div className="flex flex-col pt-2 rounded-md">
       <div
-        className={`flex flex-col p-4 space-y-4 bg-gray-100 border dark:border-gray-800 border-gray-200 dark:bg-white dark:bg-opacity-10 ${
-          viewerData?.viewer && viewerData?.viewer.role !== UserRole.Admin
-            ? 'rounded-t-md border-b-0'
-            : 'rounded-md'
-        }`}
+        className={`flex flex-col p-4 space-y-4 bg-gray-100 border dark:border-gray-800 border-gray-200 dark:bg-white dark:bg-opacity-10 rounded-t-md border-b-0`}
       >
         {data.stack.usedBy.length === 0 ? (
           <p className="text-sm font-medium text-quaternary">
@@ -115,17 +120,15 @@ export function StackUsedBy(props) {
           </div>
         )}
       </div>
-      {viewerData?.viewer && viewerData?.viewer.role !== UserRole.Admin && (
-        <label className="flex items-start px-4 py-2 space-x-3 bg-white border border-gray-200 dark:border-gray-800 rounded-b-md dark:bg-gray-900">
-          <input
-            type="checkbox"
-            onChange={handleChange}
-            defaultChecked={data.stack.usedByViewer}
-            className="relative w-4 h-4 border border-gray-300 rounded top-1 dark:border-gray-700"
-          />
-          <p className="font-medium text-primary">I use this</p>
-        </label>
-      )}
+      <label className="flex items-center px-4 py-2 space-x-3 bg-white border border-gray-200 dark:border-gray-800 rounded-b-md dark:bg-gray-900">
+        <input
+          type="checkbox"
+          onChange={handleToggle}
+          defaultChecked={data.stack.usedByViewer}
+          className="w-4 h-4 border border-gray-300 rounded dark:border-gray-700"
+        />
+        <p className="text-sm font-medium text-primary">I use this</p>
+      </label>
     </div>
   )
 }
