@@ -44,7 +44,6 @@ export type AddStackInput = {
 
 export type Bookmark = {
   __typename?: 'Bookmark'
-  comments: Array<Maybe<Comment>>
   createdAt: Scalars['String']
   description?: Maybe<Scalars['String']>
   faviconUrl?: Maybe<Scalars['String']>
@@ -231,7 +230,7 @@ export type Post = {
   og_description?: Maybe<Scalars['String']>
   og_image?: Maybe<Scalars['String']>
   og_title?: Maybe<Scalars['String']>
-  published_at?: Maybe<Scalars['String']>
+  publishedAt?: Maybe<Scalars['String']>
   reading_time?: Maybe<Scalars['Int']>
   slug?: Maybe<Scalars['String']>
   title?: Maybe<Scalars['String']>
@@ -325,7 +324,6 @@ export type Question = {
   __typename?: 'Question'
   author?: Maybe<User>
   commentCount?: Maybe<Scalars['Int']>
-  comments: Array<Maybe<Comment>>
   createdAt: Scalars['String']
   description?: Maybe<Scalars['String']>
   id: Scalars['String']
@@ -343,7 +341,6 @@ export type Repo = {
 
 export type Stack = {
   __typename?: 'Stack'
-  comments: Array<Maybe<Comment>>
   createdAt: Scalars['String']
   description?: Maybe<Scalars['String']>
   id: Scalars['ID']
@@ -439,7 +436,7 @@ export type PostInfoFragment = {
   title?: string | null | undefined
   slug?: string | null | undefined
   updated_at?: string | null | undefined
-  published_at?: string | null | undefined
+  publishedAt?: string | null | undefined
   excerpt?: string | null | undefined
   feature_image?: string | null | undefined
   html?: string | null | undefined
@@ -963,7 +960,7 @@ export type GetPostsQuery = {
         title?: string | null | undefined
         slug?: string | null | undefined
         updated_at?: string | null | undefined
-        published_at?: string | null | undefined
+        publishedAt?: string | null | undefined
         excerpt?: string | null | undefined
         feature_image?: string | null | undefined
         html?: string | null | undefined
@@ -986,7 +983,7 @@ export type GetPostQuery = {
         title?: string | null | undefined
         slug?: string | null | undefined
         updated_at?: string | null | undefined
-        published_at?: string | null | undefined
+        publishedAt?: string | null | undefined
         excerpt?: string | null | undefined
         feature_image?: string | null | undefined
         html?: string | null | undefined
@@ -1257,7 +1254,7 @@ export const PostInfoFragmentDoc = gql`
     title
     slug
     updated_at
-    published_at
+    publishedAt
     excerpt
     feature_image
     html

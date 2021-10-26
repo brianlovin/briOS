@@ -12,7 +12,6 @@ export function NavigationLink({
   isActive,
 }) {
   const { setIsOpen } = React.useContext(GlobalNavigationContext)
-
   return (
     <li
       className="flex items-stretch space-x-1"

@@ -7,6 +7,7 @@ import { ListContainer } from '~/components/ListDetail/ListContainer'
 import { ListItem } from '~/components/ListDetail/ListItem'
 import { useGetBookmarksQuery } from '~/graphql/types.generated'
 
+import { BookmarksListItem } from './BookmarkListItem'
 import { BookmarksTitlebar } from './BookmarksTitlebar'
 
 export const BookmarksContext = React.createContext({
@@ -43,14 +44,6 @@ export function BookmarksList() {
 
   const { bookmarks } = data
 
-  function handleClick(e, bookmark) {
-    if (e.metaKey) {
-      e.preventDefault()
-      e.stopPropagation()
-      window.open(bookmark.url, '_blank').focus()
-    }
-  }
-
   return (
     <BookmarksContext.Provider value={defaultContextValue}>
       <ListContainer data-cy="bookmarks-list" onRef={setScrollContainerRef}>
@@ -62,32 +55,10 @@ export function BookmarksList() {
                 tagFilter ? b.tags.some((t) => t.name === tagFilter) : true
               )
               .map((bookmark) => {
-                const active = router.query?.id === bookmark.id
+                const active = router.query.id === bookmark.id
                 return (
                   <motion.div layout key={bookmark.id}>
-                    <ListItem
-                      key={bookmark.id}
-                      title={bookmark.title}
-                      byline={
-                        <div className="flex items-center space-x-2">
-                          {bookmark.faviconUrl ? (
-                            <img
-                              src={bookmark.faviconUrl}
-                              className="w-4 h-4 rounded"
-                            />
-                          ) : (
-                            <span className="flex items-center justify-center w-4 h-4">
-                              <Link size={12} />
-                            </span>
-                          )}
-                          <span>{bookmark.host}</span>
-                        </div>
-                      }
-                      active={active}
-                      href="/bookmarks/[id]"
-                      as={`/bookmarks/${bookmark.id}`}
-                      onClick={(e) => handleClick(e, bookmark)}
-                    />
+                    <BookmarksListItem active={active} bookmark={bookmark} />
                   </motion.div>
                 )
               })}

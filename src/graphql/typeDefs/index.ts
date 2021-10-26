@@ -16,7 +16,7 @@ export default gql`
     og_description: String
     og_image: String
     og_title: String
-    published_at: String
+    publishedAt: String
     reading_time: Int
     slug: String
     title: String
@@ -39,7 +39,6 @@ export default gql`
     image: String
     faviconUrl: String
     description: String
-    comments: [Comment]!
     tags: [Tag]!
   }
 
@@ -69,7 +68,6 @@ export default gql`
     title: String!
     description: String
     commentCount: Int
-    comments: [Comment]!
   }
 
   enum CommentType {
@@ -91,7 +89,6 @@ export default gql`
     description: String
     image: String
     url: String!
-    comments: [Comment]!
     tags: [Tag]!
     usedBy: [User]!
     usedByViewer: Boolean

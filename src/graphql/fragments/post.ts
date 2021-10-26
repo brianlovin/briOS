@@ -6,7 +6,7 @@ export const PostInfoFragment = gql`
     title
     slug
     updated_at
-    published_at
+    publishedAt
     excerpt
     feature_image
     html

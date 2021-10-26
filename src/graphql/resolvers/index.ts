@@ -24,6 +24,14 @@ export default {
         day: 'numeric',
       }),
   },
+  Post: {
+    publishedAt: ({ published_at }) =>
+      new Date(published_at).toLocaleDateString('en-us', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      }),
+  },
   Question: {
     author: getQuestionAuthor,
     commentCount: ({ _count: { comments } }) => comments,

@@ -2,9 +2,10 @@ import { useRouter } from 'next/router'
 import * as React from 'react'
 
 import { ListContainer } from '~/components/ListDetail/ListContainer'
-import { ListItem } from '~/components/ListDetail/ListItem'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { useGetPostsQuery } from '~/graphql/types.generated'
+
+import { PostListItem } from './PostListItem'
 
 export function PostsList() {
   const router = useRouter()
@@ -29,25 +30,9 @@ export function PostsList() {
 
       <div className="lg:p-3 lg:space-y-1">
         {posts.map((post) => {
-          const date = new Date(post.published_at).toLocaleDateString('en-us', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-          })
-
           const active = router.query?.slug === post.slug
 
-          return (
-            <ListItem
-              key={post.id}
-              href="/writing/[slug]"
-              as={`/writing/${post.slug}`}
-              title={post.title}
-              description={post.excerpt}
-              byline={date}
-              active={active}
-            />
-          )
+          return <PostListItem key={post.id} post={post} active={active} />
         })}
       </div>
     </ListContainer>

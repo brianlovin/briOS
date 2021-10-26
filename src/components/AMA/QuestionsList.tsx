@@ -2,12 +2,11 @@ import { AnimateSharedLayout, motion } from 'framer-motion'
 import { useRouter } from 'next/router'
 import * as React from 'react'
 
-import { Avatar } from '~/components/Avatar'
 import { ListContainer } from '~/components/ListDetail/ListContainer'
-import { ListItem } from '~/components/ListDetail/ListItem'
 import { useGetQuestionsQuery } from '~/graphql/types.generated'
 
 import { AMATitlebar } from './AMATitlebar'
+import { QuestionListItem } from './QuestionListItem'
 
 export const QuestionsContext = React.createContext({
   filterPending: false,
@@ -53,26 +52,7 @@ export function QuestionsList() {
 
                 return (
                   <motion.div layout key={question.id}>
-                    <ListItem
-                      href={'/ama/[id]'}
-                      as={`/ama/${question.id}`}
-                      title={question.title}
-                      description={null}
-                      byline={
-                        <div className="flex items-center space-x-2">
-                          <Avatar
-                            user={question.author}
-                            src={question.author.avatar}
-                            width={16}
-                            height={16}
-                            layout={'fixed'}
-                            className="rounded-full"
-                          />{' '}
-                          <span>{question.author.name}</span>
-                        </div>
-                      }
-                      active={active}
-                    />
+                    <QuestionListItem question={question} active={active} />
                   </motion.div>
                 )
               })}
