@@ -26,12 +26,6 @@ export function PostDetail({ slug }) {
 
   const { post } = data
 
-  const date = new Date(post.published_at).toLocaleDateString('en-us', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
-
   return (
     <React.Fragment>
       <SyntaxHighlighter data={post} />
@@ -51,7 +45,7 @@ export function PostDetail({ slug }) {
           <Detail.Header>
             <Detail.Title ref={titleRef}>{post.title}</Detail.Title>
             <span className="inline-block leading-snug text-tertiary">
-              {date}
+              {post.publishedAt}
             </span>
           </Detail.Header>
 

@@ -1,6 +1,5 @@
 import { UserInputError } from 'apollo-server-micro'
 import fetch from 'isomorphic-unfetch'
-import { URL } from 'url'
 
 import { Context } from '~/graphql/context'
 import {

@@ -1,5 +1,3 @@
-import { URL } from 'url'
-
 export function validEmail(email) {
   // eslint-disable-next-line
   const re =

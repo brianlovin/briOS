@@ -39,11 +39,13 @@ export const PostsList = React.memo<Props>(({ posts }) => {
       />
 
       <div className="lg:p-3 lg:space-y-1">
-        {posts.map((post) => {
-          const active = router.query?.id === post.id.toString() // post ids are numbers
+        {posts &&
+          posts.length > 0 &&
+          posts.map((post) => {
+            const active = router.query?.id === post.id.toString() // post ids are numbers
 
-          return <PostsListItem key={post.id} post={post} active={active} />
-        })}
+            return <PostsListItem key={post.id} post={post} active={active} />
+          })}
       </div>
     </ListContainer>
   )

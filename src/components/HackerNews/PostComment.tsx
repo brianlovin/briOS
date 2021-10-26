@@ -28,7 +28,8 @@ function LevelZeroComment({ comment }) {
         className={'prose pt-1'}
         dangerouslySetInnerHTML={{ __html: comment.content }}
       />
-      {comment.comments.length > 0 &&
+      {comment.comments &&
+        comment.comments.length > 0 &&
         comment.comments.map((comment) => (
           <PostComment comment={comment} key={comment.id} />
         ))}
@@ -67,7 +68,8 @@ function ChildComment({ comment, level }) {
           className={'prose pt-1'}
           dangerouslySetInnerHTML={{ __html: comment.content }}
         />
-        {comment.comments.length > 0 &&
+        {comment.comments &&
+          comment.comments.length > 0 &&
           comment.comments.map((comment) => (
             <PostComment comment={comment} key={comment.id} />
           ))}
