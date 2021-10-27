@@ -6,6 +6,7 @@ import {
   MutationDeleteBookmarkArgs,
   MutationEditBookmarkArgs,
 } from '~/graphql/types.generated'
+import { revue } from '~/lib/revue'
 import { validUrl } from '~/lib/validators'
 
 import getBookmarkMetaData from './getBookmarkMetaData'
@@ -64,6 +65,17 @@ export async function addBookmark(
 
   const metadata = await getBookmarkMetaData(url)
   const { host, title, image, description, faviconUrl } = metadata
+
+  /*
+    Preemptively add bookmarks to Revue, assuming I want to share them
+    more broadly in the newsletter
+  */
+  try {
+    const { id } = await revue.getCurrentIssue()
+    await revue.addItemToIssue({ id, url })
+  } catch (err) {
+    console.error({ err })
+  }
 
   try {
     return await prisma.bookmark.create({

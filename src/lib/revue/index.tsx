@@ -55,8 +55,39 @@ async function removeSubscriber({ email, doubleOptIn }) {
   return data
 }
 
+async function getCurrentIssue() {
+  const result = await fetch(`${REVUE_BASE_URL}/issues/current`, {
+    headers: {
+      ...headers,
+    },
+  })
+  const data = await result.json()
+  // this should return a single object, but revue returns an array containing
+  // a single issue object
+  return data[0]
+}
+
+interface AddItemToIssueProps {
+  id: string
+  url: string
+}
+async function addItemToIssue({ id, url }: AddItemToIssueProps) {
+  const result = await fetch(`${REVUE_BASE_URL}/issues/${id}/items`, {
+    method: 'POST',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ issue_id: id, url }),
+  })
+  const data = await result.json()
+  return data
+}
+
 export const revue = {
   getSubscriber,
   addSubscriber,
   removeSubscriber,
+  getCurrentIssue,
+  addItemToIssue,
 }
