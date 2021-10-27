@@ -9,6 +9,5 @@ export const PostInfoFragment = gql`
     publishedAt
     excerpt
     feature_image
-    html
   }
 `

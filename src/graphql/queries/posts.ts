@@ -15,6 +15,7 @@ export const GET_POST = gql`
   query GetPost($slug: String!) {
     post(slug: $slug) {
       ...PostInfo
+      html
     }
   }
   ${PostInfoFragment}

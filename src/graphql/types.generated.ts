@@ -439,7 +439,6 @@ export type PostInfoFragment = {
   publishedAt?: string | null | undefined
   excerpt?: string | null | undefined
   feature_image?: string | null | undefined
-  html?: string | null | undefined
 }
 
 export type QuestionInfoFragment = {
@@ -963,7 +962,6 @@ export type GetPostsQuery = {
         publishedAt?: string | null | undefined
         excerpt?: string | null | undefined
         feature_image?: string | null | undefined
-        html?: string | null | undefined
       }
     | null
     | undefined
@@ -979,6 +977,7 @@ export type GetPostQuery = {
   post?:
     | {
         __typename?: 'Post'
+        html?: string | null | undefined
         id?: string | null | undefined
         title?: string | null | undefined
         slug?: string | null | undefined
@@ -986,7 +985,6 @@ export type GetPostQuery = {
         publishedAt?: string | null | undefined
         excerpt?: string | null | undefined
         feature_image?: string | null | undefined
-        html?: string | null | undefined
       }
     | null
     | undefined
@@ -1257,7 +1255,6 @@ export const PostInfoFragmentDoc = gql`
     publishedAt
     excerpt
     feature_image
-    html
   }
 `
 export const QuestionInfoFragmentDoc = gql`
@@ -2402,6 +2399,7 @@ export const GetPostDocument = gql`
   query GetPost($slug: String!) {
     post(slug: $slug) {
       ...PostInfo
+      html
     }
   }
   ${PostInfoFragmentDoc}
