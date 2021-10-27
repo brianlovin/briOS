@@ -29,7 +29,7 @@ export function RelatedBookmarks({ bookmark }) {
       </p>
       <ul>
         {related.map((r) => (
-          <li>
+          <li key={r.id}>
             <Link href="/bookmarks/[id]" as={`/bookmarks/${r.id}`}>
               <a
                 onClick={handleClick}
