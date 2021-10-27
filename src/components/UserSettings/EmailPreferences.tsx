@@ -8,6 +8,8 @@ import {
   useGetViewerWithSettingsQuery,
 } from '~/graphql/types.generated'
 
+import { WritingSubscriptionForm } from '../Writing/SubscriptionForm'
+
 interface Props {
   subscription: EmailSubscription
 }
@@ -72,7 +74,7 @@ export function EmailSubscriptionForm({ subscription }: Props) {
       />
       <div className="flex flex-col">
         <p className="font-medium text-primary">{title}</p>
-        <p className="text-sm text-tertiary">{subtitle}</p>
+        <p className="text-tertiary">{subtitle}</p>
       </div>
     </label>
   )
@@ -90,6 +92,10 @@ export function EmailPreferences() {
           subscription={subscription}
         />
       ))}
+      <div className="pl-3">
+        <p className="pl-4 -mb-3 font-medium text-primary">Newsletter</p>
+        <WritingSubscriptionForm defaultValue={viewer.email} />
+      </div>
     </div>
   )
 }

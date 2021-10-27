@@ -80,11 +80,11 @@
   }
 
   .text-tertiary {
-    @apply text-gray-500 dark:text-gray-500;
+    @apply text-gray-500 dark:text-gray-400;
   }
 
   .text-quaternary {
-    @apply text-gray-400 dark:text-gray-600;
+    @apply text-gray-400 dark:text-gray-500;
   }
 
   .bg-elevated {

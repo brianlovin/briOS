@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import { ErrorAlert, SuccessAlert } from '~/components/Alert'
-import Button from '~/components/Button'
+import { PrimaryButton } from '~/components/Button'
 import { Input } from '~/components/Input'
 import { LoadingSpinner } from '~/components/LoadingSpinner'
 import { EmailSubscriptionForm } from '~/components/UserSettings/EmailPreferences'
@@ -113,9 +113,13 @@ export function HackerNewsSubscriptionForm() {
                 name="email"
               />
             </label>
-            <Button onClick={submit} disabled={saving || !email} type="submit">
+            <PrimaryButton
+              onClick={submit}
+              disabled={saving || !email}
+              type="submit"
+            >
               {saving ? <LoadingSpinner /> : 'Subscribe'}
-            </Button>
+            </PrimaryButton>
           </form>
           {status === 'invalid-email' && (
             <ErrorAlert>That email doesn’t look valid.</ErrorAlert>

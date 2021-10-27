@@ -1,13 +1,13 @@
 import * as React from 'react'
 
 import { ErrorAlert, SuccessAlert } from '~/components/Alert'
-import Button from '~/components/Button'
+import { PrimaryButton } from '~/components/Button'
 import { Input } from '~/components/Input'
 import { LoadingSpinner } from '~/components/LoadingSpinner'
 import { validEmail } from '~/lib/validators'
 
-export function WritingSubscriptionForm() {
-  const [email, setEmail] = React.useState('')
+export function WritingSubscriptionForm({ defaultValue = '' }) {
+  const [email, setEmail] = React.useState(defaultValue)
   const [status, setStatus] = React.useState('default')
 
   function onChange(e) {
@@ -35,8 +35,8 @@ export function WritingSubscriptionForm() {
   return (
     <div className="p-4 space-y-4">
       <div className="flex flex-col space-y-4">
-        <p className="text-secondary">
-          Get an email whenever I publish new writing alongside semi-regular
+        <p className="text-tertiary">
+          Get an email whenever I publish new posts. I also publish semi-regular
           newsletters containing links to interesting articles about design,
           technology, and startups.
         </p>
@@ -56,13 +56,13 @@ export function WritingSubscriptionForm() {
               name="email"
             />
           </label>
-          <Button
+          <PrimaryButton
             onClick={submit}
             disabled={status === 'saving' || !email}
             type="submit"
           >
             {status === 'saving' ? <LoadingSpinner /> : 'Subscribe'}
-          </Button>
+          </PrimaryButton>
         </form>
         <p className="text-sm text-quaternary">
           Unsubscribe at any time. Powered by{' '}
