@@ -71,7 +71,7 @@ export async function getPostById(id, includeComments = false) {
 export async function getHNPosts(sort) {
   const topPostIds = await getPostIds(sort)
   const postPromises = topPostIds
-    .slice(0, 32)
+    .slice(0, 24)
     .map(async (id) => await getPostById(id, false))
 
   return await Promise.all([...postPromises])

@@ -42,7 +42,7 @@ function HNPostPage(props: Props) {
 export async function getStaticPaths() {
   const topPostIds = await getPostIds('top')
 
-  const postIds = topPostIds.slice(0, 16)
+  const postIds = topPostIds.slice(0, 24)
 
   const paths = postIds.map((id) => ({
     params: { id: id.toString() },
