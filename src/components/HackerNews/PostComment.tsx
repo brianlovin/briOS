@@ -1,17 +1,8 @@
 import * as React from 'react'
 
-export interface HNComment {
-  id: string
-  user: string
-  comments_count: number
-  comments: [HNComment]
-  time_ago: string
-  level: number
-  content: string
-}
-
+import { HackerNewsComment } from '~/graphql/types.generated'
 interface Props {
-  comment: HNComment
+  comment: HackerNewsComment
 }
 
 function LevelZeroComment({ comment }) {

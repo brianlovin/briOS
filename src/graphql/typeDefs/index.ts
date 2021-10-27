@@ -133,6 +133,29 @@ export default gql`
     viewerCanDelete: Boolean
   }
 
+  type HackerNewsComment {
+    id: String
+    user: String
+    comments_count: String
+    comments: [HackerNewsComment]
+    time_ago: String
+    level: Int
+    content: String
+  }
+
+  type HackerNewsPost {
+    id: String
+    title: String
+    user: String
+    time: Int
+    time_ago: String
+    comments: [HackerNewsComment]
+    comments_count: String
+    url: String
+    domain: String
+    content: String
+  }
+
   type Query {
     viewer: User
     user(username: String!): User
@@ -147,6 +170,8 @@ export default gql`
     post(slug: String!): Post
     question(id: ID!): Question
     questions: [Question]!
+    hackerNewsPosts: [HackerNewsPost]!
+    hackerNewsPost(id: ID!): HackerNewsPost
     repos: [Repo]!
     signedUploadUrl(id: ID!): String
     signedPlaybackUrl(id: ID!): String

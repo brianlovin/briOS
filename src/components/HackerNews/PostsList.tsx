@@ -7,17 +7,19 @@ import { DialogComponent } from '~/components/Dialog'
 import { HackerNewsSubscriptionForm } from '~/components/HackerNews/SubscriptionForm'
 import { ListContainer } from '~/components/ListDetail/ListContainer'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
-import { HNPost } from '~/pages/hn'
+import { useGetHackerNewsPostsQuery } from '~/graphql/types.generated'
 
 import { PostsListItem } from './PostListItem'
 
-interface Props {
-  posts: HNPost[]
-}
-
-export const PostsList = React.memo<Props>(({ posts }) => {
+export function PostsList() {
   const router = useRouter()
   let [scrollContainerRef, setScrollContainerRef] = React.useState(null)
+
+  const { data, loading } = useGetHackerNewsPostsQuery()
+
+  if (loading) return null
+
+  const { hackerNewsPosts: posts } = data
 
   return (
     <ListContainer data-cy="posts-list" onRef={setScrollContainerRef}>
@@ -49,4 +51,4 @@ export const PostsList = React.memo<Props>(({ posts }) => {
       </div>
     </ListContainer>
   )
-})
+}

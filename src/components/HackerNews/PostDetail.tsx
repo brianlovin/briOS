@@ -6,18 +6,18 @@ import { PrimaryButton } from '~/components/Button'
 import { Detail } from '~/components/ListDetail/Detail'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { baseUrl } from '~/config/seo'
-import { HNPost as HNPostType } from '~/pages/hn'
+import { useGetHackerNewsPostQuery } from '~/graphql/types.generated'
 
 import { PostByline } from './PostByline'
 import { PostComments } from './PostComments'
 import { HackerNewsSubscriptionForm } from './SubscriptionForm'
 
-interface Props {
-  post: HNPostType
-}
+export function PostDetail({ id }) {
+  const { data, loading } = useGetHackerNewsPostQuery({ variables: { id } })
 
-export function PostDetail(props: Props) {
-  const { post } = props
+  if (loading) return <Detail.Loading />
+
+  const { hackerNewsPost: post } = data
   const { comments } = post
 
   const scrollContainerRef = React.useRef(null)

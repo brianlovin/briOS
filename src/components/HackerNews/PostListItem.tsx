@@ -1,10 +1,10 @@
 import * as React from 'react'
 
 import { ListItem } from '~/components/ListDetail/ListItem'
-import { HNPost } from '~/pages/hn'
+import { HackerNewsPost } from '~/graphql/types.generated'
 
 interface Props {
-  post: HNPost
+  post: HackerNewsPost
   active: boolean
 }
 

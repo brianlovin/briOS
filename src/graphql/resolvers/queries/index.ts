@@ -1,19 +1,14 @@
-import {
-  getBookmark,
-  getBookmarks,
-} from '~/graphql/resolvers/queries/bookmarks'
-import { getComment, getComments } from '~/graphql/resolvers/queries/comment'
-import { getEpisodes } from '~/graphql/resolvers/queries/podcast'
-import {
-  getQuestion,
-  getQuestions,
-} from '~/graphql/resolvers/queries/questions'
-import { getRepos } from '~/graphql/resolvers/queries/repos'
-import { getStack, getStacks } from '~/graphql/resolvers/queries/stack'
-import { getTags } from '~/graphql/resolvers/queries/tags'
-import { getUser } from '~/graphql/resolvers/queries/user'
-import { viewer } from '~/graphql/resolvers/queries/viewer'
-import { getPost, getPosts } from '~/graphql/resolvers/queries/writing'
+import { getBookmark, getBookmarks } from './bookmarks'
+import { getComment, getComments } from './comment'
+import { getHackerNewsPost, getHackerNewsPosts } from './hackerNews'
+import { getEpisodes } from './podcast'
+import { getQuestion, getQuestions } from './questions'
+import { getRepos } from './repos'
+import { getStack, getStacks } from './stack'
+import { getTags } from './tags'
+import { getUser } from './user'
+import { viewer } from './viewer'
+import { getPost, getPosts } from './writing'
 
 export default {
   viewer: viewer,
@@ -31,4 +26,6 @@ export default {
   stacks: getStacks,
   stack: getStack,
   tags: getTags,
+  hackerNewsPosts: getHackerNewsPosts,
+  hackerNewsPost: getHackerNewsPost,
 }

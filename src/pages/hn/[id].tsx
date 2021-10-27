@@ -8,18 +8,14 @@ import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { Detail } from '~/components/ListDetail/Detail'
 import { withProviders } from '~/components/Providers/withProviders'
 import routes from '~/config/routes'
-import { getHNPosts, getPostById, getPostIds } from '~/lib/hn'
+import { getContext } from '~/graphql/context'
+import {
+  GET_HACKER_NEWS_POST,
+  GET_HACKER_NEWS_POSTS,
+} from '~/graphql/queries/hackerNews'
+import { addApolloState, initApolloClient } from '~/lib/apollo'
 
-import { HNPost as HNPostType } from '.'
-
-interface Props {
-  post: HNPostType
-  posts: HNPostType[]
-}
-
-function HNPostPage(props: Props) {
-  const { post } = props
-
+function HNPostPage({ id }) {
   const router = useRouter()
 
   if (router.isFallback) {
@@ -34,44 +30,37 @@ function HNPostPage(props: Props) {
         openGraph={routes.hn.seo.openGraph}
       />
 
-      <PostDetail post={post} />
+      <PostDetail id={id} />
     </>
   )
 }
 
-export async function getStaticPaths() {
-  const topPostIds = await getPostIds('top')
+export async function getServerSideProps({ params: { id }, req, res }) {
+  const context = await getContext(req, res)
+  const apolloClient = initApolloClient({ context })
 
-  const postIds = topPostIds.slice(0, 24)
+  await Promise.all([
+    apolloClient.query({
+      query: GET_HACKER_NEWS_POSTS,
+    }),
 
-  const paths = postIds.map((id) => ({
-    params: { id: id.toString() },
-  }))
+    apolloClient.query({
+      query: GET_HACKER_NEWS_POST,
+      variables: { id },
+    }),
+  ])
 
-  return { paths, fallback: true }
-}
-
-export async function getStaticProps({ params: { id } }) {
-  const post = await getPostById(id, true)
-  const posts = await getHNPosts('top')
-
-  return {
-    revalidate: 60 * 60,
+  return addApolloState(apolloClient, {
     props: {
-      post,
-      posts,
+      id,
     },
-  }
+  })
 }
 
 HNPostPage.getLayout = withProviders(function getLayout(page) {
   return (
     <SiteLayout>
-      <ListDetailView
-        list={<PostsList posts={page.props.posts} />}
-        hasDetail
-        detail={page}
-      />
+      <ListDetailView list={<PostsList />} hasDetail detail={page} />
     </SiteLayout>
   )
 })

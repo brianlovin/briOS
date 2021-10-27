@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { format } from 'timeago.js'
 
-import { HNPost } from '~/pages/hn'
+import { HackerNewsPost } from '~/graphql/types.generated'
 
 interface Props {
-  post: HNPost
+  post: HackerNewsPost
 }
 
 export function PostByline(props: Props) {
