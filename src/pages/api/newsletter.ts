@@ -1,47 +1,16 @@
-import fetch from 'isomorphic-unfetch'
 import { NextApiRequest, NextApiResponse } from 'next'
 
-import { baseEmail } from '~/config/seo'
+import { revue } from '~/lib/revue'
+import { validEmail } from '~/lib/validators'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const { email } = req.body
+  const { email } = JSON.parse(req.body)
 
-  if (!email) {
-    return res.status(400).json({ error: 'Email is required' })
+  if (!validEmail(email)) {
+    return res.status(200).json({ error: 'Invalid email' })
   }
 
-  const LIST_ID = process.env.MAILCHIMP_LIST_ID
-  const API_KEY = process.env.MAILCHIMP_API_KEY
-  const DATACENTER = API_KEY.split('-')[1]
+  const data = await revue.addSubscriber({ email, doubleOptIn: true })
 
-  const data = {
-    email_address: email,
-    status: 'subscribed',
-  }
-
-  const response = await fetch(
-    `https://${DATACENTER}.api.mailchimp.com/3.0/lists/${LIST_ID}/members`,
-    {
-      body: JSON.stringify(data),
-      headers: {
-        Authorization: `apikey ${API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
-  ).then((res) => res.json())
-
-  if (response.status === 400 && response.title === 'Member Exists') {
-    return res.status(400).json({
-      error: null,
-    })
-  }
-
-  if (response.status >= 400) {
-    return res.status(400).json({
-      error: `Hm, couldn’t add you to the newsletter - ping me directly at ${baseEmail} and I’ll add you to this list!`,
-    })
-  }
-
-  return res.status(201).json({ error: '' })
+  return res.status(201).json({ data, error: '' })
 }

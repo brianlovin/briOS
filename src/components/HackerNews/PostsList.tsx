@@ -4,7 +4,7 @@ import { Radio } from 'react-feather'
 
 import Button from '~/components/Button'
 import { DialogComponent } from '~/components/Dialog'
-import { SubscriptionForm } from '~/components/HackerNews/SubscriptionForm'
+import { HackerNewsSubscriptionForm } from '~/components/HackerNews/SubscriptionForm'
 import { ListContainer } from '~/components/ListDetail/ListContainer'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { HNPost } from '~/pages/hn'
@@ -25,14 +25,14 @@ export const PostsList = React.memo<Props>(({ posts }) => {
         scrollContainerRef={scrollContainerRef}
         trailingAccessory={
           <DialogComponent
-            title="Subscribe"
+            title="Daily digest"
             trigger={
               <Button data-cy="open-subscribe-hn-dialog" size="small">
                 <Radio size={16} />
                 <span>Subscribe</span>
               </Button>
             }
-            modalContent={() => <SubscriptionForm />}
+            modalContent={() => <HackerNewsSubscriptionForm />}
           />
         }
         title="HN"
