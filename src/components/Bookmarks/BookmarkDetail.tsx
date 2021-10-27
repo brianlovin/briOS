@@ -11,6 +11,7 @@ import { Tags } from '~/components/Tag'
 import { CommentType, useGetBookmarkQuery } from '~/graphql/types.generated'
 
 import { BookmarkActions } from './BookmarkActions'
+import { RelatedBookmarks } from './RelatedBookmarks'
 
 export function BookmarkDetail({ id }) {
   const scrollContainerRef: React.RefObject<HTMLDivElement> = React.useRef(null)
@@ -78,6 +79,8 @@ export function BookmarkDetail({ id }) {
           </PrimaryButton>
         </div>
       </Detail.ContentContainer>
+
+      <RelatedBookmarks bookmark={bookmark} />
 
       <Comments refId={bookmark.id} type={CommentType.Bookmark} />
     </Detail.Container>
