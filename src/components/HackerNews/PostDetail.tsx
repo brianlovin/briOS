@@ -10,6 +10,7 @@ import { HNPost as HNPostType } from '~/pages/hn'
 
 import { PostByline } from './PostByline'
 import { PostComments } from './PostComments'
+import { HackerNewsSubscriptionForm } from './SubscriptionForm'
 
 interface Props {
   post: HNPostType
@@ -79,6 +80,12 @@ export function PostDetail(props: Props) {
         </Detail.ContentContainer>
 
         <PostComments comments={comments} />
+
+        <div className="bg-gray-100 border-t border-gray-200 dark:border-gray-800 dark:bg-gray-900">
+          <div className="max-w-3xl p-4 mx-auto">
+            <HackerNewsSubscriptionForm />
+          </div>
+        </div>
       </Detail.Container>
     </React.Fragment>
   )
