@@ -7,7 +7,7 @@ export function validEmail(email) {
 
 export function validUsername(username) {
   // eslint-disable-next-line
-  const re = /^(?=[a-zA-Z0-9._]{4,16}$)(?!.*[_.]{2})[^_.].*[^_.]$/
+  const re = /^(?=[a-zA-Z0-9_]{4,16}$)(?!.*[_.]{2})[^_.].*[^_.]$/
   return re.test(String(username))
 }
 

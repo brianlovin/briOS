@@ -70,7 +70,7 @@ export function UsernameForm() {
           {error && (
             <p className={`text-xs text-red-500`}>
               Usernames should be between 4 and 16 characters and only have
-              numbers, letters, underscores, or periods.
+              numbers, letters, or underscores.
             </p>
           )}
           <p className="text-xs text-quaternary">
