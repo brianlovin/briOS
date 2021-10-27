@@ -1,5 +1,5 @@
 {
-  "extends": ["plugin:prettier/recommended"],
+  "extends": ["plugin:prettier/recommended", "plugin:@next/next/recommended"],
   "plugins": ["react", "@typescript-eslint", "simple-import-sort"],
   "env": {
     "node": true,
@@ -25,7 +25,8 @@
     "@typescript-eslint/ban-ts-ignore": "off",
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/explicit-module-boundary-types": "off"
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@next/next/no-img-element": "off"
   },
   "parser": "@typescript-eslint/parser",
   "settings": {
