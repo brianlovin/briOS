@@ -1,5 +1,6 @@
 import { UserInputError } from 'apollo-server-micro'
 
+import { IS_PROD } from '~/graphql/constants'
 import { Context } from '~/graphql/context'
 import {
   MutationAddBookmarkArgs,
@@ -70,11 +71,15 @@ export async function addBookmark(
     Preemptively add bookmarks to Revue, assuming I want to share them
     more broadly in the newsletter
   */
-  try {
-    const { id } = await revue.getCurrentIssue()
-    await revue.addItemToIssue({ id, url })
-  } catch (err) {
-    console.error({ err })
+  if (IS_PROD) {
+    try {
+      const { id } = await revue.getCurrentIssue()
+      await revue.addItemToIssue({ id, url })
+    } catch (err) {
+      console.error({ err })
+    }
+  } else {
+    console.log('Adding bookmark to newsletter', { url })
   }
 
   try {
