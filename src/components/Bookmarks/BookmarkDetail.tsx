@@ -69,7 +69,7 @@ export function BookmarkDetail({ id }) {
             </a>
           </Link>
           {bookmark.description && (
-            <p className="prose text-primary">{bookmark.description}</p>
+            <p className="italic prose opacity-70">{bookmark.description}</p>
           )}
         </Detail.Header>
         <div className="mt-6">
