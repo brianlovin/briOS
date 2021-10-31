@@ -29,7 +29,7 @@ export function CommentForm({ refId, type, openModal, refetch = null }: Props) {
       __typename: 'Mutation',
       addComment: {
         __typename: 'Comment',
-        id: `optimistic-${uuidv4()}`,
+        id: uuidv4(),
         text,
         createdAt: new Date().toLocaleDateString('en-us', {
           year: 'numeric',
@@ -37,8 +37,8 @@ export function CommentForm({ refId, type, openModal, refetch = null }: Props) {
           day: 'numeric',
         }),
         updatedAt: null,
-        viewerCanDelete: true,
-        viewerCanEdit: true,
+        viewerCanDelete: false,
+        viewerCanEdit: false,
         author: {
           __typename: 'User',
           id: uuidv4(),
