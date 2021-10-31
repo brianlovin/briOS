@@ -1,5 +1,5 @@
 .prose {
-  @apply text-gray-900 dark:text-gray-300;
+  @apply text-gray-700 dark:text-gray-400;
 }
 
 .prose blockquote {
@@ -15,7 +15,7 @@
 }
 
 .prose a {
-  @apply px-0.5 -mx-0.5 font-medium no-underline bg-yellow-400 rounded-sm dark:bg-gray-100 dark:bg-opacity-20 text-gray-1000 dark:text-gray-300 bg-opacity-20 md:hover:bg-opacity-30 md:dark:hover:bg-yellow-500 md:dark:hover:bg-opacity-100 md:dark:hover:text-gray-1000 break-words;
+  @apply font-medium text-blue-600 no-underline break-words dark:text-blue-500 hover:underline;
 }
 
 .prose a code {
@@ -23,7 +23,39 @@
 }
 
 .prose table {
-  @apply text-gray-1000 dark:text-gray-50;
+  @apply my-2 border border-gray-200 rounded-md text-gray-1000 dark:text-gray-50 dark:border-gray-800;
+}
+
+.prose.comment table {
+  @apply my-2;
+}
+
+.prose thead {
+  @apply text-gray-800 dark:text-gray-200;
+}
+
+.prose thead th {
+  @apply p-2;
+  padding-left: 1rem !important;
+}
+
+.prose thead th,
+.prose tbody th,
+.prose tbody td {
+  @apply p-2 border-r border-gray-200 dark:border-gray-800;
+  padding-left: 1rem !important;
+}
+
+.prose tbody tr {
+  @apply border-b border-gray-200 dark:border-gray-800;
+}
+
+.prose thead tr {
+  @apply border-b-2 border-gray-200 dark:border-gray-800;
+}
+
+.prose tbody tr:nth-child(2n) {
+  @apply bg-gray-50 dark:bg-gray-900;
 }
 
 .prose b,
@@ -56,7 +88,7 @@
 .prose h4,
 .prose h5,
 .prose h6 {
-  @apply font-sans font-extrabold;
+  @apply font-sans font-bold;
 }
 
 .prose h5 {
@@ -64,7 +96,15 @@
 }
 
 .prose pre {
-  @apply px-8 py-6 space-y-4 text-sm text-gray-800 bg-gray-400 border-gray-300 rounded bg-opacity-5 dark:border-gray-800 dark:text-gray-200;
+  @apply px-8 py-6 space-y-4 text-sm text-gray-800 bg-gray-400 border-gray-300 rounded-md bg-opacity-5 dark:border-gray-800 dark:text-gray-200;
+}
+
+.prose.comment {
+  @apply max-w-none;
+}
+
+.prose.comment pre {
+  @apply px-3 py-2 my-2;
 }
 
 /* this is needed to avoid HN comments from overflowing off the right edge of the screen */
@@ -73,15 +113,33 @@
   word-break: break-word;
 }
 
+.prose.comment p,
+.prose.comment ul,
+.prose.comment ol {
+  @apply my-2;
+}
+
+.prose.comment p:first-of-type {
+  margin-top: 0 !important;
+}
+
+.prose.comment p + p {
+  margin-top: 0;
+}
+
+.prose.comment pre {
+  @apply my-3;
+}
+
 .prose p + p {
   margin-top: 0;
 }
 
 .prose code {
-  @apply text-gray-800 dark:text-gray-200 px-1 py-0.5 border-gray-100 dark:border-gray-800 bg-gray-100 dark:bg-gray-900;
+  @apply text-gray-800 dark:text-gray-200 px-1 py-0.5 border-gray-100 dark:border-gray-800 bg-gray-100 rounded-md dark:bg-gray-900;
 }
 
 .prose code,
 .prose pre {
-  @apply text-base;
+  @apply text-sm font-medium whitespace-pre-wrap;
 }

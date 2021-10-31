@@ -1,4 +1,4 @@
-import { extendSEO, defaultSEO } from './seo'
+import { defaultSEO, extendSEO } from './seo'
 
 const routes = {
   home: {
@@ -14,32 +14,23 @@ const routes = {
       url: 'about',
     }),
   },
-  projects: {
-    label: 'Projects',
-    path: '/projects',
-    seo: extendSEO({
-      title: 'Projects',
-      description: 'What I’m working on.',
-      url: 'projects',
-    }),
-  },
   writing: {
     label: 'Writing',
     path: '/writing',
     seo: extendSEO({
       title: 'Writing',
       description: 'Thinking out loud about software design and development.',
-      image: 'meta/overthought.png',
+      image: 'og/writing.png',
       url: 'writing',
     }),
   },
   hn: {
-    label: 'Hacker News',
+    label: 'HN',
     path: '/hn',
     seo: extendSEO({
-      title: 'Hacker News',
-      description: 'My personal Hacker News reader.',
-      image: 'meta/hn.png',
+      title: 'HN',
+      description: 'A better Hacker News.',
+      image: 'og/hn.png',
       url: 'hn',
     }),
   },
@@ -49,7 +40,7 @@ const routes = {
     seo: extendSEO({
       title: 'Bookmarks',
       description: 'Internet things, saved for later.',
-      image: 'meta/bookmarks.png',
+      image: 'og/bookmarks.png',
       url: 'bookmarks',
     }),
   },
@@ -59,27 +50,18 @@ const routes = {
     seo: extendSEO({
       title: 'App Dissection',
       description: 'In-depth design explorations.',
-      image: 'meta/app-dissection.png',
+      image: 'og/app-dissection.png',
       url: 'app-dissection',
     }),
   },
   ama: {
-    label: 'Ask Me Anything',
+    label: 'AMA',
     path: '/ama',
     seo: extendSEO({
-      title: 'Ask Me Anything',
-      description: 'Answering questions, just for fun.',
-      image: 'meta/ama.png',
+      title: 'AMA',
+      description: 'Ask me anything.',
+      image: 'og/ama.png',
       url: 'ama',
-    }),
-  },
-  login: {
-    label: 'Login',
-    path: '/login',
-    seo: extendSEO({
-      title: 'Login',
-      description: 'What do you think you’re doing?',
-      url: 'login',
     }),
   },
   security: {
@@ -87,8 +69,8 @@ const routes = {
     path: '/security',
     seo: extendSEO({
       title: 'Security Checklist',
-      description: 'Tools and resources for staying safe on the internet.',
-      image: 'meta/security.png',
+      description: 'Staying safe on the internet.',
+      image: 'og/security.png',
       url: 'security',
     }),
   },
@@ -98,18 +80,18 @@ const routes = {
     seo: extendSEO({
       title: 'Stack',
       description: 'My favorite tools and software.',
-      image: 'meta/stack.png',
+      image: 'og/stack.png',
       url: 'stack',
     }),
   },
-  startupJobs: {
-    label: 'Startup Jobs',
-    path: '/startups',
+  settings: {
+    label: 'Settings',
+    path: '/settings',
     seo: extendSEO({
-      title: 'Startup Jobs',
-      description: 'Connecting great designers with growing startups.',
-      image: 'meta/startups.png',
-      url: 'startups',
+      title: 'Settings',
+      description: 'Manage your profile.',
+      image: 'og/settings.png',
+      url: 'settings',
     }),
   },
 }

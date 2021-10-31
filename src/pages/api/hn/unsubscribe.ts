@@ -1,14 +1,10 @@
+import jwt from 'jsonwebtoken'
 import { NextApiRequest, NextApiResponse } from 'next'
-import Cryptr from 'cryptr'
-import { db } from '~/graphql/services/firebase'
-import { baseUrl } from '~/config/seo'
 
-export function validEmail(email) {
-  // eslint-disable-next-line
-  const re =
-    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-  return re.test(String(email).toLowerCase())
-}
+import { baseUrl } from '~/config/seo'
+import { EmailSubscriptionType } from '~/graphql/types.generated'
+import { prisma } from '~/lib/prisma'
+import { validEmail } from '~/lib/validators'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { token } = req.query
@@ -18,28 +14,38 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     res.end()
   }
 
+  function error(error) {
+    res.status(200).json({ error })
+  }
+
   if (!token) {
     return done()
   }
 
-  const secret = process.env.HN_TOKEN
-  const cryptr = new Cryptr(secret)
-  const decrypted = cryptr.decrypt(token)
+  try {
+    // @ts-ignore
+    const decoded = jwt.verify(token, process.env.JWT_SIGNING_KEY)
+    const { email } = decoded
 
-  if (!validEmail(decrypted)) {
-    return done()
-  }
+    if (!email) {
+      error('Invalid token')
+    }
 
-  await db
-    .collection('hnsubscribers')
-    .where('email', '==', decrypted)
-    .get()
-    .then((snapshot) => {
-      snapshot.forEach(async (doc) => {
-        const id = doc.id
-        await db.collection('hnsubscribers').doc(id).delete()
-      })
+    if (!validEmail(email)) {
+      error('Invalid email')
+    }
+
+    await prisma.emailSubscription.delete({
+      where: {
+        emailAndType: {
+          email,
+          type: EmailSubscriptionType.HackerNews,
+        },
+      },
     })
 
-  return done()
+    done()
+  } catch (err) {
+    error(err.message)
+  }
 }

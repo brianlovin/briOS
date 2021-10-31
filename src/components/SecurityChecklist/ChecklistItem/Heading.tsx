@@ -1,4 +1,5 @@
 import * as React from 'react'
+
 import type { ChecklistResource } from '../types'
 
 type Props = {
@@ -7,7 +8,7 @@ type Props = {
 
 export function Heading({ resource }: Props) {
   return (
-    <p className="font-sans text-2xl font-bold text-primary">
+    <p className="font-sans text-xl font-semibold text-primary">
       {resource.title}
     </p>
   )

@@ -1,6 +1,8 @@
+import Image from 'next/image'
 import * as React from 'react'
+
 import type { App } from '../types'
-import Offer from './Offer'
+import { AppOffer } from './Offer'
 
 type Props = {
   app: App
@@ -115,7 +117,7 @@ export const AppRow = ({ app }: Props) => {
   }
 
   return (
-    <div className="p-4 pr-6 -mx-4 rounded-md md:hover:bg-gray-100 md:dark:hover:bg-gray-800">
+    <div className="p-4 md:hover:bg-gray-100 md:dark:hover:bg-gray-800">
       <div className="flex items-center justify-between">
         <a
           className="flex items-center h-full space-x-3"
@@ -123,9 +125,12 @@ export const AppRow = ({ app }: Props) => {
           title={`go to: ${app.name}`}
         >
           {app.image && (
-            <img
+            <Image
               className="w-8 h-8 transition-shadow rounded-md shadow-sm hover:shadow"
               alt={app.name}
+              width={32}
+              height={32}
+              layout={'fixed'}
               src={`/static/img/security/${app.image}`}
             />
           )}
@@ -137,7 +142,7 @@ export const AppRow = ({ app }: Props) => {
           </div>
         )}
       </div>
-      {app.offer && <Offer offer={app.offer} />}
+      {app.offer && <AppOffer offer={app.offer} />}
     </div>
   )
 }

@@ -8,7 +8,7 @@ hooks:
 generates:
   ./src/graphql/types.generated.ts:
     plugins:
-      - add: 
+      - add:
           content: |
             // eslint-disable
             // ⚠️ DO NOT EDIT ⚠️

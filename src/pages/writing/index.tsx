@@ -1,64 +1,41 @@
-import * as React from 'react'
-import Page, { PageHeader } from '~/components/Page'
-import { Post } from '~/graphql/types.generated'
-import PostsList from '~/components/Writing/List'
-import { GET_POSTS } from '~/graphql/queries'
-import { initApolloClient } from '~/graphql/services/apollo'
-import { CenteredColumn } from '~/components/Layouts'
-import Head from 'next/head'
 import { NextSeo } from 'next-seo'
+import * as React from 'react'
+
+import { ListDetailView, SiteLayout } from '~/components/Layouts'
+import { withProviders } from '~/components/Providers/withProviders'
+import { PostsList } from '~/components/Writing/PostsList'
 import routes from '~/config/routes'
+import { getContext } from '~/graphql/context'
+import { GET_POSTS } from '~/graphql/queries/posts'
+import { addApolloState, initApolloClient } from '~/lib/apollo'
 
-interface Props {
-  data: {
-    posts: Post[]
-  }
-}
-
-function Writing({ data }: Props) {
+function WritingPage() {
   return (
-    <Page>
-      <Head>
-        <link
-          rel="alternate"
-          type="application/rss+xml"
-          title="RSS feed"
-          href="/writing/rss"
-        />
-      </Head>
-
-      <NextSeo
-        title={routes.writing.seo.title}
-        description={routes.writing.seo.description}
-        openGraph={routes.writing.seo.openGraph}
-      />
-
-      <CenteredColumn>
-        <div data-cy="writing" className="space-y-12 ">
-          <PageHeader
-            title={routes.writing.seo.title}
-            subtitle={routes.writing.seo.description}
-          />
-
-          <div className="space-y-6 ">
-            {data && data.posts && <PostsList posts={data.posts} />}
-          </div>
-        </div>
-      </CenteredColumn>
-    </Page>
+    <NextSeo
+      title={routes.writing.seo.title}
+      description={routes.writing.seo.description}
+      openGraph={routes.writing.seo.openGraph}
+    />
   )
 }
 
-export async function getStaticProps() {
-  const client = await initApolloClient({})
-  const { data } = await client.query({ query: GET_POSTS })
-  return {
-    // because this data is slightly more dynamic, update it every hour
-    revalidate: 60 * 60,
-    props: {
-      data,
-    },
-  }
+export async function getServerSideProps({ req, res }) {
+  const context = await getContext(req, res)
+  const apolloClient = initApolloClient({ context })
+
+  await apolloClient.query({ query: GET_POSTS })
+
+  return addApolloState(apolloClient, {
+    props: {},
+  })
 }
 
-export default Writing
+WritingPage.getLayout = withProviders(function getLayout(page) {
+  return (
+    <SiteLayout>
+      <ListDetailView list={<PostsList />} hasDetail={false} detail={page} />
+    </SiteLayout>
+  )
+})
+
+export default WritingPage

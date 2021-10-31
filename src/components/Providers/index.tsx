@@ -1,25 +1,52 @@
+import { ApolloProvider } from '@apollo/client'
+import { NextPageContext } from 'next'
 import * as React from 'react'
-import Fathom from './Fathom'
-import SEO from './SEO'
-import { createClient } from '@liveblocks/client'
-import { LiveblocksProvider } from '@liveblocks/react'
-import Toast from './Toaster'
+
+import { useApollo } from '~/lib/apollo'
+
+import { Fathom } from './Fathom'
+import { SEO } from './SEO'
+import { Toast } from './Toaster'
 
 interface Props {
   children?: any
+  pageProps: NextPageContext
 }
 
-const client = createClient({
-  authEndpoint: '/api/auth',
-})
+const globalNavigationContext = {
+  isOpen: false,
+  setIsOpen: (val: boolean) => {},
+}
 
-export default function Providers({ children }: Props) {
+export const GlobalNavigationContext = React.createContext(
+  globalNavigationContext
+)
+
+export function Providers({ children, pageProps }: Props) {
+  const apolloClient = useApollo(pageProps)
+
+  const initialState = {
+    isOpen: false,
+    setIsOpen,
+  }
+
+  const [state, setState] = React.useState(initialState)
+
+  function setIsOpen(isOpen) {
+    return setState({ ...state, isOpen })
+  }
+
   return (
     <>
       <SEO />
       <Fathom />
       <Toast />
-      {children}
+
+      <ApolloProvider client={apolloClient}>
+        <GlobalNavigationContext.Provider value={state}>
+          {children}
+        </GlobalNavigationContext.Provider>
+      </ApolloProvider>
     </>
   )
 }

@@ -1,4 +1,6 @@
 import * as React from 'react'
+import { Link } from 'react-feather'
+
 import type { Resource } from '../types'
 
 type Props = {
@@ -9,9 +11,10 @@ export const ResourceRow = ({ resource }: Props) => (
   <div className="block">
     <a
       href={resource.url}
-      className="-mx-3 space-x-3 font-normal text-secondary highlight-link-hover"
+      className="relative flex items-start px-4 space-x-2 text-gray-700 dark:text-gray-400 hover:text-gray-1000 dark:hover:text-gray-50"
     >
-      <p className="inline font-medium ">· {resource.name}</p>
+      <Link size={12} className="flex-none transform translate-y-1.5" />
+      <span>{resource.name}</span>
     </a>
   </div>
 )

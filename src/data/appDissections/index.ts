@@ -43,6 +43,7 @@ export interface DesignDetailsPostSummary {
   tint: string
   firstDetail: DesignDetail
   detailsCount: number
+  createdAt: string
 }
 
 const allPosts: DesignDetailsPost[] = [
@@ -75,6 +76,7 @@ function extractSummary({
   slug,
   tint,
   details,
+  createdAt,
 }: DesignDetailsPost): DesignDetailsPostSummary {
   return {
     title,
@@ -82,11 +84,11 @@ function extractSummary({
     tint,
     firstDetail: details[1],
     detailsCount: details.length,
+    createdAt,
   }
 }
 
-export const summaries: DesignDetailsPostSummary[] = allPosts.map(
-  extractSummary
-)
+export const summaries: DesignDetailsPostSummary[] =
+  allPosts.map(extractSummary)
 
 export default allPosts

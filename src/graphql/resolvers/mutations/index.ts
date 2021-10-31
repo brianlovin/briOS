@@ -1,31 +1,53 @@
-import { login, logout } from '~/graphql/resolvers/mutations/auth'
+import { requiresAdmin } from '~/graphql/helpers/requiresAdmin'
+import { requiresUser } from '~/graphql/helpers/requiresUser'
 import {
   addBookmark,
-  editBookmark,
   deleteBookmark,
-  addBookmarkReaction,
+  editBookmark,
 } from '~/graphql/resolvers/mutations/bookmarks'
-import { requiresMe } from '~/graphql/helpers/requiresMe'
 import {
-  addAMAQuestion,
-  editAMAQuestion,
-  deleteAMAQuestion,
-  addAMAReaction,
-  addAMAAudioPlay,
-  transcribeAudio,
-} from '~/graphql/resolvers/mutations/ama'
+  addComment,
+  deleteComment,
+  editComment,
+} from '~/graphql/resolvers/mutations/comment'
+import {
+  addPost,
+  deletePost,
+  editPost,
+} from '~/graphql/resolvers/mutations/post'
+import {
+  addQuestion,
+  deleteQuestion,
+  editQuestion,
+} from '~/graphql/resolvers/mutations/questions'
+import {
+  addStack,
+  deleteStack,
+  editStack,
+  toggleStackUser,
+} from '~/graphql/resolvers/mutations/stack'
+import { deleteUser, editUser } from '~/graphql/resolvers/mutations/user'
+
+import { editEmailSubscription } from './emailSubscription'
 
 export default {
-  login,
-  logout,
-  addBookmark: requiresMe(addBookmark),
-  editBookmark: requiresMe(editBookmark),
-  deleteBookmark: requiresMe(deleteBookmark),
-  addBookmarkReaction,
-  addAMAQuestion,
-  editAMAQuestion: requiresMe(editAMAQuestion),
-  deleteAMAQuestion: requiresMe(deleteAMAQuestion),
-  addAMAReaction,
-  addAMAAudioPlay,
-  transcribeAudio: requiresMe(transcribeAudio),
+  addBookmark: requiresAdmin(addBookmark),
+  editBookmark: requiresAdmin(editBookmark),
+  deleteBookmark: requiresAdmin(deleteBookmark),
+  addStack: requiresAdmin(addStack),
+  editStack: requiresAdmin(editStack),
+  deleteStack: requiresAdmin(deleteStack),
+  toggleStackUser: requiresUser(toggleStackUser),
+  addQuestion: requiresUser(addQuestion),
+  editQuestion: requiresUser(editQuestion),
+  deleteQuestion: requiresUser(deleteQuestion),
+  addComment: requiresUser(addComment),
+  editComment: requiresUser(editComment),
+  deleteComment: requiresUser(deleteComment),
+  deleteUser: requiresUser(deleteUser),
+  editUser: requiresUser(editUser),
+  editEmailSubscription: editEmailSubscription,
+  addPost: requiresAdmin(addPost),
+  editPost: requiresAdmin(editPost),
+  deletePost: requiresAdmin(deletePost),
 }

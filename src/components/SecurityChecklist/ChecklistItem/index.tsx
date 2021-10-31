@@ -1,15 +1,17 @@
 import * as React from 'react'
-import type { ChecklistResource } from '../types'
-import { Heading } from './Heading'
-import { Apps } from './Apps'
-import { Resources } from './Resources'
+
 import { MarkdownRenderer } from '~/components/MarkdownRenderer'
+
+import type { ChecklistResource } from '../types'
+import { Apps } from './Apps'
+import { Heading } from './Heading'
+import { Resources } from './Resources'
 
 type Props = {
   resource: ChecklistResource
 }
 
-export default function ChecklistItem(props: Props) {
+export function ChecklistItem(props: Props) {
   const { resource } = props
 
   return (
@@ -17,7 +19,7 @@ export default function ChecklistItem(props: Props) {
       <div>
         <Heading resource={resource} />
 
-        <div className="mt-3 prose">
+        <div className="mt-3 prose prose-lg">
           <MarkdownRenderer>{resource.description}</MarkdownRenderer>
         </div>
       </div>

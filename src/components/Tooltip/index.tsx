@@ -1,6 +1,7 @@
-import * as React from 'react'
-import Tippy from '@tippy.js/react'
 import 'tippy.js/dist/tippy.css'
+
+import Tippy from '@tippy.js/react'
+import * as React from 'react'
 
 interface Props {
   content: string
@@ -8,7 +9,7 @@ interface Props {
   children: any
 }
 
-export default function Tooltip(props: Props) {
+export function Tooltip(props: Props) {
   const { style = {}, content, ...rest } = props
 
   return (
