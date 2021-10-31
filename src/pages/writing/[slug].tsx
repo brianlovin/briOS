@@ -4,35 +4,34 @@ import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { withProviders } from '~/components/Providers/withProviders'
 import { PostDetail } from '~/components/Writing/PostDetail'
 import { PostsList } from '~/components/Writing/PostsList'
+import { getContext } from '~/graphql/context'
+import { GET_COMMENTS } from '~/graphql/queries/comments'
 import { GET_POST, GET_POSTS } from '~/graphql/queries/posts'
+import { CommentType } from '~/graphql/types.generated'
 import { addApolloState, initApolloClient } from '~/lib/apollo'
 
 function WritingPostPage({ slug }) {
   return <PostDetail slug={slug} />
 }
 
-export async function getStaticPaths() {
-  const apolloClient = await initApolloClient({})
-  const { data } = await apolloClient.query({ query: GET_POSTS })
+export async function getServerSideProps({ params: { slug }, req, res }) {
+  const context = await getContext(req, res)
+  const apolloClient = initApolloClient({ context })
 
-  if (!data) return { paths: [], fallback: true }
-
-  const paths = data.posts.map(({ slug }) => ({
-    params: { slug },
-  }))
-
-  return { paths, fallback: true }
-}
-
-export async function getStaticProps({ params: { slug } }) {
-  const apolloClient = await initApolloClient({})
+  const { data } = await apolloClient.query({
+    query: GET_POST,
+    variables: { slug },
+  })
 
   await Promise.all([
     apolloClient.query({
-      query: GET_POST,
-      variables: { slug },
+      query: GET_POSTS,
     }),
-    apolloClient.query({ query: GET_POSTS }),
+
+    apolloClient.query({
+      query: GET_COMMENTS,
+      variables: { refId: data.post.id, type: CommentType.Bookmark },
+    }),
   ])
 
   return addApolloState(apolloClient, {

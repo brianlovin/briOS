@@ -54,8 +54,8 @@
   @apply border-b-2 border-gray-200 dark:border-gray-800;
 }
 
-.prose tbody tr:nth-child(2) {
-  @apply bg-gray-100 dark:bg-gray-900;
+.prose tbody tr:nth-child(2n) {
+  @apply bg-gray-50 dark:bg-gray-900;
 }
 
 .prose b,

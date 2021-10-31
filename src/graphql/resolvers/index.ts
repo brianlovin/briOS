@@ -29,8 +29,8 @@ export default {
       }),
   },
   Post: {
-    publishedAt: ({ published_at }) =>
-      new Date(published_at).toLocaleDateString('en-us', {
+    publishedAt: ({ publishedAt }) =>
+      new Date(publishedAt).toLocaleDateString('en-us', {
         year: 'numeric',
         month: 'long',
         day: 'numeric',

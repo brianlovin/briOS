@@ -1,10 +1,15 @@
+import deepmerge from 'deepmerge'
 import * as React from 'react'
+import ReactMarkdown from 'react-markdown'
+import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
+import remarkGfm from 'remark-gfm'
 
 import { Detail } from '~/components/ListDetail/Detail'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { SyntaxHighlighter } from '~/components/SyntaxHighlighter'
-import { useGetPostQuery } from '~/graphql/types.generated'
+import { CommentType, useGetPostQuery } from '~/graphql/types.generated'
 
+import { Comments } from '../Comments'
 import { PostSEO } from './PostSEO'
 
 export function PostDetail({ slug }) {
@@ -23,6 +28,10 @@ export function PostDetail({ slug }) {
   if (!data?.post) {
     return null
   }
+
+  const schema = deepmerge(defaultSchema, {
+    attributes: { '*': ['className'] },
+  })
 
   const { post } = data
 
@@ -49,11 +58,15 @@ export function PostDetail({ slug }) {
             </span>
           </Detail.Header>
 
-          <div
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            rehypePlugins={[[rehypeSanitize, schema]]}
+            children={post.text}
             className="mt-8 prose lg:prose-lg"
-            dangerouslySetInnerHTML={{ __html: post.html }}
           />
         </Detail.ContentContainer>
+
+        <Comments refId={post.id} type={CommentType.Post} />
       </Detail.Container>
     </React.Fragment>
   )

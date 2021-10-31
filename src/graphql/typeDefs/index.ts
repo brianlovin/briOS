@@ -2,31 +2,16 @@ import { gql } from 'apollo-server-micro'
 
 export default gql`
   type Post {
-    canonical_url: String
-    comment_id: String
-    created_at: String
-    custom_excerpt: String
-    excerpt: String
-    feature_image: String
-    featured: Boolean
-    html: String
-    id: String
-    meta_description: String
-    meta_title: String
-    og_description: String
-    og_image: String
-    og_title: String
+    id: ID!
+    createdAt: String
+    updatedAt: String
     publishedAt: String
-    reading_time: Int
-    slug: String
+    author: User
     title: String
-    twitter_description: String
-    twitter_image: String
-    twitter_title: String
-    updated_at: String
-    url: String
-    uuid: String
-    visibility: String
+    slug: String
+    text: String
+    excerpt: String
+    featureImage: String
   }
 
   type Bookmark {

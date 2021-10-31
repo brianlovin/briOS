@@ -265,31 +265,16 @@ export type PageInfo = {
 
 export type Post = {
   __typename?: 'Post'
-  canonical_url?: Maybe<Scalars['String']>
-  comment_id?: Maybe<Scalars['String']>
-  created_at?: Maybe<Scalars['String']>
-  custom_excerpt?: Maybe<Scalars['String']>
+  author?: Maybe<User>
+  createdAt?: Maybe<Scalars['String']>
   excerpt?: Maybe<Scalars['String']>
-  feature_image?: Maybe<Scalars['String']>
-  featured?: Maybe<Scalars['Boolean']>
-  html?: Maybe<Scalars['String']>
-  id?: Maybe<Scalars['String']>
-  meta_description?: Maybe<Scalars['String']>
-  meta_title?: Maybe<Scalars['String']>
-  og_description?: Maybe<Scalars['String']>
-  og_image?: Maybe<Scalars['String']>
-  og_title?: Maybe<Scalars['String']>
+  featureImage?: Maybe<Scalars['String']>
+  id: Scalars['ID']
   publishedAt?: Maybe<Scalars['String']>
-  reading_time?: Maybe<Scalars['Int']>
   slug?: Maybe<Scalars['String']>
+  text?: Maybe<Scalars['String']>
   title?: Maybe<Scalars['String']>
-  twitter_description?: Maybe<Scalars['String']>
-  twitter_image?: Maybe<Scalars['String']>
-  twitter_title?: Maybe<Scalars['String']>
-  updated_at?: Maybe<Scalars['String']>
-  url?: Maybe<Scalars['String']>
-  uuid?: Maybe<Scalars['String']>
-  visibility?: Maybe<Scalars['String']>
+  updatedAt?: Maybe<Scalars['String']>
 }
 
 export type Query = {
@@ -664,13 +649,26 @@ export type HackerNewsPostInfoFragment = {
 
 export type PostInfoFragment = {
   __typename?: 'Post'
-  id?: string | null | undefined
+  id: string
+  createdAt?: string | null | undefined
+  updatedAt?: string | null | undefined
+  publishedAt?: string | null | undefined
   title?: string | null | undefined
   slug?: string | null | undefined
-  updated_at?: string | null | undefined
-  publishedAt?: string | null | undefined
   excerpt?: string | null | undefined
-  feature_image?: string | null | undefined
+  featureImage?: string | null | undefined
+  author?:
+    | {
+        __typename: 'User'
+        id: string
+        username?: string | null | undefined
+        avatar?: string | null | undefined
+        name?: string | null | undefined
+        role?: UserRole | null | undefined
+        isViewer?: boolean | null | undefined
+      }
+    | null
+    | undefined
 }
 
 export type QuestionInfoFragment = {
@@ -1409,13 +1407,26 @@ export type GetPostsQuery = {
   posts: Array<
     | {
         __typename?: 'Post'
-        id?: string | null | undefined
+        id: string
+        createdAt?: string | null | undefined
+        updatedAt?: string | null | undefined
+        publishedAt?: string | null | undefined
         title?: string | null | undefined
         slug?: string | null | undefined
-        updated_at?: string | null | undefined
-        publishedAt?: string | null | undefined
         excerpt?: string | null | undefined
-        feature_image?: string | null | undefined
+        featureImage?: string | null | undefined
+        author?:
+          | {
+              __typename: 'User'
+              id: string
+              username?: string | null | undefined
+              avatar?: string | null | undefined
+              name?: string | null | undefined
+              role?: UserRole | null | undefined
+              isViewer?: boolean | null | undefined
+            }
+          | null
+          | undefined
       }
     | null
     | undefined
@@ -1431,14 +1442,27 @@ export type GetPostQuery = {
   post?:
     | {
         __typename?: 'Post'
-        html?: string | null | undefined
-        id?: string | null | undefined
+        text?: string | null | undefined
+        id: string
+        createdAt?: string | null | undefined
+        updatedAt?: string | null | undefined
+        publishedAt?: string | null | undefined
         title?: string | null | undefined
         slug?: string | null | undefined
-        updated_at?: string | null | undefined
-        publishedAt?: string | null | undefined
         excerpt?: string | null | undefined
-        feature_image?: string | null | undefined
+        featureImage?: string | null | undefined
+        author?:
+          | {
+              __typename: 'User'
+              id: string
+              username?: string | null | undefined
+              avatar?: string | null | undefined
+              name?: string | null | undefined
+              role?: UserRole | null | undefined
+              isViewer?: boolean | null | undefined
+            }
+          | null
+          | undefined
       }
     | null
     | undefined
@@ -1810,13 +1834,18 @@ export const HackerNewsPostInfoFragmentDoc = gql`
 export const PostInfoFragmentDoc = gql`
   fragment PostInfo on Post {
     id
+    createdAt
+    updatedAt
+    publishedAt
     title
     slug
-    updated_at
-    publishedAt
     excerpt
-    feature_image
+    featureImage
+    author {
+      ...UserInfo
+    }
   }
+  ${UserInfoFragmentDoc}
 `
 export const QuestionInfoFragmentDoc = gql`
   fragment QuestionInfo on Question {
@@ -3112,7 +3141,7 @@ export const GetPostDocument = gql`
   query GetPost($slug: String!) {
     post(slug: $slug) {
       ...PostInfo
-      html
+      text
     }
   }
   ${PostInfoFragmentDoc}

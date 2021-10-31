@@ -2,13 +2,13 @@ import { getBookmark, getBookmarks } from './bookmarks'
 import { getComment, getComments } from './comment'
 import { getHackerNewsPost, getHackerNewsPosts } from './hackerNews'
 import { getEpisodes } from './podcast'
+import { getPost, getPosts } from './posts'
 import { getQuestion, getQuestions } from './questions'
 import { getRepos } from './repos'
 import { getStack, getStacks } from './stack'
 import { getTags } from './tags'
 import { getUser } from './user'
 import { viewer } from './viewer'
-import { getPost, getPosts } from './writing'
 
 export default {
   viewer: viewer,

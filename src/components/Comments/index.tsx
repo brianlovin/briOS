@@ -62,7 +62,7 @@ export function Comments({ refId, type, refetch = null }: Props) {
                 />
               ))}
             {comments.length === 0 && (
-              <p className="text-quaternary">No comments yet...</p>
+              <p className="pb-4 text-quaternary">No comments yet...</p>
             )}
           </div>
         </div>

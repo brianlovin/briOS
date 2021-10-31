@@ -1,3 +1,5 @@
+import { UserInputError } from 'apollo-server-micro'
+
 import { Context } from '~/graphql/context'
 import {
   Bookmark,
@@ -22,6 +24,10 @@ export async function getCommentAuthor(parent: Bookmark, _, ctx: Context) {
 export async function getComments(_, args, ctx: Context) {
   const { refId, type } = args
   const { prisma } = ctx
+
+  if (!refId || !type) {
+    throw new UserInputError('refId and type are required')
+  }
 
   switch (type) {
     case CommentType.Bookmark: {
