@@ -272,6 +272,20 @@ export default gql`
     description: String
   }
 
+  input AddPostInput {
+    title: String!
+    text: String!
+    slug: String!
+    excerpt: String
+  }
+
+  input EditPostInput {
+    title: String!
+    text: String!
+    slug: String!
+    excerpt: String
+  }
+
   type Mutation {
     addBookmark(data: AddBookmarkInput!): Bookmark
     editBookmark(id: ID!, data: EditBookmarkInput!): Bookmark
@@ -289,5 +303,8 @@ export default gql`
     editUser(data: EditUserInput): User
     deleteUser: Boolean
     editEmailSubscription(data: EmailSubscriptionInput): User
+    addPost(data: AddPostInput!): Post
+    editPost(id: ID!, data: EditPostInput!): Post
+    deletePost(id: ID!): Boolean
   }
 `

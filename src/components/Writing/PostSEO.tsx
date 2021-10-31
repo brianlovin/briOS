@@ -13,15 +13,15 @@ export function PostSEO({ post }: Props) {
     <React.Fragment>
       <NextSeo
         title={post.title}
-        description={post.custom_excerpt || post.excerpt}
+        description={post.excerpt}
         openGraph={{
           title: post.title,
           url: `${baseUrl}/writing/${post.slug}`,
-          description: post.custom_excerpt || post.excerpt,
+          description: post.excerpt,
           images: [
             {
               url:
-                post.feature_image ||
+                post.featureImage ||
                 `${baseUrl}/static/img/writing/${post.slug}.png`,
               alt: post.title,
             },

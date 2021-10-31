@@ -69,6 +69,7 @@
     "remark-rehype": "^10.0.0",
     "remark-stringify": "^10.0.1",
     "remove-markdown": "^0.3.0",
+    "slugify": "^1.6.1",
     "string-replace-to-array": "^2.1.0",
     "timeago.js": "^4.0.2",
     "turndown": "^7.1.1",

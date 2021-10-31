@@ -16,7 +16,12 @@ export async function getPost(
 ) {
   const { prisma, viewer } = ctx
   const isAdmin = viewer?.role === UserRole.Admin
-  const post = await prisma.post.findUnique({ where: { slug } })
+  const [postBySlug, postById] = await Promise.all([
+    prisma.post.findUnique({ where: { slug } }),
+    prisma.post.findUnique({ where: { id: slug } }),
+  ])
+
+  const post = postBySlug || postById
 
   if (!post?.publishedAt && !isAdmin) {
     return null
