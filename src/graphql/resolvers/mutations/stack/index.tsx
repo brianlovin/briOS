@@ -95,18 +95,22 @@ export async function addStack(_, args: MutationAddStackArgs, ctx: Context) {
 
   if (!validUrl(url)) throw new UserInputError('URL was invalid')
 
+  const tags = tag
+    ? {
+        connectOrCreate: {
+          where: { name: tag },
+          create: { name: tag },
+        },
+      }
+    : undefined
+
   return await prisma.stack.create({
     data: {
       name,
       url,
       description,
       image,
-      tags: {
-        connectOrCreate: {
-          where: { name: tag },
-          create: { name: tag },
-        },
-      },
+      tags,
     },
     include: { tags: true },
   })
