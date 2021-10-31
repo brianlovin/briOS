@@ -42,6 +42,10 @@
   textarea:focus {
     @apply outline-none ring-offset-white dark:ring-offset-black ring-2 ring-offset-2 ring-blue-500;
   }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }
 
 @layer components {

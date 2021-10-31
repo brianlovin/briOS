@@ -61,7 +61,7 @@ export function DialogComponent({
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Dialog.Overlay className="fixed inset-0 bg-white bg-opacity-70 dark:bg-black dark:bg-opacity-50" />
+              <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-50" />
             </Transition.Child>
 
             <Transition.Child
@@ -73,7 +73,7 @@ export function DialogComponent({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <div className="fixed bottom-0 left-0 w-full max-h-screen pb-4 overflow-y-auto bg-white border border-gray-200 shadow-sm rounded-t-xl dark:shadow-2xl dark:border-gray-700 dark:bg-gray-800 sm:bottom-auto sm:top-1/4 sm:pb-0 sm:-translate-x-1/2 sm:rounded-xl sm:left-1/2 transform-gpu sm:max-w-sm md:max-w-md lg:max-w-lg">
+              <div className="fixed bottom-0 left-0 w-full max-h-screen pb-4 overflow-y-auto bg-white border border-gray-200 shadow-sm safe-bottom rounded-t-xl dark:shadow-2xl dark:border-gray-700 dark:bg-gray-800 sm:bottom-auto sm:top-1/4 sm:pb-0 sm:-translate-x-1/2 sm:rounded-xl sm:left-1/2 transform-gpu sm:max-w-sm md:max-w-md lg:max-w-lg">
                 <div className="flex flex-col">
                   <div className="sticky top-0 flex items-center justify-between w-full py-2 pl-4 pr-2 bg-white border-b border-gray-150 dark:border-gray-700 dark:bg-gray-800">
                     <Dialog.Title
