@@ -122,7 +122,6 @@
     "prisma": "^3.3.0",
     "stylelint-config-recommended": "^6.0.0",
     "tailwindcss": "^2.2.17",
-    "tailwindcss-safe-area": "^0.2.1",
     "typescript": "^4.4.4",
     "typescript-eslint-parser": "^22.0.0",
     "webpack": "^4.46.0"

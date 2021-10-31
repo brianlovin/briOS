@@ -11944,11 +11944,6 @@ table@^6.0.9:
     string-width "^4.2.3"
     strip-ansi "^6.0.1"
 
-tailwindcss-safe-area@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/tailwindcss-safe-area/-/tailwindcss-safe-area-0.2.1.tgz#f02cb08ba1411ba7a410a7e257bb3f971164a830"
-  integrity sha512-TtF+6xqqrMj003VBNM1B4jXFZ88jPth89XkfFyQxBgfgZ2UQlR0UAvp9evKR6Ax8cOH2TheoJSHYIpRvxI5bjg==
-
 tailwindcss@^2.2.17:
   version "2.2.17"
   resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-2.2.17.tgz#c6332731f9ff1b6628ff589c95c38685347775e3"
