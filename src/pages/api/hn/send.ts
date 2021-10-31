@@ -4,10 +4,9 @@ import { NextApiRequest, NextApiResponse } from 'next'
 
 import { baseEmail } from '~/config/seo'
 import { CLIENT_URL, IS_PROD } from '~/graphql/constants'
+import { EmailSubscriptionType } from '~/graphql/types.generated'
 import { getHNPostsForDigest } from '~/lib/hn'
 import { client as postmark } from '~/lib/postmark'
-
-import { EmailSubscriptionType } from '.prisma/client'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { token, warmup } = req.query
@@ -38,12 +37,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   const subscribers = IS_PROD
     ? await prisma.emailSubscription.findMany({
-        where: { type: EmailSubscriptionType.HACKER_NEWS },
+        where: { type: EmailSubscriptionType.HackerNews },
       })
     : await prisma.emailSubscription.findMany({
         where: {
           email: baseEmail,
-          type: EmailSubscriptionType.HACKER_NEWS,
+          type: EmailSubscriptionType.HackerNews,
         },
       })
 

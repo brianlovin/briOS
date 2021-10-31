@@ -2,10 +2,9 @@ import jwt from 'jsonwebtoken'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 import { baseUrl } from '~/config/seo'
+import { EmailSubscriptionType } from '~/graphql/types.generated'
 import { prisma } from '~/lib/prisma'
 import { validEmail } from '~/lib/validators'
-
-import { EmailSubscriptionType } from '.prisma/client'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { token } = req.query
@@ -40,7 +39,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       where: {
         emailAndType: {
           email,
-          type: EmailSubscriptionType.HACKER_NEWS,
+          type: EmailSubscriptionType.HackerNews,
         },
       },
     })
