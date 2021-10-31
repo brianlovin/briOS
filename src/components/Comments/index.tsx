@@ -62,7 +62,7 @@ export function Comments({ refId, type, refetch = null }: Props) {
     <>
       <SyntaxHighlighter data={comments} />
       <div className="relative flex flex-col flex-1 border-t dark:border-gray-800 border-gray-150">
-        <div className="absolute px-8 py-2 transform -translate-x-1/2 bg-white text-quaternary left-1/2 -top-5">
+        <div className="absolute px-8 py-2 transform -translate-x-1/2 bg-white dark:bg-black text-quaternary left-1/2 -top-5">
           <MessageCircle />
         </div>
         <div className="flex flex-col flex-1 w-full max-w-3xl px-4 pt-8 pb-4 mx-auto space-y-3 md:px-8">
