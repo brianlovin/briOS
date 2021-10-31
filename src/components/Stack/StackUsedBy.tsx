@@ -124,7 +124,7 @@ export function StackUsedBy(props) {
         <input
           type="checkbox"
           onChange={handleToggle}
-          defaultChecked={data.stack.usedByViewer}
+          checked={data.stack.usedByViewer}
           className="w-4 h-4 border border-gray-300 rounded dark:border-gray-700"
         />
         <p className="text-sm font-medium text-primary">I use this</p>
