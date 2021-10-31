@@ -39,7 +39,9 @@ export async function afterCallback(_, __, session) {
         twitterId: id,
       },
     })
-  } catch (error) {}
+  } catch (error) {
+    console.error(error)
+  }
 
   return session
 }

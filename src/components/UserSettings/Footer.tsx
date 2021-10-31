@@ -7,7 +7,9 @@ import { DeleteUserDialog } from './DeleteUserDialog'
 export function UserSettingsFooter() {
   return (
     <div className="flex justify-between py-12 space-x-4">
-      <Button href="/api/auth/logout">Log out</Button>
+      <a href="/api/auth/logout">
+        <Button>Log out</Button>
+      </a>
       <DeleteUserDialog trigger={<DeleteButton>Delete account</DeleteButton>} />
     </div>
   )

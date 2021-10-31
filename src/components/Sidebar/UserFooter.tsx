@@ -22,6 +22,14 @@ export function UserFooter() {
   const { data, loading, error } = useViewerQuery()
   const { setIsOpen } = React.useContext(GlobalNavigationContext)
 
+  function signInButton() {
+    return (
+      <a style={{ width: '100%' }} href="/api/auth/login">
+        <GhostButton style={{ width: '100%' }}>Sign in</GhostButton>
+      </a>
+    )
+  }
+
   if (loading) {
     return (
       <Container>
@@ -33,11 +41,7 @@ export function UserFooter() {
   }
 
   if (error) {
-    return (
-      <Container>
-        <GhostButton href="/api/auth/login">Sign in</GhostButton>
-      </Container>
-    )
+    return <Container>{signInButton()}</Container>
   }
 
   if (data?.viewer) {
@@ -69,11 +73,5 @@ export function UserFooter() {
     )
   }
 
-  return (
-    <Container data-cy="sign-in-button">
-      <GhostButton style={{ width: '100%' }} href="/api/auth/login">
-        Sign in
-      </GhostButton>
-    </Container>
-  )
+  return <Container data-cy="sign-in-button">{signInButton()}</Container>
 }

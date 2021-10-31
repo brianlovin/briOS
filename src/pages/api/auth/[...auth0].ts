@@ -14,18 +14,24 @@ export default handleAuth({
       await handleLogin(req, res, {
         returnTo: req.headers.referer,
       })
-    } catch (error) {}
+    } catch (error) {
+      res.status(error.status || 500).end(error.message)
+    }
   },
   async logout(req, res) {
     try {
       await handleLogout(req, res, {
         returnTo: CLIENT_URL,
       })
-    } catch (error) {}
+    } catch (error) {
+      res.status(error.status || 500).end(error.message)
+    }
   },
   async callback(req, res) {
     try {
       await handleCallback(req, res, { afterCallback })
-    } catch (error) {}
+    } catch (error) {
+      res.status(error.status || 500).end(error.message)
+    }
   },
 })
