@@ -1,5 +1,6 @@
 import * as React from 'react'
 
+import { LoadingSpinner } from '~/components/LoadingSpinner'
 import { SignInDialog } from '~/components/SignInDialog'
 import { SyntaxHighlighter } from '~/components/SyntaxHighlighter'
 import { CommentType, useGetCommentsQuery } from '~/graphql/types.generated'
@@ -40,8 +41,19 @@ export function Comments({ refId, type, refetch = null }: Props) {
     }
   }, [data])
 
-  if (loading) return <p>Loading ...</p>
-  if (error) return <p>Error...</p>
+  if (loading) {
+    return (
+      <div className="relative flex flex-col flex-1 border-t dark:border-gray-800 border-gray-150">
+        <div className="flex flex-col flex-1 w-full max-w-3xl px-4 py-8 mx-auto space-y-3 md:px-8">
+          <div className="flex flex-col items-center justify-center space-y-6">
+            <LoadingSpinner />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) return <p>Error loading comments...</p>
 
   const { comments } = data
 
