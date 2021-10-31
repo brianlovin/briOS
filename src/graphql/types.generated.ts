@@ -3085,7 +3085,7 @@ export type GetHackerNewsPostQueryResult = Apollo.QueryResult<
   GetHackerNewsPostQueryVariables
 >
 export const GetPostsDocument = gql`
-  query GetPosts {
+  query getPosts {
     posts {
       ...PostInfo
     }
@@ -3138,7 +3138,7 @@ export type GetPostsQueryResult = Apollo.QueryResult<
   GetPostsQueryVariables
 >
 export const GetPostDocument = gql`
-  query GetPost($slug: String!) {
+  query getPost($slug: String!) {
     post(slug: $slug) {
       ...PostInfo
       text

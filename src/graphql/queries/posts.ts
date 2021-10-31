@@ -3,7 +3,7 @@ import { gql } from '@apollo/client'
 import { PostInfoFragment } from '~/graphql/fragments/post'
 
 export const GET_POSTS = gql`
-  query GetPosts {
+  query getPosts {
     posts {
       ...PostInfo
     }
@@ -12,7 +12,7 @@ export const GET_POSTS = gql`
 `
 
 export const GET_POST = gql`
-  query GetPost($slug: String!) {
+  query getPost($slug: String!) {
     post(slug: $slug) {
       ...PostInfo
       text

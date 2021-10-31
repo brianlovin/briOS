@@ -36,6 +36,7 @@
     "cryptr": "^6.0.2",
     "date-fns": "^2.25.0",
     "deepmerge": "^4.2.2",
+    "feed": "^4.2.2",
     "framer-motion": "^4.1.17",
     "graphql": "^15.6.1",
     "isomorphic-unfetch": "^3.1.0",
