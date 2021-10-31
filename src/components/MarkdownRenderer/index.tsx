@@ -1,6 +1,7 @@
-import * as React from 'react'
 import Link from 'next/link'
+import * as React from 'react'
 import Markdown from 'react-markdown'
+
 import { baseUrl } from '~/config/seo'
 
 interface Props {

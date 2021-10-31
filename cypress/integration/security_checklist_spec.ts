@@ -1,15 +1,12 @@
-import data from '../../src/data/security'
+/// <reference types="cypress" />
+/// <reference types="@testing-library/cypress" />
 
-describe('Home', () => {
+describe('Security checklist', () => {
   before(() => {
     cy.visit('/security')
   })
 
-  it('should render content', () => {
-    const dataKeys = Object.keys(data)
-    dataKeys.map((key: string) => {
-      // @ts-ignore
-      cy.contains(data[key].title)
-    })
+  it('should render page', () => {
+    cy.get('[data-cy="security-checklist"]').should('be.visible')
   })
 })

@@ -1,88 +1,121 @@
-import { URL } from 'url'
 import { UserInputError } from 'apollo-server-micro'
-import { db } from '~/graphql/services/firebase'
-import getBookmarkMetaData from './getBookmarkMetaData'
-import { BOOKMARKS_COLLECTION } from '~/graphql/constants'
 
-function isValidUrl(string) {
-  try {
-    new URL(string)
-    return true
-  } catch (err) {
-    return false
-  }
-}
+import { IS_PROD } from '~/graphql/constants'
+import { Context } from '~/graphql/context'
+import {
+  MutationAddBookmarkArgs,
+  MutationDeleteBookmarkArgs,
+  MutationEditBookmarkArgs,
+} from '~/graphql/types.generated'
+import { revue } from '~/lib/revue'
+import { validUrl } from '~/lib/validators'
+
+import getBookmarkMetaData from './getBookmarkMetaData'
 
 export async function editBookmark(
   _,
-  { id, title, notes = '', category, twitterHandle }
+  args: MutationEditBookmarkArgs,
+  ctx: Context
 ) {
+  const { id, data } = args
+  const { title, description, tag, faviconUrl } = data
+  const { prisma } = ctx
+
   if (!title || title.length === 0)
     throw new UserInputError('Bookmark must have a title')
 
-  await db
-    .collection(BOOKMARKS_COLLECTION)
-    .doc(id)
-    .update({ title, notes, category, twitterHandle })
-
-  return await db
-    .collection(BOOKMARKS_COLLECTION)
-    .doc(id)
-    .get()
-    .then((doc) => doc.data())
-    .then((res) => ({ ...res, reactions: res.reactions || 0, id }))
-}
-
-export async function addBookmark(_, { url, notes, category, twitterHandle }) {
-  if (!isValidUrl(url)) throw new UserInputError('URL was invalid')
-
-  const existingRef = await db
-    .collection(BOOKMARKS_COLLECTION)
-    .where('url', '==', url)
-    .get()
-    .then((snapshot) => !snapshot.empty)
-
-  if (existingRef) throw new UserInputError('URL already exists')
-
-  const metadata = await getBookmarkMetaData(url)
-
-  const id = await db
-    .collection(BOOKMARKS_COLLECTION)
-    .add({
-      createdAt: new Date(),
-      ...metadata,
-      notes,
-      category,
-      twitterHandle,
-      reactions: 0,
-    })
-    .then(({ id }) => id)
-
-  return await db
-    .collection(BOOKMARKS_COLLECTION)
-    .doc(id)
-    .get()
-    .then((doc) => doc.data())
-    .then((res) => ({ ...res, id }))
-}
-
-export async function deleteBookmark(_, { id }) {
-  return await db
-    .collection(BOOKMARKS_COLLECTION)
-    .doc(id)
-    .delete()
-    .then(() => true)
-}
-
-export async function addBookmarkReaction(_, { id }) {
-  const docRef = db.collection(BOOKMARKS_COLLECTION).doc(id)
-  const doc = await docRef.get().then((doc) => doc.data())
-  const count = doc.reactions ? doc.reactions + 1 : 1
-
-  await docRef.update({
-    reactions: count,
+  // reset tags
+  await prisma.bookmark.update({
+    where: { id },
+    data: {
+      tags: {
+        set: [],
+      },
+    },
+    include: { tags: true },
   })
 
-  const res = await docRef.get().then((doc) => doc.data())
-  return { ...res, id }
+  // update data
+  return await prisma.bookmark.update({
+    where: { id },
+    data: {
+      title,
+      description,
+      faviconUrl,
+      tags: {
+        connectOrCreate: {
+          where: { name: tag },
+          create: { name: tag },
+        },
+      },
+    },
+    include: { tags: true },
+  })
+}
+
+export async function addBookmark(
+  _,
+  args: MutationAddBookmarkArgs,
+  ctx: Context
+) {
+  const { data } = args
+  const { url, tag } = data
+  const { prisma } = ctx
+
+  if (!validUrl(url)) throw new UserInputError('URL was invalid')
+
+  const metadata = await getBookmarkMetaData(url)
+  const { host, title, image, description, faviconUrl } = metadata
+
+  /*
+    Preemptively add bookmarks to Revue, assuming I want to share them
+    more broadly in the newsletter
+  */
+  if (IS_PROD) {
+    try {
+      const { id } = await revue.getCurrentIssue()
+      await revue.addItemToIssue({ id, url })
+    } catch (err) {
+      console.error({ err })
+    }
+  } else {
+    console.log('Adding bookmark to newsletter', { url })
+  }
+
+  try {
+    return await prisma.bookmark.create({
+      data: {
+        url,
+        host,
+        title,
+        image,
+        description,
+        faviconUrl,
+        tags: {
+          connectOrCreate: {
+            where: { name: tag },
+            create: { name: tag },
+          },
+        },
+      },
+      include: { tags: true },
+    })
+  } catch (err) {
+    throw new UserInputError('Unable to create bookmark')
+  }
+}
+
+export async function deleteBookmark(
+  _,
+  args: MutationDeleteBookmarkArgs,
+  ctx: Context
+) {
+  const { id } = args
+  const { prisma } = ctx
+
+  await prisma.bookmark.delete({
+    where: { id },
+  })
+
+  return true
 }

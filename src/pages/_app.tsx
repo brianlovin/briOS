@@ -1,17 +1,22 @@
-import * as React from 'react'
-import Providers from '~/components/Providers'
 import '~/styles/tailwind.css'
 import 'tailwindcss/utilities.css'
 import '~/styles/custom-styles.css'
 import '~/styles/syntax-highlighting.css'
 import '~/styles/prose-styles.css'
 
-function MyApp({ Component, pageProps }) {
-  return (
-    <Providers>
-      <Component {...pageProps} />
-    </Providers>
-  )
-}
+import * as React from 'react'
 
-export default MyApp
+import { SiteLayout } from '~/components/Layouts'
+import { Providers } from '~/components/Providers'
+
+export default function App({ Component, pageProps }) {
+  const getLayout =
+    Component.getLayout ||
+    ((page) => (
+      <Providers pageProps={pageProps}>
+        <SiteLayout>{page}</SiteLayout>
+      </Providers>
+    ))
+
+  return getLayout(<Component {...pageProps} />)
+}

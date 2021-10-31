@@ -1,70 +1,68 @@
-import * as React from 'react'
-import Page from '~/components/Page'
-import { NextSeo } from 'next-seo'
-import { CenteredColumn } from '~/components/Layouts'
-import { HNPost } from '~/components/HNPost'
 import { useRouter } from 'next/router'
-import FullscreenLoading from '~/components/FullscreenLoading'
-import { getPostById, getPostIds } from '~/graphql/services/hn'
-import { HNPost as HNPostType } from '.'
-import { baseUrl } from '~/config/seo'
+import { NextSeo } from 'next-seo'
+import * as React from 'react'
 
-interface Props {
-  post: HNPostType
-}
+import { PostDetail } from '~/components/HackerNews/PostDetail'
+import { PostsList } from '~/components/HackerNews/PostsList'
+import { ListDetailView, SiteLayout } from '~/components/Layouts'
+import { Detail } from '~/components/ListDetail/Detail'
+import { withProviders } from '~/components/Providers/withProviders'
+import routes from '~/config/routes'
+import { getContext } from '~/graphql/context'
+import {
+  GET_HACKER_NEWS_POST,
+  GET_HACKER_NEWS_POSTS,
+} from '~/graphql/queries/hackerNews'
+import { addApolloState, initApolloClient } from '~/lib/apollo'
 
-export default function HNPostView(props: Props) {
-  const { post } = props
-
+function HNPostPage({ id }) {
   const router = useRouter()
 
   if (router.isFallback) {
-    return <FullscreenLoading />
+    return <Detail.Loading />
   }
 
   return (
-    <Page>
+    <>
       <NextSeo
-        title={'Hacker News'}
-        description={'My personal Hacker News reader.'}
-        openGraph={{
-          title: 'Hacker News',
-          description: 'My personal Hacker News reader.',
-          images: [
-            {
-              url: `${baseUrl}/static/meta/hn.png`,
-              alt: 'Hacker News',
-            },
-          ],
-        }}
+        title={routes.hn.seo.title}
+        description={routes.hn.seo.description}
+        openGraph={routes.hn.seo.openGraph}
       />
 
-      <CenteredColumn data-cy="hn">
-        <HNPost post={post} />
-      </CenteredColumn>
-    </Page>
+      <PostDetail id={id} />
+    </>
   )
 }
 
-export async function getStaticPaths() {
-  const topPostIds = await getPostIds('top')
+export async function getServerSideProps({ params: { id }, req, res }) {
+  const context = await getContext(req, res)
+  const apolloClient = initApolloClient({ context })
 
-  const postIds = topPostIds.slice(0, 16)
+  await Promise.all([
+    apolloClient.query({
+      query: GET_HACKER_NEWS_POSTS,
+    }),
 
-  const paths = postIds.map((id) => ({
-    params: { id: id.toString() },
-  }))
+    apolloClient.query({
+      query: GET_HACKER_NEWS_POST,
+      variables: { id },
+    }),
+  ])
 
-  return { paths, fallback: true }
-}
-
-export async function getStaticProps({ params: { id } }) {
-  const post = await getPostById(id, true)
-
-  return {
-    revalidate: 60 * 60,
+  return addApolloState(apolloClient, {
     props: {
-      post,
+      id,
     },
-  }
+  })
 }
+
+HNPostPage.getLayout = withProviders(function getLayout(page) {
+  return (
+    <SiteLayout>
+      <ListDetailView list={<PostsList />} hasDetail detail={page} />
+    </SiteLayout>
+  )
+})
+
+export default HNPostPage

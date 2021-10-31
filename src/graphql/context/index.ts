@@ -1,21 +1,40 @@
-import Cryptr from 'cryptr'
+import { getSession } from '@auth0/nextjs-auth0'
+import { PrismaClient } from '@prisma/client'
 
-function isAuthenticated(req) {
-  const { session } = req?.cookies
-  if (!session || session.length < 32) {
-    return false
-  }
+import { prisma } from '~/lib/prisma'
 
-  const secret = process.env.PASSWORD_TOKEN
-  const validated = process.env.PASSWORD
-  const cryptr = new Cryptr(secret)
-  const decrypted = cryptr.decrypt(session)
-  return decrypted === validated
+import { User } from '../types.generated'
+
+export function isAuthenticated(req, res) {
+  const session = getSession(req, res)
+  return session?.user
 }
 
-export default function context(ctx) {
-  return {
-    cookie: ctx.res.cookie,
-    isMe: isAuthenticated(ctx.req),
+export async function getViewer(req, res) {
+  const user = isAuthenticated(req, res)
+
+  let viewer = null
+  if (user) {
+    viewer = await prisma.user.findUnique({ where: { twitterId: user.sub } })
   }
+
+  return viewer
+}
+
+export async function getContext(req, res) {
+  const viewer = await getViewer(req, res)
+
+  return {
+    viewer,
+    prisma,
+  }
+}
+
+export default async function context(ctx) {
+  return await getContext(ctx.req, ctx.res)
+}
+
+export type Context = {
+  prisma: PrismaClient
+  viewer: User | null
 }

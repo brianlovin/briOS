@@ -1,24 +1,29 @@
-import { getBookmarks } from '~/graphql/resolvers/queries/bookmarks'
-import { getPosts, getPost } from '~/graphql/resolvers/queries/writing'
-import { getEpisodes } from '~/graphql/resolvers/queries/podcast'
-import { getRepos } from '~/graphql/resolvers/queries/repos'
-import { isMe } from '~/graphql/resolvers/queries/isMe'
-import {
-  getAMAQuestions,
-  getSignedUploadUrl,
-  getSignedPlaybackUrl,
-  getTranscription,
-} from '~/graphql/resolvers/queries/ama'
+import { getBookmark, getBookmarks } from './bookmarks'
+import { getComment, getComments } from './comment'
+import { getHackerNewsPost, getHackerNewsPosts } from './hackerNews'
+import { getPost, getPosts } from './posts'
+import { getQuestion, getQuestions } from './questions'
+import { getRepos } from './repos'
+import { getStack, getStacks } from './stack'
+import { getTags } from './tags'
+import { getUser } from './user'
+import { viewer } from './viewer'
 
 export default {
+  viewer: viewer,
+  user: getUser,
+  bookmark: getBookmark,
   bookmarks: getBookmarks,
-  episodes: getEpisodes,
   posts: getPosts,
   post: getPost,
   repos: getRepos,
-  isMe: isMe,
-  amaQuestions: getAMAQuestions,
-  signedUploadUrl: getSignedUploadUrl,
-  signedPlaybackUrl: getSignedPlaybackUrl,
-  transcription: getTranscription,
+  question: getQuestion,
+  questions: getQuestions,
+  comment: getComment,
+  comments: getComments,
+  stacks: getStacks,
+  stack: getStack,
+  tags: getTags,
+  hackerNewsPosts: getHackerNewsPosts,
+  hackerNewsPost: getHackerNewsPost,
 }

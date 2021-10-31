@@ -2,60 +2,29 @@ import { gql } from 'apollo-server-micro'
 
 export default gql`
   type Post {
-    canonical_url: String
-    codeinjection_foot: String
-    codeinjection_head: String
-    comment_id: String
-    created_at: String
-    custom_excerpt: String
-    excerpt: String
-    feature_image: String
-    featured: Boolean
-    html: String
-    id: String
-    meta_description: String
-    meta_title: String
-    og_description: String
-    og_image: String
-    og_title: String
-    published_at: String
-    reading_time: Int
-    slug: String
+    id: ID!
+    createdAt: String
+    updatedAt: String
+    publishedAt: String
+    author: User
     title: String
-    twitter_description: String
-    twitter_image: String
-    twitter_title: String
-    updated_at: String
-    url: String
-    uuid: String
-    visibility: String
+    slug: String
+    text: String
+    excerpt: String
+    featureImage: String
   }
 
   type Bookmark {
     id: ID!
+    createdAt: String!
+    updatedAt: String!
     url: String!
-    author: String
-    creator: String
-    description: String
+    host: String!
+    title: String
     image: String
-    site_name: String
-    title: String
-    host: String
-    reactions: Int
-    notes: String
-    category: String
-    twitterHandle: String
-  }
-
-  type Episode {
-    id: String
+    faviconUrl: String
     description: String
-    legacy_id: String
-    long_description: String
-    published_at: String
-    status: String
-    title: String
-    token: String
+    tags: [Tag]!
   }
 
   type Repo {
@@ -65,66 +34,265 @@ export default gql`
     stars: Int
   }
 
-  enum AMAStatus {
-    PENDING
-    ANSWERED
+  type Question {
+    id: String!
+    createdAt: String!
+    updatedAt: String
+    author: User
+    title: String!
+    description: String
+    status: QuestionStatus
+    viewerCanEdit: Boolean
   }
 
-  type AMA {
-    id: String!
-    question: String!
-    status: AMAStatus
-    answer: String
-    createdAt: String
+  enum CommentType {
+    BOOKMARK
+    QUESTION
+    STACK
+    POST
+  }
+
+  type Tag {
+    name: String!
+  }
+
+  type Stack {
+    id: ID!
+    createdAt: String!
     updatedAt: String
-    reactions: Int
-    audioUrl: String
-    audioPlayCount: Int
-    audioWaveform: [Float]
+    name: String!
+    description: String
+    image: String
+    url: String!
+    tags: [Tag]!
+    usedBy: [User]!
+    usedByViewer: Boolean
+  }
+
+  enum UserRole {
+    BLOCKED
+    USER
+    ADMIN
+  }
+
+  enum EmailSubscriptionType {
+    HACKER_NEWS
+    NEWSLETTER
+  }
+
+  type EmailSubscription {
+    type: EmailSubscriptionType
+    subscribed: Boolean
+  }
+
+  type User {
+    id: ID!
+    createdAt: String
+    role: UserRole
+    username: String
+    avatar: String
+    name: String
+    isViewer: Boolean
+    email: String
+    pendingEmail: String
+    emailSubscriptions: [EmailSubscription]
+  }
+
+  type Comment {
+    id: ID!
+    createdAt: String!
+    updatedAt: String
+    text: String
+    author: User!
+    viewerCanEdit: Boolean
+    viewerCanDelete: Boolean
+  }
+
+  type HackerNewsComment {
+    id: String
+    user: String
+    comments_count: String
+    comments: [HackerNewsComment]
+    time_ago: String
+    level: Int
+    content: String
+  }
+
+  type HackerNewsPost {
+    id: String
+    title: String
+    user: String
+    time: Int
+    time_ago: String
+    comments: [HackerNewsComment]
+    comments_count: String
+    url: String
+    domain: String
+    content: String
+  }
+
+  input BookmarkFilter {
+    tag: String
+    host: String
+  }
+
+  enum QuestionStatus {
+    ANSWERED
+    PENDING
+  }
+
+  input QuestionFilter {
+    status: QuestionStatus
+  }
+
+  type BookmarkEdge {
+    node: Bookmark
+    cursor: String
+  }
+
+  type QuestionEdge {
+    node: Question
+    cursor: String
+  }
+
+  type StackEdge {
+    node: Stack
+    cursor: String
+  }
+
+  type PageInfo {
+    hasNextPage: Boolean
+    totalCount: Int
+    endCursor: String
+  }
+
+  type BookmarksConnection {
+    pageInfo: PageInfo
+    edges: [BookmarkEdge]!
+  }
+
+  type QuestionsConnection {
+    pageInfo: PageInfo
+    edges: [QuestionEdge]!
+  }
+
+  type StacksConnection {
+    pageInfo: PageInfo
+    edges: [StackEdge]!
   }
 
   type Query {
-    bookmarks(skip: Int, category: String): [Bookmark]!
-    episodes: [Episode]!
-    posts(first: Int): [Post]!
+    viewer: User
+    user(username: String!): User
+    bookmark(id: ID!): Bookmark
+    bookmarks(
+      first: Int
+      after: String
+      filter: BookmarkFilter
+    ): BookmarksConnection!
+    stack(id: ID!): Stack
+    stacks(first: Int, after: String): StacksConnection!
+    comment(id: ID!): Comment
+    comments(refId: String, type: CommentType): [Comment]!
+    posts(first: Int, filter: String, order: String): [Post]!
     post(slug: String!): Post
-    amaQuestions(skip: Int, status: AMAStatus): [AMA]!
+    question(id: ID!): Question
+    questions(
+      first: Int
+      after: String
+      filter: QuestionFilter
+    ): QuestionsConnection!
+    hackerNewsPosts: [HackerNewsPost]!
+    hackerNewsPost(id: ID!): HackerNewsPost
     repos: [Repo]!
-    isMe: Boolean
     signedUploadUrl(id: ID!): String
     signedPlaybackUrl(id: ID!): String
     transcription(transcriptionId: ID!): String
+    tags: [Tag]!
+  }
+
+  input EditUserInput {
+    username: String
+    email: String
+  }
+
+  input EmailSubscriptionInput {
+    type: EmailSubscriptionType!
+    subscribed: Boolean!
+    email: String
+  }
+
+  input AddStackInput {
+    name: String!
+    url: String!
+    image: String!
+    description: String!
+    tag: String
+  }
+
+  input EditStackInput {
+    name: String!
+    url: String!
+    image: String!
+    description: String!
+    tag: String
+  }
+
+  input AddBookmarkInput {
+    url: String!
+    tag: String!
+  }
+
+  input EditBookmarkInput {
+    title: String!
+    description: String!
+    tag: String!
+    faviconUrl: String!
+  }
+
+  input EditQuestionInput {
+    title: String!
+    description: String
+  }
+
+  input AddQuestionInput {
+    title: String!
+    description: String
+  }
+
+  input AddPostInput {
+    title: String!
+    text: String!
+    slug: String!
+    excerpt: String
+  }
+
+  input EditPostInput {
+    title: String!
+    text: String!
+    slug: String!
+    excerpt: String
   }
 
   type Mutation {
-    login(password: String!): Boolean
-    logout: Boolean
-    addBookmark(
-      url: String!
-      notes: String
-      category: String
-      twitterHandle: String
-    ): Bookmark
-    editBookmark(
-      id: ID!
-      title: String!
-      notes: String
-      category: String
-      twitterHandle: String
-    ): Bookmark
+    addBookmark(data: AddBookmarkInput!): Bookmark
+    editBookmark(id: ID!, data: EditBookmarkInput!): Bookmark
     deleteBookmark(id: ID!): Boolean
-    addBookmarkReaction(id: ID!): Bookmark
-    addAMAQuestion(question: String!): Boolean
-    deleteAMAQuestion(id: ID!): Boolean
-    editAMAQuestion(
-      id: ID!
-      answer: String
-      question: String
-      status: AMAStatus
-      audioWaveform: [Float]
-    ): AMA
-    addAMAReaction(id: ID!): AMA
-    addAMAAudioPlay(id: ID!): Boolean
-    transcribeAudio(url: String!): String
+    addStack(data: AddStackInput!): Stack
+    editStack(id: ID!, data: EditStackInput!): Stack
+    deleteStack(id: ID!): Boolean
+    toggleStackUser(id: ID!): Stack
+    addQuestion(data: AddQuestionInput!): Question
+    editQuestion(id: ID!, data: EditQuestionInput!): Question
+    deleteQuestion(id: ID!): Boolean
+    addComment(refId: String!, type: CommentType!, text: String!): Comment
+    editComment(id: ID!, text: String): Comment
+    deleteComment(id: ID!): Boolean
+    editUser(data: EditUserInput): User
+    deleteUser: Boolean
+    editEmailSubscription(data: EmailSubscriptionInput): User
+    addPost(data: AddPostInput!): Post
+    editPost(id: ID!, data: EditPostInput!): Post
+    deletePost(id: ID!): Boolean
   }
 `

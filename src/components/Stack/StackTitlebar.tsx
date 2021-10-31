@@ -1,0 +1,35 @@
+import * as React from 'react'
+import { Plus } from 'react-feather'
+
+import { GhostButton } from '~/components/Button'
+import { TitleBar } from '~/components/ListDetail/TitleBar'
+import { UserRole, useViewerQuery } from '~/graphql/types.generated'
+
+import { AddStackDialog } from './AddStackDialog'
+
+export function StackTitlebar({ scrollContainerRef }) {
+  const { data } = useViewerQuery()
+
+  function trailingAccessory() {
+    if (data?.viewer?.role === UserRole.Admin) {
+      return (
+        <AddStackDialog
+          trigger={
+            <GhostButton size="small-square">
+              <Plus size={16} />
+            </GhostButton>
+          }
+        />
+      )
+    }
+    return null
+  }
+
+  return (
+    <TitleBar
+      scrollContainerRef={scrollContainerRef}
+      title="Stack"
+      trailingAccessory={trailingAccessory()}
+    />
+  )
+}

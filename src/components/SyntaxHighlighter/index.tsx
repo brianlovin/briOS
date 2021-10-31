@@ -1,7 +1,7 @@
-import * as React from 'react'
 import Prism from 'prismjs'
+import * as React from 'react'
 
-export default function SyntaxHighlighter({ data }) {
+export function SyntaxHighlighter({ data }) {
   React.useEffect(() => {
     Prism.highlightAll()
   }, [data])

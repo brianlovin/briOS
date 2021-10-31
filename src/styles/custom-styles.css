@@ -1,19 +1,46 @@
-/* Write your own custom component styles here */
-@font-face {
-  font-family: 'iA Quattro';
-  font-stretch: 25% 150%;
-  font-weight: 100 1000;
-  src: url('/static/fonts/iAWriterQuattroV.ttf') format('truetype-variations');
-}
-
 @layer base {
-  body {
-    @apply font-mono;
+  html {
+    @apply max-h-screen overflow-hidden text-base antialiased;
   }
 
+  /* handles safari overscroll background color */
+  body:after {
+    content: '';
+    position: fixed;
+    top: -50%;
+    right: -50%;
+    bottom: -50%;
+    left: -50%;
+    z-index: -1;
+    @apply bg-white dark:bg-black;
+  }
   /* needed to override tailwind forms styles */
   select {
-    @apply w-full px-4 py-2 border border-gray-200 rounded focus:outline-none focus:border-gray-1000 text-primary dark:border-gray-800 dark:focus:border-gray-600 bg-gray-1000 dark:bg-white bg-opacity-5 hover:bg-opacity-10 focus:ring-0;
+    @apply w-full px-4 py-2 border border-gray-200 rounded outline-none focus:outline-none focus:border-gray-1000 text-primary dark:border-gray-800 dark:focus:border-gray-600 bg-gray-1000 dark:bg-white bg-opacity-5 hover:bg-opacity-10 focus:ring-0;
+  }
+
+  button:focus,
+  a:focus {
+    @apply outline-none ring-2 ring-offset-2 ring-offset-white dark:ring-offset-black ring-blue-500 dark:ring-blue-500;
+  }
+
+  button:focus:not(:focus-visible),
+  a:focus:not(:focus-visible) {
+    @apply outline-none ring-0 ring-offset-0;
+  }
+
+  input[type='text'],
+  textarea {
+    @apply border-none outline-none;
+  }
+
+  input[type='checkbox'] {
+    @apply dark:bg-gray-700 dark:border-gray-600;
+  }
+
+  input:focus,
+  textarea:focus {
+    @apply outline-none ring-offset-white dark:ring-offset-black ring-2 ring-offset-2 ring-blue-500;
   }
 }
 
@@ -24,6 +51,21 @@
 
   .tabbed-navigation::-webkit-scrollbar {
     display: none;
+  }
+
+  .bg-dots {
+    background: linear-gradient(90deg, #f9fafb 15px, transparent 1%) center,
+      linear-gradient(#f9fafb 15px, transparent 1%) center, rgba(0, 0, 0, 0.24);
+    background-size: 16px 16px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .bg-dots {
+      background: linear-gradient(90deg, #050505 15px, transparent 1%) center,
+        linear-gradient(#050505 15px, transparent 1%) center,
+        rgba(255, 255, 255, 0.16);
+      background-size: 16px 16px;
+    }
   }
 }
 
@@ -38,23 +80,15 @@
   }
 
   .text-tertiary {
-    @apply text-gray-500 dark:text-gray-500;
+    @apply text-gray-500 dark:text-gray-400;
   }
 
   .text-quaternary {
-    @apply text-gray-400 dark:text-gray-600;
+    @apply text-gray-400 dark:text-gray-500;
   }
 
   .bg-elevated {
     @apply bg-gray-400 dark:bg-gray-50 bg-opacity-5;
-  }
-
-  .timeline-inset {
-    @apply ml-16 md:ml-0;
-  }
-
-  .timeline-full-width {
-    @apply -ml-16 md:ml-0;
   }
 
   .filter-none {
@@ -79,7 +113,7 @@
   }
 
   .highlight-link {
-    @apply px-0.5 -mx-0.5 no-underline bg-yellow-400 rounded dark:bg-gray-100 dark:bg-opacity-20 text-gray-1000 dark:text-gray-300 bg-opacity-20 md:hover:bg-opacity-30 md:dark:hover:bg-yellow-500 md:dark:hover:bg-opacity-100 md:dark:hover:text-gray-1000;
+    @apply px-0.5 -mx-0.5 dark:bg-gray-100 dark:bg-opacity-20 text-gray-1000 dark:text-gray-300 bg-opacity-20 md:hover:bg-opacity-30 md:dark:hover:bg-yellow-500 md:dark:hover:bg-opacity-100 md:dark:hover:text-gray-1000;
   }
 
   .blink {
@@ -117,6 +151,86 @@
     100% {
       opacity: 0;
       transform: scale(1);
+    }
+  }
+
+  .meta-wrap {
+    background: transparent;
+    animation: 48s spin ease-in-out infinite;
+    -webkit-filter: brightness(105%) saturate(200%) contrast(1);
+    filter: brightness(105%) saturate(200%) contrast(1);
+    border-radius: 16px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .meta:before,
+  .meta:after {
+    content: '';
+    position: absolute;
+    width: 1024px;
+    height: 1024px;
+    left: 50%;
+    top: 50%;
+    margin: -50px;
+    background: linear-gradient(#ff9900, #ff007a);
+    border-radius: 50%;
+    -webkit-filter: blur(60px);
+    filter: blur(60px);
+    animation: move 100s infinite alternate ease-in-out;
+  }
+
+  .meta.small:before,
+  .meta.small:after {
+    width: 196px;
+    height: 196px;
+  }
+
+  .meta:before {
+    animation-duration: 29.3s;
+    animation-delay: -3.3s;
+  }
+
+  .meta:nth-child(2):before {
+    animation-duration: 34.7s;
+    animation-delay: -2.7s;
+  }
+
+  .meta:nth-child(2):after {
+    animation-duration: 28.7s;
+    animation-delay: -5.32s;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes move {
+    0% {
+      transform: translate(0%, 2%);
+    }
+    15% {
+      transform: translate(-20%, 20%);
+    }
+    30% {
+      transform: translate(30%, -30%);
+    }
+    40% {
+      transform: translate(-20%, 20%);
+    }
+    60% {
+      transform: translate(20%, -20%);
+    }
+    80% {
+      transform: translate(-20%, -10%);
+    }
+    100% {
+      transform: translate(20%, 10%);
     }
   }
 }

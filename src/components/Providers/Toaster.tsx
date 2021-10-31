@@ -1,9 +1,9 @@
 import { Toaster } from 'react-hot-toast'
 
-export default function Toast() {
+export function Toast() {
   return (
     <Toaster
-      position="bottom-center"
+      position="top-center"
       reverseOrder={false}
       gutter={8}
       containerClassName=""

@@ -1,10 +1,11 @@
-export const baseUrl = 'https://brianlovin.com'
+export const baseUrl =
+  process.env.NODE_ENV === 'production' ? 'https://brianlovin.com' : ''
 export const baseEmail = 'hi@brianlovin.com'
 
 export const defaultSEO = {
   title: 'Brian Lovin',
   description:
-    'Product designer, podcaster, and writer, living in San Francisco. Currently building native mobile apps at GitHub.',
+    'Product designer, podcaster, and writer, living in San Francisco.',
   openGraph: {
     type: 'website',
     locale: 'en_US',
@@ -12,7 +13,7 @@ export const defaultSEO = {
     site_name: 'Brian Lovin',
     images: [
       {
-        url: `${baseUrl}/static/meta/og-image.png`,
+        url: `${baseUrl}/static/og/default.png`,
         alt: 'Brian Lovin',
       },
     ],

@@ -1,12 +1,12 @@
 /// <reference types="cypress" />
 /// <reference types="@testing-library/cypress" />
 
-describe('About', () => {
+describe('About page', () => {
   before(() => {
     cy.visit('/about')
   })
 
-  it('should render about', () => {
-    cy.get('[data-cy="about-page"]').should('be.visible')
+  it('should render intro', () => {
+    cy.get('[data-cy="home-intro"]').should('be.visible')
   })
 })

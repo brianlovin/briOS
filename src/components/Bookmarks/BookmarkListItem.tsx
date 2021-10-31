@@ -1,70 +1,51 @@
 import * as React from 'react'
-import { Bookmark } from '~/graphql/types.generated'
-import EditingBookmarkListItem from './EditingBookmarkListItem'
-import BookmarkReaction from './BookmarkReaction'
-import { MarkdownRenderer } from '../MarkdownRenderer'
+import { Link } from 'react-feather'
+import ReactVisibilitySensor from 'react-visibility-sensor'
+
+import { ListItem } from '~/components/ListDetail/ListItem'
+import { BookmarkInfoFragment } from '~/graphql/types.generated'
 
 interface Props {
-  editable: boolean
-  bookmark: Bookmark
+  bookmark: BookmarkInfoFragment
+  active: boolean
 }
 
-export const BookmarkListItem = React.memo((props: Props) => {
-  const { bookmark, editable } = props
-  const [isEditing, setIsEditing] = React.useState(false)
+export const BookmarksListItem = React.memo<Props>(({ bookmark, active }) => {
+  const [isVisible, setIsVisible] = React.useState(false)
 
-  if (isEditing) {
-    return (
-      <EditingBookmarkListItem
-        onDone={() => setIsEditing(false)}
-        bookmark={bookmark}
-      />
-    )
-  }
-
-  let cleanedCategory
-  switch (bookmark.category) {
-    case 'portfolio':
-      cleanedCategory = 'Portfolio'
-      break
-    case 'website':
-      cleanedCategory = 'Personal site'
-      break
-    default:
-      cleanedCategory = 'Reading'
+  function handleClick(e, bookmark) {
+    if (e.metaKey) {
+      e.preventDefault()
+      e.stopPropagation()
+      window.open(bookmark.url, '_blank').focus()
+    }
   }
 
   return (
-    <div className="space-y-1 ">
-      <span>
-        <a
-          href={`${bookmark.url}`}
-          className="font-medium text-primary highlight-link-hover"
-        >
-          {bookmark.title}
-        </a>
-      </span>
-      {bookmark.notes && (
-        <div className="pl-4 prose-sm prose border-l border-gray-300 border-dashed text-tertiary dark:border-gray-700">
-          <MarkdownRenderer>{bookmark.notes}</MarkdownRenderer>
-        </div>
-      )}
-      <span className="flex items-center space-x-2">
-        <BookmarkReaction bookmark={bookmark} />
-        <span className="text-quaternary">{' · '}</span>
-        <span className="inline-block text-tertiary">{cleanedCategory}</span>
-        {editable && (
-          <>
-            <span className="text-quaternary">{' · '}</span>
-            <button
-              className="text-secondary highlight-link-hover"
-              onClick={() => setIsEditing(true)}
-            >
-              Edit
-            </button>
-          </>
-        )}
-      </span>
-    </div>
+    <ReactVisibilitySensor
+      partialVisibility
+      onChange={(visible: boolean) => !isVisible && setIsVisible(visible)}
+    >
+      <ListItem
+        key={bookmark.id}
+        title={bookmark.title}
+        byline={
+          <div className="flex items-center space-x-2">
+            {bookmark.faviconUrl && isVisible ? (
+              <img src={bookmark.faviconUrl} className="w-4 h-4 rounded" />
+            ) : (
+              <span className="flex items-center justify-center w-4 h-4">
+                <Link size={12} />
+              </span>
+            )}
+            <span>{bookmark.host}</span>
+          </div>
+        }
+        active={active}
+        href="/bookmarks/[id]"
+        as={`/bookmarks/${bookmark.id}`}
+        onClick={(e) => handleClick(e, bookmark)}
+      />
+    </ReactVisibilitySensor>
   )
 })

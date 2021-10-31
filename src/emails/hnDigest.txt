@@ -1,0 +1,13 @@
+Hacker News Digest
+{{ date }}
+                        
+                        
+{{#each posts}}
+  {{ title }}                                  
+  {{ url }}                                  
+  {{comments_count}} comments · https://brianlovin.com/hn/{{ id }}
+{{/each}}
+                        
+You are receiving this email because you subscribed at https://brianlovin.com/hn
+                        
+Unsubscribe: {{ unsubscribe_url }}

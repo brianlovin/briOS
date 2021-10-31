@@ -1,11 +1,24 @@
-import { BookmarkInfoFragment } from '../fragments'
 import { gql } from '@apollo/client'
 
+import {
+  BookmarkInfoWithTagsFragment,
+  BookmarksConnectionFragment,
+} from '../fragments/bookmark'
+
 export const GET_BOOKMARKS = gql`
-  query GetBookmarks($skip: Int, $category: String) {
-    bookmarks(skip: $skip, category: $category) {
-      ...BookmarkInfo
+  query getBookmarks($first: Int, $after: String, $filter: BookmarkFilter) {
+    bookmarks(first: $first, after: $after, filter: $filter) {
+      ...BookmarksConnection
     }
   }
-  ${BookmarkInfoFragment}
+  ${BookmarksConnectionFragment}
+`
+
+export const GET_BOOKMARK = gql`
+  query getBookmark($id: ID!) {
+    bookmark(id: $id) {
+      ...BookmarkInfoWithTags
+    }
+  }
+  ${BookmarkInfoWithTagsFragment}
 `

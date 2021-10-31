@@ -1,38 +1,31 @@
-import * as React from 'react'
 import { NextSeo } from 'next-seo'
-import Page, { PageHeader } from '~/components/Page'
-import DesignDetailsGrid from '~/components/DesignDetailsGrid'
-import { summaries } from '~/data/appDissections'
-import { CenteredColumn } from '~/components/Layouts'
+import * as React from 'react'
+
+import { AppDissectionList } from '~/components/AppDissection/AppDissectionList'
+import { ListDetailView, SiteLayout } from '~/components/Layouts'
+import { withProviders } from '~/components/Providers/withProviders'
 import routes from '~/config/routes'
-import Link from 'next/link'
 
-export default function DesignDetails() {
+function AppDissectionsPage() {
   return (
-    <Page>
-      <NextSeo
-        title={routes.appDissection.seo.title}
-        description={routes.appDissection.seo.description}
-        openGraph={routes.appDissection.seo.openGraph}
-      />
-
-      <CenteredColumn>
-        <div className="space-y-8 ">
-          <Link href="/projects" passHref>
-            <a className="leading-snug text-tertiary hover:text-gray-1000 dark:hover:text-gray-100">
-              &larr; Projects
-            </a>
-          </Link>
-
-          <PageHeader
-            title="App Dissection"
-            subtitle="Exploring the best interaction patterns, visual styles, and design
-            decisions of well-known apps."
-          />
-
-          <DesignDetailsGrid summaries={summaries} />
-        </div>
-      </CenteredColumn>
-    </Page>
+    <NextSeo
+      title={routes.appDissection.seo.title}
+      description={routes.appDissection.seo.description}
+      openGraph={routes.appDissection.seo.openGraph}
+    />
   )
 }
+
+AppDissectionsPage.getLayout = withProviders(function getLayout(page) {
+  return (
+    <SiteLayout>
+      <ListDetailView
+        list={<AppDissectionList />}
+        hasDetail={false}
+        detail={page}
+      />
+    </SiteLayout>
+  )
+})
+
+export default AppDissectionsPage

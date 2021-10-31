@@ -4,12 +4,37 @@ export const BookmarkInfoFragment = gql`
   fragment BookmarkInfo on Bookmark {
     __typename
     id
-    title
     url
     host
-    reactions
-    notes
-    category
-    twitterHandle
+    title
+    description
+    faviconUrl
   }
+`
+
+export const BookmarkInfoWithTagsFragment = gql`
+  fragment BookmarkInfoWithTags on Bookmark {
+    ...BookmarkInfo
+    tags {
+      name
+    }
+  }
+  ${BookmarkInfoFragment}
+`
+
+export const BookmarksConnectionFragment = gql`
+  fragment BookmarksConnection on BookmarksConnection {
+    pageInfo {
+      hasNextPage
+      totalCount
+      endCursor
+    }
+    edges {
+      cursor
+      node {
+        ...BookmarkInfoWithTags
+      }
+    }
+  }
+  ${BookmarkInfoWithTagsFragment}
 `

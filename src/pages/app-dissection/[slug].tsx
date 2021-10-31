@@ -1,18 +1,21 @@
-import * as React from 'react'
-import { NextSeo } from 'next-seo'
-import Page from '~/components/Page'
-import designDetailsPosts from '~/data/appDissections'
-import DesignDetailView from '~/components/DesignDetailView'
-import { DesignDetailsPost } from '~/data/appDissections'
 import { useRouter } from 'next/router'
+import { NextSeo } from 'next-seo'
+import * as React from 'react'
 import removeMd from 'remove-markdown'
+
+import { AppDissectionDetail } from '~/components/AppDissection/AppDissectionDetail'
+import { AppDissectionList } from '~/components/AppDissection/AppDissectionList'
+import { ListDetailView, SiteLayout } from '~/components/Layouts'
+import { withProviders } from '~/components/Providers/withProviders'
 import { baseUrl } from '~/config/seo'
+import designDetailsPosts from '~/data/appDissections'
+import { DesignDetailsPost } from '~/data/appDissections'
 
 interface Props {
   post: DesignDetailsPost
 }
 
-export default function DesignDetail({ post }: Props) {
+function AppDissectionPage({ post }: Props) {
   const router = useRouter()
 
   React.useEffect(() => {
@@ -24,7 +27,7 @@ export default function DesignDetail({ post }: Props) {
 
   if (post) {
     return (
-      <Page>
+      <>
         <NextSeo
           title={`${post.title} · App Dissection`}
           description={post.description}
@@ -35,14 +38,15 @@ export default function DesignDetail({ post }: Props) {
             site_name: 'App Dissection',
             images: [
               {
-                url: `${baseUrl}/static/meta/app-dissection.png`,
+                url: `${baseUrl}/static/og/app-dissection.png`,
                 alt: 'App Dissection',
               },
             ],
           }}
         />
-        <DesignDetailView post={post} />
-      </Page>
+
+        <AppDissectionDetail post={post} />
+      </>
     )
   }
 
@@ -64,3 +68,13 @@ export async function getStaticProps({ params: { slug } }) {
     },
   }
 }
+
+AppDissectionPage.getLayout = withProviders(function getLayout(page) {
+  return (
+    <SiteLayout>
+      <ListDetailView list={<AppDissectionList />} hasDetail detail={page} />
+    </SiteLayout>
+  )
+})
+
+export default AppDissectionPage

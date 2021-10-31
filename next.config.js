@@ -1,6 +1,12 @@
 module.exports = {
+  swcMinify: true,
+  resolve: {
+    fallback: {
+      fs: false,
+    },
+  },
   images: {
-    domains: ['pbs.twimg.com', 'overthought.ghost.io'],
+    domains: ['pbs.twimg.com', 'overthought.ghost.io', 'imagedelivery.net'],
   },
   async redirects() {
     return [
@@ -32,6 +38,11 @@ module.exports = {
       {
         source: '/overthought/:slug',
         destination: '/writing/:slug',
+        permanent: true,
+      },
+      {
+        source: '/projects',
+        destination: '/',
         permanent: true,
       },
     ]

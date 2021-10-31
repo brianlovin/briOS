@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE `Bookmark` MODIFY `url` VARCHAR(512) NOT NULL,
+    MODIFY `image` VARCHAR(512) NULL;
