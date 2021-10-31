@@ -56,6 +56,23 @@ export type Bookmark = {
   url: Scalars['String']
 }
 
+export type BookmarkEdge = {
+  __typename?: 'BookmarkEdge'
+  cursor?: Maybe<Scalars['String']>
+  node?: Maybe<Bookmark>
+}
+
+export type BookmarkFilter = {
+  host?: Maybe<Scalars['String']>
+  tag?: Maybe<Scalars['String']>
+}
+
+export type BookmarksConnection = {
+  __typename?: 'BookmarksConnection'
+  edges: Array<Maybe<BookmarkEdge>>
+  pageInfo?: Maybe<PageInfo>
+}
+
 export type Comment = {
   __typename?: 'Comment'
   author: User
@@ -239,6 +256,13 @@ export type MutationToggleStackUserArgs = {
   id: Scalars['ID']
 }
 
+export type PageInfo = {
+  __typename?: 'PageInfo'
+  endCursor?: Maybe<Scalars['String']>
+  hasNextPage?: Maybe<Scalars['Boolean']>
+  totalCount?: Maybe<Scalars['Int']>
+}
+
 export type Post = {
   __typename?: 'Post'
   canonical_url?: Maybe<Scalars['String']>
@@ -271,7 +295,7 @@ export type Post = {
 export type Query = {
   __typename?: 'Query'
   bookmark?: Maybe<Bookmark>
-  bookmarks: Array<Maybe<Bookmark>>
+  bookmarks: BookmarksConnection
   comment?: Maybe<Comment>
   comments: Array<Maybe<Comment>>
   episodes: Array<Maybe<Episode>>
@@ -280,12 +304,12 @@ export type Query = {
   post?: Maybe<Post>
   posts: Array<Maybe<Post>>
   question?: Maybe<Question>
-  questions: Array<Maybe<Question>>
+  questions: QuestionsConnection
   repos: Array<Maybe<Repo>>
   signedPlaybackUrl?: Maybe<Scalars['String']>
   signedUploadUrl?: Maybe<Scalars['String']>
   stack?: Maybe<Stack>
-  stacks: Array<Maybe<Stack>>
+  stacks: StacksConnection
   tags: Array<Maybe<Tag>>
   transcription?: Maybe<Scalars['String']>
   user?: Maybe<User>
@@ -297,7 +321,9 @@ export type QueryBookmarkArgs = {
 }
 
 export type QueryBookmarksArgs = {
-  tag?: Maybe<Scalars['String']>
+  after?: Maybe<Scalars['String']>
+  filter?: Maybe<BookmarkFilter>
+  first?: Maybe<Scalars['Int']>
 }
 
 export type QueryCommentArgs = {
@@ -327,6 +353,12 @@ export type QueryQuestionArgs = {
   id: Scalars['ID']
 }
 
+export type QueryQuestionsArgs = {
+  after?: Maybe<Scalars['String']>
+  filter?: Maybe<QuestionFilter>
+  first?: Maybe<Scalars['Int']>
+}
+
 export type QuerySignedPlaybackUrlArgs = {
   id: Scalars['ID']
 }
@@ -340,7 +372,8 @@ export type QueryStackArgs = {
 }
 
 export type QueryStacksArgs = {
-  skip?: Maybe<Scalars['Int']>
+  after?: Maybe<Scalars['String']>
+  first?: Maybe<Scalars['Int']>
 }
 
 export type QueryTranscriptionArgs = {
@@ -354,12 +387,34 @@ export type QueryUserArgs = {
 export type Question = {
   __typename?: 'Question'
   author?: Maybe<User>
-  commentCount?: Maybe<Scalars['Int']>
   createdAt: Scalars['String']
   description?: Maybe<Scalars['String']>
   id: Scalars['String']
+  status?: Maybe<QuestionStatus>
   title: Scalars['String']
   updatedAt?: Maybe<Scalars['String']>
+  viewerCanEdit?: Maybe<Scalars['Boolean']>
+}
+
+export type QuestionEdge = {
+  __typename?: 'QuestionEdge'
+  cursor?: Maybe<Scalars['String']>
+  node?: Maybe<Question>
+}
+
+export type QuestionFilter = {
+  status?: Maybe<QuestionStatus>
+}
+
+export enum QuestionStatus {
+  Answered = 'ANSWERED',
+  Pending = 'PENDING',
+}
+
+export type QuestionsConnection = {
+  __typename?: 'QuestionsConnection'
+  edges: Array<Maybe<QuestionEdge>>
+  pageInfo?: Maybe<PageInfo>
 }
 
 export type Repo = {
@@ -382,6 +437,18 @@ export type Stack = {
   url: Scalars['String']
   usedBy: Array<Maybe<User>>
   usedByViewer?: Maybe<Scalars['Boolean']>
+}
+
+export type StackEdge = {
+  __typename?: 'StackEdge'
+  cursor?: Maybe<Scalars['String']>
+  node?: Maybe<Stack>
+}
+
+export type StacksConnection = {
+  __typename?: 'StacksConnection'
+  edges: Array<Maybe<StackEdge>>
+  pageInfo?: Maybe<PageInfo>
 }
 
 export type Tag = {
@@ -428,6 +495,42 @@ export type BookmarkInfoWithTagsFragment = {
   description?: string | null | undefined
   faviconUrl?: string | null | undefined
   tags: Array<{ __typename?: 'Tag'; name: string } | null | undefined>
+}
+
+export type BookmarksConnectionFragment = {
+  __typename?: 'BookmarksConnection'
+  pageInfo?:
+    | {
+        __typename?: 'PageInfo'
+        hasNextPage?: boolean | null | undefined
+        totalCount?: number | null | undefined
+        endCursor?: string | null | undefined
+      }
+    | null
+    | undefined
+  edges: Array<
+    | {
+        __typename?: 'BookmarkEdge'
+        cursor?: string | null | undefined
+        node?:
+          | {
+              __typename: 'Bookmark'
+              id: string
+              url: string
+              host: string
+              title?: string | null | undefined
+              description?: string | null | undefined
+              faviconUrl?: string | null | undefined
+              tags: Array<
+                { __typename?: 'Tag'; name: string } | null | undefined
+              >
+            }
+          | null
+          | undefined
+      }
+    | null
+    | undefined
+  >
 }
 
 export type CommentInfoFragment = {
@@ -577,7 +680,8 @@ export type QuestionInfoFragment = {
   updatedAt?: string | null | undefined
   title: string
   description?: string | null | undefined
-  commentCount?: number | null | undefined
+  status?: QuestionStatus | null | undefined
+  viewerCanEdit?: boolean | null | undefined
   author?:
     | {
         __typename: 'User'
@@ -590,6 +694,52 @@ export type QuestionInfoFragment = {
       }
     | null
     | undefined
+}
+
+export type QuestionsConnectionFragment = {
+  __typename?: 'QuestionsConnection'
+  pageInfo?:
+    | {
+        __typename?: 'PageInfo'
+        hasNextPage?: boolean | null | undefined
+        totalCount?: number | null | undefined
+        endCursor?: string | null | undefined
+      }
+    | null
+    | undefined
+  edges: Array<
+    | {
+        __typename?: 'QuestionEdge'
+        cursor?: string | null | undefined
+        node?:
+          | {
+              __typename?: 'Question'
+              id: string
+              createdAt: string
+              updatedAt?: string | null | undefined
+              title: string
+              description?: string | null | undefined
+              status?: QuestionStatus | null | undefined
+              viewerCanEdit?: boolean | null | undefined
+              author?:
+                | {
+                    __typename: 'User'
+                    id: string
+                    username?: string | null | undefined
+                    avatar?: string | null | undefined
+                    name?: string | null | undefined
+                    role?: UserRole | null | undefined
+                    isViewer?: boolean | null | undefined
+                  }
+                | null
+                | undefined
+            }
+          | null
+          | undefined
+      }
+    | null
+    | undefined
+  >
 }
 
 export type RepoInfoFragment = {
@@ -621,6 +771,40 @@ export type StackInfoWithTagsFragment = {
   url: string
   image?: string | null | undefined
   tags: Array<{ __typename?: 'Tag'; name: string } | null | undefined>
+}
+
+export type StacksConnectionFragment = {
+  __typename?: 'StacksConnection'
+  pageInfo?:
+    | {
+        __typename?: 'PageInfo'
+        hasNextPage?: boolean | null | undefined
+        totalCount?: number | null | undefined
+        endCursor?: string | null | undefined
+      }
+    | null
+    | undefined
+  edges: Array<
+    | {
+        __typename?: 'StackEdge'
+        cursor?: string | null | undefined
+        node?:
+          | {
+              __typename: 'Stack'
+              id: string
+              createdAt: string
+              updatedAt?: string | null | undefined
+              name: string
+              description?: string | null | undefined
+              url: string
+              image?: string | null | undefined
+            }
+          | null
+          | undefined
+      }
+    | null
+    | undefined
+  >
 }
 
 export type UserInfoFragment = {
@@ -814,7 +998,8 @@ export type EditQuestionMutation = {
         updatedAt?: string | null | undefined
         title: string
         description?: string | null | undefined
-        commentCount?: number | null | undefined
+        status?: QuestionStatus | null | undefined
+        viewerCanEdit?: boolean | null | undefined
         author?:
           | {
               __typename: 'User'
@@ -855,7 +1040,8 @@ export type AddQuestionMutation = {
         updatedAt?: string | null | undefined
         title: string
         description?: string | null | undefined
-        commentCount?: number | null | undefined
+        status?: QuestionStatus | null | undefined
+        viewerCanEdit?: boolean | null | undefined
         author?:
           | {
               __typename: 'User'
@@ -983,25 +1169,48 @@ export type EditUserMutation = {
 }
 
 export type GetBookmarksQueryVariables = Exact<{
-  tag?: Maybe<Scalars['String']>
+  first?: Maybe<Scalars['Int']>
+  after?: Maybe<Scalars['String']>
+  filter?: Maybe<BookmarkFilter>
 }>
 
 export type GetBookmarksQuery = {
   __typename?: 'Query'
-  bookmarks: Array<
-    | {
-        __typename: 'Bookmark'
-        id: string
-        url: string
-        host: string
-        title?: string | null | undefined
-        description?: string | null | undefined
-        faviconUrl?: string | null | undefined
-        tags: Array<{ __typename?: 'Tag'; name: string } | null | undefined>
-      }
-    | null
-    | undefined
-  >
+  bookmarks: {
+    __typename?: 'BookmarksConnection'
+    pageInfo?:
+      | {
+          __typename?: 'PageInfo'
+          hasNextPage?: boolean | null | undefined
+          totalCount?: number | null | undefined
+          endCursor?: string | null | undefined
+        }
+      | null
+      | undefined
+    edges: Array<
+      | {
+          __typename?: 'BookmarkEdge'
+          cursor?: string | null | undefined
+          node?:
+            | {
+                __typename: 'Bookmark'
+                id: string
+                url: string
+                host: string
+                title?: string | null | undefined
+                description?: string | null | undefined
+                faviconUrl?: string | null | undefined
+                tags: Array<
+                  { __typename?: 'Tag'; name: string } | null | undefined
+                >
+              }
+            | null
+            | undefined
+        }
+      | null
+      | undefined
+    >
+  }
 }
 
 export type GetBookmarkQueryVariables = Exact<{
@@ -1235,35 +1444,59 @@ export type GetPostQuery = {
     | undefined
 }
 
-export type GetQuestionsQueryVariables = Exact<{ [key: string]: never }>
+export type GetQuestionsQueryVariables = Exact<{
+  first?: Maybe<Scalars['Int']>
+  after?: Maybe<Scalars['String']>
+  filter?: Maybe<QuestionFilter>
+}>
 
 export type GetQuestionsQuery = {
   __typename?: 'Query'
-  questions: Array<
-    | {
-        __typename?: 'Question'
-        id: string
-        createdAt: string
-        updatedAt?: string | null | undefined
-        title: string
-        description?: string | null | undefined
-        commentCount?: number | null | undefined
-        author?:
-          | {
-              __typename: 'User'
-              id: string
-              username?: string | null | undefined
-              avatar?: string | null | undefined
-              name?: string | null | undefined
-              role?: UserRole | null | undefined
-              isViewer?: boolean | null | undefined
-            }
-          | null
-          | undefined
-      }
-    | null
-    | undefined
-  >
+  questions: {
+    __typename?: 'QuestionsConnection'
+    pageInfo?:
+      | {
+          __typename?: 'PageInfo'
+          hasNextPage?: boolean | null | undefined
+          totalCount?: number | null | undefined
+          endCursor?: string | null | undefined
+        }
+      | null
+      | undefined
+    edges: Array<
+      | {
+          __typename?: 'QuestionEdge'
+          cursor?: string | null | undefined
+          node?:
+            | {
+                __typename?: 'Question'
+                id: string
+                createdAt: string
+                updatedAt?: string | null | undefined
+                title: string
+                description?: string | null | undefined
+                status?: QuestionStatus | null | undefined
+                viewerCanEdit?: boolean | null | undefined
+                author?:
+                  | {
+                      __typename: 'User'
+                      id: string
+                      username?: string | null | undefined
+                      avatar?: string | null | undefined
+                      name?: string | null | undefined
+                      role?: UserRole | null | undefined
+                      isViewer?: boolean | null | undefined
+                    }
+                  | null
+                  | undefined
+              }
+            | null
+            | undefined
+        }
+      | null
+      | undefined
+    >
+  }
 }
 
 export type GetQuestionQueryVariables = Exact<{
@@ -1280,7 +1513,8 @@ export type GetQuestionQuery = {
         updatedAt?: string | null | undefined
         title: string
         description?: string | null | undefined
-        commentCount?: number | null | undefined
+        status?: QuestionStatus | null | undefined
+        viewerCanEdit?: boolean | null | undefined
         author?:
           | {
               __typename: 'User'
@@ -1298,24 +1532,46 @@ export type GetQuestionQuery = {
     | undefined
 }
 
-export type GetStacksQueryVariables = Exact<{ [key: string]: never }>
+export type GetStacksQueryVariables = Exact<{
+  first?: Maybe<Scalars['Int']>
+  after?: Maybe<Scalars['String']>
+}>
 
 export type GetStacksQuery = {
   __typename?: 'Query'
-  stacks: Array<
-    | {
-        __typename: 'Stack'
-        id: string
-        createdAt: string
-        updatedAt?: string | null | undefined
-        name: string
-        description?: string | null | undefined
-        url: string
-        image?: string | null | undefined
-      }
-    | null
-    | undefined
-  >
+  stacks: {
+    __typename?: 'StacksConnection'
+    pageInfo?:
+      | {
+          __typename?: 'PageInfo'
+          hasNextPage?: boolean | null | undefined
+          totalCount?: number | null | undefined
+          endCursor?: string | null | undefined
+        }
+      | null
+      | undefined
+    edges: Array<
+      | {
+          __typename?: 'StackEdge'
+          cursor?: string | null | undefined
+          node?:
+            | {
+                __typename: 'Stack'
+                id: string
+                createdAt: string
+                updatedAt?: string | null | undefined
+                name: string
+                description?: string | null | undefined
+                url: string
+                image?: string | null | undefined
+              }
+            | null
+            | undefined
+        }
+      | null
+      | undefined
+    >
+  }
 }
 
 export type GetStackQueryVariables = Exact<{
@@ -1453,6 +1709,22 @@ export const BookmarkInfoWithTagsFragmentDoc = gql`
   }
   ${BookmarkInfoFragmentDoc}
 `
+export const BookmarksConnectionFragmentDoc = gql`
+  fragment BookmarksConnection on BookmarksConnection {
+    pageInfo {
+      hasNextPage
+      totalCount
+      endCursor
+    }
+    edges {
+      cursor
+      node {
+        ...BookmarkInfoWithTags
+      }
+    }
+  }
+  ${BookmarkInfoWithTagsFragmentDoc}
+`
 export const UserInfoFragmentDoc = gql`
   fragment UserInfo on User {
     __typename
@@ -1553,12 +1825,29 @@ export const QuestionInfoFragmentDoc = gql`
     updatedAt
     title
     description
-    commentCount
+    status
+    viewerCanEdit
     author {
       ...UserInfo
     }
   }
   ${UserInfoFragmentDoc}
+`
+export const QuestionsConnectionFragmentDoc = gql`
+  fragment QuestionsConnection on QuestionsConnection {
+    pageInfo {
+      hasNextPage
+      totalCount
+      endCursor
+    }
+    edges {
+      cursor
+      node {
+        ...QuestionInfo
+      }
+    }
+  }
+  ${QuestionInfoFragmentDoc}
 `
 export const RepoInfoFragmentDoc = gql`
   fragment RepoInfo on Repo {
@@ -1585,6 +1874,22 @@ export const StackInfoWithTagsFragmentDoc = gql`
     ...StackInfo
     tags {
       name
+    }
+  }
+  ${StackInfoFragmentDoc}
+`
+export const StacksConnectionFragmentDoc = gql`
+  fragment StacksConnection on StacksConnection {
+    pageInfo {
+      hasNextPage
+      totalCount
+      endCursor
+    }
+    edges {
+      cursor
+      node {
+        ...StackInfo
+      }
     }
   }
   ${StackInfoFragmentDoc}
@@ -2402,12 +2707,12 @@ export type EditUserMutationOptions = Apollo.BaseMutationOptions<
   EditUserMutationVariables
 >
 export const GetBookmarksDocument = gql`
-  query GetBookmarks($tag: String) {
-    bookmarks(tag: $tag) {
-      ...BookmarkInfoWithTags
+  query getBookmarks($first: Int, $after: String, $filter: BookmarkFilter) {
+    bookmarks(first: $first, after: $after, filter: $filter) {
+      ...BookmarksConnection
     }
   }
-  ${BookmarkInfoWithTagsFragmentDoc}
+  ${BookmarksConnectionFragmentDoc}
 `
 
 /**
@@ -2422,7 +2727,9 @@ export const GetBookmarksDocument = gql`
  * @example
  * const { data, loading, error } = useGetBookmarksQuery({
  *   variables: {
- *      tag: // value for 'tag'
+ *      first: // value for 'first'
+ *      after: // value for 'after'
+ *      filter: // value for 'filter'
  *   },
  * });
  */
@@ -2461,7 +2768,7 @@ export type GetBookmarksQueryResult = Apollo.QueryResult<
   GetBookmarksQueryVariables
 >
 export const GetBookmarkDocument = gql`
-  query GetBookmark($id: ID!) {
+  query getBookmark($id: ID!) {
     bookmark(id: $id) {
       ...BookmarkInfoWithTags
     }
@@ -2852,12 +3159,12 @@ export type GetPostQueryResult = Apollo.QueryResult<
   GetPostQueryVariables
 >
 export const GetQuestionsDocument = gql`
-  query getQuestions {
-    questions {
-      ...QuestionInfo
+  query getQuestions($first: Int, $after: String, $filter: QuestionFilter) {
+    questions(first: $first, after: $after, filter: $filter) {
+      ...QuestionsConnection
     }
   }
-  ${QuestionInfoFragmentDoc}
+  ${QuestionsConnectionFragmentDoc}
 `
 
 /**
@@ -2872,6 +3179,9 @@ export const GetQuestionsDocument = gql`
  * @example
  * const { data, loading, error } = useGetQuestionsQuery({
  *   variables: {
+ *      first: // value for 'first'
+ *      after: // value for 'after'
+ *      filter: // value for 'filter'
  *   },
  * });
  */
@@ -2967,12 +3277,12 @@ export type GetQuestionQueryResult = Apollo.QueryResult<
   GetQuestionQueryVariables
 >
 export const GetStacksDocument = gql`
-  query getStacks {
-    stacks {
-      ...StackInfo
+  query getStacks($first: Int, $after: String) {
+    stacks(first: $first, after: $after) {
+      ...StacksConnection
     }
   }
-  ${StackInfoFragmentDoc}
+  ${StacksConnectionFragmentDoc}
 `
 
 /**
@@ -2987,6 +3297,8 @@ export const GetStacksDocument = gql`
  * @example
  * const { data, loading, error } = useGetStacksQuery({
  *   variables: {
+ *      first: // value for 'first'
+ *      after: // value for 'after'
  *   },
  * });
  */

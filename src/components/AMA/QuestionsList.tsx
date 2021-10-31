@@ -3,38 +3,62 @@ import { useRouter } from 'next/router'
 import * as React from 'react'
 
 import { ListContainer } from '~/components/ListDetail/ListContainer'
-import { useGetQuestionsQuery } from '~/graphql/types.generated'
+import { QuestionStatus, useGetQuestionsQuery } from '~/graphql/types.generated'
 
+import { ListLoadMore } from '../ListDetail/ListLoadMore'
+import { LoadingSpinner } from '../LoadingSpinner'
 import { AMATitlebar } from './AMATitlebar'
 import { QuestionListItem } from './QuestionListItem'
 
 export const QuestionsContext = React.createContext({
   filterPending: false,
   setFilterPending: (bool: boolean) => {},
-  pendingCount: 0,
 })
 
 export function QuestionsList() {
-  const [filterPending, setFilterPending] = React.useState(false)
-  const [pendingCount, setPendingCount] = React.useState(0)
-  const [scrollContainerRef, setScrollContainerRef] = React.useState(null)
   const router = useRouter()
 
-  const { data, error, loading } = useGetQuestionsQuery()
+  const [filterPending, setFilterPending] = React.useState(false)
+  const [isVisible, setIsVisible] = React.useState(false)
+  const [scrollContainerRef, setScrollContainerRef] = React.useState(null)
+
+  const status = filterPending
+    ? QuestionStatus.Pending
+    : QuestionStatus.Answered
+
+  const { data, error, loading, fetchMore } = useGetQuestionsQuery({
+    variables: { filter: { status } },
+  })
+
+  function handleFetchMore() {
+    return fetchMore({
+      variables: {
+        after: data.questions.pageInfo.endCursor,
+        filter: { status },
+      },
+    })
+  }
 
   React.useEffect(() => {
-    if (data?.questions) {
-      setPendingCount(data.questions.filter((q) => q.commentCount === 0).length)
-    }
-  }, [data])
+    if (isVisible) handleFetchMore()
+  }, [isVisible])
 
-  if (error || loading) return null
+  if (loading && !data?.questions) {
+    return (
+      <ListContainer onRef={setScrollContainerRef}>
+        <AMATitlebar scrollContainerRef={scrollContainerRef} />
+        <div className="flex items-center justify-center flex-1">
+          <LoadingSpinner />
+        </div>
+      </ListContainer>
+    )
+  }
 
-  if (!data || !data.questions) return null
+  if (error) return null
 
   const { questions } = data
 
-  const defaultContextValue = { filterPending, setFilterPending, pendingCount }
+  const defaultContextValue = { filterPending, setFilterPending }
 
   return (
     <QuestionsContext.Provider value={defaultContextValue}>
@@ -43,19 +67,19 @@ export function QuestionsList() {
 
         <AnimateSharedLayout>
           <div className="lg:p-3 lg:space-y-1">
-            {questions
-              .filter((q) =>
-                filterPending ? q.commentCount === 0 : q.commentCount > 0
-              )
-              .map((question) => {
-                const active = router.query?.id === question.id.toString() // post ids are numbers
+            {questions.edges.map((question) => {
+              const active = router.query?.id === question.node.id.toString() // post ids are numbers
 
-                return (
-                  <motion.div layout key={question.id}>
-                    <QuestionListItem question={question} active={active} />
-                  </motion.div>
-                )
-              })}
+              return (
+                <motion.div layout key={question.node.id}>
+                  <QuestionListItem question={question.node} active={active} />
+                </motion.div>
+              )
+            })}
+
+            {data.questions.pageInfo.hasNextPage && (
+              <ListLoadMore setIsVisible={setIsVisible} />
+            )}
           </div>
         </AnimateSharedLayout>
       </ListContainer>

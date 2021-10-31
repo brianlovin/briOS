@@ -35,7 +35,17 @@ export function AddBookmarkForm({ closeModal }) {
         return cache.writeQuery({
           query,
           data: {
-            bookmarks: [addBookmark, ...bookmarks],
+            bookmarks: {
+              ...bookmarks,
+              edges: [
+                {
+                  __typename: 'BookmarkEdge',
+                  cursor: addBookmark.id,
+                  node: addBookmark,
+                },
+                ...bookmarks.edges,
+              ],
+            },
           },
         })
       },

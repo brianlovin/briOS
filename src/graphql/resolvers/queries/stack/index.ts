@@ -1,17 +1,67 @@
+import { PAGINATION_AMOUNT } from '~/graphql/constants'
 import { Context } from '~/graphql/context'
-import { GetStackQueryVariables, Stack } from '~/graphql/types.generated'
+import {
+  GetStackQueryVariables,
+  GetStacksQueryVariables,
+} from '~/graphql/types.generated'
 
-import { viewer } from '../viewer'
-
-export async function getStacks(_, __, ctx: Context) {
+export async function getStacks(
+  _,
+  args: GetStacksQueryVariables,
+  ctx: Context
+) {
+  const { first = PAGINATION_AMOUNT, after = undefined } = args
   const { prisma } = ctx
 
+  /*
+    When we are paginating after a cursor, we need to skip the cursor object itself. 
+    Ref https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination
+  */
+  const skip = after ? 1 : 0
+  const cursor = after ? { id: after } : undefined
+
+  /*
+    In order to know if there are more results in the database for the `hasNextPage`
+    field, we overfetch by one. If we return more than the amount we requested,
+    then we know there are more results.
+  */
+  const take = first + 1
+
   try {
-    return await prisma.stack.findMany({
+    const edges = await prisma.stack.findMany({
+      take,
+      skip,
+      cursor,
       orderBy: { name: 'asc' },
     })
+
+    // If we overfetched, then we know there are more results
+    const hasNextPage = edges.length > first
+    // Remove the last item so we only return the requested `first` amount
+    const trimmedEdges = hasNextPage ? edges.slice(0, -1) : edges
+    const edgesWithNodes = trimmedEdges.map((edge) => ({
+      cursor: edge.id,
+      node: edge,
+    }))
+
+    return {
+      pageInfo: {
+        hasNextPage,
+        totalCount: await prisma.stack.count(),
+        endCursor: edgesWithNodes[edgesWithNodes.length - 1].cursor,
+      },
+      edges: edgesWithNodes,
+    }
   } catch (e) {
-    return []
+    console.error({ error: e })
+    return {
+      pageInfo: {
+        hasNextPage: false,
+        totalCount: 0,
+        endCursor: null,
+      },
+      edges: [],
+    }
   }
 }
 

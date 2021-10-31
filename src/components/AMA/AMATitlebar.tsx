@@ -46,7 +46,7 @@ export function AMATitlebar({ scrollContainerRef }) {
 
   function trailingAccessory() {
     return (
-      <div className="flex space-x-2">
+      <div className="flex items-center space-x-2">
         {getFilterButton()}
         {getAddButton()}
       </div>

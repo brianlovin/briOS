@@ -6,6 +6,7 @@ import {
   ServerError,
 } from '@apollo/client'
 import { onError } from '@apollo/client/link/error'
+import { relayStylePagination } from '@apollo/client/utilities'
 import merge from 'deepmerge'
 import isEqual from 'lodash/isEqual'
 import { useMemo } from 'react'
@@ -62,6 +63,13 @@ export function createApolloClient({ initialState = {}, context = {} }) {
   const ssrMode = typeof window === 'undefined'
   const cache = new InMemoryCache({
     typePolicies: {
+      Query: {
+        fields: {
+          bookmarks: relayStylePagination(['filter']),
+          questions: relayStylePagination(['filter']),
+          stacks: relayStylePagination(),
+        },
+      },
       Comments: {
         keyFields: ['id'],
         fields: {

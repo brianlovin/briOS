@@ -21,3 +21,20 @@ export const BookmarkInfoWithTagsFragment = gql`
   }
   ${BookmarkInfoFragment}
 `
+
+export const BookmarksConnectionFragment = gql`
+  fragment BookmarksConnection on BookmarksConnection {
+    pageInfo {
+      hasNextPage
+      totalCount
+      endCursor
+    }
+    edges {
+      cursor
+      node {
+        ...BookmarkInfoWithTags
+      }
+    }
+  }
+  ${BookmarkInfoWithTagsFragment}
+`

@@ -98,7 +98,10 @@ export function EditStackForm({ closeModal, stack }) {
       cache.writeQuery({
         query: GET_STACKS,
         data: {
-          stacks: stacks.filter((o) => o.id !== stack.id),
+          stacks: {
+            ...stacks,
+            edges: stacks.edges.filter((o) => o.node.id !== stack.id),
+          },
         },
       })
     },

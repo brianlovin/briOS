@@ -36,9 +36,17 @@ export function AddStackForm({ closeModal }) {
       cache.writeQuery({
         query,
         data: {
-          stacks: [addStack, ...stacks].sort((a, b) =>
-            a.name < b.name ? -1 : 1
-          ),
+          stacks: {
+            ...stacks,
+            edges: [
+              {
+                __typename: 'StackEdge',
+                cursor: addStack.id,
+                node: addStack,
+              },
+              ...stacks.edges,
+            ].sort((a, b) => (a.node.name < b.node.name ? -1 : 1)),
+          },
         },
       })
     },

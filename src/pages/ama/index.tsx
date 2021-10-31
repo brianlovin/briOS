@@ -7,6 +7,7 @@ import { withProviders } from '~/components/Providers/withProviders'
 import routes from '~/config/routes'
 import { getContext } from '~/graphql/context'
 import { GET_QUESTIONS } from '~/graphql/queries/questions'
+import { QuestionStatus } from '~/graphql/types.generated'
 import { addApolloState, initApolloClient } from '~/lib/apollo'
 
 function AmaPage() {
@@ -23,7 +24,12 @@ export async function getServerSideProps({ req, res }) {
   const context = await getContext(req, res)
   const apolloClient = initApolloClient({ context })
 
-  await apolloClient.query({ query: GET_QUESTIONS })
+  await apolloClient.query({
+    query: GET_QUESTIONS,
+    variables: {
+      filter: { status: QuestionStatus.Answered },
+    },
+  })
 
   return addApolloState(apolloClient, {
     props: {},

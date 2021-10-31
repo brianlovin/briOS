@@ -22,3 +22,20 @@ export const StackInfoWithTagsFragment = gql`
   }
   ${StackInfoFragment}
 `
+
+export const StacksConnectionFragment = gql`
+  fragment StacksConnection on StacksConnection {
+    pageInfo {
+      hasNextPage
+      totalCount
+      endCursor
+    }
+    edges {
+      cursor
+      node {
+        ...StackInfo
+      }
+    }
+  }
+  ${StackInfoFragment}
+`

@@ -3,7 +3,11 @@ import Mutation from '~/graphql/resolvers/mutations'
 import Query from '~/graphql/resolvers/queries'
 import { getCommentAuthor } from '~/graphql/resolvers/queries/comment'
 import { getQuestionAuthor } from '~/graphql/resolvers/queries/questions'
-import { EmailSubscriptionType, UserRole } from '~/graphql/types.generated'
+import {
+  EmailSubscriptionType,
+  QuestionStatus,
+  UserRole,
+} from '~/graphql/types.generated'
 import { revue } from '~/lib/revue'
 
 export default {
@@ -33,8 +37,12 @@ export default {
       }),
   },
   Question: {
+    viewerCanEdit: ({ userId }, _, { viewer }: Context) => {
+      return userId === viewer?.id || viewer?.role === UserRole.Admin
+    },
     author: getQuestionAuthor,
-    commentCount: ({ _count: { comments } }) => comments,
+    status: ({ _count: { comments } }) =>
+      comments > 0 ? QuestionStatus.Answered : QuestionStatus.Pending,
     updatedAt: ({ updatedAt }) =>
       new Date(updatedAt).toLocaleDateString('en-us', {
         year: 'numeric',

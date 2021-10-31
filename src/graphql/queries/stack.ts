@@ -3,17 +3,17 @@ import { gql } from '@apollo/client'
 import { UserInfoFragment } from '~/graphql/fragments/user'
 
 import {
-  StackInfoFragment,
   StackInfoWithTagsFragment,
+  StacksConnectionFragment,
 } from '../fragments/stack'
 
 export const GET_STACKS = gql`
-  query getStacks {
-    stacks {
-      ...StackInfo
+  query getStacks($first: Int, $after: String) {
+    stacks(first: $first, after: $after) {
+      ...StacksConnection
     }
   }
-  ${StackInfoFragment}
+  ${StacksConnectionFragment}
 `
 
 export const GET_STACK = gql`

@@ -78,8 +78,9 @@ export function EditQuestionForm({ closeModal, question }) {
       deleteQuestion: true,
     },
     update(cache) {
-      const { questions } = cache.readQuery({
+      const cacheData = cache.readQuery({
         query: GET_QUESTIONS,
+        variables: { filter: { status: question.status } },
       })
 
       cache.writeQuery({
@@ -90,12 +91,25 @@ export function EditQuestionForm({ closeModal, question }) {
         },
       })
 
-      cache.writeQuery({
-        query: GET_QUESTIONS,
-        data: {
-          questions: questions.filter((o) => o.id !== question.id),
-        },
-      })
+      if (cacheData) {
+        // TODO: No clue how to type this...
+        // @ts-ignore
+        const { questions } = cacheData
+        cache.writeQuery({
+          query: GET_QUESTIONS,
+          variables: { filter: { status: question.status } },
+          data: {
+            questions: {
+              ...questions,
+              pageInfo: {
+                ...questions.pageInfo,
+                totalCount: questions.pageInfo.totalCount - 1,
+              },
+              edges: questions.edges.filter((o) => o.node.id !== question.id),
+            },
+          },
+        })
+      }
     },
   })
 
@@ -125,24 +139,25 @@ export function EditQuestionForm({ closeModal, question }) {
   }
 
   return (
-    <form className="p-4 space-y-3" onSubmit={handleSave}>
-      <Input
-        placeholder="Ask me anything..."
-        value={state.title}
-        onChange={onTitleChange}
-        onKeyDown={onKeyDown}
-      />
-      {state.error && <p className="text-red-500">{state.error}</p>}
+    <div className="p-4">
+      <form className="space-y-3" onSubmit={handleSave}>
+        <Input
+          placeholder="Ask me anything..."
+          value={state.title}
+          onChange={onTitleChange}
+          onKeyDown={onKeyDown}
+        />
+        {state.error && <p className="text-red-500">{state.error}</p>}
 
-      <Textarea
-        rows={4}
-        defaultValue={question.description}
-        onChange={onDescriptionChange}
-        onKeyDown={onKeyDown}
-        placeholder={'Add optional details'}
-      />
-
-      <div className="flex justify-between">
+        <Textarea
+          rows={4}
+          defaultValue={question.description}
+          onChange={onDescriptionChange}
+          onKeyDown={onKeyDown}
+          placeholder={'Add optional details'}
+        />
+      </form>
+      <div className="flex justify-between pt-3">
         <DeleteButton
           onClick={() => {
             closeModal()
@@ -161,6 +176,6 @@ export function EditQuestionForm({ closeModal, question }) {
           </PrimaryButton>
         </div>
       </div>
-    </form>
+    </div>
   )
 }

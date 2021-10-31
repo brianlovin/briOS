@@ -4,17 +4,39 @@ import * as React from 'react'
 import { ListContainer } from '~/components/ListDetail/ListContainer'
 import { useGetStacksQuery } from '~/graphql/types.generated'
 
+import { ListLoadMore } from '../ListDetail/ListLoadMore'
+import { LoadingSpinner } from '../LoadingSpinner'
 import { StackListItem } from './StackListItem'
 import { StackTitlebar } from './StackTitlebar'
 
 export function StackList() {
   const router = useRouter()
+  const [isVisible, setIsVisible] = React.useState(false)
   let [scrollContainerRef, setScrollContainerRef] = React.useState(null)
 
-  const { data, loading } = useGetStacksQuery()
+  const { data, loading, fetchMore } = useGetStacksQuery()
 
-  if (loading) {
-    return null
+  function handleFetchMore() {
+    return fetchMore({
+      variables: {
+        after: data.stacks.pageInfo.endCursor,
+      },
+    })
+  }
+
+  React.useEffect(() => {
+    if (isVisible) handleFetchMore()
+  }, [isVisible])
+
+  if (loading && !data?.stacks) {
+    return (
+      <ListContainer onRef={setScrollContainerRef}>
+        <StackTitlebar scrollContainerRef={scrollContainerRef} />
+        <div className="flex items-center justify-center flex-1">
+          <LoadingSpinner />
+        </div>
+      </ListContainer>
+    )
   }
 
   return (
@@ -22,10 +44,20 @@ export function StackList() {
       <StackTitlebar scrollContainerRef={scrollContainerRef} />
 
       <div className="lg:p-3 lg:space-y-1">
-        {data.stacks.map((stack) => {
-          const active = router.query.id === stack.id
-          return <StackListItem key={stack.id} stack={stack} active={active} />
+        {data.stacks.edges.map((stack) => {
+          const active = router.query.id === stack.node.id
+          return (
+            <StackListItem
+              key={stack.node.id}
+              stack={stack.node}
+              active={active}
+            />
+          )
         })}
+
+        {data.stacks.pageInfo.hasNextPage && (
+          <ListLoadMore setIsVisible={setIsVisible} />
+        )}
       </div>
     </ListContainer>
   )

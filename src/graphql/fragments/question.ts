@@ -1,6 +1,5 @@
 import { gql } from '@apollo/client'
 
-import { CommentInfoFragment } from './comment'
 import { UserInfoFragment } from './user'
 
 export const QuestionInfoFragment = gql`
@@ -10,11 +9,28 @@ export const QuestionInfoFragment = gql`
     updatedAt
     title
     description
-    commentCount
+    status
+    viewerCanEdit
     author {
       ...UserInfo
     }
   }
   ${UserInfoFragment}
-  ${CommentInfoFragment}
+`
+
+export const QuestionsConnectionFragment = gql`
+  fragment QuestionsConnection on QuestionsConnection {
+    pageInfo {
+      hasNextPage
+      totalCount
+      endCursor
+    }
+    edges {
+      cursor
+      node {
+        ...QuestionInfo
+      }
+    }
+  }
+  ${QuestionInfoFragment}
 `

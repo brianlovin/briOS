@@ -9,7 +9,7 @@ import routes from '~/config/routes'
 import { getContext } from '~/graphql/context'
 import { GET_COMMENTS } from '~/graphql/queries/comments'
 import { GET_QUESTION, GET_QUESTIONS } from '~/graphql/queries/questions'
-import { CommentType } from '~/graphql/types.generated'
+import { CommentType, QuestionStatus } from '~/graphql/types.generated'
 import { addApolloState, initApolloClient } from '~/lib/apollo'
 
 function QuestionDetailPage({ id }) {
@@ -30,7 +30,12 @@ export async function getServerSideProps({ params: { id }, req, res }) {
   const apolloClient = initApolloClient({ context })
 
   await Promise.all([
-    apolloClient.query({ query: GET_QUESTIONS }),
+    apolloClient.query({
+      query: GET_QUESTIONS,
+      variables: {
+        filter: { status: QuestionStatus.Answered },
+      },
+    }),
 
     apolloClient.query({
       query: GET_QUESTION,

@@ -1,41 +1,72 @@
 import { AnimateSharedLayout, motion } from 'framer-motion'
 import { useRouter } from 'next/router'
 import * as React from 'react'
-import { Link } from 'react-feather'
 
 import { ListContainer } from '~/components/ListDetail/ListContainer'
-import { ListItem } from '~/components/ListDetail/ListItem'
+import { PAGINATION_AMOUNT } from '~/graphql/constants'
 import { useGetBookmarksQuery } from '~/graphql/types.generated'
 
+import { ListLoadMore } from '../ListDetail/ListLoadMore'
+import { LoadingSpinner } from '../LoadingSpinner'
 import { BookmarksListItem } from './BookmarkListItem'
 import { BookmarksTitlebar } from './BookmarksTitlebar'
 
 export const BookmarksContext = React.createContext({
-  tagFilter: null,
-  setTagFilter: (name: string) => {},
+  tag: null,
+  setTag: (tag: string) => {},
 })
 
 export function BookmarksList() {
   const router = useRouter()
-  const { tag } = router.query
-  const [tagFilter, setTagFilter] = React.useState(tag)
+  const tagQuery = router.query?.tag as string
+  const [tag, setTag] = React.useState(tagQuery)
+  const [isVisible, setIsVisible] = React.useState(false)
   const [scrollContainerRef, setScrollContainerRef] = React.useState(null)
 
+  const variables = tag
+    ? {
+        first: PAGINATION_AMOUNT,
+        after: null,
+        filter: { tag: tag },
+      }
+    : null
+  const { data, error, loading, fetchMore } = useGetBookmarksQuery({
+    variables,
+  })
+
   const defaultContextValue = {
-    tagFilter,
-    setTagFilter,
+    tag,
+    setTag,
+  }
+
+  function handleFetchMore() {
+    return fetchMore({
+      variables: {
+        ...variables,
+        after: data.bookmarks.pageInfo.endCursor,
+      },
+    })
   }
 
   React.useEffect(() => {
-    if (tag) router.push(router.pathname, { query: null })
+    if (scrollContainerRef?.current) scrollContainerRef.current.scrollTo(0, 0)
   }, [tag])
 
-  const { data, error, loading } = useGetBookmarksQuery()
+  React.useEffect(() => {
+    if (isVisible) handleFetchMore()
+  }, [isVisible])
 
-  if (loading) {
+  React.useEffect(() => {
+    if (tagQuery) router.push(router.pathname, { query: null })
+  }, [tagQuery])
+
+  if (loading && !data?.bookmarks) {
     return (
       <ListContainer onRef={setScrollContainerRef}>
-        <div />
+        <BookmarksTitlebar scrollContainerRef={scrollContainerRef} />
+        <div className="flex items-center justify-center flex-1">
+          <LoadingSpinner />
+        </div>
       </ListContainer>
     )
   }
@@ -50,19 +81,19 @@ export function BookmarksList() {
         <BookmarksTitlebar scrollContainerRef={scrollContainerRef} />
         <AnimateSharedLayout>
           <div className="lg:p-3 lg:space-y-1">
-            {bookmarks
-              .filter((b) =>
-                tagFilter ? b.tags.some((t) => t.name === tagFilter) : true
+            {bookmarks.edges.map((bookmark) => {
+              const active = router.query.id === bookmark.node.id
+              return (
+                <motion.div layout key={bookmark.node.id}>
+                  <BookmarksListItem active={active} bookmark={bookmark.node} />
+                </motion.div>
               )
-              .map((bookmark) => {
-                const active = router.query.id === bookmark.id
-                return (
-                  <motion.div layout key={bookmark.id}>
-                    <BookmarksListItem active={active} bookmark={bookmark} />
-                  </motion.div>
-                )
-              })}
+            })}
           </div>
+
+          {bookmarks.pageInfo.hasNextPage && (
+            <ListLoadMore setIsVisible={setIsVisible} />
+          )}
         </AnimateSharedLayout>
       </ListContainer>
     </BookmarksContext.Provider>

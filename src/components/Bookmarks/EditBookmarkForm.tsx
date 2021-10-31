@@ -113,12 +113,17 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
         },
       })
 
-      cache.writeQuery({
-        query: GET_BOOKMARKS,
-        data: {
-          bookmarks: bookmarks.filter((o) => o.id !== bookmark.id),
-        },
-      })
+      if (bookmarks) {
+        cache.writeQuery({
+          query: GET_BOOKMARKS,
+          data: {
+            bookmarks: {
+              ...bookmarks,
+              edges: bookmarks.edges.filter((o) => o.node.id !== bookmark.id),
+            },
+          },
+        })
+      }
     },
   })
 
@@ -174,10 +179,10 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
           <a
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center pb-2 space-x-1 text-sm opacity-70 hover:opacity-100 text-secondary"
+            className="inline-flex items-center pb-2 space-x-2 text-sm opacity-70 hover:opacity-100 text-secondary"
           >
-            <LinkIcon size={12} />
-            <span>{bookmark.url}</span>
+            <LinkIcon className="flex-none" size={12} />
+            <span className="line-clamp-1">{bookmark.url}</span>
           </a>
         </Link>
 

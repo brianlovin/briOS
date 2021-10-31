@@ -1,14 +1,17 @@
 import { gql } from '@apollo/client'
 
-import { QuestionInfoFragment } from '~/graphql/fragments/question'
+import {
+  QuestionInfoFragment,
+  QuestionsConnectionFragment,
+} from '~/graphql/fragments/question'
 
 export const GET_QUESTIONS = gql`
-  query getQuestions {
-    questions {
-      ...QuestionInfo
+  query getQuestions($first: Int, $after: String, $filter: QuestionFilter) {
+    questions(first: $first, after: $after, filter: $filter) {
+      ...QuestionsConnection
     }
   }
-  ${QuestionInfoFragment}
+  ${QuestionsConnectionFragment}
 `
 
 export const GET_QUESTION = gql`

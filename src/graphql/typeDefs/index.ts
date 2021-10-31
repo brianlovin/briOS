@@ -67,7 +67,8 @@ export default gql`
     author: User
     title: String!
     description: String
-    commentCount: Int
+    status: QuestionStatus
+    viewerCanEdit: Boolean
   }
 
   enum CommentType {
@@ -156,20 +157,78 @@ export default gql`
     content: String
   }
 
+  input BookmarkFilter {
+    tag: String
+    host: String
+  }
+
+  enum QuestionStatus {
+    ANSWERED
+    PENDING
+  }
+
+  input QuestionFilter {
+    status: QuestionStatus
+  }
+
+  type BookmarkEdge {
+    node: Bookmark
+    cursor: String
+  }
+
+  type QuestionEdge {
+    node: Question
+    cursor: String
+  }
+
+  type StackEdge {
+    node: Stack
+    cursor: String
+  }
+
+  type PageInfo {
+    hasNextPage: Boolean
+    totalCount: Int
+    endCursor: String
+  }
+
+  type BookmarksConnection {
+    pageInfo: PageInfo
+    edges: [BookmarkEdge]!
+  }
+
+  type QuestionsConnection {
+    pageInfo: PageInfo
+    edges: [QuestionEdge]!
+  }
+
+  type StacksConnection {
+    pageInfo: PageInfo
+    edges: [StackEdge]!
+  }
+
   type Query {
     viewer: User
     user(username: String!): User
     bookmark(id: ID!): Bookmark
-    bookmarks(tag: String): [Bookmark]!
+    bookmarks(
+      first: Int
+      after: String
+      filter: BookmarkFilter
+    ): BookmarksConnection!
     stack(id: ID!): Stack
-    stacks(skip: Int): [Stack]!
+    stacks(first: Int, after: String): StacksConnection!
     comment(id: ID!): Comment
     comments(refId: String, type: CommentType): [Comment]!
     episodes: [Episode]!
     posts(first: Int, filter: String, order: String): [Post]!
     post(slug: String!): Post
     question(id: ID!): Question
-    questions: [Question]!
+    questions(
+      first: Int
+      after: String
+      filter: QuestionFilter
+    ): QuestionsConnection!
     hackerNewsPosts: [HackerNewsPost]!
     hackerNewsPost(id: ID!): HackerNewsPost
     repos: [Repo]!
