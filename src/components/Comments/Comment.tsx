@@ -126,13 +126,14 @@ export const Comment = React.memo(function MemoComment({
           </div>
         </div>
 
-        {(comment.viewerCanDelete || comment.viewerCanEdit) && (
-          <CommentMenu
-            comment={comment}
-            handleDelete={handleDelete}
-            handleEdit={handleEdit}
-          />
-        )}
+        {(comment.viewerCanDelete || comment.viewerCanEdit) &&
+          !comment.id.startsWith('optimistic') && (
+            <CommentMenu
+              comment={comment}
+              handleDelete={handleDelete}
+              handleEdit={handleEdit}
+            />
+          )}
       </div>
 
       {isEditing ? (

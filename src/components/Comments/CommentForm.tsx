@@ -29,7 +29,7 @@ export function CommentForm({ refId, type, openModal, refetch = null }: Props) {
       __typename: 'Mutation',
       addComment: {
         __typename: 'Comment',
-        id: uuidv4(),
+        id: `optimistic-${uuidv4()}`,
         text,
         createdAt: new Date().toLocaleDateString('en-us', {
           year: 'numeric',
