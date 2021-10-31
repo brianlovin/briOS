@@ -40,6 +40,19 @@ export default {
     viewerCanEdit: ({ userId }, _, { viewer }: Context) => {
       return userId === viewer?.id || viewer?.role === UserRole.Admin
     },
+    viewerCanComment: async ({ id }, _, ctx: Context) => {
+      const { viewer, prisma } = ctx
+      const isAdmin = viewer?.role === UserRole.Admin
+      // I can always comment to answer a question
+      if (isAdmin) return true
+      // If it's not me, only let people see the comment form if there are existing comments (answered)
+      const comments = await prisma.question
+        .findUnique({
+          where: { id },
+        })
+        .comments()
+      return comments.length > 0
+    },
     author: getQuestionAuthor,
     status: ({ _count: { comments } }) =>
       comments > 0 ? QuestionStatus.Answered : QuestionStatus.Pending,

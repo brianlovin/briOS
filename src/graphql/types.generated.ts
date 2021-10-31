@@ -395,6 +395,7 @@ export type Question = {
   status?: Maybe<QuestionStatus>
   title: Scalars['String']
   updatedAt?: Maybe<Scalars['String']>
+  viewerCanComment?: Maybe<Scalars['Boolean']>
   viewerCanEdit?: Maybe<Scalars['Boolean']>
 }
 
@@ -684,7 +685,6 @@ export type QuestionInfoFragment = {
   title: string
   description?: string | null | undefined
   status?: QuestionStatus | null | undefined
-  viewerCanEdit?: boolean | null | undefined
   author?:
     | {
         __typename: 'User'
@@ -723,7 +723,6 @@ export type QuestionsConnectionFragment = {
               title: string
               description?: string | null | undefined
               status?: QuestionStatus | null | undefined
-              viewerCanEdit?: boolean | null | undefined
               author?:
                 | {
                     __typename: 'User'
@@ -1082,7 +1081,6 @@ export type EditQuestionMutation = {
         title: string
         description?: string | null | undefined
         status?: QuestionStatus | null | undefined
-        viewerCanEdit?: boolean | null | undefined
         author?:
           | {
               __typename: 'User'
@@ -1124,7 +1122,6 @@ export type AddQuestionMutation = {
         title: string
         description?: string | null | undefined
         status?: QuestionStatus | null | undefined
-        viewerCanEdit?: boolean | null | undefined
         author?:
           | {
               __typename: 'User'
@@ -1564,7 +1561,6 @@ export type GetQuestionsQuery = {
                 title: string
                 description?: string | null | undefined
                 status?: QuestionStatus | null | undefined
-                viewerCanEdit?: boolean | null | undefined
                 author?:
                   | {
                       __typename: 'User'
@@ -1596,13 +1592,14 @@ export type GetQuestionQuery = {
   question?:
     | {
         __typename?: 'Question'
+        viewerCanEdit?: boolean | null | undefined
+        viewerCanComment?: boolean | null | undefined
         id: string
         createdAt: string
         updatedAt?: string | null | undefined
         title: string
         description?: string | null | undefined
         status?: QuestionStatus | null | undefined
-        viewerCanEdit?: boolean | null | undefined
         author?:
           | {
               __typename: 'User'
@@ -1907,7 +1904,6 @@ export const QuestionInfoFragmentDoc = gql`
     title
     description
     status
-    viewerCanEdit
     author {
       ...UserInfo
     }
@@ -3394,6 +3390,8 @@ export const GetQuestionDocument = gql`
   query getQuestion($id: ID!) {
     question(id: $id) {
       ...QuestionInfo
+      viewerCanEdit
+      viewerCanComment
     }
   }
   ${QuestionInfoFragmentDoc}

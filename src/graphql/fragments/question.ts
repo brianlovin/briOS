@@ -10,7 +10,6 @@ export const QuestionInfoFragment = gql`
     title
     description
     status
-    viewerCanEdit
     author {
       ...UserInfo
     }

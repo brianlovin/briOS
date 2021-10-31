@@ -18,6 +18,8 @@ export const GET_QUESTION = gql`
   query getQuestion($id: ID!) {
     question(id: $id) {
       ...QuestionInfo
+      viewerCanEdit
+      viewerCanComment
     }
   }
   ${QuestionInfoFragment}

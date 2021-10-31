@@ -98,11 +98,13 @@ export function QuestionDetail({ id }) {
         </Detail.Header>
       </Detail.ContentContainer>
 
-      <Comments
-        refetch={refetch}
-        refId={question.id}
-        type={CommentType.Question}
-      />
+      {question.viewerCanComment && (
+        <Comments
+          refetch={refetch}
+          refId={question.id}
+          type={CommentType.Question}
+        />
+      )}
     </Detail.Container>
   )
 }

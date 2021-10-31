@@ -43,6 +43,7 @@ export default gql`
     description: String
     status: QuestionStatus
     viewerCanEdit: Boolean
+    viewerCanComment: Boolean
   }
 
   enum CommentType {
