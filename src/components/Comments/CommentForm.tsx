@@ -119,7 +119,7 @@ export function CommentForm({ refId, type, openModal, refetch = null }: Props) {
         <div className="relative flex flex-none w-full">
           <Textarea
             data-cy="comment-form-textarea"
-            placeholder="Leave a comment..."
+            placeholder="Write a comment..."
             value={text}
             onChange={handleChange}
             onKeyDown={onKeyDown}

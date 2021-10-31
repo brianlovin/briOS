@@ -64,6 +64,9 @@ export function PostDetail({ slug }) {
             children={post.text}
             className="mt-8 prose lg:prose-lg"
           />
+
+          {/* bottom padding to give space between post content and comments */}
+          <div className="py-6" />
         </Detail.ContentContainer>
 
         <Comments refId={post.id} type={CommentType.Post} />
