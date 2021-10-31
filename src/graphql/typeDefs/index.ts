@@ -27,17 +27,6 @@ export default gql`
     tags: [Tag]!
   }
 
-  type Episode {
-    id: String
-    description: String
-    legacy_id: String
-    long_description: String
-    published_at: String
-    status: String
-    title: String
-    token: String
-  }
-
   type Repo {
     org: String
     name: String
@@ -205,7 +194,6 @@ export default gql`
     stacks(first: Int, after: String): StacksConnection!
     comment(id: ID!): Comment
     comments(refId: String, type: CommentType): [Comment]!
-    episodes: [Episode]!
     posts(first: Int, filter: String, order: String): [Post]!
     post(slug: String!): Post
     question(id: ID!): Question

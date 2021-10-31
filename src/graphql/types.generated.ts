@@ -147,18 +147,6 @@ export enum EmailSubscriptionType {
   Newsletter = 'NEWSLETTER',
 }
 
-export type Episode = {
-  __typename?: 'Episode'
-  description?: Maybe<Scalars['String']>
-  id?: Maybe<Scalars['String']>
-  legacy_id?: Maybe<Scalars['String']>
-  long_description?: Maybe<Scalars['String']>
-  published_at?: Maybe<Scalars['String']>
-  status?: Maybe<Scalars['String']>
-  title?: Maybe<Scalars['String']>
-  token?: Maybe<Scalars['String']>
-}
-
 export type HackerNewsComment = {
   __typename?: 'HackerNewsComment'
   comments?: Maybe<Array<Maybe<HackerNewsComment>>>
@@ -313,7 +301,6 @@ export type Query = {
   bookmarks: BookmarksConnection
   comment?: Maybe<Comment>
   comments: Array<Maybe<Comment>>
-  episodes: Array<Maybe<Episode>>
   hackerNewsPost?: Maybe<HackerNewsPost>
   hackerNewsPosts: Array<Maybe<HackerNewsPost>>
   post?: Maybe<Post>
@@ -565,18 +552,6 @@ export type CommentInfoFragment = {
     role?: UserRole | null | undefined
     isViewer?: boolean | null | undefined
   }
-}
-
-export type EpisodeInfoFragment = {
-  __typename?: 'Episode'
-  id?: string | null | undefined
-  description?: string | null | undefined
-  legacy_id?: string | null | undefined
-  long_description?: string | null | undefined
-  published_at?: string | null | undefined
-  status?: string | null | undefined
-  title?: string | null | undefined
-  token?: string | null | undefined
 }
 
 export type HackerNewsListItemInfoFragment = {
@@ -1373,27 +1348,6 @@ export type GetCommentsQuery = {
   >
 }
 
-export type GetEpisodesQueryVariables = Exact<{ [key: string]: never }>
-
-export type GetEpisodesQuery = {
-  __typename?: 'Query'
-  episodes: Array<
-    | {
-        __typename?: 'Episode'
-        id?: string | null | undefined
-        description?: string | null | undefined
-        legacy_id?: string | null | undefined
-        long_description?: string | null | undefined
-        published_at?: string | null | undefined
-        status?: string | null | undefined
-        title?: string | null | undefined
-        token?: string | null | undefined
-      }
-    | null
-    | undefined
-  >
-}
-
 export type GetHackerNewsPostsQueryVariables = Exact<{ [key: string]: never }>
 
 export type GetHackerNewsPostsQuery = {
@@ -1884,18 +1838,6 @@ export const CommentInfoFragmentDoc = gql`
     }
   }
   ${UserInfoFragmentDoc}
-`
-export const EpisodeInfoFragmentDoc = gql`
-  fragment EpisodeInfo on Episode {
-    id
-    description
-    legacy_id
-    long_description
-    published_at
-    status
-    title
-    token
-  }
 `
 export const HackerNewsListItemInfoFragmentDoc = gql`
   fragment HackerNewsListItemInfo on HackerNewsPost {
@@ -3166,62 +3108,6 @@ export type GetCommentsLazyQueryHookResult = ReturnType<
 export type GetCommentsQueryResult = Apollo.QueryResult<
   GetCommentsQuery,
   GetCommentsQueryVariables
->
-export const GetEpisodesDocument = gql`
-  query GetEpisodes {
-    episodes {
-      ...EpisodeInfo
-    }
-  }
-  ${EpisodeInfoFragmentDoc}
-`
-
-/**
- * __useGetEpisodesQuery__
- *
- * To run a query within a React component, call `useGetEpisodesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetEpisodesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetEpisodesQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetEpisodesQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetEpisodesQuery,
-    GetEpisodesQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetEpisodesQuery, GetEpisodesQueryVariables>(
-    GetEpisodesDocument,
-    options
-  )
-}
-export function useGetEpisodesLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetEpisodesQuery,
-    GetEpisodesQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetEpisodesQuery, GetEpisodesQueryVariables>(
-    GetEpisodesDocument,
-    options
-  )
-}
-export type GetEpisodesQueryHookResult = ReturnType<typeof useGetEpisodesQuery>
-export type GetEpisodesLazyQueryHookResult = ReturnType<
-  typeof useGetEpisodesLazyQuery
->
-export type GetEpisodesQueryResult = Apollo.QueryResult<
-  GetEpisodesQuery,
-  GetEpisodesQueryVariables
 >
 export const GetHackerNewsPostsDocument = gql`
   query getHackerNewsPosts {

@@ -1,7 +1,6 @@
 import { getBookmark, getBookmarks } from './bookmarks'
 import { getComment, getComments } from './comment'
 import { getHackerNewsPost, getHackerNewsPosts } from './hackerNews'
-import { getEpisodes } from './podcast'
 import { getPost, getPosts } from './posts'
 import { getQuestion, getQuestions } from './questions'
 import { getRepos } from './repos'
@@ -15,7 +14,6 @@ export default {
   user: getUser,
   bookmark: getBookmark,
   bookmarks: getBookmarks,
-  episodes: getEpisodes,
   posts: getPosts,
   post: getPost,
   repos: getRepos,
