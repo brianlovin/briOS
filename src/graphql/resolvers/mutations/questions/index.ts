@@ -49,12 +49,7 @@ export async function addQuestion(
   const { title, description } = data
   const { viewer, prisma } = ctx
 
-  emailMe({
-    subject: `AMA: ${title}`,
-    body: `${title}\n\n${baseUrl}/ama`,
-  })
-
-  return await prisma.question.create({
+  const question = await prisma.question.create({
     data: {
       title,
       description,
@@ -68,6 +63,13 @@ export async function addQuestion(
       },
     },
   })
+
+  emailMe({
+    subject: `AMA: ${title}`,
+    body: `${title}\n\n${baseUrl}/ama/${question.id}`,
+  })
+
+  return question
 }
 
 export async function deleteQuestion(
