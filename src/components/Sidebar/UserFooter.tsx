@@ -12,6 +12,7 @@ import { GlobalNavigationContext } from '../Providers'
 function Container(props) {
   return (
     <div
+      data-cy="sign-in-button"
       className="sticky bottom-0 z-10 flex items-center justify-between p-2 space-x-3 bg-white border-t border-gray-150 dark:bg-gray-900 dark:border-gray-800 bg-opacity-80 filter-blur dark:bg-opacity-60"
       {...props}
     />
@@ -73,5 +74,5 @@ export function UserFooter() {
     )
   }
 
-  return <Container data-cy="sign-in-button">{signInButton()}</Container>
+  return <Container>{signInButton()}</Container>
 }
