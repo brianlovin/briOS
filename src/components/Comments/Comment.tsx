@@ -172,7 +172,7 @@ export const Comment = React.memo(function MemoComment({
               )
             },
           }}
-          className="flex-grow prose comment pl-14"
+          className="flex-grow leading-normal prose comment pl-14"
         />
       )}
     </div>
