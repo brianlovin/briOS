@@ -48,35 +48,39 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       })
 
   for (const subscriber of subscribers) {
-    const unsubscribeToken = jwt.sign(
-      { email: subscriber.email },
-      process.env.JWT_SIGNING_KEY
-    )
+    try {
+      const unsubscribeToken = jwt.sign(
+        { email: subscriber.email },
+        process.env.JWT_SIGNING_KEY
+      )
 
-    const unsubscribe_url = `${CLIENT_URL}/api/hn/unsubscribe?token=${unsubscribeToken}`
+      const unsubscribe_url = `${CLIENT_URL}/api/hn/unsubscribe?token=${unsubscribeToken}`
 
-    if (IS_PROD) {
-      await postmark.sendEmailWithTemplate({
-        From: baseEmail,
-        To: subscriber.email,
-        TemplateId: 18037634,
-        TemplateModel: {
-          date,
-          posts,
-          unsubscribe_url,
-        },
-      })
-    } else {
-      console.log('Sending HN digest email', {
-        From: baseEmail,
-        To: subscriber.email,
-        TemplateId: 18037634,
-        TemplateModel: {
-          date,
-          posts,
-          unsubscribe_url,
-        },
-      })
+      if (IS_PROD) {
+        await postmark.sendEmailWithTemplate({
+          From: baseEmail,
+          To: subscriber.email,
+          TemplateId: 18037634,
+          TemplateModel: {
+            date,
+            posts,
+            unsubscribe_url,
+          },
+        })
+      } else {
+        console.log('Sending HN digest email', {
+          From: baseEmail,
+          To: subscriber.email,
+          TemplateId: 18037634,
+          TemplateModel: {
+            date,
+            posts,
+            unsubscribe_url,
+          },
+        })
+      }
+    } catch (err) {
+      console.error('Error sending HN digest email: ', { subscriber, err })
     }
   }
 
