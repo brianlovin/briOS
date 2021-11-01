@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { useRouter } from 'next/router'
 import * as React from 'react'
 
@@ -5,9 +6,15 @@ import { ErrorAlert } from '~/components/Alert'
 import { PrimaryButton } from '~/components/Button'
 import { Textarea } from '~/components/Input'
 import { LoadingSpinner } from '~/components/LoadingSpinner'
-import { useAddQuestionMutation } from '~/graphql/types.generated'
+import {
+  useAddQuestionMutation,
+  useViewerQuery,
+} from '~/graphql/types.generated'
+
+import { Avatar } from '../Avatar'
 
 export function AddQuestionForm({ closeModal }) {
+  const { data } = useViewerQuery()
   const [title, setTitle] = React.useState('')
   const [description, setDescription] = React.useState('')
   const [error, setError] = React.useState('')
@@ -57,22 +64,37 @@ export function AddQuestionForm({ closeModal }) {
     }
   }
 
+  const { viewer } = data
+
   return (
     <form className="items-stretch p-4 space-y-4" onSubmit={onSubmit}>
-      <Textarea
-        rows={2}
-        value={title}
-        placeholder="Ask me anything..."
-        onChange={onTitleChange}
-        onKeyDown={onKeyDown}
-      />
-      <Textarea
-        rows={4}
-        value={description}
-        placeholder="Optional: add a description with more details..."
-        onChange={onDescriptionChange}
-        onKeyDown={onKeyDown}
-      />
+      <div className="flex items-start space-x-3">
+        <div className="pt-0.5">
+          <Avatar
+            user={viewer}
+            src={viewer.avatar}
+            width={40}
+            height={40}
+            className="rounded-full"
+          />
+        </div>
+        <Textarea
+          rows={1}
+          value={title}
+          placeholder="Ask me anything..."
+          onChange={onTitleChange}
+          onKeyDown={onKeyDown}
+        />
+      </div>
+      <div className="pl-12">
+        <Textarea
+          rows={4}
+          value={description}
+          placeholder="Optional: add a description with more details..."
+          onChange={onDescriptionChange}
+          onKeyDown={onKeyDown}
+        />
+      </div>
       <div className="flex justify-end">
         <PrimaryButton
           disabled={title.trim().length === 0 || loading}
