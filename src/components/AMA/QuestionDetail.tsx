@@ -92,7 +92,7 @@ export function QuestionDetail({ id }) {
                   )
                 },
               }}
-              className="prose comment"
+              className="leading-normal prose comment"
             />
           )}
         </Detail.Header>
