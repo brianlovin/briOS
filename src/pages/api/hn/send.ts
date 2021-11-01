@@ -7,6 +7,7 @@ import { CLIENT_URL, IS_PROD } from '~/graphql/constants'
 import { EmailSubscriptionType } from '~/graphql/types.generated'
 import { getHNPostsForDigest } from '~/lib/hn'
 import { client as postmark } from '~/lib/postmark'
+import { prisma } from '~/lib/prisma'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { token, warmup } = req.query
