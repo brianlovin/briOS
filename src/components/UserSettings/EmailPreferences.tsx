@@ -92,10 +92,10 @@ export function EmailPreferences() {
           subscription={subscription}
         />
       ))}
-      <div className="pl-3">
+      {/* <div className="pl-3">
         <p className="pl-4 -mb-3 font-medium text-primary">Newsletter</p>
         <WritingSubscriptionForm defaultValue={viewer.email} />
-      </div>
+      </div> */}
     </div>
   )
 }
