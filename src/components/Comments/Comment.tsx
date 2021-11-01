@@ -106,7 +106,7 @@ export const Comment = React.memo(function MemoComment({
   }
 
   return (
-    <div className="flex flex-col space-y-1 group">
+    <div className="flex flex-col space-y-0 group">
       <div className="flex items-center justify-between space-x-4">
         <div className="flex items-center space-x-4">
           <Avatar
@@ -118,7 +118,7 @@ export const Comment = React.memo(function MemoComment({
             layout="fixed"
             className="rounded-full"
           />
-          <div className="flex flex-col">
+          <div className="flex space-x-2">
             <p className="font-medium leading-snug text-primary">
               {comment.author.name}
             </p>
