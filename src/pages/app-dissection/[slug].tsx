@@ -18,12 +18,7 @@ interface Props {
 function AppDissectionPage({ post }: Props) {
   const router = useRouter()
 
-  React.useEffect(() => {
-    // handle bad slug
-    if (!post) {
-      router.push('/app-dissection')
-    }
-  }, [])
+  if (!post) return null
 
   if (post) {
     return (

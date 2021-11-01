@@ -223,7 +223,6 @@ export function EditStackForm({ closeModal, stack }) {
             onClick={() => {
               closeModal()
               handleDelete()
-              router.push('/stack')
             }}
           >
             Delete

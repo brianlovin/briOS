@@ -1,5 +1,4 @@
 import deepmerge from 'deepmerge'
-import { useRouter } from 'next/router'
 import * as React from 'react'
 import ReactMarkdown from 'react-markdown'
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
@@ -17,7 +16,6 @@ import { QuestionActions } from './QuestionActions'
 export function QuestionDetail({ id }) {
   const scrollContainerRef = React.useRef(null)
   const titleRef = React.useRef(null)
-  const router = useRouter()
   const { data, loading, error, refetch } = useGetQuestionQuery({
     variables: { id },
   })
@@ -25,10 +23,6 @@ export function QuestionDetail({ id }) {
   const schema = deepmerge(defaultSchema, {
     attributes: { '*': ['className'] },
   })
-
-  React.useEffect(() => {
-    if (!loading && !data?.question) router.push('/ama')
-  }, [loading])
 
   if (loading) {
     return <Detail.Loading />

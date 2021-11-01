@@ -162,7 +162,6 @@ export function EditQuestionForm({ closeModal, question }) {
           onClick={() => {
             closeModal()
             handleDelete()
-            router.push('/ama')
           }}
         >
           Delete

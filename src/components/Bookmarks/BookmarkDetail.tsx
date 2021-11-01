@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import * as React from 'react'
 import { Link as LinkIcon } from 'react-feather'
 
@@ -16,14 +15,9 @@ import { RelatedBookmarks } from './RelatedBookmarks'
 export function BookmarkDetail({ id }) {
   const scrollContainerRef: React.RefObject<HTMLDivElement> = React.useRef(null)
   const titleRef: React.RefObject<HTMLHeadingElement> = React.useRef(null)
-  const router = useRouter()
   const { data, loading, error } = useGetBookmarkQuery({
     variables: { id },
   })
-
-  React.useEffect(() => {
-    if (!loading && !data?.bookmark) router.push('/bookmarks')
-  }, [loading])
 
   if (error) {
     return null

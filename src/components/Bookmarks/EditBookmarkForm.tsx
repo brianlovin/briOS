@@ -212,7 +212,6 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
           onClick={() => {
             closeModal()
             handleDelete()
-            router.push('/bookmarks')
           }}
         >
           Delete
