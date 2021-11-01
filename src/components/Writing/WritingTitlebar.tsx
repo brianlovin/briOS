@@ -27,20 +27,19 @@ export function WritingTitlebar({ scrollContainerRef }) {
   }
 
   function getSubscribeButton() {
-    return null
-    // if (data?.viewer?.role === UserRole.Admin) return null
-    // return (
-    //   <DialogComponent
-    //     title="Newsletter"
-    //     trigger={
-    //       <Button data-cy="open-subscribe-hn-dialog" size="small">
-    //         <Radio size={16} />
-    //         <span>Subscribe</span>
-    //       </Button>
-    //     }
-    //     modalContent={() => <WritingSubscriptionForm />}
-    //   />
-    // )
+    if (data?.viewer?.role === UserRole.Admin) return null
+    return (
+      <DialogComponent
+        title="Newsletter"
+        trigger={
+          <Button data-cy="open-subscribe-hn-dialog" size="small">
+            <Radio size={16} />
+            <span>Subscribe</span>
+          </Button>
+        }
+        modalContent={() => <WritingSubscriptionForm />}
+      />
+    )
   }
 
   function trailingAccessory() {
