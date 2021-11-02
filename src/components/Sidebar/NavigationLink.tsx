@@ -4,12 +4,15 @@ import * as React from 'react'
 import { GlobalNavigationContext } from '~/components/Providers'
 
 export function NavigationLink({
-  href,
-  label,
-  icon: Icon,
-  trailingAccessory: Accessory,
-  trailingAction: Action,
-  isActive,
+  link: {
+    href,
+    label,
+    icon: Icon,
+    trailingAccessory: Accessory,
+    trailingAction: Action,
+    isActive,
+    isExternal,
+  },
 }) {
   const { setIsOpen } = React.useContext(GlobalNavigationContext)
   return (
@@ -19,6 +22,8 @@ export function NavigationLink({
     >
       <Link href={href}>
         <a
+          target={isExternal ? '_blank' : undefined}
+          rel={isExternal ? 'noopener noreferrer' : undefined}
           className={`flex flex-1 items-center space-x-3 px-2 py-1.5 text-sm font-medium rounded-md  ${
             isActive
               ? 'bg-black text-white hover:bg-black hover:text-white dark:bg-gray-700 dark:hover:bg-gray-700 dark:text-white dark:hover:text-white'

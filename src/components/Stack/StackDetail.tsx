@@ -76,7 +76,12 @@ export function StackDetail({ id }) {
 
           <p className="prose text-primary">{stack.description}</p>
 
-          <PrimaryButton size="large" href={stack.url}>
+          <PrimaryButton
+            size="large"
+            href={stack.url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <LinkIcon size={14} />
             <span>Visit</span>
           </PrimaryButton>

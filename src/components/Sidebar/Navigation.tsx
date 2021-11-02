@@ -48,6 +48,7 @@ export function SidebarNavigation() {
       trailingAccessory: null,
       isActive: router.asPath === '/',
       trailingAction: null,
+      isExternal: false,
     },
 
     {
@@ -57,6 +58,7 @@ export function SidebarNavigation() {
       trailingAccessory: null,
       isActive: router.asPath.indexOf('/writing') >= 0,
       trailingAction: null,
+      isExternal: false,
     },
 
     'Me',
@@ -68,6 +70,7 @@ export function SidebarNavigation() {
       trailingAccessory: null,
       isActive: router.asPath.indexOf('/bookmarks') >= 0,
       trailingAction: isAdmin ? ThisAddBookmarkDialog : null,
+      isExternal: false,
     },
 
     {
@@ -79,6 +82,7 @@ export function SidebarNavigation() {
         router.asPath.indexOf('/ama') >= 0 &&
         !router.asPath.startsWith('/ama/pending'),
       trailingAction: null,
+      isExternal: false,
     },
 
     {
@@ -88,6 +92,7 @@ export function SidebarNavigation() {
       trailingAccessory: null,
       isActive: router.asPath.indexOf('/stack') >= 0,
       trailingAction: null,
+      isExternal: false,
     },
 
     'Projects',
@@ -99,6 +104,7 @@ export function SidebarNavigation() {
       trailingAccessory: ExternalLinkIcon,
       isActive: false,
       trailingAction: null,
+      isExternal: true,
     },
 
     {
@@ -108,6 +114,7 @@ export function SidebarNavigation() {
       trailingAccessory: ExternalLinkIcon,
       isActive: false,
       trailingAction: null,
+      isExternal: true,
     },
 
     {
@@ -117,6 +124,7 @@ export function SidebarNavigation() {
       trailingAccessory: ExternalLinkIcon,
       isActive: false,
       trailingAction: null,
+      isExternal: true,
     },
 
     {
@@ -126,6 +134,7 @@ export function SidebarNavigation() {
       trailingAccessory: null,
       isActive: router.asPath.indexOf('/security') >= 0,
       trailingAction: null,
+      isExternal: false,
     },
 
     {
@@ -135,6 +144,7 @@ export function SidebarNavigation() {
       trailingAccessory: null,
       isActive: router.asPath.indexOf('/hn') >= 0,
       trailingAction: null,
+      isExternal: false,
     },
 
     {
@@ -144,6 +154,7 @@ export function SidebarNavigation() {
       trailingAccessory: null,
       isActive: router.asPath.indexOf('/app-dissection') >= 0,
       trailingAction: null,
+      isExternal: false,
     },
 
     'Online',
@@ -155,6 +166,7 @@ export function SidebarNavigation() {
       trailingAccessory: ExternalLinkIcon,
       isActive: false,
       trailingAction: null,
+      isExternal: true,
     },
 
     {
@@ -164,6 +176,7 @@ export function SidebarNavigation() {
       trailingAccessory: ExternalLinkIcon,
       isActive: false,
       trailingAction: null,
+      isExternal: true,
     },
   ]
 
@@ -181,17 +194,7 @@ export function SidebarNavigation() {
           )
         }
 
-        return (
-          <NavigationLink
-            key={i}
-            href={link.href}
-            label={link.label}
-            icon={link.icon}
-            trailingAccessory={link.trailingAccessory}
-            isActive={link.isActive}
-            trailingAction={link.trailingAction}
-          />
-        )
+        return <NavigationLink key={i} link={link} />
       })}
     </ul>
   )

@@ -67,7 +67,12 @@ export function BookmarkDetail({ id }) {
           )}
         </Detail.Header>
         <div className="mt-6">
-          <PrimaryButton size="large" href={bookmark.url}>
+          <PrimaryButton
+            size="large"
+            href={bookmark.url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <LinkIcon size={14} />
             <span>Visit</span>
           </PrimaryButton>
