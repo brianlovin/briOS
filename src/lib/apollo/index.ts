@@ -21,8 +21,6 @@ import {
 
 const GRAPHQL_ENDPOINT = IS_PREVIEW
   ? `https://${process.env.VERCEL_URL}/api/graphql`
-  : IS_PROD
-  ? `${CLIENT_URL}/api/graphql`
   : '/api/graphql'
 
 console.log({ endpoint: GRAPHQL_ENDPOINT })
