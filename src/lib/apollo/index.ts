@@ -25,6 +25,7 @@ const GRAPHQL_ENDPOINT = IS_PREVIEW
 console.log({ endpoint: GRAPHQL_ENDPOINT })
 console.log({ url: process.env.VERCEL_URL })
 console.log({ env: process.env.VERCE_ENV })
+
 console.log({ cypress: process.env.CYPRESS_BASE_URL })
 
 global.fetch = require('node-fetch')
