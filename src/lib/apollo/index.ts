@@ -23,11 +23,6 @@ const GRAPHQL_ENDPOINT = IS_PREVIEW
   ? `https://${process.env.VERCEL_URL}/api/graphql`
   : '/api/graphql'
 
-console.log({ endpoint: GRAPHQL_ENDPOINT })
-console.log({ env: process.env.VERCEL_ENV })
-console.log({ isPreview: IS_PREVIEW })
-console.log({ cypress: process.env.CYPRESS_BASE_URL })
-
 global.fetch = require('node-fetch')
 let apolloClient
 
