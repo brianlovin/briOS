@@ -16,16 +16,18 @@ import {
   APOLLO_STATE_PROP_NAME,
   CLIENT_URL,
   IS_PREVIEW,
+  IS_PROD,
 } from '~/graphql/constants'
 
 const GRAPHQL_ENDPOINT = IS_PREVIEW
   ? `https://${process.env.VERCEL_URL}/api/graphql`
-  : `${CLIENT_URL}/api/graphql`
+  : IS_PROD
+  ? `${CLIENT_URL}/api/graphql`
+  : '/api/graphql'
 
 console.log({ endpoint: GRAPHQL_ENDPOINT })
 console.log({ env: process.env.VERCEL_ENV })
 console.log({ isPreview: IS_PREVIEW })
-
 console.log({ cypress: process.env.CYPRESS_BASE_URL })
 
 global.fetch = require('node-fetch')
