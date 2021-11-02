@@ -61,7 +61,12 @@ export function PostDetail({ id }) {
 
           {post.url && (
             <div className="mt-6">
-              <PrimaryButton size="large" href={post.url}>
+              <PrimaryButton
+                size="large"
+                href={post.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <LinkIcon size={14} />
                 <span>Visit</span>
               </PrimaryButton>
