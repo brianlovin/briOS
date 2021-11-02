@@ -12,9 +12,16 @@ import isEqual from 'lodash/isEqual'
 import { useMemo } from 'react'
 import toast from 'react-hot-toast'
 
-import { APOLLO_STATE_PROP_NAME, CLIENT_URL } from '~/graphql/constants'
+import {
+  APOLLO_STATE_PROP_NAME,
+  CLIENT_URL,
+  IS_PREVIEW,
+  IS_PROD,
+} from '~/graphql/constants'
 
-const GRAPHQL_ENDPOINT = `${CLIENT_URL}/api/graphql`
+const GRAPHQL_ENDPOINT = IS_PREVIEW
+  ? `https://${process.env.VERCEL_URL}/api/graphql`
+  : '/api/graphql'
 
 global.fetch = require('node-fetch')
 let apolloClient
@@ -27,7 +34,6 @@ function createIsomorphLink({ context }) {
     const { SchemaLink } = require('@apollo/link-schema')
     // eslint-disable-next-line
     const { schema } = require('~/graphql/schema')
-    const { prisma } = require('~/lib/prisma/index')
     return new SchemaLink({ schema, context })
   } else {
     return new HttpLink({
