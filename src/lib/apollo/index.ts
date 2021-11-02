@@ -12,9 +12,15 @@ import isEqual from 'lodash/isEqual'
 import { useMemo } from 'react'
 import toast from 'react-hot-toast'
 
-import { APOLLO_STATE_PROP_NAME } from '~/graphql/constants'
+import {
+  APOLLO_STATE_PROP_NAME,
+  CLIENT_URL,
+  IS_PREVIEW,
+} from '~/graphql/constants'
 
-const GRAPHQL_ENDPOINT = `/api/graphql`
+const GRAPHQL_ENDPOINT = IS_PREVIEW
+  ? `https://${process.env.VERCEL_URL}/api/graphql`
+  : `${CLIENT_URL}/api/graphql`
 
 global.fetch = require('node-fetch')
 let apolloClient
