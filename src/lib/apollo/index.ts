@@ -23,8 +23,8 @@ const GRAPHQL_ENDPOINT = IS_PREVIEW
   : `${CLIENT_URL}/api/graphql`
 
 console.log({ endpoint: GRAPHQL_ENDPOINT })
-console.log({ url: process.env.VERCEL_URL })
-console.log({ env: process.env.VERCE_ENV })
+console.log({ env: process.env.VERCEL_ENV })
+console.log({ isPreview: IS_PREVIEW })
 
 console.log({ cypress: process.env.CYPRESS_BASE_URL })
 
