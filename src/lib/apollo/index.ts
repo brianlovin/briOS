@@ -22,6 +22,8 @@ const GRAPHQL_ENDPOINT = IS_PREVIEW
   ? `https://${process.env.VERCEL_URL}/api/graphql`
   : `${CLIENT_URL}/api/graphql`
 
+console.log({ endpoint: GRAPHQL_ENDPOINT })
+
 global.fetch = require('node-fetch')
 let apolloClient
 
