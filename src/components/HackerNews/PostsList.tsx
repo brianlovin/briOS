@@ -8,6 +8,7 @@ import { HackerNewsSubscriptionForm } from '~/components/HackerNews/Subscription
 import { ListContainer } from '~/components/ListDetail/ListContainer'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { useGetHackerNewsPostsQuery } from '~/graphql/types.generated'
+import { useWindowFocus } from '~/hooks/useWindowFocus'
 
 import { PostsListItem } from './PostListItem'
 
@@ -15,7 +16,9 @@ export function PostsList() {
   const router = useRouter()
   let [scrollContainerRef, setScrollContainerRef] = React.useState(null)
 
-  const { data, loading } = useGetHackerNewsPostsQuery()
+  const { data, loading, refetch } = useGetHackerNewsPostsQuery()
+
+  useWindowFocus({ onFocus: refetch })
 
   if (loading) return null
 

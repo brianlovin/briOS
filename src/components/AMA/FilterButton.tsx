@@ -1,7 +1,6 @@
 import * as React from 'react'
 
 import { GhostButton } from '~/components/Button'
-import { PAGINATION_AMOUNT } from '~/graphql/constants'
 import { QuestionStatus, useGetQuestionsQuery } from '~/graphql/types.generated'
 
 import { LoadingSpinner } from '../LoadingSpinner'

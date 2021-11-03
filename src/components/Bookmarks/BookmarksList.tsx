@@ -5,6 +5,7 @@ import * as React from 'react'
 import { ListContainer } from '~/components/ListDetail/ListContainer'
 import { PAGINATION_AMOUNT } from '~/graphql/constants'
 import { useGetBookmarksQuery } from '~/graphql/types.generated'
+import { useWindowFocus } from '~/hooks/useWindowFocus'
 
 import { ListLoadMore } from '../ListDetail/ListLoadMore'
 import { LoadingSpinner } from '../LoadingSpinner'
@@ -30,9 +31,11 @@ export function BookmarksList() {
         filter: { tag: tag },
       }
     : null
-  const { data, error, loading, fetchMore } = useGetBookmarksQuery({
+  const { data, error, loading, fetchMore, refetch } = useGetBookmarksQuery({
     variables,
   })
+
+  useWindowFocus({ onFocus: refetch })
 
   const defaultContextValue = {
     tag,
@@ -48,6 +51,7 @@ export function BookmarksList() {
     })
   }
 
+  // scroll to the top of the list whenever the filters are changed
   React.useEffect(() => {
     if (scrollContainerRef?.current) scrollContainerRef.current.scrollTo(0, 0)
   }, [tag])
@@ -56,6 +60,7 @@ export function BookmarksList() {
     if (isVisible) handleFetchMore()
   }, [isVisible])
 
+  // if a user is linked to /bookmarks?tag=foo, clear the query filter but stay on the same page
   React.useEffect(() => {
     if (tagQuery) router.push(router.pathname, { query: null })
   }, [tagQuery])

@@ -5,6 +5,7 @@ import { LoadingSpinner } from '~/components/LoadingSpinner'
 import { SignInDialog } from '~/components/SignInDialog'
 import { SyntaxHighlighter } from '~/components/SyntaxHighlighter'
 import { CommentType, useGetCommentsQuery } from '~/graphql/types.generated'
+import { useWindowFocus } from '~/hooks/useWindowFocus'
 
 import { Comment } from './Comment'
 import { CommentForm } from './CommentForm'
@@ -12,19 +13,20 @@ import { CommentForm } from './CommentForm'
 interface Props {
   refId: string
   type: CommentType
-  refetch?: () => void
 }
 
-export function Comments({ refId, type, refetch = null }: Props) {
+export function Comments({ refId, type }: Props) {
   const [initialCommentsCount, setInitialCommentsCount] = React.useState(null)
   const messagesEndRef: React.RefObject<HTMLDivElement> = React.useRef(null)
 
-  const { data, loading, error } = useGetCommentsQuery({
+  const { data, loading, error, refetch } = useGetCommentsQuery({
     variables: {
       refId,
       type,
     },
   })
+
+  useWindowFocus({ onFocus: refetch })
 
   function scrollToBottom() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -88,12 +90,7 @@ export function Comments({ refId, type, refetch = null }: Props) {
 
         <SignInDialog>
           {({ openModal }) => (
-            <CommentForm
-              refetch={refetch}
-              refId={refId}
-              type={type}
-              openModal={openModal}
-            />
+            <CommentForm refId={refId} type={type} openModal={openModal} />
           )}
         </SignInDialog>
       </div>

@@ -5,10 +5,10 @@ import { Tooltip } from '~/components/Tooltip'
 import { GET_STACK } from '~/graphql/queries/stack'
 import {
   useGetStackQuery,
-  UserRole,
   useToggleStackUserMutation,
   useViewerQuery,
 } from '~/graphql/types.generated'
+import { useWindowFocus } from '~/hooks/useWindowFocus'
 
 export function StackUsedBy(props) {
   const { triggerSignIn } = props
@@ -20,11 +20,7 @@ export function StackUsedBy(props) {
   })
   const [toggleStackUser] = useToggleStackUserMutation()
 
-  React.useEffect(() => {
-    const refetchQuery = () => refetch()
-    window.addEventListener('focus', refetchQuery)
-    return () => window.removeEventListener('focus', refetchQuery)
-  })
+  useWindowFocus({ onFocus: refetch })
 
   if (loading) {
     return null
