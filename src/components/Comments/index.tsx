@@ -33,7 +33,7 @@ export function Comments({ refId, type, refetch = null }: Props) {
   React.useEffect(() => {
     if (data?.comments) {
       if (!initialCommentsCount) {
-        return setInitialCommentsCount(data.comments.length)
+        setInitialCommentsCount(data.comments.length)
       } else {
         if (data.comments.length > initialCommentsCount) {
           scrollToBottom()
