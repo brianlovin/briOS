@@ -14,7 +14,6 @@ export function timestampToCleanTime({
   day = 'numeric',
 }: Props) {
   const date = timestamp ? new Date(timestamp) : new Date()
-
   const formatted = date.toLocaleDateString(locale, {
     year,
     month,
@@ -22,7 +21,6 @@ export function timestampToCleanTime({
   })
 
   const raw = date.toISOString()
-
   return {
     formatted,
     raw,

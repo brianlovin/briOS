@@ -35,7 +35,7 @@ export function PostDetail({ slug }) {
   })
 
   const { post } = data
-  const publishedAt = timestampToCleanTime(post.publishedAt)
+  const publishedAt = timestampToCleanTime({ timestamp: post.publishedAt })
   return (
     <React.Fragment>
       <SyntaxHighlighter data={post} />
