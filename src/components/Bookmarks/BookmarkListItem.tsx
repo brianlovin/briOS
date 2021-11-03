@@ -36,6 +36,8 @@ export const BookmarksListItem = React.memo<Props>(({ bookmark, active }) => {
                 src={bookmark.faviconUrl}
                 alt={`Favicon for ${bookmark.host}`}
                 className="w-4 h-4 rounded"
+                width="16px"
+                height="16px"
               />
             ) : (
               <span className="flex items-center justify-center w-4 h-4">

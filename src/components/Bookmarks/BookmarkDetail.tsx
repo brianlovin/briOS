@@ -65,6 +65,8 @@ export function BookmarkDetail({ id }) {
                   src={bookmark.faviconUrl}
                   alt={`Favicon for ${bookmark.host}`}
                   className="w-4 h-4"
+                  width="16px"
+                  height="16px"
                 />
               )}
               <span>{bookmark.host}</span>
