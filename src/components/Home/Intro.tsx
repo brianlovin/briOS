@@ -217,6 +217,7 @@ export function Intro() {
                 layout="responsive"
                 className="rounded-2xl"
                 quality={100}
+                alt="Map of San Francisco with blue location dot in the middle"
               />
               <p className="flex items-center justify-end pt-2 space-x-2 text-sm md:text-right text-quaternary">
                 <MapPin size={12} />

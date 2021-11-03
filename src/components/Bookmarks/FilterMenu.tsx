@@ -29,7 +29,7 @@ export function BookmarksFilterMenu() {
                 {tag && (
                   <div className="absolute w-3 h-3 bg-blue-500 border-2 border-white rounded-full dark:border-gray-900 top-1 right-1" />
                 )}
-                <GhostButton size="small-square">
+                <GhostButton aria-label="Filter bookmarks" size="small-square">
                   <svg
                     width="16"
                     height="16"
