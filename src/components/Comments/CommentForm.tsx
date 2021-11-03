@@ -16,10 +16,9 @@ interface Props {
   refId: string
   type: CommentType
   openModal: () => void
-  refetch?: () => void
 }
 
-export function CommentForm({ refId, type, openModal, refetch = null }: Props) {
+export function CommentForm({ refId, type, openModal }: Props) {
   const { data } = useViewerQuery()
   const [text, setText] = React.useState('')
   const [error, setError] = React.useState(null)
@@ -63,9 +62,6 @@ export function CommentForm({ refId, type, openModal, refetch = null }: Props) {
           comments: [...comments, addComment],
         },
       })
-    },
-    onCompleted() {
-      refetch && refetch()
     },
   })
 

@@ -16,7 +16,7 @@ import { QuestionActions } from './QuestionActions'
 export function QuestionDetail({ id }) {
   const scrollContainerRef = React.useRef(null)
   const titleRef = React.useRef(null)
-  const { data, loading, error, refetch } = useGetQuestionQuery({
+  const { data, loading } = useGetQuestionQuery({
     variables: { id },
   })
 
@@ -93,11 +93,7 @@ export function QuestionDetail({ id }) {
       </Detail.ContentContainer>
 
       {question.viewerCanComment && (
-        <Comments
-          refetch={refetch}
-          refId={question.id}
-          type={CommentType.Question}
-        />
+        <Comments refId={question.id} type={CommentType.Question} />
       )}
     </Detail.Container>
   )
