@@ -10,7 +10,10 @@ import {
 } from '~/graphql/types.generated'
 import { revue } from '~/lib/revue'
 
+import { dateScalar } from '../scalars'
+
 export default {
+  Date: dateScalar,
   Query,
   Mutation,
   Comment: {
@@ -21,20 +24,6 @@ export default {
     viewerCanDelete: ({ userId }, _, { viewer }: Context) => {
       return userId === viewer?.id || viewer?.role === UserRole.Admin
     },
-    createdAt: ({ createdAt }) =>
-      new Date(createdAt).toLocaleDateString('en-us', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-      }),
-  },
-  Post: {
-    publishedAt: ({ publishedAt }) =>
-      new Date(publishedAt).toLocaleDateString('en-us', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      }),
   },
   Question: {
     viewerCanEdit: ({ userId }, _, { viewer }: Context) => {
@@ -56,12 +45,6 @@ export default {
     author: getQuestionAuthor,
     status: ({ _count: { comments } }) =>
       comments > 0 ? QuestionStatus.Answered : QuestionStatus.Pending,
-    updatedAt: ({ updatedAt }) =>
-      new Date(updatedAt).toLocaleDateString('en-us', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-      }),
   },
   User: {
     isViewer: ({ id }, _, { viewer }: Context) => {

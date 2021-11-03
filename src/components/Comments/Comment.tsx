@@ -15,6 +15,7 @@ import {
   useDeleteCommentMutation,
   useEditCommentMutation,
 } from '~/graphql/types.generated'
+import { timestampToCleanTime } from '~/lib/transformers'
 
 import { CommentMenu } from './CommentMenu'
 
@@ -105,6 +106,11 @@ export const Comment = React.memo(function MemoComment({
     editComment()
   }
 
+  const createdAt = timestampToCleanTime({
+    month: 'short',
+    timestamp: comment.createdAt,
+  })
+
   return (
     <div className="flex flex-col space-y-0 group">
       <div className="flex items-center justify-between space-x-4">
@@ -122,7 +128,9 @@ export const Comment = React.memo(function MemoComment({
             <p className="font-medium leading-snug text-primary">
               {comment.author.name}
             </p>
-            <p className="leading-snug text-quaternary">{comment.createdAt}</p>
+            <p className="leading-snug text-quaternary" title={createdAt.raw}>
+              {createdAt.formatted}
+            </p>
           </div>
         </div>
 

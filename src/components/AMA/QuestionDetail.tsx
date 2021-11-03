@@ -10,6 +10,7 @@ import { Detail } from '~/components/ListDetail/Detail'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { SyntaxHighlighter } from '~/components/SyntaxHighlighter'
 import { CommentType, useGetQuestionQuery } from '~/graphql/types.generated'
+import { timestampToCleanTime } from '~/lib/transformers'
 
 import { QuestionActions } from './QuestionActions'
 
@@ -33,6 +34,10 @@ export function QuestionDetail({ id }) {
   }
 
   const { question } = data
+  const updatedAt = timestampToCleanTime({
+    month: 'short',
+    timestamp: data?.question.updatedAt,
+  })
 
   return (
     <Detail.Container data-cy="question-detail" ref={scrollContainerRef}>
@@ -63,7 +68,9 @@ export function QuestionDetail({ id }) {
             <span className="font-medium text-secondary">
               {question.author.name}
             </span>
-            <span className="text-tertiary">{data?.question.updatedAt}</span>
+            <span title={updatedAt.raw} className="text-tertiary">
+              {updatedAt.formatted}
+            </span>
           </div>
           <Detail.Title ref={titleRef}>{question.title}</Detail.Title>
           {question.description && (

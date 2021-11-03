@@ -5,16 +5,13 @@ import { DesignDetailMedia } from '~/components/AppDissection/DetailMedia'
 import { Detail } from '~/components/ListDetail/Detail'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { MarkdownRenderer } from '~/components/MarkdownRenderer'
+import { timestampToCleanTime } from '~/lib/transformers'
 
 export function AppDissectionDetail({ post }) {
   const scrollContainerRef = React.useRef(null)
   const titleRef = React.useRef(null)
 
-  const date = new Date(post.createdAt).toLocaleDateString('en-us', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })
+  const date = timestampToCleanTime({ timestamp: post.createdAt })
 
   return (
     <Detail.Container data-cy="app-detail" ref={scrollContainerRef}>
@@ -41,8 +38,11 @@ export function AppDissectionDetail({ post }) {
             />
             <div>
               <Detail.Title ref={titleRef}>{post.title}</Detail.Title>
-              <span className="inline-block leading-snug text-tertiary">
-                {date}
+              <span
+                title={date.raw}
+                className="inline-block leading-snug text-tertiary"
+              >
+                {date.formatted}
               </span>
             </div>
           </div>

@@ -22,6 +22,7 @@ export type Scalars = {
   Boolean: boolean
   Int: number
   Float: number
+  Date: any
 }
 
 export type AddBookmarkInput = {
@@ -51,7 +52,7 @@ export type AddStackInput = {
 
 export type Bookmark = {
   __typename?: 'Bookmark'
-  createdAt: Scalars['String']
+  createdAt: Scalars['Date']
   description?: Maybe<Scalars['String']>
   faviconUrl?: Maybe<Scalars['String']>
   host: Scalars['String']
@@ -59,7 +60,7 @@ export type Bookmark = {
   image?: Maybe<Scalars['String']>
   tags: Array<Maybe<Tag>>
   title?: Maybe<Scalars['String']>
-  updatedAt: Scalars['String']
+  updatedAt: Scalars['Date']
   url: Scalars['String']
 }
 
@@ -83,10 +84,10 @@ export type BookmarksConnection = {
 export type Comment = {
   __typename?: 'Comment'
   author: User
-  createdAt: Scalars['String']
+  createdAt: Scalars['Date']
   id: Scalars['ID']
   text?: Maybe<Scalars['String']>
-  updatedAt?: Maybe<Scalars['String']>
+  updatedAt?: Maybe<Scalars['Date']>
   viewerCanDelete?: Maybe<Scalars['Boolean']>
   viewerCanEdit?: Maybe<Scalars['Boolean']>
 }
@@ -154,6 +155,7 @@ export type HackerNewsComment = {
   content?: Maybe<Scalars['String']>
   id?: Maybe<Scalars['String']>
   level?: Maybe<Scalars['Int']>
+  time?: Maybe<Scalars['Int']>
   time_ago?: Maybe<Scalars['String']>
   user?: Maybe<Scalars['String']>
 }
@@ -284,15 +286,15 @@ export type PageInfo = {
 export type Post = {
   __typename?: 'Post'
   author?: Maybe<User>
-  createdAt?: Maybe<Scalars['String']>
+  createdAt?: Maybe<Scalars['Date']>
   excerpt?: Maybe<Scalars['String']>
   featureImage?: Maybe<Scalars['String']>
   id: Scalars['ID']
-  publishedAt?: Maybe<Scalars['String']>
+  publishedAt?: Maybe<Scalars['Date']>
   slug?: Maybe<Scalars['String']>
   text?: Maybe<Scalars['String']>
   title?: Maybe<Scalars['String']>
-  updatedAt?: Maybe<Scalars['String']>
+  updatedAt?: Maybe<Scalars['Date']>
 }
 
 export type Query = {
@@ -389,12 +391,12 @@ export type QueryUserArgs = {
 export type Question = {
   __typename?: 'Question'
   author?: Maybe<User>
-  createdAt: Scalars['String']
+  createdAt: Scalars['Date']
   description?: Maybe<Scalars['String']>
   id: Scalars['String']
   status?: Maybe<QuestionStatus>
   title: Scalars['String']
-  updatedAt?: Maybe<Scalars['String']>
+  updatedAt?: Maybe<Scalars['Date']>
   viewerCanComment?: Maybe<Scalars['Boolean']>
   viewerCanEdit?: Maybe<Scalars['Boolean']>
 }
@@ -430,13 +432,13 @@ export type Repo = {
 
 export type Stack = {
   __typename?: 'Stack'
-  createdAt: Scalars['String']
+  createdAt: Scalars['Date']
   description?: Maybe<Scalars['String']>
   id: Scalars['ID']
   image?: Maybe<Scalars['String']>
   name: Scalars['String']
   tags: Array<Maybe<Tag>>
-  updatedAt?: Maybe<Scalars['String']>
+  updatedAt?: Maybe<Scalars['Date']>
   url: Scalars['String']
   usedBy: Array<Maybe<User>>
   usedByViewer?: Maybe<Scalars['Boolean']>
@@ -462,7 +464,7 @@ export type Tag = {
 export type User = {
   __typename?: 'User'
   avatar?: Maybe<Scalars['String']>
-  createdAt?: Maybe<Scalars['String']>
+  createdAt?: Maybe<Scalars['Date']>
   email?: Maybe<Scalars['String']>
   emailSubscriptions?: Maybe<Array<Maybe<EmailSubscription>>>
   id: Scalars['ID']
@@ -539,8 +541,8 @@ export type BookmarksConnectionFragment = {
 export type CommentInfoFragment = {
   __typename: 'Comment'
   id: string
-  createdAt: string
-  updatedAt?: string | null | undefined
+  createdAt: any
+  updatedAt?: any | null | undefined
   text?: string | null | undefined
   viewerCanEdit?: boolean | null | undefined
   viewerCanDelete?: boolean | null | undefined
@@ -656,9 +658,9 @@ export type HackerNewsPostInfoFragment = {
 export type PostInfoFragment = {
   __typename?: 'Post'
   id: string
-  createdAt?: string | null | undefined
-  updatedAt?: string | null | undefined
-  publishedAt?: string | null | undefined
+  createdAt?: any | null | undefined
+  updatedAt?: any | null | undefined
+  publishedAt?: any | null | undefined
   title?: string | null | undefined
   slug?: string | null | undefined
   excerpt?: string | null | undefined
@@ -680,8 +682,8 @@ export type PostInfoFragment = {
 export type QuestionInfoFragment = {
   __typename?: 'Question'
   id: string
-  createdAt: string
-  updatedAt?: string | null | undefined
+  createdAt: any
+  updatedAt?: any | null | undefined
   title: string
   description?: string | null | undefined
   status?: QuestionStatus | null | undefined
@@ -718,8 +720,8 @@ export type QuestionsConnectionFragment = {
           | {
               __typename?: 'Question'
               id: string
-              createdAt: string
-              updatedAt?: string | null | undefined
+              createdAt: any
+              updatedAt?: any | null | undefined
               title: string
               description?: string | null | undefined
               status?: QuestionStatus | null | undefined
@@ -755,8 +757,8 @@ export type RepoInfoFragment = {
 export type StackInfoFragment = {
   __typename: 'Stack'
   id: string
-  createdAt: string
-  updatedAt?: string | null | undefined
+  createdAt: any
+  updatedAt?: any | null | undefined
   name: string
   description?: string | null | undefined
   url: string
@@ -766,8 +768,8 @@ export type StackInfoFragment = {
 export type StackInfoWithTagsFragment = {
   __typename: 'Stack'
   id: string
-  createdAt: string
-  updatedAt?: string | null | undefined
+  createdAt: any
+  updatedAt?: any | null | undefined
   name: string
   description?: string | null | undefined
   url: string
@@ -794,8 +796,8 @@ export type StacksConnectionFragment = {
           | {
               __typename: 'Stack'
               id: string
-              createdAt: string
-              updatedAt?: string | null | undefined
+              createdAt: any
+              updatedAt?: any | null | undefined
               name: string
               description?: string | null | undefined
               url: string
@@ -901,8 +903,8 @@ export type AddCommentMutation = {
     | {
         __typename: 'Comment'
         id: string
-        createdAt: string
-        updatedAt?: string | null | undefined
+        createdAt: any
+        updatedAt?: any | null | undefined
         text?: string | null | undefined
         viewerCanEdit?: boolean | null | undefined
         viewerCanDelete?: boolean | null | undefined
@@ -931,8 +933,8 @@ export type EditCommentMutation = {
     | {
         __typename: 'Comment'
         id: string
-        createdAt: string
-        updatedAt?: string | null | undefined
+        createdAt: any
+        updatedAt?: any | null | undefined
         text?: string | null | undefined
         viewerCanEdit?: boolean | null | undefined
         viewerCanDelete?: boolean | null | undefined
@@ -997,9 +999,9 @@ export type EditPostMutation = {
         __typename?: 'Post'
         text?: string | null | undefined
         id: string
-        createdAt?: string | null | undefined
-        updatedAt?: string | null | undefined
-        publishedAt?: string | null | undefined
+        createdAt?: any | null | undefined
+        updatedAt?: any | null | undefined
+        publishedAt?: any | null | undefined
         title?: string | null | undefined
         slug?: string | null | undefined
         excerpt?: string | null | undefined
@@ -1041,9 +1043,9 @@ export type AddPostMutation = {
         __typename?: 'Post'
         text?: string | null | undefined
         id: string
-        createdAt?: string | null | undefined
-        updatedAt?: string | null | undefined
-        publishedAt?: string | null | undefined
+        createdAt?: any | null | undefined
+        updatedAt?: any | null | undefined
+        publishedAt?: any | null | undefined
         title?: string | null | undefined
         slug?: string | null | undefined
         excerpt?: string | null | undefined
@@ -1076,8 +1078,8 @@ export type EditQuestionMutation = {
     | {
         __typename?: 'Question'
         id: string
-        createdAt: string
-        updatedAt?: string | null | undefined
+        createdAt: any
+        updatedAt?: any | null | undefined
         title: string
         description?: string | null | undefined
         status?: QuestionStatus | null | undefined
@@ -1117,8 +1119,8 @@ export type AddQuestionMutation = {
     | {
         __typename?: 'Question'
         id: string
-        createdAt: string
-        updatedAt?: string | null | undefined
+        createdAt: any
+        updatedAt?: any | null | undefined
         title: string
         description?: string | null | undefined
         status?: QuestionStatus | null | undefined
@@ -1150,8 +1152,8 @@ export type EditStackMutation = {
     | {
         __typename: 'Stack'
         id: string
-        createdAt: string
-        updatedAt?: string | null | undefined
+        createdAt: any
+        updatedAt?: any | null | undefined
         name: string
         description?: string | null | undefined
         url: string
@@ -1181,8 +1183,8 @@ export type AddStackMutation = {
     | {
         __typename: 'Stack'
         id: string
-        createdAt: string
-        updatedAt?: string | null | undefined
+        createdAt: any
+        updatedAt?: any | null | undefined
         name: string
         description?: string | null | undefined
         url: string
@@ -1325,8 +1327,8 @@ export type GetCommentsQuery = {
     | {
         __typename: 'Comment'
         id: string
-        createdAt: string
-        updatedAt?: string | null | undefined
+        createdAt: any
+        updatedAt?: any | null | undefined
         text?: string | null | undefined
         viewerCanEdit?: boolean | null | undefined
         viewerCanDelete?: boolean | null | undefined
@@ -1469,9 +1471,9 @@ export type GetPostsQuery = {
     | {
         __typename?: 'Post'
         id: string
-        createdAt?: string | null | undefined
-        updatedAt?: string | null | undefined
-        publishedAt?: string | null | undefined
+        createdAt?: any | null | undefined
+        updatedAt?: any | null | undefined
+        publishedAt?: any | null | undefined
         title?: string | null | undefined
         slug?: string | null | undefined
         excerpt?: string | null | undefined
@@ -1505,9 +1507,9 @@ export type GetPostQuery = {
         __typename?: 'Post'
         text?: string | null | undefined
         id: string
-        createdAt?: string | null | undefined
-        updatedAt?: string | null | undefined
-        publishedAt?: string | null | undefined
+        createdAt?: any | null | undefined
+        updatedAt?: any | null | undefined
+        publishedAt?: any | null | undefined
         title?: string | null | undefined
         slug?: string | null | undefined
         excerpt?: string | null | undefined
@@ -1556,8 +1558,8 @@ export type GetQuestionsQuery = {
             | {
                 __typename?: 'Question'
                 id: string
-                createdAt: string
-                updatedAt?: string | null | undefined
+                createdAt: any
+                updatedAt?: any | null | undefined
                 title: string
                 description?: string | null | undefined
                 status?: QuestionStatus | null | undefined
@@ -1595,8 +1597,8 @@ export type GetQuestionQuery = {
         viewerCanEdit?: boolean | null | undefined
         viewerCanComment?: boolean | null | undefined
         id: string
-        createdAt: string
-        updatedAt?: string | null | undefined
+        createdAt: any
+        updatedAt?: any | null | undefined
         title: string
         description?: string | null | undefined
         status?: QuestionStatus | null | undefined
@@ -1643,8 +1645,8 @@ export type GetStacksQuery = {
             | {
                 __typename: 'Stack'
                 id: string
-                createdAt: string
-                updatedAt?: string | null | undefined
+                createdAt: any
+                updatedAt?: any | null | undefined
                 name: string
                 description?: string | null | undefined
                 url: string
@@ -1670,8 +1672,8 @@ export type GetStackQuery = {
         __typename: 'Stack'
         usedByViewer?: boolean | null | undefined
         id: string
-        createdAt: string
-        updatedAt?: string | null | undefined
+        createdAt: any
+        updatedAt?: any | null | undefined
         name: string
         description?: string | null | undefined
         url: string

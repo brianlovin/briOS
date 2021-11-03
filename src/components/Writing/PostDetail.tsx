@@ -8,6 +8,7 @@ import { Detail } from '~/components/ListDetail/Detail'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { SyntaxHighlighter } from '~/components/SyntaxHighlighter'
 import { CommentType, useGetPostQuery } from '~/graphql/types.generated'
+import { timestampToCleanTime } from '~/lib/transformers'
 
 import { Comments } from '../Comments'
 import { PostSEO } from './PostSEO'
@@ -34,7 +35,7 @@ export function PostDetail({ slug }) {
   })
 
   const { post } = data
-
+  const publishedAt = timestampToCleanTime(post.publishedAt)
   return (
     <React.Fragment>
       <SyntaxHighlighter data={post} />
@@ -53,8 +54,11 @@ export function PostDetail({ slug }) {
         <Detail.ContentContainer>
           <Detail.Header>
             <Detail.Title ref={titleRef}>{post.title}</Detail.Title>
-            <span className="inline-block leading-snug text-tertiary">
-              {post.publishedAt}
+            <span
+              title={publishedAt.raw}
+              className="inline-block leading-snug text-tertiary"
+            >
+              {publishedAt.formatted}
             </span>
           </Detail.Header>
 
