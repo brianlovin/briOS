@@ -117,6 +117,7 @@ export default gql`
     comments_count: String
     comments: [HackerNewsComment]
     time_ago: String
+    time: Int
     level: Int
     content: String
   }

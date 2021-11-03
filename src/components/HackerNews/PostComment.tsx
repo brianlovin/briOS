@@ -1,11 +1,14 @@
 import * as React from 'react'
 
 import { HackerNewsComment } from '~/graphql/types.generated'
+import { timestampToCleanTime } from '~/lib/transformers'
 interface Props {
   comment: HackerNewsComment
 }
 
-function LevelZeroComment({ comment }) {
+function LevelZeroComment({ comment }: Props) {
+  const date = timestampToCleanTime({ timestamp: comment.time * 1000 })
+
   return (
     <div className="px-4 pt-8 md:pt-12 md:px-8">
       <a
@@ -13,7 +16,10 @@ function LevelZeroComment({ comment }) {
         id={comment.id}
         href={`#${comment.id}`}
       >
-        <p className="text-sm text-quaternary">{`${comment.user} · ${comment.time_ago}`}</p>
+        <p
+          title={date.raw}
+          className="text-sm text-quaternary"
+        >{`${comment.user} · ${comment.time_ago}`}</p>
       </a>
       <div
         className={'prose pt-1'}
@@ -28,9 +34,11 @@ function LevelZeroComment({ comment }) {
   )
 }
 
-function ChildComment({ comment, level }) {
+function ChildComment({ comment }: Props) {
+  const date = timestampToCleanTime({ timestamp: comment.time * 1000 })
+
   let color
-  switch (level) {
+  switch (comment.level) {
     case 2: {
       color = 'border-gray-200 dark:border-gray-700'
       break
@@ -43,6 +51,7 @@ function ChildComment({ comment, level }) {
       color = 'border-gray-300 dark:border-gray-600'
     }
   }
+
   return (
     <>
       <div
@@ -53,7 +62,10 @@ function ChildComment({ comment, level }) {
           id={comment.id}
           href={`#${comment.id}`}
         >
-          <p className="text-sm text-quaternary">{`${comment.user} · ${comment.time_ago}`}</p>
+          <p
+            title={date.raw}
+            className="text-sm text-quaternary"
+          >{`${comment.user} · ${comment.time_ago}`}</p>
         </a>
         <div
           className={'prose pt-1'}
@@ -79,6 +91,6 @@ export const PostComment = React.memo((props: Props) => {
   if (level === 0) {
     return <LevelZeroComment comment={comment} />
   } else {
-    return <ChildComment level={level} comment={comment} />
+    return <ChildComment comment={comment} />
   }
 })

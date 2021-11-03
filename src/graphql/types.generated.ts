@@ -155,6 +155,7 @@ export type HackerNewsComment = {
   content?: Maybe<Scalars['String']>
   id?: Maybe<Scalars['String']>
   level?: Maybe<Scalars['Int']>
+  time?: Maybe<Scalars['Int']>
   time_ago?: Maybe<Scalars['String']>
   user?: Maybe<Scalars['String']>
 }

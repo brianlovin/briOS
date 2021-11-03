@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { format } from 'timeago.js'
 
 import { HackerNewsPost } from '~/graphql/types.generated'
+import { timestampToCleanTime } from '~/lib/transformers'
 
 interface Props {
   post: HackerNewsPost
@@ -10,15 +10,7 @@ interface Props {
 export function PostByline(props: Props) {
   const { post } = props
 
-  // the timestamp for the post will always be stale becuse we are statically
-  // generating the hn pages. we can recalculate the time ago text whenever
-  // the component mounts, so that the data loads instantly but the user won't
-  // be misled about the published date
-  const [timeAgo, setTimeAgo] = React.useState(format(post.time * 1000))
-
-  React.useEffect(() => {
-    setTimeAgo(format(post.time * 1000))
-  }, [])
+  const date = timestampToCleanTime({ timestamp: post.time * 1000 })
 
   return (
     <div className="flex space-x-2 text-tertiary">
@@ -26,7 +18,7 @@ export function PostByline(props: Props) {
 
       <span className="text-quaternary">·</span>
 
-      <span>{timeAgo}</span>
+      <span title={date.raw}>{date.formatted}</span>
     </div>
   )
 }
