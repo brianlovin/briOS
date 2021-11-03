@@ -121,7 +121,7 @@ export default [
   },
   {
     description:
-      "And one more video of the [Shorts website](https://tryonshorts.com/) to showcase the product's simplicity and consistency across the board. ",
+      "And one more video of the Shorts website to showcase the product's simplicity and consistency across the board. ",
     title: 'Website',
     media: [
       'https://player.vimeo.com/external/160552036.hd.mp4?s=474f827fa8092c0520fcf21dbbd177496eef304a&profile_id=119',
