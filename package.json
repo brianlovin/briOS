@@ -11,7 +11,8 @@
     "generate": "graphql-codegen",
     "generate:watch": "graphql-codegen --watch 'src/graphql/**/*.ts'",
     "postinstall": "yarn generate && prisma generate",
-    "db:dev": "pscale connect brianlovin dev --port 3309"
+    "db:dev": "pscale connect brianlovin dev --port 3309",
+    "db:prod": "pscale connect brianlovin main --port 3309"
   },
   "husky": {
     "hooks": {
