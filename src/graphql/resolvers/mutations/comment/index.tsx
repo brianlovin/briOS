@@ -105,13 +105,25 @@ export async function addComment(
     })
   }
 
-  return await prisma.comment.create({
-    data: {
-      text,
-      userId: viewer.id,
-      [field]: refId,
-    },
-  })
+  const [comment] = await Promise.all([
+    prisma.comment.create({
+      data: {
+        text,
+        userId: viewer.id,
+        [field]: refId,
+      },
+    }),
+    prisma[table].update({
+      where: {
+        id: refId,
+      },
+      data: {
+        updatedAt: new Date(),
+      },
+    }),
+  ])
+
+  return comment
 }
 
 export async function deleteComment(

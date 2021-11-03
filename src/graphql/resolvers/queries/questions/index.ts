@@ -119,6 +119,9 @@ export async function getQuestions(
       },
     })
 
+    // happens when there are no pending questions left to answer, for example
+    if (edges.length === 0) return nullResults
+
     // If we overfetched, then we know there are more results
     const hasNextPage = edges.length > first
     // Remove the last item so we only return the requested `first` amount
