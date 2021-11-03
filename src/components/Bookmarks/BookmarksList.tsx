@@ -1,4 +1,4 @@
-import { AnimateSharedLayout, motion } from 'framer-motion'
+import { LayoutGroup, motion } from 'framer-motion'
 import { useRouter } from 'next/router'
 import * as React from 'react'
 
@@ -79,7 +79,7 @@ export function BookmarksList() {
     <BookmarksContext.Provider value={defaultContextValue}>
       <ListContainer data-cy="bookmarks-list" onRef={setScrollContainerRef}>
         <BookmarksTitlebar scrollContainerRef={scrollContainerRef} />
-        <AnimateSharedLayout>
+        <LayoutGroup>
           <div className="lg:p-3 lg:space-y-1">
             {bookmarks.edges.map((bookmark) => {
               const active = router.query.id === bookmark.node.id
@@ -94,7 +94,7 @@ export function BookmarksList() {
           {bookmarks.pageInfo.hasNextPage && (
             <ListLoadMore setIsVisible={setIsVisible} />
           )}
-        </AnimateSharedLayout>
+        </LayoutGroup>
       </ListContainer>
     </BookmarksContext.Provider>
   )
