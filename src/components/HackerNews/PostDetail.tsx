@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { NextSeo } from 'next-seo'
 import * as React from 'react'
 import { Link as LinkIcon } from 'react-feather'
@@ -55,8 +56,18 @@ export function PostDetail({ id }) {
 
         <Detail.ContentContainer>
           <Detail.Header>
-            <Detail.Title ref={titleRef}>{post.title}</Detail.Title>
+            <Link href={post.url}>
+              <a target="_blank" rel="noopener noreferrer" className="block">
+                <Detail.Title ref={titleRef}>{post.title}</Detail.Title>
+              </a>
+            </Link>
             <PostByline post={post} />
+            {post.content && (
+              <p
+                className="prose opacity-70"
+                dangerouslySetInnerHTML={{ __html: post.content }}
+              />
+            )}
           </Detail.Header>
 
           {post.url && (
@@ -71,16 +82,6 @@ export function PostDetail({ id }) {
                 <span>Visit</span>
               </PrimaryButton>
             </div>
-          )}
-
-          {post.content && (
-            <div
-              className={'prose lg:prose-lg'}
-              style={{
-                display: 'grid',
-              }}
-              dangerouslySetInnerHTML={{ __html: post.content }}
-            />
           )}
         </Detail.ContentContainer>
 

@@ -50,12 +50,16 @@ export function BookmarkDetail({ id }) {
         <Detail.Header>
           <Tags tags={bookmark.tags} />
           <Link href={bookmark.url}>
-            <a className="block">
+            <a target="_blank" rel="noopener" className="block">
               <Detail.Title ref={titleRef}>{bookmark.title}</Detail.Title>
             </a>
           </Link>
           <Link href={bookmark.url}>
-            <a className="flex items-center space-x-2 leading-snug text-tertiary">
+            <a
+              target="_blank"
+              rel="noopener"
+              className="flex items-center space-x-2 leading-snug text-tertiary"
+            >
               {bookmark.faviconUrl && (
                 <img src={bookmark.faviconUrl} className="w-4 h-4" />
               )}
