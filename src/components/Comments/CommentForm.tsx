@@ -11,6 +11,7 @@ import {
   useViewerQuery,
 } from '~/graphql/types.generated'
 import { useDebounce } from '~/hooks/useDebounce'
+import { timestampToCleanTime } from '~/lib/transformers'
 
 interface Props {
   refId: string
@@ -30,12 +31,8 @@ export function CommentForm({ refId, type, openModal }: Props) {
         __typename: 'Comment',
         id: uuidv4(),
         text,
-        createdAt: new Date().toLocaleDateString('en-us', {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric',
-        }),
-        updatedAt: null,
+        createdAt: timestampToCleanTime({ month: 'short' }).formatted,
+        updatedAt: timestampToCleanTime({ month: 'short' }).formatted,
         viewerCanDelete: false,
         viewerCanEdit: false,
         author: {

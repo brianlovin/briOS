@@ -1,11 +1,13 @@
 import { gql } from 'apollo-server-micro'
 
 export default gql`
+  scalar Date
+
   type Post {
     id: ID!
-    createdAt: String
-    updatedAt: String
-    publishedAt: String
+    createdAt: Date
+    updatedAt: Date
+    publishedAt: Date
     author: User
     title: String
     slug: String
@@ -16,8 +18,8 @@ export default gql`
 
   type Bookmark {
     id: ID!
-    createdAt: String!
-    updatedAt: String!
+    createdAt: Date!
+    updatedAt: Date!
     url: String!
     host: String!
     title: String
@@ -36,8 +38,8 @@ export default gql`
 
   type Question {
     id: String!
-    createdAt: String!
-    updatedAt: String
+    createdAt: Date!
+    updatedAt: Date
     author: User
     title: String!
     description: String
@@ -59,8 +61,8 @@ export default gql`
 
   type Stack {
     id: ID!
-    createdAt: String!
-    updatedAt: String
+    createdAt: Date!
+    updatedAt: Date
     name: String!
     description: String
     image: String
@@ -88,7 +90,7 @@ export default gql`
 
   type User {
     id: ID!
-    createdAt: String
+    createdAt: Date
     role: UserRole
     username: String
     avatar: String
@@ -101,8 +103,8 @@ export default gql`
 
   type Comment {
     id: ID!
-    createdAt: String!
-    updatedAt: String
+    createdAt: Date!
+    updatedAt: Date
     text: String
     author: User!
     viewerCanEdit: Boolean
