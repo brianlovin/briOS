@@ -12,7 +12,10 @@ export function CommentMenu({ handleDelete, handleEdit, comment }) {
           {({ open }) => (
             <>
               <Menu.Button as="div" className="z-0 inline-flex">
-                <GhostButton size="small-square">
+                <GhostButton
+                  aria-label="Open comment actions menu"
+                  size="small-square"
+                >
                   <MoreHorizontal size={16} />
                 </GhostButton>
               </Menu.Button>

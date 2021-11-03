@@ -28,7 +28,7 @@ function ThisAddBookmarkDialog() {
   return (
     <AddBookmarkDialog
       trigger={
-        <GhostButton size="small-square">
+        <GhostButton aria-label="Add bookmark" size="small-square">
           <Plus size={16} />
         </GhostButton>
       }

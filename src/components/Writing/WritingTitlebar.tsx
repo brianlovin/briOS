@@ -18,6 +18,7 @@ export function WritingTitlebar({ scrollContainerRef }) {
           href="/writing/new"
           data-cy="new-post-button"
           size="small-square"
+          aria-label="Add post"
         >
           <Plus size={16} />
         </GhostButton>

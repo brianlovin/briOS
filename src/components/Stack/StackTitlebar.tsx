@@ -15,7 +15,7 @@ export function StackTitlebar({ scrollContainerRef }) {
       return (
         <AddStackDialog
           trigger={
-            <GhostButton size="small-square">
+            <GhostButton aria-label="Add Stack" size="small-square">
               <Plus size={16} />
             </GhostButton>
           }

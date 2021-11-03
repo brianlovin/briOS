@@ -83,6 +83,7 @@ export function DialogComponent({
                       {title}
                     </Dialog.Title>
                     <GhostButton
+                      aria-label="Close dialog"
                       size="small-square"
                       ref={closeButtonRef}
                       onClick={closeModal}

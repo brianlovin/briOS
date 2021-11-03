@@ -18,7 +18,11 @@ export function AMATitlebar({ scrollContainerRef }) {
       return (
         <SignInDialog
           trigger={
-            <GhostButton size="small-square" data-cy="open-add-question-dialog">
+            <GhostButton
+              aria-label="Ask a question"
+              size="small-square"
+              data-cy="open-add-question-dialog"
+            >
               <Plus size={16} />
             </GhostButton>
           }
@@ -29,7 +33,11 @@ export function AMATitlebar({ scrollContainerRef }) {
     return (
       <AddQuestionDialog
         trigger={
-          <GhostButton size="small-square" data-cy="open-add-question-dialog">
+          <GhostButton
+            aria-label="Ask a question"
+            size="small-square"
+            data-cy="open-add-question-dialog"
+          >
             <Plus size={16} />
           </GhostButton>
         }
