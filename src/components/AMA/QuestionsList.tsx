@@ -1,4 +1,4 @@
-import { AnimateSharedLayout, motion } from 'framer-motion'
+import { LayoutGroup, motion } from 'framer-motion'
 import { useRouter } from 'next/router'
 import * as React from 'react'
 
@@ -65,7 +65,7 @@ export function QuestionsList() {
       <ListContainer data-cy="questions-list" onRef={setScrollContainerRef}>
         <AMATitlebar scrollContainerRef={scrollContainerRef} />
 
-        <AnimateSharedLayout>
+        <LayoutGroup>
           <div className="lg:p-3 lg:space-y-1">
             {questions.edges.map((question) => {
               const active = router.query?.id === question.node.id.toString() // post ids are numbers
@@ -81,7 +81,7 @@ export function QuestionsList() {
               <ListLoadMore setIsVisible={setIsVisible} />
             )}
           </div>
-        </AnimateSharedLayout>
+        </LayoutGroup>
       </ListContainer>
     </QuestionsContext.Provider>
   )
