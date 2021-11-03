@@ -32,7 +32,11 @@ export const BookmarksListItem = React.memo<Props>(({ bookmark, active }) => {
         byline={
           <div className="flex items-center space-x-2">
             {bookmark.faviconUrl && isVisible ? (
-              <img src={bookmark.faviconUrl} className="w-4 h-4 rounded" />
+              <img
+                src={bookmark.faviconUrl}
+                alt={`Favicon for ${bookmark.host}`}
+                className="w-4 h-4 rounded"
+              />
             ) : (
               <span className="flex items-center justify-center w-4 h-4">
                 <Link size={12} />
