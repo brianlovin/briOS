@@ -1,8 +1,5 @@
-import deepmerge from 'deepmerge'
+import Link from 'next/link'
 import * as React from 'react'
-import ReactMarkdown from 'react-markdown'
-import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
-import remarkGfm from 'remark-gfm'
 
 import { Avatar } from '~/components/Avatar'
 import Button, { PrimaryButton } from '~/components/Button'
@@ -17,6 +14,7 @@ import {
 } from '~/graphql/types.generated'
 import { timestampToCleanTime } from '~/lib/transformers'
 
+import { MarkdownRenderer } from '../MarkdownRenderer'
 import { CommentMenu } from './CommentMenu'
 
 interface Props {
@@ -33,10 +31,6 @@ export const Comment = React.memo(function MemoComment({
   const [isEditing, setIsEditing] = React.useState(false)
   const [editText, setEditText] = React.useState(comment.text)
   const [isSavingEdit, setIsSavingEdit] = React.useState(false)
-
-  const schema = deepmerge(defaultSchema, {
-    attributes: { '*': ['className'] },
-  })
 
   const [deleteComment] = useDeleteCommentMutation({
     variables: { id: comment.id },
@@ -115,19 +109,31 @@ export const Comment = React.memo(function MemoComment({
     <div className="flex flex-col space-y-0 group">
       <div className="flex items-center justify-between space-x-4">
         <div className="flex items-center space-x-4">
-          <Avatar
-            user={comment.author}
-            src={comment.author.avatar}
-            width={40}
-            height={40}
-            quality={100}
-            layout="fixed"
-            className="rounded-full"
-          />
-          <div className="flex space-x-2">
-            <p className="font-medium leading-snug text-primary">
-              {comment.author.name}
-            </p>
+          <Link href={`/u/${comment.author.username}`}>
+            <a className="inline-flex">
+              <Avatar
+                user={comment.author}
+                src={comment.author.avatar}
+                width={40}
+                height={40}
+                quality={100}
+                layout="fixed"
+                className="rounded-full"
+              />
+            </a>
+          </Link>
+          <div className="flex space-x-1">
+            <Link href={`/u/${comment.author.username}`}>
+              <a className="inline-flex space-x-1">
+                <span className="font-semibold leading-snug text-primary">
+                  {comment.author.name}
+                </span>
+                <span className="inline-flex font-normal leading-snug text-tertiary">
+                  @{comment.author.username}
+                </span>
+              </a>
+            </Link>
+            <p className="leading-snug text-quaternary">·</p>
             <p className="leading-snug text-quaternary" title={createdAt.raw}>
               {createdAt.formatted}
             </p>
@@ -161,26 +167,10 @@ export const Comment = React.memo(function MemoComment({
           </div>
         </div>
       ) : (
-        <ReactMarkdown
-          remarkPlugins={[remarkGfm]}
-          rehypePlugins={[[rehypeSanitize, schema]]}
+        <MarkdownRenderer
           children={comment.text}
-          components={{
-            h1: 'p',
-            h2: 'p',
-            h3: 'p',
-            h4: 'p',
-            h5: 'p',
-            h6: 'p',
-            code({ node, inline, className, children, ...props }) {
-              return (
-                <code className={className} {...props}>
-                  {children}
-                </code>
-              )
-            },
-          }}
           className="flex-grow leading-normal prose comment pl-14"
+          variant="comment"
         />
       )}
     </div>

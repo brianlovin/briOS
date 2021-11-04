@@ -9,6 +9,7 @@ import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { Tags } from '~/components/Tag'
 import { CommentType, useGetBookmarkQuery } from '~/graphql/types.generated'
 
+import { MarkdownRenderer } from '../MarkdownRenderer'
 import { BookmarkActions } from './BookmarkActions'
 import { RelatedBookmarks } from './RelatedBookmarks'
 
@@ -73,7 +74,11 @@ export function BookmarkDetail({ id }) {
             </a>
           </Link>
           {bookmark.description && (
-            <p className="italic prose opacity-70">{bookmark.description}</p>
+            <MarkdownRenderer
+              className="italic prose opacity-70"
+              children={bookmark.description}
+              variant="comment"
+            />
           )}
         </Detail.Header>
         <div className="mt-6">

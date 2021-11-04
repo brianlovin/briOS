@@ -10573,6 +10573,14 @@ remark-html@^15.0.0:
     mdast-util-to-hast "^12.0.0"
     unified "^10.0.0"
 
+remark-linkify-regex@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/remark-linkify-regex/-/remark-linkify-regex-1.0.0.tgz#afcaf4dcc96ffdf62e7aca490c3f3f5969a43f85"
+  integrity sha512-ysHcEHKFGmdjfcsWD7fLZw3soTOtuLbL2+xXH/kyf8fZROKD92gINgkb0QVPdTjfuRj/wycs4IQjqiSJy0uqTA==
+  dependencies:
+    unist-util-flatmap "1.0.x"
+    unist-util-visit-parents "2.0.x"
+
 remark-lint-final-newline@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/remark-lint-final-newline/-/remark-lint-final-newline-2.1.0.tgz#33f2d26fff49f6eb99ffb7823c45b63089876134"
@@ -12435,10 +12443,20 @@ unist-util-find-after@^4.0.0:
     "@types/unist" "^2.0.0"
     unist-util-is "^5.0.0"
 
+unist-util-flatmap@1.0.x:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/unist-util-flatmap/-/unist-util-flatmap-1.0.0.tgz#f914ed6b36ff040afce938d848f379f88b94b448"
+  integrity sha512-IG32jcKJlhARCYT2LsYPJWdoXYkzz3ESAdl1aa2hn9Auh+cgUmU6wgkII4yCc/1GgeWibRdELdCZh/p3QKQ1dQ==
+
 unist-util-generated@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/unist-util-generated/-/unist-util-generated-2.0.0.tgz#86fafb77eb6ce9bfa6b663c3f5ad4f8e56a60113"
   integrity sha512-TiWE6DVtVe7Ye2QxOVW9kqybs6cZexNwTwSMVgkfjEReqy/xwGpAXb99OxktoWwmL+Z+Epb0Dn8/GNDYP1wnUw==
+
+unist-util-is@^2.1.2:
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/unist-util-is/-/unist-util-is-2.1.3.tgz#459182db31f4742fceaea88d429693cbf0043d20"
+  integrity sha512-4WbQX2iwfr/+PfM4U3zd2VNXY+dWtZsN1fLnWEi2QQXA4qyDYAZcDMfXUX0Cu6XZUHHAO9q4nyxxLT4Awk1qUA==
 
 unist-util-is@^4.0.0:
   version "4.1.0"
@@ -12475,6 +12493,13 @@ unist-util-stringify-position@^3.0.0:
   integrity sha512-SdfAl8fsDclywZpfMDTVDxA2V7LjtRDTOFd44wUJamgl6OlVngsqWjxvermMYf60elWHbxhuRCZml7AnuXCaSA==
   dependencies:
     "@types/unist" "^2.0.0"
+
+unist-util-visit-parents@2.0.x:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/unist-util-visit-parents/-/unist-util-visit-parents-2.0.1.tgz#63fffc8929027bee04bfef7d2cce474f71cb6217"
+  integrity sha512-6B0UTiMfdWql4cQ03gDTCSns+64Zkfo2OCbK31Ov0uMizEz+CJeAp0cgZVb5Fhmcd7Bct2iRNywejT0orpbqUA==
+  dependencies:
+    unist-util-is "^2.1.2"
 
 unist-util-visit-parents@^3.0.0:
   version "3.1.1"

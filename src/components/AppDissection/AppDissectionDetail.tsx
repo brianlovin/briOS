@@ -50,7 +50,7 @@ export function AppDissectionDetail({ post }) {
 
         <div className="space-y-12">
           <div className="pt-12 prose">
-            <MarkdownRenderer>{post.description}</MarkdownRenderer>
+            <MarkdownRenderer children={post.description} />
           </div>
 
           {post.details.map((detail, i) => (

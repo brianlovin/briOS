@@ -10,6 +10,7 @@ import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { Tags } from '~/components/Tag'
 import { CommentType, useGetStackQuery } from '~/graphql/types.generated'
 
+import { MarkdownRenderer } from '../MarkdownRenderer'
 import { SignInDialog } from '../SignInDialog'
 import { StackActions } from './StackActions'
 import { StackUsedBy } from './StackUsedBy'
@@ -74,7 +75,11 @@ export function StackDetail({ id }) {
             </div>
           </div>
 
-          <p className="prose text-primary">{stack.description}</p>
+          <MarkdownRenderer
+            className="prose text-primary"
+            children={stack.description}
+            variant="comment"
+          />
 
           <PrimaryButton
             size="large"

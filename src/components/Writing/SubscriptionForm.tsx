@@ -67,6 +67,8 @@ export function WritingSubscriptionForm({ defaultValue = '' }) {
         <p className="text-sm text-quaternary">
           Unsubscribe at any time. Powered by{' '}
           <a
+            target="_blank"
+            rel="noopener noreferrer"
             href="https://www.getrevue.co/profile/brian_lovin"
             className="text-primary"
           >

@@ -20,7 +20,7 @@ export function ChecklistItem(props: Props) {
         <Heading resource={resource} />
 
         <div className="mt-3 prose prose-lg">
-          <MarkdownRenderer>{resource.description}</MarkdownRenderer>
+          <MarkdownRenderer children={resource.description} />
         </div>
       </div>
 

@@ -22,7 +22,7 @@ function LevelZeroComment({ comment }: Props) {
         >{`${comment.user} · ${comment.time_ago}`}</p>
       </a>
       <div
-        className={'prose pt-1'}
+        className={'prose comment pt-1'}
         dangerouslySetInnerHTML={{ __html: comment.content }}
       />
       {comment.comments &&
