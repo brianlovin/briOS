@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router'
 import { NextSeo } from 'next-seo'
 import * as React from 'react'
 import removeMd from 'remove-markdown'
@@ -16,8 +15,6 @@ interface Props {
 }
 
 function AppDissectionPage({ post }: Props) {
-  const router = useRouter()
-
   if (!post) return null
 
   if (post) {

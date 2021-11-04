@@ -6,6 +6,7 @@ import { Link as LinkIcon } from 'react-feather'
 import { PrimaryButton } from '~/components/Button'
 import { Detail } from '~/components/ListDetail/Detail'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
+import routes from '~/config/routes'
 import { baseUrl } from '~/config/seo'
 import { useGetHackerNewsPostQuery } from '~/graphql/types.generated'
 
@@ -36,10 +37,12 @@ export function PostDetail({ id }) {
           url: `${baseUrl}/hn/${post.id}`,
           description:
             post.content || `${post.comments_count} comments · ${post.domain}`,
-          site_name: 'Hacker News',
-        }}
-        twitter={{
-          cardType: 'summary_large_image',
+          images: [
+            {
+              url: routes.hn.seo.image,
+              alt: routes.hn.seo.description,
+            },
+          ],
         }}
       />
 
