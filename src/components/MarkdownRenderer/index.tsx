@@ -4,17 +4,31 @@ import * as React from 'react'
 import Markdown from 'react-markdown'
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
 import remarkGfm from 'remark-gfm'
+import linkifyRegex from 'remark-linkify-regex'
 
 function LinkRenderer({ href, ...rest }: any) {
-  const url = new URL(href)
-  if (url.origin === 'https://brianlovin.com') {
+  if (href.startsWith('@')) {
+    // link to a mention
     return (
-      <Link href={href}>
+      <Link href={`/u/${href.slice(1)}`} {...rest}>
         <a {...rest} />
       </Link>
     )
   }
-  return <a target="_blank" rel="noopener" href={href} {...rest} />
+  try {
+    const url = new URL(href)
+    if (url.origin === 'https://brianlovin.com') {
+      return (
+        <Link href={href}>
+          <a {...rest} />
+        </Link>
+      )
+    }
+    return <a target="_blank" rel="noopener" href={href} {...rest} />
+  } catch (e) {
+    console.error(e)
+    return <a target="_blank" rel="noopener" href={href} {...rest} />
+  }
 }
 
 function getComponentsForVariant(variant) {
@@ -60,11 +74,9 @@ export function MarkdownRenderer(props: any) {
   return (
     <Markdown
       {...rest}
-      remarkPlugins={[remarkGfm]}
+      remarkPlugins={[remarkGfm, linkifyRegex(/^(?!.*\bRT\b)(?:.+\s)?@\w+/i)]}
       rehypePlugins={[[rehypeSanitize, schema]]}
-      components={{
-        a: LinkRenderer,
-      }}
+      components={components}
     >
       {children}
     </Markdown>
