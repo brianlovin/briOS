@@ -18,7 +18,7 @@ import { QuestionActions } from './QuestionActions'
 export function QuestionDetail({ id }) {
   const scrollContainerRef = React.useRef(null)
   const titleRef = React.useRef(null)
-  const { data, loading } = useGetQuestionQuery({
+  const { data, loading, error } = useGetQuestionQuery({
     variables: { id },
   })
 
@@ -26,8 +26,8 @@ export function QuestionDetail({ id }) {
     return <Detail.Loading />
   }
 
-  if (!data || !data?.question) {
-    return null
+  if (!data?.question || error) {
+    return <Detail.Null />
   }
 
   const { question } = data

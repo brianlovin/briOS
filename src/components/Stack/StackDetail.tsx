@@ -21,7 +21,7 @@ export function StackDetail({ id }) {
   const scrollContainerRef = React.useRef(null)
   const titleRef = React.useRef(null)
 
-  const { data, loading } = useGetStackQuery({
+  const { data, loading, error } = useGetStackQuery({
     variables: {
       id,
     },
@@ -31,8 +31,8 @@ export function StackDetail({ id }) {
     return <Detail.Loading />
   }
 
-  if (!data?.stack) {
-    return null
+  if (!data?.stack || error) {
+    return <Detail.Null />
   }
 
   const { stack } = data
