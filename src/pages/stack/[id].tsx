@@ -1,11 +1,9 @@
-import { NextSeo } from 'next-seo'
 import * as React from 'react'
 
 import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { withProviders } from '~/components/Providers/withProviders'
 import { StackDetail } from '~/components/Stack/StackDetail'
 import { StackList } from '~/components/Stack/StackList'
-import routes from '~/config/routes'
 import { getContext } from '~/graphql/context'
 import { GET_COMMENTS } from '~/graphql/queries/comments'
 import { GET_STACK, GET_STACKS } from '~/graphql/queries/stack'
@@ -13,17 +11,7 @@ import { CommentType } from '~/graphql/types.generated'
 import { addApolloState, initApolloClient } from '~/lib/apollo'
 
 function StackDetailPage({ id }) {
-  return (
-    <>
-      <NextSeo
-        title={routes.stack.seo.title}
-        description={routes.stack.seo.description}
-        openGraph={routes.stack.seo.openGraph}
-      />
-
-      <StackDetail id={id} />
-    </>
-  )
+  return <StackDetail id={id} />
 }
 
 export async function getServerSideProps({ params: { id }, req, res }) {

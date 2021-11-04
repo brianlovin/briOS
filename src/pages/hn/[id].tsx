@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router'
-import { NextSeo } from 'next-seo'
 import * as React from 'react'
 
 import { PostDetail } from '~/components/HackerNews/PostDetail'
@@ -7,7 +6,6 @@ import { PostsList } from '~/components/HackerNews/PostsList'
 import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { Detail } from '~/components/ListDetail/Detail'
 import { withProviders } from '~/components/Providers/withProviders'
-import routes from '~/config/routes'
 import { getContext } from '~/graphql/context'
 import {
   GET_HACKER_NEWS_POST,
@@ -22,17 +20,7 @@ function HNPostPage({ id }) {
     return <Detail.Loading />
   }
 
-  return (
-    <>
-      <NextSeo
-        title={routes.hn.seo.title}
-        description={routes.hn.seo.description}
-        openGraph={routes.hn.seo.openGraph}
-      />
-
-      <PostDetail id={id} />
-    </>
-  )
+  return <PostDetail id={id} />
 }
 
 export async function getServerSideProps({ params: { id }, req, res }) {
