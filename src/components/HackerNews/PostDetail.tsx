@@ -29,7 +29,7 @@ export function PostDetail({ id }) {
   const titleRef = React.useRef(null)
 
   return (
-    <React.Fragment>
+    <>
       <NextSeo
         title={post.title}
         description={
@@ -99,6 +99,6 @@ export function PostDetail({ id }) {
           </div>
         </div>
       </Detail.Container>
-    </React.Fragment>
+    </>
   )
 }

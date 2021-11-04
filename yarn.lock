@@ -9975,7 +9975,7 @@ prisma@^3.4.0:
   dependencies:
     "@prisma/engines" "3.4.0-27.1c9fdaa9e2319b814822d6dbfd0a69e1fcc13a85"
 
-prismjs@^1.22.0, prismjs@^1.25.0, prismjs@~1.25.0:
+prismjs@^1.22.0, prismjs@~1.25.0:
   version "1.25.0"
   resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.25.0.tgz#6f822df1bdad965734b310b315a23315cf999756"
   integrity sha512-WCjJHl1KEWbnkQom1+SzftbtXMKQoezOCYs5rECqMN+jP+apI7ftoflyqigqzopSO3hMhTEb0mFClA8lkolgEg==
@@ -10562,17 +10562,6 @@ remark-gfm@^3.0.0:
     micromark-extension-gfm "^2.0.0"
     unified "^10.0.0"
 
-remark-html@^15.0.0:
-  version "15.0.0"
-  resolved "https://registry.yarnpkg.com/remark-html/-/remark-html-15.0.0.tgz#9e5b8abefa82f232c995e611906c0ab6690c2d96"
-  integrity sha512-Fsk04zueun0u3aM3dbwfVDRTOeEco0H4Dc3hWyv7XKra8smQQJEqnD0sFhQVe9v1KxYvzVcJ6ioXtuLux2SvJA==
-  dependencies:
-    "@types/mdast" "^3.0.0"
-    hast-util-sanitize "^4.0.0"
-    hast-util-to-html "^8.0.0"
-    mdast-util-to-hast "^12.0.0"
-    unified "^10.0.0"
-
 remark-linkify-regex@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/remark-linkify-regex/-/remark-linkify-regex-1.0.0.tgz#afcaf4dcc96ffdf62e7aca490c3f3f5969a43f85"
@@ -10858,7 +10847,7 @@ remark-rehype@^9.0.0:
     mdast-util-to-hast "^11.0.0"
     unified "^10.0.0"
 
-remark-stringify@^10.0.0, remark-stringify@^10.0.1:
+remark-stringify@^10.0.0:
   version "10.0.1"
   resolved "https://registry.yarnpkg.com/remark-stringify/-/remark-stringify-10.0.1.tgz#9422dd20803892570a5e3d16801ffe081340ff06"
   integrity sha512-380vOu9EHqRTDhI9RlPU2EKY1abUDEmxw9fW7pJ/8Jr1izk0UcdnZB30qiDDRYi6pGn5FnVf9Wd2iUeCWTqM7Q==

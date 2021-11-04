@@ -10,27 +10,25 @@ interface Props {
 
 export function PostSEO({ post }: Props) {
   return (
-    <React.Fragment>
-      <NextSeo
-        title={post.title}
-        description={post.excerpt}
-        openGraph={{
-          title: post.title,
-          url: `${baseUrl}/writing/${post.slug}`,
-          description: post.excerpt,
-          images: [
-            {
-              url:
-                post.featureImage ||
-                `${baseUrl}/static/img/writing/${post.slug}.png`,
-              alt: post.title,
-            },
-          ],
-        }}
-        twitter={{
-          cardType: 'summary_large_image',
-        }}
-      />
-    </React.Fragment>
+    <NextSeo
+      title={post.title}
+      description={post.excerpt}
+      openGraph={{
+        title: post.title,
+        url: `${baseUrl}/writing/${post.slug}`,
+        description: post.excerpt,
+        images: [
+          {
+            url:
+              post.featureImage ||
+              `${baseUrl}/static/img/writing/${post.slug}.png`,
+            alt: post.title,
+          },
+        ],
+      }}
+      twitter={{
+        cardType: 'summary_large_image',
+      }}
+    />
   )
 }

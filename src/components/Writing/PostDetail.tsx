@@ -3,7 +3,6 @@ import * as React from 'react'
 
 import { Detail } from '~/components/ListDetail/Detail'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
-import { SyntaxHighlighter } from '~/components/SyntaxHighlighter'
 import { CommentType, useGetPostQuery } from '~/graphql/types.generated'
 import { timestampToCleanTime } from '~/lib/transformers'
 
@@ -27,8 +26,7 @@ export function PostDetail({ slug }) {
   const { post } = data
   const publishedAt = timestampToCleanTime({ timestamp: post.publishedAt })
   return (
-    <React.Fragment>
-      <SyntaxHighlighter data={post} />
+    <>
       <PostSEO post={post} />
       <Detail.Container data-cy="post-detail" ref={scrollContainerRef}>
         <TitleBar
@@ -78,6 +76,6 @@ export function PostDetail({ slug }) {
 
         <Comments refId={post.id} type={CommentType.Post} />
       </Detail.Container>
-    </React.Fragment>
+    </>
   )
 }

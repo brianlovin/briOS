@@ -6,7 +6,7 @@ import { baseUrl, defaultSEO } from '~/config/seo'
 
 export function SEO() {
   return (
-    <React.Fragment>
+    <>
       <DefaultSeo {...defaultSEO} />
       <Head>
         <link rel="icon" href="/static/favicon.ico" sizes="any" />
@@ -36,6 +36,6 @@ export function SEO() {
           media="(prefers-color-scheme: dark)"
         />
       </Head>
-    </React.Fragment>
+    </>
   )
 }
