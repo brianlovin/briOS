@@ -1,6 +1,10 @@
 import * as React from 'react'
+import { Compass } from 'react-feather'
 
 import { LoadingSpinner } from '~/components/LoadingSpinner'
+
+import Button from '../Button'
+import { TitleBar } from './TitleBar'
 
 function ContentContainer(props) {
   return (
@@ -55,10 +59,32 @@ function Loading() {
   )
 }
 
+function Null() {
+  return (
+    <Container>
+      <TitleBar title="Not found" />
+      <div className="flex flex-col items-center justify-center flex-1 px-8 space-y-6 text-center lg:px-16">
+        <Compass className="text-secondary" size={32} />
+        <div className="flex flex-col space-y-1">
+          <p className="font-semibold text-primary">
+            What you seek does not exist.
+          </p>
+          <p className="text-tertiary">
+            Maybe this link is broken. Maybe something was deleted, or moved. In
+            any case, there’s nothing to see here...
+          </p>
+        </div>
+        <Button href="/">Go home</Button>
+      </div>
+    </Container>
+  )
+}
+
 export const Detail = {
   Container,
   ContentContainer,
   Header,
   Title,
   Loading,
+  Null,
 }

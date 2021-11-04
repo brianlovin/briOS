@@ -30,7 +30,7 @@ export async function getServerSideProps({ params: { slug }, req, res }) {
 
     apolloClient.query({
       query: GET_COMMENTS,
-      variables: { refId: data.post.id, type: CommentType.Bookmark },
+      variables: { refId: data?.post?.id, type: CommentType.Bookmark },
     }),
   ])
 
