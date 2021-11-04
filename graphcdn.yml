@@ -1,0 +1,15 @@
+rootTypeNames:
+  query: Query
+  mutation: Mutation
+originUrl: 'https://brianlovin.com/api/graphql'
+rules:
+  - types:
+      Query:
+        - posts
+        - stacks
+        - bookmarks
+        - questions
+        - hackerNewsPosts
+    maxAge: 900
+    swr: 900
+    description: Cache frequently visited lists of data for 15 minutes
