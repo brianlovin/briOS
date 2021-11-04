@@ -1,8 +1,4 @@
-import deepmerge from 'deepmerge'
 import * as React from 'react'
-import ReactMarkdown from 'react-markdown'
-import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
-import remarkGfm from 'remark-gfm'
 
 import { Avatar } from '~/components/Avatar'
 import Button, { PrimaryButton } from '~/components/Button'
@@ -17,6 +13,7 @@ import {
 } from '~/graphql/types.generated'
 import { timestampToCleanTime } from '~/lib/transformers'
 
+import { MarkdownRenderer } from '../MarkdownRenderer'
 import { CommentMenu } from './CommentMenu'
 
 interface Props {
@@ -33,10 +30,6 @@ export const Comment = React.memo(function MemoComment({
   const [isEditing, setIsEditing] = React.useState(false)
   const [editText, setEditText] = React.useState(comment.text)
   const [isSavingEdit, setIsSavingEdit] = React.useState(false)
-
-  const schema = deepmerge(defaultSchema, {
-    attributes: { '*': ['className'] },
-  })
 
   const [deleteComment] = useDeleteCommentMutation({
     variables: { id: comment.id },
@@ -161,26 +154,10 @@ export const Comment = React.memo(function MemoComment({
           </div>
         </div>
       ) : (
-        <ReactMarkdown
-          remarkPlugins={[remarkGfm]}
-          rehypePlugins={[[rehypeSanitize, schema]]}
+        <MarkdownRenderer
           children={comment.text}
-          components={{
-            h1: 'p',
-            h2: 'p',
-            h3: 'p',
-            h4: 'p',
-            h5: 'p',
-            h6: 'p',
-            code({ node, inline, className, children, ...props }) {
-              return (
-                <code className={className} {...props}>
-                  {children}
-                </code>
-              )
-            },
-          }}
           className="flex-grow leading-normal prose comment pl-14"
+          variant="comment"
         />
       )}
     </div>

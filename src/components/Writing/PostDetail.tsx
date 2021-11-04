@@ -1,8 +1,5 @@
-import deepmerge from 'deepmerge'
+import Link from 'next/link'
 import * as React from 'react'
-import ReactMarkdown from 'react-markdown'
-import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
-import remarkGfm from 'remark-gfm'
 
 import { Detail } from '~/components/ListDetail/Detail'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
@@ -11,6 +8,7 @@ import { CommentType, useGetPostQuery } from '~/graphql/types.generated'
 import { timestampToCleanTime } from '~/lib/transformers'
 
 import { Comments } from '../Comments'
+import { MarkdownRenderer } from '../MarkdownRenderer'
 import { PostSEO } from './PostSEO'
 
 export function PostDetail({ slug }) {
@@ -29,10 +27,6 @@ export function PostDetail({ slug }) {
   if (!data?.post) {
     return null
   }
-
-  const schema = deepmerge(defaultSchema, {
-    attributes: { '*': ['className'] },
-  })
 
   const { post } = data
   const publishedAt = timestampToCleanTime({ timestamp: post.publishedAt })
@@ -62,11 +56,24 @@ export function PostDetail({ slug }) {
             </span>
           </Detail.Header>
 
-          <ReactMarkdown
-            remarkPlugins={[remarkGfm]}
-            rehypePlugins={[[rehypeSanitize, schema]]}
+          <MarkdownRenderer
             children={post.text}
             className="mt-8 prose lg:prose-lg"
+            components={{
+              a: ({ href, ...rest }) => {
+                const url = new URL(href)
+                if (url.origin === 'https://brianlovin.com') {
+                  return (
+                    <Link href={href}>
+                      <a {...rest} />
+                    </Link>
+                  )
+                }
+                return (
+                  <a target="_blank" rel="noopener" href={href} {...rest} />
+                )
+              },
+            }}
           />
 
           {/* bottom padding to give space between post content and comments */}

@@ -116,7 +116,7 @@
 .prose.comment p,
 .prose.comment ul,
 .prose.comment ol {
-  @apply my-2;
+  @apply my-3;
 }
 
 .prose.comment p:first-of-type {

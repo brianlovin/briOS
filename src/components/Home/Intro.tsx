@@ -29,7 +29,12 @@ interface TableRowProps {
 
 function TableRow({ href, title, subtitle, date }: TableRowProps) {
   return (
-    <a href={href} className="flex items-center space-x-4 group">
+    <a
+      target="_blank"
+      rel="noopener noreferrer"
+      href={href}
+      className="flex items-center space-x-4 group"
+    >
       <span className="flex-none font-medium text-gray-1000 group-hover:underline group-hover:text-blue-600 dark:group-hover:text-blue-500 dark:text-gray-100">
         {title}
       </span>
@@ -156,47 +161,109 @@ export function Intro() {
               <div className="prose text-primary">
                 <p>
                   Hey, I&apos;m Brian. I&apos;m a designer,{' '}
-                  <a href="https://designdetails.fm">podcaster</a>,{' '}
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://designdetails.fm"
+                  >
+                    podcaster
+                  </a>
+                  ,{' '}
                   <Link href="/writing" passHref>
                     <a>writer</a>
                   </Link>
                   , and{' '}
-                  <a href="https://github.com/brianlovin">software tinkerer</a>.
-                  I&apos;m currently building{' '}
-                  <a href="https://github.com/mobile">
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://github.com/brianlovin"
+                  >
+                    software tinkerer
+                  </a>
+                  . I&apos;m currently building{' '}
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://github.com/mobile"
+                  >
                     native mobile apps at GitHub
                   </a>
                   .
                 </p>
                 <p>
                   Before GitHub, I co-founded{' '}
-                  <a href="https://spectrum.chat">Spectrum</a>, a platform for
-                  large-scale communities to have better public conversations.
-                  Spectrum was acquired by GitHub in November, 2018.
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://spectrum.chat"
+                  >
+                    Spectrum
+                  </a>
+                  , a platform for large-scale communities to have better public
+                  conversations. Spectrum was acquired by GitHub in November,
+                  2018.
                 </p>
                 <p>
                   Before Spectrum I designed payments experiences at Facebook,
                   working across Facebook, Messenger, WhatsApp, and Instagram. I
                   originally cut my teeth as the first product designer at{' '}
-                  <a href="https://buffer.com">Buffer</a>.
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://buffer.com"
+                  >
+                    Buffer
+                  </a>
+                  .
                 </p>
                 <p>
                   I also co-host the{' '}
-                  <a href="https://designdetails.fm">Design Details Podcast</a>,
-                  a weekly conversation about design process and culture. Design
-                  Details is part of <a href="https://spec.fm">Spec.fm</a>, a
-                  podcast network for designers and developers, which I
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://designdetails.fm"
+                  >
+                    Design Details Podcast
+                  </a>
+                  , a weekly conversation about design process and culture.
+                  Design Details is part of{' '}
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://spec.fm"
+                  >
+                    Spec.fm
+                  </a>
+                  , a podcast network for designers and developers, which I
                   co-founded in 2015.
                 </p>
                 <p>
                   You can find me on{' '}
-                  <a href="https://twitter.com/brian_lovin">Twitter</a> where I
-                  talk about design and development, or on{' '}
-                  <a href="https://github.com/brianlovin">GitHub</a> where I’m
-                  building in the open, or on{' '}
-                  <a href="https://figma.com/@brian">Figma</a> where I’m
-                  exploring how plugins can automate the tedious parts of
-                  interface design.
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://twitter.com/brian_lovin"
+                  >
+                    Twitter
+                  </a>{' '}
+                  where I talk about design and development, or on{' '}
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://github.com/brianlovin"
+                  >
+                    GitHub
+                  </a>{' '}
+                  where I’m building in the open, or on{' '}
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://figma.com/@brian"
+                  >
+                    Figma
+                  </a>{' '}
+                  where I’m exploring how plugins can automate the tedious parts
+                  of interface design.
                 </p>
               </div>
               <div className="flex pt-6">
@@ -211,6 +278,7 @@ export function Intro() {
             <SectionTitle>Where</SectionTitle>
             <SectionContent>
               <Image
+                priority
                 src="/static/img/sf.png"
                 width={800}
                 height={400}

@@ -1,8 +1,4 @@
-import deepmerge from 'deepmerge'
 import * as React from 'react'
-import ReactMarkdown from 'react-markdown'
-import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
-import remarkGfm from 'remark-gfm'
 
 import { Avatar } from '~/components/Avatar'
 import { Comments } from '~/components/Comments'
@@ -12,6 +8,7 @@ import { SyntaxHighlighter } from '~/components/SyntaxHighlighter'
 import { CommentType, useGetQuestionQuery } from '~/graphql/types.generated'
 import { timestampToCleanTime } from '~/lib/transformers'
 
+import { MarkdownRenderer } from '../MarkdownRenderer'
 import { QuestionActions } from './QuestionActions'
 
 export function QuestionDetail({ id }) {
@@ -19,10 +16,6 @@ export function QuestionDetail({ id }) {
   const titleRef = React.useRef(null)
   const { data, loading } = useGetQuestionQuery({
     variables: { id },
-  })
-
-  const schema = deepmerge(defaultSchema, {
-    attributes: { '*': ['className'] },
   })
 
   if (loading) {
@@ -74,26 +67,10 @@ export function QuestionDetail({ id }) {
           </div>
           <Detail.Title ref={titleRef}>{question.title}</Detail.Title>
           {question.description && (
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              rehypePlugins={[[rehypeSanitize, schema]]}
+            <MarkdownRenderer
               children={question.description}
-              components={{
-                h1: 'p',
-                h2: 'p',
-                h3: 'p',
-                h4: 'p',
-                h5: 'p',
-                h6: 'p',
-                code({ node, inline, className, children, ...props }) {
-                  return (
-                    <code className={className} {...props}>
-                      {children}
-                    </code>
-                  )
-                },
-              }}
               className="leading-normal prose comment"
+              variant="comment"
             />
           )}
         </Detail.Header>
