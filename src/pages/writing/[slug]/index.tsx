@@ -28,11 +28,10 @@ export async function getServerSideProps({ params: { slug }, req, res }) {
       query: GET_POSTS,
     }),
 
-    data?.post &&
-      apolloClient.query({
-        query: GET_COMMENTS,
-        variables: { refId: data.post.id, type: CommentType.Bookmark },
-      }),
+    apolloClient.query({
+      query: GET_COMMENTS,
+      variables: { refId: data?.post?.id, type: CommentType.Bookmark },
+    }),
   ])
 
   return addApolloState(apolloClient, {
