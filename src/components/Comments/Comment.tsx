@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import * as React from 'react'
 
 import { Avatar } from '~/components/Avatar'
@@ -108,19 +109,31 @@ export const Comment = React.memo(function MemoComment({
     <div className="flex flex-col space-y-0 group">
       <div className="flex items-center justify-between space-x-4">
         <div className="flex items-center space-x-4">
-          <Avatar
-            user={comment.author}
-            src={comment.author.avatar}
-            width={40}
-            height={40}
-            quality={100}
-            layout="fixed"
-            className="rounded-full"
-          />
-          <div className="flex space-x-2">
-            <p className="font-medium leading-snug text-primary">
-              {comment.author.name}
-            </p>
+          <Link href={`/u/${comment.author.username}`}>
+            <a className="inline-flex">
+              <Avatar
+                user={comment.author}
+                src={comment.author.avatar}
+                width={40}
+                height={40}
+                quality={100}
+                layout="fixed"
+                className="rounded-full"
+              />
+            </a>
+          </Link>
+          <div className="flex space-x-1">
+            <Link href={`/u/${comment.author.username}`}>
+              <a className="inline-flex space-x-1">
+                <span className="font-semibold leading-snug text-primary">
+                  {comment.author.name}
+                </span>
+                <span className="inline-flex font-normal leading-snug text-tertiary">
+                  @{comment.author.username}
+                </span>
+              </a>
+            </Link>
+            <p className="leading-snug text-quaternary">·</p>
             <p className="leading-snug text-quaternary" title={createdAt.raw}>
               {createdAt.formatted}
             </p>
