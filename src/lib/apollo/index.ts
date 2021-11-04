@@ -21,8 +21,6 @@ import {
 
 const GRAPHQL_ENDPOINT = IS_PREVIEW
   ? `https://${process.env.VERCEL_URL}/api/graphql`
-  : IS_PROD
-  ? 'https://brianlovin2.graphcdn.app'
   : '/api/graphql'
 
 global.fetch = require('node-fetch')
