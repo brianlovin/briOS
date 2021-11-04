@@ -7,7 +7,6 @@ import { Avatar } from '~/components/Avatar'
 import { Comments } from '~/components/Comments'
 import { Detail } from '~/components/ListDetail/Detail'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
-import { SyntaxHighlighter } from '~/components/SyntaxHighlighter'
 import routes from '~/config/routes'
 import { CommentType, useGetQuestionQuery } from '~/graphql/types.generated'
 import { timestampToCleanTime } from '~/lib/transformers'
@@ -53,8 +52,6 @@ export function QuestionDetail({ id }) {
         }}
       />
       <Detail.Container data-cy="question-detail" ref={scrollContainerRef}>
-        <SyntaxHighlighter data={question} />
-
         <TitleBar
           backButton
           globalMenu={false}

@@ -1,8 +1,8 @@
 import '~/styles/tailwind.css'
 import 'tailwindcss/utilities.css'
 import '~/styles/custom-styles.css'
-import '~/styles/syntax-highlighting.css'
 import '~/styles/prose-styles.css'
+import '~/styles/dracula.css'
 
 import * as React from 'react'
 

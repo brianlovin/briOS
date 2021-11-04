@@ -6,6 +6,8 @@ import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
 import remarkGfm from 'remark-gfm'
 import linkifyRegex from 'remark-linkify-regex'
 
+import { CodeBlock } from './CodeBlock'
+
 function LinkRenderer({ href, ...rest }: any) {
   if (href.startsWith('@')) {
     // link to a mention
@@ -37,6 +39,20 @@ function getComponentsForVariant(variant) {
     case 'longform': {
       return {
         a: LinkRenderer,
+        code({ node, inline, className, children, ...props }) {
+          const language = /language-(\w+)/.exec(className || '')?.[1]
+          return !inline && language ? (
+            <CodeBlock
+              text={String(children).replace(/\n$/, '')}
+              language={language}
+              {...props}
+            />
+          ) : (
+            <code className={className} {...props}>
+              {children}
+            </code>
+          )
+        },
       }
     }
     // Questions, comments, descriptions on bookmarks, etc.
@@ -49,8 +65,18 @@ function getComponentsForVariant(variant) {
         h4: 'p',
         h5: 'p',
         h6: 'p',
+        pre({ children }) {
+          return <>{children}</>
+        },
         code({ node, inline, className, children, ...props }) {
-          return (
+          const language = /language-(\w+)/.exec(className || '')?.[1]
+          return !inline && language ? (
+            <CodeBlock
+              text={String(children).replace(/\n$/, '')}
+              language={language}
+              {...props}
+            />
+          ) : (
             <code className={className} {...props}>
               {children}
             </code>
