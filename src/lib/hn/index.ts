@@ -26,9 +26,13 @@ export async function getPostIds(sort) {
 
 export async function getPostById(id, includeComments = false) {
   async function getPost() {
-    return await fetch(`${ITEM_BASE_URL}/item/${id}.json`).then((res) =>
-      res.json()
-    )
+    try {
+      return await fetch(`${ITEM_BASE_URL}/item/${id}.json`).then((res) =>
+        res.json()
+      )
+    } catch (e) {
+      return null
+    }
   }
 
   let data
@@ -40,6 +44,8 @@ export async function getPostById(id, includeComments = false) {
       fetch: getPost,
     })
   }
+
+  if (!data) return null
 
   function trimComments(comment) {
     if (!comment) return null

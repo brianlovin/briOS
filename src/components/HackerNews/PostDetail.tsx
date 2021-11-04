@@ -15,9 +15,12 @@ import { PostComments } from './PostComments'
 import { HackerNewsSubscriptionForm } from './SubscriptionForm'
 
 export function PostDetail({ id }) {
-  const { data, loading } = useGetHackerNewsPostQuery({ variables: { id } })
+  const { data, loading, error } = useGetHackerNewsPostQuery({
+    variables: { id },
+  })
 
   if (loading) return <Detail.Loading />
+  if (!data?.hackerNewsPost || error) return <Detail.Null />
 
   const { hackerNewsPost: post } = data
   const { comments } = post

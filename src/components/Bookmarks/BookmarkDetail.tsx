@@ -22,16 +22,12 @@ export function BookmarkDetail({ id }) {
     variables: { id },
   })
 
-  if (error) {
-    return null
-  }
-
   if (loading) {
     return <Detail.Loading />
   }
 
-  if (!data || !data.bookmark) {
-    return null
+  if (!data?.bookmark || error) {
+    return <Detail.Null />
   }
 
   const { bookmark } = data

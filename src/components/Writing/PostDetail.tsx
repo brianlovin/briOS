@@ -16,16 +16,12 @@ export function PostDetail({ slug }) {
   const titleRef = React.useRef(null)
   const { data, error, loading } = useGetPostQuery({ variables: { slug } })
 
-  if (error) {
-    return null
-  }
-
   if (loading) {
     return <Detail.Loading />
   }
 
-  if (!data?.post) {
-    return null
+  if (!data?.post || error) {
+    return <Detail.Null />
   }
 
   const { post } = data

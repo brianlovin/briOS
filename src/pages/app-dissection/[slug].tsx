@@ -5,6 +5,7 @@ import removeMd from 'remove-markdown'
 import { AppDissectionDetail } from '~/components/AppDissection/AppDissectionDetail'
 import { AppDissectionList } from '~/components/AppDissection/AppDissectionList'
 import { ListDetailView, SiteLayout } from '~/components/Layouts'
+import { Detail } from '~/components/ListDetail/Detail'
 import { withProviders } from '~/components/Providers/withProviders'
 import { baseUrl } from '~/config/seo'
 import designDetailsPosts from '~/data/appDissections'
@@ -15,7 +16,7 @@ interface Props {
 }
 
 function AppDissectionPage({ post }: Props) {
-  if (!post) return null
+  if (!post) return <Detail.Null />
 
   if (post) {
     return (
@@ -56,7 +57,7 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params: { slug } }) {
   return {
     props: {
-      post: designDetailsPosts.find((post) => post.slug === slug),
+      post: designDetailsPosts.find((post) => post.slug === slug) || null,
     },
   }
 }
