@@ -10,15 +10,13 @@ export function CodeBlock({
   [key: string]: any
 }) {
   return (
-    <div className="relative group code-block">
-      <SyntaxHighlighter
-        showLineNumbers={!['bash', 'text', 'treeview'].includes(language)}
-        useInlineStyles={false}
-        language={language}
-        children={text}
-        style=""
-        {...rest}
-      />
-    </div>
+    <SyntaxHighlighter
+      showLineNumbers={!['bash', 'text', 'treeview'].includes(language)}
+      useInlineStyles={false}
+      language={language}
+      children={text}
+      style=""
+      {...rest}
+    />
   )
 }
