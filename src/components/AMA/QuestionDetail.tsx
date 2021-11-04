@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import * as React from 'react'
 
 import { Avatar } from '~/components/Avatar'
@@ -49,21 +50,36 @@ export function QuestionDetail({ id }) {
 
       <Detail.ContentContainer>
         <Detail.Header>
-          <div className="flex items-center space-x-3">
-            <Avatar
-              user={question.author}
-              src={question.author.avatar}
-              width={32}
-              height={32}
-              layout={'fixed'}
-              className="rounded-full"
-            />{' '}
-            <span className="font-medium text-secondary">
-              {question.author.name}
-            </span>
-            <span title={updatedAt.raw} className="text-tertiary">
-              {updatedAt.formatted}
-            </span>
+          <div className="flex items-center pb-2 space-x-4">
+            <Link href={`/u/${question.author.username}`}>
+              <a className="inline-flex">
+                <Avatar
+                  user={question.author}
+                  src={question.author.avatar}
+                  width={32}
+                  height={32}
+                  quality={100}
+                  layout="fixed"
+                  className="rounded-full"
+                />
+              </a>
+            </Link>
+            <div className="flex space-x-1">
+              <Link href={`/u/${question.author.username}`}>
+                <a className="inline-flex space-x-1">
+                  <span className="font-semibold leading-snug text-primary">
+                    {question.author.name}
+                  </span>
+                  <span className="inline-flex font-normal leading-snug text-tertiary">
+                    @{question.author.username}
+                  </span>
+                </a>
+              </Link>
+              <p className="leading-snug text-quaternary">·</p>
+              <p className="leading-snug text-quaternary" title={updatedAt.raw}>
+                {updatedAt.formatted}
+              </p>
+            </div>
           </div>
           <Detail.Title ref={titleRef}>{question.title}</Detail.Title>
           {question.description && (
