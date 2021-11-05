@@ -208,10 +208,6 @@ export default gql`
     ): QuestionsConnection!
     hackerNewsPosts: [HackerNewsPost]!
     hackerNewsPost(id: ID!): HackerNewsPost
-    repos: [Repo]!
-    signedUploadUrl(id: ID!): String
-    signedPlaybackUrl(id: ID!): String
-    transcription(transcriptionId: ID!): String
     tags: [Tag]!
   }
 

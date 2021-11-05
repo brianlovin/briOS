@@ -8,6 +8,7 @@ import {
   MutationEditQuestionArgs,
   UserRole,
 } from '~/graphql/types.generated'
+import { graphcdn } from '~/lib/graphcdn'
 import { emailMe } from '~/lib/postmark'
 
 export async function editQuestion(
@@ -24,17 +25,26 @@ export async function editQuestion(
   }
 
   if (viewer.role === UserRole.Admin || viewer.id === question.userId) {
-    return await prisma.question.update({
-      where: { id },
-      data,
-      include: {
-        _count: {
-          select: {
-            comments: true,
+    return await prisma.question
+      .update({
+        where: { id },
+        data,
+        include: {
+          _count: {
+            select: {
+              comments: true,
+            },
           },
         },
-      },
-    })
+      })
+      .then((question) => {
+        graphcdn.purgeList('questions')
+        return question
+      })
+      .catch((err) => {
+        console.error({ err })
+        throw new UserInputError('Unable to edit question')
+      })
   }
 
   throw new UserInputError('No permission to delete this question')
@@ -49,20 +59,29 @@ export async function addQuestion(
   const { title, description } = data
   const { viewer, prisma } = ctx
 
-  const question = await prisma.question.create({
-    data: {
-      title,
-      description,
-      userId: viewer.id,
-    },
-    include: {
-      _count: {
-        select: {
-          comments: true,
+  const question = await prisma.question
+    .create({
+      data: {
+        title,
+        description,
+        userId: viewer.id,
+      },
+      include: {
+        _count: {
+          select: {
+            comments: true,
+          },
         },
       },
-    },
-  })
+    })
+    .then((question) => {
+      graphcdn.purgeList('questions')
+      return question
+    })
+    .catch((err) => {
+      console.error({ err })
+      throw new UserInputError('Unable to add question')
+    })
 
   emailMe({
     subject: `AMA: ${title}`,
@@ -84,7 +103,16 @@ export async function deleteQuestion(
   if (!question) return true
 
   if (viewer.role === UserRole.Admin || viewer.id === question.userId) {
-    return await prisma.question.delete({ where: { id } }).then(() => true)
+    return await prisma.question
+      .delete({ where: { id } })
+      .then(() => {
+        graphcdn.purgeList('questions')
+        return true
+      })
+      .catch((err) => {
+        console.error({ err })
+        throw new UserInputError('Unable to delete question')
+      })
   }
 
   throw new UserInputError('No permission to delete this question')
