@@ -7,6 +7,7 @@ import {
   MutationDeleteBookmarkArgs,
   MutationEditBookmarkArgs,
 } from '~/graphql/types.generated'
+import { graphcdn } from '~/lib/graphcdn'
 import { revue } from '~/lib/revue'
 import { validUrl } from '~/lib/validators'
 
@@ -35,22 +36,30 @@ export async function editBookmark(
     include: { tags: true },
   })
 
-  // update data
-  return await prisma.bookmark.update({
-    where: { id },
-    data: {
-      title,
-      description,
-      faviconUrl,
-      tags: {
-        connectOrCreate: {
-          where: { name: tag },
-          create: { name: tag },
+  return await prisma.bookmark
+    .update({
+      where: { id },
+      data: {
+        title,
+        description,
+        faviconUrl,
+        tags: {
+          connectOrCreate: {
+            where: { name: tag },
+            create: { name: tag },
+          },
         },
       },
-    },
-    include: { tags: true },
-  })
+      include: { tags: true },
+    })
+    .then((bookmark) => {
+      graphcdn.purgeList('bookmarks')
+      return bookmark
+    })
+    .catch((err) => {
+      console.error({ err })
+      throw new UserInputError('Unable to edit bookmark')
+    })
 }
 
 export async function addBookmark(
@@ -82,8 +91,8 @@ export async function addBookmark(
     console.log('Adding bookmark to newsletter', { url })
   }
 
-  try {
-    return await prisma.bookmark.create({
+  return await prisma.bookmark
+    .create({
       data: {
         url,
         host,
@@ -100,9 +109,14 @@ export async function addBookmark(
       },
       include: { tags: true },
     })
-  } catch (err) {
-    throw new UserInputError('Unable to create bookmark')
-  }
+    .then((bookmark) => {
+      graphcdn.purgeList('bookmarks')
+      return bookmark
+    })
+    .catch((err) => {
+      console.error({ err })
+      throw new UserInputError('Unable to create bookmark')
+    })
 }
 
 export async function deleteBookmark(
@@ -113,9 +127,16 @@ export async function deleteBookmark(
   const { id } = args
   const { prisma } = ctx
 
-  await prisma.bookmark.delete({
-    where: { id },
-  })
-
-  return true
+  return await prisma.bookmark
+    .delete({
+      where: { id },
+    })
+    .then(() => {
+      graphcdn.purgeList('bookmarks')
+      return true
+    })
+    .catch((err) => {
+      console.error({ err })
+      throw new UserInputError('Unable to delete bookmark')
+    })
 }

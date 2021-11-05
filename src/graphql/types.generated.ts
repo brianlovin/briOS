@@ -309,13 +309,9 @@ export type Query = {
   posts: Array<Maybe<Post>>
   question?: Maybe<Question>
   questions: QuestionsConnection
-  repos: Array<Maybe<Repo>>
-  signedPlaybackUrl?: Maybe<Scalars['String']>
-  signedUploadUrl?: Maybe<Scalars['String']>
   stack?: Maybe<Stack>
   stacks: StacksConnection
   tags: Array<Maybe<Tag>>
-  transcription?: Maybe<Scalars['String']>
   user?: Maybe<User>
   viewer?: Maybe<User>
 }
@@ -363,14 +359,6 @@ export type QueryQuestionsArgs = {
   first?: Maybe<Scalars['Int']>
 }
 
-export type QuerySignedPlaybackUrlArgs = {
-  id: Scalars['ID']
-}
-
-export type QuerySignedUploadUrlArgs = {
-  id: Scalars['ID']
-}
-
 export type QueryStackArgs = {
   id: Scalars['ID']
 }
@@ -378,10 +366,6 @@ export type QueryStackArgs = {
 export type QueryStacksArgs = {
   after?: Maybe<Scalars['String']>
   first?: Maybe<Scalars['Int']>
-}
-
-export type QueryTranscriptionArgs = {
-  transcriptionId: Scalars['ID']
 }
 
 export type QueryUserArgs = {

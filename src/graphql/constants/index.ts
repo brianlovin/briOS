@@ -2,6 +2,8 @@ import { baseUrl } from '~/config/seo'
 
 export const IS_PROD = process.env.NODE_ENV === 'production'
 export const IS_PREVIEW = process.env.VERCEL_ENV === 'preview'
+export const GRAPHCDN_ENDPOINT = 'https://brios.graphcdn.app'
+export const GRAPHCDN_PURGE_ENDPOINT = 'https://admin.graphcdn.io/brios'
 export const CLIENT_URL = IS_PROD ? baseUrl : 'http://localhost:3000'
 export const PAGINATION_AMOUNT = 24
 

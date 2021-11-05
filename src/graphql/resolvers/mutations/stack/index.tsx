@@ -8,6 +8,7 @@ import {
   MutationEditStackArgs,
   MutationToggleStackUserArgs,
 } from '~/graphql/types.generated'
+import { graphcdn } from '~/lib/graphcdn'
 import { validUrl } from '~/lib/validators'
 
 export async function editStack(_, args: MutationEditStackArgs, ctx: Context) {
@@ -56,36 +57,35 @@ export async function editStack(_, args: MutationEditStackArgs, ctx: Context) {
     },
   })
 
-  if (tag) {
-    // set new tag
-    return await prisma.stack.update({
-      where: { id },
-      data: {
-        name,
-        url,
-        description,
-        image,
-        tags: {
-          connectOrCreate: {
-            where: { name: tag },
-            create: { name: tag },
-          },
+  const tags = tag
+    ? {
+        connectOrCreate: {
+          where: { name: tag },
+          create: { name: tag },
         },
-      },
-      include: { tags: true },
-    })
-  } else {
-    return await prisma.stack.update({
+      }
+    : undefined
+
+  return await prisma.stack
+    .update({
       where: { id },
       data: {
         name,
         url,
         description,
         image,
+        tags,
       },
       include: { tags: true },
     })
-  }
+    .then((stack) => {
+      graphcdn.purgeList('stacks')
+      return stack
+    })
+    .catch((err) => {
+      console.error({ err })
+      throw new UserInputError('Unable to edit stack')
+    })
 }
 
 export async function addStack(_, args: MutationAddStackArgs, ctx: Context) {
@@ -104,16 +104,25 @@ export async function addStack(_, args: MutationAddStackArgs, ctx: Context) {
       }
     : undefined
 
-  return await prisma.stack.create({
-    data: {
-      name,
-      url,
-      description,
-      image,
-      tags,
-    },
-    include: { tags: true },
-  })
+  return await prisma.stack
+    .create({
+      data: {
+        name,
+        url,
+        description,
+        image,
+        tags,
+      },
+      include: { tags: true },
+    })
+    .then((stack) => {
+      graphcdn.purgeList('stacks')
+      return stack
+    })
+    .catch((err) => {
+      console.error({ err })
+      throw new UserInputError('Unable to add stack')
+    })
 }
 
 export async function deleteStack(
@@ -125,6 +134,7 @@ export async function deleteStack(
   const { prisma } = ctx
 
   const old = await prisma.stack.findUnique({ where: { id } })
+
   try {
     const url = new URL(old.image)
     const [, , imageId] = url.pathname.split('/')
@@ -143,11 +153,18 @@ export async function deleteStack(
     console.error({ err })
   }
 
-  await prisma.stack.delete({
-    where: { id },
-  })
-
-  return true
+  return await prisma.stack
+    .delete({
+      where: { id },
+    })
+    .then(() => {
+      graphcdn.purgeList('stacks')
+      return true
+    })
+    .catch((err) => {
+      console.error({ err })
+      throw new UserInputError('Unable to delete stack')
+    })
 }
 
 export async function toggleStackUser(

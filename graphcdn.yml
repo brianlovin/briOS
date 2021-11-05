@@ -5,11 +5,30 @@ originUrl: 'https://brianlovin.com/api/graphql'
 rules:
   - types:
       Query:
+        - post
+        - tags
         - posts
+        - stack
         - stacks
+        - bookmark
+        - comments
+        - question
         - bookmarks
         - questions
+        - hackerNewsPost
         - hackerNewsPosts
     maxAge: 900
     swr: 900
-    description: Cache frequently visited lists of data for 15 minutes
+keyFields:
+  types:
+    Tag:
+      - name
+    Repo: []
+    User:
+      - id
+      - username
+    PageInfo: []
+    StackEdge: []
+    BookmarkEdge: []
+    QuestionEdge: []
+    EmailSubscription: []
