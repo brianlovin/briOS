@@ -17,6 +17,7 @@ export async function getQuestion(_, { id }: QueryQuestionArgs, ctx: Context) {
       _count: {
         select: {
           comments: true,
+          reactions: true,
         },
       },
     },
@@ -114,6 +115,7 @@ export async function getQuestions(
         _count: {
           select: {
             comments: true,
+            reactions: true,
           },
         },
       },

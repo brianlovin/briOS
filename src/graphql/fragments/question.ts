@@ -10,6 +10,8 @@ export const QuestionInfoFragment = gql`
     title
     description
     status
+    reactionCount
+    viewerHasReacted
     author {
       ...UserInfo
     }

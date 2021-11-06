@@ -8,6 +8,7 @@ import { timestampToCleanTime } from '~/lib/transformers'
 
 import { Comments } from '../Comments'
 import { MarkdownRenderer } from '../MarkdownRenderer'
+import { PostActions } from './PostActions'
 import { PostSEO } from './PostSEO'
 
 export function PostDetail({ slug }) {
@@ -37,6 +38,7 @@ export function PostDetail({ slug }) {
           title={post.title}
           titleRef={titleRef}
           scrollContainerRef={scrollContainerRef}
+          trailingAccessory={<PostActions post={post} />}
         />
 
         <Detail.ContentContainer>

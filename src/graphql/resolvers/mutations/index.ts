@@ -10,6 +10,7 @@ import {
   deleteComment,
   editComment,
 } from '~/graphql/resolvers/mutations/comment'
+import { editEmailSubscription } from '~/graphql/resolvers/mutations/emailSubscription'
 import {
   addPost,
   deletePost,
@@ -20,6 +21,7 @@ import {
   deleteQuestion,
   editQuestion,
 } from '~/graphql/resolvers/mutations/questions'
+import { toggleReaction } from '~/graphql/resolvers/mutations/reactions'
 import {
   addStack,
   deleteStack,
@@ -27,8 +29,6 @@ import {
   toggleStackUser,
 } from '~/graphql/resolvers/mutations/stack'
 import { deleteUser, editUser } from '~/graphql/resolvers/mutations/user'
-
-import { editEmailSubscription } from './emailSubscription'
 
 export default {
   addBookmark: requiresAdmin(addBookmark),
@@ -50,4 +50,5 @@ export default {
   addPost: requiresAdmin(addPost),
   editPost: requiresAdmin(editPost),
   deletePost: requiresAdmin(deletePost),
+  toggleReaction: requiresUser(toggleReaction),
 }

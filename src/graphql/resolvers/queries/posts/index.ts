@@ -6,6 +6,13 @@ export async function getPosts(_, __, ctx: Context) {
   return await prisma.post.findMany({
     orderBy: { publishedAt: 'desc' },
     where: { publishedAt: { not: null } },
+    include: {
+      _count: {
+        select: {
+          reactions: true,
+        },
+      },
+    },
   })
 }
 
@@ -17,8 +24,26 @@ export async function getPost(
   const { prisma, viewer } = ctx
   const isAdmin = viewer?.role === UserRole.Admin
   const [postBySlug, postById] = await Promise.all([
-    prisma.post.findUnique({ where: { slug } }),
-    prisma.post.findUnique({ where: { id: slug } }),
+    prisma.post.findUnique({
+      where: { slug },
+      include: {
+        _count: {
+          select: {
+            reactions: true,
+          },
+        },
+      },
+    }),
+    prisma.post.findUnique({
+      where: { id: slug },
+      include: {
+        _count: {
+          select: {
+            reactions: true,
+          },
+        },
+      },
+    }),
   ])
 
   const post = postBySlug || postById
