@@ -1,4 +1,4 @@
-# schema: 'http://localhost:3000/api/graphql'
+schema: './src/graphql/typeDefs/index.ts'
 scopes:
   AUTHENTICATED: 'cookie:appSession'
 rootTypeNames:
