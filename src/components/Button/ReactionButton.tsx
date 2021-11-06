@@ -56,7 +56,11 @@ export function ReactionButton({ onClick, hasReacted, count, loading }: Props) {
   }
 
   return (
-    <Button onClick={handleClick} style={{ maxHeight: '32px' }}>
+    <Button
+      aria-label={hasReactedState ? 'Unlike' : 'Like'}
+      onClick={handleClick}
+      style={{ maxHeight: '32px', overflow: 'hidden' }}
+    >
       {hasReactedState ? (
         <span className="relative text-red-500">
           {ping && (
@@ -71,7 +75,7 @@ export function ReactionButton({ onClick, hasReacted, count, loading }: Props) {
           <HeartIcon />
         </span>
       )}
-      <div className="relative h-3">
+      <div className="relative h-3 -top-px">
         <div
           className={`flex space-y-2 duration-300 flex-col items-center justify-center ${currTranslate} transform transition-all`}
         >
