@@ -8,7 +8,7 @@ export const CLIENT_URL = IS_PROD ? baseUrl : 'http://localhost:3000'
 
 export const GRAPHQL_ENDPOINT = VERCEL_PREVIEW
   ? `https://${process.env.VERCEL_URL}/api/graphql`
-  : VERCEL_PROD
+  : IS_PROD
   ? process.env.GRAPHQL_ENDPOINT
   : '/api/graphql'
 
