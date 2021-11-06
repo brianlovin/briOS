@@ -2,6 +2,7 @@ rootTypeNames:
   query: Query
   mutation: Mutation
 originUrl: 'https://brianlovin.com/api/graphql'
+# schema: 'http://localhost:3000/api/graphql'
 rules:
   - types:
       Query:
