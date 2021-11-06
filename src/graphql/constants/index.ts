@@ -13,6 +13,7 @@ export const GRAPHQL_ENDPOINT = IS_DEV
   : 'https://brios.brianlovin.com'
 
 console.log({
+  test: 'bar',
   endpiont: GRAPHQL_ENDPOINT,
   isPreview: IS_PREVIEW,
   isProd: IS_PROD,
