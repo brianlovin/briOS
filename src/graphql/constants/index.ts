@@ -12,7 +12,12 @@ export const GRAPHQL_ENDPOINT = VERCEL_PREVIEW
   ? process.env.GRAPHQL_ENDPOINT
   : '/api/graphql'
 
-console.log({ GRAPHQL_ENDPOINT })
+console.log({
+  endpiont: GRAPHQL_ENDPOINT,
+  isPreview: VERCEL_PREVIEW,
+  isProd: VERCEL_PROD,
+  env: process.env.GRAPHQL_ENDPOINT,
+})
 
 export const PAGINATION_AMOUNT = 24
 
