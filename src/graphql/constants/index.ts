@@ -12,13 +12,6 @@ export const GRAPHQL_ENDPOINT = IS_DEV
   ? `https://${process.env.VERCEL_URL}/api/graphql`
   : 'https://brios.brianlovin.com'
 
-console.log({
-  endpiont: GRAPHQL_ENDPOINT,
-  isPreview: IS_PREVIEW,
-  isProd: IS_PROD,
-  env: process.env.GRAPHQL_ENDPOINT,
-})
-
 export const PAGINATION_AMOUNT = 24
 
 export const RATE_LIMIT_REQUEST_AMOUNT = 1024
