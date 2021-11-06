@@ -2,19 +2,11 @@ import Image from 'next/image'
 import * as React from 'react'
 
 import { ListItem } from '~/components/ListDetail/ListItem'
+import { StackListItemFragment } from '~/graphql/types.generated'
 
 // TODO: Figure out how to get this dynamically
 interface Props {
-  stack: {
-    __typename: 'Stack'
-    id: string
-    createdAt: string
-    updatedAt?: string | null | undefined
-    name: string
-    description?: string | null | undefined
-    url: string
-    image?: string | null | undefined
-  }
+  stack: StackListItemFragment
   active: boolean
 }
 
