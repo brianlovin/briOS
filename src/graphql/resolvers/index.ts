@@ -61,7 +61,7 @@ export default {
     author: getQuestionAuthor,
     status: ({ _count: { comments } }) =>
       comments > 0 ? QuestionStatus.Answered : QuestionStatus.Pending,
-    viewerHasReacted: async ({ id }, _, { viewer }: Context) => {
+    viewerHasReacted: async ({ id }, _, { viewer, prisma }: Context) => {
       if (!viewer) return false
 
       const reactions = await prisma.question
@@ -128,7 +128,7 @@ export default {
     },
   },
   Bookmark: {
-    viewerHasReacted: async ({ id }, _, { viewer }: Context) => {
+    viewerHasReacted: async ({ id }, _, { viewer, prisma }: Context) => {
       if (!viewer) return false
 
       const reactions = await prisma.bookmark
@@ -152,7 +152,7 @@ export default {
     },
   },
   Post: {
-    viewerHasReacted: async ({ id }, _, { viewer }: Context) => {
+    viewerHasReacted: async ({ id }, _, { viewer, prisma }: Context) => {
       if (!viewer) return false
 
       const reactions = await prisma.post
@@ -176,7 +176,7 @@ export default {
     },
   },
   Stack: {
-    viewerHasReacted: async ({ id }, _, { viewer }: Context) => {
+    viewerHasReacted: async ({ id }, _, { viewer, prisma }: Context) => {
       if (!viewer) return false
 
       const reactions = await prisma.stack
