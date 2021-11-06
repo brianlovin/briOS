@@ -15,6 +15,7 @@ interface Props {
 }
 
 export function Comments({ refId, type }: Props) {
+  const [refIdState, setRefIdState] = React.useState(refId)
   const [initialCommentsCount, setInitialCommentsCount] = React.useState(null)
   const messagesEndRef: React.RefObject<HTMLDivElement> = React.useRef(null)
 
@@ -36,12 +37,21 @@ export function Comments({ refId, type }: Props) {
       if (!initialCommentsCount) {
         setInitialCommentsCount(data.comments.length)
       } else {
-        if (data.comments.length > initialCommentsCount) {
+        if (
+          refId === refIdState &&
+          data.comments.length > initialCommentsCount
+        ) {
           scrollToBottom()
         }
       }
     }
   }, [data])
+
+  React.useEffect(() => {
+    if (refId !== refIdState) {
+      setRefIdState(refId)
+    }
+  }, [refId])
 
   if (loading) {
     return (
@@ -66,8 +76,7 @@ export function Comments({ refId, type }: Props) {
       </div>
       <div className="flex flex-col flex-1 w-full max-w-3xl px-4 pt-8 pb-4 mx-auto space-y-3 md:px-8">
         <div className="flex flex-col space-y-6">
-          {comments &&
-            comments.length > 0 &&
+          {comments?.length > 0 &&
             comments.map((comment) => (
               <Comment
                 key={comment.id}
@@ -76,7 +85,7 @@ export function Comments({ refId, type }: Props) {
                 comment={comment}
               />
             ))}
-          {comments.length === 0 && (
+          {comments?.length === 0 && (
             <p className="block pt-12 pb-16 text-center text-quaternary">
               No comments yet...
             </p>
