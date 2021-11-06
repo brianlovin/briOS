@@ -12,6 +12,8 @@ export const GRAPHQL_ENDPOINT = VERCEL_PREVIEW
   ? process.env.GRAPHQL_ENDPOINT
   : '/api/graphql'
 
+console.log({ GRAPHQL_ENDPOINT })
+
 export const PAGINATION_AMOUNT = 24
 
 export const RATE_LIMIT_REQUEST_AMOUNT = 1024
