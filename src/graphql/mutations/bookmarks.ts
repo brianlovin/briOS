@@ -1,14 +1,14 @@
 import { gql } from '@apollo/client'
 
-import { BookmarkInfoWithTagsFragment } from '~/graphql/fragments/bookmark'
+import { BookmarkDetailFragment } from '../fragments/bookmark'
 
 export const EDIT_BOOKMARK = gql`
   mutation editBookmark($id: ID!, $data: EditBookmarkInput!) {
     editBookmark(id: $id, data: $data) {
-      ...BookmarkInfoWithTags
+      ...BookmarkDetail
     }
   }
-  ${BookmarkInfoWithTagsFragment}
+  ${BookmarkDetailFragment}
 `
 
 export const DELETE_BOOKMARK = gql`
@@ -20,8 +20,8 @@ export const DELETE_BOOKMARK = gql`
 export const ADD_BOOKMARK = gql`
   mutation addBookmark($data: AddBookmarkInput!) {
     addBookmark(data: $data) {
-      ...BookmarkInfoWithTags
+      ...BookmarkDetail
     }
   }
-  ${BookmarkInfoWithTagsFragment}
+  ${BookmarkDetailFragment}
 `

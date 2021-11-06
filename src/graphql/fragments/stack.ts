@@ -1,28 +1,41 @@
 import { gql } from '@apollo/client'
 
-export const StackInfoFragment = gql`
-  fragment StackInfo on Stack {
+import { UserInfoFragment } from './user'
+
+export const StackCoreFragment = gql`
+  fragment StackCore on Stack {
     __typename
     id
-    createdAt
-    updatedAt
     name
-    description
-    url
     image
-    reactionCount
-    viewerHasReacted
+    url
   }
 `
 
-export const StackInfoWithTagsFragment = gql`
-  fragment StackInfoWithTags on Stack {
-    ...StackInfo
+export const StackListItemFragment = gql`
+  fragment StackListItem on Stack {
+    ...StackCore
+  }
+  ${StackCoreFragment}
+`
+
+export const StackDetailFragment = gql`
+  fragment StackDetail on Stack {
+    ...StackCore
+    createdAt
+    description
+    reactionCount
+    viewerHasReacted
+    usedByViewer
+    usedBy {
+      ...UserInfo
+    }
     tags {
       name
     }
   }
-  ${StackInfoFragment}
+  ${StackCoreFragment}
+  ${UserInfoFragment}
 `
 
 export const StacksConnectionFragment = gql`
@@ -35,9 +48,9 @@ export const StacksConnectionFragment = gql`
     edges {
       cursor
       node {
-        ...StackInfo
+        ...StackListItem
       }
     }
   }
-  ${StackInfoFragment}
+  ${StackListItemFragment}
 `

@@ -10,7 +10,7 @@ interface Props {
 }
 
 export const PostListItem = React.memo<Props>(({ post, active }) => {
-  const publishedAt = timestampToCleanTime({ timestamp: post.createdAt })
+  const publishedAt = timestampToCleanTime({ timestamp: post.publishedAt })
   return (
     <ListItem
       key={post.id}

@@ -11,7 +11,7 @@ export function AppDissectionDetail({ post }) {
   const scrollContainerRef = React.useRef(null)
   const titleRef = React.useRef(null)
 
-  const date = timestampToCleanTime({ timestamp: post.createdAt })
+  const date = timestampToCleanTime({ timestamp: post.publishedAt })
 
   return (
     <Detail.Container data-cy="app-detail" ref={scrollContainerRef}>

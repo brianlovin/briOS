@@ -1,14 +1,14 @@
 import { gql } from '@apollo/client'
 
-import { QuestionInfoFragment } from '~/graphql/fragments/question'
+import { QuestionDetailFragment } from '../fragments/question'
 
 export const EDIT_QUESTION = gql`
   mutation editQuestion($id: ID!, $data: EditQuestionInput!) {
     editQuestion(id: $id, data: $data) {
-      ...QuestionInfo
+      ...QuestionDetail
     }
   }
-  ${QuestionInfoFragment}
+  ${QuestionDetailFragment}
 `
 
 export const DELETE_QUESTION = gql`
@@ -20,8 +20,8 @@ export const DELETE_QUESTION = gql`
 export const ADD_QUESTION = gql`
   mutation addQuestion($data: AddQuestionInput!) {
     addQuestion(data: $data) {
-      ...QuestionInfo
+      ...QuestionDetail
     }
   }
-  ${QuestionInfoFragment}
+  ${QuestionDetailFragment}
 `

@@ -139,6 +139,8 @@ export function EditStackForm({ closeModal, stack }) {
           url: state.url,
           image: state.image,
           tags: state.tag ? [{ name: state.tag }] : [],
+          usedBy: [],
+          usedByViewer: false,
         },
       },
       onError({ message }) {

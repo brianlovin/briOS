@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
-export const BookmarkInfoFragment = gql`
-  fragment BookmarkInfo on Bookmark {
+export const BookmarkCoreFragment = gql`
+  fragment BookmarkCore on Bookmark {
     __typename
     id
     url
@@ -9,19 +9,26 @@ export const BookmarkInfoFragment = gql`
     title
     description
     faviconUrl
-    reactionCount
-    viewerHasReacted
   }
 `
 
-export const BookmarkInfoWithTagsFragment = gql`
-  fragment BookmarkInfoWithTags on Bookmark {
-    ...BookmarkInfo
+export const BookmarkListItemFragment = gql`
+  fragment BookmarkListItem on Bookmark {
+    ...BookmarkCore
+  }
+  ${BookmarkCoreFragment}
+`
+
+export const BookmarkDetailFragment = gql`
+  fragment BookmarkDetail on Bookmark {
+    ...BookmarkCore
+    reactionCount
+    viewerHasReacted
     tags {
       name
     }
   }
-  ${BookmarkInfoFragment}
+  ${BookmarkCoreFragment}
 `
 
 export const BookmarksConnectionFragment = gql`
@@ -34,9 +41,9 @@ export const BookmarksConnectionFragment = gql`
     edges {
       cursor
       node {
-        ...BookmarkInfoWithTags
+        ...BookmarkListItem
       }
     }
   }
-  ${BookmarkInfoWithTagsFragment}
+  ${BookmarkListItemFragment}
 `

@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 import {
-  QuestionInfoFragment,
+  QuestionDetailFragment,
   QuestionsConnectionFragment,
 } from '~/graphql/fragments/question'
 
@@ -17,10 +17,8 @@ export const GET_QUESTIONS = gql`
 export const GET_QUESTION = gql`
   query getQuestion($id: ID!) {
     question(id: $id) {
-      ...QuestionInfo
-      viewerCanEdit
-      viewerCanComment
+      ...QuestionDetail
     }
   }
-  ${QuestionInfoFragment}
+  ${QuestionDetailFragment}
 `
