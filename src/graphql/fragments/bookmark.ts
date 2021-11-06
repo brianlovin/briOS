@@ -9,6 +9,8 @@ export const BookmarkInfoFragment = gql`
     title
     description
     faviconUrl
+    reactionCount
+    viewerHasReacted
   }
 `
 

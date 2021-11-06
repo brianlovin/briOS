@@ -10,6 +10,8 @@ export const StackInfoFragment = gql`
     description
     url
     image
+    reactionCount
+    viewerHasReacted
   }
 `
 

@@ -71,6 +71,7 @@ export function StackDetail({ id }) {
               <Link href={stack.url}>
                 <a className="inline-block">
                   <Image
+                    priority
                     src={stack.image}
                     width={80}
                     height={80}

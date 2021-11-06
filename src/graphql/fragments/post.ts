@@ -12,6 +12,8 @@ export const PostInfoFragment = gql`
     slug
     excerpt
     featureImage
+    reactionCount
+    viewerHasReacted
     author {
       ...UserInfo
     }

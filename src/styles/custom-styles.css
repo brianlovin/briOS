@@ -19,6 +19,8 @@
     @apply w-full px-4 py-2 border border-gray-200 rounded outline-none focus:outline-none focus:border-gray-1000 text-primary dark:border-gray-800 dark:focus:border-gray-600 bg-gray-1000 dark:bg-white bg-opacity-5 hover:bg-opacity-10 focus:ring-0;
   }
 
+  button:active,
+  a:active,
   button:focus,
   a:focus {
     @apply outline-none ring-2 ring-offset-2 ring-offset-white dark:ring-offset-black ring-blue-500 dark:ring-blue-500;

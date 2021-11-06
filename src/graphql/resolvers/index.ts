@@ -16,6 +16,22 @@ export default {
   Date: dateScalar,
   Query,
   Mutation,
+  Reactable: {
+    __resolveType(obj) {
+      switch (obj.reactableType) {
+        case 'question':
+          return 'Question'
+        case 'stack':
+          return 'Stack'
+        case 'post':
+          return 'Post'
+        case 'bookmark':
+          return 'Bookmark'
+        default:
+          return null
+      }
+    },
+  },
   Comment: {
     author: getCommentAuthor,
     viewerCanEdit: ({ userId }, _, { viewer }: Context) => {
@@ -45,6 +61,28 @@ export default {
     author: getQuestionAuthor,
     status: ({ _count: { comments } }) =>
       comments > 0 ? QuestionStatus.Answered : QuestionStatus.Pending,
+    viewerHasReacted: async ({ id }, _, { viewer }: Context) => {
+      if (!viewer) return false
+
+      const reactions = await prisma.question
+        .findUnique({
+          where: { id },
+        })
+        .reactions()
+
+      return reactions.some(({ userId }) => userId === viewer.id)
+    },
+    reactionCount: async ({ id, _count }) => {
+      if (_count?.reactions) return _count.reactions
+
+      const reactions = await prisma.question
+        .findUnique({
+          where: { id },
+        })
+        .reactions()
+
+      return reactions.length
+    },
   },
   User: {
     isViewer: ({ id }, _, { viewer }: Context) => {
@@ -87,6 +125,80 @@ export default {
           subscribed: !!hn,
         },
       ]
+    },
+  },
+  Bookmark: {
+    viewerHasReacted: async ({ id }, _, { viewer }: Context) => {
+      if (!viewer) return false
+
+      const reactions = await prisma.bookmark
+        .findUnique({
+          where: { id },
+        })
+        .reactions()
+
+      return reactions.some(({ userId }) => userId === viewer.id)
+    },
+    reactionCount: async ({ id, _count }) => {
+      if (_count?.reactions) return _count.reactions
+
+      const reactions = await prisma.bookmark
+        .findUnique({
+          where: { id },
+        })
+        .reactions()
+
+      return reactions.length
+    },
+  },
+  Post: {
+    viewerHasReacted: async ({ id }, _, { viewer }: Context) => {
+      if (!viewer) return false
+
+      const reactions = await prisma.post
+        .findUnique({
+          where: { id },
+        })
+        .reactions()
+
+      return reactions.length
+
+      return reactions.some(({ userId }) => userId === viewer.id)
+    },
+    reactionCount: async ({ id, _count }) => {
+      if (_count?.reactions) return _count.reactions
+
+      const reactions = await prisma.post
+        .findUnique({
+          where: { id },
+        })
+        .reactions()
+
+      return reactions.length
+    },
+  },
+  Stack: {
+    viewerHasReacted: async ({ id }, _, { viewer }: Context) => {
+      if (!viewer) return false
+
+      const reactions = await prisma.stack
+        .findUnique({
+          where: { id },
+        })
+        .reactions()
+
+      return reactions.some(({ userId }) => userId === viewer.id)
+    },
+    reactionCount: async ({ id, _count }) => {
+      if (_count?.reactions) return _count.reactions
+
+      const reactions = await prisma.stack
+        .findUnique({
+          where: { id },
+        })
+        .reactions()
+
+      return reactions.length
     },
   },
 }

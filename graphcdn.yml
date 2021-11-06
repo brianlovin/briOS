@@ -23,7 +23,6 @@ keyFields:
   types:
     Tag:
       - name
-    Repo: []
     User:
       - id
       - username

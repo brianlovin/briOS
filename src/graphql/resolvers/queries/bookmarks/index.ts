@@ -54,7 +54,12 @@ export async function getBookmarks(
       cursor,
       where,
       orderBy: { createdAt: 'desc' },
-      include: { tags: true },
+      include: {
+        tags: true,
+        _count: {
+          select: { reactions: true },
+        },
+      },
     })
 
     // If we overfetched, then we know there are more results
@@ -93,7 +98,12 @@ export async function getBookmark(_, { id }, ctx: Context) {
   try {
     return await prisma.bookmark.findUnique({
       where: { id },
-      include: { tags: true },
+      include: {
+        tags: true,
+        _count: {
+          select: { reactions: true },
+        },
+      },
     })
   } catch (e) {
     return null

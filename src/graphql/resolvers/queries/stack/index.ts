@@ -33,6 +33,13 @@ export async function getStacks(
       skip,
       cursor,
       orderBy: { name: 'asc' },
+      include: {
+        _count: {
+          select: {
+            reactions: true,
+          },
+        },
+      },
     })
 
     // If we overfetched, then we know there are more results
@@ -78,6 +85,11 @@ export async function getStack(
       include: {
         users: true,
         tags: true,
+        _count: {
+          select: {
+            reactions: true,
+          },
+        },
       },
     })
 

@@ -14,6 +14,8 @@ export default gql`
     text: String
     excerpt: String
     featureImage: String
+    reactionCount: Int
+    viewerHasReacted: Boolean
   }
 
   type Bookmark {
@@ -27,17 +29,12 @@ export default gql`
     faviconUrl: String
     description: String
     tags: [Tag]!
-  }
-
-  type Repo {
-    org: String
-    name: String
-    description: String
-    stars: Int
+    reactionCount: Int
+    viewerHasReacted: Boolean
   }
 
   type Question {
-    id: String!
+    id: ID!
     createdAt: Date!
     updatedAt: Date
     author: User
@@ -46,9 +43,18 @@ export default gql`
     status: QuestionStatus
     viewerCanEdit: Boolean
     viewerCanComment: Boolean
+    reactionCount: Int
+    viewerHasReacted: Boolean
   }
 
   enum CommentType {
+    BOOKMARK
+    QUESTION
+    STACK
+    POST
+  }
+
+  enum ReactionType {
     BOOKMARK
     QUESTION
     STACK
@@ -70,6 +76,8 @@ export default gql`
     tags: [Tag]!
     usedBy: [User]!
     usedByViewer: Boolean
+    reactionCount: Int
+    viewerHasReacted: Boolean
   }
 
   enum UserRole {
@@ -112,7 +120,7 @@ export default gql`
   }
 
   type HackerNewsComment {
-    id: String
+    id: ID
     user: String
     comments_count: String
     comments: [HackerNewsComment]
@@ -123,7 +131,7 @@ export default gql`
   }
 
   type HackerNewsPost {
-    id: String
+    id: ID
     title: String
     user: String
     time: Int
@@ -197,7 +205,7 @@ export default gql`
     stack(id: ID!): Stack
     stacks(first: Int, after: String): StacksConnection!
     comment(id: ID!): Comment
-    comments(refId: String, type: CommentType): [Comment]!
+    comments(refId: ID!, type: CommentType!): [Comment]!
     posts(first: Int, filter: String, order: String): [Post]!
     post(slug: String!): Post
     question(id: ID!): Question
@@ -274,6 +282,8 @@ export default gql`
     excerpt: String
   }
 
+  union Reactable = Bookmark | Question | Post | Stack
+
   type Mutation {
     addBookmark(data: AddBookmarkInput!): Bookmark
     editBookmark(id: ID!, data: EditBookmarkInput!): Bookmark
@@ -285,7 +295,7 @@ export default gql`
     addQuestion(data: AddQuestionInput!): Question
     editQuestion(id: ID!, data: EditQuestionInput!): Question
     deleteQuestion(id: ID!): Boolean
-    addComment(refId: String!, type: CommentType!, text: String!): Comment
+    addComment(refId: ID!, type: CommentType!, text: String!): Comment
     editComment(id: ID!, text: String): Comment
     deleteComment(id: ID!): Boolean
     editUser(data: EditUserInput): User
@@ -294,5 +304,6 @@ export default gql`
     addPost(data: AddPostInput!): Post
     editPost(id: ID!, data: EditPostInput!): Post
     deletePost(id: ID!): Boolean
+    toggleReaction(refId: ID!, type: ReactionType!): Reactable
   }
 `
