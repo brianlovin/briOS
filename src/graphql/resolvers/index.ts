@@ -72,7 +72,7 @@ export default {
 
       return reactions.some(({ userId }) => userId === viewer.id)
     },
-    reactionCount: async ({ id, _count }) => {
+    reactionCount: async ({ id, _count }, _, { prisma }: Context) => {
       if (_count?.reactions) return _count.reactions
 
       const reactions = await prisma.question
@@ -139,7 +139,7 @@ export default {
 
       return reactions.some(({ userId }) => userId === viewer.id)
     },
-    reactionCount: async ({ id, _count }) => {
+    reactionCount: async ({ id, _count }, _, { prisma }: Context) => {
       if (_count?.reactions) return _count.reactions
 
       const reactions = await prisma.bookmark
@@ -161,11 +161,9 @@ export default {
         })
         .reactions()
 
-      return reactions.length
-
       return reactions.some(({ userId }) => userId === viewer.id)
     },
-    reactionCount: async ({ id, _count }) => {
+    reactionCount: async ({ id, _count }, _, { prisma }: Context) => {
       if (_count?.reactions) return _count.reactions
 
       const reactions = await prisma.post
@@ -189,7 +187,7 @@ export default {
 
       return reactions.some(({ userId }) => userId === viewer.id)
     },
-    reactionCount: async ({ id, _count }) => {
+    reactionCount: async ({ id, _count }, _, { prisma }: Context) => {
       if (_count?.reactions) return _count.reactions
 
       const reactions = await prisma.stack
