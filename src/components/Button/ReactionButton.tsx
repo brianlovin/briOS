@@ -7,26 +7,38 @@ import { HeartFillIcon, HeartIcon } from '../Icon'
 import { SignInDialog } from '../SignInDialog'
 
 interface Props {
+  id: string // used to reset the button state as the user switches between pages
   hasReacted: boolean
   count: number
   onClick: () => void
   loading: boolean
 }
 
-export function ReactionButton({ onClick, hasReacted, count, loading }: Props) {
+export function ReactionButton(props: Props) {
+  const { id, onClick, hasReacted, count, loading } = props
+
   const { data } = useViewerQuery()
   const [hasReactedState, setHasReactedState] = React.useState(hasReacted)
-  const currCount = count
-  const nextCount = hasReactedState ? count - 1 : count + 1
+  let currCount = count
+  let nextCount = hasReactedState ? count - 1 : count + 1
   const [currTranslate, setCurrTranslate] = React.useState(
     hasReactedState ? '-translate-y-4' : 'translate-y-0'
   )
   const [nextTranslate, setNextTranslate] = React.useState(
     hasReactedState ? 'translate-y-0' : '-translate-y-4'
   )
-  const currOpacity = 'opacity-100'
-  const nextOpacity = 'opacity-0'
+  let currOpacity = 'opacity-100'
+  let nextOpacity = 'opacity-0'
   const [ping, setPing] = React.useState(false)
+
+  // reset all the states as people navigate between different reactable pages
+  React.useEffect(() => {
+    setHasReactedState(hasReacted)
+    currCount = count
+    nextCount = hasReacted ? count - 1 : count + 1
+    setCurrTranslate(hasReacted ? '-translate-y-4' : 'translate-y-0')
+    setNextTranslate(hasReacted ? 'translate-y-0' : '-translate-y-4')
+  }, [id, hasReacted])
 
   if (!data?.viewer) {
     return (

@@ -46,6 +46,7 @@ function getReactionButton(post) {
 
   return (
     <ReactionButton
+      id={post.id}
       loading={loading}
       count={post.reactionCount}
       hasReacted={post.viewerHasReacted}

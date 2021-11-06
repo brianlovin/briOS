@@ -49,6 +49,7 @@ function getReactionButton(question) {
 
   return (
     <ReactionButton
+      id={question.id}
       loading={loading}
       count={question.reactionCount}
       hasReacted={question.viewerHasReacted}

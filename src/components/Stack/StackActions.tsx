@@ -58,6 +58,7 @@ function getReactionButton(stack) {
 
   return (
     <ReactionButton
+      id={stack.id}
       loading={loading}
       count={stack.reactionCount}
       hasReacted={stack.viewerHasReacted}

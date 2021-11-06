@@ -51,6 +51,7 @@ function getReactionButton(bookmark) {
 
   return (
     <ReactionButton
+      id={bookmark.id}
       loading={loading}
       count={bookmark.reactionCount}
       hasReacted={bookmark.viewerHasReacted}
