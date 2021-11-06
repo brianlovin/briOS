@@ -10,7 +10,7 @@ export const GRAPHQL_ENDPOINT = IS_DEV
   ? '/api/graphql'
   : IS_PREVIEW
   ? `https://${process.env.VERCEL_URL}/api/graphql`
-  : process.env.GRAPHQL_ENDPOINT
+  : 'https://brios.brianlovin.com'
 
 console.log({
   endpiont: GRAPHQL_ENDPOINT,
