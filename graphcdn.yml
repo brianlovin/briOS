@@ -1,8 +1,21 @@
+# schema: 'http://localhost:3000/api/graphql'
+scopes:
+  AUTHENTICATED: 'cookie:appSession'
 rootTypeNames:
   query: Query
   mutation: Mutation
-originUrl: 'https://brianlovin.com/api/graphql'
-# schema: 'http://localhost:3000/api/graphql'
+keyFields:
+  types:
+    Tag:
+      - name
+    User:
+      - id
+      - username
+    PageInfo: []
+    StackEdge: []
+    BookmarkEdge: []
+    QuestionEdge: []
+    EmailSubscription: []
 rules:
   - types:
       Query:
@@ -18,17 +31,13 @@ rules:
         - questions
         - hackerNewsPost
         - hackerNewsPosts
-    maxAge: 900
-    swr: 900
-keyFields:
-  types:
-    Tag:
-      - name
-    User:
-      - id
-      - username
-    PageInfo: []
-    StackEdge: []
-    BookmarkEdge: []
-    QuestionEdge: []
-    EmailSubscription: []
+    maxAge: 43200
+    swr: 43200
+    scope: AUTHENTICATED
+  - types:
+      Query:
+        - viewer
+    maxAge: 2592000
+    swr: 2592000
+    scope: AUTHENTICATED
+originUrl: 'https://brianlovin.com/api/graphql'
