@@ -9,7 +9,7 @@ export const CLIENT_URL = IS_PROD ? baseUrl : 'http://localhost:3000'
 export const GRAPHQL_ENDPOINT = VERCEL_PREVIEW
   ? `https://${process.env.VERCEL_URL}/api/graphql`
   : VERCEL_PROD
-  ? 'https://brianlovin.com/api/graphql'
+  ? process.env.GRAPHQL_ENDPOINT
   : '/api/graphql'
 
 export const PAGINATION_AMOUNT = 24
