@@ -29,7 +29,7 @@ function createIsomorphLink({ context }) {
   } else {
     return new HttpLink({
       uri: GRAPHQL_ENDPOINT || '/api/graphql',
-      credentials: 'same-origin',
+      credentials: 'include',
     })
   }
 }
