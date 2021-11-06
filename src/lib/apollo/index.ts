@@ -19,6 +19,8 @@ import {
   IS_PROD,
 } from '~/graphql/constants'
 
+console.log({ isPreview: IS_PREVIEW, isProd: IS_PROD })
+
 const GRAPHQL_ENDPOINT = IS_PREVIEW
   ? `https://${process.env.VERCEL_URL}/api/graphql`
   : IS_PROD
