@@ -1,15 +1,14 @@
 import { gql } from '@apollo/client'
 
-import { PostInfoFragment } from '~/graphql/fragments/post'
+import { PostDetailFragment } from '../fragments/post'
 
 export const EDIT_POST = gql`
   mutation editPost($id: ID!, $data: EditPostInput!) {
     editPost(id: $id, data: $data) {
-      ...PostInfo
-      text
+      ...PostDetail
     }
   }
-  ${PostInfoFragment}
+  ${PostDetailFragment}
 `
 
 export const DELETE_POST = gql`
@@ -21,9 +20,8 @@ export const DELETE_POST = gql`
 export const ADD_POST = gql`
   mutation addPost($data: AddPostInput!) {
     addPost(data: $data) {
-      ...PostInfo
-      text
+      ...PostDetail
     }
   }
-  ${PostInfoFragment}
+  ${PostDetailFragment}
 `

@@ -198,5 +198,32 @@ export default {
 
       return reactions.length
     },
+    usedBy: async ({ id, users }, _, ctx: Context) => {
+      const { prisma } = ctx
+      if (users) return users
+
+      const data = await prisma.stack.findUnique({
+        where: { id },
+        include: {
+          users: true,
+        },
+      })
+
+      return data.users || []
+    },
+    usedByViewer: async ({ id, users }, _, ctx: Context) => {
+      const { prisma, viewer } = ctx
+      if (!viewer?.id) return false
+      if (users) return users.some((s) => s.id === viewer.id)
+
+      const data = await prisma.stack.findUnique({
+        where: { id },
+        include: {
+          users: true,
+        },
+      })
+
+      return data.users.some((s) => s.id === viewer.id)
+    },
   },
 }

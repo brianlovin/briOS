@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 import {
-  BookmarkInfoWithTagsFragment,
+  BookmarkDetailFragment,
   BookmarksConnectionFragment,
 } from '../fragments/bookmark'
 
@@ -17,8 +17,8 @@ export const GET_BOOKMARKS = gql`
 export const GET_BOOKMARK = gql`
   query getBookmark($id: ID!) {
     bookmark(id: $id) {
-      ...BookmarkInfoWithTags
+      ...BookmarkDetail
     }
   }
-  ${BookmarkInfoWithTagsFragment}
+  ${BookmarkDetailFragment}
 `

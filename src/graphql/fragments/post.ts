@@ -1,22 +1,30 @@
 import { gql } from '@apollo/client'
 
-import { UserInfoFragment } from './user'
-
-export const PostInfoFragment = gql`
-  fragment PostInfo on Post {
+export const PostCoreFragment = gql`
+  fragment PostCore on Post {
+    __typename
     id
-    createdAt
-    updatedAt
     publishedAt
     title
     slug
+  }
+`
+
+export const PostListItemFragment = gql`
+  fragment PostListItem on Post {
+    ...PostCore
+  }
+  ${PostCoreFragment}
+`
+
+export const PostDetailFragment = gql`
+  fragment PostDetail on Post {
+    ...PostCore
+    text
     excerpt
     featureImage
     reactionCount
     viewerHasReacted
-    author {
-      ...UserInfo
-    }
   }
-  ${UserInfoFragment}
+  ${PostCoreFragment}
 `

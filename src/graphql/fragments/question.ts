@@ -2,20 +2,37 @@ import { gql } from '@apollo/client'
 
 import { UserInfoFragment } from './user'
 
-export const QuestionInfoFragment = gql`
-  fragment QuestionInfo on Question {
+export const QuestionCoreFragment = gql`
+  fragment QuestionCore on Question {
+    __typename
     id
-    createdAt
-    updatedAt
     title
-    description
-    status
-    reactionCount
-    viewerHasReacted
+    createdAt
     author {
       ...UserInfo
     }
   }
+  ${UserInfoFragment}
+`
+
+export const QuestionListItemFragment = gql`
+  fragment QuestionListItem on Question {
+    ...QuestionCore
+  }
+  ${QuestionCoreFragment}
+`
+
+export const QuestionDetailFragment = gql`
+  fragment QuestionDetail on Question {
+    ...QuestionCore
+    description
+    status
+    viewerCanEdit
+    viewerCanComment
+    reactionCount
+    viewerHasReacted
+  }
+  ${QuestionCoreFragment}
   ${UserInfoFragment}
 `
 
@@ -29,9 +46,9 @@ export const QuestionsConnectionFragment = gql`
     edges {
       cursor
       node {
-        ...QuestionInfo
+        ...QuestionListItem
       }
     }
   }
-  ${QuestionInfoFragment}
+  ${QuestionListItemFragment}
 `

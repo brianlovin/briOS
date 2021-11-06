@@ -77,10 +77,10 @@ export async function getStack(
   { id }: GetStackQueryVariables,
   ctx: Context
 ) {
-  const { prisma, viewer } = ctx
+  const { prisma } = ctx
 
-  try {
-    const data = await prisma.stack.findUnique({
+  return await prisma.stack
+    .findUnique({
       where: { id },
       include: {
         users: true,
@@ -92,17 +92,7 @@ export async function getStack(
         },
       },
     })
-
-    const usedBy = data.users
-    const usedByViewer =
-      viewer?.id && data.users.some((s) => s.id === viewer.id)
-
-    return {
-      ...data,
-      usedBy,
-      usedByViewer,
-    }
-  } catch (e) {
-    return null
-  }
+    .catch((e) => {
+      return null
+    })
 }

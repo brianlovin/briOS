@@ -3,10 +3,10 @@ import { Link } from 'react-feather'
 import ReactVisibilitySensor from 'react-visibility-sensor'
 
 import { ListItem } from '~/components/ListDetail/ListItem'
-import { BookmarkInfoFragment } from '~/graphql/types.generated'
+import { BookmarkListItemFragment } from '~/graphql/types.generated'
 
 interface Props {
-  bookmark: BookmarkInfoFragment
+  bookmark: BookmarkListItemFragment
   active: boolean
 }
 

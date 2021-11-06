@@ -30,9 +30,9 @@ export function QuestionDetail({ id }) {
   }
 
   const { question } = data
-  const updatedAt = timestampToCleanTime({
+  const createdAt = timestampToCleanTime({
     month: 'short',
-    timestamp: data?.question.updatedAt,
+    timestamp: data?.question.createdAt,
   })
 
   return (
@@ -93,9 +93,9 @@ export function QuestionDetail({ id }) {
                 <p className="leading-snug text-quaternary">·</p>
                 <p
                   className="leading-snug text-quaternary"
-                  title={updatedAt.raw}
+                  title={createdAt.raw}
                 >
-                  {updatedAt.formatted}
+                  {createdAt.formatted}
                 </p>
               </div>
             </div>
