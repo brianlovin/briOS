@@ -38,7 +38,7 @@ export function AppDissectionDetail({ post }: Props) {
               width={80}
               height={80}
               layout="fixed"
-              alt={`${post.name} icon`}
+              alt={`${post.title} icon`}
               className={'rounded-2xl'}
             />
             <div>
