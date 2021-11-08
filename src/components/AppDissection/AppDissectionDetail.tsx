@@ -5,13 +5,18 @@ import { DesignDetailMedia } from '~/components/AppDissection/DetailMedia'
 import { Detail } from '~/components/ListDetail/Detail'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { MarkdownRenderer } from '~/components/MarkdownRenderer'
+import { DesignDetailsPost } from '~/data/appDissections'
 import { timestampToCleanTime } from '~/lib/transformers'
 
-export function AppDissectionDetail({ post }) {
+interface Props {
+  post: DesignDetailsPost
+}
+
+export function AppDissectionDetail({ post }: Props) {
   const scrollContainerRef = React.useRef(null)
   const titleRef = React.useRef(null)
 
-  const date = timestampToCleanTime({ timestamp: post.publishedAt })
+  const date = timestampToCleanTime({ timestamp: post.createdAt })
 
   return (
     <Detail.Container data-cy="app-detail" ref={scrollContainerRef}>
@@ -33,7 +38,7 @@ export function AppDissectionDetail({ post }) {
               width={80}
               height={80}
               layout="fixed"
-              alt={`${post.name} icon`}
+              alt={`${post.title} icon`}
               className={'rounded-2xl'}
             />
             <div>
