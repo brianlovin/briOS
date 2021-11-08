@@ -1,5 +1,5 @@
 type Props = {
-  timestamp?: number
+  timestamp?: number | string
   locale?: string
   year?: 'numeric' | '2-digit'
   month?: 'numeric' | '2-digit' | 'long' | 'short' | 'narrow'

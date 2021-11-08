@@ -5,9 +5,14 @@ import { DesignDetailMedia } from '~/components/AppDissection/DetailMedia'
 import { Detail } from '~/components/ListDetail/Detail'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { MarkdownRenderer } from '~/components/MarkdownRenderer'
+import { DesignDetailsPost } from '~/data/appDissections'
 import { timestampToCleanTime } from '~/lib/transformers'
 
-export function AppDissectionDetail({ post }) {
+interface Props {
+  post: DesignDetailsPost
+}
+
+export function AppDissectionDetail({ post }: Props) {
   const scrollContainerRef = React.useRef(null)
   const titleRef = React.useRef(null)
 
