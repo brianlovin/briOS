@@ -75,7 +75,7 @@ export function Comments({ refId, type }: Props) {
         <MessageCircle />
       </div>
       <div className="flex flex-col flex-1 w-full max-w-3xl px-4 pt-8 pb-4 mx-auto space-y-3 md:px-8">
-        <div className="flex flex-col space-y-6">
+        <div className="flex flex-col space-y-3">
           {comments?.length > 0 &&
             comments.map((comment) => (
               <Comment
