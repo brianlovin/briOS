@@ -1,11 +1,21 @@
 import { Context } from '~/graphql/context'
-import { GetPostQueryVariables, UserRole } from '~/graphql/types.generated'
+import {
+  GetPostQueryVariables,
+  GetPostsQueryVariables,
+  UserRole,
+} from '~/graphql/types.generated'
 
-export async function getPosts(_, __, ctx: Context) {
-  const { prisma } = ctx
+export async function getPosts(_, args: GetPostsQueryVariables, ctx: Context) {
+  const { filter } = args
+  const { prisma, viewer } = ctx
+  const published = filter?.published
+  const isAdmin = viewer?.role === UserRole.Admin
+
   return await prisma.post.findMany({
-    orderBy: { publishedAt: 'desc' },
-    where: { publishedAt: { not: null } },
+    orderBy: published ? { publishedAt: 'desc' } : { createdAt: 'desc' },
+    where: {
+      publishedAt: !published && isAdmin ? { equals: null } : { not: null },
+    },
     include: {
       _count: {
         select: {
