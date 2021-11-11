@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { withProviders } from '~/components/Providers/withProviders'
-import { PostEditor } from '~/components/Writing/PostEditor'
+import { PostEditor } from '~/components/Writing/Editor/PostEditor'
 import { getContext } from '~/graphql/context'
 import { GET_POST } from '~/graphql/queries/posts'
 import { addApolloState, initApolloClient } from '~/lib/apollo'
