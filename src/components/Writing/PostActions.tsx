@@ -1,12 +1,14 @@
 import * as React from 'react'
 
+import Button from '~/components/Button'
+import { ReactionButton } from '~/components/Button/ReactionButton'
 import { GET_POST } from '~/graphql/queries/posts'
 import {
   ReactionType,
+  UserRole,
   useToggleReactionMutation,
+  useViewerQuery,
 } from '~/graphql/types.generated'
-
-import { ReactionButton } from '../Button/ReactionButton'
 
 function getReactionButton(post) {
   const [toggleReaction, { loading }] = useToggleReactionMutation()
@@ -55,8 +57,24 @@ function getReactionButton(post) {
   )
 }
 
+function getEditButton(post) {
+  const { data } = useViewerQuery()
+  const isAdmin = data?.viewer?.role === UserRole.Admin
+
+  if (!isAdmin) return null
+
+  return (
+    <Button href="/writing/[slug]/edit" as={`/writing/${post.slug}/edit`}>
+      Edit
+    </Button>
+  )
+}
+
 export function PostActions({ post }) {
   return (
-    <div className="flex items-center space-x-2">{getReactionButton(post)}</div>
+    <div className="flex items-center space-x-2">
+      {getReactionButton(post)}
+      {getEditButton(post)}
+    </div>
   )
 }

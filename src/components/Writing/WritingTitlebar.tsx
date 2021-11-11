@@ -6,6 +6,8 @@ import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { UserRole, useViewerQuery } from '~/graphql/types.generated'
 
 import { DialogComponent } from '../Dialog'
+import SegmentedControl from '../SegmentedController'
+import { WritingContext } from './PostsList'
 import { WritingSubscriptionForm } from './SubscriptionForm'
 
 export function WritingTitlebar({ scrollContainerRef }) {
@@ -52,11 +54,33 @@ export function WritingTitlebar({ scrollContainerRef }) {
     )
   }
 
+  function getChildren() {
+    const { data } = useViewerQuery()
+    const { setFilter, filter } = React.useContext(WritingContext)
+    if (data?.viewer?.role === UserRole.Admin) {
+      return (
+        <div className="pt-2 pb-1">
+          <SegmentedControl
+            onSetActiveItem={setFilter}
+            active={filter}
+            items={[
+              { id: 'published', label: 'Published' },
+              { id: 'draft', label: 'Drafts' },
+            ]}
+          />
+        </div>
+      )
+    }
+    return null
+  }
+
   return (
     <TitleBar
       trailingAccessory={trailingAccessory()}
       title="Writing"
       scrollContainerRef={scrollContainerRef}
-    />
+    >
+      {getChildren()}
+    </TitleBar>
   )
 }
