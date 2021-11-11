@@ -8,6 +8,7 @@ import { PostsList } from '~/components/Writing/PostsList'
 import { getContext } from '~/graphql/context'
 import { GET_COMMENTS } from '~/graphql/queries/comments'
 import { GET_POST, GET_POSTS } from '~/graphql/queries/posts'
+import { GET_VIEWER_QUERY } from '~/graphql/queries/viewer'
 import { CommentType, useGetPostQuery } from '~/graphql/types.generated'
 import { addApolloState, initApolloClient } from '~/lib/apollo'
 
@@ -29,6 +30,10 @@ export async function getServerSideProps({ params: { slug }, req, res }) {
   await Promise.all([
     apolloClient.query({
       query: GET_POSTS,
+    }),
+
+    apolloClient.query({
+      query: GET_VIEWER_QUERY,
     }),
 
     data?.post?.id &&
