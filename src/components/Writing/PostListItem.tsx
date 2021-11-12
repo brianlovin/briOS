@@ -18,7 +18,7 @@ export const PostListItem = React.memo<Props>(({ post, active }) => {
       as={`/writing/${post.slug}`}
       title={post.title}
       description={post.excerpt}
-      byline={publishedAt.formatted}
+      byline={post.publishedAt ? publishedAt.formatted : 'Draft'}
       active={active}
     />
   )

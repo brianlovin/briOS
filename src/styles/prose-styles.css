@@ -144,3 +144,12 @@
   @apply text-sm font-medium whitespace-pre-wrap;
   word-break: break-word;
 }
+
+.prose pre {
+  @apply text-gray-100 bg-gray-800;
+}
+
+code .linenumber {
+  user-select: none;
+  opacity: 0.5;
+}

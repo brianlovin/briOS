@@ -2,12 +2,12 @@ import * as React from 'react'
 
 import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { withProviders } from '~/components/Providers/withProviders'
-import { PostComposer } from '~/components/Writing/PostComposer'
+import { PostEditor } from '~/components/Writing/Editor/PostEditor'
 import { getContext } from '~/graphql/context'
 import { addApolloState, initApolloClient } from '~/lib/apollo'
 
 function NewPostPage() {
-  return <PostComposer />
+  return <PostEditor />
 }
 
 export async function getServerSideProps({ req, res }) {

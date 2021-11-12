@@ -1,13 +1,13 @@
 import Link from 'next/link'
 import * as React from 'react'
 
+import { Comments } from '~/components/Comments'
 import { Detail } from '~/components/ListDetail/Detail'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
+import { MarkdownRenderer } from '~/components/MarkdownRenderer'
 import { CommentType, useGetPostQuery } from '~/graphql/types.generated'
 import { timestampToCleanTime } from '~/lib/transformers'
 
-import { Comments } from '../Comments'
-import { MarkdownRenderer } from '../MarkdownRenderer'
 import { PostActions } from './PostActions'
 import { PostSEO } from './PostSEO'
 
@@ -23,7 +23,6 @@ export function PostDetail({ slug }) {
   if (!data?.post || error) {
     return <Detail.Null />
   }
-
   const { post } = data
   const publishedAt = timestampToCleanTime({ timestamp: post.publishedAt })
   return (
@@ -55,21 +54,6 @@ export function PostDetail({ slug }) {
           <MarkdownRenderer
             children={post.text}
             className="mt-8 prose lg:prose-lg"
-            components={{
-              a: ({ href, ...rest }) => {
-                const url = new URL(href)
-                if (url.origin === 'https://brianlovin.com') {
-                  return (
-                    <Link href={href}>
-                      <a {...rest} />
-                    </Link>
-                  )
-                }
-                return (
-                  <a target="_blank" rel="noopener" href={href} {...rest} />
-                )
-              },
-            }}
           />
 
           {/* bottom padding to give space between post content and comments */}

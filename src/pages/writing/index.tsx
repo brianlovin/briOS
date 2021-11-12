@@ -7,6 +7,7 @@ import { PostsList } from '~/components/Writing/PostsList'
 import routes from '~/config/routes'
 import { getContext } from '~/graphql/context'
 import { GET_POSTS } from '~/graphql/queries/posts'
+import { GET_VIEWER_QUERY } from '~/graphql/queries/viewer'
 import { addApolloState, initApolloClient } from '~/lib/apollo'
 
 function WritingPage() {
@@ -23,7 +24,14 @@ export async function getServerSideProps({ req, res }) {
   const context = await getContext(req, res)
   const apolloClient = initApolloClient({ context })
 
-  await apolloClient.query({ query: GET_POSTS })
+  await apolloClient.query({
+    query: GET_VIEWER_QUERY,
+  })
+
+  await apolloClient.query({
+    query: GET_POSTS,
+    variables: { filter: { published: true } },
+  })
 
   return addApolloState(apolloClient, {
     props: {},

@@ -15,10 +15,10 @@ type ButtonAsLink = BaseButtonProps &
 
 type ButtonProps = ButtonAsButton | ButtonAsLink
 
-function BaseButton({ href = null, forwardedRef = null, ...rest }) {
+function BaseButton({ href = null, as = null, forwardedRef = null, ...rest }) {
   if (href && href.startsWith('/')) {
     return (
-      <Link href={href}>
+      <Link href={href} as={as}>
         <a {...rest} />
       </Link>
     )

@@ -6,8 +6,8 @@ import {
 } from '~/graphql/fragments/post'
 
 export const GET_POSTS = gql`
-  query getPosts {
-    posts {
+  query getPosts($filter: WritingFilter) {
+    posts(filter: $filter) {
       ...PostListItem
     }
   }
