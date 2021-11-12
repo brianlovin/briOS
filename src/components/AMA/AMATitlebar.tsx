@@ -6,12 +6,14 @@ import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { SignInDialog } from '~/components/SignInDialog'
 import { UserRole, useViewerQuery } from '~/graphql/types.generated'
 
+import SegmentedControl from '../SegmentedController'
 import { AddQuestionDialog } from './AddQuestionDialog'
 import { QuestionsFilterButton } from './FilterButton'
 import { QuestionsContext } from './QuestionsList'
 
 export function AMATitlebar({ scrollContainerRef }) {
   const { data } = useViewerQuery()
+  const { setFilterPending, filterPending } = React.useContext(QuestionsContext)
 
   function getAddButton() {
     if (!data?.viewer) {
@@ -45,41 +47,35 @@ export function AMATitlebar({ scrollContainerRef }) {
     )
   }
 
-  function getFilterButton() {
-    if (!data?.viewer) return null
-    if (data.viewer.role !== UserRole.Admin) return null
-
-    return <QuestionsFilterButton />
+  function trailingAccessory() {
+    return <div className="flex items-center space-x-2">{getAddButton()}</div>
   }
 
-  function trailingAccessory() {
-    return (
-      <div className="flex items-center space-x-2">
-        {getFilterButton()}
-        {getAddButton()}
-      </div>
-    )
+  function getChildren() {
+    if (data?.viewer?.role === UserRole.Admin) {
+      return (
+        <div className="pt-2 pb-1">
+          <SegmentedControl
+            onSetActiveItem={() => setFilterPending(!filterPending)}
+            active={filterPending ? 'pending' : 'answered'}
+            items={[
+              { id: 'answered', label: 'Answered' },
+              { id: 'pending', label: 'Pending' },
+            ]}
+          />
+        </div>
+      )
+    }
+    return null
   }
 
   return (
-    <QuestionsContext.Consumer>
-      {({ filterPending }) => {
-        const title = !data?.viewer
-          ? 'Ask me anything'
-          : data.viewer.role === UserRole.Admin
-          ? filterPending
-            ? 'Pending questions'
-            : 'Answered questions'
-          : 'Ask me anything'
-
-        return (
-          <TitleBar
-            scrollContainerRef={scrollContainerRef}
-            title={title}
-            trailingAccessory={trailingAccessory()}
-          />
-        )
-      }}
-    </QuestionsContext.Consumer>
+    <TitleBar
+      scrollContainerRef={scrollContainerRef}
+      title="Ask me anything"
+      trailingAccessory={trailingAccessory()}
+    >
+      {getChildren()}
+    </TitleBar>
   )
 }
