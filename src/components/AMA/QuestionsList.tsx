@@ -4,7 +4,6 @@ import * as React from 'react'
 
 import { ListContainer } from '~/components/ListDetail/ListContainer'
 import { QuestionStatus, useGetQuestionsQuery } from '~/graphql/types.generated'
-import { useWindowFocus } from '~/hooks/useWindowFocus'
 
 import { ListLoadMore } from '../ListDetail/ListLoadMore'
 import { LoadingSpinner } from '../LoadingSpinner'
@@ -31,14 +30,7 @@ export function QuestionsList() {
     variables: { filter: { status } },
   })
 
-  /*
-    This is hacky, but it's pretty hard to refetch the correct pending/answered
-    query whenever I comment on a question. Hack this so that I can blur and 
-    refocus the window to refetch the list of questions and move recently-answered
-    questions to the Answered list.
-  */
-  useWindowFocus({ onFocus: refetch })
-  // also refetch questions whenever I toggle back and forth between answered/unanswered
+  // refetch questions whenever I toggle back and forth between answered/unanswered
   React.useEffect(() => {
     refetch()
   }, [status])
