@@ -15,9 +15,7 @@ export function StackUsedBy(props) {
   const { triggerSignIn } = props
   const { data: viewerData } = useViewerQuery()
   const { data, loading, error, refetch } = useGetStackQuery({
-    variables: {
-      id: props.stack.id,
-    },
+    variables: { slug: props.stack.slug },
   })
   const [toggleStackUser] = useToggleStackUserMutation()
 
@@ -50,12 +48,12 @@ export function StackUsedBy(props) {
       update(cache) {
         const { stack } = cache.readQuery({
           query: GET_STACK,
-          variables: { id: props.stack.id },
+          variables: { slug: props.stack.slug },
         })
 
         cache.writeQuery({
           query: GET_STACK,
-          variables: { id: props.stack.id },
+          variables: { slug: props.stack.slug },
           data: {
             stack: {
               ...stack,
@@ -85,20 +83,20 @@ export function StackUsedBy(props) {
       <div
         className={`flex flex-col p-4 space-y-4 bg-gray-100 border dark:border-gray-800 border-gray-200 dark:bg-white dark:bg-opacity-10 rounded-t-md border-b-0`}
       >
-        {data.stack.usedBy.length === 0 ? (
+        {data?.stack?.usedBy.length === 0 ? (
           <p className="text-sm font-medium text-quaternary">
             Nobody else is using this yet...
           </p>
         ) : (
           <p className="text-sm font-medium text-quaternary">
             Also used by{' '}
-            {data.stack.usedBy.length === 1
-              ? `${data.stack.usedBy.length} person`
-              : `${data.stack.usedBy.length} people`}
+            {data?.stack?.usedBy.length === 1
+              ? `${data?.stack?.usedBy.length} person`
+              : `${data?.stack?.usedBy.length} people`}
           </p>
         )}
 
-        {data.stack.usedBy.length > 0 && (
+        {data?.stack?.usedBy.length > 0 && (
           <div className="flex flex-wrap -m-1">
             {data.stack.usedBy.map((user) => (
               <Tooltip key={user.id} content={user.name}>
@@ -125,7 +123,7 @@ export function StackUsedBy(props) {
         <input
           type="checkbox"
           onChange={handleToggle}
-          checked={data.stack.usedByViewer}
+          checked={data?.stack?.usedByViewer}
           className="w-4 h-4 border border-gray-300 rounded dark:border-gray-700"
         />
         <p className="text-sm font-medium text-primary">I use this</p>

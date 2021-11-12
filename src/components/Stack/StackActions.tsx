@@ -44,7 +44,7 @@ function getReactionButton(stack) {
       update(cache, { data: { toggleReaction } }) {
         cache.writeQuery({
           query: GET_STACK,
-          variables: { id: stack.id },
+          variables: { slug: stack.slug },
           data: {
             stack: {
               ...stack,

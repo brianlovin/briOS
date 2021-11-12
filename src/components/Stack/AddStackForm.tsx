@@ -22,34 +22,12 @@ export function AddStackForm({ closeModal }) {
 
   const router = useRouter()
 
-  const query = GET_STACKS
-
   const [handleAddStack] = useAddStackMutation({
-    onCompleted: ({ addStack: { id } }) => {
+    onCompleted: ({ addStack: { slug } }) => {
       closeModal()
-      return router.push(`/stack/${id}`)
+      return router.push(`/stack/${slug}`)
     },
-    update(cache, { data: { addStack } }) {
-      const { stacks } = cache.readQuery({
-        query,
-      })
-      cache.writeQuery({
-        query,
-        data: {
-          stacks: {
-            ...stacks,
-            edges: [
-              {
-                __typename: 'StackEdge',
-                cursor: addStack.id,
-                node: addStack,
-              },
-              ...stacks.edges,
-            ].sort((a, b) => (a.node.name < b.node.name ? -1 : 1)),
-          },
-        },
-      })
-    },
+    refetchQueries: [GET_STACKS],
     onError({ message }) {
       const clean = message.replace('GraphQL error:', '')
       setError(clean)

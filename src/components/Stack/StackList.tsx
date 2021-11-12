@@ -45,7 +45,7 @@ export function StackList() {
 
       <div className="lg:p-3 lg:space-y-1">
         {data.stacks.edges.map((stack) => {
-          const active = router.query.id === stack.node.id
+          const active = router.query.slug === stack.node.slug
           return (
             <StackListItem
               key={stack.node.id}

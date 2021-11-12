@@ -9,6 +9,7 @@ export const StackCoreFragment = gql`
     name
     image
     url
+    slug
   }
 `
 

@@ -1,5 +1,6 @@
 import { UserInputError } from 'apollo-server-micro'
 import fetch from 'isomorphic-unfetch'
+import slugify from 'slugify'
 
 import { Context } from '~/graphql/context'
 import {
@@ -112,6 +113,7 @@ export async function addStack(_, args: MutationAddStackArgs, ctx: Context) {
         description,
         image,
         tags,
+        slug: slugify(name, { lower: true }),
       },
       include: { tags: true },
     })

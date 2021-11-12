@@ -10,33 +10,34 @@ import { GET_STACK, GET_STACKS } from '~/graphql/queries/stack'
 import { CommentType } from '~/graphql/types.generated'
 import { addApolloState, initApolloClient } from '~/lib/apollo'
 
-function StackDetailPage({ id }) {
-  return <StackDetail id={id} />
+function StackDetailPage({ slug }) {
+  return <StackDetail slug={slug} />
 }
 
-export async function getServerSideProps({ params: { id }, req, res }) {
+export async function getServerSideProps({ params: { slug }, req, res }) {
   const context = await getContext(req, res)
   const apolloClient = initApolloClient({ context })
+
+  const { data } = await apolloClient.query({
+    query: GET_STACK,
+    variables: { slug },
+  })
 
   await Promise.all([
     apolloClient.query({
       query: GET_STACKS,
     }),
 
-    apolloClient.query({
-      query: GET_STACK,
-      variables: { id },
-    }),
-
-    apolloClient.query({
-      query: GET_COMMENTS,
-      variables: { refId: id, type: CommentType.Stack },
-    }),
+    data?.stack &&
+      apolloClient.query({
+        query: GET_COMMENTS,
+        variables: { refId: data.stack.id, type: CommentType.Stack },
+      }),
   ])
 
   return addApolloState(apolloClient, {
     props: {
-      id,
+      slug,
     },
   })
 }

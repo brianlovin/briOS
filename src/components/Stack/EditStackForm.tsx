@@ -82,28 +82,10 @@ export function EditStackForm({ closeModal, stack }) {
       __typename: 'Mutation',
       deleteStack: true,
     },
-    update(cache) {
-      const { stacks } = cache.readQuery({
-        query: GET_STACKS,
-      })
-
-      cache.writeQuery({
-        query: GET_STACK,
-        variables: { id: stack.id },
-        data: {
-          stack: null,
-        },
-      })
-
-      cache.writeQuery({
-        query: GET_STACKS,
-        data: {
-          stacks: {
-            ...stacks,
-            edges: stacks.edges.filter((o) => o.node.id !== stack.id),
-          },
-        },
-      })
+    refetchQueries: [GET_STACKS],
+    onCompleted() {
+      closeModal()
+      router.push('/stack')
     },
   })
 
