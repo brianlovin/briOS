@@ -258,9 +258,9 @@ export default gql`
 
   input EditBookmarkInput {
     title: String!
-    description: String!
-    tag: String!
-    faviconUrl: String!
+    description: String
+    tag: String
+    faviconUrl: String
   }
 
   input EditQuestionInput {
