@@ -154,6 +154,10 @@ export default gql`
     PENDING
   }
 
+  input WritingFilter {
+    published: Boolean
+  }
+
   input QuestionFilter {
     status: QuestionStatus
   }
@@ -207,7 +211,7 @@ export default gql`
     stacks(first: Int, after: String): StacksConnection!
     comment(id: ID!): Comment
     comments(refId: ID!, type: CommentType!): [Comment]!
-    posts(first: Int, filter: String, order: String): [Post]!
+    posts(filter: WritingFilter): [Post]!
     post(slug: String!): Post
     question(id: ID!): Question
     questions(
@@ -281,6 +285,7 @@ export default gql`
     text: String!
     slug: String!
     excerpt: String
+    published: Boolean
   }
 
   union Reactable = Bookmark | Question | Post | Stack

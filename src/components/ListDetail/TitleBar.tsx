@@ -99,50 +99,54 @@ export function TitleBar({
       <div
         style={{
           boxShadow: `0 1px 3px rgba(0,0,0,${currentScrollOffset})`,
+          minHeight: '48px',
         }}
-        className={`sticky top-0 z-10 flex items-center justify-between flex-none px-3 py-2 dark:bg-gray-900 dark:bg-opacity-80 bg-white h-14 bg-opacity-90 filter-blur dark:border-b dark:border-gray-900`}
+        className={`sticky top-0 z-10 flex justify-center flex-col px-3 py-2 dark:bg-gray-900 dark:bg-opacity-80 bg-white bg-opacity-90 filter-blur dark:border-b dark:border-gray-900`}
       >
-        <span className="flex items-center space-x-3">
-          {globalMenu && (
-            <span
-              onClick={() => setIsOpen(!isOpen)}
-              className="flex items-center justify-center p-2 rounded-md cursor-pointer lg:hidden hover:bg-gray-200 dark:hover:bg-gray-800"
+        <div className="flex items-center justify-between flex-none">
+          <span className="flex items-center space-x-3">
+            {globalMenu && (
+              <span
+                onClick={() => setIsOpen(!isOpen)}
+                className="flex items-center justify-center p-2 rounded-md cursor-pointer lg:hidden hover:bg-gray-200 dark:hover:bg-gray-800"
+              >
+                {isOpen ? (
+                  <X size={16} className="text-primary" />
+                ) : (
+                  <Menu size={16} className="text-primary" />
+                )}
+              </span>
+            )}
+
+            {backButton && (
+              <Link href={backButtonHref}>
+                <a className="flex items-center justify-center p-2 rounded-md dark:hover:bg-gray-800 text-primary lg:hidden hover:bg-gray-200">
+                  <ArrowLeft size={16} className="text-primary" />
+                </a>
+              </Link>
+            )}
+
+            {leadingAccessory && <>{leadingAccessory}</>}
+
+            <p
+              style={
+                magicTitle
+                  ? {
+                      transform: `translateY(${offset}%)`,
+                      opacity: `${opacity}`,
+                    }
+                  : {}
+              }
+              className="text-sm font-bold transform-gpu text-primary line-clamp-1"
             >
-              {isOpen ? (
-                <X size={16} className="text-primary" />
-              ) : (
-                <Menu size={16} className="text-primary" />
-              )}
-            </span>
-          )}
+              {title}
+            </p>
+          </span>
 
-          {backButton && (
-            <Link href={backButtonHref}>
-              <a className="flex items-center justify-center p-2 rounded-md dark:hover:bg-gray-800 text-primary md:hidden hover:bg-gray-200">
-                <ArrowLeft size={16} className="text-primary" />
-              </a>
-            </Link>
-          )}
+          {trailingAccessory && <>{trailingAccessory}</>}
+        </div>
 
-          {leadingAccessory && <>{leadingAccessory}</>}
-
-          <p
-            style={
-              magicTitle
-                ? {
-                    transform: `translateY(${offset}%)`,
-                    opacity: `${opacity}`,
-                  }
-                : {}
-            }
-            className="text-sm font-bold transform-gpu text-primary line-clamp-1"
-          >
-            {title}
-          </p>
-          {children}
-        </span>
-
-        {trailingAccessory && <>{trailingAccessory}</>}
+        <div>{children}</div>
       </div>
     </>
   )

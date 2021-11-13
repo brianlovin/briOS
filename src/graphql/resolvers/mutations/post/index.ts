@@ -10,8 +10,17 @@ import { graphcdn } from '~/lib/graphcdn'
 
 export async function editPost(_, args: MutationEditPostArgs, ctx: Context) {
   const { id, data } = args
-  const { title, text, slug, excerpt } = data
+  const {
+    title = '',
+    text = '',
+    slug = '',
+    excerpt = '',
+    published = false,
+  } = data
   const { prisma } = ctx
+
+  const existing = await prisma.post.findUnique({ where: { slug } })
+  if (existing?.id !== id) throw new UserInputError('Slug already exists')
 
   return await prisma.post
     .update({
@@ -21,10 +30,11 @@ export async function editPost(_, args: MutationEditPostArgs, ctx: Context) {
         text,
         slug,
         excerpt,
+        publishedAt: published ? new Date() : null,
       },
     })
     .then((post) => {
-      graphcdn.purgeList('posts')
+      if (post.publishedAt) graphcdn.purgeList('posts')
       return post
     })
     .catch((err) => {

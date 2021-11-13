@@ -5,7 +5,6 @@ import * as React from 'react'
 import { ListContainer } from '~/components/ListDetail/ListContainer'
 import { PAGINATION_AMOUNT } from '~/graphql/constants'
 import { useGetBookmarksQuery } from '~/graphql/types.generated'
-import { useWindowFocus } from '~/hooks/useWindowFocus'
 
 import { ListLoadMore } from '../ListDetail/ListLoadMore'
 import { LoadingSpinner } from '../LoadingSpinner'
@@ -31,11 +30,9 @@ export function BookmarksList() {
         filter: { tag: tag },
       }
     : null
-  const { data, error, loading, fetchMore, refetch } = useGetBookmarksQuery({
+  const { data, error, loading, fetchMore } = useGetBookmarksQuery({
     variables,
   })
-
-  useWindowFocus({ onFocus: refetch })
 
   const defaultContextValue = {
     tag,

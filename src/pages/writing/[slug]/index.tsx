@@ -2,15 +2,19 @@ import * as React from 'react'
 
 import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { withProviders } from '~/components/Providers/withProviders'
+import { PostEditor } from '~/components/Writing/Editor/PostEditor'
 import { PostDetail } from '~/components/Writing/PostDetail'
 import { PostsList } from '~/components/Writing/PostsList'
 import { getContext } from '~/graphql/context'
 import { GET_COMMENTS } from '~/graphql/queries/comments'
 import { GET_POST, GET_POSTS } from '~/graphql/queries/posts'
-import { CommentType } from '~/graphql/types.generated'
+import { GET_VIEWER_QUERY } from '~/graphql/queries/viewer'
+import { CommentType, useGetPostQuery } from '~/graphql/types.generated'
 import { addApolloState, initApolloClient } from '~/lib/apollo'
 
 function WritingPostPage({ slug }) {
+  const { data } = useGetPostQuery({ variables: { slug } })
+  if (data?.post && !data.post.publishedAt) return <PostEditor slug={slug} />
   return <PostDetail slug={slug} />
 }
 
@@ -29,9 +33,14 @@ export async function getServerSideProps({ params: { slug }, req, res }) {
     }),
 
     apolloClient.query({
-      query: GET_COMMENTS,
-      variables: { refId: data?.post?.id, type: CommentType.Bookmark },
+      query: GET_VIEWER_QUERY,
     }),
+
+    data?.post?.id &&
+      apolloClient.query({
+        query: GET_COMMENTS,
+        variables: { refId: data.post.id, type: CommentType.Bookmark },
+      }),
   ])
 
   return addApolloState(apolloClient, {
