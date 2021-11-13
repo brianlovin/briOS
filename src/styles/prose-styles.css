@@ -64,7 +64,7 @@
 }
 
 .prose hr {
-  @apply border-gray-300 dark:border-gray-800;
+  @apply border-gray-200 dark:border-gray-800;
 }
 
 /* the kg-embed-card gets applied to iframes sent from Ghost. this preserves a good video aspect ratio */
@@ -92,7 +92,7 @@
 }
 
 .prose h5 {
-  @apply mt-10 -mb-3 text-2xl;
+  @apply mt-10 -mb-3 text-xl;
 }
 
 .prose pre {
