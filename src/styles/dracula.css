@@ -10,13 +10,6 @@
  * @author Zeno Rocha <hi@zenorocha.com>
  */
 
-.hljs {
-  display: block;
-  overflow-x: auto;
-  padding: 0.5em;
-  background: #282a36;
-}
-
 .hljs-built_in,
 .hljs-selector-tag,
 .hljs-section,
@@ -57,18 +50,6 @@
 .hljs-quote,
 .hljs-deletion {
   color: #6272a4;
-}
-
-.hljs-keyword,
-.hljs-selector-tag,
-.hljs-literal,
-.hljs-title,
-.hljs-section,
-.hljs-doctag,
-.hljs-type,
-.hljs-name,
-.hljs-strong {
-  font-weight: bold;
 }
 
 .hljs-literal,

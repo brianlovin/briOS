@@ -51,10 +51,7 @@ export function PostDetail({ slug }) {
             </span>
           </Detail.Header>
 
-          <MarkdownRenderer
-            children={post.text}
-            className="mt-8 prose lg:prose-lg"
-          />
+          <MarkdownRenderer children={post.text} className="mt-8 prose" />
 
           {/* bottom padding to give space between post content and comments */}
           <div className="py-6" />

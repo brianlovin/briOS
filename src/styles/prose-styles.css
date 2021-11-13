@@ -19,7 +19,7 @@
 }
 
 .prose a code {
-  @apply px-0.5 -mx-0.5 font-medium no-underline bg-yellow-400 rounded-sm dark:bg-gray-100 dark:bg-opacity-20 text-gray-1000 dark:text-gray-300 bg-opacity-20 hover:bg-opacity-30 dark:hover:bg-yellow-500 dark:hover:bg-opacity-100 dark:hover:text-gray-1000;
+  @apply text-blue-600 dark:text-blue-500;
 }
 
 .prose table {
@@ -64,7 +64,7 @@
 }
 
 .prose hr {
-  @apply border-gray-300 dark:border-gray-800;
+  @apply border-gray-200 dark:border-gray-800;
 }
 
 /* the kg-embed-card gets applied to iframes sent from Ghost. this preserves a good video aspect ratio */
@@ -92,7 +92,7 @@
 }
 
 .prose h5 {
-  @apply mt-10 -mb-3 text-2xl;
+  @apply mt-10 -mb-3 text-xl;
 }
 
 .prose pre {
@@ -147,9 +147,4 @@
 
 .prose pre {
   @apply text-gray-100 bg-gray-800;
-}
-
-code .linenumber {
-  user-select: none;
-  opacity: 0.5;
 }

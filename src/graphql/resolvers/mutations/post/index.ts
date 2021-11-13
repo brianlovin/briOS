@@ -30,7 +30,15 @@ export async function editPost(_, args: MutationEditPostArgs, ctx: Context) {
         text,
         slug,
         excerpt,
-        publishedAt: published ? new Date() : null,
+        publishedAt:
+          // as long as the current post isn't published, and the user is trying to hit publish
+          // then it's save to publish. but if the post is _already_ published, we don't want
+          // to override the publishedAt date
+          !existing.publishedAt && published
+            ? new Date()
+            : existing.publishedAt
+            ? existing.publishedAt
+            : null,
       },
     })
     .then((post) => {

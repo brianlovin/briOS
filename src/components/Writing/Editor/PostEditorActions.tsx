@@ -68,7 +68,8 @@ export function PostEditorActions() {
           <LoadingSpinner />
         ) : (
           <>
-            <PostEditorAutoSave /> <span>Save draft</span>
+            <PostEditorAutoSave />{' '}
+            <span>{existingPost?.publishedAt ? 'Update' : 'Save draft'}</span>
           </>
         )}
       </Button>

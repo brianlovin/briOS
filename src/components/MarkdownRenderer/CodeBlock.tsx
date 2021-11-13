@@ -11,11 +11,12 @@ export function CodeBlock({
 }) {
   return (
     <SyntaxHighlighter
-      showLineNumbers={!['bash', 'text', 'treeview'].includes(language)}
+      showLineNumbers={false}
       useInlineStyles={false}
       language={language}
       children={text}
       style=""
+      wrapLongLines
       {...rest}
     />
   )
