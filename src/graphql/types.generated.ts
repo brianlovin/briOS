@@ -673,6 +673,7 @@ export type PostCoreFragment = {
   publishedAt?: any | null | undefined
   title?: string | null | undefined
   slug?: string | null | undefined
+  excerpt?: string | null | undefined
 }
 
 export type PostListItemFragment = {
@@ -681,12 +682,12 @@ export type PostListItemFragment = {
   publishedAt?: any | null | undefined
   title?: string | null | undefined
   slug?: string | null | undefined
+  excerpt?: string | null | undefined
 }
 
 export type PostDetailFragment = {
   __typename: 'Post'
   text?: string | null | undefined
-  excerpt?: string | null | undefined
   featureImage?: string | null | undefined
   reactionCount?: number | null | undefined
   viewerHasReacted?: boolean | null | undefined
@@ -694,6 +695,7 @@ export type PostDetailFragment = {
   publishedAt?: any | null | undefined
   title?: string | null | undefined
   slug?: string | null | undefined
+  excerpt?: string | null | undefined
 }
 
 export type QuestionCoreFragment = {
@@ -1070,7 +1072,6 @@ export type EditPostMutation = {
     | {
         __typename: 'Post'
         text?: string | null | undefined
-        excerpt?: string | null | undefined
         featureImage?: string | null | undefined
         reactionCount?: number | null | undefined
         viewerHasReacted?: boolean | null | undefined
@@ -1078,6 +1079,7 @@ export type EditPostMutation = {
         publishedAt?: any | null | undefined
         title?: string | null | undefined
         slug?: string | null | undefined
+        excerpt?: string | null | undefined
       }
     | null
     | undefined
@@ -1102,7 +1104,6 @@ export type AddPostMutation = {
     | {
         __typename: 'Post'
         text?: string | null | undefined
-        excerpt?: string | null | undefined
         featureImage?: string | null | undefined
         reactionCount?: number | null | undefined
         viewerHasReacted?: boolean | null | undefined
@@ -1110,6 +1111,7 @@ export type AddPostMutation = {
         publishedAt?: any | null | undefined
         title?: string | null | undefined
         slug?: string | null | undefined
+        excerpt?: string | null | undefined
       }
     | null
     | undefined
@@ -1602,6 +1604,7 @@ export type GetPostsQuery = {
         publishedAt?: any | null | undefined
         title?: string | null | undefined
         slug?: string | null | undefined
+        excerpt?: string | null | undefined
       }
     | null
     | undefined
@@ -1618,7 +1621,6 @@ export type GetPostQuery = {
     | {
         __typename: 'Post'
         text?: string | null | undefined
-        excerpt?: string | null | undefined
         featureImage?: string | null | undefined
         reactionCount?: number | null | undefined
         viewerHasReacted?: boolean | null | undefined
@@ -1626,6 +1628,7 @@ export type GetPostQuery = {
         publishedAt?: any | null | undefined
         title?: string | null | undefined
         slug?: string | null | undefined
+        excerpt?: string | null | undefined
       }
     | null
     | undefined
@@ -1995,6 +1998,7 @@ export const PostCoreFragmentDoc = gql`
     publishedAt
     title
     slug
+    excerpt
   }
 `
 export const PostListItemFragmentDoc = gql`
@@ -2007,7 +2011,6 @@ export const PostDetailFragmentDoc = gql`
   fragment PostDetail on Post {
     ...PostCore
     text
-    excerpt
     featureImage
     reactionCount
     viewerHasReacted
