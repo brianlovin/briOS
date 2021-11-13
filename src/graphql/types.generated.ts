@@ -102,9 +102,9 @@ export enum CommentType {
 }
 
 export type EditBookmarkInput = {
-  description: Scalars['String']
-  faviconUrl: Scalars['String']
-  tag: Scalars['String']
+  description?: Maybe<Scalars['String']>
+  faviconUrl?: Maybe<Scalars['String']>
+  tag?: Maybe<Scalars['String']>
   title: Scalars['String']
 }
 
