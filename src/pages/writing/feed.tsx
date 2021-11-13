@@ -12,7 +12,10 @@ export async function getServerSideProps({ req, res }) {
   const apolloClient = initApolloClient({ context })
   const {
     data: { posts },
-  } = await apolloClient.query({ query: GET_POSTS })
+  } = await apolloClient.query({
+    query: GET_POSTS,
+    variables: { filter: { published: true } },
+  })
   const { json } = await generateRSS(posts)
 
   if (res) {

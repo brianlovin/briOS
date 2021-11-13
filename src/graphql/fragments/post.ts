@@ -7,6 +7,7 @@ export const PostCoreFragment = gql`
     publishedAt
     title
     slug
+    excerpt
   }
 `
 
@@ -21,7 +22,6 @@ export const PostDetailFragment = gql`
   fragment PostDetail on Post {
     ...PostCore
     text
-    excerpt
     featureImage
     reactionCount
     viewerHasReacted
