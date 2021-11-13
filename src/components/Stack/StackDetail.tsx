@@ -17,14 +17,12 @@ import { SignInDialog } from '../SignInDialog'
 import { StackActions } from './StackActions'
 import { StackUsedBy } from './StackUsedBy'
 
-export function StackDetail({ id }) {
+export function StackDetail({ slug }) {
   const scrollContainerRef = React.useRef(null)
   const titleRef = React.useRef(null)
 
   const { data, loading, error } = useGetStackQuery({
-    variables: {
-      id,
-    },
+    variables: { slug },
   })
 
   if (loading) {

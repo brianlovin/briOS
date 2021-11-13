@@ -17,8 +17,8 @@ export const GET_STACKS = gql`
 `
 
 export const GET_STACK = gql`
-  query getStack($id: ID!) {
-    stack(id: $id) {
+  query getStack($slug: String!) {
+    stack(slug: $slug) {
       ...StackDetail
     }
   }

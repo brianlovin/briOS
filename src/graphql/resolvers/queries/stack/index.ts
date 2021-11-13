@@ -74,14 +74,14 @@ export async function getStacks(
 
 export async function getStack(
   _,
-  { id }: GetStackQueryVariables,
+  { slug }: GetStackQueryVariables,
   ctx: Context
 ) {
   const { prisma } = ctx
 
-  return await prisma.stack
+  const stackBySlug = await prisma.stack
     .findUnique({
-      where: { id },
+      where: { slug },
       include: {
         users: true,
         tags: true,
@@ -95,4 +95,20 @@ export async function getStack(
     .catch((e) => {
       return null
     })
+
+  if (stackBySlug) return stackBySlug
+
+  // Fallback for old links that may exist that used a stack ID
+  return await prisma.stack.findUnique({
+    where: { id: slug },
+    include: {
+      users: true,
+      tags: true,
+      _count: {
+        select: {
+          reactions: true,
+        },
+      },
+    },
+  })
 }

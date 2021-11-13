@@ -50,6 +50,8 @@ model Bookmark {
   comments      Comment[]
   reactions     Reaction[]
   tags          Tag[]
+
+  @@index([host])
 }
 
 model Question {
@@ -115,6 +117,8 @@ model Post {
   reactions    Reaction[]
   history      PostEdit[]
   userId       String
+
+  @@index([publishedAt])
 }
 
 model PostEdit {
@@ -142,6 +146,7 @@ model Stack {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   name        String
+  slug        String?    @unique
   description String     @db.VarChar(280)
   image       String
   url         String
