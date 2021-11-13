@@ -141,7 +141,8 @@
 
 .prose code,
 .prose pre {
-  @apply text-sm;
+  @apply text-sm font-medium whitespace-pre-wrap;
+  word-break: break-word;
 }
 
 .prose pre {
