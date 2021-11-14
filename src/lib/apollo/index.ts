@@ -93,6 +93,7 @@ export function createApolloClient({ initialState = {}, context = {} }) {
     ssrMode,
     link,
     cache,
+    ssrForceFetchDelay: 1000, // prevents immediate refetch of SSR queries on the client
   })
 }
 

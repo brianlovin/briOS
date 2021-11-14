@@ -4,7 +4,6 @@ import Button from '~/components/Button'
 import { GET_STACK } from '~/graphql/queries/stack'
 import {
   ReactionType,
-  UserRole,
   useToggleReactionMutation,
   useViewerQuery,
 } from '~/graphql/types.generated'
@@ -14,7 +13,7 @@ import { EditStackDialog } from './EditStackDialog'
 
 function getEditButton(stack) {
   const { data } = useViewerQuery()
-  if (data?.viewer?.role === UserRole.Admin) {
+  if (data?.viewer?.isAdmin) {
     return <EditStackDialog stack={stack} trigger={<Button>Edit</Button>} />
   }
   return null

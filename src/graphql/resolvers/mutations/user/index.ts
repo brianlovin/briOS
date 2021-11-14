@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 import { baseEmail } from '~/config/seo'
 import { CLIENT_URL, IS_PROD } from '~/graphql/constants'
 import { Context } from '~/graphql/context'
-import { MutationEditUserArgs, UserRole } from '~/graphql/types.generated'
+import { MutationEditUserArgs } from '~/graphql/types.generated'
 import { deleteUser as deleteUserFromAuth0 } from '~/lib/auth0/deleteUser'
 import { client as postmark } from '~/lib/postmark'
 import { validEmail, validUsername } from '~/lib/validators'
@@ -12,7 +12,7 @@ import { validEmail, validUsername } from '~/lib/validators'
 export async function deleteUser(_, __, ctx: Context) {
   const { prisma, viewer } = ctx
 
-  if (viewer.role === UserRole.Admin) {
+  if (viewer.isAdmin) {
     throw new UserInputError('Admins can’t be deleted')
   }
 

@@ -7,6 +7,8 @@ import { withProviders } from '~/components/Providers/withProviders'
 import routes from '~/config/routes'
 import { getContext } from '~/graphql/context'
 import { GET_BOOKMARKS } from '~/graphql/queries/bookmarks'
+import { GET_TAGS } from '~/graphql/queries/tags'
+import { GET_VIEWER } from '~/graphql/queries/viewer'
 import { addApolloState, initApolloClient } from '~/lib/apollo'
 
 function BookmarksPage() {
@@ -23,7 +25,11 @@ export async function getServerSideProps({ req, res }) {
   const context = await getContext(req, res)
   const apolloClient = initApolloClient({ context })
 
-  await apolloClient.query({ query: GET_BOOKMARKS })
+  await Promise.all([
+    apolloClient.query({ query: GET_VIEWER }),
+    apolloClient.query({ query: GET_BOOKMARKS }),
+    apolloClient.query({ query: GET_TAGS }),
+  ])
 
   return addApolloState(apolloClient, {
     props: {},

@@ -1,10 +1,8 @@
 import { AuthenticationError } from 'apollo-server-micro'
 
-import { UserRole } from '../types.generated'
-
 export function requiresAdmin(fn) {
   return function resolve(parent, args, context) {
-    if (context?.viewer?.role === UserRole.Admin) {
+    if (context?.viewer?.isAdmin) {
       return fn(parent, args, context)
     }
 

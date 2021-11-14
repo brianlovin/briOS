@@ -108,6 +108,7 @@ export default gql`
     email: String
     pendingEmail: String
     emailSubscriptions: [EmailSubscription]
+    isAdmin: Boolean
   }
 
   type Comment {

@@ -7,6 +7,7 @@ import { StackList } from '~/components/Stack/StackList'
 import routes from '~/config/routes'
 import { getContext } from '~/graphql/context'
 import { GET_STACKS } from '~/graphql/queries/stack'
+import { GET_VIEWER } from '~/graphql/queries/viewer'
 import { addApolloState, initApolloClient } from '~/lib/apollo'
 
 function StackPage() {
@@ -33,9 +34,10 @@ export async function getServerSideProps({ req, res }) {
   const context = await getContext(req, res)
   const apolloClient = initApolloClient({ context })
 
-  await apolloClient.query({
-    query: GET_STACKS,
-  })
+  await Promise.all([
+    apolloClient.query({ query: GET_VIEWER }),
+    apolloClient.query({ query: GET_STACKS }),
+  ])
 
   return addApolloState(apolloClient, {
     props: {},

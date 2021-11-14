@@ -7,6 +7,7 @@ import { withProviders } from '~/components/Providers/withProviders'
 import { getContext } from '~/graphql/context'
 import { GET_COMMENTS } from '~/graphql/queries/comments'
 import { GET_QUESTION, GET_QUESTIONS } from '~/graphql/queries/questions'
+import { GET_VIEWER } from '~/graphql/queries/viewer'
 import { CommentType, QuestionStatus } from '~/graphql/types.generated'
 import { addApolloState, initApolloClient } from '~/lib/apollo'
 
@@ -35,6 +36,8 @@ export async function getServerSideProps({ params: { id }, req, res }) {
       query: GET_COMMENTS,
       variables: { refId: id, type: CommentType.Question },
     }),
+
+    apolloClient.query({ query: GET_VIEWER }),
   ])
 
   return addApolloState(apolloClient, {
