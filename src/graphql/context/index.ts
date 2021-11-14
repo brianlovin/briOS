@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client'
 
 import { prisma } from '~/lib/prisma'
 
-import { User } from '../types.generated'
+import { User, UserRole } from '../types.generated'
 
 export function isAuthenticated(req, res) {
   const session = getSession(req, res)
@@ -19,6 +19,11 @@ export async function getViewer(req, res) {
   }
 
   return viewer
+    ? {
+        ...viewer,
+        isAdmin: viewer?.role === UserRole.Admin,
+      }
+    : null
 }
 
 export async function getContext(req, res) {

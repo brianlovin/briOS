@@ -5,7 +5,6 @@ import {
   QueryQuestionArgs,
   Question,
   QuestionStatus,
-  UserRole,
 } from '~/graphql/types.generated'
 
 export async function getQuestion(_, { id }: QueryQuestionArgs, ctx: Context) {
@@ -33,7 +32,7 @@ export async function getQuestion(_, { id }: QueryQuestionArgs, ctx: Context) {
   // question hasn't been answered, show it to admin or asker
   if (!viewer) return null
 
-  if (question.userId === viewer.id || viewer.role === UserRole.Admin) {
+  if (question.userId === viewer.id || viewer.isAdmin) {
     return question
   }
 
@@ -52,7 +51,6 @@ export async function getQuestions(
   } = args
 
   const { prisma, viewer } = ctx
-  const isAdmin = viewer?.role === UserRole.Admin
 
   const nullResults = {
     pageInfo: {
@@ -63,7 +61,7 @@ export async function getQuestions(
     edges: [],
   }
 
-  if (!isAdmin && filter.status === QuestionStatus.Pending) {
+  if (!viewer?.isAdmin && filter.status === QuestionStatus.Pending) {
     return nullResults
   }
 

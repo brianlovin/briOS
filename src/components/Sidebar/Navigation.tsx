@@ -20,7 +20,7 @@ import {
   TwitterIcon,
   WritingIcon,
 } from '~/components/Icon'
-import { UserRole, useViewerQuery } from '~/graphql/types.generated'
+import { useViewerQuery } from '~/graphql/types.generated'
 
 import { NavigationLink } from './NavigationLink'
 
@@ -39,7 +39,6 @@ function ThisAddBookmarkDialog() {
 export function SidebarNavigation() {
   const router = useRouter()
   const { data } = useViewerQuery()
-  const isAdmin = data?.viewer?.role === UserRole.Admin
   const links = [
     {
       href: '/',
@@ -69,7 +68,7 @@ export function SidebarNavigation() {
       icon: BookmarksIcon,
       trailingAccessory: null,
       isActive: router.asPath.indexOf('/bookmarks') >= 0,
-      trailingAction: isAdmin ? ThisAddBookmarkDialog : null,
+      trailingAction: data?.viewer?.isAdmin ? ThisAddBookmarkDialog : null,
       isExternal: false,
     },
 

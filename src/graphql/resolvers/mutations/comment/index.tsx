@@ -7,7 +7,6 @@ import {
   MutationAddCommentArgs,
   MutationDeleteCommentArgs,
   MutationEditCommentArgs,
-  UserRole,
 } from '~/graphql/types.generated'
 import { graphcdn } from '~/lib/graphcdn'
 import { emailMe } from '~/lib/postmark'
@@ -100,7 +99,7 @@ export async function addComment(
     throw new UserInputError('Commenting on something that doesn’t exist')
   }
 
-  if (viewer.role !== UserRole.Admin) {
+  if (!viewer.isAdmin) {
     emailMe({
       subject: `New comment on ${table}`,
       body: `${text}\n\n${route}`,
@@ -148,7 +147,7 @@ export async function deleteComment(
   // comment doesn't exist, already deleted
   if (!comment) return true
   // no permission
-  if (comment.userId !== viewer?.id && viewer?.role !== UserRole.Admin) {
+  if (comment.userId !== viewer?.id && !viewer?.isAdmin) {
     throw new UserInputError('You can’t delete this comment')
   }
 

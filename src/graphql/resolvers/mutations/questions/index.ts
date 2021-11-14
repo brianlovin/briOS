@@ -6,7 +6,6 @@ import {
   MutationAddQuestionArgs,
   MutationDeleteQuestionArgs,
   MutationEditQuestionArgs,
-  UserRole,
 } from '~/graphql/types.generated'
 import { graphcdn } from '~/lib/graphcdn'
 import { emailMe } from '~/lib/postmark'
@@ -24,7 +23,7 @@ export async function editQuestion(
     throw new UserInputError('Question doesn’t exist')
   }
 
-  if (viewer.role === UserRole.Admin || viewer.id === question.userId) {
+  if (viewer.isAdmin || viewer.id === question.userId) {
     return await prisma.question
       .update({
         where: { id },
@@ -102,7 +101,7 @@ export async function deleteQuestion(
   const question = await prisma.question.findUnique({ where: { id } })
   if (!question) return true
 
-  if (viewer.role === UserRole.Admin || viewer.id === question.userId) {
+  if (viewer.isAdmin || viewer.id === question.userId) {
     return await prisma.question
       .delete({ where: { id } })
       .then(() => {

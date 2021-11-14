@@ -2,19 +2,18 @@ import { Context } from '~/graphql/context'
 import {
   GetPostQueryVariables,
   GetPostsQueryVariables,
-  UserRole,
 } from '~/graphql/types.generated'
 
 export async function getPosts(_, args: GetPostsQueryVariables, ctx: Context) {
   const { filter } = args
   const { prisma, viewer } = ctx
   const published = filter?.published
-  const isAdmin = viewer?.role === UserRole.Admin
 
   return await prisma.post.findMany({
     orderBy: published ? { publishedAt: 'desc' } : { createdAt: 'desc' },
     where: {
-      publishedAt: !published && isAdmin ? { equals: null } : { not: null },
+      publishedAt:
+        !published && viewer?.isAdmin ? { equals: null } : { not: null },
     },
     include: {
       _count: {
@@ -32,7 +31,6 @@ export async function getPost(
   ctx: Context
 ) {
   const { prisma, viewer } = ctx
-  const isAdmin = viewer?.role === UserRole.Admin
   const [postBySlug, postById] = await Promise.all([
     prisma.post.findUnique({
       where: { slug },
@@ -58,7 +56,7 @@ export async function getPost(
 
   const post = postBySlug || postById
 
-  if (!post?.publishedAt && !isAdmin) {
+  if (!post?.publishedAt && !viewer?.isAdmin) {
     return null
   }
 

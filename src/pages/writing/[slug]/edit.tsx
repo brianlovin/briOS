@@ -7,13 +7,12 @@ import { PostEditor } from '~/components/Writing/Editor/PostEditor'
 import { getContext } from '~/graphql/context'
 import { GET_POST } from '~/graphql/queries/posts'
 import { GET_VIEWER } from '~/graphql/queries/viewer'
-import { UserRole, useViewerQuery } from '~/graphql/types.generated'
+import { useViewerQuery } from '~/graphql/types.generated'
 import { addApolloState, initApolloClient } from '~/lib/apollo'
 
 function EditPostPage({ slug }) {
   const { data } = useViewerQuery()
-  if (!data?.viewer) return <Detail.Null />
-  if (data.viewer.role !== UserRole.Admin) return <Detail.Null />
+  if (!data?.viewer?.isAdmin) return <Detail.Null />
   return <PostEditor slug={slug} />
 }
 

@@ -3,7 +3,7 @@ import { Plus, Radio } from 'react-feather'
 
 import Button, { GhostButton } from '~/components/Button'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
-import { UserRole, useViewerQuery } from '~/graphql/types.generated'
+import { useViewerQuery } from '~/graphql/types.generated'
 
 import { DialogComponent } from '../Dialog'
 import SegmentedControl from '../SegmentedController'
@@ -14,7 +14,7 @@ export function WritingTitlebar({ scrollContainerRef }) {
   const { data } = useViewerQuery()
 
   function getAddButton() {
-    if (data?.viewer?.role === UserRole.Admin) {
+    if (data?.viewer?.isAdmin) {
       return (
         <GhostButton
           href="/writing/new"
@@ -30,7 +30,7 @@ export function WritingTitlebar({ scrollContainerRef }) {
   }
 
   function getSubscribeButton() {
-    if (data?.viewer?.role === UserRole.Admin) return null
+    if (data?.viewer?.isAdmin) return null
     return (
       <DialogComponent
         title="Newsletter"
@@ -57,7 +57,7 @@ export function WritingTitlebar({ scrollContainerRef }) {
   function getChildren() {
     const { data } = useViewerQuery()
     const { setFilter, filter } = React.useContext(WritingContext)
-    if (data?.viewer?.role === UserRole.Admin) {
+    if (data?.viewer?.isAdmin) {
       return (
         <div className="pt-2 pb-1">
           <SegmentedControl

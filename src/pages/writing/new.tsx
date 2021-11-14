@@ -5,13 +5,12 @@ import { Detail } from '~/components/ListDetail/Detail'
 import { withProviders } from '~/components/Providers/withProviders'
 import { PostEditor } from '~/components/Writing/Editor/PostEditor'
 import { getContext } from '~/graphql/context'
-import { UserRole, useViewerQuery } from '~/graphql/types.generated'
+import { useViewerQuery } from '~/graphql/types.generated'
 import { addApolloState, initApolloClient } from '~/lib/apollo'
 
 function NewPostPage() {
   const { data } = useViewerQuery()
-  if (!data?.viewer) return <Detail.Null />
-  if (data.viewer.role !== UserRole.Admin) return <Detail.Null />
+  if (!data?.viewer?.isAdmin) return <Detail.Null />
   return <PostEditor />
 }
 

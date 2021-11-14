@@ -4,11 +4,10 @@ import { Plus } from 'react-feather'
 import { GhostButton } from '~/components/Button'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { SignInDialog } from '~/components/SignInDialog'
-import { UserRole, useViewerQuery } from '~/graphql/types.generated'
+import { useViewerQuery } from '~/graphql/types.generated'
 
 import SegmentedControl from '../SegmentedController'
 import { AddQuestionDialog } from './AddQuestionDialog'
-import { QuestionsFilterButton } from './FilterButton'
 import { QuestionsContext } from './QuestionsList'
 
 export function AMATitlebar({ scrollContainerRef }) {
@@ -52,7 +51,7 @@ export function AMATitlebar({ scrollContainerRef }) {
   }
 
   function getChildren() {
-    if (data?.viewer?.role === UserRole.Admin) {
+    if (data?.viewer?.isAdmin) {
       return (
         <div className="pt-2 pb-1">
           <SegmentedControl

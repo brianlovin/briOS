@@ -5,7 +5,6 @@ import { ReactionButton } from '~/components/Button/ReactionButton'
 import { GET_POST } from '~/graphql/queries/posts'
 import {
   ReactionType,
-  UserRole,
   useToggleReactionMutation,
   useViewerQuery,
 } from '~/graphql/types.generated'
@@ -59,9 +58,8 @@ function getReactionButton(post) {
 
 function getEditButton(post) {
   const { data } = useViewerQuery()
-  const isAdmin = data?.viewer?.role === UserRole.Admin
 
-  if (!isAdmin) return null
+  if (!data?.viewer?.isAdmin) return null
 
   return (
     <Button href="/writing/[slug]/edit" as={`/writing/${post.slug}/edit`}>

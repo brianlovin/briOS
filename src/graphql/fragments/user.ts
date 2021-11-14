@@ -9,6 +9,7 @@ export const UserInfoFragment = gql`
     name
     role
     isViewer
+    isAdmin
   }
 `
 

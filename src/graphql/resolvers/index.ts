@@ -38,18 +38,17 @@ export default {
       return userId === viewer?.id
     },
     viewerCanDelete: ({ userId }, _, { viewer }: Context) => {
-      return userId === viewer?.id || viewer?.role === UserRole.Admin
+      return userId === viewer?.id || viewer?.isAdmin
     },
   },
   Question: {
     viewerCanEdit: ({ userId }, _, { viewer }: Context) => {
-      return userId === viewer?.id || viewer?.role === UserRole.Admin
+      return userId === viewer?.id || viewer?.isAdmin
     },
     viewerCanComment: async ({ id }, _, ctx: Context) => {
       const { viewer, prisma } = ctx
-      const isAdmin = viewer?.role === UserRole.Admin
       // I can always comment to answer a question
-      if (isAdmin) return true
+      if (viewer?.isAdmin) return true
       // If it's not me, only let people see the comment form if there are existing comments (answered)
       const comments = await prisma.question
         .findUnique({
@@ -87,6 +86,9 @@ export default {
   User: {
     isViewer: ({ id }, _, { viewer }: Context) => {
       return viewer && viewer.id === id
+    },
+    isAdmin: ({ role }) => {
+      return role === UserRole.Admin
     },
     email: ({ id }, _, { viewer }: Context) => {
       return viewer && viewer.id === id ? viewer.email : null
