@@ -26,8 +26,8 @@ export async function getServerSideProps({ req, res }) {
   const apolloClient = initApolloClient({ context })
 
   await Promise.all([
-    apolloClient.query({ query: GET_BOOKMARKS }),
     apolloClient.query({ query: GET_VIEWER }),
+    apolloClient.query({ query: GET_BOOKMARKS }),
     apolloClient.query({ query: GET_TAGS }),
   ])
 

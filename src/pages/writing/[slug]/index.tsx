@@ -28,9 +28,8 @@ export async function getServerSideProps({ params: { slug }, req, res }) {
   })
 
   await Promise.all([
-    apolloClient.query({ query: GET_POSTS }),
-
     apolloClient.query({ query: GET_VIEWER }),
+    apolloClient.query({ query: GET_POSTS }),
 
     data?.post?.id &&
       apolloClient.query({

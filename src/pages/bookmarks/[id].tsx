@@ -23,9 +23,7 @@ export async function getServerSideProps({ params: { id }, req, res }) {
 
   await Promise.all([
     apolloClient.query({ query: GET_VIEWER }),
-
     apolloClient.query({ query: GET_BOOKMARKS }),
-
     apolloClient.query({ query: GET_TAGS }),
 
     apolloClient.query({
