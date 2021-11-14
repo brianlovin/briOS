@@ -1,16 +1,26 @@
-import * as React from 'react'
+import * as Fathom from 'fathom-client'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 
-export function Fathom() {
-  React.useEffect(() => {
-    const tracker = window.document.createElement('script')
-    const firstScript = window.document.getElementsByTagName('script')[0]
-    tracker.defer = true
-    tracker.setAttribute('data-site', process.env.NEXT_PUBLIC_FATHOM_SITE_ID)
-    tracker.setAttribute('data-spa', 'auto')
-    tracker.setAttribute('data-excluded-domains', 'localhost,now.sh,vercel.app')
-    tracker.setAttribute('data-included-domains', 'brianlovin.com')
-    tracker.src = process.env.NEXT_PUBLIC_FATHOM_CUSTOM_URL
-    firstScript.parentNode.insertBefore(tracker, firstScript)
+export function FathomProvider() {
+  const router = useRouter()
+  useEffect(() => {
+    Fathom.load(process.env.NEXT_PUBLIC_FATHOM_SITE_ID, {
+      includedDomains: ['brianlovin.com'],
+      excludedDomains: ['vercel.app,localhost'],
+      url: process.env.NEXT_PUBLIC_FATHOM_CUSTOM_URL,
+      spa: 'auto',
+    })
+
+    function onRouteChangeComplete() {
+      Fathom.trackPageview()
+    }
+
+    router.events.on('routeChangeComplete', onRouteChangeComplete)
+
+    return () => {
+      router.events.off('routeChangeComplete', onRouteChangeComplete)
+    }
   }, [])
 
   return null
