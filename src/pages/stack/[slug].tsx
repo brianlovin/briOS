@@ -7,6 +7,7 @@ import { StackList } from '~/components/Stack/StackList'
 import { getContext } from '~/graphql/context'
 import { GET_COMMENTS } from '~/graphql/queries/comments'
 import { GET_STACK, GET_STACKS } from '~/graphql/queries/stack'
+import { GET_VIEWER } from '~/graphql/queries/viewer'
 import { CommentType } from '~/graphql/types.generated'
 import { addApolloState, initApolloClient } from '~/lib/apollo'
 
@@ -24,6 +25,8 @@ export async function getServerSideProps({ params: { slug }, req, res }) {
   })
 
   await Promise.all([
+    apolloClient.query({ query: GET_VIEWER }),
+
     apolloClient.query({
       query: GET_STACKS,
     }),
