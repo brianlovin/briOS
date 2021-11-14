@@ -13,7 +13,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   async function getIsAdmin(req, res) {
     const user = isAuthenticated(req, res)
-
     if (!user) return false
 
     const viewer = await prisma.user.findUnique({
