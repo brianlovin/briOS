@@ -1356,14 +1356,14 @@
     change-case-all "1.0.14"
     tslib "~2.3.0"
 
-"@graphql-codegen/typescript@^2.3.0", "@graphql-codegen/typescript@^2.3.1":
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript/-/typescript-2.3.1.tgz#ad557cc28f20aa8a9ad9f153c3c8ac8b6e09075a"
-  integrity sha512-5wfuJhXnDVdufznLZG2/YlPMy5qGVYAEodBACVT8Dfgnt7T8eQOdaTfEPh04hqf/WR6DDoiLrJDcdyqWUO305w==
+"@graphql-codegen/typescript@^2.3.0", "@graphql-codegen/typescript@^2.4.1":
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript/-/typescript-2.4.1.tgz#96d427993982edc27c50c4cd8841bdbbe26689d9"
+  integrity sha512-1+dZ0Qar+jGISXTdm7nWpv7Agt5uRj3q2GtpTJ92aA/AEHh+MTharanYcExEbdqNQm7b859MusI+Jo1Hlqsfmw==
   dependencies:
     "@graphql-codegen/plugin-helpers" "^2.3.0"
     "@graphql-codegen/schema-ast" "^2.4.0"
-    "@graphql-codegen/visitor-plugin-common" "2.5.0"
+    "@graphql-codegen/visitor-plugin-common" "2.5.1"
     auto-bind "~4.0.0"
     tslib "~2.3.0"
 
@@ -1371,6 +1371,22 @@
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/visitor-plugin-common/-/visitor-plugin-common-2.5.0.tgz#e412fade4ca3178a19e7ea122a4cb3463f2bf585"
   integrity sha512-a1kJ/5YBivCj9X20YuhNU2mPY9xjUVmJO0VjHBu06PyvC27GsR1PmvgRALIXrb6QwV+9DDUda3ewKzgne2Qc+A==
+  dependencies:
+    "@graphql-codegen/plugin-helpers" "^2.3.0"
+    "@graphql-tools/optimize" "^1.0.1"
+    "@graphql-tools/relay-operation-optimizer" "^6.3.7"
+    "@graphql-tools/utils" "^8.3.0"
+    auto-bind "~4.0.0"
+    change-case-all "1.0.14"
+    dependency-graph "^0.11.0"
+    graphql-tag "^2.11.0"
+    parse-filepath "^1.0.2"
+    tslib "~2.3.0"
+
+"@graphql-codegen/visitor-plugin-common@2.5.1":
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/visitor-plugin-common/-/visitor-plugin-common-2.5.1.tgz#4401bc401ff501b9b9330d1681e64685f519b327"
+  integrity sha512-hLnVB6u7qB1rIh9oJnGVWQmrUsXw3nEUMF+LGdf4b5qEWh5f9HSzciWMS6M47h4fSqpLyW4qgk2glH/DKwFgRA==
   dependencies:
     "@graphql-codegen/plugin-helpers" "^2.3.0"
     "@graphql-tools/optimize" "^1.0.1"
