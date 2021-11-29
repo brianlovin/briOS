@@ -111,7 +111,7 @@
     "husky": "^7.0.4",
     "lint-staged": "^12.1.2",
     "now-env": "^3.2.0",
-    "postcss": "^8.3.11",
+    "postcss": "^8.4.4",
     "postcss-import": "^14.0.2",
     "postcss-preset-env": "^7.0.1",
     "prettier": "^2.4.1",
