@@ -1817,17 +1817,17 @@
   resolved "https://registry.yarnpkg.com/@panva/asn1.js/-/asn1.js-1.0.0.tgz#dd55ae7b8129e02049f009408b97c61ccf9032f6"
   integrity sha512-UdkG3mLEqXgnlKsWanWcgb6dOjUzJ+XC5f+aWw30qrtjxeNUSfKX1cd5FBzOaXQumoe9nIqeZUvrRJS03HCCtw==
 
-"@prisma/client@^3.5.0":
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/@prisma/client/-/client-3.5.0.tgz#bb0c9c10fd9912209f5bfd01c1683094d8fa9a2d"
-  integrity sha512-LuaaisknLe9CCfJ1Rtqe9b9knvPgEEcC77OMmWdo3fSanxl5oTDxcH3IIhpULQQlJfZvDcaEXuXNU4dsNF+q1w==
+"@prisma/client@^3.6.0":
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/@prisma/client/-/client-3.6.0.tgz#68a60cd4c73a369b11f72e173e86fd6789939293"
+  integrity sha512-ycSGY9EZGROtje0iCNsgC5Zqi/ttX2sO7BNMYaLsUMiTlf3F69ZPH+08pRo0hrDfkZzyimXYqeXJlaoYDH1w7A==
   dependencies:
-    "@prisma/engines-version" "3.5.0-38.78a5df6def6943431f4c022e1428dbc3e833cf8e"
+    "@prisma/engines-version" "3.6.0-24.dc520b92b1ebb2d28dc3161f9f82e875bd35d727"
 
-"@prisma/engines-version@3.5.0-38.78a5df6def6943431f4c022e1428dbc3e833cf8e":
-  version "3.5.0-38.78a5df6def6943431f4c022e1428dbc3e833cf8e"
-  resolved "https://registry.yarnpkg.com/@prisma/engines-version/-/engines-version-3.5.0-38.78a5df6def6943431f4c022e1428dbc3e833cf8e.tgz#254fdb80ae6db397ee1e638d12561f35d058e340"
-  integrity sha512-X16YmBmj7Omso4ZbkNBe6gPYlNcnwZMUPtXsguCkn+KoMqm3DJD9M4X31gx0Gf13Q44dY3SKPJZUk44/XUj/WA==
+"@prisma/engines-version@3.6.0-24.dc520b92b1ebb2d28dc3161f9f82e875bd35d727":
+  version "3.6.0-24.dc520b92b1ebb2d28dc3161f9f82e875bd35d727"
+  resolved "https://registry.yarnpkg.com/@prisma/engines-version/-/engines-version-3.6.0-24.dc520b92b1ebb2d28dc3161f9f82e875bd35d727.tgz#25aa447776849a774885866b998732b37ec4f4f5"
+  integrity sha512-vtoO2ys6mSfc8ONTWdcYztKN3GBU1tcKBj0aXObyjzSuGwHFcM/pEA0xF+n1W4/0TAJgfoPX2khNEit6g0jtNA==
 
 "@prisma/engines@3.5.0-38.78a5df6def6943431f4c022e1428dbc3e833cf8e":
   version "3.5.0-38.78a5df6def6943431f4c022e1428dbc3e833cf8e"
@@ -10141,10 +10141,10 @@ react-linkify@^1.0.0-alpha:
     linkify-it "^2.0.3"
     tlds "^1.199.0"
 
-react-markdown@^7.1.0:
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/react-markdown/-/react-markdown-7.1.0.tgz#0ba62a4459daab6600ede83495a9228dae9d8f8e"
-  integrity sha512-hL8cLLkTydyoKlZWZOjlU6TvMYIw9qKLh1CCzVfnhKt/R/SnKVAqiyugetXY61CkjhBqJl2C5FdU3OwHYo7SrQ==
+react-markdown@^7.1.1:
+  version "7.1.1"
+  resolved "https://registry.yarnpkg.com/react-markdown/-/react-markdown-7.1.1.tgz#cb4d2c2fa3bc1292c889b068a5bf064ae4be1c60"
+  integrity sha512-bXS7indkcPlCLB6wRFFzX8Xdghr62TBxUF2587o+CUkaZlNaoILb2qNt+5pYmTZuCOC+OeEcdJ+06mu5whtCVQ==
   dependencies:
     "@types/hast" "^2.0.0"
     "@types/unist" "^2.0.0"
