@@ -91,6 +91,16 @@ const workHistory = [
 
 const speakingData = [
   {
+    href: 'https://uibreakfast.com/228-design-advisory-with-brian-lovin/',
+    title: 'UI Breakfast',
+    date: "Dec '21",
+  },
+  {
+    href: 'https://designmba.show/episodes/brian-lovin',
+    title: 'Design MBA',
+    date: "Nov '21",
+  },
+  {
     href: 'https://progressionapp.com/blog/podcast-26-brian-lovin-github-spectrum-design-details-on-the-rise-of-the-senior-ic/',
     title: 'Progression Podcast',
     date: "Jun '21",
