@@ -131,6 +131,10 @@
   @apply my-3;
 }
 
+.prose.comment a {
+  @apply break-all;
+}
+
 .prose p + p {
   margin-top: 0;
 }
