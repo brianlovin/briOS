@@ -91,20 +91,20 @@
     iterall "^1.1.3"
     uuid "^3.1.0"
 
-"@auth0/nextjs-auth0@^1.5.0":
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/@auth0/nextjs-auth0/-/nextjs-auth0-1.6.1.tgz#9d187e75964c46e1cc9065fd01840de8a9f5a2ef"
-  integrity sha512-xecYNjI1KvFerzarMUS6p7coWWAI7/JeJ9iMxj+ztIo+VJfR9CkYV2b/Fu3A2iy+UYbIoG78YV2plOynAIUOwQ==
+"@auth0/nextjs-auth0@^1.6.2":
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/@auth0/nextjs-auth0/-/nextjs-auth0-1.6.2.tgz#503e293ca62e5e287b84f460d087963af7f30039"
+  integrity sha512-jmcWfZyJAil+XPt/yyT7zjV2tCdRdbJj4bw54Gbs8kyCAtRyCvSlJ3Q+qWCFEmH9megGuPY/T9qCYOEpMFsDEQ==
   dependencies:
     base64url "^3.0.1"
     cookie "^0.4.1"
     debug "^4.3.2"
     futoin-hkdf "^1.4.2"
-    http-errors "^1.8.0"
+    http-errors "^1.8.1"
     joi "^17.4.1"
     jose "^2.0.5"
     on-headers "^1.0.2"
-    openid-client "^4.9.0"
+    openid-client "^4.9.1"
     tslib "^2.3.1"
     url-join "^4.0.1"
 
@@ -6625,16 +6625,16 @@ http-errors@1.7.3:
     statuses ">= 1.5.0 < 2"
     toidentifier "1.0.0"
 
-http-errors@^1.7.3, http-errors@^1.8.0:
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/http-errors/-/http-errors-1.8.0.tgz#75d1bbe497e1044f51e4ee9e704a62f28d336507"
-  integrity sha512-4I8r0C5JDhT5VkvI47QktDW75rNlGVsUf/8hzjCC/wkWI/jdTRmBb9aI7erSG82r1bjKY3F6k28WnsVxB1C73A==
+http-errors@^1.7.3, http-errors@^1.8.1:
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/http-errors/-/http-errors-1.8.1.tgz#7c3f28577cbc8a207388455dbd62295ed07bd68c"
+  integrity sha512-Kpk9Sm7NmI+RHhnj6OIWDI1d6fIoFAtFt9RLaTMRlg/8w49juAStsrBgp0Dp4OdxdVbRIeKhtCUvoi/RuAhO4g==
   dependencies:
     depd "~1.1.2"
     inherits "2.0.4"
     setprototypeof "1.2.0"
     statuses ">= 1.5.0 < 2"
-    toidentifier "1.0.0"
+    toidentifier "1.0.1"
 
 http-proxy-agent@^5.0.0:
   version "5.0.0"
@@ -9148,7 +9148,7 @@ onetime@^5.1.0, onetime@^5.1.2:
   dependencies:
     mimic-fn "^2.1.0"
 
-openid-client@^4.9.0:
+openid-client@^4.9.1:
   version "4.9.1"
   resolved "https://registry.yarnpkg.com/openid-client/-/openid-client-4.9.1.tgz#4f00a9d1566c0fa08f0dd5986cf0e6b1e5d14186"
   integrity sha512-DYUF07AHjI3QDKqKbn2F7RqozT4hyi4JvmpodLrq0HHoNP7t/AjeG/uqiBK1/N2PZSAQEThVjDLHSmJN4iqu/w==
@@ -12012,6 +12012,11 @@ toidentifier@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/toidentifier/-/toidentifier-1.0.0.tgz#7e1be3470f1e77948bc43d94a3c8f4d7752ba553"
   integrity sha512-yaOH/Pk/VEhBWWTlhI+qXxDFXlejDGcQipMlyxda9nthulaxLZUNcUqFxokp0vcYnvteJln5FNQDRrxj3YcbVw==
+
+toidentifier@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/toidentifier/-/toidentifier-1.0.1.tgz#3be34321a88a820ed1bd80dfaa33e479fbb8dd35"
+  integrity sha512-o5sSPKEkg/DIQNmH43V0/uerLrpzVedkUh8tGNvaeXpfpuwjKenlSox/2O/BTlZUtEe+JG7s5YhEz608PlAHRA==
 
 totalist@^2.0.0:
   version "2.0.0"
