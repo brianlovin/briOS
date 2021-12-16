@@ -16,10 +16,7 @@ function LevelZeroComment({ comment }: Props) {
         id={comment.id}
         href={`#${comment.id}`}
       >
-        <p
-          title={date.raw}
-          className="text-sm text-quaternary"
-        >{`${comment.user} · ${comment.time_ago}`}</p>
+        <p className="text-sm text-quaternary">{`${comment.user}`}</p>
       </a>
       <div
         className={'prose comment pt-1'}
@@ -62,10 +59,7 @@ function ChildComment({ comment }: Props) {
           id={comment.id}
           href={`#${comment.id}`}
         >
-          <p
-            title={date.raw}
-            className="text-sm text-quaternary"
-          >{`${comment.user} · ${comment.time_ago}`}</p>
+          <p className="text-sm text-quaternary">{`${comment.user}`}</p>
         </a>
         <div
           className={'prose pt-1'}
