@@ -69,7 +69,7 @@ export function PostDetail({ id }) {
             </Link>
             <PostByline post={post} />
             {post.content && (
-              <p
+              <div
                 className="prose comment opacity-70"
                 dangerouslySetInnerHTML={{ __html: post.content }}
               />
