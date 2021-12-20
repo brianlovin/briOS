@@ -39,7 +39,7 @@
     "deepmerge": "^4.2.2",
     "fathom-client": "^3.2.0",
     "feed": "^4.2.2",
-    "framer-motion": "^5.4.5",
+    "framer-motion": "^5.5.5",
     "graphql": "^15.6.1",
     "isomorphic-unfetch": "^3.1.0",
     "jsonwebtoken": "^8.5.1",
