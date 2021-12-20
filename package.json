@@ -69,7 +69,7 @@
     "remark-preset-lint-recommended": "^6.1.2",
     "remark-rehype": "^10.1.0",
     "remove-markdown": "^0.3.0",
-    "slugify": "^1.6.3",
+    "slugify": "^1.6.4",
     "string-replace-to-array": "^2.1.0",
     "turndown": "^7.1.1",
     "turndown-plugin-gfm": "^1.0.2",
