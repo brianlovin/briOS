@@ -122,20 +122,18 @@ export const Comment = React.memo(function MemoComment({
               />
             </a>
           </Link>
+
           <div className="flex space-x-1">
             <Link href={`/u/${comment.author.username}`}>
-              <a className="inline-flex space-x-1">
-                <span className="font-semibold leading-snug whitespace-nowrap text-primary">
+              <a className="font-semibold leading-snug text-primary">
+                <div className="flex break-all line-clamp-1">
                   {comment.author.name}
-                </span>
-                <span className="inline-flex font-normal leading-snug line-clamp-1 text-tertiary">
-                  @{comment.author.username}
-                </span>
+                </div>
               </a>
             </Link>
             <p className="leading-snug text-quaternary">·</p>
             <p
-              className="leading-snug text-quaternary line-clamp-1"
+              className="leading-snug line-clamp-1 text-quaternary"
               title={createdAt.raw}
             >
               {createdAt.formatted}
