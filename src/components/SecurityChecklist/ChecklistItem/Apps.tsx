@@ -14,9 +14,9 @@ export const Apps = ({ resource }: Props) => {
 
   return (
     <div className="-mx-4 overflow-hidden border md:rounded-lg shadow-subtle dark:border-gray-800 dark:bg-gray-900 border-gray-150">
-      <p className="p-4 text-sm font-semibold tracking-wider uppercase text-secondary">
+      <h3 className="p-4 text-sm font-semibold tracking-wider uppercase text-secondary">
         Apps
-      </p>
+      </h3>
       {appList && appList.map((app) => <AppRow key={app.name} app={app} />)}
     </div>
   )

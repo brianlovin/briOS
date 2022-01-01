@@ -18,7 +18,7 @@ export function DesignDetailMedia(props: Props) {
       onChange={(visible: boolean) => !isVisible && setIsVisible(visible)}
     >
       <div className="flex flex-col">
-        <h5 className="mb-4 text-lg font-bold text-primary">{detail.title}</h5>
+        <h2 className="mb-4 text-lg font-bold text-primary">{detail.title}</h2>
         <div className="prose">
           <MarkdownRenderer>{detail.description}</MarkdownRenderer>
         </div>

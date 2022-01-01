@@ -128,7 +128,7 @@ export function TitleBar({
 
             {leadingAccessory && <>{leadingAccessory}</>}
 
-            <p
+            <h2
               style={
                 magicTitle
                   ? {
@@ -140,7 +140,7 @@ export function TitleBar({
               className="text-sm font-bold transform-gpu text-primary line-clamp-1"
             >
               {title}
-            </p>
+            </h2>
           </span>
 
           {trailingAccessory && <>{trailingAccessory}</>}
