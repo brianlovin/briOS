@@ -9,7 +9,7 @@ import { TitleBar } from '~/components/ListDetail/TitleBar'
 
 function SectionTitle(props) {
   return (
-    <p
+    <h4
       className="col-span-2 pt-8 text-lg font-extrabold text-black dark:text-white md:font-normal md:text-base md:pt-0 md:text-right md:text-opacity-40"
       {...props}
     />
@@ -35,9 +35,9 @@ function TableRow({ href, title, subtitle, date }: TableRowProps) {
       href={href}
       className="flex items-center space-x-4 group"
     >
-      <span className="flex-none font-medium text-gray-1000 group-hover:underline group-hover:text-blue-600 dark:group-hover:text-blue-500 dark:text-gray-100">
+      <strong className="flex-none font-medium text-gray-1000 group-hover:underline group-hover:text-blue-600 dark:group-hover:text-blue-500 dark:text-gray-100">
         {title}
-      </span>
+      </strong>
       <span className="flex-shrink w-full border-t border-gray-300 border-dashed dark:border-gray-800" />
       {subtitle && <span className="flex-none text-tertiary">{subtitle}</span>}
       {date && (

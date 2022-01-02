@@ -184,12 +184,12 @@ export function SidebarNavigation() {
       {links.map((link, i) => {
         if (typeof link === 'string') {
           return (
-            <li
+            <h4
               key={i}
               className="px-2 pt-5 pb-2 text-xs font-semibold text-gray-1000 dark:text-white text-opacity-40"
             >
               {link}
-            </li>
+            </h4>
           )
         }
 
