@@ -60,7 +60,7 @@
     "react-visibility-sensor": "^5.1.1",
     "rehype-parse": "^8.0.3",
     "rehype-raw": "^6.1.1",
-    "rehype-remark": "^9.1.0",
+    "rehype-remark": "^9.1.2",
     "rehype-sanitize": "^5.0.1",
     "rehype-stringify": "^9.0.2",
     "remark": "^14.0.2",
