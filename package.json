@@ -109,7 +109,7 @@
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "husky": "^7.0.4",
-    "lint-staged": "^12.1.4",
+    "lint-staged": "^12.1.5",
     "now-env": "^3.2.0",
     "postcss": "^8.4.5",
     "postcss-import": "^14.0.2",
