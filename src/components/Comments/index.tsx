@@ -48,6 +48,7 @@ export function Comments({ refId, type }: Props) {
   }, [data])
 
   React.useEffect(() => {
+    setInitialCommentsCount(data?.comments?.length)
     if (refId !== refIdState) {
       setRefIdState(refId)
     }
