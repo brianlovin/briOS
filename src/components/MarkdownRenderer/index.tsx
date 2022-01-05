@@ -2,13 +2,20 @@ import deepmerge from 'deepmerge'
 import Link from 'next/link'
 import * as React from 'react'
 import Markdown from 'react-markdown'
+import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
+import rehypeSlug from 'rehype-slug'
 import remarkGfm from 'remark-gfm'
 import linkifyRegex from 'remark-linkify-regex'
 
 import { CodeBlock } from './CodeBlock'
 
 function LinkRenderer({ href, ...rest }: any) {
+  // auto-link headings
+  if (href.startsWith('#')) {
+    return <a href={href} {...rest} />
+  }
+
   if (href.startsWith('@')) {
     // link to a mention
     return (
@@ -113,7 +120,11 @@ export function MarkdownRenderer(props: any) {
     <Markdown
       {...rest}
       remarkPlugins={[remarkGfm, linkifyRegex(/^(?!.*\bRT\b)(?:.+\s)?@\w+/i)]}
-      rehypePlugins={[[rehypeSanitize, schema]]}
+      rehypePlugins={[
+        [rehypeSanitize, schema],
+        rehypeSlug,
+        [rehypeAutolinkHeadings, { behavior: 'wrap' }],
+      ]}
       components={components}
     >
       {children}

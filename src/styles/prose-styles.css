@@ -91,8 +91,17 @@
   @apply font-sans font-bold;
 }
 
+.prose h1 a,
+.prose h2 a,
+.prose h3 a,
+.prose h4 a,
+.prose h5 a,
+.prose h6 a {
+  @apply font-sans font-bold no-underline text-gray-1000 dark:text-gray-100;
+}
+
 .prose h5 {
-  @apply mt-10 -mb-3 text-xl;
+  @apply mt-12 -mb-3 text-xl;
 }
 
 .prose pre {
