@@ -10520,11 +10520,12 @@ remark-gfm@^3.0.1:
     micromark-extension-gfm "^2.0.0"
     unified "^10.0.0"
 
-remark-linkify-regex@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/remark-linkify-regex/-/remark-linkify-regex-1.0.0.tgz#afcaf4dcc96ffdf62e7aca490c3f3f5969a43f85"
-  integrity sha512-ysHcEHKFGmdjfcsWD7fLZw3soTOtuLbL2+xXH/kyf8fZROKD92gINgkb0QVPdTjfuRj/wycs4IQjqiSJy0uqTA==
+remark-linkify-regex@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/remark-linkify-regex/-/remark-linkify-regex-1.1.0.tgz#037dfcee6b982ba2edb3eca980a0551b227db034"
+  integrity sha512-+t/nHM5W32pdNJbtUQXubalAwe9yCHZgWxxZjvfNHkesEttirfC2+bG3vanlNFRVHuzH037F44GQ5RiMB7+b/A==
   dependencies:
+    unicode-word-regex "^1.0.1"
     unist-util-flatmap "1.0.x"
     unist-util-visit-parents "2.0.x"
 
@@ -12303,6 +12304,11 @@ unicode-property-aliases-ecmascript@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/unicode-property-aliases-ecmascript/-/unicode-property-aliases-ecmascript-2.0.0.tgz#0a36cb9a585c4f6abd51ad1deddb285c165297c8"
   integrity sha512-5Zfuy9q/DFr4tfO7ZPeVXb1aPoeQSdeFMLpYuFebehDAhbuevLs5yxSZmIFN1tP5F9Wl4IpJrYojg85/zgyZHQ==
+
+unicode-word-regex@^1.0.1:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/unicode-word-regex/-/unicode-word-regex-1.1.0.tgz#cdd6910e4e413606e704e139079bcab2b91040e3"
+  integrity sha512-2HlIXyag8yi0+AsB1Rx88gSuzw4hS/PgrcTbzkqIW/RBdi2VSp1rRr55RS+HszErwlSRAoA9jhM6L/x+xtu41w==
 
 unified-lint-rule@^2.0.0:
   version "2.1.1"
