@@ -91,17 +91,17 @@
     iterall "^1.1.3"
     uuid "^3.1.0"
 
-"@auth0/nextjs-auth0@^1.6.2":
-  version "1.6.2"
-  resolved "https://registry.yarnpkg.com/@auth0/nextjs-auth0/-/nextjs-auth0-1.6.2.tgz#503e293ca62e5e287b84f460d087963af7f30039"
-  integrity sha512-jmcWfZyJAil+XPt/yyT7zjV2tCdRdbJj4bw54Gbs8kyCAtRyCvSlJ3Q+qWCFEmH9megGuPY/T9qCYOEpMFsDEQ==
+"@auth0/nextjs-auth0@^1.7.0":
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/@auth0/nextjs-auth0/-/nextjs-auth0-1.7.0.tgz#61af4e9315cf8e8b42ffcb2dad09ff92b7ce7cfa"
+  integrity sha512-twz4f1A94i2ShJ6jB3UsFuVhzE0vJ1M/Ukq5bNBm/gpvCK6E/P8Ew2wQloak73+mXcV7eg5S+HOlmiKpcSe6mw==
   dependencies:
     base64url "^3.0.1"
     cookie "^0.4.1"
-    debug "^4.3.2"
+    debug "^4.3.3"
     futoin-hkdf "^1.4.2"
     http-errors "^1.8.1"
-    joi "^17.4.1"
+    joi "^17.5.0"
     jose "^2.0.5"
     on-headers "^1.0.2"
     openid-client "^4.9.1"
@@ -7391,7 +7391,7 @@ jest-worker@27.0.0-next.5:
     merge-stream "^2.0.0"
     supports-color "^8.0.0"
 
-joi@^17.4.1:
+joi@^17.5.0:
   version "17.5.0"
   resolved "https://registry.yarnpkg.com/joi/-/joi-17.5.0.tgz#7e66d0004b5045d971cf416a55fb61d33ac6e011"
   integrity sha512-R7hR50COp7StzLnDi4ywOXHrBrgNXuUUfJWIR5lPY5Bm/pOD3jZaTwpluUXVLRWcoWZxkrHBBJ5hLxgnlehbdw==
