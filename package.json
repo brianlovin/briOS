@@ -119,7 +119,7 @@
     "prettier": "^2.5.1",
     "prettier-eslint": "^13.0.0",
     "prettier-plugin-prisma": "^3.7.0",
-    "prisma": "^3.7.0",
+    "prisma": "^3.8.1",
     "stylelint-config-recommended": "^6.0.0",
     "tailwindcss": "^2.2.19",
     "typescript": "^4.4.4",
