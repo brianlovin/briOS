@@ -14,7 +14,7 @@ export function ListDetailView({ list, detail, hasDetail = false }: Props) {
       {list && (
         <div
           className={`bg-dots ${
-            hasDetail ? 'hidden md:flex' : 'w-full min-h-screen'
+            hasDetail ? 'hidden lg:flex' : 'w-full min-h-screen'
           }`}
         >
           {list}
