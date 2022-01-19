@@ -98,10 +98,15 @@ export function TitleBar({
     <>
       <div
         style={{
+          background: `rgba(255,255,255,${
+            currentScrollOffset === 0
+              ? currentScrollOffset
+              : currentScrollOffset + 0.8
+          })`,
           boxShadow: `0 1px 3px rgba(0,0,0,${currentScrollOffset})`,
           minHeight: '48px',
         }}
-        className={`sticky top-0 z-10 flex justify-center flex-col px-3 py-2 dark:bg-gray-900 dark:bg-opacity-80 bg-white bg-opacity-90 filter-blur dark:border-b dark:border-gray-900`}
+        className={`sticky top-0 z-10 flex justify-center flex-col px-3 py-2 filter-blur dark:border-b dark:border-gray-900`}
       >
         <div className="flex items-center justify-between flex-none">
           <span className="flex items-center space-x-3">
