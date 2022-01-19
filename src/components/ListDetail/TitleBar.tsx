@@ -94,14 +94,21 @@ export function TitleBar({
     })
   }, [title, titleRef, scrollContainerRef])
 
+  const isDarkMode =
+    window?.matchMedia &&
+    window?.matchMedia('(prefers-color-scheme: dark)').matches
+  const tint = isDarkMode ? '50,50,50' : '255,255,255'
+
   return (
     <>
       <div
         style={{
-          background: `rgba(255,255,255,${
+          background: `rgba(${tint},${
             currentScrollOffset === 0
               ? currentScrollOffset
-              : currentScrollOffset + 0.8
+              : currentScrollOffset + isDarkMode
+              ? 0.5
+              : 0.8
           })`,
           boxShadow: `0 1px 3px rgba(0,0,0,${currentScrollOffset})`,
           minHeight: '48px',
