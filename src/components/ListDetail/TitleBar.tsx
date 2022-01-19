@@ -106,9 +106,9 @@ export function TitleBar({
           background: `rgba(${tint},${
             currentScrollOffset === 0
               ? currentScrollOffset
-              : currentScrollOffset + isDarkMode
-              ? 0.5
-              : 0.8
+              : isDarkMode
+              ? currentScrollOffset + 0.5
+              : currentScrollOffset + 0.8
           })`,
           boxShadow: `0 1px 3px rgba(0,0,0,${currentScrollOffset})`,
           minHeight: '48px',
