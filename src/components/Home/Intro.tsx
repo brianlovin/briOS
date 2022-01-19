@@ -91,6 +91,11 @@ const workHistory = [
 
 const speakingData = [
   {
+    href: 'https://maze.co/podcast/#brian-lovin',
+    title: 'The Optimal Path Podcast',
+    date: "Jan '22",
+  },
+  {
     href: 'https://uibreakfast.com/228-design-advisory-with-brian-lovin/',
     title: 'UI Breakfast',
     date: "Dec '21",
