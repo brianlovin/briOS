@@ -30,7 +30,7 @@ export function TitleBar({
   children,
 }: Props) {
   const { isOpen, setIsOpen } = React.useContext(GlobalNavigationContext)
-
+  const [darkMode, setDarkMode] = React.useState(false)
   const [offset, setOffset] = React.useState(200)
   const [opacity, _setOpacity] = React.useState(0)
   const [currentScrollOffset, _setCurrentScrollOffset] = React.useState(0)
@@ -94,19 +94,21 @@ export function TitleBar({
     })
   }, [title, titleRef, scrollContainerRef])
 
-  const isDarkMode =
-    window?.matchMedia &&
-    window?.matchMedia('(prefers-color-scheme: dark)').matches
-  const tint = isDarkMode ? '50,50,50' : '255,255,255'
+  React.useEffect(() => {
+    const isDarkMode =
+      window?.matchMedia &&
+      window?.matchMedia('(prefers-color-scheme: dark)').matches
+    if (isDarkMode) setDarkMode(true)
+  }, [])
 
   return (
     <>
       <div
         style={{
-          background: `rgba(${tint},${
+          background: `rgba(${darkMode ? '50,50,50' : '255,255,255'},${
             currentScrollOffset === 0
               ? currentScrollOffset
-              : isDarkMode
+              : darkMode
               ? currentScrollOffset + 0.5
               : currentScrollOffset + 0.8
           })`,
