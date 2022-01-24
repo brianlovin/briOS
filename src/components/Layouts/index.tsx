@@ -15,7 +15,7 @@ export function ListDetailView({ list, detail, hasDetail = false }: Props) {
         <div
           id="list"
           className={`bg-dots ${
-            hasDetail ? 'hidden lg:flex' : 'w-full min-h-screen'
+            hasDetail ? 'hidden lg:flex' : 'min-h-screen w-full'
           }`}
         >
           {list}
@@ -28,7 +28,7 @@ export function ListDetailView({ list, detail, hasDetail = false }: Props) {
 
 export function SiteLayout({ children }) {
   return (
-    <div className="relative flex w-full h-full min-h-screen">
+    <div className="relative flex h-full min-h-screen w-full">
       <Sidebar />
 
       <div className="flex flex-1">{children}</div>

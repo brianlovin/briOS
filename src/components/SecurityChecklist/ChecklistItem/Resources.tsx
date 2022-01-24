@@ -10,8 +10,8 @@ type Props = {
 export function Resources({ resource }: Props) {
   if (!resource.resources) return null
   return (
-    <div className="pb-4 -mx-4 overflow-hidden border md:rounded-lg dark:bg-gray-900 dark:border-gray-800 shadow-subtle border-gray-150">
-      <h3 className="p-4 text-sm font-semibold tracking-wider uppercase text-secondary">
+    <div className="-mx-4 overflow-hidden border border-gray-150 pb-4 shadow-subtle dark:border-gray-800 dark:bg-gray-900 md:rounded-lg">
+      <h3 className="text-secondary p-4 text-sm font-semibold uppercase tracking-wider">
         Resources
       </h3>
       <div className="space-y-3">

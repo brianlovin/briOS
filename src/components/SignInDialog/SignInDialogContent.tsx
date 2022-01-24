@@ -6,12 +6,12 @@ export function SignInDialogContent() {
   return (
     <div
       data-cy="sign-in-dialog"
-      className="flex flex-col items-start p-4 space-y-6 md:p-6"
+      className="flex flex-col items-start space-y-6 p-4 md:p-6"
     >
-      <div className="grid w-full gap-4 sm:grid-cols-2 text-primary">
-        <div className="flex flex-col items-center justify-center p-4 space-y-2 bg-gray-100 rounded-lg dark:bg-gray-700 dark:bg-opacity-70">
+      <div className="text-primary grid w-full gap-4 sm:grid-cols-2">
+        <div className="flex flex-col items-center justify-center space-y-2 rounded-lg bg-gray-100 p-4 dark:bg-gray-700 dark:bg-opacity-70">
           <svg
-            className="w-6 h-6 text-gray-500 dark:text-gray-400"
+            className="h-6 w-6 text-gray-500 dark:text-gray-400"
             fill="currentColor"
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
@@ -19,14 +19,14 @@ export function SignInDialogContent() {
             <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z" />
             <path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z" />
           </svg>
-          <p className="text-base font-semibold text-primary">
+          <p className="text-primary text-base font-semibold">
             Ask me anything
           </p>
         </div>
 
-        <div className="flex flex-col items-center justify-center p-4 space-y-2 bg-gray-100 rounded-lg dark:bg-gray-700 dark:bg-opacity-70">
+        <div className="flex flex-col items-center justify-center space-y-2 rounded-lg bg-gray-100 p-4 dark:bg-gray-700 dark:bg-opacity-70">
           <svg
-            className="w-6 h-6 text-gray-500 dark:text-gray-400"
+            className="h-6 w-6 text-gray-500 dark:text-gray-400"
             fill="currentColor"
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
@@ -37,14 +37,14 @@ export function SignInDialogContent() {
               clipRule="evenodd"
             />
           </svg>
-          <p className="text-base font-semibold text-primary">
+          <p className="text-primary text-base font-semibold">
             Comment on posts
           </p>
         </div>
 
-        <div className="flex flex-col items-center justify-center p-4 space-y-2 bg-gray-100 rounded-lg dark:bg-gray-700 dark:bg-opacity-70">
+        <div className="flex flex-col items-center justify-center space-y-2 rounded-lg bg-gray-100 p-4 dark:bg-gray-700 dark:bg-opacity-70">
           <svg
-            className="w-6 h-6 text-gray-500 dark:text-gray-400"
+            className="h-6 w-6 text-gray-500 dark:text-gray-400"
             fill="currentColor"
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
@@ -55,14 +55,14 @@ export function SignInDialogContent() {
               clipRule="evenodd"
             />
           </svg>
-          <p className="text-base font-semibold text-primary">
+          <p className="text-primary text-base font-semibold">
             Like and save links
           </p>
         </div>
 
-        <div className="flex flex-col items-center justify-center p-4 space-y-2 bg-gray-100 rounded-lg dark:bg-gray-700 dark:bg-opacity-70">
+        <div className="flex flex-col items-center justify-center space-y-2 rounded-lg bg-gray-100 p-4 dark:bg-gray-700 dark:bg-opacity-70">
           <svg
-            className="w-6 h-6 text-gray-500 dark:text-gray-400"
+            className="h-6 w-6 text-gray-500 dark:text-gray-400"
             fill="currentColor"
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
@@ -73,11 +73,11 @@ export function SignInDialogContent() {
               clipRule="evenodd"
             />
           </svg>
-          <p className="text-base font-semibold text-primary">More soon...</p>
+          <p className="text-primary text-base font-semibold">More soon...</p>
         </div>
       </div>
 
-      <div className="flex items-stretch self-stretch justify-items-stretch">
+      <div className="flex items-stretch justify-items-stretch self-stretch">
         <a className="flex w-full" href="/api/auth/login">
           <TwitterButton style={{ flex: '1' }} size="large">
             <svg
@@ -93,7 +93,7 @@ export function SignInDialogContent() {
           </TwitterButton>
         </a>
       </div>
-      <p className="text-xs text-left text-quaternary">
+      <p className="text-quaternary text-left text-xs">
         Delete your account any time. I will only request access to your public
         Twitter profile information. You won’t be subscribed to anything.
       </p>

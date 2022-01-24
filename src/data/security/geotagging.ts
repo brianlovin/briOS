@@ -8,14 +8,11 @@ export default {
   resources: [
     {
       name: 'Are Location-Tagged Photos Really a Privacy Concern?',
-      url:
-        'https://www.howtogeek.com/340566/are-location-tagged-photos-really-a-privacy-concern/',
+      url: 'https://www.howtogeek.com/340566/are-location-tagged-photos-really-a-privacy-concern/',
     },
     {
-      name:
-        'Software Roundup: 5 of The Best Apps to Remove EXIF Data from Images',
-      url:
-        'https://www.maketecheasier.com/best-apps-remove-exif-data-from-images/',
+      name: 'Software Roundup: 5 of The Best Apps to Remove EXIF Data from Images',
+      url: 'https://www.maketecheasier.com/best-apps-remove-exif-data-from-images/',
     },
     {
       name: 'Geotagging',
@@ -27,8 +24,7 @@ export default {
     },
     {
       name: 'Web photos that reveal secrets, like where you live',
-      url:
-        'https://www.nytimes.com/2010/08/12/technology/personaltech/12basics.html',
+      url: 'https://www.nytimes.com/2010/08/12/technology/personaltech/12basics.html',
     },
     {
       name: 'How to avoid the potential risks of geotagging',
@@ -36,8 +32,7 @@ export default {
     },
     {
       name: 'How to turn off geotagging for photos on iPhone and iPad',
-      url:
-        'https://www.techbout.com/turn-off-geotagging-for-photos-iphone-ipad-8738/',
+      url: 'https://www.techbout.com/turn-off-geotagging-for-photos-iphone-ipad-8738/',
     },
     {
       name: 'How To turn off geotagging on Android devices',

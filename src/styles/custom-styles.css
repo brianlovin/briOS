@@ -23,12 +23,12 @@
 @layer components {
   /* needed to override tailwind forms styles */
   select {
-    @apply w-full px-4 py-2 border border-gray-200 rounded outline-none focus:outline-none focus:border-gray-1000 text-primary dark:border-gray-800 dark:focus:border-gray-600 bg-gray-1000 dark:bg-white bg-opacity-5 hover:bg-opacity-10 focus:ring-0;
+    @apply text-primary w-full rounded border border-gray-200 bg-gray-1000 bg-opacity-5 px-4 py-2 outline-none hover:bg-opacity-10 focus:border-gray-1000 focus:outline-none focus:ring-0 dark:border-gray-800 dark:bg-white dark:focus:border-gray-600;
   }
 
   button:focus,
   a:focus {
-    @apply outline-none ring-2 ring-offset-2 ring-offset-white dark:ring-offset-black ring-blue-500 dark:ring-blue-500;
+    @apply outline-none ring-2 ring-blue-500 ring-offset-2 ring-offset-white dark:ring-blue-500 dark:ring-offset-black;
   }
 
   button:active:not(:focus-visible),
@@ -40,20 +40,20 @@
 
   input[type='text'],
   textarea {
-    @apply bg-blue-500 border-none outline-none;
+    @apply border-none bg-blue-500 outline-none;
   }
 
   input[type='checkbox'] {
-    @apply dark:bg-gray-700 dark:border-gray-600;
+    @apply dark:border-gray-600 dark:bg-gray-700;
   }
 
   input:focus,
   textarea:focus {
-    @apply outline-none ring-offset-white dark:ring-offset-black ring-2 ring-offset-2 ring-blue-500;
+    @apply outline-none ring-2 ring-blue-500 ring-offset-2 ring-offset-white dark:ring-offset-black;
   }
 
   .font-list-heading {
-    @apply font-sans text-lg font-bold text-primary;
+    @apply text-primary font-sans text-lg font-bold;
   }
 
   .tabbed-navigation::-webkit-scrollbar {
@@ -95,7 +95,7 @@
   }
 
   .bg-elevated {
-    @apply bg-gray-400 dark:bg-gray-50 bg-opacity-5;
+    @apply bg-gray-400 bg-opacity-5 dark:bg-gray-50;
   }
 
   .filter-none {
@@ -116,11 +116,11 @@
   }
 
   .highlight-link-hover {
-    @apply px-0.5 -mx-0.5 no-underline md:hover:bg-yellow-400 rounded-sm md:dark:hover:bg-yellow-500 dark:bg-opacity-100 text-gray-1000 dark:text-gray-300 bg-opacity-20 md:hover:bg-opacity-30 md:dark:hover:bg-opacity-100 md:dark:hover:text-gray-1000;
+    @apply -mx-0.5 rounded-sm bg-opacity-20 px-0.5 text-gray-1000 no-underline dark:bg-opacity-100 dark:text-gray-300 md:hover:bg-yellow-400 md:hover:bg-opacity-30 md:dark:hover:bg-yellow-500 md:dark:hover:bg-opacity-100 md:dark:hover:text-gray-1000;
   }
 
   .highlight-link {
-    @apply px-0.5 -mx-0.5 dark:bg-gray-100 dark:bg-opacity-20 text-gray-1000 dark:text-gray-300 bg-opacity-20 md:hover:bg-opacity-30 md:dark:hover:bg-yellow-500 md:dark:hover:bg-opacity-100 md:dark:hover:text-gray-1000;
+    @apply -mx-0.5 bg-opacity-20 px-0.5 text-gray-1000 dark:bg-gray-100 dark:bg-opacity-20 dark:text-gray-300 md:hover:bg-opacity-30 md:dark:hover:bg-yellow-500 md:dark:hover:bg-opacity-100 md:dark:hover:text-gray-1000;
   }
 
   .blink {

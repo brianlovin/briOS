@@ -13,7 +13,7 @@ export function PostByline(props: Props) {
   const date = timestampToCleanTime({ timestamp: post.time * 1000 })
 
   return (
-    <div className="flex space-x-2 text-tertiary">
+    <div className="text-tertiary flex space-x-2">
       <p className="font-normal">{`${post.comments_count} comments`}</p>
 
       <span className="text-quaternary">·</span>

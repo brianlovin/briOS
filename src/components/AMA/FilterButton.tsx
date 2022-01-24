@@ -19,7 +19,7 @@ export function QuestionsFilterButton() {
   return (
     <div className="relative" data-cy="pending-filter-button">
       {!filterPending && data.questions.pageInfo.totalCount > 0 && (
-        <div className="absolute top-0 right-0 w-3 h-3 bg-yellow-500 border-2 border-white rounded-full dark:border-gray-900" />
+        <div className="absolute top-0 right-0 h-3 w-3 rounded-full border-2 border-white bg-yellow-500 dark:border-gray-900" />
       )}
       <GhostButton
         aria-label={

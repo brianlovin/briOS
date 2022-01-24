@@ -65,7 +65,7 @@ export function QuestionDetail({ id }) {
 
         <Detail.ContentContainer>
           <Detail.Header>
-            <div className="flex items-center pb-2 space-x-4">
+            <div className="flex items-center space-x-4 pb-2">
               <Link href={`/u/${question.author.username}`}>
                 <a className="inline-flex">
                   <Avatar
@@ -82,17 +82,17 @@ export function QuestionDetail({ id }) {
               <div className="flex space-x-1">
                 <Link href={`/u/${question.author.username}`}>
                   <a className="inline-flex space-x-1">
-                    <span className="font-semibold leading-snug whitespace-nowrap text-primary">
+                    <span className="text-primary whitespace-nowrap font-semibold leading-snug">
                       {question.author.name}
                     </span>
-                    <span className="inline-flex font-normal leading-snug line-clamp-1 text-tertiary">
+                    <span className="text-tertiary inline-flex font-normal leading-snug line-clamp-1">
                       @{question.author.username}
                     </span>
                   </a>
                 </Link>
-                <p className="leading-snug text-quaternary">·</p>
+                <p className="text-quaternary leading-snug">·</p>
                 <p
-                  className="leading-snug text-quaternary line-clamp-1"
+                  className="text-quaternary leading-snug line-clamp-1"
                   title={createdAt.raw}
                 >
                   {createdAt.formatted}
@@ -103,7 +103,7 @@ export function QuestionDetail({ id }) {
             {question.description && (
               <MarkdownRenderer
                 children={question.description}
-                className="leading-normal prose comment"
+                className="comment prose leading-normal"
                 variant="comment"
               />
             )}

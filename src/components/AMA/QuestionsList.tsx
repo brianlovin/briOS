@@ -52,7 +52,7 @@ export function QuestionsList() {
     return (
       <ListContainer onRef={setScrollContainerRef}>
         <AMATitlebar scrollContainerRef={scrollContainerRef} />
-        <div className="flex items-center justify-center flex-1">
+        <div className="flex flex-1 items-center justify-center">
           <LoadingSpinner />
         </div>
       </ListContainer>
@@ -71,7 +71,7 @@ export function QuestionsList() {
         <AMATitlebar scrollContainerRef={scrollContainerRef} />
 
         <LayoutGroup>
-          <div className="lg:p-3 lg:space-y-1">
+          <div className="lg:space-y-1 lg:p-3">
             {questions.edges.map((question) => {
               const active = router.query?.id === question.node.id.toString() // post ids are numbers
 

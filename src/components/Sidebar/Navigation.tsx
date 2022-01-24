@@ -180,13 +180,13 @@ export function SidebarNavigation() {
   ]
 
   return (
-    <ul className="flex-1 px-3 py-3 space-y-1">
+    <ul className="flex-1 space-y-1 px-3 py-3">
       {links.map((link, i) => {
         if (typeof link === 'string') {
           return (
             <h4
               key={i}
-              className="px-2 pt-5 pb-2 text-xs font-semibold text-gray-1000 dark:text-white text-opacity-40"
+              className="px-2 pt-5 pb-2 text-xs font-semibold text-gray-1000 text-opacity-40 dark:text-white"
             >
               {link}
             </h4>

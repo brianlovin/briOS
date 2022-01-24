@@ -11,8 +11,7 @@ export default {
     },
     {
       name: 'How to temporarily disable TouchID or FaceID',
-      url:
-        'https://www.iphonelife.com/content/how-to-temporarily-disable-touch-id-or-face-id-your-iphone',
+      url: 'https://www.iphonelife.com/content/how-to-temporarily-disable-touch-id-or-face-id-your-iphone',
     },
     {
       name: 'Changing your iOS passcode',

@@ -10,16 +10,16 @@ function LevelZeroComment({ comment }: Props) {
   const date = timestampToCleanTime({ timestamp: comment.time * 1000 })
 
   return (
-    <div className="px-4 pt-8 md:pt-12 md:px-8">
+    <div className="px-4 pt-8 md:px-8 md:pt-12">
       <a
         className="inline-block font-normal"
         id={comment.id}
         href={`#${comment.id}`}
       >
-        <p className="text-sm text-quaternary">{`${comment.user}`}</p>
+        <p className="text-quaternary text-sm">{`${comment.user}`}</p>
       </a>
       <div
-        className={'prose comment pt-1'}
+        className={'comment prose pt-1'}
         dangerouslySetInnerHTML={{ __html: comment.content }}
       />
       {comment.comments &&
@@ -51,13 +51,13 @@ function ChildComment({ comment }: Props) {
 
   return (
     <>
-      <div className={`border-l-2 ${color} flex shrink flex-col pl-4 mt-4`}>
+      <div className={`border-l-2 ${color} mt-4 flex shrink flex-col pl-4`}>
         <a
           className="inline-block font-normal"
           id={comment.id}
           href={`#${comment.id}`}
         >
-          <p className="text-sm text-quaternary">{`${comment.user}`}</p>
+          <p className="text-quaternary text-sm">{`${comment.user}`}</p>
         </a>
         <div
           className={'prose pt-1'}

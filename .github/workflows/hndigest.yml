@@ -2,17 +2,17 @@ name: send daily digest
 
 on:
   schedule:
-    - cron:  '0 23 * * *'
+    - cron: '0 23 * * *'
 
 jobs:
   send-hacker-news-digest:
     runs-on: ubuntu-latest
     steps:
-    - name: warm up function
-      uses: wei/curl@v1
-      with:
-        args: 'https://brianlovin.com/api/hn/send?warmup=true'
-    - name: send digests
-      uses: wei/curl@v1
-      with:
-        args: 'https://brianlovin.com/api/hn/send?token=${{secrets.HN_TOKEN}}'
+      - name: warm up function
+        uses: wei/curl@v1
+        with:
+          args: 'https://brianlovin.com/api/hn/send?warmup=true'
+      - name: send digests
+        uses: wei/curl@v1
+        with:
+          args: 'https://brianlovin.com/api/hn/send?token=${{secrets.HN_TOKEN}}'

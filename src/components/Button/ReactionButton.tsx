@@ -87,9 +87,9 @@ export function ReactionButton(props: Props) {
           <HeartIcon />
         </span>
       )}
-      <div className="relative h-3 -top-px">
+      <div className="relative -top-px h-3">
         <div
-          className={`flex space-y-2 duration-300 flex-col items-center justify-center ${currTranslate} transform transition-all`}
+          className={`flex flex-col items-center justify-center space-y-2 duration-300 ${currTranslate} transform transition-all`}
         >
           {hasReactedState ? (
             <>

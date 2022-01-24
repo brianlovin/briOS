@@ -79,16 +79,16 @@ export function StackUsedBy(props) {
   }
 
   return (
-    <div className="flex flex-col pt-2 rounded-md">
+    <div className="flex flex-col rounded-md pt-2">
       <div
-        className={`flex flex-col p-4 space-y-4 bg-gray-100 border dark:border-gray-800 border-gray-200 dark:bg-white dark:bg-opacity-10 rounded-t-md border-b-0`}
+        className={`flex flex-col space-y-4 rounded-t-md border border-b-0 border-gray-200 bg-gray-100 p-4 dark:border-gray-800 dark:bg-white dark:bg-opacity-10`}
       >
         {data?.stack?.usedBy.length === 0 ? (
-          <p className="text-sm font-medium text-quaternary">
+          <p className="text-quaternary text-sm font-medium">
             Nobody else is using this yet...
           </p>
         ) : (
-          <p className="text-sm font-medium text-quaternary">
+          <p className="text-quaternary text-sm font-medium">
             Also used by{' '}
             {data?.stack?.usedBy.length === 1
               ? `${data?.stack?.usedBy.length} person`
@@ -97,7 +97,7 @@ export function StackUsedBy(props) {
         )}
 
         {data?.stack?.usedBy.length > 0 && (
-          <div className="flex flex-wrap -m-1">
+          <div className="-m-1 flex flex-wrap">
             {data.stack.usedBy.map((user) => (
               <Tooltip key={user.id} content={user.name}>
                 <span>
@@ -119,14 +119,14 @@ export function StackUsedBy(props) {
           </div>
         )}
       </div>
-      <label className="flex items-center px-4 py-2 space-x-3 bg-white border border-gray-200 dark:border-gray-800 rounded-b-md dark:bg-gray-900">
+      <label className="flex items-center space-x-3 rounded-b-md border border-gray-200 bg-white px-4 py-2 dark:border-gray-800 dark:bg-gray-900">
         <input
           type="checkbox"
           onChange={handleToggle}
           checked={data?.stack?.usedByViewer}
-          className="w-4 h-4 border border-gray-300 rounded dark:border-gray-700"
+          className="h-4 w-4 rounded border border-gray-300 dark:border-gray-700"
         />
-        <p className="text-sm font-medium text-primary">I use this</p>
+        <p className="text-primary text-sm font-medium">I use this</p>
       </label>
     </div>
   )

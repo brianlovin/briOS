@@ -7,10 +7,10 @@ export function SidebarOverlay() {
 
   return (
     <div
-      className={`fixed bg-black bg-opacity-10 dark:bg-opacity-50 transition duration-200 ease-in-out inset-0 z-20 ${
+      className={`fixed inset-0 z-20 bg-black bg-opacity-10 transition duration-200 ease-in-out dark:bg-opacity-50 ${
         isOpen
-          ? 'opacity-100 pointer-events-auto'
-          : 'opacity-0 pointer-events-none'
+          ? 'pointer-events-auto opacity-100'
+          : 'pointer-events-none opacity-0'
       }`}
       onClick={() => setIsOpen(false)}
     />

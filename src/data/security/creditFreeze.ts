@@ -13,13 +13,11 @@ export default {
     },
     {
       name: 'Freezing credit will now be free; here’s why you should go for it',
-      url:
-        'https://www.nytimes.com/2018/09/14/your-money/credit-freeze-free.html',
+      url: 'https://www.nytimes.com/2018/09/14/your-money/credit-freeze-free.html',
     },
     {
       name: '7 things you should know before freezing your credit',
-      url:
-        'https://www.experian.com/blogs/ask-experian/7-things-you-need-to-know-before-freezing-your-credit/',
+      url: 'https://www.experian.com/blogs/ask-experian/7-things-you-need-to-know-before-freezing-your-credit/',
     },
     {
       name: 'Experian Freeze',

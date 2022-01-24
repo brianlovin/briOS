@@ -27,12 +27,12 @@ export function SecurityChecklist() {
           <Detail.Title ref={titleRef}>
             {routes.security.seo.title}
           </Detail.Title>
-          <p className="text-xl text-tertiary">
+          <p className="text-tertiary text-xl">
             {routes.security.seo.description}
           </p>
         </Detail.Header>
 
-        <div className="pt-16 space-y-24">
+        <div className="space-y-24 pt-16">
           {resources.map((resource) => (
             <ChecklistItem key={resource.id} resource={resource} />
           ))}

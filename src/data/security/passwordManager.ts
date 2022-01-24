@@ -31,8 +31,7 @@ export default {
           'https://download.cloud.lastpass.com/windows_installer/lastpass.exe',
         macos:
           'https://itunes.apple.com/us/app/lastpass/id926036361?ls=1&mt=12',
-        ios:
-          'https://itunes.apple.com/us/app/lastpass-password-manager/id324613447',
+        ios: 'https://itunes.apple.com/us/app/lastpass-password-manager/id324613447',
         android: 'https://lastpass.com/android_market.php',
         linux: 'https://lastpass.com/misc_download2.php',
       },
@@ -44,8 +43,7 @@ export default {
       sources: {
         windows: 'https://www.dashlane.com/directdownload?target=archive_win',
         macos: 'https://www.dashlane.com/directdownload?target=launcher_macosx',
-        ios:
-          'https://itunes.apple.com/us/app/dashlane-password-manager/id517914548',
+        ios: 'https://itunes.apple.com/us/app/dashlane-password-manager/id517914548',
         android: 'https://play.google.com/store/apps/details?id=com.dashlane',
         linux:
           'https://support.dashlane.com/hc/en-us/articles/115005432325-Getting-started-with-Dashlane-for-Linux-and-Chromebook',
@@ -60,8 +58,7 @@ export default {
           'https://vault.bitwarden.com/download/?app=desktop&platform=windows',
         macos:
           'https://vault.bitwarden.com/download/?app=desktop&platform=macos',
-        ios:
-          'https://itunes.apple.com/app/bitwarden-free-password-manager/id1137397744?mt=8',
+        ios: 'https://itunes.apple.com/app/bitwarden-free-password-manager/id1137397744?mt=8',
         android:
           'https://play.google.com/store/apps/details?id=com.x8bit.bitwarden',
         linux:
@@ -77,8 +74,7 @@ export default {
           'https://github.com/buttercup/buttercup-desktop/releases/download/v1.14.0/buttercup-desktop-setup-1.14.0.exe',
         macos:
           'https://github.com/buttercup/buttercup-desktop/releases/download/v1.14.0/Buttercup-1.14.0.dmg',
-        ios:
-          'https://itunes.apple.com/us/app/buttercup-password-manager/id1294001514?ls=1&mt=8',
+        ios: 'https://itunes.apple.com/us/app/buttercup-password-manager/id1294001514?ls=1&mt=8',
         android:
           'https://play.google.com/store/apps/details?id=com.buttercup&hl=en',
         linux:
@@ -109,18 +105,15 @@ export default {
   resources: [
     {
       name: 'How to use a password manager (and why you really should)',
-      url:
-        'https://www.theverge.com/2017/7/24/15921282/best-password-manager-1password-lastpass-dashlane-how-to',
+      url: 'https://www.theverge.com/2017/7/24/15921282/best-password-manager-1password-lastpass-dashlane-how-to',
     },
     {
       name: 'How password managers work and why you should use one',
-      url:
-        'https://motherboard.vice.com/en_us/article/59yv5x/how-password-managers-work-and-why-you-should-use-one',
+      url: 'https://motherboard.vice.com/en_us/article/59yv5x/how-password-managers-work-and-why-you-should-use-one',
     },
     {
       name: 'Password managers compared',
-      url:
-        'https://www.howtogeek.com/240255/password-managers-compared-lastpass-vs-keepass-vs-dashlane-vs-1password/',
+      url: 'https://www.howtogeek.com/240255/password-managers-compared-lastpass-vs-keepass-vs-dashlane-vs-1password/',
     },
     {
       name: 'Have I Been Pwned: Find out if your passwords have been hacked',

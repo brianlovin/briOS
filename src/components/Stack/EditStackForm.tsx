@@ -168,7 +168,7 @@ export function EditStackForm({ closeModal, stack }) {
   }
 
   return (
-    <div className="p-4 space-y-3">
+    <div className="space-y-3 p-4">
       <StackImageUploader stack={stack} onImageUploaded={onImageUploaded} />
 
       <form className="space-y-3" onSubmit={handleSave}>

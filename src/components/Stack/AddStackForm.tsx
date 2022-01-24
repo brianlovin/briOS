@@ -75,7 +75,7 @@ export function AddStackForm({ closeModal }) {
   }
 
   return (
-    <div className="p-4 space-y-3">
+    <div className="space-y-3 p-4">
       <StackImageUploader stack={null} onImageUploaded={onImageUploaded} />
       <form className="space-y-3" onSubmit={onSubmit}>
         <TagPicker filter={tagFilter} defaultValue={tag} onChange={setTag} />

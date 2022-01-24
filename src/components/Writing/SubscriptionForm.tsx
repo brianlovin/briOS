@@ -33,7 +33,7 @@ export function WritingSubscriptionForm({ defaultValue = '' }) {
   }
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="space-y-4 p-4">
       <div className="flex flex-col space-y-4">
         <p className="text-tertiary">
           Get an email whenever I publish new posts. I also publish semi-regular
@@ -43,7 +43,7 @@ export function WritingSubscriptionForm({ defaultValue = '' }) {
         <form
           data-cy="subscribe-hn-form"
           onSubmit={submit}
-          className="grid grid-cols-1 gap-2 mt-2 md:grid-cols-3"
+          className="mt-2 grid grid-cols-1 gap-2 md:grid-cols-3"
         >
           <label className="md:col-span-2">
             <span className="sr-only">Email address</span>
@@ -64,7 +64,7 @@ export function WritingSubscriptionForm({ defaultValue = '' }) {
             {status === 'saving' ? <LoadingSpinner /> : 'Subscribe'}
           </PrimaryButton>
         </form>
-        <p className="text-sm text-quaternary">
+        <p className="text-quaternary text-sm">
           Unsubscribe at any time. Powered by{' '}
           <a
             target="_blank"

@@ -20,8 +20,7 @@ export default {
       sources: {
         windows: 'https://www.whatsapp.com/download',
         macos: 'https://www.whatsapp.com/download',
-        ios:
-          'http://itunes.apple.com/us/app/whatsapp-messenger/id310633997?mt=8',
+        ios: 'http://itunes.apple.com/us/app/whatsapp-messenger/id310633997?mt=8',
         android: 'https://play.google.com/store/apps/details?id=com.whatsapp',
       },
     },
@@ -32,8 +31,7 @@ export default {
       sources: {
         windows: 'https://www.signal.org/download/',
         macos: 'https://www.signal.org/download/',
-        ios:
-          'https://itunes.apple.com/us/app/signal-private-messenger/id874139669?mt=8',
+        ios: 'https://itunes.apple.com/us/app/signal-private-messenger/id874139669?mt=8',
         android:
           'https://play.google.com/store/apps/details?id=org.thoughtcrime.securesms&referrer=utm_source%3DOWS%26utm_medium%3DWeb%26utm_campaign%3DNav',
         linux: 'https://www.signal.org/download/',
@@ -47,23 +45,19 @@ export default {
     },
     {
       name: 'Hacker lexicon: end-to-end encryption',
-      url:
-        'https://www.wired.com/2014/11/hacker-lexicon-end-to-end-encryption/',
+      url: 'https://www.wired.com/2014/11/hacker-lexicon-end-to-end-encryption/',
     },
     {
       name: 'Encrypted messaging isn’t magic',
       url: 'https://www.wired.com/story/encrypted-messaging-isnt-magic/',
     },
     {
-      name:
-        'Why you need a better handle on the WhatsApp, Signal and Telegram apps',
-      url:
-        'https://www.cnet.com/news/you-might-not-really-understand-how-encrypted-messaging-apps-work/',
+      name: 'Why you need a better handle on the WhatsApp, Signal and Telegram apps',
+      url: 'https://www.cnet.com/news/you-might-not-really-understand-how-encrypted-messaging-apps-work/',
     },
     {
       name: 'The best and worst encrypted messaging apps',
-      url:
-        'https://gizmodo.com/the-best-and-worst-encrypted-messaging-apps-1782424449',
+      url: 'https://gizmodo.com/the-best-and-worst-encrypted-messaging-apps-1782424449',
     },
   ],
 }

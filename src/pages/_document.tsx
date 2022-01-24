@@ -11,13 +11,13 @@ class MyDocument extends Document {
       <Html lang="en">
         <Head />
         <body>
-          <span className="absolute flex p-2 space-x-1 transform -translate-y-full bg-white border-b border-gray-150 dark:border-gray-800 dark:bg-gray-900 text-tertiary focus-within:relative focus-within:translate-y-0">
-            <a className="font-semibold text-primary" href="#main">
+          <span className="text-tertiary absolute flex -translate-y-full transform space-x-1 border-b border-gray-150 bg-white p-2 focus-within:relative focus-within:translate-y-0 dark:border-gray-800 dark:bg-gray-900">
+            <a className="text-primary font-semibold" href="#main">
               Skip to content
             </a>
             <span>(if available)</span>
             <span>or</span>
-            <a className="font-semibold text-primary" href="#list">
+            <a className="text-primary font-semibold" href="#list">
               jump to list
             </a>
             <span>(if available)</span>

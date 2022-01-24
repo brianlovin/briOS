@@ -10,7 +10,7 @@ export function AppOffer({ offer }: Props) {
   return (
     <a
       href={offer.url}
-      className="flex items-center px-4 py-2 mt-3 space-x-3 text-center rounded dark:bg-yellow-400 dark:text-yellow-500 dark:bg-opacity-20 bg-yellow-50 hover:bg-yellow-100 dark:hover:bg-opacity-30 dark:hover:bg-yellow-400 dark:hover:text-yellow-400"
+      className="mt-3 flex items-center space-x-3 rounded bg-yellow-50 px-4 py-2 text-center hover:bg-yellow-100 dark:bg-yellow-400 dark:bg-opacity-20 dark:text-yellow-500 dark:hover:bg-yellow-400 dark:hover:bg-opacity-30 dark:hover:text-yellow-400"
     >
       <p className="text-sm font-medium">{offer.label}</p>
     </a>

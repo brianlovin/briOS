@@ -72,13 +72,13 @@ export function BookmarkDetail({ id }) {
               <a
                 target="_blank"
                 rel="noopener"
-                className="flex items-center space-x-2 leading-snug text-tertiary"
+                className="text-tertiary flex items-center space-x-2 leading-snug"
               >
                 {bookmark.faviconUrl && (
                   <img
                     src={bookmark.faviconUrl}
                     alt={`Favicon for ${bookmark.host}`}
-                    className="w-4 h-4"
+                    className="h-4 w-4"
                     width="16px"
                     height="16px"
                   />
@@ -88,7 +88,7 @@ export function BookmarkDetail({ id }) {
             </Link>
             {bookmark.description && (
               <MarkdownRenderer
-                className="italic prose opacity-70"
+                className="prose italic opacity-70"
                 children={bookmark.description}
                 variant="comment"
               />

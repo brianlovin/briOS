@@ -11,8 +11,7 @@ export default {
       sources: {
         windows: 'https://www.fastmail.com/',
         macos: 'https://www.fastmail.com/',
-        ios:
-          'https://itunes.apple.com/us/app/fastmail-email-calendar/id931370077',
+        ios: 'https://itunes.apple.com/us/app/fastmail-email-calendar/id931370077',
         android:
           'https://play.google.com/store/apps/details?id=com.fastmail.app',
         linux: 'https://www.fastmail.com/',
@@ -25,8 +24,7 @@ export default {
       sources: {
         windows: 'https://protonmail.com/',
         macos: 'https://protonmail.com/',
-        ios:
-          'https://itunes.apple.com/app/protonmail-encrypted-email/id979659905',
+        ios: 'https://itunes.apple.com/app/protonmail-encrypted-email/id979659905',
         android:
           'https://play.google.com/store/apps/details?id=ch.protonmail.android',
         linux: 'https://protonmail.com/',
@@ -90,21 +88,18 @@ export default {
     },
     {
       name: 'How Google is destroying privacy and collecting your data',
-      url:
-        'https://www.salon.com/2014/02/05/4_ways_google_is_destroying_privacy_and_collecting_your_data_partner/',
+      url: 'https://www.salon.com/2014/02/05/4_ways_google_is_destroying_privacy_and_collecting_your_data_partner/',
     },
     {
       name: 'Privacy-friendly alternatives to Google that don’t track you',
       url: 'https://nomoregoogle.com/',
     },
     {
-      name:
-        'Opt out of global data surveillance programs like PRISM, XKeyscore and Tempora.',
+      name: 'Opt out of global data surveillance programs like PRISM, XKeyscore and Tempora.',
       url: 'https://prism-break.org/en/',
     },
     {
-      name:
-        'Knowledge and tools to protect your privacy against global mass surveillance',
+      name: 'Knowledge and tools to protect your privacy against global mass surveillance',
       url: 'https://www.privacytools.io/',
     },
     {

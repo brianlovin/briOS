@@ -5,34 +5,28 @@ export default {
   `,
   resources: [
     {
-      name:
-        'iOS camera permissions allow rogue apps to surreptitiously photograph & video users',
+      name: 'iOS camera permissions allow rogue apps to surreptitiously photograph & video users',
       url: 'https://9to5mac.com/2017/10/26/ios-camera-permissions-abuse/',
     },
     {
-      name:
-        'How to stop your iPhone from tracking locations you frequently visit',
+      name: 'How to stop your iPhone from tracking locations you frequently visit',
       url: 'https://www.imore.com/stop-iphone-tracking-frequent-locations',
     },
     {
       name: 'How to manage app permissions on iOS',
-      url:
-        'https://www.howtogeek.com/211623/how-to-manage-app-permissions-on-your-iphone-or-ipad/',
+      url: 'https://www.howtogeek.com/211623/how-to-manage-app-permissions-on-your-iphone-or-ipad/',
     },
     {
       name: 'How to manage app permissions on Android',
-      url:
-        'https://www.howtogeek.com/230683/how-to-manage-app-permissions-on-android-6.0/',
+      url: 'https://www.howtogeek.com/230683/how-to-manage-app-permissions-on-android-6.0/',
     },
     {
       name: 'How to manage app permissions on macOS',
-      url:
-        'https://www.idownloadblog.com/2018/08/16/howto-mac-camera-microphone-permission/',
+      url: 'https://www.idownloadblog.com/2018/08/16/howto-mac-camera-microphone-permission/',
     },
     {
       name: 'How to manage app permissions on Windows',
-      url:
-        'https://www.intowindows.com/how-to-change-app-permissions-in-windows-10/',
+      url: 'https://www.intowindows.com/how-to-change-app-permissions-in-windows-10/',
     },
     {
       name: 'Apps and services with access to your Google account',

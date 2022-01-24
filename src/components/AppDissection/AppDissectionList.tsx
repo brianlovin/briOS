@@ -18,7 +18,7 @@ export const AppDissectionList = React.memo(() => {
         title="App Dissection"
       />
 
-      <div className="lg:p-3 lg:space-y-1">
+      <div className="lg:space-y-1 lg:p-3">
         {summaries.map((summary) => {
           const active = router.query.slug === summary.slug
           return (

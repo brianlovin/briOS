@@ -59,8 +59,7 @@ export default {
           'https://download.cloud.lastpass.com/windows_installer/lastpass.exe',
         macos:
           'https://itunes.apple.com/us/app/lastpass/id926036361?ls=1&mt=12',
-        ios:
-          'https://itunes.apple.com/us/app/lastpass-password-manager/id324613447',
+        ios: 'https://itunes.apple.com/us/app/lastpass-password-manager/id324613447',
         android: 'https://lastpass.com/android_market.php',
         linux: 'https://lastpass.com/misc_download2.php',
       },
@@ -88,13 +87,11 @@ export default {
     },
     {
       name: 'Two-factor authentication: a little goes a long way',
-      url:
-        'https://securityintelligence.com/two-factor-authentication-a-little-goes-a-long-way/',
+      url: 'https://securityintelligence.com/two-factor-authentication-a-little-goes-a-long-way/',
     },
     {
       name: 'So hey, you should stop using texts for two-factor authentication',
-      url:
-        'https://www.wired.com/2016/06/hey-stop-using-texts-two-factor-authentication/',
+      url: 'https://www.wired.com/2016/06/hey-stop-using-texts-two-factor-authentication/',
     },
     {
       name: 'List of websites and whether or not they support 2FA.',
@@ -105,8 +102,7 @@ export default {
       url: 'https://www.turnon2fa.com/',
     },
     {
-      name:
-        'List of websites and whether or not they support One Time Passwords (OTP) or Universal 2nd Factor (U2F)',
+      name: 'List of websites and whether or not they support One Time Passwords (OTP) or Universal 2nd Factor (U2F)',
       url: 'https://www.dongleauth.info/',
     },
   ],

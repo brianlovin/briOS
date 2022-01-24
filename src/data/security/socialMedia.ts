@@ -23,8 +23,7 @@ export default {
     },
     {
       name: 'Facebook ad personalization settings',
-      url:
-        'https://www.facebook.com/ads/preferences/?entry_product=ad_settings_screen',
+      url: 'https://www.facebook.com/ads/preferences/?entry_product=ad_settings_screen',
     },
     {
       name: 'Facebook location history',
@@ -64,22 +63,18 @@ export default {
     },
     {
       name: 'Google purchase history',
-      url:
-        'https://myaccount.google.com/purchases?utm_source=google-account&utm_medium=web',
+      url: 'https://myaccount.google.com/purchases?utm_source=google-account&utm_medium=web',
     },
     {
       name: 'Google subscription history',
-      url:
-        'https://myaccount.google.com/subscriptions?utm_source=google-account&utm_medium=web',
+      url: 'https://myaccount.google.com/subscriptions?utm_source=google-account&utm_medium=web',
     },
     {
       name: 'Google reservation history',
-      url:
-        'https://myaccount.google.com/reservations?utm_source=google-account&utm_medium=web&continue=https%3A%2F%2Fmyaccount.google.com%2Fpayments-and-subscriptions',
+      url: 'https://myaccount.google.com/reservations?utm_source=google-account&utm_medium=web&continue=https%3A%2F%2Fmyaccount.google.com%2Fpayments-and-subscriptions',
     },
     {
-      name:
-        're:consent browser extension gives you more privacy control on the web',
+      name: 're:consent browser extension gives you more privacy control on the web',
       url: 'https://cliqz.com/en/magazine/re-consent',
     },
     {

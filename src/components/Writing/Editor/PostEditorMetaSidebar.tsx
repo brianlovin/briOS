@@ -68,7 +68,7 @@ export function PostEditorMetaSidebar() {
           sidebarIsOpen
             ? 'absolute inset-y-0 right-0 translate-x-0 shadow-lg'
             : 'absolute right-0 translate-x-full'
-        } flex flex-none flex-col w-3/4 sm:w-1/2 md:w-1/3 lg:w-56 2xl:w-72 3xl:w-80 z-30 max-h-screen h-full min-h-screen overflow-y-auto transition duration-200 ease-in-out transform bg-white border-l pb-10 sm:pb-0 border-gray-150 dark:bg-gray-900 dark:border-gray-800`}
+        } 3xl:w-80 z-30 flex h-full max-h-screen min-h-screen w-3/4 flex-none transform flex-col overflow-y-auto border-l border-gray-150 bg-white pb-10 transition duration-200 ease-in-out dark:border-gray-800 dark:bg-gray-900 sm:w-1/2 sm:pb-0 md:w-1/3 lg:w-56 2xl:w-72`}
       >
         <TitleBar
           scrollContainerRef={scrollContainerRef}
@@ -82,9 +82,9 @@ export function PostEditorMetaSidebar() {
           title="Details"
         />
 
-        <div className="flex-1 px-3 py-3 space-y-4">
+        <div className="flex-1 space-y-4 px-3 py-3">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-semibold text-primary">Slug</p>
+            <p className="text-primary text-sm font-semibold">Slug</p>
             <Input
               placeholder="Slug"
               value={draftState.slug}
@@ -93,7 +93,7 @@ export function PostEditorMetaSidebar() {
           </div>
 
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-semibold text-primary">Excerpt</p>
+            <p className="text-primary text-sm font-semibold">Excerpt</p>
             <Textarea
               value={draftState.excerpt}
               placeholder="Excerpt"
@@ -104,7 +104,7 @@ export function PostEditorMetaSidebar() {
           </div>
         </div>
 
-        <div className="sticky bottom-0 z-10 flex items-center justify-between p-2 space-x-3 bg-white border-t border-gray-150 dark:bg-gray-900 dark:border-gray-800 bg-opacity-80 filter-blur dark:bg-opacity-60">
+        <div className="filter-blur sticky bottom-0 z-10 flex items-center justify-between space-x-3 border-t border-gray-150 bg-white bg-opacity-80 p-2 dark:border-gray-800 dark:bg-gray-900 dark:bg-opacity-60">
           {existingPost?.id && !existingPost?.publishedAt && (
             <PrimaryButton
               style={{ width: '100%' }}
@@ -127,10 +127,10 @@ export function PostEditorMetaSidebar() {
       </nav>
 
       <div
-        className={`fixed bg-black bg-opacity-5 dark:bg-opacity-50 transition duration-200 ease-in-out inset-0 z-20 ${
+        className={`fixed inset-0 z-20 bg-black bg-opacity-5 transition duration-200 ease-in-out dark:bg-opacity-50 ${
           sidebarIsOpen
-            ? 'opacity-100 pointer-events-auto'
-            : 'opacity-0 pointer-events-none'
+            ? 'pointer-events-auto opacity-100'
+            : 'pointer-events-none opacity-0'
         }`}
         onClick={() => setSidebarIsOpen(false)}
       />

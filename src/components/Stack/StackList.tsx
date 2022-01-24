@@ -32,7 +32,7 @@ export function StackList() {
     return (
       <ListContainer onRef={setScrollContainerRef}>
         <StackTitlebar scrollContainerRef={scrollContainerRef} />
-        <div className="flex items-center justify-center flex-1">
+        <div className="flex flex-1 items-center justify-center">
           <LoadingSpinner />
         </div>
       </ListContainer>
@@ -43,7 +43,7 @@ export function StackList() {
     <ListContainer data-cy="stack-list" onRef={setScrollContainerRef}>
       <StackTitlebar scrollContainerRef={scrollContainerRef} />
 
-      <div className="lg:p-3 lg:space-y-1">
+      <div className="lg:space-y-1 lg:p-3">
         {data.stacks.edges.map((stack) => {
           const active = router.query.slug === stack.node.slug
           return (

@@ -70,7 +70,7 @@ export function PostDetail({ id }) {
             <PostByline post={post} />
             {post.content && (
               <div
-                className="prose comment opacity-70"
+                className="comment prose opacity-70"
                 dangerouslySetInnerHTML={{ __html: post.content }}
               />
             )}
@@ -93,8 +93,8 @@ export function PostDetail({ id }) {
 
         <PostComments comments={comments} />
 
-        <div className="bg-gray-100 border-t border-gray-200 dark:border-gray-800 dark:bg-gray-900">
-          <div className="max-w-3xl p-4 mx-auto">
+        <div className="border-t border-gray-200 bg-gray-100 dark:border-gray-800 dark:bg-gray-900">
+          <div className="mx-auto max-w-3xl p-4">
             <HackerNewsSubscriptionForm />
           </div>
         </div>

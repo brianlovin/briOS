@@ -11,8 +11,7 @@ export default {
       sources: {
         windows: 'https://duckduckgo.com',
         macos: 'https://duckduckgo.com',
-        ios:
-          'https://itunes.apple.com/us/app/duckduckgo-search-stories/id663592361?mt=8',
+        ios: 'https://itunes.apple.com/us/app/duckduckgo-search-stories/id663592361?mt=8',
         android:
           'https://play.google.com/store/apps/details?id=com.duckduckgo.mobile.android',
         linux: 'https://duckduckgo.com',
@@ -30,8 +29,7 @@ export default {
     },
     {
       name: 'DuckDuckGo: No, we’re not using fingerprinting to track you',
-      url:
-        'https://techcrunch.com/2019/01/07/duckduckgo-browser-fingerprinting/',
+      url: 'https://techcrunch.com/2019/01/07/duckduckgo-browser-fingerprinting/',
     },
     {
       name: 'Everything Google knows about you',
