@@ -44,7 +44,7 @@ export function ReactionButton(props: Props) {
     return (
       <SignInDialog
         trigger={
-          <Button>
+          <Button aria-label="Like">
             <span className="text-gray-500">
               <HeartIcon />
             </span>
