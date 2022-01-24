@@ -11,13 +11,15 @@ const mono = [
   'monospace',
 ]
 module.exports = {
-  purge: ['./src/**/*.{js,jsx,ts,tsx,vue}'],
-  darkMode: 'media',
+  content: ['./src/**/*.{js,jsx,ts,tsx,vue}'],
   theme: {
     extend: {
       colors: {
         white: '#fff',
-        gray: colors.trueGray,
+        green: colors.emerald,
+        yellow: colors.amber,
+        purple: colors.violet,
+        gray: colors.neutral,
         'gray-150': '#EEEFF2',
         'gray-1000': '#050505',
         black: '#050505',
@@ -26,6 +28,7 @@ module.exports = {
         'design-details-dark': '#273F3F',
         'hacker-news': '#FF965A',
         twitter: '#479BEA',
+        current: 'currentColor',
       },
       boxShadow: {
         xs: '0 1px 2px 0px rgba(0,0,0,0.03)',

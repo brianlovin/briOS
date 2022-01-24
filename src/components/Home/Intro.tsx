@@ -38,7 +38,7 @@ function TableRow({ href, title, subtitle, date }: TableRowProps) {
       <strong className="flex-none font-medium text-gray-1000 group-hover:underline group-hover:text-blue-600 dark:group-hover:text-blue-500 dark:text-gray-100">
         {title}
       </strong>
-      <span className="flex-shrink w-full border-t border-gray-300 border-dashed dark:border-gray-800" />
+      <span className="w-full border-t border-gray-300 border-dashed shrink dark:border-gray-800" />
       {subtitle && <span className="flex-none text-tertiary">{subtitle}</span>}
       {date && (
         <span className="flex-none font-mono text-quaternary">{date}</span>

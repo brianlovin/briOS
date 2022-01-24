@@ -28,7 +28,7 @@ const SegmentedControl = ({
   return (
     <AnimateSharedLayout>
       <ol
-        className={`flex p-1 bg-black dark:bg-white list-none bg-opacity-5 rounded-md`}
+        className={`flex p-1 bg-black dark:bg-white dark:bg-opacity-5 list-none bg-opacity-5 rounded-md`}
       >
         {items.map((item, i) => {
           const isActive = items[i].id === activeItem

@@ -15,8 +15,6 @@ interface Props {
 }
 
 export function Comments({ refId, type }: Props) {
-  const [refIdState, setRefIdState] = React.useState(refId)
-  const [initialCommentsCount, setInitialCommentsCount] = React.useState(null)
   const messagesEndRef: React.RefObject<HTMLDivElement> = React.useRef(null)
 
   const { data, loading, error, refetch } = useGetCommentsQuery({
@@ -27,32 +25,6 @@ export function Comments({ refId, type }: Props) {
   })
 
   useWindowFocus({ onFocus: refetch })
-
-  function scrollToBottom() {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }
-
-  React.useEffect(() => {
-    if (data?.comments) {
-      if (!initialCommentsCount) {
-        setInitialCommentsCount(data.comments.length)
-      } else {
-        if (
-          refId === refIdState &&
-          data.comments.length > initialCommentsCount
-        ) {
-          scrollToBottom()
-        }
-      }
-    }
-  }, [data])
-
-  React.useEffect(() => {
-    setInitialCommentsCount(data?.comments?.length)
-    if (refId !== refIdState) {
-      setRefIdState(refId)
-    }
-  }, [refId])
 
   if (loading) {
     return (
