@@ -51,9 +51,7 @@ function ChildComment({ comment }: Props) {
 
   return (
     <>
-      <div
-        className={`border-l-2 ${color} flex flex-shrink flex-col pl-4 mt-4`}
-      >
+      <div className={`border-l-2 ${color} flex shrink flex-col pl-4 mt-4`}>
         <a
           className="inline-block font-normal"
           id={comment.id}

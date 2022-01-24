@@ -1,3 +1,7 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
 @layer base {
   html {
     @apply max-h-screen overflow-hidden text-base antialiased;
@@ -14,6 +18,9 @@
     z-index: -1;
     @apply bg-white dark:bg-black;
   }
+}
+
+@layer components {
   /* needed to override tailwind forms styles */
   select {
     @apply w-full px-4 py-2 border border-gray-200 rounded outline-none focus:outline-none focus:border-gray-1000 text-primary dark:border-gray-800 dark:focus:border-gray-600 bg-gray-1000 dark:bg-white bg-opacity-5 hover:bg-opacity-10 focus:ring-0;
@@ -33,7 +40,7 @@
 
   input[type='text'],
   textarea {
-    @apply border-none outline-none;
+    @apply bg-blue-500 border-none outline-none;
   }
 
   input[type='checkbox'] {
@@ -44,9 +51,7 @@
   textarea:focus {
     @apply outline-none ring-offset-white dark:ring-offset-black ring-2 ring-offset-2 ring-blue-500;
   }
-}
 
-@layer components {
   .font-list-heading {
     @apply font-sans text-lg font-bold text-primary;
   }
