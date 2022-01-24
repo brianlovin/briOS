@@ -67,7 +67,7 @@ export function AddQuestionForm({ closeModal }) {
   const { viewer } = data
 
   return (
-    <form className="items-stretch p-4 space-y-4" onSubmit={onSubmit}>
+    <form className="items-stretch space-y-4 p-4" onSubmit={onSubmit}>
       <div className="flex items-start space-x-3">
         <div className="pt-0.5">
           <Avatar

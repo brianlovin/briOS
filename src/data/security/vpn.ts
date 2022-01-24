@@ -36,8 +36,7 @@ export default {
       url: 'https://www.expressvpn.com/',
       offer: {
         label: 'Get 30 days free',
-        url:
-          'https://www.expressrefer.com/refer-friend?referrer_id=44490458&utm_campaign=referrals&utm_medium=copy_link&utm_source=referral_dashboard',
+        url: 'https://www.expressrefer.com/refer-friend?referrer_id=44490458&utm_campaign=referrals&utm_medium=copy_link&utm_source=referral_dashboard',
       },
       sources: {
         windows: 'https://www.expressvpn.com/vpn-software/vpn-windows',
@@ -67,8 +66,7 @@ export default {
       sources: {
         windows: 'https://protonvpn.com/download/',
         macos: 'https://protonvpn.com/download/',
-        ios:
-          'https://itunes.apple.com/us/app/protonvpn-fast-secure-vpn/id1437005085',
+        ios: 'https://itunes.apple.com/us/app/protonvpn-fast-secure-vpn/id1437005085',
         android:
           'https://play.google.com/store/apps/details?id=ch.protonvpn.android',
         linux: 'https://protonvpn.com/download/#dl-clients',
@@ -83,8 +81,7 @@ export default {
           'https://www.privateinternetaccess.com/installer/x/download_installer_win/64',
         macos:
           'https://www.privateinternetaccess.com/installer/x/download_installer_osx',
-        ios:
-          'https://itunes.apple.com/us/app/private-internet-access-anonymous/id955626407?mt=8&uo=6&at=1001l3Gx&ct=web',
+        ios: 'https://itunes.apple.com/us/app/private-internet-access-anonymous/id955626407?mt=8&uo=6&at=1001l3Gx&ct=web',
         android:
           'https://play.google.com/store/apps/details?id=com.privateinternetaccess.android&hl=en',
         linux:
@@ -115,8 +112,7 @@ export default {
   resources: [
     {
       name: 'Why you should be using a VPN',
-      url:
-        'https://lifehacker.com/5940565/why-you-should-start-using-a-vpn-and-how-to-choose-the-best-one-for-your-needs',
+      url: 'https://lifehacker.com/5940565/why-you-should-start-using-a-vpn-and-how-to-choose-the-best-one-for-your-needs',
     },
     {
       name: 'What is a VPN and why you need one',
@@ -124,8 +120,7 @@ export default {
     },
     {
       name: 'Why you should use a VPN on a public Wi-Fi network',
-      url:
-        'https://www.macworld.com/article/3322951/security/why-you-should-use-a-vpn-on-a-public-wi-fi-network.html',
+      url: 'https://www.macworld.com/article/3322951/security/why-you-should-use-a-vpn-on-a-public-wi-fi-network.html',
     },
     {
       name: 'A detailed VPN provider comparison chart',

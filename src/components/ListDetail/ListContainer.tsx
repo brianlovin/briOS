@@ -10,7 +10,7 @@ export function ListContainer({ children, onRef, ...rest }) {
   return (
     <div
       ref={scrollContainerRef}
-      className="relative flex-none w-full h-full max-h-screen min-h-screen overflow-y-auto bg-white border-r lg:bg-gray-50 border-gray-150 lg:w-80 xl:w-96 lg:dark:bg-gray-900 dark:bg-gray-900 dark:border-gray-800"
+      className="relative h-full max-h-screen min-h-screen w-full flex-none overflow-y-auto border-r border-gray-150 bg-white dark:border-gray-800 dark:bg-gray-900 lg:w-80 lg:bg-gray-50 lg:dark:bg-gray-900 xl:w-96"
       {...rest}
     >
       {children}

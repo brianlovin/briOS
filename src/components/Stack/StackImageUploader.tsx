@@ -57,14 +57,14 @@ export function StackImageUploader({ stack, onImageUploaded }) {
 
   if (initialImage || previewImage) {
     return (
-      <div className="relative inline-block w-24 h-24 border border-gray-100 rounded-lg dark:border-gray-900">
+      <div className="relative inline-block h-24 w-24 rounded-lg border border-gray-100 dark:border-gray-900">
         <Image
           src={initialImage || previewImage}
           width="96"
           height="96"
           layout="fixed"
           quality={100}
-          className={`rounded-lg inline-block`}
+          className={`inline-block rounded-lg`}
         />
         <button
           onClick={() => {
@@ -72,7 +72,7 @@ export function StackImageUploader({ stack, onImageUploaded }) {
             setPreviewImage(null)
             onImageUploaded(null)
           }}
-          className="absolute p-2 text-white border-2 border-white rounded-full shadow-md cursor-pointer hover:bg-red-500 dark:bg-gray-700 dark:border-gray-800 -top-3 -right-3 bg-gray-1000 focus:bg-red-500"
+          className="absolute -top-3 -right-3 cursor-pointer rounded-full border-2 border-white bg-gray-1000 p-2 text-white shadow-md hover:bg-red-500 focus:bg-red-500 dark:border-gray-800 dark:bg-gray-700"
         >
           <Trash size={16} />
         </button>
@@ -83,7 +83,7 @@ export function StackImageUploader({ stack, onImageUploaded }) {
   return (
     <div
       {...getRootProps()}
-      className={`flex items-center justify-center w-24 h-24 p-6 border border-gray-200 border-dashed rounded-md dark:border-gray-700 bg-gray-100 hover:bg-gray-150 dark:bg-gray-800 dark:hover:border-gray-600 dark:hover:bg-gray-800 text-tertiary cursor-pointer`}
+      className={`text-tertiary flex h-24 w-24 cursor-pointer items-center justify-center rounded-md border border-dashed border-gray-200 bg-gray-100 p-6 hover:bg-gray-150 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600 dark:hover:bg-gray-800`}
     >
       <input {...getInputProps()} />
       {loading ? <LoadingSpinner /> : <Upload size={16} />}

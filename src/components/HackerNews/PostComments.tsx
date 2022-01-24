@@ -4,15 +4,15 @@ import { PostComment } from './PostComment'
 
 export function PostComments({ comments }) {
   return (
-    <div className="relative flex flex-col flex-1 pb-24 border-t dark:border-gray-800 border-gray-150">
-      <div className="flex flex-col flex-1 w-full max-w-3xl mx-auto space-y-8 divide-y divide-gray-150 md:space-y-12 dark:divide-gray-800">
+    <div className="relative flex flex-1 flex-col border-t border-gray-150 pb-24 dark:border-gray-800">
+      <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col space-y-8 divide-y divide-gray-150 dark:divide-gray-800 md:space-y-12">
         {comments &&
           comments.length > 0 &&
           comments.map((comment) => (
             <PostComment key={comment.id} comment={comment} />
           ))}
         {comments.length === 0 && (
-          <p className="p-8 text-quaternary">No comments yet...</p>
+          <p className="text-quaternary p-8">No comments yet...</p>
         )}
       </div>
     </div>

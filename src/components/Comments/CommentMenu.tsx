@@ -31,7 +31,7 @@ export function CommentMenu({ handleDelete, handleEdit, comment }) {
               >
                 <Menu.Items
                   static
-                  className="absolute right-0 z-10 w-56 mt-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-sm outline-none dark:divide-gray-700 dark:border-gray-700 dark:bg-gray-800"
+                  className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md border border-gray-200 bg-white shadow-sm outline-none dark:divide-gray-700 dark:border-gray-700 dark:bg-gray-800"
                 >
                   {comment.viewerCanEdit && (
                     <div className="py-1">
@@ -41,9 +41,9 @@ export function CommentMenu({ handleDelete, handleEdit, comment }) {
                             onClick={handleEdit}
                             className={`${
                               active
-                                ? 'bg-gray-100 dark:text-white text-gray-900 dark:bg-gray-700'
+                                ? 'bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-white'
                                 : 'text-gray-900 dark:text-gray-200'
-                            } flex cursor-pointer justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
+                            } flex w-full cursor-pointer justify-between px-4 py-2 text-left text-sm leading-5`}
                           >
                             Edit
                           </a>
@@ -60,9 +60,9 @@ export function CommentMenu({ handleDelete, handleEdit, comment }) {
                             onClick={handleDelete}
                             className={`${
                               active
-                                ? 'bg-red-50 dark:text-red-500 text-red-500 dark:bg-red-500 dark:bg-opacity-10'
+                                ? 'bg-red-50 text-red-500 dark:bg-red-500 dark:bg-opacity-10 dark:text-red-500'
                                 : 'text-red-500 dark:text-red-500'
-                            } flex justify-between cursor-pointer w-full px-4 py-2 text-sm leading-5 text-left`}
+                            } flex w-full cursor-pointer justify-between px-4 py-2 text-left text-sm leading-5`}
                           >
                             Delete
                           </a>

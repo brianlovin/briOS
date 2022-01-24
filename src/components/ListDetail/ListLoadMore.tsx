@@ -9,7 +9,7 @@ export function ListLoadMore({ setIsVisible }) {
       partialVisibility
       onChange={(visible: boolean) => setIsVisible(visible)}
     >
-      <div className="flex items-center justify-center w-full p-4">
+      <div className="flex w-full items-center justify-center p-4">
         <LoadingSpinner />
       </div>
     </ReactVisibilitySensor>

@@ -70,10 +70,10 @@ export function EmailSubscriptionForm({ subscription }: Props) {
         type="checkbox"
         onChange={onChange}
         defaultChecked={subscribed}
-        className="relative w-4 h-4 border border-gray-300 rounded top-1 dark:border-gray-700"
+        className="relative top-1 h-4 w-4 rounded border border-gray-300 dark:border-gray-700"
       />
       <div className="flex flex-col">
-        <p className="font-medium text-primary">{title}</p>
+        <p className="text-primary font-medium">{title}</p>
         <p className="text-tertiary">{subtitle}</p>
       </div>
     </label>
@@ -93,7 +93,7 @@ export function EmailPreferences() {
         />
       ))}
       <div className="pl-3">
-        <p className="pl-4 -mb-3 font-medium text-primary">Newsletter</p>
+        <p className="text-primary -mb-3 pl-4 font-medium">Newsletter</p>
         <WritingSubscriptionForm defaultValue={viewer.email} />
       </div>
     </div>

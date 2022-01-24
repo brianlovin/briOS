@@ -8,7 +8,7 @@ type Props = {
 
 export function Heading({ resource }: Props) {
   return (
-    <h2 className="font-sans text-xl font-semibold text-primary">
+    <h2 className="text-primary font-sans text-xl font-semibold">
       {resource.title}
     </h2>
   )

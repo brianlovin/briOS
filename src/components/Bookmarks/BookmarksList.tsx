@@ -66,7 +66,7 @@ export function BookmarksList() {
     return (
       <ListContainer onRef={setScrollContainerRef}>
         <BookmarksTitlebar scrollContainerRef={scrollContainerRef} />
-        <div className="flex items-center justify-center flex-1">
+        <div className="flex flex-1 items-center justify-center">
           <LoadingSpinner />
         </div>
       </ListContainer>
@@ -82,7 +82,7 @@ export function BookmarksList() {
       <ListContainer data-cy="bookmarks-list" onRef={setScrollContainerRef}>
         <BookmarksTitlebar scrollContainerRef={scrollContainerRef} />
         <LayoutGroup>
-          <div className="lg:p-3 lg:space-y-1">
+          <div className="lg:space-y-1 lg:p-3">
             {bookmarks.edges.map((bookmark) => {
               const active = router.query.id === bookmark.node.id
               return (

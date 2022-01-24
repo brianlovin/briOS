@@ -13,8 +13,8 @@ export const Apps = ({ resource }: Props) => {
   const appList = resource.apps
 
   return (
-    <div className="-mx-4 overflow-hidden border md:rounded-lg shadow-subtle dark:border-gray-800 dark:bg-gray-900 border-gray-150">
-      <h3 className="p-4 text-sm font-semibold tracking-wider uppercase text-secondary">
+    <div className="-mx-4 overflow-hidden border border-gray-150 shadow-subtle dark:border-gray-800 dark:bg-gray-900 md:rounded-lg">
+      <h3 className="text-secondary p-4 text-sm font-semibold uppercase tracking-wider">
         Apps
       </h3>
       {appList && appList.map((app) => <AppRow key={app.name} app={app} />)}

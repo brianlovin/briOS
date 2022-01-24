@@ -13,8 +13,7 @@ export default {
       sources: {
         windows: 'https://laptop-updates.brave.com/latest/winx64',
         macos: 'https://laptop-updates.brave.com/latest/osx',
-        ios:
-          'https://geo.itunes.apple.com/us/app/brave-web-browser/id1052879175?mt=8',
+        ios: 'https://geo.itunes.apple.com/us/app/brave-web-browser/id1052879175?mt=8',
         android:
           'https://play.google.com/store/apps/details?id=com.brave.browser&hl=en',
         linux:
@@ -73,8 +72,7 @@ export default {
       sources: {
         windows: 'https://cliqz.com/download',
         macos: 'https://cliqz.com/download',
-        ios:
-          'https://itunes.apple.com/de/app/cliqz-browser-suchmaschine/id1065837334?mt=8',
+        ios: 'https://itunes.apple.com/de/app/cliqz-browser-suchmaschine/id1065837334?mt=8',
         android:
           'https://play.google.com/store/apps/details?hl=de&id=com.cliqz.browser',
       },
@@ -83,37 +81,30 @@ export default {
   resources: [
     {
       name: 'Don’t expect privacy from Chrome',
-      url:
-        'https://www.digitaltrends.com/computing/google-chrome-incognito-mode-tracking/',
+      url: 'https://www.digitaltrends.com/computing/google-chrome-incognito-mode-tracking/',
     },
     {
       name: 'Google Chrome‘s users take a back seat to its bottom line',
-      url:
-        'https://www.eff.org/deeplinks/2018/11/google-chromes-users-take-back-seat-its-bottom-line',
+      url: 'https://www.eff.org/deeplinks/2018/11/google-chromes-users-take-back-seat-its-bottom-line',
     },
     {
       name: 'What data of mine does Chrome send to Google?',
-      url:
-        'https://lifehacker.com/5763452/what-data-does-chrome-send-to-google-about-me',
+      url: 'https://lifehacker.com/5763452/what-data-does-chrome-send-to-google-about-me',
     },
     {
       name: 'Firefox multi-account containers',
-      url:
-        'https://addons.mozilla.org/en-US/firefox/addon/multi-account-containers/',
+      url: 'https://addons.mozilla.org/en-US/firefox/addon/multi-account-containers/',
     },
     {
       name: 'How to protect yourself from browser fingerprinting',
-      url:
-        'https://www.comparitech.com/blog/vpn-privacy/what-is-browser-fingerprinting-how-to-protect-yourself/',
+      url: 'https://www.comparitech.com/blog/vpn-privacy/what-is-browser-fingerprinting-how-to-protect-yourself/',
     },
     {
       name: 'Browser fingerprinting, and why they are so hard to erase',
-      url:
-        'https://www.networkworld.com/article/2884026/security0/browser-fingerprints-and-why-they-are-so-hard-to-erase.html',
+      url: 'https://www.networkworld.com/article/2884026/security0/browser-fingerprints-and-why-they-are-so-hard-to-erase.html',
     },
     {
-      name:
-        'Who Tracks Me - Learn about tracking technologies, market structure and data-sharing on the web.',
+      name: 'Who Tracks Me - Learn about tracking technologies, market structure and data-sharing on the web.',
       url: 'https://whotracks.me/',
     },
   ],

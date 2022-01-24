@@ -9,7 +9,7 @@ import { TitleBar } from './TitleBar'
 function ContentContainer(props) {
   return (
     <div
-      className="w-full max-w-3xl px-4 py-8 pb-10 mx-auto md:px-8"
+      className="mx-auto w-full max-w-3xl px-4 py-8 pb-10 md:px-8"
       {...props}
     />
   )
@@ -25,7 +25,7 @@ const Container = React.forwardRef<HTMLDivElement, DetailContainerProps>(
       <div
         ref={ref}
         id="main"
-        className="relative flex flex-col w-full max-h-screen overflow-y-auto bg-white dark:bg-black"
+        className="relative flex max-h-screen w-full flex-col overflow-y-auto bg-white dark:bg-black"
         {...props}
       />
     )
@@ -44,7 +44,7 @@ const Title = React.forwardRef<HTMLHeadingElement, TitleProps>((props, ref) => {
   return (
     <h1
       ref={ref}
-      className="font-sans text-2xl font-bold xl:text-3xl text-primary"
+      className="text-primary font-sans text-2xl font-bold xl:text-3xl"
       {...props}
     />
   )
@@ -53,7 +53,7 @@ const Title = React.forwardRef<HTMLHeadingElement, TitleProps>((props, ref) => {
 function Loading() {
   return (
     <Container>
-      <div className="flex flex-col items-center justify-center flex-1">
+      <div className="flex flex-1 flex-col items-center justify-center">
         <LoadingSpinner />
       </div>
     </Container>
@@ -64,10 +64,10 @@ function Null() {
   return (
     <Container>
       <TitleBar title="Not found" />
-      <div className="flex flex-col items-center justify-center flex-1 px-8 space-y-6 text-center lg:px-16">
+      <div className="flex flex-1 flex-col items-center justify-center space-y-6 px-8 text-center lg:px-16">
         <Compass className="text-secondary" size={32} />
         <div className="flex flex-col space-y-1">
-          <p className="font-semibold text-primary">
+          <p className="text-primary font-semibold">
             What you seek does not exist.
           </p>
           <p className="text-tertiary">

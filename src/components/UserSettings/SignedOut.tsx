@@ -8,7 +8,7 @@ export function SignedOut() {
   return (
     <Detail.Container>
       <TitleBar title="Settings" />
-      <div className="flex flex-col items-center justify-center flex-1">
+      <div className="flex flex-1 flex-col items-center justify-center">
         <a href="/api/auth/login">
           <TwitterButton size="large">
             <svg

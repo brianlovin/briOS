@@ -11,24 +11,19 @@ export default {
     },
     {
       name: 'Rarely Patched Software Bugs in Home Routers Cripple Security',
-      url:
-        'https://www.wsj.com/articles/rarely-patched-software-bugs-in-home-routers-cripple-security-1453136285',
+      url: 'https://www.wsj.com/articles/rarely-patched-software-bugs-in-home-routers-cripple-security-1453136285',
     },
     {
       name: 'Why Installing Software Updates Makes Us WannaCry',
-      url:
-        'https://www.scientificamerican.com/article/why-installing-software-updates-makes-us-wannacry/',
+      url: 'https://www.scientificamerican.com/article/why-installing-software-updates-makes-us-wannacry/',
     },
     {
-      name:
-        'Everything You Ever Wanted to Know About Microsoft Windows Updates',
-      url:
-        'https://www.automox.com/blog/everything-you-want-microsoft-windows-updates',
+      name: 'Everything You Ever Wanted to Know About Microsoft Windows Updates',
+      url: 'https://www.automox.com/blog/everything-you-want-microsoft-windows-updates',
     },
     {
       name: 'Patching Is Failing as a Security Paradigm',
-      url:
-        'https://motherboard.vice.com/en_us/article/439wbw/patching-is-failing-as-a-security-paradigm',
+      url: 'https://motherboard.vice.com/en_us/article/439wbw/patching-is-failing-as-a-security-paradigm',
     },
   ],
 }

@@ -110,14 +110,14 @@ export function EmailForm() {
 
   return (
     <div className="space-y-2">
-      <p className="font-semibold text-primary">Email</p>
+      <p className="text-primary font-semibold">Email</p>
 
       {viewer.email && (
-        <div className="flex space-x-2 text-primary">
+        <div className="text-primary flex space-x-2">
           <span>{viewer.email}</span>
           <span>·</span>
           <button
-            className="font-medium text-blue-500 cursor-pointer"
+            className="cursor-pointer font-medium text-blue-500"
             onClick={() => setIsEditing(!isEditing)}
           >
             {isEditing ? 'Cancel' : 'Edit'}
@@ -128,7 +128,7 @@ export function EmailForm() {
       {(isNew || isEditing) && (
         <form className="space-y-2" onSubmit={onSubmit}>
           {isNew && (
-            <p className="text-sm text-quaternary">
+            <p className="text-quaternary text-sm">
               Adding your email will allow you to turn on replies for comments
               or AMA questions.
             </p>

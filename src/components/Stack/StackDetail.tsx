@@ -92,7 +92,7 @@ export function StackDetail({ slug }) {
             </div>
 
             <MarkdownRenderer
-              className="prose text-primary"
+              className="text-primary prose"
               children={stack.description}
               variant="comment"
             />

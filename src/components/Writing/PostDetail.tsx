@@ -45,13 +45,13 @@ export function PostDetail({ slug }) {
             <Detail.Title ref={titleRef}>{post.title}</Detail.Title>
             <span
               title={publishedAt.raw}
-              className="inline-block leading-snug text-tertiary"
+              className="text-tertiary inline-block leading-snug"
             >
               {publishedAt.formatted}
             </span>
           </Detail.Header>
 
-          <MarkdownRenderer children={post.text} className="mt-8 prose" />
+          <MarkdownRenderer children={post.text} className="prose mt-8" />
 
           {/* bottom padding to give space between post content and comments */}
           <div className="py-6" />

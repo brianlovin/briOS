@@ -45,7 +45,7 @@ export function AppDissectionDetail({ post }: Props) {
               <Detail.Title ref={titleRef}>{post.title}</Detail.Title>
               <span
                 title={date.raw}
-                className="inline-block leading-snug text-tertiary"
+                className="text-tertiary inline-block leading-snug"
               >
                 {date.formatted}
               </span>
@@ -54,7 +54,7 @@ export function AppDissectionDetail({ post }: Props) {
         </Detail.Header>
 
         <div className="space-y-12">
-          <div className="pt-12 prose">
+          <div className="prose pt-12">
             <MarkdownRenderer children={post.description} />
           </div>
 

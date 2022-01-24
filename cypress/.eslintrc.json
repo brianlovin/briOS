@@ -2,7 +2,5 @@
   "rules": {
     "cypress/no-unnecessary-waiting": "warn"
   },
-  "extends": [
-    "plugin:cypress/recommended"
-  ]
+  "extends": ["plugin:cypress/recommended"]
 }

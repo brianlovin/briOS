@@ -10,8 +10,7 @@ export default {
   resources: [
     {
       name: 'Opt out of Whitepages',
-      url:
-        'https://support.whitepages.com/hc/en-us/requests/new?ticket_form_id=580868',
+      url: 'https://support.whitepages.com/hc/en-us/requests/new?ticket_form_id=580868',
     },
     {
       name: 'Opt out of Intelius',

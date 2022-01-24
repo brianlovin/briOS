@@ -43,14 +43,14 @@ export function UsernameForm() {
 
   return (
     <div className="space-y-2">
-      <p className="font-semibold text-primary">Username</p>
+      <p className="text-primary font-semibold">Username</p>
 
       {viewer.username && (
-        <div className="flex space-x-2 text-primary">
+        <div className="text-primary flex space-x-2">
           <span>@{viewer.username}</span>
           <span>·</span>
           <button
-            className="font-medium text-blue-500 cursor-pointer"
+            className="cursor-pointer font-medium text-blue-500"
             onClick={() => setIsEditing(!isEditing)}
           >
             {isEditing ? 'Cancel' : 'Edit'}
@@ -73,7 +73,7 @@ export function UsernameForm() {
               numbers, letters, or underscores.
             </p>
           )}
-          <p className="text-xs text-quaternary">
+          <p className="text-quaternary text-xs">
             Updating your username will break any existing links to your
             profile, so you know, don’t do it too often.
           </p>

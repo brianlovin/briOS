@@ -13,7 +13,7 @@ function Container(props) {
   return (
     <div
       data-cy="sign-in-button"
-      className="sticky bottom-0 z-10 flex items-center justify-between p-2 space-x-3 bg-white border-t border-gray-150 dark:bg-gray-900 dark:border-gray-800 bg-opacity-80 filter-blur dark:bg-opacity-60"
+      className="filter-blur sticky bottom-0 z-10 flex items-center justify-between space-x-3 border-t border-gray-150 bg-white bg-opacity-80 p-2 dark:border-gray-800 dark:bg-gray-900 dark:bg-opacity-60"
       {...props}
     />
   )
@@ -34,7 +34,7 @@ export function UserFooter() {
   if (loading) {
     return (
       <Container>
-        <div className="flex items-center justify-center w-full py-1">
+        <div className="flex w-full items-center justify-center py-1">
           <LoadingSpinner />
         </div>
       </Container>
@@ -51,7 +51,7 @@ export function UserFooter() {
         <Link href={`/u/${data.viewer.username}`}>
           <a
             onClick={() => setIsOpen(false)}
-            className="flex items-center flex-none rounded-full"
+            className="flex flex-none items-center rounded-full"
           >
             <Avatar
               user={data.viewer}

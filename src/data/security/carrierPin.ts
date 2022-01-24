@@ -13,8 +13,7 @@ export default {
     },
     {
       name: 'SIM hijacking explained',
-      url:
-        'https://www.pandasecurity.com/mediacenter/security/sim-hijacking-explained/',
+      url: 'https://www.pandasecurity.com/mediacenter/security/sim-hijacking-explained/',
     },
     {
       name: 'Verizon FAQ',

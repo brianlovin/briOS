@@ -106,7 +106,7 @@ export const Comment = React.memo(function MemoComment({
   })
 
   return (
-    <div className="flex flex-col space-y-0 group">
+    <div className="group flex flex-col space-y-0">
       <div className="flex items-center justify-between space-x-4">
         <div className="flex items-center space-x-4">
           <Link href={`/u/${comment.author.username}`}>
@@ -125,15 +125,15 @@ export const Comment = React.memo(function MemoComment({
 
           <div className="flex space-x-1">
             <Link href={`/u/${comment.author.username}`}>
-              <a className="font-semibold leading-snug text-primary">
+              <a className="text-primary font-semibold leading-snug">
                 <div className="flex break-all line-clamp-1">
                   {comment.author.name}
                 </div>
               </a>
             </Link>
-            <p className="leading-snug text-quaternary">·</p>
+            <p className="text-quaternary leading-snug">·</p>
             <p
-              className="leading-snug line-clamp-1 text-quaternary"
+              className="text-quaternary leading-snug line-clamp-1"
               title={createdAt.raw}
             >
               {createdAt.formatted}
@@ -170,7 +170,7 @@ export const Comment = React.memo(function MemoComment({
       ) : (
         <MarkdownRenderer
           children={comment.text}
-          className="flex-grow leading-normal prose comment pl-14"
+          className="comment prose flex-grow pl-14 leading-normal"
           variant="comment"
         />
       )}

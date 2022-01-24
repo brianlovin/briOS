@@ -107,7 +107,7 @@ export const AppRow = ({ app }: Props) => {
         key={key}
       >
         <a
-          className="items-center space-y-1 focus:text-primary text-tertiary hover:text-gray-1000 dark:hover:text-gray-50"
+          className="focus:text-primary text-tertiary items-center space-y-1 hover:text-gray-1000 dark:hover:text-gray-50"
           href={sourceUrl}
         >
           <AppIconSvg name={renderMatch} />
@@ -120,13 +120,13 @@ export const AppRow = ({ app }: Props) => {
     <div className="p-4 md:hover:bg-gray-100 md:dark:hover:bg-gray-800">
       <div className="flex items-center justify-between">
         <a
-          className="flex items-center h-full space-x-3"
+          className="flex h-full items-center space-x-3"
           href={app.url}
           title={`go to: ${app.name}`}
         >
           {app.image && (
             <Image
-              className="w-8 h-8 transition-shadow rounded-md shadow-sm hover:shadow"
+              className="h-8 w-8 rounded-md shadow-sm transition-shadow hover:shadow"
               alt={app.name}
               width={32}
               height={32}
@@ -134,7 +134,7 @@ export const AppRow = ({ app }: Props) => {
               src={`/static/img/security/${app.image}`}
             />
           )}
-          <p className="font-medium text-primary">{app.name}</p>
+          <p className="text-primary font-medium">{app.name}</p>
         </a>
         {sourcesKeys && (
           <div className="flex items-center space-x-5">

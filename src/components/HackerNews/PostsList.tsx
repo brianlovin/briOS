@@ -43,7 +43,7 @@ export function PostsList() {
         title="HN"
       />
 
-      <div className="lg:p-3 lg:space-y-1">
+      <div className="lg:space-y-1 lg:p-3">
         {posts &&
           posts.length > 0 &&
           posts.map((post) => {

@@ -41,7 +41,7 @@ export function PostsList() {
     return (
       <ListContainer onRef={setScrollContainerRef}>
         <WritingTitlebar scrollContainerRef={scrollContainerRef} />
-        <div className="flex items-center justify-center flex-1">
+        <div className="flex flex-1 items-center justify-center">
           <LoadingSpinner />
         </div>
       </ListContainer>
@@ -60,7 +60,7 @@ export function PostsList() {
       <ListContainer data-cy="posts-list" onRef={setScrollContainerRef}>
         <WritingTitlebar scrollContainerRef={scrollContainerRef} />
 
-        <div className="lg:p-3 lg:space-y-1">
+        <div className="lg:space-y-1 lg:p-3">
           {posts.map((post) => {
             const active = router.query?.slug === post.slug
 
