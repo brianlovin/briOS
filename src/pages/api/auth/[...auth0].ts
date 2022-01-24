@@ -13,6 +13,9 @@ export default handleAuth({
     try {
       await handleLogin(req, res, {
         returnTo: req.headers.referer,
+        authorizationParams: {
+          connection: 'twitter',
+        },
       })
     } catch (error) {
       res.status(error.status || 500).end(error.message)
