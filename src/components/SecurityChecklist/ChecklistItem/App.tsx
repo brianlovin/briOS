@@ -107,7 +107,7 @@ export const AppRow = ({ app }: Props) => {
         key={key}
       >
         <a
-          className="items-center space-y-1 text-tertiary hover:text-gray-1000 dark:hover:text-gray-50"
+          className="items-center space-y-1 focus:text-primary text-tertiary hover:text-gray-1000 dark:hover:text-gray-50"
           href={sourceUrl}
         >
           <AppIconSvg name={renderMatch} />
