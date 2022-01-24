@@ -13,6 +13,7 @@ export function ListDetailView({ list, detail, hasDetail = false }: Props) {
     <div className="flex w-full">
       {list && (
         <div
+          id="list"
           className={`bg-dots ${
             hasDetail ? 'hidden lg:flex' : 'w-full min-h-screen'
           }`}
