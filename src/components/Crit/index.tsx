@@ -97,7 +97,7 @@ export function Crit() {
             <p>
               It takes a long time for a designer to ramp up in a new business,
               industry, and problem space. For that kind of long-term
-              commitment, it’s probably better to hire a contractor or full time
+              commitment, it’s probably better to hire a contractor or full-time
               designer. But visual design critique can be done without as much
               context, meaning I can get in and get the work done quickly and
               efficiently.
@@ -107,34 +107,35 @@ export function Crit() {
                 I won’t propose new features, remove features, or make
                 consequential changes to your layout. If you think I'm your
                 target customer, I will be happy to share more nuanced product
-                feedback and reactions.
+                feedback.
               </li>
               <li>
-                I won’t propose logo or brand changes, or propose costly updates
-                to an entire color scheme or typeface. For this reason, your
-                money will be best spent on in-product interfaces, not landing
-                pages.
+                I won’t propose logo, brand, or other costly thematic changes
+                (like color schemes and typefaces). I might gently recommend
+                small changes here, but your brand is your brand. For this
+                reason, your money will be best spent on in-product interfaces,
+                not landing pages.
               </li>
               <li>
-                I won’t implement any of the proposed changes — I’m happy to
-                pair with a frontend engineer to work through specific details
-                if needed.
+                I won’t implement any changes in code — I’m happy to pair with a
+                frontend engineer of your choice to work through specific
+                details if needed.
               </li>
             </ul>
             <h5>What’s the deliverable?</h5>
             <p>
-              At the end of the two hours, I’ll send you notes of my findings,
-              well-annotated screenshots, and a Figma file with high-fidelity
-              recreations of your interfaces, but…better!
+              At the end of the two hours, I’ll send you notes of my findings
+              with well-annotated screenshots and a Figma file full of
+              high-fidelity recreations of your interfaces...but better!
             </p>
             <h5>What do you need from me?</h5>
             <p>
               Send me a list of views, pages, or flows that need the most
-              attention. If it's more helpful for me to see a interface that
-              your users will experience, you can create a test account with
-              pre-populated data that I'll work against. For anything more
-              specific, we can always hop on a call to make sure I understand
-              your goals and situation.
+              attention. If it's more helpful for me to see a realistic
+              interface that your users will experience, you can create a test
+              account with pre-populated data that I'll work against. For
+              anything more specific, we can always hop on a call to make sure I
+              understand your goals and situation.
             </p>
             <h5>What if your work sucks?</h5>
             <p>
