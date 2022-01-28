@@ -9751,11 +9751,6 @@ prettier-plugin-prisma@^3.7.0:
   dependencies:
     "@prisma/prisma-fmt-wasm" "3.8.0-43.34df67547cf5598f5a6cd3eb45f14ee70c3fb86f"
 
-prettier-plugin-tailwindcss@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/prettier-plugin-tailwindcss/-/prettier-plugin-tailwindcss-0.1.1.tgz#1318ada36c61f6f5e858232c831ec19cb1ea6f76"
-  integrity sha512-mjwWE0fswYMiYw4KlcINXw5It6nXfJl3N0+eVFtuvjw+cJjFmErE7hXYJZnUSFSWXJacpCjx1KVkxSOolu4zBw==
-
 prettier@^2.0.0, prettier@^2.5.1:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.5.1.tgz#fff75fa9d519c54cf0fce328c1017d94546bc56a"

@@ -57,7 +57,7 @@ export function ListItem({
               className={`line-clamp-1 ${
                 active
                   ? 'text-white text-opacity-60'
-                  : 'text-gray-1000 text-opacity-40 dark:text-white'
+                  : 'text-gray-1000 text-opacity-40 dark:text-white dark:text-opacity-60'
               }`}
             >
               {byline}
