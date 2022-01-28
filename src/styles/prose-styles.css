@@ -88,7 +88,7 @@
 .prose h4,
 .prose h5,
 .prose h6 {
-  @apply font-sans font-bold;
+  @apply font-sans font-bold text-gray-900 dark:text-gray-100;
   scroll-margin-top: 4rem;
 }
 

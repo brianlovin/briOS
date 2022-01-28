@@ -24,6 +24,16 @@ const routes = {
       url: 'writing',
     }),
   },
+  crit: {
+    label: 'Crit',
+    path: '/crit',
+    seo: extendSEO({
+      title: 'Crit',
+      description: 'Visual design critique, as a service.',
+      image: 'og/crit.png',
+      url: 'crit',
+    }),
+  },
   hn: {
     label: 'HN',
     path: '/hn',
