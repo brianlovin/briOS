@@ -3,7 +3,7 @@
 }
 
 .prose blockquote {
-  @apply border-l-2 border-gray-200 font-normal dark:border-gray-800 dark:text-gray-400;
+  @apply font-normal border-l-2 border-gray-200 dark:border-gray-800 dark:text-gray-400;
 }
 
 .prose figure {
@@ -15,7 +15,7 @@
 }
 
 .prose a {
-  @apply break-words font-medium text-blue-600 no-underline hover:underline dark:text-blue-500;
+  @apply font-medium text-blue-600 no-underline break-words hover:underline dark:text-blue-500;
 }
 
 .prose a code {
@@ -23,7 +23,7 @@
 }
 
 .prose table {
-  @apply my-2 rounded-md border border-gray-200 text-gray-1000 dark:border-gray-800 dark:text-gray-50;
+  @apply my-2 border border-gray-200 rounded-md text-gray-1000 dark:border-gray-800 dark:text-gray-50;
 }
 
 .prose.comment table {
@@ -42,7 +42,7 @@
 .prose thead th,
 .prose tbody th,
 .prose tbody td {
-  @apply border-r border-gray-200 p-2 dark:border-gray-800;
+  @apply p-2 border-r border-gray-200 dark:border-gray-800;
   padding-left: 1rem !important;
 }
 
@@ -98,7 +98,7 @@
 .prose h4 a,
 .prose h5 a,
 .prose h6 a {
-  @apply font-sans font-bold text-gray-1000 no-underline dark:text-gray-100;
+  @apply font-sans font-bold no-underline text-gray-1000 dark:text-gray-100;
 }
 
 .prose h5 {
@@ -106,7 +106,7 @@
 }
 
 .prose pre {
-  @apply space-y-4 rounded-md border-gray-300 bg-gray-400 bg-opacity-5 px-8 py-6 text-sm text-gray-800 dark:border-gray-800 dark:text-gray-200;
+  @apply px-8 py-6 space-y-4 text-sm text-gray-800 bg-gray-400 border-gray-300 rounded-md bg-opacity-5 dark:border-gray-800 dark:text-gray-200;
 }
 
 .prose.comment {
@@ -114,7 +114,7 @@
 }
 
 .prose.comment pre {
-  @apply my-2 px-3 py-2;
+  @apply px-3 py-2 my-2;
 }
 
 /* this is needed to avoid HN comments from overflowing off the right edge of the screen */
@@ -155,10 +155,14 @@
 
 .prose code,
 .prose pre {
-  @apply whitespace-pre-wrap text-sm font-medium;
+  @apply text-sm font-medium whitespace-pre-wrap;
   word-break: break-word;
 }
 
+.prose pre > code {
+  @apply text-gray-200 bg-gray-800;
+}
+
 .prose pre {
-  @apply bg-gray-800 text-gray-100;
+  @apply text-gray-100 bg-gray-800;
 }
