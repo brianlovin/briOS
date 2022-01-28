@@ -106,9 +106,9 @@ export function Crit() {
             <p>
               I know that this price might not be realistic for many folks out
               there, or might not feel like it's paying for "enough." But my two
-              hours with your interfaces will be highly productive, and the
-              artifacts you'll receive in return will be clear, actionable, and
-              easy to understand.
+              hours with your interfaces will be highly productive, actionable,
+              and easy to build against — more than a decade of design
+              experience concentrated into two hours of value.
             </p>
             <h5>Only visual design?</h5>
             <p>
