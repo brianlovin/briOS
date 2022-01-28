@@ -33,15 +33,15 @@ function TableRow({ href, title, subtitle, date }: TableRowProps) {
       target="_blank"
       rel="noopener noreferrer"
       href={href}
-      className="group flex items-center space-x-4"
+      className="flex items-center space-x-4 group"
     >
       <strong className="flex-none font-medium text-gray-1000 group-hover:text-blue-600 group-hover:underline dark:text-gray-100 dark:group-hover:text-blue-500">
         {title}
       </strong>
-      <span className="w-full shrink border-t border-dashed border-gray-300 dark:border-gray-800" />
-      {subtitle && <span className="text-tertiary flex-none">{subtitle}</span>}
+      <span className="w-full border-t border-gray-300 border-dashed shrink dark:border-gray-800" />
+      {subtitle && <span className="flex-none text-tertiary">{subtitle}</span>}
       {date && (
-        <span className="text-quaternary flex-none font-mono">{date}</span>
+        <span className="flex-none font-mono text-quaternary">{date}</span>
       )}
     </a>
   )
@@ -50,7 +50,7 @@ function TableRow({ href, title, subtitle, date }: TableRowProps) {
 function SectionContainer(props) {
   return (
     <div
-      className="grid grid-cols-1 items-start gap-6 md:grid-cols-12"
+      className="grid items-start grid-cols-1 gap-6 md:grid-cols-12"
       {...props}
     />
   )
@@ -169,11 +169,11 @@ export function Intro() {
       <div className="p-4" ref={titleRef} />
 
       <Detail.ContentContainer>
-        <div className="space-y-8 pb-24 md:space-y-16">
+        <div className="pb-24 space-y-8 md:space-y-16">
           <SectionContainer>
             <SectionTitle />
             <SectionContent>
-              <div className="text-primary prose">
+              <div className="prose text-primary">
                 <p>
                   Hey, I&apos;m Brian. I&apos;m a designer,{' '}
                   <a
@@ -280,6 +280,14 @@ export function Intro() {
                   where I’m exploring how plugins can automate the tedious parts
                   of interface design.
                 </p>
+
+                <p>
+                  If you’re interested in working together, let’s set up a{' '}
+                  <Link href="/crit">
+                    <a>visual design critique</a>
+                  </Link>
+                  .
+                </p>
               </div>
               <div className="flex pt-6">
                 <Button href="https://changelog.brianlovin.com">
@@ -302,7 +310,7 @@ export function Intro() {
                 quality={100}
                 alt="Map of San Francisco with blue location dot in the middle"
               />
-              <p className="text-quaternary flex items-center justify-end space-x-2 pt-2 text-sm md:text-right">
+              <p className="flex items-center justify-end pt-2 space-x-2 text-sm text-quaternary md:text-right">
                 <MapPin size={12} />
                 <span>San Francisco, CA</span>
               </p>

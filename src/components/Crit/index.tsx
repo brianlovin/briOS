@@ -68,13 +68,14 @@ export function Crit() {
               visual nitpicking you've ever seen. Show me your product, app, or
               website, and I'll point out in excruciating detail every pixel
               that I think could be better placed. I’ll point out the
-              small-but-subtle ways alignment, color, and typography choices are
-              holding your design back from visual excellence. It'll be a blast!
+              small-but-subtle ways alignment, color, and typographic choices
+              are holding your design back from visual excellence. It'll be a
+              blast!
             </p>
             <h5>Why do I need this?</h5>
             <p>
               Fair question! Sometimes people think of high quality visual
-              design as "polish work" or "a nice to have stretch goal." But I
+              design as "polish work" or a "nice to have stretch goal." But I
               believe that all software should be beautiful, and that form and
               function both play an important role in a product's success.
             </p>
