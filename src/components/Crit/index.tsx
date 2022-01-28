@@ -53,11 +53,14 @@ export function Crit() {
           <div className="prose prose-lg">
             <h5>Who do you think you are?</h5>
             <p>
-              You can learn more about me{' '}
+              Hey! I'm Brian, I'm a product designer at GitHub, startup founder,
+              and side-project tinkerer. You can learn more about me{' '}
               <Link href="/">
                 <a>here</a>
               </Link>
-              .
+              {', '}
+              or poke around the other pages on this site to get a feel for my
+              work.
             </p>
             <h5>What is this?</h5>
             <p>
@@ -68,7 +71,14 @@ export function Crit() {
               small-but-subtle ways alignment, color, and typography choices are
               holding your design back from visual excellence. It'll be a blast!
             </p>
-            This is most useful when:
+            <h5>Why do I need this?</h5>
+            <p>
+              Fair question! Sometimes people think of high quality visual
+              design as "polish work" or "a nice to have stretch goal." But I
+              believe that all software should be beautiful, and that form and
+              function both play an important role in a product's success.
+            </p>
+            <p>A visual design critique will be most useful when:</p>
             <ul>
               <li>
                 Your product is about to ship, and you need a last minute gut
@@ -77,7 +87,7 @@ export function Crit() {
               <li>
                 Your product has grown weeds, and isn’t quite as consistent or
                 shiny as it used to be. You need someone to point out where to
-                start fixing things, and how to get the most impact with the
+                start fixing things, and how to have the most impact with the
                 least amount of effort.
               </li>
               <li>
@@ -92,7 +102,14 @@ export function Crit() {
               real-time on a video call.
             </p>
             <h5>That’s expensive!</h5>
-            <p>So is bad design.</p>
+            <p>So is bad design!</p>
+            <p>
+              I know that this price might not be realistic for many folks out
+              there, or might not feel like it's paying for "enough." But my two
+              hours with your interfaces will be highly productive, and the
+              artifacts you'll receive in return will be clear, actionable, and
+              easy to understand.
+            </p>
             <h5>Only visual design?</h5>
             <p>
               It takes a long time for a designer to ramp up in a new business,
@@ -104,7 +121,7 @@ export function Crit() {
             </p>
             <ul>
               <li>
-                I won’t propose new features, remove features, or make
+                I won’t make up new features, remove features, or make
                 consequential changes to your layout. If you think I'm your
                 target customer, I will be happy to share more nuanced product
                 feedback.
@@ -112,9 +129,9 @@ export function Crit() {
               <li>
                 I won’t propose logo, brand, or other costly thematic changes
                 (like color schemes and typefaces). I might gently recommend
-                small changes here, but your brand is your brand. For this
-                reason, your money will be best spent on in-product interfaces,
-                not landing pages.
+                small changes in these areas, but your brand is your brand. For
+                this reason, your money will be best spent on in-product
+                interfaces, not landing pages.
               </li>
               <li>
                 I won’t implement any changes in code — I’m happy to pair with a
@@ -148,17 +165,20 @@ export function Crit() {
             <p>
               Click the blue button below, send over the cheddar, and I'll email
               you within 24 hours to get the process started. You should expect
-              all the deliverables within a week, but keep in mind I'm only
-              human!
+              all the deliverables within a week or two, but keep in mind I'm
+              only human!
             </p>
           </div>
-          <div className="inline-block pb-32">
+          <div className="inline-flex flex-col pb-32 space-y-4">
             <PrimaryButton
               size="large"
               href="https://buy.stripe.com/bIY8xe72Wh2z70Q3cc"
             >
               Click this blue button
             </PrimaryButton>
+            <p className="text-sm text-quaternary">
+              * Current delivery estimate: 1-2 weeks
+            </p>
           </div>
         </div>
       </Detail.ContentContainer>
