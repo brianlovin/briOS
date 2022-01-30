@@ -29,7 +29,7 @@ const routes = {
     path: '/crit',
     seo: extendSEO({
       title: 'Crit',
-      description: 'Visual design critique, as a service.',
+      description: 'A comprehensive product design health report.',
       image: 'og/crit.png',
       url: 'crit',
     }),
