@@ -139,6 +139,18 @@ export function Crit() {
                 brand.
               </li>
               <li>
+                This health report does not include a full accessibility audit.
+                I will point out accessibility concerns as I encounter them, but
+                this critique should not be used in place of a professional
+                accessibility audit.
+              </li>
+              <li>
+                I am unable to redesign your entire icon system. If you are
+                interested in having help redoing your icons, I am happy to
+                connect you with some of the best icon designers in the industry
+                to do this work.
+              </li>
+              <li>
                 I won’t implement any changes in code. See an{' '}
                 <a
                   href="https://brianlovin.notion.site/Crit-Placemark-ebe780d4707f436b9663f5f296d1bfc7"
@@ -163,6 +175,11 @@ export function Crit() {
             <p>
               I will also spend time redesigning a single page of your product —
               let me know which page I should work against.
+            </p>
+            <p>
+              It will save me time if you are able to provide your brand assets
+              (logos, typefaces, colors, etc.), icon set, or other relevant
+              documentation that will help me be more prepared to start work.
             </p>
 
             <h5>What if your work sucks?</h5>
