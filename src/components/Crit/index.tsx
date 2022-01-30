@@ -190,12 +190,9 @@ export function Crit() {
             </p>
             <p>
               I will also spend time redesigning a single page of your product —
-              let me know which page I should work against.
-            </p>
-            <p>
-              It will save me time if you are able to provide your brand assets
-              (logos, typefaces, colors, etc.), icon set, or other relevant
-              documentation that will help me be more prepared to start work.
+              let me know which page I should use. It will save me time if you
+              are able to provide your brand assets (logos, typefaces, colors,
+              etc.), icon set, or other relevant documentation.
             </p>
 
             <h5>What's your refund policy?</h5>
