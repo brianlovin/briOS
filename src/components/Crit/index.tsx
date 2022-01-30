@@ -38,9 +38,9 @@ export function Crit() {
             </p>
             <p>
               You‘ll receive an in-depth product teardown document, including my
-              product recommendations, bug reports, visual nits, thematic areas
-              of opportunity, and a Figma file containing annotated screenshots
-              and a high-fidelity redesign of a single screen.
+              product recommendations, bug reports, visual nits, and a Figma
+              file containing annotated screenshots and a high-fidelity redesign
+              of a single screen.
             </p>
             <p>
               See the results of an example critique{' '}
