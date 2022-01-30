@@ -122,21 +122,12 @@ export function Crit() {
                 Figma, but don’t end up looking correct in production code.
               </li>
             </ul>
+
             <h5>How much does it cost?</h5>
             <p>
               $2,500 for a product teardown, which includes a user experience,
               user interface, visual, and interaction design audit, as well as a
               redesign of one view in your app.
-            </p>
-
-            <h5>That’s expensive!</h5>
-            <p>So is bad design!</p>
-            <p>
-              I know that this price might not be realistic for many folks out
-              there, or might not feel like it's paying for "enough." But my
-              time examining your product will be highly productive and
-              actionable — more than a decade of design experience concentrated
-              into a rich set of high-value artifacts.
             </p>
 
             <h5>Are you redesigning my whole product?</h5>
