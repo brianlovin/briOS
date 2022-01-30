@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
@@ -5,7 +6,23 @@ import { Detail } from '~/components/ListDetail/Detail'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
 import routes from '~/config/routes'
 
-import { PrimaryButton } from '../Button'
+import Button, { PrimaryButton } from '../Button'
+import { ExternalLinkIcon } from '../Icon'
+import { Testimonial } from './Testimonial'
+
+const testimonials = [
+  {
+    avatarSrc: '/static/img/crit/tmcw.jpg',
+    name: 'Tom MacWright',
+    quoteSrc: 'https://twitter.com/tmcw/status/1487905310761263109',
+    productSrc: 'https://placemark.io',
+    productName: 'Placemark',
+    reportSrc:
+      'https://brianlovin.notion.site/Crit-Placemark-ebe780d4707f436b9663f5f296d1bfc7',
+    quote:
+      'Designing Placemark has often felt like wandering through a dungeon, this design crit process felt like someone popping up and showing me the dungeon map and showing me a whole bunch of secret shortcuts.',
+  },
+]
 
 export function Crit() {
   const scrollContainerRef = React.useRef(null)
@@ -32,18 +49,18 @@ export function Crit() {
           <div className="prose prose-lg">
             <p>
               Crit is a comprehensive product design health report. It's a
-              complete usability, user interface, interaction, and visual design
-              audit, and includes a high-fidelity redesign of a single page in
-              your product with actionable suggestions for improvement.
+              thorough usability, user interface, interaction, and visual design
+              audit, and includes a redesign of a single page in your product
+              with actionable suggestions for improvement.
             </p>
             <p>
               You‘ll receive an in-depth product teardown document, including my
               product recommendations, bug reports, visual nits, and a Figma
-              file containing annotated screenshots and a high-fidelity redesign
-              of a single screen.
+              file containing annotated screenshots and a redesign of a single
+              screen.
             </p>
             <p>
-              See the results of an example critique{' '}
+              See the results of an example health report{' '}
               <a
                 href="https://brianlovin.notion.site/Crit-Placemark-ebe780d4707f436b9663f5f296d1bfc7"
                 target="_blank"
@@ -57,9 +74,18 @@ export function Crit() {
 
           <div className="inline-block">
             <PrimaryButton size="large" href={stripePaymentUrl}>
-              Let’s get started
+              Get started
             </PrimaryButton>
           </div>
+
+          <div className="w-16 h-px rounded bg-gray-150 dark:bg-gray-800" />
+
+          {testimonials.map((testimonial) => (
+            <Testimonial
+              key={testimonial.reportSrc}
+              testimonial={testimonial}
+            />
+          ))}
 
           <div className="w-16 h-px rounded bg-gray-150 dark:bg-gray-800" />
 
@@ -82,26 +108,25 @@ export function Crit() {
             <p>A product design health report will be most useful when:</p>
             <ul>
               <li>
-                Your product is about to ship, and you need a last minute gut
-                check to make things look great and work well.
+                Your product is about to ship, and you need a gut check to make
+                things look great and work well.
               </li>
               <li>
                 Your product has grown weeds, and isn’t quite as consistent or
                 shiny as it used to be. You need someone to point out where to
-                start fixing things, and how to have the most impact with the
-                least amount of effort.
+                start fixing things and how to have the most impact with a few
+                key changes.
               </li>
               <li>
                 You want to understand why your designs seem to work well in
-                Figma, but aren't translating well into a great end-user
-                experience.
+                Figma, but don’t end up looking correct in production code.
               </li>
             </ul>
             <h5>How much does it cost?</h5>
             <p>
-              $2,500 for the full product teardown, which includes a user
-              experience, user interface, visual, and interaction design audit,
-              as well as a high-fidelity redesign of one view in your app.
+              $2,500 for a product teardown, which includes a user experience,
+              user interface, visual, and interaction design audit, as well as a
+              redesign of one view in your app.
             </p>
 
             <h5>That’s expensive!</h5>
@@ -109,9 +134,9 @@ export function Crit() {
             <p>
               I know that this price might not be realistic for many folks out
               there, or might not feel like it's paying for "enough." But my
-              time examining your product will be highly productive, actionable,
-              and easy to build against — more than a decade of design
-              experience concentrated into a high-value artifact.
+              time examining your product will be highly productive and
+              actionable — more than a decade of design experience concentrated
+              into a rich set of high-value artifacts.
             </p>
 
             <h5>Are you redesigning my whole product?</h5>
@@ -165,7 +190,7 @@ export function Crit() {
 
             <h5>What do you need from me?</h5>
             <p>
-              Send me a list of views, pages, or flows that need the most
+              Send me a list of 1-3 views, pages, or flows that need the most
               attention. If it's more helpful for me to see a realistic
               interface that your users will experience, you can create a test
               account with pre-populated data that I'll work against. For
@@ -182,24 +207,23 @@ export function Crit() {
               documentation that will help me be more prepared to start work.
             </p>
 
-            <h5>What if your work sucks?</h5>
+            <h5>What's your refund policy?</h5>
             <p>
-              A reasonable question, wise of you to ask. How about this: I
-              guarantee that we'll find a meaningful way to improve the design
+              I guarantee that we'll find a meaningful way to improve the design
               quality of your product, or I'll send your money back without a
               fuss.
             </p>
 
             <h5>When can you start?</h5>
             <p>
-              Click the blue button below, send over the cheddar, and I'll email
-              you within 24 hours to get the process started. You should expect
-              all the deliverables within a week or two.
+              Click the blue button below to send payment, and I'll email you
+              within 24 hours to get the process started. You should expect the
+              entire process to complete within two to four weeks.
             </p>
           </div>
           <div className="inline-flex flex-col pb-32 space-y-4">
             <PrimaryButton size="large" href={stripePaymentUrl}>
-              Click here to get started
+              Get started
             </PrimaryButton>
           </div>
         </div>
