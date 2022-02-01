@@ -27,7 +27,7 @@ const testimonials = [
 export function Crit() {
   const scrollContainerRef = React.useRef(null)
   const titleRef = React.useRef(null)
-  const stripePaymentUrl = 'https://buy.stripe.com/00g28Q3QK8w3dpe7su'
+  const stripePaymentUrl = 'https://buy.stripe.com/14keVCgDw4fN2KAeUX'
 
   return (
     <Detail.Container ref={scrollContainerRef}>
@@ -52,12 +52,6 @@ export function Crit() {
               thorough usability, user interface, interaction, and visual design
               audit, and includes a redesign of a single page in your product
               with actionable suggestions for improvement.
-            </p>
-            <p>
-              You‘ll receive an in-depth product teardown document, including my
-              product recommendations, bug reports, visual nits, and a Figma
-              file containing annotated screenshots and a redesign of a single
-              screen.
             </p>
             <p>
               See the results of an example health report{' '}
@@ -125,7 +119,7 @@ export function Crit() {
 
             <h5>How much does it cost?</h5>
             <p>
-              $2,500 for a product teardown, which includes a user experience,
+              $5,000 for a product teardown, which includes a user experience,
               user interface, visual, and interaction design audit, as well as a
               redesign of one view in your app.
             </p>
