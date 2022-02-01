@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
@@ -6,8 +5,7 @@ import { Detail } from '~/components/ListDetail/Detail'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
 import routes from '~/config/routes'
 
-import Button, { PrimaryButton } from '../Button'
-import { ExternalLinkIcon } from '../Icon'
+import { PrimaryButton } from '../Button'
 import { Testimonial } from './Testimonial'
 
 const testimonials = [
@@ -21,6 +19,17 @@ const testimonials = [
       'https://brianlovin.notion.site/Crit-Placemark-ebe780d4707f436b9663f5f296d1bfc7',
     quote:
       'Designing Placemark has often felt like wandering through a dungeon, this design crit process felt like someone popping up and showing me the dungeon map and showing me a whole bunch of secret shortcuts.',
+  },
+  {
+    avatarSrc: '/static/img/crit/jmduke.jpg',
+    name: 'Justin M. Duke',
+    quoteSrc: 'https://twitter.com/jmduke/status/1488376005827842049',
+    productSrc: 'http://buttondown.email',
+    productName: 'Buttondown',
+    reportSrc:
+      'https://brianlovin.notion.site/Crit-Buttondown-e9f46bd7995c4d53ae0dd2eb2ff86fab',
+    quote:
+      'I was lucky enough to get Brian to take a look at Buttondown and, uh, holy smokes — that was the best money I’ve poured into the business in a long, long time. Trust me: book some time with him. Easiest investment you can make in your product',
   },
 ]
 
@@ -54,13 +63,21 @@ export function Crit() {
               with actionable suggestions for improvement.
             </p>
             <p>
-              See the results of an example health report{' '}
+              See past health reports:{' '}
               <a
                 href="https://brianlovin.notion.site/Crit-Placemark-ebe780d4707f436b9663f5f296d1bfc7"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                here
+                Placemark
+              </a>{' '}
+              <span className="text-gray-300 dark:text-gray-800">/</span>{' '}
+              <a
+                href="https://brianlovin.notion.site/Crit-Buttondown-e9f46bd7995c4d53ae0dd2eb2ff86fab"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Buttondown
               </a>
               .
             </p>
