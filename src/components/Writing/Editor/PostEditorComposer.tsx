@@ -54,7 +54,7 @@ export function PostEditorComposer() {
             value={draftState.title}
             onChange={handleTitleChange}
             placeholder={'Post title'}
-            className="composer text-primary block w-full p-0 text-2xl font-bold focus:border-0 focus:outline-none focus:ring-0 dark:bg-black md:text-3xl"
+            className="block w-full p-0 text-2xl font-bold border-none composer text-primary focus:border-0 focus:outline-none focus:ring-0 dark:bg-black md:text-3xl"
           />
           <Textarea
             rows={20}
@@ -62,7 +62,7 @@ export function PostEditorComposer() {
             value={draftState.text}
             onChange={handleTextChange}
             placeholder={'Write a post...'}
-            className="composer text-primary prose block w-full p-0 pt-5 text-lg font-normal focus:border-0 focus:outline-none focus:ring-0 dark:bg-black"
+            className="block w-full p-0 pt-5 text-lg font-normal prose border-none composer text-primary focus:border-0 focus:outline-none focus:ring-0 dark:bg-black"
           />
         </Detail.Header>
       </Detail.ContentContainer>

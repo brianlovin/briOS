@@ -15,7 +15,7 @@
 }
 
 .prose a {
-  @apply font-medium text-blue-600 no-underline break-words hover:underline dark:text-blue-500;
+  @apply font-normal text-blue-600 no-underline break-words hover:underline dark:text-blue-500;
 }
 
 .prose a code {
@@ -165,4 +165,12 @@
 
 .prose pre {
   @apply text-gray-100 bg-gray-800;
+}
+
+.prose sup {
+  @apply text-sm text-blue-500 dark:text-gray-400;
+  vertical-align: super;
+  top: 0px;
+  position: relative;
+  scroll-margin-top: 4rem;
 }
