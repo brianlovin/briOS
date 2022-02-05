@@ -111,7 +111,12 @@ export function MarkdownRenderer(props: any) {
   const { children, variant = 'longform', ...rest } = props
 
   const schema = deepmerge(defaultSchema, {
-    attributes: { '*': ['className'] },
+    tagNames: [...defaultSchema.tagNames, 'sup', 'sub', 'section'],
+    attributes: {
+      '*': ['className'],
+    },
+    clobberPrefix: '',
+    clobber: ['name', 'id'],
   })
 
   const components = getComponentsForVariant(variant)
