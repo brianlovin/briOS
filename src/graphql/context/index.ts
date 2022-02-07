@@ -1,21 +1,23 @@
-import { getSession } from '@auth0/nextjs-auth0'
 import { PrismaClient } from '@prisma/client'
 
+import { authik } from '~/lib/authik/server'
 import { prisma } from '~/lib/prisma'
 
 import { User, UserRole } from '../types.generated'
 
-export function isAuthenticated(req, res) {
-  const session = getSession(req, res)
-  return session?.user
+export async function isAuthenticated(req, res) {
+  const { sessionToken } = await authik.verifySessionToken(req)
+  return sessionToken
 }
 
 export async function getViewer(req, res) {
-  const user = isAuthenticated(req, res)
+  const sessionToken = await isAuthenticated(req, res)
 
   let viewer = null
-  if (user) {
-    viewer = await prisma.user.findUnique({ where: { twitterId: user.sub } })
+  if (sessionToken) {
+    viewer = await prisma.user.findUnique({
+      where: { authikId: sessionToken.userId },
+    })
   }
 
   return viewer
