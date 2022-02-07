@@ -6,6 +6,7 @@ import { Avatar } from '~/components/Avatar'
 import { GhostButton } from '~/components/Button'
 import { LoadingSpinner } from '~/components/LoadingSpinner'
 import { useViewerQuery } from '~/graphql/types.generated'
+import { authik } from '~/lib/authik/client'
 
 import { GlobalNavigationContext } from '../Providers'
 
@@ -25,9 +26,12 @@ export function UserFooter() {
 
   function signInButton() {
     return (
-      <a style={{ width: '100%' }} href="/api/auth/login">
-        <GhostButton style={{ width: '100%' }}>Sign in</GhostButton>
-      </a>
+      <GhostButton
+        onClick={() => authik.loginWithTwitter()}
+        style={{ width: '100%' }}
+      >
+        Sign in
+      </GhostButton>
     )
   }
 
