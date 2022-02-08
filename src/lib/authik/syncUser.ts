@@ -7,7 +7,7 @@ name, and description
 
 */
 
-import { User } from '@authik/next'
+import { User } from '@authik/nextjs'
 
 import { prisma } from '~/lib/prisma'
 

@@ -91,10 +91,10 @@
     iterall "^1.1.3"
     uuid "^3.1.0"
 
-"@authik/next@0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@authik/next/-/next-0.0.2.tgz#31cb921a767430b5ff08b259a6729e093a07f696"
-  integrity sha512-xEo5+JEQvYXXL5cM2eLs7l7xzzeGwJUbFJRyfTa5TA1Jtku8RJkJbkR33Xqcd77OBASHC5WphL6f1IFpm8R2iQ==
+"@authik/nextjs@0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@authik/nextjs/-/nextjs-0.0.1.tgz#6dc6b9d67476c293cb99171f806db6f0adfaf4c8"
+  integrity sha512-GG0uTmT66xbFU6mOP85hELYfzw86eCyn8tneTKQ0P6BJeukcKTB8k7ToIM4RyUYXRUXZra6ZMfPaufJo+aW9uA==
   dependencies:
     cookie "^0.4.2"
     jose "^4.4.0"
@@ -7158,9 +7158,9 @@ jest-worker@27.0.0-next.5:
     supports-color "^8.0.0"
 
 jose@^4.4.0:
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/jose/-/jose-4.4.0.tgz#459954544088244836a361172eb32a704bc55c5f"
-  integrity sha512-3CsqCQWuEUPpNlSLRcLRC8eO/ATFe1tLJMZCtjx2+ma1gkjGQ62HF50oWs3cwtWjLCpM8bdMPpQbxpgc3fhxrQ==
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/jose/-/jose-4.5.0.tgz#92829d8cf846351eb55aaaf94f252fb1d191f2d5"
+  integrity sha512-GFcVFQwYQKbQTUOo2JlpFGXTkgBw26uzDsRMD2q1WgSKNSnpKS9Ug7bdQ8dS+p4sZHNH6iRPu6WK2jLIjspaMA==
 
 js-cookie@^3.0.1:
   version "3.0.1"
