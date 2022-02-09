@@ -12,8 +12,7 @@ import { LoadingSpinner } from '../LoadingSpinner'
 export function DeleteUserDialog({ trigger }) {
   const router = useRouter()
   const apolloClient = useApolloClient()
-  const [handleDelete] = useDeleteUserMutation()
-  const [loading, setLoading] = React.useState(false)
+  const [handleDelete, { loading }] = useDeleteUserMutation()
 
   return (
     <DialogComponent
@@ -25,12 +24,9 @@ export function DeleteUserDialog({ trigger }) {
 
           <DeleteButton
             onClick={async () => {
-              setLoading(true)
               await handleDelete()
-              await authik.logout()
+              await authik.clearSessionData()
               await apolloClient.resetStore()
-              setLoading(false)
-              closeModal()
             }}
           >
             {loading ? <LoadingSpinner /> : 'Delete my account'}
