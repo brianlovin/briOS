@@ -12,17 +12,17 @@ import { User } from '@authik/nextjs'
 import { prisma } from '~/lib/prisma'
 
 export async function syncUser(authikUser: User) {
-  const twitterProfile = authikUser.provider_profiles.find(
+  const twitterProfile = authikUser.external_profiles.find(
     (profile) => profile.type === 'twitter'
   )
   const {
-    provider_id,
+    external_id,
     name,
     username,
     avatar_url,
     twitter: { description, location },
   } = twitterProfile
-  const legacyTwitterId = `twitter|${provider_id}`
+  const legacyTwitterId = `twitter|${external_id}`
 
   try {
     await prisma.user.upsert({

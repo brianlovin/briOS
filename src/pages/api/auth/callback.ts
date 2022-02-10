@@ -15,7 +15,7 @@ export default async function handler(
       res.redirect(`/?errorCode=${login.failure.code}`)
     } else if (login.status === 'succeeded') {
       await syncUser(login.user)
-      res.redirect(login.redirect.continue_url || '/')
+      res.redirect(login.external_account.redirect_url || '/')
     }
   }
 }
