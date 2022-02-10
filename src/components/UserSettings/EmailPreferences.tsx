@@ -4,8 +4,8 @@ import toast from 'react-hot-toast'
 import {
   EmailSubscription,
   EmailSubscriptionType,
+  GetViewerWithSettingsQuery,
   useEditEmailSubscriptionMutation,
-  useGetViewerWithSettingsQuery,
 } from '~/graphql/types.generated'
 
 import { WritingSubscriptionForm } from '../Writing/SubscriptionForm'
@@ -80,9 +80,10 @@ export function EmailSubscriptionForm({ subscription }: Props) {
   )
 }
 
-export function EmailPreferences() {
-  const { data } = useGetViewerWithSettingsQuery()
-  const { viewer } = data
+export function EmailPreferences(props: {
+  viewer: GetViewerWithSettingsQuery['viewer']
+}) {
+  const { viewer } = props
 
   return (
     <div className="flex flex-col space-y-8">
