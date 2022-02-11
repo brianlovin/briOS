@@ -23,7 +23,7 @@
     "@apollo/client": "^3.5.7",
     "@apollo/link-error": "^2.0.0-beta.3",
     "@apollo/link-schema": "^2.0.0-beta.3",
-    "@authik/nextjs": "0.0.7",
+    "@authik/nextjs": "0.0.8",
     "@graphql-tools/schema": "^8.3.1",
     "@headlessui/react": "^1.4.1",
     "@prisma/client": "^3.9.1",

@@ -80,7 +80,9 @@ export function SignInDialogContent() {
 
       <div className="flex items-stretch justify-items-stretch self-stretch">
         <TwitterButton
-          onClick={() => authik.loginWithTwitter()}
+          onClick={() =>
+            authik.loginWithTwitter({ returnTo: window.location.pathname })
+          }
           style={{ flex: '1' }}
           size="large"
         >

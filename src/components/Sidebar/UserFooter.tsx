@@ -27,7 +27,9 @@ export function UserFooter() {
   function signInButton() {
     return (
       <GhostButton
-        onClick={() => authik.loginWithTwitter()}
+        onClick={() =>
+          authik.loginWithTwitter({ returnTo: window.location.pathname })
+        }
         style={{ width: '100%' }}
       >
         Sign in

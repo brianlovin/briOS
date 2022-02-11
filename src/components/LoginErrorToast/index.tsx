@@ -4,7 +4,7 @@ import toast from 'react-hot-toast'
 
 export function LoginErrorToast() {
   const router = useRouter()
-  const errorCode = router.query['errorCode']
+  const errorCode = router.query['error_code']
 
   useEffect(() => {
     if (errorCode) {

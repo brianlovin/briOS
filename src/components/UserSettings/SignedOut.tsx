@@ -10,7 +10,12 @@ export function SignedOut() {
     <Detail.Container>
       <TitleBar title="Settings" />
       <div className="flex flex-1 flex-col items-center justify-center">
-        <TwitterButton onClick={() => authik.loginWithTwitter()} size="large">
+        <TwitterButton
+          onClick={() =>
+            authik.loginWithTwitter({ returnTo: window.location.pathname })
+          }
+          size="large"
+        >
           <svg
             viewBox="0 0 16 14"
             xmlns="http://www.w3.org/2000/svg"

@@ -91,10 +91,10 @@
     iterall "^1.1.3"
     uuid "^3.1.0"
 
-"@authik/nextjs@0.0.7":
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@authik/nextjs/-/nextjs-0.0.7.tgz#58e197a710057374b88c6cd1fb5bb6a12744ffea"
-  integrity sha512-H5wGO3C5WmBQ43gTpk/4asKaHxWgqtVthuhsYTyySkQYnS79rVY/6KyZu3+Kvxfo18Xn8Gph4s8es56HfsJxsg==
+"@authik/nextjs@0.0.8":
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/@authik/nextjs/-/nextjs-0.0.8.tgz#d22965e4c323742682ba39c916bde42563a2a46a"
+  integrity sha512-rkUFq/Ip5aS3Dgfv1PqYNjckEY2h0K8EgpOiAnI6RjQnU5Z8Jvu3AdmP0NDlniU0MpRuRSSkCMfMz/fWLUr43g==
   dependencies:
     axios "^0.25.0"
     cookie "^0.4.2"
