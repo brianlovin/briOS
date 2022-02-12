@@ -23,7 +23,7 @@
 @layer components {
   /* needed to override tailwind forms styles */
   select {
-    @apply text-primary w-full rounded border border-gray-200 bg-gray-1000 bg-opacity-5 px-4 py-2 outline-none hover:bg-opacity-10 focus:border-gray-1000 focus:outline-none focus:ring-0 dark:border-gray-800 dark:bg-white dark:focus:border-gray-600;
+    @apply w-full px-4 py-2 border border-gray-200 rounded outline-none text-primary bg-gray-1000 bg-opacity-5 hover:bg-opacity-10 focus:border-gray-1000 focus:outline-none focus:ring-0 dark:border-gray-800 dark:bg-white dark:focus:border-gray-600;
   }
 
   button:focus,
@@ -40,7 +40,7 @@
 
   input[type='text'],
   textarea {
-    @apply border-none bg-blue-500 outline-none;
+    @apply bg-white border border-gray-200 outline-none dark:border-gray-700 dark:bg-gray-800;
   }
 
   input[type='checkbox'] {
@@ -53,7 +53,7 @@
   }
 
   .font-list-heading {
-    @apply text-primary font-sans text-lg font-bold;
+    @apply font-sans text-lg font-bold text-primary;
   }
 
   .tabbed-navigation::-webkit-scrollbar {
