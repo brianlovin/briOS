@@ -78,6 +78,14 @@ export function Crit() {
                 rel="noopener noreferrer"
               >
                 Buttondown
+              </a>{' '}
+              <span className="text-gray-300 dark:text-gray-800">/</span>{' '}
+              <a
+                href="https://brianlovin.notion.site/Outline-3947b9c3b5ff44a38af8e6146e6eb0fa"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Outline
               </a>
               .
             </p>
