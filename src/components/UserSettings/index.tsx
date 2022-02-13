@@ -42,14 +42,14 @@ export function UserSettings() {
         <div className="divide-y divide-gray-200 py-12 dark:divide-gray-800">
           <div className="space-y-8 py-12">
             <h3 className="text-primary text-lg font-bold">Account</h3>
-            <EmailForm />
-            <UsernameForm />
+            <EmailForm viewer={data.viewer} />
+            <UsernameForm viewer={data.viewer} />
           </div>
 
           {data.viewer.email && (
             <div className="space-y-8 py-12">
               <h3 className="text-primary text-lg font-bold">Emails</h3>
-              <EmailPreferences />
+              <EmailPreferences viewer={data.viewer} />
             </div>
           )}
 

@@ -16,13 +16,13 @@ model User {
   role         Role       @default(USER)
   username     String     @unique @db.VarChar(16)
   twitterId    String     @unique
+  authikId     String?    @unique
   email        String?    @unique
   pendingEmail String?
   avatar       String?
   description  String?    @db.VarChar(256)
   location     String?    @db.VarChar(32)
   name         String?
-  nickname     String?
   comments     Comment[]
   questions    Question[]
   reactions    Reaction[]
