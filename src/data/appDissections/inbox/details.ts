@@ -4,7 +4,7 @@ export default [
       '[Material Design](http://www.google.com/design/spec/material-design/introduction.html) is a visual language for interacting with digital interfaces. What we find in Inbox is a whole-hearted adoption of subtle motion and gestures to guide users through flows and views.\r\n\r\nThis splash page sets the tone perfectly for what users can expect in terms of interactivity, playfulness and speed. Every animation here feels paced and intentional, with the right level of stickiness and pop to each movement.',
     title: 'Splash page',
     media: [
-      'https://player.vimeo.com/external/157936417.hd.mp4?s=a451533602db6a8aab29b301f6a5f15da863b2f6&profile_id=113',
+      'https://videodelivery.net/630e4c2f3bd93dad13715f2191f68a15/downloads/default.mp4',
     ],
   },
   {
@@ -12,7 +12,7 @@ export default [
       'I had actually added two email accounts to Inbox before recording this screen, but I wanted to share the little slider here that lets users pick and choose which email accounts will be shown in Inbox. Here I only toggle one, but in reality it’s possible to pick and choose between multiple accounts.\r\n\r\nAt the time of this writing, the main thing holding me back from switching to Inbox (from [Mailbox](http://www.mailboxapp.com/)) is a unified inbox. I’m managing ~6-10 email addresses at any given time, and having to toggle between them can be tedious at times. Hopefully Google can find a clever solution here – I know it’s a tough one!',
     title: 'Signing in',
     media: [
-      'https://player.vimeo.com/external/157936416.hd.mp4?s=0062cd5761a093cf8dfc04f792ac7a6efa7aac8b&profile_id=113',
+      'https://videodelivery.net/9a0f9f03ff43a7e4fc8c3aa0b6d18aac/downloads/default.mp4',
     ],
   },
   {
@@ -20,7 +20,7 @@ export default [
       'The red circle in the bottom right of the screen is a new persistent design element that gives you quick-access to the email composer, reminders and suggested contacts. I’m not quite sure how these suggested contacts are chosen – perhaps they’re people I email most frequently (hi mom and dad!) – this seems like an odd design choice in my opinion, as the odds of me wanting quick access to just one or two individuals is relatively low. On the odd-occasion where I do want to email these specific people though, I suppose the suggestion will be a nice shortcut.\r\n\r\nIt’s also worth paying attention to the way Inbox plays with a semi-opaque white overlay in the view to provide contrast for the quick menu options. The animations here are nice and tight and don’t feel muddled at all.\r\n\r\nNote: Not a bad idea to slip the ‘invitation’ prompt there as well! I’ve already used it once, which might provide some validation for this kind of growth interaction.',
     title: 'Choose an action',
     media: [
-      'https://player.vimeo.com/external/157936420.hd.mp4?s=49af2b5d9e540c3cd697b51864a9efe6e85151da&profile_id=113',
+      'https://videodelivery.net/ed5699c1291154bdccd8583e9f894cf8/downloads/default.mp4',
     ],
   },
   {
@@ -28,7 +28,7 @@ export default [
       'Pinned items – what are you? Why do you exist? How do I use you effectively? These are a few questions that bounced around my head on the first run-through of Inbox. I’m familiar with starring emails in Gmail, but pinning is a whole new interaction that I’m not sure Google explains too well here.\r\n\r\nPerhaps the intention was just that, actually – leave pinning somewhat vague and let users decide the right use case for their own need.\r\n\r\nAt the risk of sounding like a pedantic typography dork – the line height feels a bit too much on the empty view notices. It flows less like a cohesive sentence and more like a series of headlines.',
     title: 'Pinned items toggle',
     media: [
-      'https://player.vimeo.com/external/157936422.hd.mp4?s=b52fcc19e1ab838426df3e949b0e0248a5bcd1c1&profile_id=167',
+      'https://videodelivery.net/6b75daaa19ae428c304adbb8c076ca2d/downloads/default.mp4',
     ],
   },
   {
@@ -36,7 +36,7 @@ export default [
       'If a design pattern works, it works – right? I’m pleased to see swiping become a more commonly-used gesture across all email apps, taking a cue from what Mailbox originally did so well. Here we can quickly swipe an email to mark it as ‘done’ or to ‘snooze’ it for later.\r\n\r\nA quick digression: It’s quite interesting to see Inbox place so much emphasis on getting emails ‘done,’ i.e. treating your emails like a to-do list. At the same time, however, we have this idea of ‘pinning’ emails to your inbox. There’s sort of this clash of intentions here – do I pin an important email? Or do I snooze it? Or is a pinned item like a high-priority to-do list item? When do I unpin an email? Questions like these continue to arise the longer I dive into Inbox.',
     title: 'Swiping',
     media: [
-      'https://player.vimeo.com/external/157936424.hd.mp4?s=3ce03b56db22457d94f713d56350013c87405446&profile_id=167',
+      'https://videodelivery.net/8f9170024b5f3f1e08e905951abdd892/downloads/default.mp4',
     ],
   },
   {
@@ -44,7 +44,7 @@ export default [
       'Inbox does a marvelous job of using color to create a sense of location within the app. Green is done, orange/yellow is snoozed, blue is inbox, grey is a label, etc. This consistency – and the bold use of color, as well – really create this coherent language and navigation that you can pick up super fast. At a glance I can know exactly where I’m located in the app.\r\n\r\nThat’s no easy feat to pull off as a designer – in fact, I’m struggling to think of any other apps that use color so prominently to create a sense of space and direction in a UI.',
     title: 'Color',
     media: [
-      'https://player.vimeo.com/external/157936425.hd.mp4?s=858dfaa19d4135716f48222028e0ea603aa9e2fe&profile_id=167',
+      'https://videodelivery.net/c564310955c322a2bc88f8003d344e00/downloads/default.mp4',
     ],
   },
   {
@@ -52,7 +52,7 @@ export default [
       'Creating a functional, aesthetically-coherent and intuitive navigation is insanely hard. Especially when you’re Google and the use-cases for a particular product could measure beyond reason. I’m quite pleased with the general structure of the navigation in Inbox – things are ordered and grouped in a coherent, logical manner and transition animations are snappy and responsive.',
     title: 'Navigation',
     media: [
-      'https://player.vimeo.com/external/157936427.hd.mp4?s=3323c7ad089dea664319421e18c8b437c8e16f3f&profile_id=113',
+      'https://videodelivery.net/75ffd5f1e811f13b14fab585b25d75a8/downloads/default.mp4',
     ],
   },
   {
@@ -60,7 +60,7 @@ export default [
       'Bigger phones and wider screens mean that the corners of a UI are increasingly harder to reach, especially for people with smaller-than-giant hands. It’s up to designers to work their way around these hardware constraints, and Inbox has just shown us how flexible (and usable) an interface can really be:\r\n\r\nSwipe up or down past the edge of an individual email to return to your previous list (in this case, my inbox). In the next year or two, I hope that every app will embrace location-agnostic swipe gestures for core navigation. It really adds so much to the experience for casual and power-users alike.',
     title: 'Swiping gestures',
     media: [
-      'https://player.vimeo.com/external/157936429.hd.mp4?s=faf9c38f2e7326d451810a97b62683f6a9f9a0d9&profile_id=113',
+      'https://videodelivery.net/38d58924a0221f6e3a069137d6f5d068/downloads/default.mp4',
     ],
   },
   {
@@ -68,7 +68,7 @@ export default [
       'When a feature like Reminders has this level of prominence in a Google app, it’s best to pay attention. In the core [Google Search](https://brianlovin.com/app-dissection/google-search-for-ios/) app, Reminders are tucked away in the interface – out of sight, out of mind.\r\n\r\nThere’s no doubt with Inbox, however, that Reminders play a larger part of Google’s vision for the future. Why? I’m not totally sure yet. Mixing reminders with snoozed emails with pinned emails – the meaning of these terms is starting to become a bit convoluted.',
     title: 'Reminders',
     media: [
-      'https://player.vimeo.com/external/157936430.hd.mp4?s=4134dccccfa542bc54a061029a5fe7e6bbc2b792&profile_id=167',
+      'https://videodelivery.net/e80483275f9a49c508b96cc261d811d4/downloads/default.mp4',
     ],
   },
   {
@@ -76,7 +76,7 @@ export default [
       'Your emails in Inbox are often segmented by date range – in this case, you can see some of my items in ‘Today,’ followed by some items from earlier this month. When I clear a section, pay attention to the animations and transitions happening across the app. Along the bottom of the screen the app highlights a few contextual items about my last action while the rest of the interface slides up smoothly to fill the gap. Lovely.',
     title: 'Clear a section',
     media: [
-      'https://player.vimeo.com/external/157936434.hd.mp4?s=370d26f7478f057751951a91823a8761e6b570ef&profile_id=113',
+      'https://videodelivery.net/68e9ba91567356dfa07eb9d52d7f0cf7/downloads/default.mp4',
     ],
   },
   {
@@ -84,7 +84,7 @@ export default [
       'I love the icon transition in the upper-left corner of the navigation when the search is toggled. There’s also the beautiful Material language coming to life with the circular highlights on my tap location.',
     title: 'Search',
     media: [
-      'https://player.vimeo.com/external/157936433.hd.mp4?s=d6a1146fbffcada1932eaf300f0947daff99e12b&profile_id=167',
+      'https://videodelivery.net/d56a519c31f4e6e7966d36cfa3db5c9c/downloads/default.mp4',
     ],
   },
   {
@@ -92,7 +92,7 @@ export default [
       'One of the core elements of Inbox is the email previews that show up inline with your messages. These travel cards are my favorite – the layout and type here is so clear, and the accent photos that accompany my travel destinations are just icing on the cake. Inbox has done a great job with these previews both on the web and iOS, highlighting attachments and Google Docs with a lot less friction than other email apps.',
     title: 'Context cards',
     media: [
-      'https://player.vimeo.com/external/157936439.hd.mp4?s=6c7ac6b0eb76b4d3e9054d924820bf4a040d9c68&profile_id=113',
+      'https://videodelivery.net/9f3042767e6d3caa32e8cf86c95078f0/downloads/default.mp4',
     ],
   },
   {
@@ -100,7 +100,7 @@ export default [
       'Just to highlight another example here, I can quickly preview and save a photo attachment in an email without ever having to open the message. This is – in my opinion – the biggest selling point of Inbox at this point: Saving me time on the actions I take the most.',
     title: 'Attachments',
     media: [
-      'https://player.vimeo.com/external/157936435.hd.mp4?s=fd2ee857842ff41df762045d46f0589c804a0ee4&profile_id=113',
+      'https://videodelivery.net/3a3b15eebe4c26b6875ffe4da56cb881/downloads/default.mp4',
     ],
   },
   {
@@ -108,7 +108,7 @@ export default [
       'Multiple attachments? No problem. This is just too slick – what a time saver for anyone who deals with a large volume of attachments!',
     title: 'Multiple attachments',
     media: [
-      'https://player.vimeo.com/external/157936443.hd.mp4?s=a503afe92bc29cf409853e5dfc2231d5c025b18a&profile_id=167',
+      'https://videodelivery.net/31420b7cc0c95532fe724b9e6d66305a/downloads/default.mp4',
     ],
   },
   {
@@ -116,7 +116,7 @@ export default [
       'Inbox brings a new interaction pattern to the table with ‘sweeping’ – a quick way to mark a group of emails (based on time period) as done in one action. I can see this feature having a really solid application for folks that use labels liberally in their email workflow. Being able to quickly act upon a group of emails is a time saver, indeed, but in many cases will only be practical for certain workflows.\r\n\r\nAlso – don’t you just love this empty inbox view? It’s so much friendlier and more inviting than your traditional ’empty view’ text that one might expect.',
     title: 'Sweep',
     media: [
-      'https://player.vimeo.com/external/157936442.hd.mp4?s=1fa3abc6d33be41f5bdd1d4ad29f656bb3bfb3fc&profile_id=113',
+      'https://videodelivery.net/e5afd39c0f4f9465d83367c15f4018a4/downloads/default.mp4',
     ],
   },
   {
@@ -124,7 +124,7 @@ export default [
       'I’m a huge onboarding dork – I’m fascinated by the process, the aesthetics and the usability of it all – in fact, working on user activation is one of my core areas of focus at [Buffer](http://bufferapp.com/). Being such, I’m fascinated by the way different apps educate users about new experiences or interactions.\r\n\r\nHere’s a quick recording of Inbox’s walkthrough. Every subtle motion feels nicely structured and clear. I particularly love the way the designers here use color to prime new users for the experience in-app (i.e. orange = snooze).\r\n\r\nAlso note: Reminders is the first screen here. This is a serious push from Google to get users to interact with reminders across the Google landscape.',
     title: 'Onboarding',
     media: [
-      'https://player.vimeo.com/external/157936459.hd.mp4?s=6de9e01aded7f9dcc756897c992d58974682a33b&profile_id=113',
+      'https://videodelivery.net/aa40b87e38ea2a0894a5e0f777ff2d3a/downloads/default.mp4',
     ],
   },
   {
@@ -132,7 +132,7 @@ export default [
       'Here I’ve added two email accounts to Inbox and I’m able to quickly swap between them by tapping my profile picture in the sidebar drawer. The pacing of the animations is really nice here – multi-tap account swaps can sometimes feel tedious, but in this case the flow is quite smooth.',
     title: 'Switching accounts',
     media: [
-      'https://player.vimeo.com/external/157936461.hd.mp4?s=d10687aa770a3d698c5cf7b4cb4887e71818abd7&profile_id=113',
+      'https://videodelivery.net/97237e413854c1668fda4482465e525d/downloads/default.mp4',
     ],
   },
   {
@@ -140,7 +140,7 @@ export default [
       'I realized after recording all of these videos that I hadn’t actually focused too much on what Inbox is really about – your emails. This next video captures the slick transitions that occur when you open up an email. I love the way the white expands up and down the screen, pushing the colored nav bar out of the way to create a more immersive, distraction-free reading environment.',
     title: 'Reading an email',
     media: [
-      'https://player.vimeo.com/external/157936457.hd.mp4?s=37bd1cbe105f9f25b4b719f645ae94936df555d6&profile_id=113',
+      'https://videodelivery.net/747830aa4455bdfb7c18ab70d6109cd3/downloads/default.mp4',
     ],
   },
   {
@@ -148,7 +148,7 @@ export default [
       'Alternatively, you can tap on this little dropdown arrow in the sidebar to bring up a list of your connected email accounts. I love the subtle bouncing here on the dropdown arrow, which pairs so well with the transition of other elements in and out of the sidebar container.',
     title: 'Toggling accounts',
     media: [
-      'https://player.vimeo.com/external/157936464.hd.mp4?s=f4a93a161ddca240d3d1c67d0943a04ce31838c4&profile_id=167',
+      'https://videodelivery.net/9d8afc4bf473461317fbabe08e2b2148/downloads/default.mp4',
     ],
   },
   {
@@ -157,7 +157,7 @@ export default [
     title: 'Web landing page',
     orientation: 'landscape',
     media: [
-      'https://player.vimeo.com/external/157936466.hd.mp4?s=8ec3fae1ae54eae7610a9af52e95e75fc9ef378f&profile_id=119',
+      'https://videodelivery.net/7a0167038c714e069d02129775e48b14/downloads/default.mp4',
     ],
   },
   {
@@ -166,7 +166,7 @@ export default [
     title: 'Web view',
     orientation: 'landscape',
     media: [
-      'https://player.vimeo.com/external/157936447.hd.mp4?s=2300e19f6d09e1eaf84f71774c02a5c00c77f66a&profile_id=119',
+      'https://videodelivery.net/b9fff5a2d60169a58a1e291e7896c298/downloads/default.mp4',
     ],
   },
   {
@@ -175,7 +175,7 @@ export default [
     title: 'Depth',
     orientation: 'landscape',
     media: [
-      'https://player.vimeo.com/external/157936449.hd.mp4?s=d817388b7b3eed6338227a7dd7424122dcc4f68d&profile_id=119',
+      'https://videodelivery.net/51eeade98ff36f674d60e401be582dc5/downloads/default.mp4',
     ],
   },
   {
@@ -184,7 +184,7 @@ export default [
     title: 'Motion',
     orientation: 'landscape',
     media: [
-      'https://player.vimeo.com/external/157936448.hd.mp4?s=2b570561e3cfe7114c9e6a41166be67fb8aff33f&profile_id=119',
+      'https://videodelivery.net/4d3cc7d1de352b6d277e0db5a0b13556/downloads/default.mp4',
     ],
   },
   {
@@ -193,7 +193,7 @@ export default [
     title: 'Web view',
     orientation: 'landscape',
     media: [
-      'https://player.vimeo.com/external/157936455.hd.mp4?s=076a1510733bab34d453aeecd57c7ee22c4afce6&profile_id=119',
+      'https://videodelivery.net/a74e54f3a18088c6872f6151f0f9e3db/downloads/default.mp4',
     ],
   },
   {
@@ -202,7 +202,7 @@ export default [
     title: 'Search',
     orientation: 'landscape',
     media: [
-      'https://player.vimeo.com/external/157936460.hd.mp4?s=8c05c16bedddc1da5beb3b30865ed00e2080e628&profile_id=119',
+      'https://videodelivery.net/d61eef806dc4fa6c45f4b7e6dc0507cc/downloads/default.mp4',
     ],
   },
 ]
