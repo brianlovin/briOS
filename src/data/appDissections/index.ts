@@ -24,7 +24,7 @@ import twitter from './twitter'
 export interface DesignDetail {
   title: string
   description: string
-  media: Array<string>
+  media: Array<string> | null
   orientation?: 'landscape'
 }
 
