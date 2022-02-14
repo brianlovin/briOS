@@ -15,6 +15,7 @@ const testimonials = [
     quoteSrc: 'https://twitter.com/tmcw/status/1487905310761263109',
     productSrc: 'https://placemark.io',
     productName: 'Placemark',
+    productLogo: '/static/img/crit/placemark.jpg',
     reportSrc:
       'https://brianlovin.notion.site/Crit-Placemark-ebe780d4707f436b9663f5f296d1bfc7',
     quote:
@@ -24,12 +25,24 @@ const testimonials = [
     avatarSrc: '/static/img/crit/jmduke.jpg',
     name: 'Justin M. Duke',
     quoteSrc: 'https://twitter.com/jmduke/status/1488376005827842049',
-    productSrc: 'http://buttondown.email',
+    productSrc: 'https://buttondown.email',
     productName: 'Buttondown',
+    productLogo: '/static/img/crit/buttondown.jpg',
     reportSrc:
       'https://brianlovin.notion.site/Crit-Buttondown-e9f46bd7995c4d53ae0dd2eb2ff86fab',
     quote:
       'I was lucky enough to get Brian to take a look at Buttondown and, uh, holy smokes — that was the best money I’ve poured into the business in a long, long time. Trust me: book some time with him. Easiest investment you can make in your product',
+  },
+  {
+    avatarSrc: '/static/img/crit/jeff_weinstein.jpg',
+    name: 'Jeff Weinstein',
+    quoteSrc: 'https://twitter.com/jeff_weinstein/status/1490918876112392196',
+    productSrc: 'https://stripe.com/atlas',
+    productName: 'Stripe Atlas',
+    productLogo: '/static/img/crit/stripe.jpg',
+    reportSrc: null,
+    quote:
+      'Brian’s critiques are a balanced alchemy of macro and micro. He identifies the few, most important things to structurally improve the user experience as well as a litany dump of smaller, straightforward changes to brighten fit and finish. ',
   },
 ]
 
