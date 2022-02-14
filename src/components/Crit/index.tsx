@@ -4,8 +4,9 @@ import React from 'react'
 import { Detail } from '~/components/ListDetail/Detail'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
 import routes from '~/config/routes'
+import { baseEmail } from '~/config/seo'
 
-import { PrimaryButton } from '../Button'
+import Button, { PrimaryButton } from '../Button'
 import { Testimonial } from './Testimonial'
 
 const testimonials = [
@@ -42,7 +43,18 @@ const testimonials = [
     productLogo: '/static/img/crit/stripe.jpg',
     reportSrc: null,
     quote:
-      'Brian’s critiques are a balanced alchemy of macro and micro. He identifies the few, most important things to structurally improve the user experience as well as a litany dump of smaller, straightforward changes to brighten fit and finish. ',
+      'Brian’s critiques are a balanced alchemy of macro and micro. He identifies the few, most important things to structurally improve the user experience as well as a litany dump of smaller, straightforward changes to brighten fit and finish.',
+  },
+  {
+    avatarSrc: '/static/img/crit/meredithneyrand.jpeg',
+    name: 'Meredith Neyrand',
+    quoteSrc: 'https://twitter.com/MeredithNeyrand/status/1493343761337753600',
+    productSrc: 'https://stripe.com/payments/payment-links',
+    productName: 'Stripe Payment Links',
+    productLogo: '/static/img/crit/stripe.jpg',
+    reportSrc: null,
+    quote:
+      'Money well spent! Thanks for the super detailed write-up and feedback on the Payment Links experience @brian_lovin. Incredibly valuable to get an unbiased outside opinion like that.',
   },
 ]
 
@@ -104,20 +116,29 @@ export function Crit() {
             </p>
           </div>
 
-          <div className="inline-block">
+          <div className="inline-flex space-x-3">
             <PrimaryButton size="large" href={stripePaymentUrl}>
               Get started
             </PrimaryButton>
+
+            <Button
+              size="large"
+              href={`mailto:${baseEmail}?subject=Product design health report`}
+            >
+              Email me
+            </Button>
           </div>
 
           <div className="w-16 h-px rounded bg-gray-150 dark:bg-gray-800" />
 
-          {testimonials.map((testimonial) => (
-            <Testimonial
-              key={testimonial.reportSrc}
-              testimonial={testimonial}
-            />
-          ))}
+          <div className="space-y-6">
+            {testimonials.map((testimonial) => (
+              <Testimonial
+                key={testimonial.reportSrc}
+                testimonial={testimonial}
+              />
+            ))}
+          </div>
 
           <div className="w-16 h-px rounded bg-gray-150 dark:bg-gray-800" />
 
@@ -241,10 +262,17 @@ export function Crit() {
               entire process to complete within two to four weeks.
             </p>
           </div>
-          <div className="inline-flex flex-col pb-32 space-y-4">
+          <div className="inline-flex pb-32 space-x-3">
             <PrimaryButton size="large" href={stripePaymentUrl}>
               Get started
             </PrimaryButton>
+
+            <Button
+              size="large"
+              href={`mailto:${baseEmail}?subject=Product design health report`}
+            >
+              Email me
+            </Button>
           </div>
         </div>
       </Detail.ContentContainer>
