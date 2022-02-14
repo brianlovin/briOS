@@ -30,7 +30,7 @@ export function DesignDetailMedia(props: Props) {
                 playsInline
                 muted
                 loop
-                // autoPlay
+                autoPlay
                 preload="metadata"
                 key={src}
                 style={{
