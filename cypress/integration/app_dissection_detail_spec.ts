@@ -8,9 +8,6 @@ describe('App dissection post', () => {
 
   it('should render apps list', () => {
     cy.get('[data-cy="apps-list"]').should('be.visible')
-  })
-
-  it('should render app detail', () => {
     cy.get('[data-cy="app-detail"]').should('be.visible')
   })
 })
