@@ -1,6 +1,6 @@
 schema: './src/graphql/typeDefs/index.ts'
 scopes:
-  AUTHENTICATED: 'cookie:appSession'
+  AUTHENTICATED: 'cookie:authik_session_token'
 rootTypeNames:
   query: Query
   mutation: Mutation
