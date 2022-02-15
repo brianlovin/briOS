@@ -20,6 +20,7 @@ import {
   StaffDesignIcon,
   TwitterIcon,
   WritingIcon,
+  YouTubeIcon,
 } from '~/components/Icon'
 import { useViewerQuery } from '~/graphql/types.generated'
 
@@ -192,6 +193,15 @@ export function SidebarNavigation() {
           href: 'https://github.com/brianlovin',
           label: 'GitHub',
           icon: GitHubIcon,
+          trailingAccessory: ExternalLinkIcon,
+          isActive: false,
+          trailingAction: null,
+          isExternal: true,
+        },
+        {
+          href: 'https://www.youtube.com/channel/UC-esBYEUGQ6iK1wmw76f5MA',
+          label: 'YouTube',
+          icon: YouTubeIcon,
           trailingAccessory: ExternalLinkIcon,
           isActive: false,
           trailingAction: null,
