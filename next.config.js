@@ -50,6 +50,12 @@ module.exports = {
         destination: '/',
         permanent: true,
       },
+      {
+        source: '/youtube',
+        destination: 'https://www.youtube.com/channel/UC-esBYEUGQ6iK1wmw76f5MA',
+        permanent: true,
+        basePath: false,
+      },
     ]
   },
 }
