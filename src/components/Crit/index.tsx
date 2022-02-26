@@ -56,6 +56,28 @@ const testimonials = [
     quote:
       'Money well spent! Thanks for the super detailed write-up and feedback on the Payment Links experience @brian_lovin. Incredibly valuable to get an unbiased outside opinion like that.',
   },
+  {
+    avatarSrc: '/static/img/crit/tommoor.png',
+    name: 'Tom Moor',
+    quoteSrc: 'https://twitter.com/tommoor/status/1492653348230627332?s=21',
+    productSrc: 'https://getoutline.com',
+    productName: 'Outline',
+    productLogo: '/static/img/crit/outline.png',
+    reportSrc: null,
+    quote:
+      'We’ve all been stewing in our own designs for toooo long, a professional second set of eyes is a blessing 🙏',
+  },
+  {
+    avatarSrc: '/static/img/crit/tylermking.jpeg',
+    name: 'Tyler King',
+    quoteSrc: 'https://twitter.com/TylerMKing',
+    productSrc: 'https://lessannoyingcrm.com',
+    productName: 'Less Annoying CRM',
+    productLogo: '/static/img/crit/lacrm.png',
+    reportSrc: null,
+    quote:
+      'Brian’s Crit was like a cheat code. We’re a small company without much design expertise, but with just a few pointers here and there from Brian, our design has been elevated to a new level of polish and profesionalism. He also taught me quite a bit throughout the process so that I can maintain this higher standard in the future.',
+  },
 ]
 
 export function Crit() {
