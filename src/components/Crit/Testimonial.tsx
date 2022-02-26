@@ -3,7 +3,7 @@ import Link from 'next/link'
 import React from 'react'
 
 import Button from '../Button'
-import { ExternalLinkIcon } from '../Icon'
+import { ExternalLinkIcon, YouTubeIcon } from '../Icon'
 
 type TestimonialProps = {
   avatarSrc: string
@@ -13,6 +13,7 @@ type TestimonialProps = {
   productLogo: string
   productName: string
   quote: string
+  youtube: string
   reportSrc: string
 }
 
@@ -80,6 +81,18 @@ export function Testimonial({
       <p className="prose prose-lg">
         <p>{testimonial.quote}</p>
       </p>
+      {testimonial.youtube && (
+        <div className="relative w-full pb-[56.25%]">
+          <iframe
+            className="absolute top-0 left-0 w-full h-full rounded-md"
+            src={testimonial.youtube}
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        </div>
+      )}
     </div>
   )
 }

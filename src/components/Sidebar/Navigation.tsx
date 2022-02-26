@@ -215,7 +215,7 @@ export function SidebarNavigation() {
     <div className="flex-1 px-3 py-3 space-y-1">
       {sections.map((section, i) => {
         return (
-          <ul className="space-y-1">
+          <ul key={i} className="space-y-1">
             {section.label && (
               <h4
                 key={i}
