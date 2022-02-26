@@ -252,47 +252,43 @@ export function Intro() {
                   , a podcast network for designers and developers, which I
                   co-founded in 2015.
                 </p>
-                <p>
-                  You can find me on{' '}
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href="https://twitter.com/brian_lovin"
-                  >
-                    Twitter
-                  </a>{' '}
-                  where I talk about design and development, or on{' '}
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href="https://github.com/brianlovin"
-                  >
-                    GitHub
-                  </a>{' '}
-                  where I’m building in the open, or on{' '}
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href="https://figma.com/@brian"
-                  >
-                    Figma
-                  </a>{' '}
-                  where I’m exploring how plugins can automate the tedious parts
-                  of interface design.
-                </p>
-
-                <p>
-                  If you’re interested in working together, let’s set up a{' '}
-                  <Link href="/crit">
-                    <a>visual design critique</a>
-                  </Link>
-                  .
-                </p>
               </div>
               <div className="flex pt-6">
                 <Button href="https://changelog.brianlovin.com">
                   View changelog
                 </Button>
+              </div>
+            </SectionContent>
+          </SectionContainer>
+
+          <SectionContainer>
+            <SectionTitle>Online</SectionTitle>
+            <SectionContent>
+              <div className="flex flex-col space-y-3">
+                <TableRow
+                  href={'/twitter'}
+                  title={'Twitter'}
+                  subtitle={'Follow'}
+                  date={''}
+                />
+                <TableRow
+                  href={'/youtube'}
+                  title={'YouTube'}
+                  subtitle={'Subscribe'}
+                  date={''}
+                />
+                <TableRow
+                  href={'/github'}
+                  title={'GitHub'}
+                  subtitle={'Follow'}
+                  date={''}
+                />
+                <TableRow
+                  href={'/figma'}
+                  title={'Figma'}
+                  subtitle={'Follow'}
+                  date={''}
+                />
               </div>
             </SectionContent>
           </SectionContainer>
