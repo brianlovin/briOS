@@ -190,6 +190,16 @@ export function SidebarNavigation() {
         },
 
         {
+          href: 'https://www.youtube.com/channel/UC-esBYEUGQ6iK1wmw76f5MA',
+          label: 'YouTube',
+          icon: YouTubeIcon,
+          trailingAccessory: ExternalLinkIcon,
+          isActive: false,
+          trailingAction: null,
+          isExternal: true,
+        },
+
+        {
           href: 'https://github.com/brianlovin',
           label: 'GitHub',
           icon: GitHubIcon,
@@ -198,10 +208,11 @@ export function SidebarNavigation() {
           trailingAction: null,
           isExternal: true,
         },
+
         {
-          href: 'https://www.youtube.com/channel/UC-esBYEUGQ6iK1wmw76f5MA',
-          label: 'YouTube',
-          icon: YouTubeIcon,
+          href: 'https://figma.com/@brian',
+          label: 'Figma',
+          icon: FigmaIcon,
           trailingAccessory: ExternalLinkIcon,
           isActive: false,
           trailingAction: null,
@@ -215,7 +226,7 @@ export function SidebarNavigation() {
     <div className="flex-1 px-3 py-3 space-y-1">
       {sections.map((section, i) => {
         return (
-          <ul className="space-y-1">
+          <ul key={i} className="space-y-1">
             {section.label && (
               <h4
                 key={i}

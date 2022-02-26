@@ -56,6 +56,24 @@ module.exports = {
         permanent: true,
         basePath: false,
       },
+      {
+        source: '/twitter',
+        destination: 'https://twitter.com/brian_lovin',
+        permanent: true,
+        basePath: false,
+      },
+      {
+        source: '/github',
+        destination: 'https://github.com/brianlovin',
+        permanent: true,
+        basePath: false,
+      },
+      {
+        source: '/figma',
+        destination: 'https://figma.com/@brian',
+        permanent: true,
+        basePath: false,
+      },
     ]
   },
 }

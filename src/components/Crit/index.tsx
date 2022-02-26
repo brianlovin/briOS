@@ -19,6 +19,7 @@ const testimonials = [
     productLogo: '/static/img/crit/placemark.jpg',
     reportSrc:
       'https://brianlovin.notion.site/Crit-Placemark-ebe780d4707f436b9663f5f296d1bfc7',
+    youtube: 'https://www.youtube.com/embed/reWeNx9KA_E',
     quote:
       'Designing Placemark has often felt like wandering through a dungeon, this design crit process felt like someone popping up and showing me the dungeon map and showing me a whole bunch of secret shortcuts.',
   },
@@ -31,6 +32,7 @@ const testimonials = [
     productLogo: '/static/img/crit/buttondown.jpg',
     reportSrc:
       'https://brianlovin.notion.site/Crit-Buttondown-e9f46bd7995c4d53ae0dd2eb2ff86fab',
+    youtube: 'https://www.youtube.com/embed/PxufnL7shIc',
     quote:
       'I was lucky enough to get Brian to take a look at Buttondown and, uh, holy smokes — that was the best money I’ve poured into the business in a long, long time. Trust me: book some time with him. Easiest investment you can make in your product',
   },
@@ -42,6 +44,7 @@ const testimonials = [
     productName: 'Stripe Atlas',
     productLogo: '/static/img/crit/stripe.jpg',
     reportSrc: null,
+    youtube: null,
     quote:
       'Brian’s critiques are a balanced alchemy of macro and micro. He identifies the few, most important things to structurally improve the user experience as well as a litany dump of smaller, straightforward changes to brighten fit and finish.',
   },
@@ -53,6 +56,7 @@ const testimonials = [
     productName: 'Stripe Payment Links',
     productLogo: '/static/img/crit/stripe.jpg',
     reportSrc: null,
+    youtube: null,
     quote:
       'Money well spent! Thanks for the super detailed write-up and feedback on the Payment Links experience @brian_lovin. Incredibly valuable to get an unbiased outside opinion like that.',
   },
@@ -65,6 +69,7 @@ const testimonials = [
     productLogo: '/static/img/crit/outline.png',
     reportSrc:
       'https://brianlovin.notion.site/Outline-3947b9c3b5ff44a38af8e6146e6eb0fa',
+    youtube: 'https://www.youtube.com/embed/UjG4lB2u-r4',
     quote:
       'We’ve all been stewing in our own designs for toooo long, a professional second set of eyes is a blessing 🙏',
   },
@@ -76,6 +81,7 @@ const testimonials = [
     productName: 'Less Annoying CRM',
     productLogo: '/static/img/crit/lacrm.png',
     reportSrc: null,
+    youtube: null,
     quote:
       'Brian’s Crit was like a cheat code. We’re a small company without much design expertise, but with just a few pointers here and there from Brian, our design has been elevated to a new level of polish and profesionalism. He also taught me quite a bit throughout the process so that I can maintain this higher standard in the future.',
   },
