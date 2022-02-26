@@ -63,7 +63,8 @@ const testimonials = [
     productSrc: 'https://getoutline.com',
     productName: 'Outline',
     productLogo: '/static/img/crit/outline.png',
-    reportSrc: null,
+    reportSrc:
+      'https://brianlovin.notion.site/Outline-3947b9c3b5ff44a38af8e6146e6eb0fa',
     quote:
       'We’ve all been stewing in our own designs for toooo long, a professional second set of eyes is a blessing 🙏',
   },
