@@ -80,8 +80,8 @@ const testimonials = [
     productSrc: 'https://lessannoyingcrm.com',
     productName: 'Less Annoying CRM',
     productLogo: '/static/img/crit/lacrm.png',
-    reportSrc: null,
-    youtube: null,
+    reportSrc: 'https://www.youtube.com/watch?v=x9KMAudQBjE',
+    youtube: 'https://www.youtube.com/embed/x9KMAudQBjE',
     quote:
       'Brian’s Crit was like a cheat code. We’re a small company without much design expertise, but with just a few pointers here and there from Brian, our design has been elevated to a new level of polish and profesionalism. He also taught me quite a bit throughout the process so that I can maintain this higher standard in the future.',
   },
@@ -140,6 +140,14 @@ export function Crit() {
                 rel="noopener noreferrer"
               >
                 Outline
+              </a>{' '}
+              <span className="text-gray-300 dark:text-gray-800">/</span>{' '}
+              <a
+                href="https://www.youtube.com/watch?v=x9KMAudQBjE"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Less Annoying CRM
               </a>
               .
             </p>
