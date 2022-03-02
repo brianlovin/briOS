@@ -285,7 +285,8 @@ export function YouTubeIcon() {
       />
       <path
         d="M6.6499 6.30005V10.7L11.0499 8.50005L6.6499 6.30005Z"
-        fill="white"
+        fill="currentColor"
+        className="text-gray-50 dark:text-gray-900"
       />
     </svg>
   )
