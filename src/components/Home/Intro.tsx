@@ -91,6 +91,11 @@ const workHistory = [
 
 const speakingData = [
   {
+    href: 'https://museapp.com/podcast/51-personal-brand/',
+    title: 'Metamuse: Personal Brand',
+    date: "Mar '22",
+  },
+  {
     href: 'https://maze.co/podcast/#brian-lovin',
     title: 'The Optimal Path Podcast',
     date: "Jan '22",
