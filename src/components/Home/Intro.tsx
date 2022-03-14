@@ -91,6 +91,11 @@ const workHistory = [
 
 const speakingData = [
   {
+    href: 'https://artofproductpodcast.com/episode-202',
+    title: 'The Art of Product',
+    date: "Mar '22",
+  },
+  {
     href: 'https://museapp.com/podcast/51-personal-brand/',
     title: 'Metamuse: Personal Brand',
     date: "Mar '22",
