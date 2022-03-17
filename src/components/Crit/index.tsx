@@ -85,6 +85,18 @@ const testimonials = [
     quote:
       'Brian’s Crit was like a cheat code. We’re a small company without much design expertise, but with just a few pointers here and there from Brian, our design has been elevated to a new level of polish and profesionalism. He also taught me quite a bit throughout the process so that I can maintain this higher standard in the future.',
   },
+  {
+    avatarSrc: '/static/img/crit/kitze.jpg',
+    name: 'Kitze',
+    quoteSrc: 'https://twitter.com/thekitze',
+    productSrc: 'https://sizzy.co',
+    productName: 'Sizzy',
+    productLogo: '/static/img/crit/sizzy.jpeg',
+    reportSrc: null,
+    youtube: null,
+    quote:
+      'After 2 years of randomly cramming buttons in random places, Brian’s super clean redesign felt like a breath of fresh air. Can’t wait to implement the changes!',
+  },
 ]
 
 export function Crit() {
