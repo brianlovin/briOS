@@ -92,8 +92,8 @@ const testimonials = [
     productSrc: 'https://sizzy.co',
     productName: 'Sizzy',
     productLogo: '/static/img/crit/sizzy.jpeg',
-    reportSrc: null,
-    youtube: null,
+    reportSrc: 'https://www.youtube.com/watch?v=WggOnKLnFe4',
+    youtube: 'https://www.youtube.com/embed/WggOnKLnFe4',
     quote:
       'After 2 years of randomly cramming buttons in random places, Brian’s super clean redesign felt like a breath of fresh air. Can’t wait to implement the changes!',
   },
