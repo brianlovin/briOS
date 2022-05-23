@@ -236,7 +236,7 @@ export function SidebarNavigation() {
               </h4>
             )}
             {section.items.map((item, j) => (
-              <NavigationLink key={i} link={item} />
+              <NavigationLink key={j} link={item} />
             ))}
           </ul>
         )
