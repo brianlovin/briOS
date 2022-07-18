@@ -10,3 +10,4 @@ yarn-error.log
 .vercel
 cors.json
 src/data/local/*
+tsconfig.tsbuildinfo

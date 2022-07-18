@@ -1,0 +1,113 @@
+name: Database
+on: [pull_request]
+jobs:
+  pscale:
+    runs-on: ubuntu-latest
+    env:
+      PLANETSCALE_SERVICE_TOKEN_NAME: ''
+      PLANETSCALE_SERVICE_TOKEN: ''
+      PLANETSCALE_ORG: ''
+      DATABASE_URL: ''
+      POSTMARK_CLIENT_ID: ''
+      JWT_SIGNING_KEY: ''
+      AUTH0_SECRET: ''
+      AUTH0_BASE_URL: ''
+      AUTH0_CLIENT_ID: ''
+      AUTH0_CLIENT_SECRET: ''
+      AUTH0_MANAGEMENT_CLIENT_ID: ''
+      AUTH0_MANAGEMENT_CLIENT_SECRET: ''
+      AUTH0_ISSUER_BASE_URL: ''
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16.11'
+
+      - name: Install tooling
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
+          docker pull planetscale/pscale:latest
+          npm install -g yarn
+
+      - name: Configure yarn cache
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Point to yarn cache
+        uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install modules
+        run: yarn --frozen-lockfile
+
+      - name: Get branch and short sha
+        id: variables
+        shell: bash
+        run: |
+          echo "::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/})"
+          echo "::set-output name=sha_short::$(echo $(git rev-parse --short HEAD))"
+
+      - name: Create planetscale development branch
+        container: planetscale/pscale:latest
+        run: >
+          docker run \
+            -e PLANETSCALE_SERVICE_TOKEN_NAME=${{ env.PLANETSCALE_SERVICE_TOKEN_NAME }} \
+            -e PLANETSCALE_SERVICE_TOKEN=${{ env.PLANETSCALE_SERVICE_TOKEN }} \
+            -e PLANETSCALE_ORG=${{ env.PLANETSCALE_ORG }} \
+            planetscale/pscale:latest branch create \
+            brios-test-env-database \
+            ${{ steps.variables.outputs.branch }}-${{ steps.variables.outputs.sha_short }}-${{ github.run_id }}
+
+      - name: Wait for planetscale db branch readiness
+        container: planetscale/pscale:latest
+        run: |
+          echo "Checking if the planetscale db branch is ready to accept connections...👀";
+          while true; do
+            echo $(docker run -e PLANETSCALE_SERVICE_TOKEN_NAME=${{ env.PLANETSCALE_SERVICE_TOKEN_NAME }} -e PLANETSCALE_SERVICE_TOKEN=${{ env.PLANETSCALE_SERVICE_TOKEN }} -e PLANETSCALE_ORG=${{ env.PLANETSCALE_ORG }} planetscale/pscale:latest branch list brios-test-env-database --format json | jq -c ".[] | select(.name == \"${{ steps.variables.outputs.branch }}-${{ steps.variables.outputs.sha_short }}-${{ github.run_id }}\") | .ready") > BRANCH_READINESS;
+            if [[ "$(cat BRANCH_READINESS)" == "false" ]]
+            then
+              echo "Branch not ready yet -- checking again in 5 seconds 🐝";
+              sleep 5;
+            else
+              echo "Branch is ready to accept connections! 🚀";
+              exit 0;
+            fi
+          done
+
+      - name: Connect to planetscale db branch
+        container: planetscale/pscale:latest
+        run: |
+          docker run \
+            -e PLANETSCALE_SERVICE_TOKEN_NAME=${{ env.PLANETSCALE_SERVICE_TOKEN_NAME }} \
+            -e PLANETSCALE_SERVICE_TOKEN=${{ env.PLANETSCALE_SERVICE_TOKEN }} \
+            -e PLANETSCALE_ORG=${{ env.PLANETSCALE_ORG }} \
+            -e PSCALE_ALLOW_NONINTERACTIVE_SHELL=true \
+            -p 3309:3309 \
+            -d \
+            planetscale/pscale:latest connect \
+            brios-test-env-database \
+            ${{ steps.variables.outputs.branch }}-${{ steps.variables.outputs.sha_short }}-${{ github.run_id }} \
+            --port 3309
+
+      - name: Run integration tests
+        run: |
+          yarn dev &
+          sleep 5
+          yarn test
+        env:
+      - name: Delete planetscale db branch
+        uses: docker://planetscale/pscale:latest
+        with:
+          entrypoint: /usr/bin/pscale
+          args: |
+            branch delete brios-test-env-database ${{ steps.variables.outputs.branch }}-${{ steps.variables.outputs.sha_short }}-${{ github.run_id }} --force

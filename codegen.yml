@@ -22,3 +22,13 @@ generates:
       withComponent: false
       reactApolloVersion: 3
       preResolveTypes: true
+  ./tests/generated/types.ts:
+    documents:
+      test/documents/**/*.graphql:
+        skipGraphQLImport: false
+    plugins:
+      - typescript
+      - typescript-operations
+      - typed-document-node
+    config:
+      enumsAsTypes: true
