@@ -89,7 +89,7 @@ export function July() {
         </div>
       </TimelineEntry>
       <TimelineEntry
-        title="DataMaps: Complete software specification"
+        title="Academic Innovation Fund: Complete software specification"
         timestamp="July 14, 2021"
         Icon={Camera}
         tint="blue"
@@ -97,10 +97,8 @@ export function July() {
         <div className="flex flex-col overflow-hidden transition-shadow bg-white rounded-md shadow md:flex-row dark:bg-gray-900 hover:shadow-cardHover">
           <div className="flex flex-col justify-start px-3 py-3 space-y-2 md:w-1/2">
             <p className="flex px-2 font-normal">
-              This video introduces the DataMaps project and provides a complete
-              walkthrough of the Spreadsheet Map list of functionalities such as
-              Uploads, Search/Filtering, Ratings, Site administration, and
-              application portals for students and faculty.
+              This video submission to the Office of the Associate VP Teaching and Learning at York University describes the full list of functionalities 
+              I developed for the web mapping innovation project
             </p>
             <span />
             <a

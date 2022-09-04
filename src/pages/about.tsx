@@ -27,51 +27,54 @@ function About({ data, summaries }: Props) {
     <Page>
       <CenteredColumn>
         <div className="flex flex-col space-y-12" data-cy="about-page">
-          <div className="-mx-4 -mt-24 md:mt-0 md:-mx-8 ">
+          {/* <div className="-mx-4 -mt-24 md:mt-0 md:-mx-8 "> */}
+          <div className="-mx-0 -mt-0 md:mt-0 md:-mx-0 ">
             <Image
-              src="https://d2fl8krjhnb3wd.cloudfront.net/static/img/about.png"
+              // src="https://d2fl8krjhnb3wd.cloudfront.net/static/img/about.png"
+              src="/static/img/me.jpg"
               alt={'A photo of me'}
               layout="responsive"
-              width="1922"
-              height="1430"
+              width="1000"
+              height="1000"
               className="md:rounded-lg"
             />
           </div>
           <div className="flex flex-col space-y-12">
             <div className="flex flex-col prose lg:prose-lg">
               <p>
-                Paul is a{' '}
+                Paul is a multi cloud certified {' '}
                 <a
-                  href="https://cloud.google.com/certification/cloud-architect"
+                  href="https://www.credential.net/7cec8ff7-d2b0-4a31-baa4-ed4ff116e7c2"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  professional cloud architect
+                  Professional Cloud Architect
                 </a>{' '}
-                on the Google Cloud Platform, designing and building data
-                intensive architectures for deploying resilient, highly scalable
-                and fault tolerant big data workloads.
+                at {' '} 
+                <a
+                  href="https://www.bmo.com/main/about-bmo/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  BMO Financial Group
+                </a>.
+                He helps the organization with it's data challenges, from ensuring the architecture meets the business needs to attaining robust insights, and uncovering missed opportunities. 
+                With his expertise in Data Engineering, and a myriad of capabilities, he enables the Digital Acquisition business effectively leverage Data and AI-driven strategies.
               </p>
               <p>
-                Previously, he worked as a graduate research assistant at{' '}
+                Before BMO, he worked as a Business System Analyst at{' '}
                 <a
-                  href="https://lassonde.yorku.ca"
+                  href="https://www.td.com/about-tdbfg/corporate-information/corporate-profile/profile.jsp"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  York University
+                  TD Bank Financial Group
                 </a>{' '}
-                where he conducted research and built big data applications for{' '}
-                <a
-                  href="https://www.youtube.com/watch?v=0CU6C0kJoCA&t=18s"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  graph data mining in social networks
-                </a>{' '}
-                . His research was primarily motivated by the need to accurately
-                discover interesting patterns from large data files over 60TB.
+                where he supported the Transaction Monitoring
+                business to reduce the risk of money laundering and fraud offences. 
+                He developed robust analytics and reporting solutions that encompass all banking verticals (including payments, mututal funds, lending, and insurance) to ensure business rules for revealing fraud and money laundering evolve in step with offenders' practices.
               </p>
+          
               <p>
                 You can find him on{' '}
                 <a
@@ -92,7 +95,17 @@ function About({ data, summaries }: Props) {
                 for professional networking.
               </p>
             </div>
-
+            <div className="-mx-0 -mt-0 md:mt-0 md:-mx-0 ">
+            <Image
+                src="/static/img/yyz.png"
+                width={800}
+                height={400}
+                layout="responsive"
+                className="rounded-2xl"
+                quality={100}
+                alt="Map of Toronto with blue location dot in the middle"
+              />
+          </div>
             <Divider />
 
             <div className="flex flex-col space-y-4">
@@ -120,6 +133,75 @@ function About({ data, summaries }: Props) {
                   Subscribe via RSS &rarr;
                 </a>
               </div>
+            </div>
+
+            <div className="flex flex-col space-y-4">
+              <h4>Data Science Portfolio</h4>
+              <p className="text-lg">Exploring the art of AI/ML, one concept at a time.</p>
+              <div className="flex flex-col space-y-1">
+                <a
+                  href="https://github.com/paulowe/hyperparameter-optimization"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 dark:text-blue-500"
+                >
+                  paulowe / hyperparameter-optimization
+                </a>
+                <p>Advanced hyperparameter optimization techniques including Bayesian, Multi-fidelity, and SMBO algorithms.</p>
+              </div>
+
+              <div className="flex flex-col space-y-1">
+                <a
+                  className="text-blue-600 dark:text-blue-500"
+                  href="https://github.com/paulowe/influence-max-gpp"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  paulowe / influence-max-gpp
+                </a>
+                <p>
+                  A graph processing platform to create a ranking dashboard of
+                  influential Twitter profiles using Neo4J and Spark.{' '}
+                </p>
+              </div>
+
+              <div className="flex flex-col space-y-1">
+                <a
+                  href="https://github.com/paulowe/tensorflow-lifetime-value"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 dark:text-blue-500"
+                >
+                  paulowe / tensorflow-lifetime-value
+                </a>
+                <p>
+                A neural network model for predicting CLTV scores using Tensorflow and Lifetimes Python Library.
+                </p>
+              </div>
+
+              <div className="flex flex-col space-y-1">
+                <a
+                  href="https://github.com/paulowe/twint"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 dark:text-blue-500"
+                >
+                  paulowe / twint
+                </a>
+                <p>
+                  An advanced Twitter scraping &amp; OSINT tool written in
+                  Python.
+                </p>
+              </div>
+
+              <a
+                href="https://github.com/paulowe"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 dark:text-blue-500"
+              >
+                Follow me on GitHub &rarr;
+              </a>
             </div>
 
             <div className="flex flex-col space-y-4">
@@ -158,73 +240,7 @@ function About({ data, summaries }: Props) {
               <div />
             </div>
 
-            <div className="flex flex-col space-y-4">
-              <h4>Open source work</h4>
-              <div className="flex flex-col space-y-1">
-                <a
-                  href="https://github.com/paulowe/paulowe"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 dark:text-blue-500"
-                >
-                  paulowe / paulowe
-                </a>
-                <p>The code that powers this website you’re looking at.</p>
-              </div>
 
-              <div className="flex flex-col space-y-1">
-                <a
-                  className="text-blue-600 dark:text-blue-500"
-                  href="https://github.com/paulowe/influence-max-gpp"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  paulowe / influence-max-gpp
-                </a>
-                <p>
-                  A graph processing platform to create a ranking dashboard of
-                  influential Twitter profiles.{' '}
-                </p>
-              </div>
-
-              <div className="flex flex-col space-y-1">
-                <a
-                  href="https://github.com/paulowe/maps4resources"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 dark:text-blue-500"
-                >
-                  paulowe / maps4resources
-                </a>
-                <p>
-                  A flask application for visualizing spreadsheets on a map.
-                </p>
-              </div>
-
-              <div className="flex flex-col space-y-1">
-                <a
-                  href="https://github.com/paulowe/twint"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 dark:text-blue-500"
-                >
-                  paulowe / twint
-                </a>
-                <p>
-                  An advanced Twitter scraping &amp; OSINT tool written in
-                  Python.
-                </p>
-              </div>
-
-              <a
-                href="https://github.com/paulowe"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 dark:text-blue-500"
-              >
-                Follow me on GitHub &rarr;
-              </a>
-            </div>
           </div>
         </div>
       </CenteredColumn>

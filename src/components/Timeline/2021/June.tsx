@@ -8,7 +8,7 @@ export function June() {
     <>
       <DateEntry title="June, 2021" />
       <TimelineEntry
-        title="Mapping FSL Twitter: A visual and technical perspective"
+        title="Undergraduate Research Fair: Mapping FSL Twitter"
         timestamp="June 05, 2021"
         Icon={Camera}
         tint="red"
@@ -20,7 +20,7 @@ export function June() {
               structural properties of the FSL Twitter network. A graph
               processing platform to create a dashboard of influential Twitter
               profiles and a geo-visualization tool are implemented as part of
-              the big data solution
+              the big data solution.
             </p>
             <span />
             <a
