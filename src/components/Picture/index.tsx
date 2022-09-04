@@ -3,7 +3,7 @@ import * as React from 'react'
 interface Props {
   srcset: string[]
   alt: string
-  style?: object
+  // style?: object
   width: string
   height: string
   lazy?: boolean
