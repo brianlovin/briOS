@@ -42,7 +42,7 @@ function About({ data, summaries }: Props) {
           <div className="flex flex-col space-y-12">
             <div className="flex flex-col prose lg:prose-lg">
               <p>
-                Paul is a multi cloud certified {' '}
+                Paul is a multi cloud certified{' '}
                 <a
                   href="https://www.credential.net/7cec8ff7-d2b0-4a31-baa4-ed4ff116e7c2"
                   target="_blank"
@@ -50,16 +50,20 @@ function About({ data, summaries }: Props) {
                 >
                   Professional Cloud Architect
                 </a>{' '}
-                at {' '} 
+                at{' '}
                 <a
                   href="https://www.bmo.com/main/about-bmo/"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   BMO Financial Group
-                </a>.
-                He helps the organization with it's data challenges, from ensuring the architecture meets the business needs to attaining robust insights, and uncovering missed opportunities. 
-                With his expertise in Data Engineering, and a myriad of capabilities, he enables the Digital Acquisition business effectively leverage Data and AI-driven strategies.
+                </a>
+                . He helps the organization with it&apos;s data challenges, from
+                ensuring the architecture meets the business needs to attaining
+                robust insights, and uncovering missed opportunities. With his
+                expertise in Data Engineering, and a myriad of capabilities, he
+                enables the Digital Acquisition business effectively leverage
+                Data and AI-driven strategies.
               </p>
               <p>
                 Before BMO, he worked as a Business System Analyst at{' '}
@@ -70,11 +74,14 @@ function About({ data, summaries }: Props) {
                 >
                   TD Bank Financial Group
                 </a>{' '}
-                where he supported the Transaction Monitoring
-                business to reduce the risk of money laundering and fraud offences. 
-                He developed robust analytics and reporting solutions that encompass all banking verticals (including payments, mututal funds, lending, and insurance) to ensure business rules for revealing fraud and money laundering evolve in step with offenders' practices.
+                where he supported the Transaction Monitoring business to reduce
+                the risk of money laundering and fraud offences. He developed
+                robust analytics and reporting solutions that encompass all
+                banking verticals (including payments, mututal funds, lending,
+                and insurance) to ensure business rules for revealing fraud and
+                money laundering evolve in step with offenders' practices.
               </p>
-          
+
               <p>
                 You can find him on{' '}
                 <a
@@ -96,7 +103,7 @@ function About({ data, summaries }: Props) {
               </p>
             </div>
             <div className="-mx-0 -mt-0 md:mt-0 md:-mx-0 ">
-            <Image
+              <Image
                 src="/static/img/yyz.png"
                 width={800}
                 height={400}
@@ -105,7 +112,7 @@ function About({ data, summaries }: Props) {
                 quality={100}
                 alt="Map of Toronto with blue location dot in the middle"
               />
-          </div>
+            </div>
             <Divider />
 
             <div className="flex flex-col space-y-4">
@@ -137,7 +144,9 @@ function About({ data, summaries }: Props) {
 
             <div className="flex flex-col space-y-4">
               <h4>Data Science Portfolio</h4>
-              <p className="text-lg">Exploring the art of AI/ML, one concept at a time.</p>
+              <p className="text-lg">
+                Exploring the art of AI/ML, one concept at a time.
+              </p>
               <div className="flex flex-col space-y-1">
                 <a
                   href="https://github.com/paulowe/hyperparameter-optimization"
@@ -147,7 +156,10 @@ function About({ data, summaries }: Props) {
                 >
                   paulowe / hyperparameter-optimization
                 </a>
-                <p>Advanced hyperparameter optimization techniques including Bayesian, Multi-fidelity, and SMBO algorithms.</p>
+                <p>
+                  Advanced hyperparameter optimization techniques including
+                  Bayesian, Multi-fidelity, and SMBO algorithms.
+                </p>
               </div>
 
               <div className="flex flex-col space-y-1">
@@ -175,7 +187,8 @@ function About({ data, summaries }: Props) {
                   paulowe / tensorflow-lifetime-value
                 </a>
                 <p>
-                A neural network model for predicting CLTV scores using Tensorflow and Lifetimes Python Library.
+                  A neural network model for predicting CLTV scores using
+                  Tensorflow and Lifetimes Python Library.
                 </p>
               </div>
 
@@ -239,8 +252,6 @@ function About({ data, summaries }: Props) {
               </div>
               <div />
             </div>
-
-
           </div>
         </div>
       </CenteredColumn>
