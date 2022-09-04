@@ -12,7 +12,6 @@ import URL from 'url'
 import fetch from 'isomorphic-unfetch'
 import admin from 'firebase-admin'
 
-
 admin.initializeApp()
 const db = admin.firestore()
 const client = algoliasearch(
