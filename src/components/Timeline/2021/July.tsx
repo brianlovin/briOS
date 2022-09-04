@@ -97,9 +97,9 @@ export function July() {
         <div className="flex flex-col overflow-hidden transition-shadow bg-white rounded-md shadow md:flex-row dark:bg-gray-900 hover:shadow-cardHover">
           <div className="flex flex-col justify-start px-3 py-3 space-y-2 md:w-1/2">
             <p className="flex px-2 font-normal">
-              This video submission to the Office of the Associate VP Teaching 
-              and Learning at York University describes the full list of functionalities 
-              I developed for the web mapping innovation project
+              This video submission to the Office of the Associate VP Teaching
+              and Learning at York University describes the full list of
+              functionalities I developed for the web mapping innovation project
             </p>
             <span />
             <a
