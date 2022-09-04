@@ -14,7 +14,8 @@ export default function OverthoughtList({ posts }: Props) {
       {posts.map((post) => (
         <div className="flex flex-col space-y-1" key={post.id}>
           <Link
-            href="/paulsmessage/[slug]"
+            // href="/paulsmessage/[slug]"
+            href="https://paulowe.com/[slug]"
             as={`/paulsmessage/${post.slug}`}
             passHref
           >
