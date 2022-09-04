@@ -1,9 +1,18 @@
-const functions = require('firebase-functions')
-const cheerio = require('cheerio')
-const algoliasearch = require('algoliasearch')
-const URL = require('url')
-const fetch = require('isomorphic-unfetch')
-const admin = require('firebase-admin')
+// const functions = require('firebase-functions')
+// const cheerio = require('cheerio')
+// const algoliasearch = require('algoliasearch')
+// const URL = require('url')
+// const fetch = require('isomorphic-unfetch')
+// const admin = require('firebase-admin')
+
+import functions from 'firebase-functions';
+import cheerio from 'cheerio';
+import algoliasearch from 'algoliasearch';
+import URL from 'url';
+import fetch from 'isomorphic-unfetch';
+import admin from 'firebase-admin';
+
+
 admin.initializeApp()
 const db = admin.firestore()
 const client = algoliasearch(
