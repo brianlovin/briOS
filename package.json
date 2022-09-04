@@ -118,7 +118,7 @@
       "prettier --write"
     ]
   },
-  "engines":{ "node": "13.16.0"},
+  "engines":{ "node": "14.16.0"},
   "pre-commit": "lint:staged && generate",
   "license": "MIT"
 }
