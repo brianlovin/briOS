@@ -5,12 +5,12 @@
 // const fetch = require('isomorphic-unfetch')
 // const admin = require('firebase-admin')
 
-import functions from 'firebase-functions';
-import cheerio from 'cheerio';
-import algoliasearch from 'algoliasearch';
-import URL from 'url';
-import fetch from 'isomorphic-unfetch';
-import admin from 'firebase-admin';
+import functions from 'firebase-functions'
+import cheerio from 'cheerio'
+import algoliasearch from 'algoliasearch'
+import URL from 'url'
+import fetch from 'isomorphic-unfetch'
+import admin from 'firebase-admin'
 
 
 admin.initializeApp()

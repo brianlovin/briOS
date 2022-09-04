@@ -79,7 +79,7 @@ function About({ data, summaries }: Props) {
                 robust analytics and reporting solutions that encompass all
                 banking verticals (including payments, mututal funds, lending,
                 and insurance) to ensure business rules for revealing fraud and
-                money laundering evolve in step with offenders' practices.
+                money laundering evolve in step with offenders practices.
               </p>
 
               <p>
