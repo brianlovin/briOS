@@ -8,6 +8,7 @@ import {
   AMAIcon,
   AppDissectionIcon,
   BookmarksIcon,
+  CampsiteIcon,
   CritIcon,
   ExternalLinkIcon,
   FigmaIcon,
@@ -64,16 +65,6 @@ export function SidebarNavigation() {
           trailingAction: null,
           isExternal: false,
         },
-
-        {
-          href: '/crit',
-          label: 'Crit',
-          icon: CritIcon,
-          trailingAccessory: null,
-          isActive: router.asPath.indexOf('/crit') >= 0,
-          trailingAction: null,
-          isExternal: false,
-        },
       ],
     },
     {
@@ -115,6 +106,16 @@ export function SidebarNavigation() {
     {
       label: 'Projects',
       items: [
+        {
+          href: 'https://campsite.design',
+          label: 'Campsite',
+          icon: CampsiteIcon,
+          trailingAccessory: ExternalLinkIcon,
+          isActive: false,
+          trailingAction: null,
+          isExternal: true,
+        },
+
         {
           href: 'https://designdetails.fm',
           label: 'Design Details',

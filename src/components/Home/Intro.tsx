@@ -58,10 +58,16 @@ function SectionContainer(props) {
 
 const workHistory = [
   {
+    href: 'https://campsite.design',
+    title: 'Campsite',
+    subtitle: 'Founder',
+    date: '2022—\u00a0\u00a0',
+  },
+  {
     href: 'https://github.com/mobile',
     title: 'GitHub',
     subtitle: 'Product Designer',
-    date: '2018—\u00a0\u00a0',
+    date: '2018—22',
   },
   {
     href: 'https://designdetails.fm',
@@ -206,6 +212,18 @@ export function Intro() {
                     software tinkerer
                   </a>
                   . I&apos;m currently building{' '}
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://campsite.design"
+                  >
+                    Campsite
+                  </a>
+                  , a place for design teams to work better together.
+                </p>
+
+                <p>
+                  Before Campsite, I spent four years designing{' '}
                   <a
                     target="_blank"
                     rel="noopener noreferrer"
