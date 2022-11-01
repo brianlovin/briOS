@@ -219,7 +219,8 @@ export function Intro() {
                   >
                     Campsite
                   </a>
-                  , a place for design teams to work better together.
+                  , a tool that helps software share and discover
+                  work-in-progress.
                 </p>
 
                 <p>
