@@ -219,7 +219,8 @@ export function Intro() {
                   >
                     Campsite
                   </a>
-                  , a tool that helps teams share and collaborate on work-in-progress.
+                  , a tool that helps teams share and collaborate on
+                  work-in-progress.
                 </p>
 
                 <p>
