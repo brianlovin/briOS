@@ -74,6 +74,12 @@ module.exports = {
         permanent: true,
         basePath: false,
       },
+      {
+        source: '/mastadon',
+        destination: 'https://mastodon.cloud/@brian',
+        permanent: true,
+        basePath: false,
+      },
     ]
   },
 }
