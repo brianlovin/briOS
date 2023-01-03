@@ -26,6 +26,7 @@ export function EmailForm(props: {
       },
     },
     update(cache) {
+      // @ts-ignore
       const { viewer } = cache.readQuery({
         query: GET_VIEWER_SETTINGS,
       })
@@ -53,7 +54,7 @@ export function EmailForm(props: {
       },
     },
     update(cache) {
-      const { viewer } = cache.readQuery({
+      const { viewer } = cache.readQuery<GetViewerWithSettingsQuery>({
         query: GET_VIEWER_SETTINGS,
       })
 
@@ -80,7 +81,7 @@ export function EmailForm(props: {
       },
     },
     update(cache) {
-      const { viewer } = cache.readQuery({
+      const { viewer } = cache.readQuery<GetViewerWithSettingsQuery>({
         query: GET_VIEWER_SETTINGS,
       })
 
@@ -111,14 +112,14 @@ export function EmailForm(props: {
 
   return (
     <div className="space-y-2">
-      <p className="text-primary font-semibold">Email</p>
+      <p className="font-semibold text-primary">Email</p>
 
       {viewer.email && (
-        <div className="text-primary flex space-x-2">
+        <div className="flex space-x-2 text-primary">
           <span>{viewer.email}</span>
           <span>·</span>
           <button
-            className="cursor-pointer font-medium text-blue-500"
+            className="font-medium text-blue-500 cursor-pointer"
             onClick={() => setIsEditing(!isEditing)}
           >
             {isEditing ? 'Cancel' : 'Edit'}
@@ -129,7 +130,7 @@ export function EmailForm(props: {
       {(isNew || isEditing) && (
         <form className="space-y-2" onSubmit={onSubmit}>
           {isNew && (
-            <p className="text-quaternary text-sm">
+            <p className="text-sm text-quaternary">
               Adding your email will allow you to turn on replies for comments
               or AMA questions.
             </p>

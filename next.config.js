@@ -1,9 +1,11 @@
+/**
+ * @type {import('next').NextConfig}
+ */
 module.exports = {
-  swcMinify: true,
-  resolve: {
-    fallback: {
-      fs: false,
-    },
+  webpack: (config) => {
+    config.resolve.fallback = { fs: false, net: false, tls: false }
+
+    return config
   },
   images: {
     domains: [

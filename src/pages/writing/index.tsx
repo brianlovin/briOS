@@ -20,24 +20,6 @@ function WritingPage() {
   )
 }
 
-export async function getServerSideProps({ req, res }) {
-  const context = await getContext(req, res)
-  const apolloClient = initApolloClient({ context })
-
-  await Promise.all([
-    apolloClient.query({ query: GET_VIEWER }),
-
-    apolloClient.query({
-      query: GET_POSTS,
-      variables: { filter: { published: true } },
-    }),
-  ])
-
-  return addApolloState(apolloClient, {
-    props: {},
-  })
-}
-
 WritingPage.getLayout = withProviders(function getLayout(page) {
   return (
     <SiteLayout>

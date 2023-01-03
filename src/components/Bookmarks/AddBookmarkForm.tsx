@@ -8,6 +8,7 @@ import { LoadingSpinner } from '~/components/LoadingSpinner'
 import { TagPicker } from '~/components/Tag/TagPicker'
 import { GET_BOOKMARKS } from '~/graphql/queries/bookmarks'
 import {
+  GetBookmarksQuery,
   useAddBookmarkMutation,
   useGetBookmarksQuery,
 } from '~/graphql/types.generated'
@@ -31,7 +32,7 @@ export function AddBookmarkForm({ closeModal }) {
     addBookmark({
       variables: { data: { url, tag } },
       update(cache, { data: { addBookmark } }) {
-        const { bookmarks } = cache.readQuery({ query })
+        const { bookmarks } = cache.readQuery<GetBookmarksQuery>({ query })
         return cache.writeQuery({
           query,
           data: {
@@ -85,7 +86,7 @@ export function AddBookmarkForm({ closeModal }) {
   }
 
   return (
-    <form className="space-y-3 p-4" onSubmit={onSubmit}>
+    <form className="p-4 space-y-3" onSubmit={onSubmit}>
       <Input
         type="text"
         placeholder="Add a url..."

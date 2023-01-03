@@ -9,6 +9,7 @@ import { GET_COMMENTS } from '~/graphql/queries/comments'
 import {
   Comment as CommentProp,
   CommentType,
+  GetCommentsQuery,
   useDeleteCommentMutation,
   useEditCommentMutation,
 } from '~/graphql/types.generated'
@@ -39,7 +40,7 @@ export const Comment = React.memo(function MemoComment({
       deleteComment: true,
     },
     update(cache) {
-      const { comments } = cache.readQuery({
+      const { comments } = cache.readQuery<GetCommentsQuery>({
         query: GET_COMMENTS,
         variables: { refId, type },
       })
@@ -106,34 +107,33 @@ export const Comment = React.memo(function MemoComment({
   })
 
   return (
-    <div className="group flex flex-col space-y-0">
+    <div className="flex flex-col space-y-0 group">
       <div className="flex items-center justify-between space-x-4">
         <div className="flex items-center space-x-4">
-          <Link href={`/u/${comment.author.username}`}>
-            <a className="inline-flex">
-              <Avatar
-                user={comment.author}
-                src={comment.author.avatar}
-                width={40}
-                height={40}
-                quality={100}
-                layout="fixed"
-                className="rounded-full"
-              />
-            </a>
+          <Link href={`/u/${comment.author.username}`} className="inline-flex">
+            <Avatar
+              user={comment.author}
+              src={comment.author.avatar}
+              width={40}
+              height={40}
+              quality={100}
+              layout="fixed"
+              className="rounded-full"
+            />
           </Link>
 
           <div className="flex space-x-1">
-            <Link href={`/u/${comment.author.username}`}>
-              <a className="text-primary font-semibold leading-snug">
-                <div className="flex break-all line-clamp-1">
-                  {comment.author.name}
-                </div>
-              </a>
+            <Link
+              href={`/u/${comment.author.username}`}
+              className="font-semibold leading-snug text-primary"
+            >
+              <div className="flex break-all line-clamp-1">
+                {comment.author.name}
+              </div>
             </Link>
-            <p className="text-quaternary leading-snug">·</p>
+            <p className="leading-snug text-quaternary">·</p>
             <p
-              className="text-quaternary leading-snug line-clamp-1"
+              className="leading-snug text-quaternary line-clamp-1"
               title={createdAt.raw}
             >
               {createdAt.formatted}
@@ -170,7 +170,7 @@ export const Comment = React.memo(function MemoComment({
       ) : (
         <MarkdownRenderer
           children={comment.text}
-          className="comment prose flex-grow pl-14 leading-normal"
+          className="flex-grow leading-normal prose comment pl-14"
           variant="comment"
         />
       )}

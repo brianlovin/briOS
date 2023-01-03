@@ -8,6 +8,7 @@ import { EmailSubscriptionForm } from '~/components/UserSettings/EmailPreference
 import { GET_VIEWER_SETTINGS } from '~/graphql/queries/viewer'
 import {
   EmailSubscriptionType,
+  GetViewerWithSettingsQuery,
   useEditEmailSubscriptionMutation,
   useEditUserMutation,
   useGetViewerWithSettingsQuery,
@@ -36,7 +37,7 @@ export function HackerNewsSubscriptionForm() {
 
   const [setPendingEmail, setPendingEmailResponse] = useEditUserMutation({
     update(cache) {
-      const { viewer } = cache.readQuery({
+      const { viewer } = cache.readQuery<GetViewerWithSettingsQuery>({
         query: GET_VIEWER_SETTINGS,
       })
 
@@ -91,7 +92,7 @@ export function HackerNewsSubscriptionForm() {
 
   if (!data.viewer || !data.viewer.email) {
     return (
-      <div className="space-y-4 p-4">
+      <div className="p-4 space-y-4">
         <div className="flex flex-col space-y-4">
           <p className="text-secondary">
             Get a daily email with the the top stories from Hacker News. No
@@ -100,7 +101,7 @@ export function HackerNewsSubscriptionForm() {
           <form
             data-cy="subscribe-hn-form"
             onSubmit={submit}
-            className="mt-2 grid grid-cols-1 gap-2 md:grid-cols-3"
+            className="grid grid-cols-1 gap-2 mt-2 md:grid-cols-3"
           >
             <label className="md:col-span-2">
               <span className="sr-only">Email address</span>

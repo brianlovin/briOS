@@ -19,19 +19,6 @@ function HNPage() {
   )
 }
 
-export async function getServerSideProps({ req, res }) {
-  const context = await getContext(req, res)
-  const apolloClient = initApolloClient({ context })
-
-  await apolloClient.query({
-    query: GET_HACKER_NEWS_POSTS,
-  })
-
-  return addApolloState(apolloClient, {
-    props: {},
-  })
-}
-
 HNPage.getLayout = withProviders(function getLayout(page) {
   return (
     <SiteLayout>

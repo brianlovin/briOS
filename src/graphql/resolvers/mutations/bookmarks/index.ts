@@ -88,7 +88,6 @@ export async function addBookmark(
       console.error({ err })
     }
   } else {
-    console.log('Adding bookmark to newsletter', { url })
   }
 
   return await prisma.bookmark

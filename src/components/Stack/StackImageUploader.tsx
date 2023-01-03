@@ -57,11 +57,12 @@ export function StackImageUploader({ stack, onImageUploaded }) {
 
   if (initialImage || previewImage) {
     return (
-      <div className="relative inline-block h-24 w-24 rounded-lg border border-gray-100 dark:border-gray-900">
+      <div className="relative inline-block w-24 h-24 border border-gray-100 rounded-lg dark:border-gray-900">
         <Image
+          alt="stack image preview"
           src={initialImage || previewImage}
-          width="96"
-          height="96"
+          width={96}
+          height={96}
           layout="fixed"
           quality={100}
           className={`inline-block rounded-lg`}
@@ -72,7 +73,7 @@ export function StackImageUploader({ stack, onImageUploaded }) {
             setPreviewImage(null)
             onImageUploaded(null)
           }}
-          className="absolute -top-3 -right-3 cursor-pointer rounded-full border-2 border-white bg-gray-1000 p-2 text-white shadow-md hover:bg-red-500 focus:bg-red-500 dark:border-gray-800 dark:bg-gray-700"
+          className="absolute p-2 text-white border-2 border-white rounded-full shadow-md cursor-pointer -top-3 -right-3 bg-gray-1000 hover:bg-red-500 focus:bg-red-500 dark:border-gray-800 dark:bg-gray-700"
         >
           <Trash size={16} />
         </button>

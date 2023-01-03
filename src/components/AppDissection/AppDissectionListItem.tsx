@@ -20,8 +20,8 @@ export const AppDissectionListItem = React.memo<Props>(
         description={null}
         leadingAccessory={
           <Image
-            width={'48px'}
-            height={'48px'}
+            width={48}
+            height={48}
             layout="fixed"
             alt={summary.title}
             className={'rounded-xl'}

@@ -9,6 +9,7 @@ import { TagPicker } from '~/components/Tag/TagPicker'
 import { GET_BOOKMARKS } from '~/graphql/queries/bookmarks'
 import { GET_BOOKMARK } from '~/graphql/queries/bookmarks'
 import {
+  GetBookmarksQuery,
   useDeleteBookmarkMutation,
   useEditBookmarkMutation,
 } from '~/graphql/types.generated'
@@ -101,7 +102,7 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
       deleteBookmark: true,
     },
     update(cache) {
-      const { bookmarks } = cache.readQuery({
+      const { bookmarks } = cache.readQuery<GetBookmarksQuery>({
         query: GET_BOOKMARKS,
       })
 
@@ -175,15 +176,14 @@ export function EditBookmarkForm({ closeModal, bookmark }) {
           onKeyDown={onKeyDown}
         />
         {state.error && <p className="text-red-500">{state.error}</p>}
-        <Link href={bookmark.url}>
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-secondary inline-flex items-center space-x-2 pb-2 text-sm opacity-70 hover:opacity-100"
-          >
-            <LinkIcon className="flex-none" size={12} />
-            <span className="line-clamp-1">{bookmark.url}</span>
-          </a>
+        <Link
+          href={bookmark.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center pb-2 space-x-2 text-sm text-secondary opacity-70 hover:opacity-100"
+        >
+          <LinkIcon className="flex-none" size={12} />
+          <span className="line-clamp-1">{bookmark.url}</span>
         </Link>
 
         <TagPicker
