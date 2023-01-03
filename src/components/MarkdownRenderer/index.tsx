@@ -18,20 +18,12 @@ function LinkRenderer({ href, ...rest }: any) {
 
   if (href.startsWith('@')) {
     // link to a mention
-    return (
-      <Link href={`/u/${href.slice(1)}`} {...rest}>
-        <a {...rest} />
-      </Link>
-    )
+    return <Link href={`/u/${href.slice(1)}`} {...rest} />
   }
   try {
     const url = new URL(href)
     if (url.origin === 'https://brianlovin.com') {
-      return (
-        <Link href={href}>
-          <a {...rest} />
-        </Link>
-      )
+      return <Link href={href} {...rest} />
     }
     return <a target="_blank" rel="noopener" href={href} {...rest} />
   } catch (e) {

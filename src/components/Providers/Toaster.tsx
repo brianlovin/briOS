@@ -14,14 +14,14 @@ export function Toast() {
         duration: 2000,
         success: {
           duration: 2000,
-          theme: {
+          iconTheme: {
             primary: 'green',
             secondary: 'black',
           },
         },
         error: {
           duration: 2000,
-          theme: {
+          iconTheme: {
             primary: 'red',
             secondary: 'white',
           },

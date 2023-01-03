@@ -14,7 +14,7 @@ function Container(props) {
   return (
     <div
       data-cy="sign-in-button"
-      className="filter-blur sticky bottom-0 z-10 flex items-center justify-between space-x-3 border-t border-gray-150 bg-white bg-opacity-80 p-2 dark:border-gray-800 dark:bg-gray-900 dark:bg-opacity-60"
+      className="sticky bottom-0 z-10 flex items-center justify-between p-2 space-x-3 bg-white border-t filter-blur border-gray-150 bg-opacity-80 dark:border-gray-800 dark:bg-gray-900 dark:bg-opacity-60"
       {...props}
     />
   )
@@ -40,7 +40,7 @@ export function UserFooter() {
   if (loading) {
     return (
       <Container>
-        <div className="flex w-full items-center justify-center py-1">
+        <div className="flex items-center justify-center w-full py-1">
           <LoadingSpinner />
         </div>
       </Container>
@@ -54,20 +54,19 @@ export function UserFooter() {
   if (data?.viewer) {
     return (
       <Container>
-        <Link href={`/u/${data.viewer.username}`}>
-          <a
-            onClick={() => setIsOpen(false)}
-            className="flex flex-none items-center rounded-full"
-          >
-            <Avatar
-              user={data.viewer}
-              src={data.viewer.avatar}
-              width={24}
-              height={24}
-              layout="fixed"
-              className="rounded-full"
-            />
-          </a>
+        <Link
+          href={`/u/${data.viewer.username}`}
+          onClick={() => setIsOpen(false)}
+          className="flex items-center flex-none rounded-full"
+        >
+          <Avatar
+            user={data.viewer}
+            src={data.viewer.avatar}
+            width={24}
+            height={24}
+            layout="fixed"
+            className="rounded-full"
+          />
         </Link>
         <GhostButton
           aria-label="Manage settings"

@@ -7,6 +7,7 @@ import { Textarea } from '~/components/Input'
 import { GET_COMMENTS } from '~/graphql/queries/comments'
 import {
   CommentType,
+  GetCommentsQuery,
   useAddCommentMutation,
   useViewerQuery,
 } from '~/graphql/types.generated'
@@ -47,7 +48,7 @@ export function CommentForm({ refId, type, openModal }: Props) {
       },
     },
     update(cache, { data: { addComment } }) {
-      const { comments } = cache.readQuery({
+      const { comments } = cache.readQuery<GetCommentsQuery>({
         query: GET_COMMENTS,
         variables: { refId, type },
       })
@@ -104,12 +105,12 @@ export function CommentForm({ refId, type, openModal }: Props) {
   }
 
   return (
-    <div className="filter-blur sticky bottom-0 flex flex-col border-t border-gray-150 bg-white bg-opacity-90 pb-10 dark:border-gray-800 dark:bg-gray-900 sm:pb-0">
+    <div className="sticky bottom-0 flex flex-col pb-10 bg-white border-t filter-blur border-gray-150 bg-opacity-90 dark:border-gray-800 dark:bg-gray-900 sm:pb-0">
       <form
-        className="mx-auto flex w-full max-w-3xl flex-none items-center space-x-4 px-4 py-4 md:px-6"
+        className="flex items-center flex-none w-full max-w-3xl px-4 py-4 mx-auto space-x-4 md:px-6"
         onSubmit={onSubmit}
       >
-        <div className="relative flex w-full flex-none">
+        <div className="relative flex flex-none w-full">
           <Textarea
             data-cy="comment-form-textarea"
             placeholder="Write a comment..."

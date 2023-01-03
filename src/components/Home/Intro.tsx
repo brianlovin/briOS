@@ -201,7 +201,7 @@ export function Intro() {
                   </a>
                   ,{' '}
                   <Link href="/writing" passHref>
-                    <a>writer</a>
+                    writer
                   </Link>
                   , and{' '}
                   <a

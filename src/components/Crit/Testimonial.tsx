@@ -25,35 +25,35 @@ export function Testimonial({
   return (
     <div className="flex flex-col p-6 space-y-4 bg-gray-100 rounded-lg dark:bg-gray-800">
       <div className="flex items-center space-x-4">
-        <Link href={testimonial.quoteSrc}>
-          <a
+        <Link
+          href={testimonial.quoteSrc}
+          className="font-semibold text-primary"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            width={56}
+            height={56}
+            alt="testimonial avatar"
+            src={testimonial.avatarSrc}
+            className="flex-none bg-gray-300 rounded-full"
+          />
+        </Link>
+        <div className="flex flex-col flex-1">
+          <Link
+            href={testimonial.quoteSrc}
             className="font-semibold text-primary"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Image
-              width="56"
-              height="56"
-              src={testimonial.avatarSrc}
-              className="flex-none bg-gray-300 rounded-full"
-            />
-          </a>
-        </Link>
-        <div className="flex flex-col flex-1">
-          <Link href={testimonial.quoteSrc}>
-            <a
-              className="font-semibold text-primary"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {testimonial.name}
-            </a>
+            {testimonial.name}
           </Link>
           <div className="flex items-center space-x-1.5">
             <Image
+              alt="product logo"
               src={testimonial.productLogo}
-              width="16"
-              height="16"
+              width={16}
+              height={16}
               className="rounded"
             />
             <a

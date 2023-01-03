@@ -21,10 +21,8 @@ function createIsomorphLink({ context }) {
   if (typeof window === 'undefined') {
     // These have to imported dynamically, instead of at the root of the page,
     // in order to make sure that we're not shipping server-side code to the client
-    // eslint-disable-next-line
     const { SchemaLink } = require('@apollo/link-schema')
-    // eslint-disable-next-line
-    const { schema } = require('~/graphql/schema')
+    const { schema } = require('../../graphql/schema')
     return new SchemaLink({ schema, context })
   } else {
     return new HttpLink({

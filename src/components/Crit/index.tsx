@@ -198,9 +198,7 @@ export function Crit() {
             <p>
               Hey! I'm Brian, I'm a product designer at GitHub, startup founder,
               and side-project tinkerer. You can learn more about me{' '}
-              <Link href="/">
-                <a>here</a>
-              </Link>
+              <Link href="/">here</Link>
               {', '}
               or poke around the other pages on this site to get a feel for my
               work.

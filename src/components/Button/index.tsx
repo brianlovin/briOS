@@ -17,11 +17,7 @@ type ButtonProps = ButtonAsButton | ButtonAsLink
 
 function BaseButton({ href = null, as = null, forwardedRef = null, ...rest }) {
   if (href && href.startsWith('/')) {
-    return (
-      <Link href={href} as={as}>
-        <a {...rest} />
-      </Link>
-    )
+    return <Link href={href} as={as} {...rest} />
   }
 
   if (href) {

@@ -14,15 +14,6 @@ function NewPostPage() {
   return <PostEditor />
 }
 
-export async function getServerSideProps({ req, res }) {
-  const context = await getContext(req, res)
-  const apolloClient = initApolloClient({ context })
-
-  return addApolloState(apolloClient, {
-    props: {},
-  })
-}
-
 NewPostPage.getLayout = withProviders(function getLayout(page) {
   return (
     <SiteLayout>

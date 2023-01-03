@@ -19,14 +19,14 @@ export function PostDetail({ id }) {
     variables: { id },
   })
 
+  const scrollContainerRef = React.useRef(null)
+  const titleRef = React.useRef(null)
+
   if (loading) return <Detail.Loading />
   if (!data?.hackerNewsPost || error) return <Detail.Null />
 
   const { hackerNewsPost: post } = data
   const { comments } = post
-
-  const scrollContainerRef = React.useRef(null)
-  const titleRef = React.useRef(null)
 
   return (
     <>
@@ -62,15 +62,18 @@ export function PostDetail({ id }) {
 
         <Detail.ContentContainer>
           <Detail.Header>
-            <Link href={post.url}>
-              <a target="_blank" rel="noopener noreferrer" className="block">
-                <Detail.Title ref={titleRef}>{post.title}</Detail.Title>
-              </a>
+            <Link
+              href={post.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block"
+            >
+              <Detail.Title ref={titleRef}>{post.title}</Detail.Title>
             </Link>
             <PostByline post={post} />
             {post.content && (
               <div
-                className="comment prose opacity-70"
+                className="prose comment opacity-70"
                 dangerouslySetInnerHTML={{ __html: post.content }}
               />
             )}
@@ -93,8 +96,8 @@ export function PostDetail({ id }) {
 
         <PostComments comments={comments} />
 
-        <div className="border-t border-gray-200 bg-gray-100 dark:border-gray-800 dark:bg-gray-900">
-          <div className="mx-auto max-w-3xl p-4">
+        <div className="bg-gray-100 border-t border-gray-200 dark:border-gray-800 dark:bg-gray-900">
+          <div className="max-w-3xl p-4 mx-auto">
             <HackerNewsSubscriptionForm />
           </div>
         </div>
