@@ -66,12 +66,6 @@ export function Comments({ refId, type }: Props) {
         </div>
       </div>
       <div ref={messagesEndRef} />
-
-      <SignInDialog>
-        {({ openModal }) => (
-          <CommentForm refId={refId} type={type} openModal={openModal} />
-        )}
-      </SignInDialog>
     </div>
   )
 }
