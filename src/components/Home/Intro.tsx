@@ -97,6 +97,11 @@ const workHistory = [
 
 const speakingData = [
   {
+     href: 'https://fullstackwhatever.com/',
+    title: 'Full Stack Whatever',
+    date: "Jan '22",
+  },
+  {
     href: 'https://artofproductpodcast.com/episode-202',
     title: 'The Art of Product',
     date: "Mar '22",
