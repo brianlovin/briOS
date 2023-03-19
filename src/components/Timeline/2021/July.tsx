@@ -10,7 +10,7 @@ export function July() {
     <>
       <DateEntry title="July, 2021" />
 
-      <TimelineEntry
+      {/* <TimelineEntry
         title="Defining Infrastructure as Code with Terraform"
         timestamp="July 29, 2021"
         Icon={Zap}
@@ -47,7 +47,7 @@ export function July() {
             />
           </div>
         </div>
-      </TimelineEntry>
+      </TimelineEntry> */}
       <TimelineEntry
         title="TensorFlow on AI Platform for training and model serving "
         timestamp="July 22, 2021"

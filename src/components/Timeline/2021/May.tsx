@@ -83,8 +83,8 @@ export function May() {
       </TimelineEntry>
 
       <TimelineEntry
-        title="🎊 Graduated from AWS re/Start 🎊"
-        timestamp="May 8, 2020"
+        title="Amazon Web Services Certified"
+        timestamp="May 8, 2021"
         Icon={CheckCircle}
         tint={'green'}
         divider={true}

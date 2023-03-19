@@ -11,7 +11,7 @@ export function Year2020() {
     <>
       <December />
       <July />
-      <June />
+      {/* <June /> */}
       <April />
       <March />
       <January />

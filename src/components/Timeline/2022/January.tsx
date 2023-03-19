@@ -8,7 +8,7 @@ export function January() {
     <>
       <DateEntry title="January, 2022" />
       <TimelineEntry
-        title="🎊 Became Google Cloud Certified 🎊"
+        title="Google Cloud Certified"
         timestamp="Jan 8, 2022"
         Icon={CheckCircle}
         tint={'green'}
@@ -21,9 +21,7 @@ export function January() {
         >
           <div className="flex flex-col overflow-hidden transition-shadow bg-white rounded-md shadow md:flex-row dark:bg-gray-900 hover:shadow-cardHover">
             <div className="flex flex-col justify-center px-3 py-3 space-y-1 md:items-center">
-              <h5 className="px-2 pt-2">
-                Google Cloud Certified Professional Cloud Architect
-              </h5>
+              <h5 className="px-2 pt-2">Professional Cloud Architect</h5>
               <p className="flex-1 px-2 font-normal md:text-center">
                 A Google Cloud Certified - Professional Cloud Architect enables
                 organizations to leverage Google Cloud technologies. Through an

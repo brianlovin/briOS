@@ -70,7 +70,7 @@ export function January() {
             <a
               target="_blank"
               rel="noopener noreferrer"
-              href="https://www.bestlassonde.ca/2019/11/19/best-startup-experience/"
+              href="https://yfile.news.yorku.ca/2019/12/18/york-hosts-200-students-for-inaugural-36-hour-experiential-learning-program/"
             >
               Read more about the competition
             </a>

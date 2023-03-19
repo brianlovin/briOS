@@ -10,7 +10,7 @@ import { May } from './May'
 export function Year2022() {
   return (
     <>
-      <May />
+      {/* <May /> */}
       <January />
     </>
   )

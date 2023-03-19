@@ -48,7 +48,7 @@ export function Footer() {
           </a>
 
           <a
-            href="https://d2fl8krjhnb3wd.cloudfront.net/static/docs/resume-pcowe.pdf"
+            href="https://d2fl8krjhnb3wd.cloudfront.net/static/docs/resume.pdf"
             rel="noopener noreferrer"
             className="black-link"
           >

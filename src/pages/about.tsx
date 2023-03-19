@@ -42,15 +42,8 @@ function About({ data, summaries }: Props) {
           <div className="flex flex-col space-y-12">
             <div className="flex flex-col prose lg:prose-lg">
               <p>
-                Paul is a multi cloud certified{' '}
-                <a
-                  href="https://www.credential.net/7cec8ff7-d2b0-4a31-baa4-ed4ff116e7c2"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Professional Cloud Architect
-                </a>{' '}
-                at{' '}
+                Hey, I&apos;m Paul. Welcome to my corner of the internet! I
+                currently work at{' '}
                 <a
                   href="https://www.bmo.com/main/about-bmo/"
                   target="_blank"
@@ -58,15 +51,33 @@ function About({ data, summaries }: Props) {
                 >
                   BMO Financial Group
                 </a>
-                . He helps the organization with a variety of data challenges,
-                from ensuring the architecture meets the business needs to
-                attaining robust insights, and uncovering missed opportunities.
-                With his expertise in Data Engineering, and a myriad of
-                capabilities, he enables the Digital Acquisition business
-                effectively leverage Data and AI-driven strategies.
+                . In my role, I wear two hats as both a{' '}
+                <a
+                  href="https://www.credential.net/7cec8ff7-d2b0-4a31-baa4-ed4ff116e7c2"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Cloud Architect
+                </a>{' '}
+                and a{' '}
+                <a
+                  href="https://www.credential.net/3ccde215-74ab-4924-8846-ca7673a47f7c"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Data Engineer
+                </a>
+                . I help the Digital Advertising business implement cloud-based
+                solutions. I am responsible for designing, implementing, and
+                maintaining scalable, secure, and cost-effective cloud-based
+                solutions that meet the needs of the business. This includes
+                designing pipelines, ensuring data quality, and developing
+                distributed data processing systems. I work closely with data
+                scientists, analysts, and other stakeholders to ensure the data
+                infrastructure meets their needs.
               </p>
               <p>
-                Before BMO, he worked as a Business System Analyst at{' '}
+                Before BMO, I worked as a Data Integration Specialist at{' '}
                 <a
                   href="https://www.td.com/about-tdbfg/corporate-information/corporate-profile/profile.jsp"
                   target="_blank"
@@ -74,16 +85,17 @@ function About({ data, summaries }: Props) {
                 >
                   TD Bank Financial Group
                 </a>{' '}
-                where he supported the Transaction Monitoring business to reduce
-                the risk of money laundering and fraud offences. He developed
-                robust analytics and reporting solutions that encompass all
-                banking verticals (including payments, mututal funds, lending,
-                and insurance) to ensure business rules for revealing fraud and
-                money laundering evolve in step with offenders practices.
+                where I supported the Transaction Monitoring business to reduce
+                the risk of money laundering and fraud offences. I developed
+                cutting-edge analytics and reporting solutions that spanned
+                across all banking verticals, including payments, mututal funds,
+                lending, and insurance, to ensure that the business rules for
+                revealing fraud and money laundering evolve in step with
+                offenders practices.
               </p>
 
               <p>
-                You can find him on{' '}
+                Follow me on{' '}
                 <a
                   href="https://github.com/paulowe"
                   target="_blank"
@@ -91,15 +103,15 @@ function About({ data, summaries }: Props) {
                 >
                   GitHub
                 </a>{' '}
-                where he is building in the open, or on{' '}
+                where I am building in the open, or connect with me on{' '}
                 <a
                   href="https://www.linkedin.com/in/paulowe"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   LinkedIn
-                </a>{' '}
-                for professional networking.
+                </a>
+                .{' '}
               </p>
             </div>
             <div className="-mx-0 -mt-0 md:mt-0 md:-mx-0 ">
