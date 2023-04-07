@@ -65,18 +65,6 @@ export default {
         android: 'https://vivaldi.com/android/',
       },
     },
-    {
-      name: 'Cliqz',
-      image: 'cliqz.png',
-      url: 'https://cliqz.com/',
-      sources: {
-        windows: 'https://cliqz.com/download',
-        macos: 'https://cliqz.com/download',
-        ios: 'https://itunes.apple.com/de/app/cliqz-browser-suchmaschine/id1065837334?mt=8',
-        android:
-          'https://play.google.com/store/apps/details?hl=de&id=com.cliqz.browser',
-      },
-    },
   ],
   resources: [
     {
