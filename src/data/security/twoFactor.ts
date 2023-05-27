@@ -95,7 +95,7 @@ export default {
     },
     {
       name: 'List of websites and whether or not they support 2FA.',
-      url: 'https://twofactorauth.org/',
+      url: 'https://2fa.directory',
     },
     {
       name: 'Step-by-step instructions on enabling 2FA',
