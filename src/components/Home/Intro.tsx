@@ -58,9 +58,9 @@ function SectionContainer(props) {
 
 const workHistory = [
   {
-    href: 'https://campsite.design',
+    href: 'https://campsite.co',
     title: 'Campsite',
-    subtitle: 'Founder',
+    subtitle: 'CEO',
     date: '2022—\u00a0\u00a0',
   },
   {
@@ -97,13 +97,33 @@ const workHistory = [
 
 const speakingData = [
   {
-    href: 'https://fullstackwhatever.com/',
+    href: 'https://fullstackwhatever.com/episode/brian-lovin-ryan-nystrom-surrounded-by-people-doing-interesting-work',
+    title: 'Full Stack Whatever with Ryan Nystrom',
+    date: "Dec '23",
+  },
+  {
+    href: 'https://www.youtube.com/watch?v=ozU063JY4ko&t=2s',
+    title: 'Deep Dive: How to level up as an IC designer',
+    date: "Nov '23",
+  },
+  {
+    href: 'https://www.youtube.com/watch?v=njO9OJTDSGM&t=19s',
+    title: 'Deep Dive: Lessons from Campsite',
+    date: "Nov '23",
+  },
+  {
+    href: 'https://open.spotify.com/episode/5rR19EwPx7wKevfaitnrZL?si=74837d42237240bd',
+    title: 'Keshav Podcast: Design, Engineering, and Starting a Company',
+    date: "Aug '23",
+  },
+  {
+    href: 'https://fullstackwhatever.com/episode/brian-lovin-its-all-about-having-fun',
     title: 'Full Stack Whatever',
-    date: "Jan '22",
+    date: "Jan '23",
   },
   {
     href: 'https://artofproductpodcast.com/episode-202',
-    title: 'The Art of Product',
+    title: 'The Art of Product: The Art and Pain of Design',
     date: "Mar '22",
   },
   {
@@ -113,22 +133,22 @@ const speakingData = [
   },
   {
     href: 'https://maze.co/podcast/#brian-lovin',
-    title: 'The Optimal Path Podcast',
+    title: 'Optimal Path: The Spectrum of Design',
     date: "Jan '22",
   },
   {
     href: 'https://uibreakfast.com/228-design-advisory-with-brian-lovin/',
-    title: 'UI Breakfast',
+    title: 'UI Breakfast: Design Advising',
     date: "Dec '21",
   },
   {
     href: 'https://designmba.show/episodes/brian-lovin',
-    title: 'Design MBA',
+    title: 'Design MBA: Managing Side Projects',
     date: "Nov '21",
   },
   {
     href: 'https://progressionapp.com/blog/podcast-26-brian-lovin-github-spectrum-design-details-on-the-rise-of-the-senior-ic/',
-    title: 'Progression Podcast',
+    title: 'Progression Podcast: The Rise of the Senior IC',
     date: "Jun '21",
   },
   {
@@ -138,22 +158,17 @@ const speakingData = [
   },
   {
     href: "https://softwareengineeringdaily.com/'20/07/15/github-mobile-with-brian-lovin-and-ryan-nystrom/",
-    title: 'Software Engineering Daily',
-    date: "Jul '20",
-  },
-  {
-    href: 'https://avocode.com/blog/brian-lovin-product-designer-github-interview',
-    title: 'The Grit',
+    title: 'Software Engineering Daily: GitHub Mobile',
     date: "Jul '20",
   },
   {
     href: 'https://www.swiftbysundell.com/podcast/67/',
-    title: 'Swift by Sundell',
+    title: 'Swift by Sundell: Building for Open Source',
     date: "Feb '20",
   },
   {
     href: 'https://www.youtube.com/watch?v=SyS3h3kmBnY',
-    title: 'Figma Config',
+    title: 'Figma Config: Extend What’s Possible with Plugins',
     date: "Feb '20",
   },
   {
@@ -163,7 +178,7 @@ const speakingData = [
   },
   {
     href: 'https://www.youtube.com/watch?v=6MBBTdu8v6E',
-    title: 'GraphQL Summit',
+    title: 'GraphQL Summit: Designing with GraphQL',
     date: "Nov '17",
   },
   {
@@ -220,12 +235,13 @@ export function Intro() {
                   <a
                     target="_blank"
                     rel="noopener noreferrer"
-                    href="https://campsite.design"
+                    href="https://campsite.co"
+                    className="!text-orange-500"
                   >
                     Campsite
                   </a>
-                  , a tool that helps teams share and collaborate on
-                  work-in-progress.
+                  , an app that brings together a team’s posts, calls, notes,
+                  and chat.
                 </p>
 
                 <p>
@@ -275,22 +291,7 @@ export function Intro() {
                     Design Details Podcast
                   </a>
                   , a weekly conversation about design process and culture.
-                  Design Details is part of{' '}
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href="https://spec.fm"
-                  >
-                    Spec.fm
-                  </a>
-                  , a podcast network for designers and developers, which I
-                  co-founded in 2015.
                 </p>
-              </div>
-              <div className="flex pt-6">
-                <Button href="https://changelog.brianlovin.com">
-                  View changelog
-                </Button>
               </div>
             </SectionContent>
           </SectionContainer>

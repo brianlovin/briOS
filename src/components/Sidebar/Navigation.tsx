@@ -107,7 +107,7 @@ export function SidebarNavigation() {
       label: 'Projects',
       items: [
         {
-          href: 'https://campsite.design',
+          href: 'https://campsite.co',
           label: 'Campsite',
           icon: CampsiteIcon,
           trailingAccessory: ExternalLinkIcon,
