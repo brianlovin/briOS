@@ -18,6 +18,13 @@
     z-index: -1;
     @apply bg-white dark:bg-black;
   }
+
+  /* handles dark mode in native uis */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+    }
+  }
 }
 
 @layer components {
