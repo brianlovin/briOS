@@ -10,20 +10,17 @@ interface EmailMeProps {
   body: string
 }
 
+const email = {
+  From: baseEmail,
+  To: baseEmail,
+  Subject: subject,
+  TextBody: body,
+}
+
 export function emailMe({ subject, body }: EmailMeProps) {
   if (!IS_PROD) {
-    return console.log('Sending Postmark email: ', {
-      From: baseEmail,
-      To: baseEmail,
-      Subject: subject,
-      TextBody: body,
-    })
+    return console.log('Sending Postmark email: ', email)
   }
 
-  return client.sendEmail({
-    From: baseEmail,
-    To: baseEmail,
-    Subject: subject,
-    TextBody: body,
-  })
+  return client.sendEmail(email)
 }
