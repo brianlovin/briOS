@@ -33,13 +33,13 @@ function TableRow({ href, title, subtitle, date }: TableRowProps) {
       target="_blank"
       rel="noopener noreferrer"
       href={href}
-      className="flex items-center space-x-4 group text-xs"
+      className="flex items-center space-x-3 group text-xs"
     >
-      <strong className="flex-none w-2/3 font-medium text-gray-1000 group-hover:text-blue-600 group-hover:underline dark:text-gray-100 dark:group-hover:text-blue-500  ">
+      <strong className="flex-none  font-medium text-gray-1000 group-hover:text-blue-600 group-hover:underline dark:text-gray-100 dark:group-hover:text-blue-500  ">
         {title}
       </strong>
-      <span className="w-full border-t border-gray-300 border-dashed shrink dark:border-gray-800 " />
-      {subtitle && <span className="flex-none text-tertiary">{subtitle}</span>}
+      <span className=" lg:w-full w-8/12  border-t border-gray-300 border-dashed shrink dark:border-gray-800 " />
+      {subtitle && <span className="lg:flex-none flex-1 text-tertiary ">{subtitle}</span>}
       {date && (
         <span className="flex-none font-mono text-quaternary ">{date}</span>
       )}
@@ -351,7 +351,7 @@ export function Intro() {
           <SectionContainer>
             <SectionTitle>Work</SectionTitle>
             <SectionContent>
-              <div className="flex flex-col space-y-3">
+              <div className="flex flex-col space-y-3 ">
                 {workHistory.map((job) => (
                   <TableRow
                     href={job.href}
