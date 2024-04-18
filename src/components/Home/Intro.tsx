@@ -17,7 +17,7 @@ function SectionTitle(props) {
 }
 
 function SectionContent(props) {
-  return <div className="col-span-10" {...props} />
+  return <div className="col-span-10 " {...props} />
 }
 
 interface TableRowProps {
@@ -33,15 +33,15 @@ function TableRow({ href, title, subtitle, date }: TableRowProps) {
       target="_blank"
       rel="noopener noreferrer"
       href={href}
-      className="flex items-center space-x-4 group"
+      className="flex items-center space-x-4 group text-xs"
     >
-      <strong className="flex-none font-medium text-gray-1000 group-hover:text-blue-600 group-hover:underline dark:text-gray-100 dark:group-hover:text-blue-500">
+      <strong className="flex-none w-2/3 font-medium text-gray-1000 group-hover:text-blue-600 group-hover:underline dark:text-gray-100 dark:group-hover:text-blue-500  ">
         {title}
       </strong>
-      <span className="w-full border-t border-gray-300 border-dashed shrink dark:border-gray-800" />
+      <span className="w-full border-t border-gray-300 border-dashed shrink dark:border-gray-800 " />
       {subtitle && <span className="flex-none text-tertiary">{subtitle}</span>}
       {date && (
-        <span className="flex-none font-mono text-quaternary">{date}</span>
+        <span className="flex-none font-mono text-quaternary ">{date}</span>
       )}
     </a>
   )
@@ -50,7 +50,7 @@ function TableRow({ href, title, subtitle, date }: TableRowProps) {
 function SectionContainer(props) {
   return (
     <div
-      className="grid items-start grid-cols-1 gap-6 md:grid-cols-12"
+      className="grid items-start grid-cols-1 gap-6 md:grid-cols-12 w-full  "
       {...props}
     />
   )
@@ -368,7 +368,7 @@ export function Intro() {
           <SectionContainer>
             <SectionTitle>Speaking</SectionTitle>
             <SectionContent>
-              <div className="flex flex-col space-y-3">
+              <div className="flex flex-col space-y-3 ">
                 {speakingData.map((s) => (
                   <TableRow
                     href={s.href}
