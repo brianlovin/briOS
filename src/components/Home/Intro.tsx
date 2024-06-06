@@ -215,22 +215,22 @@ export function Intro() {
                   <a
                     target="_blank"
                     rel="noopener noreferrer"
+                    href="https://github.com/brianlovin"
+                  >
+                    software engineer
+                  </a>
+                  ,{' '}
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
                     href="https://designdetails.fm"
                   >
                     podcaster
                   </a>
-                  ,{' '}
+                  , and{' '}
                   <Link href="/writing" passHref>
                     writer
                   </Link>
-                  , and{' '}
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href="https://github.com/brianlovin"
-                  >
-                    software tinkerer
-                  </a>
                   . I&apos;m currently building{' '}
                   <a
                     target="_blank"
