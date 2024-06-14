@@ -33,13 +33,13 @@ function TableRow({ href, title, subtitle, date }: TableRowProps) {
       target="_blank"
       rel="noopener noreferrer"
       href={href}
-      className="flex items-center space-x-4 group"
+      className="flex items-center space-x-3 group lg:text-base text-xs"
     >
-      <strong className="flex-none font-medium text-gray-1000 group-hover:text-blue-600 group-hover:underline dark:text-gray-100 dark:group-hover:text-blue-500">
+      <strong className="w-fit-content lg:flex-none flex-grow font-medium text-gray-1000 group-hover:text-blue-600 group-hover:underline dark:text-gray-100 dark:group-hover:text-blue-500">
         {title}
       </strong>
-      <span className="w-full border-t border-gray-300 border-dashed shrink dark:border-gray-800" />
-      {subtitle && <span className="flex-none text-tertiary">{subtitle}</span>}
+      <span className="w-full border-t border-gray-300 border-dashed shrink dark:border-gray-800"/>
+      {subtitle && <span className="lg:flex-none flex-1 text-tertiary">{subtitle}</span>}
       {date && (
         <span className="flex-none font-mono text-quaternary">{date}</span>
       )}
@@ -50,7 +50,7 @@ function TableRow({ href, title, subtitle, date }: TableRowProps) {
 function SectionContainer(props) {
   return (
     <div
-      className="grid items-start grid-cols-1 gap-6 md:grid-cols-12"
+      className="grid items-start grid-cols-1 gap-6 md:grid-cols-12 w-full"
       {...props}
     />
   )
