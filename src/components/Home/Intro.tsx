@@ -351,7 +351,7 @@ export function Intro() {
           <SectionContainer>
             <SectionTitle>Work</SectionTitle>
             <SectionContent>
-              <div className="flex flex-col space-y-3 ">
+              <div className="flex flex-col space-y-3">
                 {workHistory.map((job) => (
                   <TableRow
                     href={job.href}
