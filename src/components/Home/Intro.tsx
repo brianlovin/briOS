@@ -33,12 +33,12 @@ function TableRow({ href, title, subtitle, date }: TableRowProps) {
       target="_blank"
       rel="noopener noreferrer"
       href={href}
-      className="flex items-center space-x-4 group"
+      className="flex sm:items-center flex-col sm:flex-row gap-0.5 sm:gap-4 group"
     >
-      <strong className="flex-none font-medium text-gray-1000 group-hover:text-blue-600 group-hover:underline dark:text-gray-100 dark:group-hover:text-blue-500">
+      <strong className="line-clamp-2 font-medium text-gray-1000 group-hover:text-blue-600 group-hover:underline dark:text-gray-100 dark:group-hover:text-blue-500">
         {title}
       </strong>
-      <span className="w-full border-t border-gray-300 border-dashed shrink dark:border-gray-800" />
+      <span className="hidden sm:flex flex-1 border-t border-gray-300 border-dashed shrink dark:border-gray-800" />
       {subtitle && <span className="flex-none text-tertiary">{subtitle}</span>}
       {date && (
         <span className="flex-none font-mono text-quaternary">{date}</span>
@@ -299,7 +299,7 @@ export function Intro() {
           <SectionContainer>
             <SectionTitle>Online</SectionTitle>
             <SectionContent>
-              <div className="flex flex-col space-y-3">
+              <div className="flex flex-col gap-5 lg:gap-3">
                 <TableRow
                   href={'/twitter'}
                   title={'Twitter'}
