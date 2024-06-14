@@ -368,7 +368,7 @@ export function Intro() {
           <SectionContainer>
             <SectionTitle>Speaking</SectionTitle>
             <SectionContent>
-              <div className="flex flex-col space-y-3 ">
+              <div className="flex flex-col space-y-3">
                 {speakingData.map((s) => (
                   <TableRow
                     href={s.href}
