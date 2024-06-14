@@ -5,7 +5,6 @@ import { GlobalNavigationContext } from '~/components/Providers'
 
 import { SidebarNavigation } from './Navigation'
 import { SidebarOverlay } from './Overlay'
-import { UserFooter } from './UserFooter'
 
 export function Sidebar() {
   const { isOpen } = React.useContext(GlobalNavigationContext)
@@ -26,7 +25,6 @@ export function Sidebar() {
           title="Brian Lovin"
         />
         <SidebarNavigation />
-        <UserFooter />
       </nav>
 
       <SidebarOverlay />
