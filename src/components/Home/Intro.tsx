@@ -17,7 +17,7 @@ function SectionTitle(props) {
 }
 
 function SectionContent(props) {
-  return <div className="col-span-10 " {...props} />
+  return <div className="col-span-10" {...props} />
 }
 
 interface TableRowProps {
