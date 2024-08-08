@@ -5,6 +5,7 @@ import * as React from 'react'
 import { Link as LinkIcon } from 'react-feather'
 
 import { PrimaryButton } from '~/components/Button'
+import { Campsite } from '~/components/Campsite'
 import { Comments } from '~/components/Comments'
 import { Detail } from '~/components/ListDetail/Detail'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
@@ -108,6 +109,12 @@ export function StackDetail({ slug }) {
                 <StackUsedBy triggerSignIn={openModal} stack={stack} />
               )}
             </SignInDialog>
+
+            <div className="justify-center flex">
+              <div className="w-full max-w-3xl mx-auto">
+                <Campsite referrer="/stack" />
+              </div>
+            </div>
           </Detail.Header>
         </Detail.ContentContainer>
 

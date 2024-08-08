@@ -4,6 +4,7 @@ import * as React from 'react'
 import { Link as LinkIcon } from 'react-feather'
 
 import { PrimaryButton } from '~/components/Button'
+import { Campsite } from '~/components/Campsite'
 import { Detail } from '~/components/ListDetail/Detail'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
 import routes from '~/config/routes'
@@ -93,6 +94,12 @@ export function PostDetail({ id }) {
             </div>
           )}
         </Detail.ContentContainer>
+
+        <div className="justify-center flex">
+          <div className="px-4 md:px-8 w-full max-w-3xl mx-auto">
+            <Campsite referrer="/hn" />
+          </div>
+        </div>
 
         <PostComments comments={comments} />
 
