@@ -1,7 +1,6 @@
-import Link from 'next/link'
 import * as React from 'react'
 
-import { Comments } from '~/components/Comments'
+import { Campsite } from '~/components/Campsite'
 import { Detail } from '~/components/ListDetail/Detail'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { MarkdownRenderer } from '~/components/MarkdownRenderer'
@@ -37,11 +36,17 @@ export function PostDetail({ slug }) {
           title={post.title}
           titleRef={titleRef}
           scrollContainerRef={scrollContainerRef}
-          trailingAccessory={<PostActions post={post} />}
         />
 
         <Detail.ContentContainer>
           <Detail.Header>
+            {post.slug !== 'campsite' && (
+              <div className="justify-center mb-6 md:mb-12 flex">
+                <div className="w-full max-w-3xl mx-auto">
+                  <Campsite referrer="/post" />
+                </div>
+              </div>
+            )}
             <Detail.Title ref={titleRef}>{post.title}</Detail.Title>
             <span
               title={publishedAt.raw}
@@ -56,8 +61,6 @@ export function PostDetail({ slug }) {
           {/* bottom padding to give space between post content and comments */}
           <div className="py-6" />
         </Detail.ContentContainer>
-
-        <Comments refId={post.id} type={CommentType.Post} />
       </Detail.Container>
     </>
   )
