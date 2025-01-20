@@ -1,6 +1,5 @@
 import * as React from 'react'
 
-import { Campsite } from '~/components/Campsite'
 import { Detail } from '~/components/ListDetail/Detail'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { MarkdownRenderer } from '~/components/MarkdownRenderer'
@@ -40,13 +39,6 @@ export function PostDetail({ slug }) {
 
         <Detail.ContentContainer>
           <Detail.Header>
-            {post.slug !== 'campsite' && (
-              <div className="justify-center mb-6 md:mb-12 flex">
-                <div className="w-full max-w-3xl mx-auto">
-                  <Campsite referrer="/post" />
-                </div>
-              </div>
-            )}
             <Detail.Title ref={titleRef}>{post.title}</Detail.Title>
             <span
               title={publishedAt.raw}

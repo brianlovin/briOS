@@ -40,7 +40,7 @@ export function PostsList() {
             modalContent={() => <HackerNewsSubscriptionForm />}
           />
         }
-        title="HN"
+        title="Better HN"
       />
 
       <div className="lg:space-y-1 lg:p-3">

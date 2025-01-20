@@ -4,7 +4,6 @@ import * as React from 'react'
 import { Link as LinkIcon } from 'react-feather'
 
 import { PrimaryButton } from '~/components/Button'
-import { Campsite } from '~/components/Campsite'
 import { Comments } from '~/components/Comments'
 import { Detail } from '~/components/ListDetail/Detail'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
@@ -107,12 +106,6 @@ export function BookmarkDetail({ id }) {
               <LinkIcon size={14} />
               <span>Visit</span>
             </PrimaryButton>
-          </div>
-
-          <div className="justify-center mt-6 flex">
-            <div className="w-full max-w-3xl mx-auto">
-              <Campsite referrer="/bookmark" />
-            </div>
           </div>
         </Detail.ContentContainer>
 

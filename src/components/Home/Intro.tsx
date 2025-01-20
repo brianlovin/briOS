@@ -21,17 +21,24 @@ function SectionContent(props) {
 }
 
 interface TableRowProps {
+  internal?: boolean
   href: string
   title: string
   date: string
   subtitle?: string
 }
 
-function TableRow({ href, title, subtitle, date }: TableRowProps) {
+function TableRow({
+  internal = false,
+  href,
+  title,
+  subtitle,
+  date,
+}: TableRowProps) {
   return (
     <a
-      target="_blank"
-      rel="noopener noreferrer"
+      target={internal ? '_self' : '_blank'}
+      rel={internal ? '' : 'noopener noreferrer'}
       href={href}
       className="flex sm:items-center flex-col sm:flex-row gap-0.5 sm:gap-4 group"
     >
@@ -58,22 +65,22 @@ function SectionContainer(props) {
 
 const workHistory = [
   {
-    href: 'https://campsite.co',
+    href: 'https://notion.com',
+    title: 'Notion',
+    subtitle: 'Product Designer',
+    date: '2025—\u00a0\u00a0',
+  },
+  {
+    href: 'https://campsite.com',
     title: 'Campsite',
-    subtitle: 'CEO',
-    date: '2022—\u00a0\u00a0',
+    subtitle: 'Co-founder',
+    date: '2022—25',
   },
   {
     href: 'https://github.com/mobile',
     title: 'GitHub',
     subtitle: 'Product Designer',
     date: '2018—22',
-  },
-  {
-    href: 'https://designdetails.fm',
-    title: 'Design Details Podcast',
-    subtitle: 'Co-host',
-    date: '2014—\u00a0\u00a0',
   },
   {
     href: 'https://github.com/withspectrum/spectrum',
@@ -92,6 +99,63 @@ const workHistory = [
     title: 'Buffer',
     subtitle: 'Product Designer',
     date: '2013—15',
+  },
+]
+
+const projects = [
+  {
+    href: 'https://staff.design',
+    title: 'Staff.design',
+    subtitle: '',
+    date: '',
+  },
+  {
+    href: 'https://designdetails.fm',
+    title: 'Design Details Podcast',
+    subtitle: '',
+    date: '',
+  },
+  {
+    href: 'https://figma.com/@brian',
+    title: 'Figma plugins',
+    subtitle: '',
+    date: '',
+  },
+  {
+    href: '/security',
+    title: 'Security Checklist',
+    subtitle: '',
+    date: '',
+  },
+  {
+    href: '/app-dissection',
+    title: 'App Dissection',
+    subtitle: '',
+    date: '',
+  },
+  {
+    href: '/hn',
+    title: 'Better Hacker News',
+    subtitle: '',
+    date: '',
+  },
+  {
+    href: '/stack',
+    title: 'My Stack',
+    subtitle: '',
+    date: '',
+  },
+  {
+    href: '/ama',
+    title: 'Ask Me Anything',
+    subtitle: '',
+    date: '',
+  },
+  {
+    href: '/bookmarks',
+    title: 'Bookmarks',
+    subtitle: '',
+    date: '',
   },
 ]
 
@@ -189,23 +253,10 @@ const speakingData = [
 ]
 
 export function Intro() {
-  const scrollContainerRef = React.useRef(null)
-  const titleRef = React.useRef(null)
-
   return (
-    <Detail.Container data-cy="home-intro" ref={scrollContainerRef}>
-      <TitleBar
-        magicTitle
-        titleRef={titleRef}
-        scrollContainerRef={scrollContainerRef}
-        title="Home"
-      />
-
-      {/* Keep this div to trigger the magic scroll */}
-      <div className="p-4" ref={titleRef} />
-
+    <Detail.Container data-cy="home-intro">
       <Detail.ContentContainer>
-        <div className="pb-24 space-y-8 md:space-y-16">
+        <div className="pb-24 sm:pt-16 space-y-8 md:space-y-16">
           <SectionContainer>
             <SectionTitle />
             <SectionContent>
@@ -231,32 +282,36 @@ export function Intro() {
                   <Link href="/writing" passHref>
                     writer
                   </Link>
-                  . I&apos;m currently building{' '}
+                  . I&apos;m currently designing products at{' '}
                   <a
                     target="_blank"
                     rel="noopener noreferrer"
-                    href="https://campsite.co"
-                    className="!text-orange-500"
+                    href="https://notion.com"
+                  >
+                    Notion
+                  </a>
+                  . Before Notion, I was the co-founder and CEO at{' '}
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://campsite.com"
                   >
                     Campsite
                   </a>
-                  , an app that brings together a team’s posts, calls, notes,
-                  and chat.
+                  , an app that combined posts, docs, calls, and chat to enable
+                  thoughtful team collaboration.
                 </p>
 
                 <p>
-                  Before Campsite, I spent four years designing{' '}
+                  Before Campsite, I spent four years designing the{' '}
                   <a
                     target="_blank"
                     rel="noopener noreferrer"
                     href="https://github.com/mobile"
                   >
-                    native mobile apps at GitHub
+                    GitHub Mobile apps
                   </a>
-                  .
-                </p>
-                <p>
-                  Before GitHub, I co-founded{' '}
+                  . I joined GitHub after they acquired my first startup,{' '}
                   <a
                     target="_blank"
                     rel="noopener noreferrer"
@@ -265,8 +320,7 @@ export function Intro() {
                     Spectrum
                   </a>
                   , a platform for large-scale communities to have better public
-                  conversations. Spectrum was acquired by GitHub in November,
-                  2018.
+                  conversations.
                 </p>
                 <p>
                   Before Spectrum I designed payments experiences at Facebook,
@@ -307,6 +361,12 @@ export function Intro() {
                   date={''}
                 />
                 <TableRow
+                  href={'https://www.threads.net/@brianlovin'}
+                  title={'Threads'}
+                  subtitle={'Follow'}
+                  date={''}
+                />
+                <TableRow
                   href={'/youtube'}
                   title={'YouTube'}
                   subtitle={'Subscribe'}
@@ -336,7 +396,6 @@ export function Intro() {
                 src="/static/img/sf.png"
                 width={800}
                 height={400}
-                layout="responsive"
                 className="rounded-2xl"
                 quality={100}
                 alt="Map of San Francisco with blue location dot in the middle"
@@ -359,6 +418,24 @@ export function Intro() {
                     subtitle={job.subtitle}
                     date={job.date}
                     key={job.href}
+                  />
+                ))}
+              </div>
+            </SectionContent>
+          </SectionContainer>
+
+          <SectionContainer>
+            <SectionTitle>Projects</SectionTitle>
+            <SectionContent>
+              <div className="flex flex-col gap-5 lg:gap-3">
+                {projects.map((project) => (
+                  <TableRow
+                    internal={project.href.startsWith('/')}
+                    href={project.href}
+                    title={project.title}
+                    subtitle={project.subtitle}
+                    date={project.date}
+                    key={project.href}
                   />
                 ))}
               </div>
