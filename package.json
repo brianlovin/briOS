@@ -13,7 +13,7 @@
     "cypress:run": "cypress run",
     "generate": "graphql-codegen",
     "generate:watch": "graphql-codegen --watch 'src/graphql/**/*.ts'",
-    "postinstall": "yarn generate && prisma generate",
+    "postinstall": "pnpm generate && prisma generate",
     "db:dev": "pscale connect brianlovin main --port 3309",
     "db:prod": "pscale connect brianlovin main --port 3309"
   },

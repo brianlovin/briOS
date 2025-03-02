@@ -10,3 +10,7 @@ yarn-error.log
 .vercel
 cors.json
 src/data/local/*
+
+# pnpm specific
+.pnpm-debug.log
+.pnpm-store/
