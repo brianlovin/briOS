@@ -49,7 +49,7 @@
     "loader-utils": "^3.2.1",
     "lodash": "^4.17.21",
     "lru-cache": "^6.0.0",
-    "next": "^13",
+    "next": "^14",
     "next-seo": "^4.28.1",
     "postmark": "^2.8.1",
     "react": "^18.2.0",
