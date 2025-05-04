@@ -3,9 +3,7 @@ import Link from 'next/link'
 import * as React from 'react'
 import { MapPin } from 'react-feather'
 
-import Button from '~/components/Button'
 import { Detail } from '~/components/ListDetail/Detail'
-import { TitleBar } from '~/components/ListDetail/TitleBar'
 
 function SectionTitle(props) {
   return (

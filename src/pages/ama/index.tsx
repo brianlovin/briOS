@@ -5,11 +5,6 @@ import { QuestionsList } from '~/components/AMA/QuestionsList'
 import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { withProviders } from '~/components/Providers/withProviders'
 import routes from '~/config/routes'
-import { getContext } from '~/graphql/context'
-import { GET_QUESTIONS } from '~/graphql/queries/questions'
-import { GET_VIEWER } from '~/graphql/queries/viewer'
-import { QuestionStatus } from '~/graphql/types.generated'
-import { addApolloState, initApolloClient } from '~/lib/apollo'
 
 function AmaPage() {
   return (

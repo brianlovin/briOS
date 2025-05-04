@@ -2,12 +2,10 @@ import * as React from 'react'
 import { MessageCircle } from 'react-feather'
 
 import { LoadingSpinner } from '~/components/LoadingSpinner'
-import { SignInDialog } from '~/components/SignInDialog'
 import { CommentType, useGetCommentsQuery } from '~/graphql/types.generated'
 import { useWindowFocus } from '~/hooks/useWindowFocus'
 
 import { Comment } from './Comment'
-import { CommentForm } from './CommentForm'
 
 interface Props {
   refId: string

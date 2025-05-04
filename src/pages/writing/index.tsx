@@ -5,10 +5,6 @@ import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { withProviders } from '~/components/Providers/withProviders'
 import { PostsList } from '~/components/Writing/PostsList'
 import routes from '~/config/routes'
-import { getContext } from '~/graphql/context'
-import { GET_POSTS } from '~/graphql/queries/posts'
-import { GET_VIEWER } from '~/graphql/queries/viewer'
-import { addApolloState, initApolloClient } from '~/lib/apollo'
 
 function WritingPage() {
   return (

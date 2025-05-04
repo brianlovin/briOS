@@ -20,7 +20,7 @@
         "date-fns": "^2.28.0",
         "decode-uri-component": "^0.4.1",
         "deepmerge": "^4.2.2",
-        "fathom-client": "^3.2.0",
+        "fathom-client": "^3.7.2",
         "feed": "^4.2.2",
         "framer-motion": "^6.2.1",
         "graphql": "^15.8.0",
@@ -84,6 +84,7 @@
         "eslint-plugin-prettier": "^4.0.0",
         "eslint-plugin-react": "^7.28.0",
         "eslint-plugin-simple-import-sort": "^7.0.0",
+        "eslint-plugin-unused-imports": "^4.1.4",
         "husky": "^7.0.4",
         "lint-staged": "^12.1.7",
         "now-env": "^3.2.0",
@@ -1089,6 +1090,8 @@
     "eslint-plugin-react-hooks": ["eslint-plugin-react-hooks@4.6.2", "", { "peerDependencies": { "eslint": "^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0" } }, "sha512-QzliNJq4GinDBcD8gPB5v0wh6g8q3SUi6EFF0x8N/BL9PoVs0atuGc47ozMRyOWAKdwaZ5OnbOEa3WR+dSGKuQ=="],
 
     "eslint-plugin-simple-import-sort": ["eslint-plugin-simple-import-sort@7.0.0", "", { "peerDependencies": { "eslint": ">=5.0.0" } }, "sha512-U3vEDB5zhYPNfxT5TYR7u01dboFZp+HNpnGhkDB2g/2E4wZ/g1Q9Ton8UwCLfRV9yAKyYqDh62oHOamvkFxsvw=="],
+
+    "eslint-plugin-unused-imports": ["eslint-plugin-unused-imports@4.1.4", "", { "peerDependencies": { "@typescript-eslint/eslint-plugin": "^8.0.0-0 || ^7.0.0 || ^6.0.0 || ^5.0.0", "eslint": "^9.0.0 || ^8.0.0" }, "optionalPeers": ["@typescript-eslint/eslint-plugin"] }, "sha512-YptD6IzQjDardkl0POxnnRBhU1OEePMV0nd6siHaRBbd+lyh6NAhFEobiznKU7kTsSsDeSD62Pe7kAM1b7dAZQ=="],
 
     "eslint-scope": ["eslint-scope@5.1.1", "", { "dependencies": { "esrecurse": "^4.3.0", "estraverse": "^4.1.1" } }, "sha512-2NxwbF/hZ0KpepYN0cNbo+FN6XoK7GaHlQhgx/hIZl6Va0bF45RQOOwhLIy8lQDbuCiadSLCBnH2CFYquit5bw=="],
 

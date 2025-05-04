@@ -5,7 +5,6 @@ import {
   EmailSubscriptionType,
   MutationEditEmailSubscriptionArgs,
 } from '~/graphql/types.generated'
-import { revue } from '~/lib/revue'
 import { validEmail } from '~/lib/validators'
 
 export async function editEmailSubscription(
