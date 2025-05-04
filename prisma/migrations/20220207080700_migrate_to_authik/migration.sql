@@ -6,8 +6,10 @@
 
 */
 -- AlterTable
-ALTER TABLE `User` DROP COLUMN `nickname`,
-    ADD COLUMN `authikId` VARCHAR(191) NULL;
+ALTER TABLE `User` DROP COLUMN `nickname`;
 
--- CreateIndex
-CREATE UNIQUE INDEX `User_authikId_key` ON `User`(`authikId`);
+-- DropIndex
+DROP INDEX `User_authikId_key` ON `User`;
+
+-- AlterTable
+ALTER TABLE `User` DROP COLUMN `authikId`;

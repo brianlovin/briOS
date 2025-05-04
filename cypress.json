@@ -1,8 +1,0 @@
-{
-  "projectId": "pt8y9e",
-  "baseUrl": "http://localhost:3000",
-  "viewportWidth": 1300,
-  "defaultCommandTimeout": 20000,
-  "video": false,
-  "blockHosts": ["*.usefathom.com"]
-}

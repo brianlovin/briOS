@@ -5,7 +5,6 @@ import { baseEmail } from '~/config/seo'
 import { CLIENT_URL, IS_PROD } from '~/graphql/constants'
 import { Context } from '~/graphql/context'
 import { MutationEditUserArgs } from '~/graphql/types.generated'
-import { authik } from '~/lib/authik/server'
 import { client as postmark } from '~/lib/postmark'
 import { validEmail, validUsername } from '~/lib/validators'
 
@@ -13,11 +12,8 @@ export async function deleteUser(_, __, ctx: Context) {
   const { prisma, viewer } = ctx
 
   if (viewer.isAdmin) {
-    throw new UserInputError('Admins can’t be deleted')
+    throw new UserInputError("Admins can't be deleted")
   }
-
-  const user = await prisma.user.findUnique({ where: { id: viewer.id } })
-  await authik.deleteUser(user.authikId)
 
   return await prisma.user
     .delete({

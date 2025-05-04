@@ -1,33 +1,27 @@
-import * as React from 'react'
-
-import { TwitterButton } from '~/components/Button'
-import { Detail } from '~/components/ListDetail/Detail'
-import { TitleBar } from '~/components/ListDetail/TitleBar'
-import { authik } from '~/lib/authik/client'
+import { useRouter } from 'next/router'
+import React from 'react'
 
 export function SignedOut() {
+  const router = useRouter()
+
+  function handleSignIn() {
+    // TODO: Replace with your new authentication method
+    router.push('/auth/signin')
+  }
+
   return (
-    <Detail.Container>
-      <TitleBar title="Settings" />
-      <div className="flex flex-1 flex-col items-center justify-center">
-        <TwitterButton
-          onClick={() =>
-            authik.loginWithTwitter({ returnTo: window.location.pathname })
-          }
-          size="large"
+    <div className="flex flex-col items-center justify-center min-h-screen py-12 bg-gray-50 dark:bg-gray-900">
+      <div className="px-4 py-8 bg-white rounded-lg shadow dark:bg-gray-800 sm:px-10">
+        <h2 className="mb-4 text-xl font-semibold text-gray-900 dark:text-gray-100">
+          Sign in to continue
+        </h2>
+        <button
+          onClick={handleSignIn}
+          className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
         >
-          <svg
-            viewBox="0 0 16 14"
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="14"
-            fill="currentColor"
-          >
-            <path d="M14.3617 3.35401C14.3687 3.49999 14.3713 3.64777 14.3713 3.79376C14.3713 8.29039 11.0696 13.4737 5.03217 13.4737C3.17739 13.4737 1.45304 12.9105 0 11.9445C0.859457 12.0522 1.73097 11.9833 2.56473 11.7418C3.39849 11.5003 4.17814 11.0908 4.85913 10.5369C4.17428 10.5235 3.51059 10.2886 2.96085 9.86516C2.41112 9.44169 2.00282 8.85078 1.79304 8.17505C2.28527 8.27044 2.79186 8.25042 3.27565 8.11647C2.53271 7.96035 1.8647 7.54285 1.38482 6.9347C0.904951 6.32655 0.642734 5.56518 0.642609 4.77959V4.73724C1.09843 5.00001 1.60823 5.14614 2.12957 5.16347C1.4338 4.6828 0.941284 3.94507 0.752536 3.10088C0.563788 2.25669 0.693041 1.36968 1.11391 0.620882C1.93808 1.67201 2.96639 2.53173 4.13207 3.14418C5.29774 3.75663 6.5747 4.10813 7.88 4.17584C7.82353 3.92137 7.79523 3.66107 7.79565 3.39996C7.79565 2.9534 7.88054 2.51121 8.04548 2.09865C8.21041 1.68609 8.45215 1.31124 8.7569 0.995511C9.06165 0.679784 9.42344 0.429363 9.82159 0.258552C10.2197 0.0877414 10.6465 -0.00011384 11.0774 4.51813e-06C11.5265 -0.000754465 11.9709 0.0941183 12.3832 0.278738C12.7954 0.463357 13.1667 0.733786 13.4739 1.07325C14.2088 0.922489 14.9136 0.643368 15.5583 0.247815C15.3131 1.03559 14.8001 1.70424 14.1148 2.12937C14.7654 2.04944 15.4009 1.86901 16 1.5941C15.5599 2.27755 15.005 2.87363 14.3617 3.35401V3.35401Z" />
-          </svg>
-          <span>Sign in with Twitter</span>
-        </TwitterButton>
+          Sign in with Twitter
+        </button>
       </div>
-    </Detail.Container>
+    </div>
   )
 }
