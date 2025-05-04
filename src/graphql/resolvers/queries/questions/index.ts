@@ -8,7 +8,7 @@ import {
 } from '~/graphql/types.generated'
 
 export async function getQuestion(_, { id }: QueryQuestionArgs, ctx: Context) {
-  const { prisma, viewer } = ctx
+  const { prisma } = ctx
   const question = await prisma.question.findUnique({
     where: { id },
     include: {
@@ -29,13 +29,6 @@ export async function getQuestion(_, { id }: QueryQuestionArgs, ctx: Context) {
     return question
   }
 
-  // question hasn't been answered, show it to admin or asker
-  if (!viewer) return null
-
-  if (question.userId === viewer.id || viewer.isAdmin) {
-    return question
-  }
-
   return null
 }
 
@@ -50,7 +43,7 @@ export async function getQuestions(
     filter = { status: QuestionStatus.Answered },
   } = args
 
-  const { prisma, viewer } = ctx
+  const { prisma } = ctx
 
   const nullResults = {
     pageInfo: {
@@ -61,7 +54,7 @@ export async function getQuestions(
     edges: [],
   }
 
-  if (!viewer?.isAdmin && filter.status === QuestionStatus.Pending) {
+  if (filter.status === QuestionStatus.Pending) {
     return nullResults
   }
 
@@ -82,13 +75,6 @@ export async function getQuestions(
     where = {
       comments: {
         some: {},
-      },
-    }
-  }
-  if (filter.status === QuestionStatus.Pending) {
-    where = {
-      comments: {
-        none: {},
       },
     }
   }

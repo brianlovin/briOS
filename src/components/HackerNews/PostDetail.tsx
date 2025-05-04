@@ -9,7 +9,6 @@ import { useGetHackerNewsPostQuery } from '~/graphql/types.generated'
 
 import { PostByline } from './PostByline'
 import { PostComments } from './PostComments'
-import { HackerNewsSubscriptionForm } from './SubscriptionForm'
 
 export function PostDetail({ id }) {
   const { data, loading, error } = useGetHackerNewsPostQuery({
@@ -72,12 +71,6 @@ export function PostDetail({ id }) {
       </Detail.ContentContainer>
 
       <PostComments comments={comments} />
-
-      <div className="bg-gray-100 border-t border-gray-200 dark:border-gray-800 dark:bg-gray-900">
-        <div className="max-w-3xl p-4 mx-auto">
-          <HackerNewsSubscriptionForm />
-        </div>
-      </div>
     </Detail.Container>
   )
 }

@@ -16,7 +16,6 @@ import {
 import { timestampToCleanTime } from '~/lib/transformers'
 
 import { MarkdownRenderer } from '../MarkdownRenderer'
-import { CommentMenu } from './CommentMenu'
 
 interface Props {
   comment: CommentProp
@@ -140,14 +139,6 @@ export const Comment = React.memo(function MemoComment({
             </p>
           </div>
         </div>
-
-        {(comment.viewerCanDelete || comment.viewerCanEdit) && (
-          <CommentMenu
-            comment={comment}
-            handleDelete={handleDelete}
-            handleEdit={handleEdit}
-          />
-        )}
       </div>
 
       {isEditing ? (

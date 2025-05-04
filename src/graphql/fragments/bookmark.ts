@@ -23,7 +23,6 @@ export const BookmarkDetailFragment = gql`
   fragment BookmarkDetail on Bookmark {
     ...BookmarkCore
     reactionCount
-    viewerHasReacted
     tags {
       name
     }

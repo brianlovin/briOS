@@ -64,7 +64,6 @@ export type Bookmark = {
   title?: Maybe<Scalars['String']>
   updatedAt: Scalars['Date']
   url: Scalars['String']
-  viewerHasReacted?: Maybe<Scalars['Boolean']>
 }
 
 export type BookmarkEdge = {
@@ -91,8 +90,6 @@ export type Comment = {
   id: Scalars['ID']
   text?: Maybe<Scalars['String']>
   updatedAt?: Maybe<Scalars['Date']>
-  viewerCanDelete?: Maybe<Scalars['Boolean']>
-  viewerCanEdit?: Maybe<Scalars['Boolean']>
 }
 
 export enum CommentType {
@@ -306,7 +303,6 @@ export type Post = {
   text?: Maybe<Scalars['String']>
   title?: Maybe<Scalars['String']>
   updatedAt?: Maybe<Scalars['Date']>
-  viewerHasReacted?: Maybe<Scalars['Boolean']>
 }
 
 export type Query = {
@@ -325,7 +321,6 @@ export type Query = {
   stacks: StacksConnection
   tags: Array<Maybe<Tag>>
   user?: Maybe<User>
-  viewer?: Maybe<User>
 }
 
 export type QueryBookmarkArgs = {
@@ -392,9 +387,6 @@ export type Question = {
   status?: Maybe<QuestionStatus>
   title: Scalars['String']
   updatedAt?: Maybe<Scalars['Date']>
-  viewerCanComment?: Maybe<Scalars['Boolean']>
-  viewerCanEdit?: Maybe<Scalars['Boolean']>
-  viewerHasReacted?: Maybe<Scalars['Boolean']>
 }
 
 export type QuestionEdge = {
@@ -440,8 +432,6 @@ export type Stack = {
   updatedAt?: Maybe<Scalars['Date']>
   url: Scalars['String']
   usedBy: Array<Maybe<User>>
-  usedByViewer?: Maybe<Scalars['Boolean']>
-  viewerHasReacted?: Maybe<Scalars['Boolean']>
 }
 
 export type StackEdge = {
@@ -468,8 +458,6 @@ export type User = {
   email?: Maybe<Scalars['String']>
   emailSubscriptions?: Maybe<Array<Maybe<EmailSubscription>>>
   id: Scalars['ID']
-  isAdmin?: Maybe<Scalars['Boolean']>
-  isViewer?: Maybe<Scalars['Boolean']>
   name?: Maybe<Scalars['String']>
   pendingEmail?: Maybe<Scalars['String']>
   role?: Maybe<UserRole>
@@ -509,7 +497,6 @@ export type BookmarkListItemFragment = {
 export type BookmarkDetailFragment = {
   __typename: 'Bookmark'
   reactionCount?: number | null
-  viewerHasReacted?: boolean | null
   id: string
   url: string
   host: string
@@ -548,8 +535,6 @@ export type CommentInfoFragment = {
   createdAt: any
   updatedAt?: any | null
   text?: string | null
-  viewerCanEdit?: boolean | null
-  viewerCanDelete?: boolean | null
   author: {
     __typename: 'User'
     id: string
@@ -557,8 +542,6 @@ export type CommentInfoFragment = {
     avatar?: string | null
     name?: string | null
     role?: UserRole | null
-    isViewer?: boolean | null
-    isAdmin?: boolean | null
   }
 }
 
@@ -652,7 +635,6 @@ export type PostDetailFragment = {
   text?: string | null
   featureImage?: string | null
   reactionCount?: number | null
-  viewerHasReacted?: boolean | null
   id: string
   publishedAt?: any | null
   title?: string | null
@@ -672,8 +654,6 @@ export type QuestionCoreFragment = {
     avatar?: string | null
     name?: string | null
     role?: UserRole | null
-    isViewer?: boolean | null
-    isAdmin?: boolean | null
   } | null
 }
 
@@ -689,8 +669,6 @@ export type QuestionListItemFragment = {
     avatar?: string | null
     name?: string | null
     role?: UserRole | null
-    isViewer?: boolean | null
-    isAdmin?: boolean | null
   } | null
 }
 
@@ -698,10 +676,7 @@ export type QuestionDetailFragment = {
   __typename: 'Question'
   description?: string | null
   status?: QuestionStatus | null
-  viewerCanEdit?: boolean | null
-  viewerCanComment?: boolean | null
   reactionCount?: number | null
-  viewerHasReacted?: boolean | null
   id: string
   title: string
   createdAt: any
@@ -712,8 +687,6 @@ export type QuestionDetailFragment = {
     avatar?: string | null
     name?: string | null
     role?: UserRole | null
-    isViewer?: boolean | null
-    isAdmin?: boolean | null
   } | null
 }
 
@@ -740,8 +713,6 @@ export type QuestionsConnectionFragment = {
         avatar?: string | null
         name?: string | null
         role?: UserRole | null
-        isViewer?: boolean | null
-        isAdmin?: boolean | null
       } | null
     } | null
   } | null>
@@ -770,8 +741,6 @@ export type StackDetailFragment = {
   createdAt: any
   description?: string | null
   reactionCount?: number | null
-  viewerHasReacted?: boolean | null
-  usedByViewer?: boolean | null
   id: string
   name: string
   image?: string | null
@@ -784,8 +753,6 @@ export type StackDetailFragment = {
     avatar?: string | null
     name?: string | null
     role?: UserRole | null
-    isViewer?: boolean | null
-    isAdmin?: boolean | null
   } | null>
   tags: Array<{ __typename?: 'Tag'; name: string } | null>
 }
@@ -819,19 +786,6 @@ export type UserInfoFragment = {
   avatar?: string | null
   name?: string | null
   role?: UserRole | null
-  isViewer?: boolean | null
-  isAdmin?: boolean | null
-}
-
-export type UserSettingsFragment = {
-  __typename?: 'User'
-  email?: string | null
-  pendingEmail?: string | null
-  emailSubscriptions?: Array<{
-    __typename?: 'EmailSubscription'
-    type?: EmailSubscriptionType | null
-    subscribed?: boolean | null
-  } | null> | null
 }
 
 export type EditBookmarkMutationVariables = Exact<{
@@ -844,7 +798,6 @@ export type EditBookmarkMutation = {
   editBookmark?: {
     __typename: 'Bookmark'
     reactionCount?: number | null
-    viewerHasReacted?: boolean | null
     id: string
     url: string
     host: string
@@ -873,7 +826,6 @@ export type AddBookmarkMutation = {
   addBookmark?: {
     __typename: 'Bookmark'
     reactionCount?: number | null
-    viewerHasReacted?: boolean | null
     id: string
     url: string
     host: string
@@ -898,8 +850,6 @@ export type AddCommentMutation = {
     createdAt: any
     updatedAt?: any | null
     text?: string | null
-    viewerCanEdit?: boolean | null
-    viewerCanDelete?: boolean | null
     author: {
       __typename: 'User'
       id: string
@@ -907,8 +857,6 @@ export type AddCommentMutation = {
       avatar?: string | null
       name?: string | null
       role?: UserRole | null
-      isViewer?: boolean | null
-      isAdmin?: boolean | null
     }
   } | null
 }
@@ -926,8 +874,6 @@ export type EditCommentMutation = {
     createdAt: any
     updatedAt?: any | null
     text?: string | null
-    viewerCanEdit?: boolean | null
-    viewerCanDelete?: boolean | null
     author: {
       __typename: 'User'
       id: string
@@ -935,8 +881,6 @@ export type EditCommentMutation = {
       avatar?: string | null
       name?: string | null
       role?: UserRole | null
-      isViewer?: boolean | null
-      isAdmin?: boolean | null
     }
   } | null
 }
@@ -978,7 +922,6 @@ export type EditPostMutation = {
     text?: string | null
     featureImage?: string | null
     reactionCount?: number | null
-    viewerHasReacted?: boolean | null
     id: string
     publishedAt?: any | null
     title?: string | null
@@ -1007,7 +950,6 @@ export type AddPostMutation = {
     text?: string | null
     featureImage?: string | null
     reactionCount?: number | null
-    viewerHasReacted?: boolean | null
     id: string
     publishedAt?: any | null
     title?: string | null
@@ -1027,10 +969,7 @@ export type EditQuestionMutation = {
     __typename: 'Question'
     description?: string | null
     status?: QuestionStatus | null
-    viewerCanEdit?: boolean | null
-    viewerCanComment?: boolean | null
     reactionCount?: number | null
-    viewerHasReacted?: boolean | null
     id: string
     title: string
     createdAt: any
@@ -1041,8 +980,6 @@ export type EditQuestionMutation = {
       avatar?: string | null
       name?: string | null
       role?: UserRole | null
-      isViewer?: boolean | null
-      isAdmin?: boolean | null
     } | null
   } | null
 }
@@ -1066,10 +1003,7 @@ export type AddQuestionMutation = {
     __typename: 'Question'
     description?: string | null
     status?: QuestionStatus | null
-    viewerCanEdit?: boolean | null
-    viewerCanComment?: boolean | null
     reactionCount?: number | null
-    viewerHasReacted?: boolean | null
     id: string
     title: string
     createdAt: any
@@ -1080,8 +1014,6 @@ export type AddQuestionMutation = {
       avatar?: string | null
       name?: string | null
       role?: UserRole | null
-      isViewer?: boolean | null
-      isAdmin?: boolean | null
     } | null
   } | null
 }
@@ -1099,26 +1031,10 @@ export type ToggleReactionMutation = {
         id: string
         url: string
         reactionCount?: number | null
-        viewerHasReacted?: boolean | null
       }
-    | {
-        __typename?: 'Post'
-        id: string
-        reactionCount?: number | null
-        viewerHasReacted?: boolean | null
-      }
-    | {
-        __typename?: 'Question'
-        id: string
-        reactionCount?: number | null
-        viewerHasReacted?: boolean | null
-      }
-    | {
-        __typename?: 'Stack'
-        id: string
-        reactionCount?: number | null
-        viewerHasReacted?: boolean | null
-      }
+    | { __typename?: 'Post'; id: string; reactionCount?: number | null }
+    | { __typename?: 'Question'; id: string; reactionCount?: number | null }
+    | { __typename?: 'Stack'; id: string; reactionCount?: number | null }
     | null
 }
 
@@ -1134,8 +1050,6 @@ export type EditStackMutation = {
     createdAt: any
     description?: string | null
     reactionCount?: number | null
-    viewerHasReacted?: boolean | null
-    usedByViewer?: boolean | null
     id: string
     name: string
     image?: string | null
@@ -1148,8 +1062,6 @@ export type EditStackMutation = {
       avatar?: string | null
       name?: string | null
       role?: UserRole | null
-      isViewer?: boolean | null
-      isAdmin?: boolean | null
     } | null>
     tags: Array<{ __typename?: 'Tag'; name: string } | null>
   } | null
@@ -1175,8 +1087,6 @@ export type AddStackMutation = {
     createdAt: any
     description?: string | null
     reactionCount?: number | null
-    viewerHasReacted?: boolean | null
-    usedByViewer?: boolean | null
     id: string
     name: string
     image?: string | null
@@ -1189,8 +1099,6 @@ export type AddStackMutation = {
       avatar?: string | null
       name?: string | null
       role?: UserRole | null
-      isViewer?: boolean | null
-      isAdmin?: boolean | null
     } | null>
     tags: Array<{ __typename?: 'Tag'; name: string } | null>
   } | null
@@ -1216,34 +1124,7 @@ export type ToggleStackUserMutation = {
       avatar?: string | null
       name?: string | null
       role?: UserRole | null
-      isViewer?: boolean | null
-      isAdmin?: boolean | null
     } | null>
-  } | null
-}
-
-export type DeleteUserMutationVariables = Exact<{ [key: string]: never }>
-
-export type DeleteUserMutation = {
-  __typename?: 'Mutation'
-  deleteUser?: boolean | null
-}
-
-export type EditUserMutationVariables = Exact<{
-  data?: InputMaybe<EditUserInput>
-}>
-
-export type EditUserMutation = {
-  __typename?: 'Mutation'
-  editUser?: {
-    __typename: 'User'
-    id: string
-    username?: string | null
-    avatar?: string | null
-    name?: string | null
-    role?: UserRole | null
-    isViewer?: boolean | null
-    isAdmin?: boolean | null
   } | null
 }
 
@@ -1288,7 +1169,6 @@ export type GetBookmarkQuery = {
   bookmark?: {
     __typename: 'Bookmark'
     reactionCount?: number | null
-    viewerHasReacted?: boolean | null
     id: string
     url: string
     host: string
@@ -1312,8 +1192,6 @@ export type GetCommentsQuery = {
     createdAt: any
     updatedAt?: any | null
     text?: string | null
-    viewerCanEdit?: boolean | null
-    viewerCanDelete?: boolean | null
     author: {
       __typename: 'User'
       id: string
@@ -1321,8 +1199,6 @@ export type GetCommentsQuery = {
       avatar?: string | null
       name?: string | null
       role?: UserRole | null
-      isViewer?: boolean | null
-      isAdmin?: boolean | null
     }
   } | null>
 }
@@ -1423,7 +1299,6 @@ export type GetPostQuery = {
     text?: string | null
     featureImage?: string | null
     reactionCount?: number | null
-    viewerHasReacted?: boolean | null
     id: string
     publishedAt?: any | null
     title?: string | null
@@ -1463,8 +1338,6 @@ export type GetQuestionsQuery = {
           avatar?: string | null
           name?: string | null
           role?: UserRole | null
-          isViewer?: boolean | null
-          isAdmin?: boolean | null
         } | null
       } | null
     } | null>
@@ -1481,10 +1354,7 @@ export type GetQuestionQuery = {
     __typename: 'Question'
     description?: string | null
     status?: QuestionStatus | null
-    viewerCanEdit?: boolean | null
-    viewerCanComment?: boolean | null
     reactionCount?: number | null
-    viewerHasReacted?: boolean | null
     id: string
     title: string
     createdAt: any
@@ -1495,8 +1365,6 @@ export type GetQuestionQuery = {
       avatar?: string | null
       name?: string | null
       role?: UserRole | null
-      isViewer?: boolean | null
-      isAdmin?: boolean | null
     } | null
   } | null
 }
@@ -1542,8 +1410,6 @@ export type GetStackQuery = {
     createdAt: any
     description?: string | null
     reactionCount?: number | null
-    viewerHasReacted?: boolean | null
-    usedByViewer?: boolean | null
     id: string
     name: string
     image?: string | null
@@ -1556,8 +1422,6 @@ export type GetStackQuery = {
       avatar?: string | null
       name?: string | null
       role?: UserRole | null
-      isViewer?: boolean | null
-      isAdmin?: boolean | null
     } | null>
     tags: Array<{ __typename?: 'Tag'; name: string } | null>
   } | null
@@ -1583,49 +1447,6 @@ export type GetUserQuery = {
     avatar?: string | null
     name?: string | null
     role?: UserRole | null
-    isViewer?: boolean | null
-    isAdmin?: boolean | null
-  } | null
-}
-
-export type ViewerQueryVariables = Exact<{ [key: string]: never }>
-
-export type ViewerQuery = {
-  __typename?: 'Query'
-  viewer?: {
-    __typename: 'User'
-    id: string
-    username?: string | null
-    avatar?: string | null
-    name?: string | null
-    role?: UserRole | null
-    isViewer?: boolean | null
-    isAdmin?: boolean | null
-  } | null
-}
-
-export type GetViewerWithSettingsQueryVariables = Exact<{
-  [key: string]: never
-}>
-
-export type GetViewerWithSettingsQuery = {
-  __typename?: 'Query'
-  viewer?: {
-    __typename: 'User'
-    id: string
-    username?: string | null
-    avatar?: string | null
-    name?: string | null
-    role?: UserRole | null
-    isViewer?: boolean | null
-    isAdmin?: boolean | null
-    email?: string | null
-    pendingEmail?: string | null
-    emailSubscriptions?: Array<{
-      __typename?: 'EmailSubscription'
-      type?: EmailSubscriptionType | null
-      subscribed?: boolean | null
-    } | null> | null
   } | null
 }
 
@@ -1644,7 +1465,6 @@ export const BookmarkDetailFragmentDoc = gql`
   fragment BookmarkDetail on Bookmark {
     ...BookmarkCore
     reactionCount
-    viewerHasReacted
     tags {
       name
     }
@@ -1681,8 +1501,6 @@ export const UserInfoFragmentDoc = gql`
     avatar
     name
     role
-    isViewer
-    isAdmin
   }
 `
 export const CommentInfoFragmentDoc = gql`
@@ -1692,8 +1510,6 @@ export const CommentInfoFragmentDoc = gql`
     createdAt
     updatedAt
     text
-    viewerCanEdit
-    viewerCanDelete
     author {
       ...UserInfo
     }
@@ -1766,7 +1582,6 @@ export const PostDetailFragmentDoc = gql`
     text
     featureImage
     reactionCount
-    viewerHasReacted
   }
   ${PostCoreFragmentDoc}
 `
@@ -1787,10 +1602,7 @@ export const QuestionDetailFragmentDoc = gql`
     ...QuestionCore
     description
     status
-    viewerCanEdit
-    viewerCanComment
     reactionCount
-    viewerHasReacted
   }
   ${QuestionCoreFragmentDoc}
 `
@@ -1832,8 +1644,6 @@ export const StackDetailFragmentDoc = gql`
     createdAt
     description
     reactionCount
-    viewerHasReacted
-    usedByViewer
     usedBy {
       ...UserInfo
     }
@@ -1865,16 +1675,6 @@ export const StacksConnectionFragmentDoc = gql`
     }
   }
   ${StackListItemFragmentDoc}
-`
-export const UserSettingsFragmentDoc = gql`
-  fragment UserSettings on User {
-    email
-    pendingEmail
-    emailSubscriptions {
-      type
-      subscribed
-    }
-  }
 `
 export const EditBookmarkDocument = gql`
   mutation editBookmark($id: ID!, $data: EditBookmarkInput!) {
@@ -2533,23 +2333,19 @@ export const ToggleReactionDocument = gql`
       ... on Stack {
         id
         reactionCount
-        viewerHasReacted
       }
       ... on Bookmark {
         id
         url
         reactionCount
-        viewerHasReacted
       }
       ... on Question {
         id
         reactionCount
-        viewerHasReacted
       }
       ... on Post {
         id
         reactionCount
-        viewerHasReacted
       }
     }
   }
@@ -2799,100 +2595,6 @@ export type ToggleStackUserMutationResult =
 export type ToggleStackUserMutationOptions = Apollo.BaseMutationOptions<
   ToggleStackUserMutation,
   ToggleStackUserMutationVariables
->
-export const DeleteUserDocument = gql`
-  mutation deleteUser {
-    deleteUser
-  }
-`
-export type DeleteUserMutationFn = Apollo.MutationFunction<
-  DeleteUserMutation,
-  DeleteUserMutationVariables
->
-
-/**
- * __useDeleteUserMutation__
- *
- * To run a mutation, you first call `useDeleteUserMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteUserMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deleteUserMutation, { data, loading, error }] = useDeleteUserMutation({
- *   variables: {
- *   },
- * });
- */
-export function useDeleteUserMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    DeleteUserMutation,
-    DeleteUserMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<DeleteUserMutation, DeleteUserMutationVariables>(
-    DeleteUserDocument,
-    options
-  )
-}
-export type DeleteUserMutationHookResult = ReturnType<
-  typeof useDeleteUserMutation
->
-export type DeleteUserMutationResult = Apollo.MutationResult<DeleteUserMutation>
-export type DeleteUserMutationOptions = Apollo.BaseMutationOptions<
-  DeleteUserMutation,
-  DeleteUserMutationVariables
->
-export const EditUserDocument = gql`
-  mutation editUser($data: EditUserInput) {
-    editUser(data: $data) {
-      ...UserInfo
-    }
-  }
-  ${UserInfoFragmentDoc}
-`
-export type EditUserMutationFn = Apollo.MutationFunction<
-  EditUserMutation,
-  EditUserMutationVariables
->
-
-/**
- * __useEditUserMutation__
- *
- * To run a mutation, you first call `useEditUserMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useEditUserMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [editUserMutation, { data, loading, error }] = useEditUserMutation({
- *   variables: {
- *      data: // value for 'data'
- *   },
- * });
- */
-export function useEditUserMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    EditUserMutation,
-    EditUserMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<EditUserMutation, EditUserMutationVariables>(
-    EditUserDocument,
-    options
-  )
-}
-export type EditUserMutationHookResult = ReturnType<typeof useEditUserMutation>
-export type EditUserMutationResult = Apollo.MutationResult<EditUserMutation>
-export type EditUserMutationOptions = Apollo.BaseMutationOptions<
-  EditUserMutation,
-  EditUserMutationVariables
 >
 export const GetBookmarksDocument = gql`
   query getBookmarks($first: Int, $after: String, $filter: BookmarkFilter) {
@@ -3612,112 +3314,4 @@ export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>
 export type GetUserQueryResult = Apollo.QueryResult<
   GetUserQuery,
   GetUserQueryVariables
->
-export const ViewerDocument = gql`
-  query viewer {
-    viewer {
-      ...UserInfo
-    }
-  }
-  ${UserInfoFragmentDoc}
-`
-
-/**
- * __useViewerQuery__
- *
- * To run a query within a React component, call `useViewerQuery` and pass it any options that fit your needs.
- * When your component renders, `useViewerQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useViewerQuery({
- *   variables: {
- *   },
- * });
- */
-export function useViewerQuery(
-  baseOptions?: Apollo.QueryHookOptions<ViewerQuery, ViewerQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<ViewerQuery, ViewerQueryVariables>(
-    ViewerDocument,
-    options
-  )
-}
-export function useViewerLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<ViewerQuery, ViewerQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<ViewerQuery, ViewerQueryVariables>(
-    ViewerDocument,
-    options
-  )
-}
-export type ViewerQueryHookResult = ReturnType<typeof useViewerQuery>
-export type ViewerLazyQueryHookResult = ReturnType<typeof useViewerLazyQuery>
-export type ViewerQueryResult = Apollo.QueryResult<
-  ViewerQuery,
-  ViewerQueryVariables
->
-export const GetViewerWithSettingsDocument = gql`
-  query getViewerWithSettings {
-    viewer {
-      ...UserInfo
-      ...UserSettings
-    }
-  }
-  ${UserInfoFragmentDoc}
-  ${UserSettingsFragmentDoc}
-`
-
-/**
- * __useGetViewerWithSettingsQuery__
- *
- * To run a query within a React component, call `useGetViewerWithSettingsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetViewerWithSettingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetViewerWithSettingsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetViewerWithSettingsQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetViewerWithSettingsQuery,
-    GetViewerWithSettingsQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<
-    GetViewerWithSettingsQuery,
-    GetViewerWithSettingsQueryVariables
-  >(GetViewerWithSettingsDocument, options)
-}
-export function useGetViewerWithSettingsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetViewerWithSettingsQuery,
-    GetViewerWithSettingsQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<
-    GetViewerWithSettingsQuery,
-    GetViewerWithSettingsQueryVariables
-  >(GetViewerWithSettingsDocument, options)
-}
-export type GetViewerWithSettingsQueryHookResult = ReturnType<
-  typeof useGetViewerWithSettingsQuery
->
-export type GetViewerWithSettingsLazyQueryHookResult = ReturnType<
-  typeof useGetViewerWithSettingsLazyQuery
->
-export type GetViewerWithSettingsQueryResult = Apollo.QueryResult<
-  GetViewerWithSettingsQuery,
-  GetViewerWithSettingsQueryVariables
 >

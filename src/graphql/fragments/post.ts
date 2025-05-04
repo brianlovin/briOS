@@ -24,7 +24,6 @@ export const PostDetailFragment = gql`
     text
     featureImage
     reactionCount
-    viewerHasReacted
   }
   ${PostCoreFragment}
 `

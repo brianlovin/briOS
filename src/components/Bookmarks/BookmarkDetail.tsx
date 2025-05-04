@@ -12,7 +12,6 @@ import routes from '~/config/routes'
 import { CommentType, useGetBookmarkQuery } from '~/graphql/types.generated'
 
 import { MarkdownRenderer } from '../MarkdownRenderer'
-import { BookmarkActions } from './BookmarkActions'
 import { RelatedBookmarks } from './RelatedBookmarks'
 
 export function BookmarkDetail({ id }) {
@@ -57,7 +56,6 @@ export function BookmarkDetail({ id }) {
           title={bookmark.title}
           titleRef={titleRef}
           scrollContainerRef={scrollContainerRef}
-          trailingAccessory={<BookmarkActions bookmark={bookmark} />}
         />
 
         <Detail.ContentContainer>

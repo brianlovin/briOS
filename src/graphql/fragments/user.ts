@@ -8,18 +8,5 @@ export const UserInfoFragment = gql`
     avatar
     name
     role
-    isViewer
-    isAdmin
-  }
-`
-
-export const UserSettingsFragment = gql`
-  fragment UserSettings on User {
-    email
-    pendingEmail
-    emailSubscriptions {
-      type
-      subscribed
-    }
   }
 `

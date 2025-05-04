@@ -5,15 +5,12 @@ import {
 } from '~/graphql/types.generated'
 
 export async function getPosts(_, args: GetPostsQueryVariables, ctx: Context) {
-  const { filter } = args
-  const { prisma, viewer } = ctx
-  const published = filter?.published
+  const { prisma } = ctx
 
   return await prisma.post.findMany({
-    orderBy: published ? { publishedAt: 'desc' } : { createdAt: 'desc' },
+    orderBy: { publishedAt: 'desc' },
     where: {
-      publishedAt:
-        !published && viewer?.isAdmin ? { equals: null } : { not: null },
+      publishedAt: { not: null },
     },
     include: {
       _count: {
@@ -30,7 +27,7 @@ export async function getPost(
   { slug }: GetPostQueryVariables,
   ctx: Context
 ) {
-  const { prisma, viewer } = ctx
+  const { prisma } = ctx
   const [postBySlug, postById] = await Promise.all([
     prisma.post.findUnique({
       where: { slug },
@@ -56,7 +53,7 @@ export async function getPost(
 
   const post = postBySlug || postById
 
-  if (!post?.publishedAt && !viewer?.isAdmin) {
+  if (!post?.publishedAt) {
     return null
   }
 

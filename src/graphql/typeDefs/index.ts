@@ -15,7 +15,6 @@ export default gql`
     excerpt: String
     featureImage: String
     reactionCount: Int
-    viewerHasReacted: Boolean
   }
 
   type Bookmark {
@@ -30,7 +29,6 @@ export default gql`
     description: String
     tags: [Tag]!
     reactionCount: Int
-    viewerHasReacted: Boolean
   }
 
   type Question {
@@ -41,10 +39,7 @@ export default gql`
     title: String!
     description: String
     status: QuestionStatus
-    viewerCanEdit: Boolean
-    viewerCanComment: Boolean
     reactionCount: Int
-    viewerHasReacted: Boolean
   }
 
   enum CommentType {
@@ -76,9 +71,7 @@ export default gql`
     slug: String!
     tags: [Tag]!
     usedBy: [User]!
-    usedByViewer: Boolean
     reactionCount: Int
-    viewerHasReacted: Boolean
   }
 
   enum UserRole {
@@ -104,11 +97,9 @@ export default gql`
     username: String
     avatar: String
     name: String
-    isViewer: Boolean
     email: String
     pendingEmail: String
     emailSubscriptions: [EmailSubscription]
-    isAdmin: Boolean
   }
 
   type Comment {
@@ -117,8 +108,6 @@ export default gql`
     updatedAt: Date
     text: String
     author: User!
-    viewerCanEdit: Boolean
-    viewerCanDelete: Boolean
   }
 
   type HackerNewsComment {
@@ -200,7 +189,6 @@ export default gql`
   }
 
   type Query {
-    viewer: User
     user(username: String!): User
     bookmark(id: ID!): Bookmark
     bookmarks(
