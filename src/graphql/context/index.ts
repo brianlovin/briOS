@@ -1,13 +1,12 @@
 import { PrismaClient } from '@prisma/client'
 
-import { authik } from '~/lib/authik/server'
 import { prisma } from '~/lib/prisma'
 
 import { User, UserRole } from '../types.generated'
 
 export async function isAuthenticated(req, res) {
-  const { sessionToken } = await authik.verifySessionToken(req)
-  return sessionToken
+  // TODO: Replace with your new authentication method
+  return null
 }
 
 export async function getViewer(req, res) {
@@ -16,7 +15,7 @@ export async function getViewer(req, res) {
   let viewer = null
   if (sessionToken) {
     viewer = await prisma.user.findUnique({
-      where: { authikId: sessionToken.userId },
+      where: { twitterId: sessionToken.userId },
     })
   }
 

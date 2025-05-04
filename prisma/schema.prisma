@@ -16,7 +16,6 @@ model User {
   role         Role       @default(USER)
   username     String     @unique @db.VarChar(16)
   twitterId    String     @unique
-  authikId     String?    @unique
   email        String?    @unique
   pendingEmail String?
   avatar       String?

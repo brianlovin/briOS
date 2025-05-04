@@ -1,21 +1,22 @@
-import Link from 'next/link'
-import * as React from 'react'
-import { Settings } from 'react-feather'
+import { useRouter } from 'next/router'
+import React from 'react'
 
-import { Avatar } from '~/components/Avatar'
-import { GhostButton } from '~/components/Button'
-import { LoadingSpinner } from '~/components/LoadingSpinner'
-import { useViewerQuery } from '~/graphql/types.generated'
-import { authik } from '~/lib/authik/client'
+export function UserFooter() {
+  const router = useRouter()
 
-import { GlobalNavigationContext } from '../Providers'
+  function handleSignIn() {
+    // TODO: Replace with your new authentication method
+    router.push('/auth/signin')
+  }
 
-function Container(props) {
   return (
-    <div
-      data-cy="sign-in-button"
-      className="sticky bottom-0 z-10 flex items-center justify-between p-2 space-x-3 bg-white border-t filter-blur border-gray-150 bg-opacity-80 dark:border-gray-800 dark:bg-gray-900 dark:bg-opacity-60"
-      {...props}
-    />
+    <div className="flex items-center justify-between p-4 border-t border-gray-200 dark:border-gray-800">
+      <button
+        onClick={handleSignIn}
+        className="text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+      >
+        Sign in
+      </button>
+    </div>
   )
 }
