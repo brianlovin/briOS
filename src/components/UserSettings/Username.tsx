@@ -6,7 +6,6 @@ import { LoadingSpinner } from '~/components/LoadingSpinner'
 import {
   GetViewerWithSettingsQuery,
   useEditUserMutation,
-  useGetViewerWithSettingsQuery,
 } from '~/graphql/types.generated'
 import { validUsername } from '~/lib/validators'
 

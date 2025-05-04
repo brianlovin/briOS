@@ -1,5 +1,3 @@
-import * as uuid from 'uuid'
-
 import {
   RATE_LIMIT_REQUEST_AMOUNT,
   RATE_LIMIT_REQUEST_DURATION,

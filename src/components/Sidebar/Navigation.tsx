@@ -9,7 +9,6 @@ import {
   AppDissectionIcon,
   BookmarksIcon,
   CampsiteIcon,
-  CritIcon,
   ExternalLinkIcon,
   FigmaIcon,
   GitHubIcon,

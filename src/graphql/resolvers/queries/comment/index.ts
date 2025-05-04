@@ -1,5 +1,3 @@
-import { UserInputError } from 'apollo-server-micro'
-
 import { Context } from '~/graphql/context'
 import {
   Bookmark,

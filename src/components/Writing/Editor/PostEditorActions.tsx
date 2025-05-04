@@ -6,7 +6,6 @@ import slugify from 'slugify'
 
 import Button from '~/components/Button'
 import { LoadingSpinner } from '~/components/LoadingSpinner'
-import { Switch } from '~/components/Switch'
 import {
   useAddPostMutation,
   useEditPostMutation,

@@ -5,9 +5,6 @@ import { PostsList } from '~/components/HackerNews/PostsList'
 import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { withProviders } from '~/components/Providers/withProviders'
 import routes from '~/config/routes'
-import { getContext } from '~/graphql/context'
-import { GET_HACKER_NEWS_POSTS } from '~/graphql/queries/hackerNews'
-import { addApolloState, initApolloClient } from '~/lib/apollo'
 
 function HNPage() {
   return (

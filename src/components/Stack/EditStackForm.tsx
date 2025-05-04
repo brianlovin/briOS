@@ -4,7 +4,7 @@ import * as React from 'react'
 import Button, { DeleteButton } from '~/components/Button'
 import { Input, Textarea } from '~/components/Input'
 import { TagPicker } from '~/components/Tag/TagPicker'
-import { GET_STACK, GET_STACKS } from '~/graphql/queries/stack'
+import { GET_STACKS } from '~/graphql/queries/stack'
 import {
   useDeleteStackMutation,
   useEditStackMutation,

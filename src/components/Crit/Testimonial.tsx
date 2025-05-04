@@ -3,7 +3,7 @@ import Link from 'next/link'
 import React from 'react'
 
 import Button from '../Button'
-import { ExternalLinkIcon, YouTubeIcon } from '../Icon'
+import { ExternalLinkIcon } from '../Icon'
 
 type TestimonialProps = {
   avatarSrc: string

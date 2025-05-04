@@ -5,11 +5,6 @@ import { BookmarksList } from '~/components/Bookmarks/BookmarksList'
 import { ListDetailView, SiteLayout } from '~/components/Layouts'
 import { withProviders } from '~/components/Providers/withProviders'
 import routes from '~/config/routes'
-import { getContext } from '~/graphql/context'
-import { GET_BOOKMARKS } from '~/graphql/queries/bookmarks'
-import { GET_TAGS } from '~/graphql/queries/tags'
-import { GET_VIEWER } from '~/graphql/queries/viewer'
-import { addApolloState, initApolloClient } from '~/lib/apollo'
 
 function BookmarksPage() {
   return (

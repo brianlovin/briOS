@@ -6,10 +6,7 @@ import { Input, Textarea } from '~/components/Input'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { LoadingSpinner } from '~/components/LoadingSpinner'
 import { GET_POSTS } from '~/graphql/queries/posts'
-import {
-  useEditPostMutation,
-  useGetPostsQuery,
-} from '~/graphql/types.generated'
+import { useEditPostMutation } from '~/graphql/types.generated'
 
 import { PostEditorContext } from './PostEditor'
 
