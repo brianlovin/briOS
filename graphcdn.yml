@@ -1,6 +1,7 @@
 schema: './src/graphql/typeDefs/index.ts'
 scopes:
-  AUTHENTICATED: 'cookie:authik_session_token'
+  # TODO: Replace with your new authentication method
+  AUTHENTICATED: 'cookie:session_token'
 rootTypeNames:
   query: Query
   mutation: Mutation

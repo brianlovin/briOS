@@ -8,11 +8,23 @@ module.exports = {
     return config
   },
   images: {
-    domains: [
-      'pbs.twimg.com',
-      'abs.twimg.com',
-      'overthought.ghost.io',
-      'imagedelivery.net',
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'pbs.twimg.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'abs.twimg.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'overthought.ghost.io',
+      },
+      {
+        protocol: 'https',
+        hostname: 'imagedelivery.net',
+      },
     ],
   },
   async redirects() {

@@ -6,7 +6,6 @@ import { useGetViewerWithSettingsQuery } from '~/graphql/types.generated'
 
 import { EmailForm } from './Email'
 import { EmailPreferences } from './EmailPreferences'
-import { UserSettingsFooter } from './Footer'
 import { SignedOut } from './SignedOut'
 import { UsernameForm } from './Username'
 
@@ -52,8 +51,6 @@ export function UserSettings() {
               <EmailPreferences viewer={data.viewer} />
             </div>
           )}
-
-          <UserSettingsFooter />
         </div>
       </Detail.ContentContainer>
     </Detail.Container>

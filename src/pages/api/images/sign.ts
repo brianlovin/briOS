@@ -2,13 +2,12 @@ import fetch from 'isomorphic-unfetch'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 import { UserRole } from '~/graphql/types.generated'
-import { authik } from '~/lib/authik/server'
 import { prisma } from '~/lib/prisma'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   async function isAuthenticated(req, res) {
-    const { sessionToken } = await authik.verifySessionToken(req)
-    return sessionToken
+    // TODO: Replace with your new authentication method
+    return null
   }
 
   async function getIsAdmin(req, res) {
@@ -16,10 +15,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (!sessionToken) return false
 
     const viewer = await prisma.user.findUnique({
-      where: { authikId: sessionToken.userId },
+      where: { twitterId: sessionToken.userId },
     })
 
-    return viewer.role === UserRole.Admin
+    return viewer?.role === UserRole.Admin
   }
 
   const isAdmin = await getIsAdmin(req, res)
