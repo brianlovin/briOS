@@ -1,9 +1,6 @@
 import { useRouter } from 'next/router'
 import * as React from 'react'
-import { Plus } from 'react-feather'
 
-import { AddBookmarkDialog } from '~/components/Bookmarks/AddBookmarkDialog'
-import { GhostButton } from '~/components/Button'
 import {
   AMAIcon,
   AppDissectionIcon,
@@ -22,25 +19,11 @@ import {
   WritingIcon,
   YouTubeIcon,
 } from '~/components/Icon'
-import { useViewerQuery } from '~/graphql/types.generated'
 
 import { NavigationLink } from './NavigationLink'
 
-function ThisAddBookmarkDialog() {
-  return (
-    <AddBookmarkDialog
-      trigger={
-        <GhostButton aria-label="Add bookmark" size="small-square">
-          <Plus size={16} />
-        </GhostButton>
-      }
-    />
-  )
-}
-
 export function SidebarNavigation() {
   const router = useRouter()
-  const { data } = useViewerQuery()
   const sections = [
     {
       label: null,
@@ -75,7 +58,7 @@ export function SidebarNavigation() {
           icon: BookmarksIcon,
           trailingAccessory: null,
           isActive: router.asPath.indexOf('/bookmarks') >= 0,
-          trailingAction: data?.viewer?.isAdmin ? ThisAddBookmarkDialog : null,
+          trailingAction: null,
           isExternal: false,
         },
 

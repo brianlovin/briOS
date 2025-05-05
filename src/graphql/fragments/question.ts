@@ -27,10 +27,7 @@ export const QuestionDetailFragment = gql`
     ...QuestionCore
     description
     status
-    viewerCanEdit
-    viewerCanComment
     reactionCount
-    viewerHasReacted
   }
   ${QuestionCoreFragment}
   ${UserInfoFragment}

@@ -9,9 +9,6 @@ keyFields:
   types:
     Tag:
       - name
-    User:
-      - id
-      - username
     PageInfo: []
     StackEdge: []
     BookmarkEdge: []
@@ -34,11 +31,5 @@ rules:
         - hackerNewsPosts
     maxAge: 43200
     swr: 43200
-    scope: AUTHENTICATED
-  - types:
-      Query:
-        - viewer
-    maxAge: 2592000
-    swr: 2592000
     scope: AUTHENTICATED
 originUrl: 'https://brianlovin.com/api/graphql'

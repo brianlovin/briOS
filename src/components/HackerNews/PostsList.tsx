@@ -1,10 +1,6 @@
 import { useRouter } from 'next/router'
 import * as React from 'react'
-import { Radio } from 'react-feather'
 
-import Button from '~/components/Button'
-import { DialogComponent } from '~/components/Dialog'
-import { HackerNewsSubscriptionForm } from '~/components/HackerNews/SubscriptionForm'
 import { ListContainer } from '~/components/ListDetail/ListContainer'
 import { TitleBar } from '~/components/ListDetail/TitleBar'
 import { useGetHackerNewsPostsQuery } from '~/graphql/types.generated'
@@ -28,18 +24,7 @@ export function PostsList() {
     <ListContainer data-cy="posts-list" onRef={setScrollContainerRef}>
       <TitleBar
         scrollContainerRef={scrollContainerRef}
-        trailingAccessory={
-          <DialogComponent
-            title="Daily digest"
-            trigger={
-              <Button data-cy="open-subscribe-hn-dialog" size="small">
-                <Radio size={16} />
-                <span>Subscribe</span>
-              </Button>
-            }
-            modalContent={() => <HackerNewsSubscriptionForm />}
-          />
-        }
+        trailingAccessory={null}
         title="Better HN"
       />
 

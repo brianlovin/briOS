@@ -11,7 +11,6 @@ import { CommentType, useGetQuestionQuery } from '~/graphql/types.generated'
 import { timestampToCleanTime } from '~/lib/transformers'
 
 import { MarkdownRenderer } from '../MarkdownRenderer'
-import { QuestionActions } from './QuestionActions'
 
 export function QuestionDetail({ id }) {
   const scrollContainerRef = React.useRef(null)
@@ -59,7 +58,6 @@ export function QuestionDetail({ id }) {
           title={question.title}
           titleRef={titleRef}
           scrollContainerRef={scrollContainerRef}
-          trailingAccessory={<QuestionActions question={question} />}
         />
 
         <Detail.ContentContainer>
@@ -111,9 +109,7 @@ export function QuestionDetail({ id }) {
           </Detail.Header>
         </Detail.ContentContainer>
 
-        {question.viewerCanComment && (
-          <Comments refId={question.id} type={CommentType.Question} />
-        )}
+        <Comments refId={question.id} type={CommentType.Question} />
       </Detail.Container>
     </>
   )

@@ -9,8 +9,6 @@ export const CommentInfoFragment = gql`
     createdAt
     updatedAt
     text
-    viewerCanEdit
-    viewerCanDelete
     author {
       ...UserInfo
     }

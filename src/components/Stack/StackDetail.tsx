@@ -14,7 +14,6 @@ import { CommentType, useGetStackQuery } from '~/graphql/types.generated'
 
 import { MarkdownRenderer } from '../MarkdownRenderer'
 import { SignInDialog } from '../SignInDialog'
-import { StackActions } from './StackActions'
 import { StackUsedBy } from './StackUsedBy'
 
 export function StackDetail({ slug }) {
@@ -60,7 +59,6 @@ export function StackDetail({ slug }) {
           title={stack.name}
           titleRef={titleRef}
           scrollContainerRef={scrollContainerRef}
-          trailingAccessory={<StackActions stack={stack} />}
         />
 
         <Detail.ContentContainer>

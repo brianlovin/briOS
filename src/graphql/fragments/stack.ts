@@ -26,8 +26,6 @@ export const StackDetailFragment = gql`
     createdAt
     description
     reactionCount
-    viewerHasReacted
-    usedByViewer
     usedBy {
       ...UserInfo
     }

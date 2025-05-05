@@ -1,7 +1,7 @@
 import deepmerge from 'deepmerge'
 import Link from 'next/link'
 import * as React from 'react'
-import Markdown from 'react-markdown'
+import Markdown, { Components } from 'react-markdown'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
 import rehypeSlug from 'rehype-slug'
@@ -32,27 +32,37 @@ function LinkRenderer({ href, ...rest }: any) {
   }
 }
 
-function getComponentsForVariant(variant) {
+function getComponentsForVariant(variant: 'longform' | 'comment'): Components {
   // Blog posts
   switch (variant) {
     case 'longform': {
       return {
         a: LinkRenderer,
-        pre({ node, inline, className, children, ...props }) {
+        pre({
+          children,
+          className,
+          ...props
+        }: React.ComponentPropsWithoutRef<'pre'>) {
           const language = /language-(\w+)/.exec(className || '')?.[1]
-          return !inline && language ? (
+          return language ? (
             <CodeBlock
               text={String(children).replace(/\n$/, '')}
               language={language}
               {...props}
             />
           ) : (
-            <>{children}</>
+            <pre className={className} {...props}>
+              {children}
+            </pre>
           )
         },
-        code({ node, inline, className, children, ...props }) {
+        code({
+          children,
+          className,
+          ...props
+        }: React.ComponentPropsWithoutRef<'code'>) {
           const language = /language-(\w+)/.exec(className || '')?.[1]
-          return !inline && language ? (
+          return language ? (
             <CodeBlock
               text={String(children).replace(/\n$/, '')}
               language={language}
@@ -70,18 +80,30 @@ function getComponentsForVariant(variant) {
     case 'comment': {
       return {
         a: LinkRenderer,
-        h1: 'p',
-        h2: 'p',
-        h3: 'p',
-        h4: 'p',
-        h5: 'p',
-        h6: 'p',
-        pre({ children }) {
-          return <>{children}</>
+        h1: 'p' as const,
+        h2: 'p' as const,
+        h3: 'p' as const,
+        h4: 'p' as const,
+        h5: 'p' as const,
+        h6: 'p' as const,
+        pre({
+          children,
+          className,
+          ...props
+        }: React.ComponentPropsWithoutRef<'pre'>) {
+          return (
+            <pre className={className} {...props}>
+              {children}
+            </pre>
+          )
         },
-        code({ node, inline, className, children, ...props }) {
+        code({
+          children,
+          className,
+          ...props
+        }: React.ComponentPropsWithoutRef<'code'>) {
           const language = /language-(\w+)/.exec(className || '')?.[1]
-          return !inline && language ? (
+          return language ? (
             <CodeBlock
               text={String(children).replace(/\n$/, '')}
               language={language}
@@ -98,10 +120,18 @@ function getComponentsForVariant(variant) {
   }
 }
 
-export function MarkdownRenderer(props: any) {
-  // variant = 'longform' | 'comment'
-  const { children, variant = 'longform', ...rest } = props
+type MarkdownRendererProps = {
+  children: string
+  variant?: 'longform' | 'comment'
+  className?: string
+} & Omit<React.ComponentProps<typeof Markdown>, 'children' | 'className'>
 
+export function MarkdownRenderer({
+  children,
+  variant = 'longform',
+  className,
+  ...rest
+}: MarkdownRendererProps) {
   const schema = deepmerge(defaultSchema, {
     tagNames: [...defaultSchema.tagNames, 'sup', 'sub', 'section'],
     attributes: {
@@ -114,17 +144,19 @@ export function MarkdownRenderer(props: any) {
   const components = getComponentsForVariant(variant)
 
   return (
-    <Markdown
-      {...rest}
-      remarkPlugins={[remarkGfm, linkifyRegex(/^(?!.*\bRT\b)(?:.+\s)?@\w+/i)]}
-      rehypePlugins={[
-        [rehypeSanitize, schema],
-        rehypeSlug,
-        [rehypeAutolinkHeadings, { behavior: 'wrap' }],
-      ]}
-      components={components}
-    >
-      {children}
-    </Markdown>
+    <div className={className}>
+      <Markdown
+        {...rest}
+        remarkPlugins={[remarkGfm, linkifyRegex(/^(?!.*\bRT\b)(?:.+\s)?@\w+/i)]}
+        rehypePlugins={[
+          [rehypeSanitize, schema],
+          rehypeSlug,
+          [rehypeAutolinkHeadings, { behavior: 'wrap' }],
+        ]}
+        components={components}
+      >
+        {children}
+      </Markdown>
+    </div>
   )
 }
