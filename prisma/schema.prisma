@@ -8,6 +8,7 @@ datasource db {
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["referentialIntegrity"]
+  binaryTargets   = ["native", "darwin", "darwin-arm64", "rhel-openssl-3.0.x", "debian-openssl-3.0.x"]
 }
 
 model User {
