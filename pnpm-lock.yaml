@@ -85,10 +85,10 @@ importers:
         version: 6.0.0
       next:
         specifier: ^15.4.7
-        version: 15.4.7(@babel/core@7.12.9)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 15.4.7(@babel/core@7.20.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       next-seo:
         specifier: ^4.28.1
-        version: 4.29.0(next@15.4.7(@babel/core@7.12.9)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 4.29.0(next@15.4.7(@babel/core@7.20.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       postmark:
         specifier: ^2.8.1
         version: 2.9.5
@@ -194,7 +194,7 @@ importers:
         version: 3.2.3(graphql@15.8.0)
       '@graphql-codegen/cli':
         specifier: ^2.3.1
-        version: 2.16.2(@babel/core@7.12.9)(@types/node@17.0.45)(enquirer@2.3.6)(graphql@15.8.0)(ts-node@10.9.1(@types/node@17.0.45)(typescript@4.9.4))(typescript@4.9.4)
+        version: 2.16.2(@babel/core@7.20.7)(@types/node@17.0.45)(enquirer@2.3.6)(graphql@15.8.0)(ts-node@10.9.1(@types/node@17.0.45)(typescript@4.9.4))(typescript@4.9.4)
       '@graphql-codegen/typescript':
         specifier: ^2.4.2
         version: 2.8.6(graphql@15.8.0)
@@ -944,6 +944,7 @@ packages:
 
   '@graphql-tools/prisma-loader@7.2.50':
     resolution: {integrity: sha512-tSZFtx5GP5LBHmChwVCkvFw9oCwc0QVP2xR/Pyp61c3Fb2gyqzFq/8lnbcmxR+Oi9/Cwt3JsSc4Jkg8jBi5HLw==}
+    deprecated: 'This package was intended to be used with an older versions of Prisma.\nThe newer versions of Prisma has a different approach to GraphQL integration.\nTherefore, this package is no longer needed and has been deprecated and removed.\nLearn more: https://www.prisma.io/graphql'
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
 
@@ -2411,6 +2412,15 @@ packages:
       supports-color:
         optional: true
 
+  debug@4.4.3:
+    resolution: {integrity: sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==}
+    engines: {node: '>=6.0'}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
+
   decamelize-keys@1.1.1:
     resolution: {integrity: sha512-WiPxgEirIV0/eIOMcnFBA3/IJZAZqKnwAwWyvvdi4lsr1WCN22nhdf/3db3DoZcUjTV2SqfzIwNyp6y2xs3nmg==}
     engines: {node: '>=0.10.0'}
@@ -2664,6 +2674,7 @@ packages:
   eslint-plugin-markdown@2.2.1:
     resolution: {integrity: sha512-FgWp4iyYvTFxPwfbxofTvXxgzPsDuSKHQy2S+a8Ve6savbujey+lgrFFbXQA0HPygISpRYWYBjooPzhYSF81iA==}
     engines: {node: ^8.10.0 || ^10.12.0 || >= 12.0.0}
+    deprecated: Please use @eslint/markdown instead
     peerDependencies:
       eslint: '>=6.0.0'
 
@@ -5128,6 +5139,11 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
+  semver@7.7.3:
+    resolution: {integrity: sha512-SdsKMrI9TdgjdweUSR9MweHA4EJ8YxHn8DFaDisvhVlUOe4BF1tLD7GAj0lIqWVl+dPb/rExr0Btby5loQm20Q==}
+    engines: {node: '>=10'}
+    hasBin: true
+
   sentence-case@3.0.4:
     resolution: {integrity: sha512-8LS0JInaQMCRoQ7YUytAo/xUu5W2XnQxV2HI/6uM6U7CITS1RqPElr30V6uIqyMKM9lJGRVFy5/4CuzcixNYSg==}
 
@@ -5616,6 +5632,7 @@ packages:
 
   ua-parser-js@0.7.32:
     resolution: {integrity: sha512-f9BESNVhzlhEFf2CHMSj40NWOjYPl1YKYbrvIr/hFTDEmLq7SRbWvm7FcdcpCYT95zrOhC7gZSxjdnnTpBcwVw==}
+    deprecated: You are using an outdated version of ua-parser-js. Please update to ua-parser-js v0.7.33 / v1.0.33 / v2.0.0 (or later) to avoid ReDoS vulnerability [CVE-2022-25927](https://github.com/advisories/GHSA-fhg7-m89q-25r3)
 
   uc.micro@1.0.6:
     resolution: {integrity: sha512-8Y75pvTYkLJW2hWQHXxoqRgV7qb9B+9vFEtidML+7koHUFapnVJAZ6cKs+Qjz5Aw3aZWHMC6u0wJE3At+nSGwA==}
@@ -6347,9 +6364,9 @@ snapshots:
       '@babel/core': 7.20.7
       '@babel/helper-plugin-utils': 7.20.2
 
-  '@babel/plugin-syntax-import-assertions@7.20.0(@babel/core@7.12.9)':
+  '@babel/plugin-syntax-import-assertions@7.20.0(@babel/core@7.20.7)':
     dependencies:
-      '@babel/core': 7.12.9
+      '@babel/core': 7.20.7
       '@babel/helper-plugin-utils': 7.20.2
 
   '@babel/plugin-syntax-jsx@7.12.1(@babel/core@7.12.9)':
@@ -6678,7 +6695,7 @@ snapshots:
       graphql: 15.8.0
       tslib: 2.4.1
 
-  '@graphql-codegen/cli@2.16.2(@babel/core@7.12.9)(@types/node@17.0.45)(enquirer@2.3.6)(graphql@15.8.0)(ts-node@10.9.1(@types/node@17.0.45)(typescript@4.9.4))(typescript@4.9.4)':
+  '@graphql-codegen/cli@2.16.2(@babel/core@7.20.7)(@types/node@17.0.45)(enquirer@2.3.6)(graphql@15.8.0)(ts-node@10.9.1(@types/node@17.0.45)(typescript@4.9.4))(typescript@4.9.4)':
     dependencies:
       '@babel/generator': 7.20.7
       '@babel/template': 7.20.7
@@ -6686,9 +6703,9 @@ snapshots:
       '@graphql-codegen/core': 2.6.8(graphql@15.8.0)
       '@graphql-codegen/plugin-helpers': 3.1.2(graphql@15.8.0)
       '@graphql-tools/apollo-engine-loader': 7.3.21(graphql@15.8.0)
-      '@graphql-tools/code-file-loader': 7.3.15(@babel/core@7.12.9)(graphql@15.8.0)
-      '@graphql-tools/git-loader': 7.2.15(@babel/core@7.12.9)(graphql@15.8.0)
-      '@graphql-tools/github-loader': 7.3.22(@babel/core@7.12.9)(graphql@15.8.0)
+      '@graphql-tools/code-file-loader': 7.3.15(@babel/core@7.20.7)(graphql@15.8.0)
+      '@graphql-tools/git-loader': 7.2.15(@babel/core@7.20.7)(graphql@15.8.0)
+      '@graphql-tools/github-loader': 7.3.22(@babel/core@7.20.7)(graphql@15.8.0)
       '@graphql-tools/graphql-file-loader': 7.5.13(graphql@15.8.0)
       '@graphql-tools/json-file-loader': 7.4.14(graphql@15.8.0)
       '@graphql-tools/load': 7.8.0(graphql@15.8.0)
@@ -6852,9 +6869,9 @@ snapshots:
       tslib: 2.8.1
       value-or-promise: 1.0.11
 
-  '@graphql-tools/code-file-loader@7.3.15(@babel/core@7.12.9)(graphql@15.8.0)':
+  '@graphql-tools/code-file-loader@7.3.15(@babel/core@7.20.7)(graphql@15.8.0)':
     dependencies:
-      '@graphql-tools/graphql-tag-pluck': 7.4.2(@babel/core@7.12.9)(graphql@15.8.0)
+      '@graphql-tools/graphql-tag-pluck': 7.4.2(@babel/core@7.20.7)(graphql@15.8.0)
       '@graphql-tools/utils': 9.1.3(graphql@15.8.0)
       globby: 11.1.0
       graphql: 15.8.0
@@ -6925,9 +6942,9 @@ snapshots:
       tslib: 2.8.1
       value-or-promise: 1.0.11
 
-  '@graphql-tools/git-loader@7.2.15(@babel/core@7.12.9)(graphql@15.8.0)':
+  '@graphql-tools/git-loader@7.2.15(@babel/core@7.20.7)(graphql@15.8.0)':
     dependencies:
-      '@graphql-tools/graphql-tag-pluck': 7.4.2(@babel/core@7.12.9)(graphql@15.8.0)
+      '@graphql-tools/graphql-tag-pluck': 7.4.2(@babel/core@7.20.7)(graphql@15.8.0)
       '@graphql-tools/utils': 9.1.3(graphql@15.8.0)
       graphql: 15.8.0
       is-glob: 4.0.3
@@ -6938,10 +6955,10 @@ snapshots:
       - '@babel/core'
       - supports-color
 
-  '@graphql-tools/github-loader@7.3.22(@babel/core@7.12.9)(graphql@15.8.0)':
+  '@graphql-tools/github-loader@7.3.22(@babel/core@7.20.7)(graphql@15.8.0)':
     dependencies:
       '@ardatan/sync-fetch': 0.0.1
-      '@graphql-tools/graphql-tag-pluck': 7.4.2(@babel/core@7.12.9)(graphql@15.8.0)
+      '@graphql-tools/graphql-tag-pluck': 7.4.2(@babel/core@7.20.7)(graphql@15.8.0)
       '@graphql-tools/utils': 9.1.3(graphql@15.8.0)
       '@whatwg-node/fetch': 0.5.4
       graphql: 15.8.0
@@ -6960,10 +6977,10 @@ snapshots:
       tslib: 2.8.1
       unixify: 1.0.0
 
-  '@graphql-tools/graphql-tag-pluck@7.4.2(@babel/core@7.12.9)(graphql@15.8.0)':
+  '@graphql-tools/graphql-tag-pluck@7.4.2(@babel/core@7.20.7)(graphql@15.8.0)':
     dependencies:
       '@babel/parser': 7.20.7
-      '@babel/plugin-syntax-import-assertions': 7.20.0(@babel/core@7.12.9)
+      '@babel/plugin-syntax-import-assertions': 7.20.0(@babel/core@7.20.7)
       '@babel/traverse': 7.20.10
       '@babel/types': 7.20.7
       '@graphql-tools/utils': 9.1.3(graphql@15.8.0)
@@ -8688,6 +8705,10 @@ snapshots:
       supports-color: 9.3.1
 
   debug@4.4.1:
+    dependencies:
+      ms: 2.1.3
+
+  debug@4.4.3:
     dependencies:
       ms: 2.1.3
 
@@ -11098,13 +11119,13 @@ snapshots:
 
   neo-async@2.6.2: {}
 
-  next-seo@4.29.0(next@15.4.7(@babel/core@7.12.9)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  next-seo@4.29.0(next@15.4.7(@babel/core@7.20.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
-      next: 15.4.7(@babel/core@7.12.9)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 15.4.7(@babel/core@7.20.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
-  next@15.4.7(@babel/core@7.12.9)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  next@15.4.7(@babel/core@7.20.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
       '@next/env': 15.4.7
       '@swc/helpers': 0.5.15
@@ -11112,7 +11133,7 @@ snapshots:
       postcss: 8.4.31
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      styled-jsx: 5.1.6(@babel/core@7.12.9)(react@18.2.0)
+      styled-jsx: 5.1.6(@babel/core@7.20.7)(react@18.2.0)
     optionalDependencies:
       '@next/swc-darwin-arm64': 15.4.7
       '@next/swc-darwin-x64': 15.4.7
@@ -11153,7 +11174,7 @@ snapshots:
     dependencies:
       hosted-git-info: 4.1.0
       is-core-module: 2.16.1
-      semver: 7.7.2
+      semver: 7.7.3
       validate-npm-package-license: 3.0.4
 
   normalize-path@2.1.1:
@@ -12331,6 +12352,8 @@ snapshots:
 
   semver@7.7.2: {}
 
+  semver@7.7.3: {}
+
   sentence-case@3.0.4:
     dependencies:
       no-case: 3.0.4
@@ -12582,12 +12605,12 @@ snapshots:
       hey-listen: 1.0.8
       tslib: 2.8.1
 
-  styled-jsx@5.1.6(@babel/core@7.12.9)(react@18.2.0):
+  styled-jsx@5.1.6(@babel/core@7.20.7)(react@18.2.0):
     dependencies:
       client-only: 0.0.1
       react: 18.2.0
     optionalDependencies:
-      '@babel/core': 7.12.9
+      '@babel/core': 7.20.7
 
   stylelint-config-recommended@6.0.0(stylelint@14.16.1):
     dependencies:
@@ -12600,7 +12623,7 @@ snapshots:
       colord: 2.9.3
       cosmiconfig: 7.1.0
       css-functions-list: 3.2.3
-      debug: 4.4.1
+      debug: 4.4.3
       fast-glob: 3.3.3
       fastest-levenshtein: 1.0.16
       file-entry-cache: 6.0.1
