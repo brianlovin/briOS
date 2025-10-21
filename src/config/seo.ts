@@ -3,18 +3,18 @@ export const baseUrl =
 export const baseEmail = 'hi@brianlovin.com'
 
 export const defaultSEO = {
-  title: 'Brian Lovin',
+  title: 'briOS',
   description:
     'Product designer, podcaster, and writer, living in San Francisco.',
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: baseUrl,
-    site_name: 'Brian Lovin',
+    site_name: 'briOS',
     images: [
       {
         url: `${baseUrl}/static/og/default.png`,
-        alt: 'Brian Lovin',
+        alt: 'briOS',
       },
     ],
   },

@@ -7,7 +7,7 @@ export async function generateRSS(posts) {
   const date = new Date()
   const updated = new Date(posts[0].publishedAt)
   const author = {
-    name: 'Brian Lovin',
+    name: 'briOS',
     email: baseEmail,
     link: baseUrl,
   }

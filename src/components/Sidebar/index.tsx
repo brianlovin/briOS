@@ -22,7 +22,7 @@ export function Sidebar() {
         <TitleBar
           scrollContainerRef={scrollContainerRef}
           leadingAccessory={null}
-          title="Brian Lovin"
+          title="briOS"
         />
         <SidebarNavigation />
       </nav>
