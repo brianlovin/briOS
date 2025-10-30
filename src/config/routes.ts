@@ -94,6 +94,15 @@ const routes = {
       url: 'stack',
     }),
   },
+  sms: {
+    label: 'SMS',
+    path: '/sms',
+    seo: extendSEO({
+      title: 'SMS Consent',
+      description: 'SMS messaging consent and opt-in.',
+      url: 'sms',
+    }),
+  },
   settings: {
     label: 'Settings',
     path: '/settings',
