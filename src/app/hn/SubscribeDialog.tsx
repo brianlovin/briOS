@@ -1,6 +1,6 @@
 "use client";
 
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { useState } from "react";
 
 import { hnSubscribedAtom } from "@/atoms/hnSubscription";
@@ -23,7 +23,7 @@ export function SubscribeDialog() {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-  const [, setHnSubscribed] = useAtom(hnSubscribedAtom);
+  const setHnSubscribed = useSetAtom(hnSubscribedAtom);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();

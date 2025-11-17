@@ -1,6 +1,6 @@
 "use client";
 
-import { useAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
@@ -27,7 +27,7 @@ export default function HNLayout({ children }: { children: React.ReactNode }) {
 
   // Fetch posts at layout level to share with children
   const { data: posts, isLoading, isError } = useHNPosts();
-  const [hnSubscribed] = useAtom(hnSubscribedAtom);
+  const hnSubscribed = useAtomValue(hnSubscribedAtom);
 
   return (
     <HNPostsProvider posts={posts} isLoading={isLoading} isError={isError}>
