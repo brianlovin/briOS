@@ -1,10 +1,12 @@
 "use client";
 
+import { useAtom } from "jotai";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import React, { useMemo, useRef } from "react";
 
+import { hnSubscribedAtom } from "@/atoms/hnSubscription";
 import { ListDetailLayout } from "@/components/ListDetailLayout";
 import { useListNavigation } from "@/hooks/useListNavigation";
 import { useHNPosts } from "@/lib/hooks/useHn";
@@ -25,6 +27,7 @@ export default function HNLayout({ children }: { children: React.ReactNode }) {
 
   // Fetch posts at layout level to share with children
   const { data: posts, isLoading, isError } = useHNPosts();
+  const [hnSubscribed] = useAtom(hnSubscribedAtom);
 
   return (
     <HNPostsProvider posts={posts} isLoading={isLoading} isError={isError}>
@@ -35,7 +38,7 @@ export default function HNLayout({ children }: { children: React.ReactNode }) {
         headerChildren={
           <>
             <div className="text-quaternary hidden text-sm sm:flex">{formattedDate}</div>
-            <SubscribeDialog />
+            {!hnSubscribed && <SubscribeDialog />}
           </>
         }
       >
