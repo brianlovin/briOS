@@ -61,7 +61,7 @@ export function SubscribeDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="primary" size="sm">
+        <Button variant="primary" size="sm" className="ml-auto">
           Daily digest email
         </Button>
       </DialogTrigger>

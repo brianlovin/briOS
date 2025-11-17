@@ -34,7 +34,7 @@ export default function HNLayout({ children }: { children: React.ReactNode }) {
         list={<HNStoriesList />}
         headerChildren={
           <>
-            <div className="text-quaternary mr-auto text-sm">{formattedDate}</div>
+            <div className="text-quaternary hidden text-sm sm:flex">{formattedDate}</div>
             <SubscribeDialog />
           </>
         }

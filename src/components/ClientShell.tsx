@@ -40,13 +40,13 @@ export function ClientShell({ children }: PropsWithChildren) {
     <>
       <Toaster position="bottom-center" />
       <CommandMenu />
-      <main className="relative mx-auto flex h-screen w-full max-w-[100rem] overflow-hidden md:p-2">
+      <main className="relative mx-auto flex h-screen w-full max-w-400 overflow-hidden md:p-2">
         <PrimarySidebar />
 
         <div
           data-main-content
           className={cn(
-            "bg-elevated dark:shadow-contrast relative flex min-w-0 flex-1 overflow-hidden md:max-h-[calc(100vh-1rem)] md:rounded-lg md:shadow-sm md:ring-[0.5px] md:ring-black/5",
+            "md:bg-elevated md:dark:shadow-contrast relative flex min-w-0 flex-1 overflow-hidden md:max-h-[calc(100vh-1rem)] md:rounded-lg md:shadow-sm md:ring-[0.5px] md:ring-black/5",
             {
               "ml-3": sidebarOpen && !isSmallScreen,
             },

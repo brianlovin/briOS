@@ -45,7 +45,7 @@ interface ListItemSubLabelProps extends PropsWithChildren {
 }
 
 export function List({ children, className = "" }: ListProps) {
-  return <ul className={cn("flex flex-col gap-1.5", className)}>{children}</ul>;
+  return <ul className={cn("flex flex-col gap-2.5 md:gap-1.5", className)}>{children}</ul>;
 }
 
 export function ListItem({ children, className = "", href }: ListItemProps) {

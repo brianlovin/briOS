@@ -55,7 +55,13 @@ export default function AMADetail() {
       <FancySeparator />
 
       <div className="flex items-start gap-4">
-        <Image src="/img/avatar.jpg" alt="Avatar" width={32} height={32} className="rounded-full" />
+        <Image
+          src="/img/avatar.jpg"
+          alt="Avatar"
+          width={32}
+          height={32}
+          className="min-h-8 min-w-8 rounded-full"
+        />
         <div className="flex flex-col gap-6">{renderBlocks(question.blocks)}</div>
       </div>
     </div>

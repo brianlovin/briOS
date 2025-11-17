@@ -124,14 +124,20 @@ export default function Home() {
               <SectionHeading>Projects</SectionHeading>
               <List>
                 {projects.map(({ name, href, description, external }) => (
-                  <ListItem key={name} href={href}>
-                    <ListItemLabel>{name}</ListItemLabel>
-                    <ListItemSubLabel>{description}</ListItemSubLabel>
-                    {external && (
-                      <ListItemSubLabel className="font-mono opacity-80">
-                        <ArrowUpRight />
-                      </ListItemSubLabel>
-                    )}
+                  <ListItem
+                    key={name}
+                    href={href}
+                    className="flex-col items-start gap-0 sm:flex-row sm:items-center sm:gap-2"
+                  >
+                    <ListItemLabel className="sm:line-clamp-1">{name}</ListItemLabel>
+                    <div className="flex flex-1 items-center gap-2">
+                      <ListItemSubLabel className="flex-1">{description}</ListItemSubLabel>
+                      {external && (
+                        <ListItemSubLabel className="shrink-0 font-mono opacity-80">
+                          <ArrowUpRight />
+                        </ListItemSubLabel>
+                      )}
+                    </div>
                   </ListItem>
                 ))}
               </List>
