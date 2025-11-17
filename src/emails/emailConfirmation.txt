@@ -1,5 +1,0 @@
-Confirm your email address                     
-                        
-Click this URL or paste it into your browser:
-
-{{url}}

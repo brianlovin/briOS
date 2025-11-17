@@ -1,0 +1,24 @@
+# Dependencies
+node_modules
+
+# Build outputs
+.next
+out
+dist
+build
+coverage
+
+# Logs
+*.log
+
+# OS generated
+.DS_Store
+
+# IDE
+.vscode/settings.json
+
+# Git
+.git 
+
+# Python
+venv/*

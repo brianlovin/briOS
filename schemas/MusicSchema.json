@@ -1,0 +1,99 @@
+{
+  "props": {
+    "Spotify ID": {
+      "id": "MWCP",
+      "name": "Spotify ID",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
+    "Duration": {
+      "id": "P%3A%7Cq",
+      "name": "Duration",
+      "description": null,
+      "type": "number",
+      "number": {
+        "format": "number"
+      }
+    },
+    "Journal": {
+      "id": "R%3E%3Ck",
+      "name": "Journal",
+      "description": null,
+      "type": "relation",
+      "relation": {
+        "database_id": "1e8c711c-0ceb-80ec-ac8b-e3e864400a7d",
+        "data_source_id": "1e8c711c-0ceb-809e-82e2-000b04ef46d4",
+        "type": "single_property",
+        "single_property": {}
+      }
+    },
+    "Spotify URL": {
+      "id": "UOaG",
+      "name": "Spotify URL",
+      "description": null,
+      "type": "url",
+      "url": {}
+    },
+    "Dupe Key": {
+      "id": "%5B%3BGZ",
+      "name": "Dupe Key",
+      "description": null,
+      "type": "formula",
+      "formula": {
+        "expression": "     {{notion:block_property:MWCP:00000000-0000-0000-0000-000000000000:30816cbc-deb8-4977-8ae8-d92f0669fb36}} + \"-\" +\n     formatDate({{notion:block_property:rVH%3D:00000000-0000-0000-0000-000000000000:30816cbc-deb8-4977-8ae8-d92f0669fb36}}, \"yyyy-MM-dd'T'HH:mm:ssX\")"
+      }
+    },
+    "Artist": {
+      "id": "eNT%5D",
+      "name": "Artist",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
+    "Album": {
+      "id": "gODT",
+      "name": "Album",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
+    "Popularity": {
+      "id": "q%5C%5DL",
+      "name": "Popularity",
+      "description": null,
+      "type": "number",
+      "number": {
+        "format": "number"
+      }
+    },
+    "Played At": {
+      "id": "rVH%3D",
+      "name": "Played At",
+      "description": null,
+      "type": "date",
+      "date": {}
+    },
+    "Album Art": {
+      "id": "%7D%3DAU",
+      "name": "Album Art",
+      "description": null,
+      "type": "url",
+      "url": {}
+    },
+    "Explicit": {
+      "id": "%7D%3DRo",
+      "name": "Explicit",
+      "description": null,
+      "type": "checkbox",
+      "checkbox": {}
+    },
+    "Name": {
+      "id": "title",
+      "name": "Name",
+      "description": null,
+      "type": "title",
+      "title": {}
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "props": {
+    "Answered At": {
+      "id": "XNdx",
+      "name": "Answered At",
+      "description": null,
+      "type": "date",
+      "date": {}
+    },
+    "Created At": {
+      "id": "_isf",
+      "name": "Created At",
+      "description": null,
+      "type": "date",
+      "date": {}
+    },
+    "Status": {
+      "id": "onMy",
+      "name": "Status",
+      "description": null,
+      "type": "select",
+      "select": {
+        "options": [
+          {
+            "id": "Xfoo",
+            "name": "Won't answer",
+            "color": "orange",
+            "description": null
+          },
+          {
+            "id": "=}MG",
+            "name": "Unanswered",
+            "color": "yellow",
+            "description": null
+          },
+          {
+            "id": "bMeS",
+            "name": "Answered",
+            "color": "blue",
+            "description": null
+          }
+        ]
+      }
+    },
+    "Description": {
+      "id": "%7DVyi",
+      "name": "Description",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
+    "Name": {
+      "id": "title",
+      "name": "Name",
+      "description": null,
+      "type": "title",
+      "title": {}
+    }
+  }
+}

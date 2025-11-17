@@ -1,0 +1,39 @@
+{
+  "props": {
+    "Slug": {
+      "id": "CqXd",
+      "name": "Slug",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
+    "Excerpt": {
+      "id": "I%5Dtv",
+      "name": "Excerpt",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
+    "Published": {
+      "id": "UYHC",
+      "name": "Published",
+      "description": null,
+      "type": "date",
+      "date": {}
+    },
+    "FeatureImage": {
+      "id": "%5D%40yA",
+      "name": "FeatureImage",
+      "description": null,
+      "type": "url",
+      "url": {}
+    },
+    "Name": {
+      "id": "title",
+      "name": "Name",
+      "description": null,
+      "type": "title",
+      "title": {}
+    }
+  }
+}

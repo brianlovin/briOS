@@ -1,0 +1,101 @@
+{
+  "props": {
+    "Slug": {
+      "id": "%3CTHv",
+      "name": "Slug",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
+    "Description": {
+      "id": "%3D%5C%5Ck",
+      "name": "Description",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
+    "Image": {
+      "id": "IRWG",
+      "name": "Image",
+      "description": null,
+      "type": "url",
+      "url": {}
+    },
+    "URL": {
+      "id": "YOu%3A",
+      "name": "URL",
+      "description": null,
+      "type": "url",
+      "url": {}
+    },
+    "Platforms": {
+      "id": "ZCf%7D",
+      "name": "Platforms",
+      "description": null,
+      "type": "multi_select",
+      "multi_select": {
+        "options": [
+          {
+            "id": "eO<O",
+            "name": "Windows",
+            "color": "blue",
+            "description": null
+          },
+          {
+            "id": "X{y@",
+            "name": "Web",
+            "color": "orange",
+            "description": null
+          },
+          {
+            "id": "]ata",
+            "name": "Physical",
+            "color": "yellow",
+            "description": null
+          },
+          {
+            "id": "hfWj",
+            "name": "macOS",
+            "color": "brown",
+            "description": null
+          },
+          {
+            "id": "GBY_",
+            "name": "iOS",
+            "color": "red",
+            "description": null
+          }
+        ]
+      }
+    },
+    "Status": {
+      "id": "zNHC",
+      "name": "Status",
+      "description": null,
+      "type": "select",
+      "select": {
+        "options": [
+          {
+            "id": "u|<s",
+            "name": "Inactive",
+            "color": "gray",
+            "description": null
+          },
+          {
+            "id": "cI\\O",
+            "name": "Active",
+            "color": "green",
+            "description": null
+          }
+        ]
+      }
+    },
+    "Name": {
+      "id": "title",
+      "name": "Name",
+      "description": null,
+      "type": "title",
+      "title": {}
+    }
+  }
+}
