@@ -83,7 +83,7 @@ export function ListeningHistory({ initialData }: ListeningHistoryProps = {}) {
     >
       <div className="min-w-fit">
         {/* Table Header - Now sticky within the scrollable container */}
-        <div className="bg-secondary dark:bg-tertiary border-secondary sticky top-0 z-10 border-b">
+        <div className="bg-secondary md:dark:bg-tertiary border-secondary sticky top-0 z-10 border-b">
           <div className="flex gap-4 px-4 py-2 text-sm font-medium">
             <div className="min-w-[200px] flex-1 text-left">Song</div>
             <div className="min-w-[150px] flex-1 text-left">Artist</div>

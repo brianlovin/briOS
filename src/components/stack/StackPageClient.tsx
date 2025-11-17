@@ -51,7 +51,7 @@ export function StackPageClient({ initialData }: StackPageClientProps) {
       {/* Table */}
       <div className="relative flex-1 overflow-auto">
         {/* Table Header - Sticky (hidden on mobile) */}
-        <div className="bg-secondary dark:bg-tertiary border-secondary sticky top-0 z-10 hidden border-b md:block">
+        <div className="bg-secondary md:dark:bg-tertiary border-secondary sticky top-0 z-10 hidden border-b md:block">
           <div className="grid grid-cols-12 gap-4 px-4 py-2 text-sm font-medium">
             <div className="col-span-3 text-left">Name</div>
             <div className="col-span-6 text-left">Description</div>
