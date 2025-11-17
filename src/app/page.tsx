@@ -48,7 +48,7 @@ export default function Home() {
                 className="mb-8 rounded-full select-none"
               />
               <p className="text-pretty">
-                Hey, I&apos;m Brian Lovin. I&apos;m a designer and software engineer living in San
+                Hey, I&apos;m Brian. I&apos;m a designer and software engineer living in San
                 Francisco.
               </p>
 
