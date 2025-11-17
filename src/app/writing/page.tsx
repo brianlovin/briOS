@@ -53,7 +53,7 @@ export default async function WritingPage() {
                   .filter((post) => post.slug) // Only show posts that have slugs
                   .map((post) => (
                     <ListItem key={post.id} href={`/writing/${post.slug}`}>
-                      <ListItemLabel>{post.title}</ListItemLabel>
+                      <ListItemLabel className="line-clamp-none">{post.title}</ListItemLabel>
                     </ListItem>
                   ))}
               </List>
