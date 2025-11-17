@@ -21,7 +21,7 @@ export default function AppDissectionIndex() {
       </TopBar>
 
       <div className="flex-1 overflow-y-auto">
-        <div className="mx-auto grid w-full grid-cols-2 gap-1 p-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 lg:p-8">
+        <div className="mx-auto grid w-full grid-cols-3 gap-1 p-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 lg:p-8">
           {allAppDissectionItems.map((item) => (
             <AppDissectionItem key={item.slug} item={item} />
           ))}
