@@ -1,7 +1,9 @@
 "use client";
 
+import { useSetAtom } from "jotai";
 import { useState } from "react";
 
+import { hnSubscribedAtom } from "@/atoms/hnSubscription";
 import { Button } from "@/components/ui/Button";
 import {
   Dialog,
@@ -21,6 +23,7 @@ export function SubscribeDialog() {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const setHnSubscribed = useSetAtom(hnSubscribedAtom);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -46,6 +49,7 @@ export function SubscribeDialog() {
 
       setSuccess(true);
       setEmail("");
+      setHnSubscribed(true);
       setTimeout(() => {
         setOpen(false);
         setSuccess(false);
