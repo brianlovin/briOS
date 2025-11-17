@@ -1,0 +1,241 @@
+{
+  "props": {
+    "Analytics Fetched": {
+      "id": "%3CMNv",
+      "name": "Analytics Fetched",
+      "description": null,
+      "type": "checkbox",
+      "checkbox": {}
+    },
+    "Status": {
+      "id": "%3ClCx",
+      "name": "Status",
+      "description": null,
+      "type": "select",
+      "select": {
+        "options": [
+          {
+            "id": "b3df6822-fa0e-4a3c-be5c-ad88928a26d3",
+            "name": "draft",
+            "color": "gray",
+            "description": null
+          },
+          {
+            "id": "534ab032-d611-464a-9944-66afbbc74c51",
+            "name": "published",
+            "color": "green",
+            "description": null
+          },
+          {
+            "id": "27863d7a-0d52-471f-b746-940291835423",
+            "name": "scheduled",
+            "color": "yellow",
+            "description": null
+          },
+          {
+            "id": "4c1463b4-ce51-493d-9b54-c1acca0201bf",
+            "name": "private",
+            "color": "red",
+            "description": null
+          }
+        ]
+      }
+    },
+    "Description": {
+      "id": "%3FUSd",
+      "name": "Description",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
+    "Top Country": {
+      "id": "AAm%5C",
+      "name": "Top Country",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
+    "Top Country Downloads": {
+      "id": "C_%3C%5C",
+      "name": "Top Country Downloads",
+      "description": null,
+      "type": "number",
+      "number": {
+        "format": "number"
+      }
+    },
+    "Slug": {
+      "id": "JHnk",
+      "name": "Slug",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
+    "Total Downloads": {
+      "id": "KYCk",
+      "name": "Total Downloads",
+      "description": null,
+      "type": "number",
+      "number": {
+        "format": "number"
+      }
+    },
+    "Analytics Error": {
+      "id": "Mk%3BP",
+      "name": "Analytics Error",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
+    "Duration (formatted)": {
+      "id": "O%3B%5DA",
+      "name": "Duration (formatted)",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
+    "Duration (seconds)": {
+      "id": "PFhM",
+      "name": "Duration (seconds)",
+      "description": null,
+      "type": "number",
+      "number": {
+        "format": "number"
+      }
+    },
+    "Published Date": {
+      "id": "%5ClBq",
+      "name": "Published Date",
+      "description": null,
+      "type": "date",
+      "date": {}
+    },
+    "Has Description Content": {
+      "id": "_Q%3EX",
+      "name": "Has Description Content",
+      "description": null,
+      "type": "checkbox",
+      "checkbox": {}
+    },
+    "Episode transcripts": {
+      "id": "_pGN",
+      "name": "Episode transcripts",
+      "description": null,
+      "type": "relation",
+      "relation": {
+        "database_id": "1ffc711c-0ceb-80e6-8f2f-d998a64362d6",
+        "data_source_id": "1ffc711c-0ceb-80ac-a72b-000b8d8cc82b",
+        "type": "dual_property",
+        "dual_property": {
+          "synced_property_name": "Episode",
+          "synced_property_id": "H%5C%5EC"
+        }
+      }
+    },
+    "Content Migrated": {
+      "id": "bUIM",
+      "name": "Content Migrated",
+      "description": null,
+      "type": "checkbox",
+      "checkbox": {}
+    },
+    "Audio URL (S3)": {
+      "id": "cgp%5E",
+      "name": "Audio URL (S3)",
+      "description": null,
+      "type": "url",
+      "url": {}
+    },
+    "Episode Number": {
+      "id": "c~v_",
+      "name": "Episode Number",
+      "description": null,
+      "type": "number",
+      "number": {
+        "format": "number"
+      }
+    },
+    "Downloads Last Updated": {
+      "id": "hpIC",
+      "name": "Downloads Last Updated",
+      "description": null,
+      "type": "date",
+      "date": {}
+    },
+    "Simplecast ID": {
+      "id": "kpOc",
+      "name": "Simplecast ID",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
+    "Original Audio URL": {
+      "id": "lf%7CZ",
+      "name": "Original Audio URL",
+      "description": null,
+      "type": "url",
+      "url": {}
+    },
+    "Image URL": {
+      "id": "rsGG",
+      "name": "Image URL",
+      "description": null,
+      "type": "url",
+      "url": {}
+    },
+    "Migration Status": {
+      "id": "uDvE",
+      "name": "Migration Status",
+      "description": null,
+      "type": "select",
+      "select": {
+        "options": [
+          {
+            "id": "77a95071-6799-4876-9c6b-669f388a46cb",
+            "name": "pending",
+            "color": "gray",
+            "description": null
+          },
+          {
+            "id": "aa05efa0-3178-49e0-8bf9-9ca395117407",
+            "name": "downloading",
+            "color": "yellow",
+            "description": null
+          },
+          {
+            "id": "eb3a98a0-fc79-4844-b96d-cf3dd16100cb",
+            "name": "uploading",
+            "color": "blue",
+            "description": null
+          },
+          {
+            "id": "cf612e9f-b038-4390-9e31-89bb0fefee7a",
+            "name": "completed",
+            "color": "green",
+            "description": null
+          },
+          {
+            "id": "e96ff6e9-c161-4455-ab07-3f17a0d8c810",
+            "name": "failed",
+            "color": "red",
+            "description": null
+          }
+        ]
+      }
+    },
+    "Has Long Description": {
+      "id": "w~N%7B",
+      "name": "Has Long Description",
+      "description": null,
+      "type": "checkbox",
+      "checkbox": {}
+    },
+    "Name": {
+      "id": "title",
+      "name": "Name",
+      "description": null,
+      "type": "title",
+      "title": {}
+    }
+  }
+}

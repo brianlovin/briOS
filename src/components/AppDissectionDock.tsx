@@ -1,0 +1,164 @@
+"use client";
+
+import * as Tooltip from "@radix-ui/react-tooltip";
+import { motion, MotionValue, useMotionValue, useSpring, useTransform } from "motion/react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRef } from "react";
+
+import { allAppDissectionItems } from "@/data/app-dissection";
+
+const SCALE = 1.4; // max scale factor of an icon
+const DISTANCE = 110; // pixels before mouse affects an icon
+const NUDGE = 30; // pixels icons are moved away from mouse
+const SPRING = {
+  mass: 0.1,
+  stiffness: 150,
+  damping: 7,
+};
+
+// Number of items to show on each side of current item
+const ITEMS_PER_SIDE_DESKTOP = 3; // Shows 7 total (current + 3 on each side)
+// const ITEMS_PER_SIDE_MOBILE = 2; // Shows 5 total on mobile (for future responsive implementation)
+
+interface Props {
+  currentSlug: string;
+}
+
+export function AppDissectionDock({ currentSlug }: Props) {
+  const mouseLeft = useMotionValue(-Infinity);
+  const mouseRight = useMotionValue(-Infinity);
+  const left = useTransform(mouseLeft, [0, 40], [0, -40]);
+  const right = useTransform(mouseRight, [0, 40], [0, -40]);
+  const leftSpring = useSpring(left, SPRING);
+  const rightSpring = useSpring(right, SPRING);
+
+  // Find current item index
+  const currentIndex = allAppDissectionItems.findIndex((item) => item.slug === currentSlug);
+
+  // Calculate visible items - always try to show 7 total, redistributing as needed
+  const totalToShow = ITEMS_PER_SIDE_DESKTOP * 2 + 1; // 7 for desktop (3 + 1 + 3)
+  const halfWindow = Math.floor(totalToShow / 2); // 3
+
+  // Start with centered window
+  let startIndex = currentIndex - halfWindow;
+  let endIndex = currentIndex + halfWindow + 1; // +1 because slice is exclusive
+
+  // Adjust if we're near the beginning - show more on the right
+  if (startIndex < 0) {
+    endIndex = Math.min(allAppDissectionItems.length, endIndex + Math.abs(startIndex));
+    startIndex = 0;
+  }
+
+  // Adjust if we're near the end - show more on the left
+  if (endIndex > allAppDissectionItems.length) {
+    startIndex = Math.max(0, startIndex - (endIndex - allAppDissectionItems.length));
+    endIndex = allAppDissectionItems.length;
+  }
+
+  const visibleItems = allAppDissectionItems.slice(startIndex, endIndex);
+
+  return (
+    <div className="relative mx-auto flex items-center gap-2">
+      <motion.div
+        onMouseMove={(e) => {
+          const { left, right } = e.currentTarget.getBoundingClientRect();
+          const offsetLeft = e.clientX - left;
+          const offsetRight = right - e.clientX;
+          mouseLeft.set(offsetLeft);
+          mouseRight.set(offsetRight);
+        }}
+        onMouseLeave={() => {
+          mouseLeft.set(-Infinity);
+          mouseRight.set(-Infinity);
+        }}
+        className="relative flex h-16 items-end gap-3 px-2 pb-3"
+      >
+        <motion.div
+          className="bg-secondary/50 dark:bg-secondary/30 border-secondary/50 dark:border-secondary/20 absolute inset-y-0 -z-10 rounded-2xl border shadow-lg backdrop-blur-xl"
+          style={{ left: leftSpring, right: rightSpring }}
+        />
+
+        {visibleItems.map((item) => (
+          <AppIcon key={item.slug} mouseLeft={mouseLeft} item={item} currentSlug={currentSlug} />
+        ))}
+      </motion.div>
+    </div>
+  );
+}
+
+interface AppIconProps {
+  mouseLeft: MotionValue;
+  item: (typeof allAppDissectionItems)[number];
+  currentSlug: string;
+}
+
+function AppIcon({ mouseLeft, item, currentSlug }: AppIconProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const isActive = item.slug === currentSlug;
+
+  const distance = useTransform(() => {
+    const bounds = ref.current
+      ? { x: ref.current.offsetLeft, width: ref.current.offsetWidth }
+      : { x: 0, width: 0 };
+
+    return mouseLeft.get() - bounds.x - bounds.width / 2;
+  });
+
+  const scale = useTransform(distance, [-DISTANCE, 0, DISTANCE], [1, SCALE, 1]);
+  const x = useTransform(() => {
+    const d = distance.get();
+    if (d === -Infinity) {
+      return 0;
+    } else if (d < -DISTANCE || d > DISTANCE) {
+      return Math.sign(d) * -1 * NUDGE;
+    } else {
+      return (-d / DISTANCE) * NUDGE * scale.get();
+    }
+  });
+
+  const scaleSpring = useSpring(scale, SPRING);
+  const xSpring = useSpring(x, SPRING);
+
+  return (
+    <Tooltip.Provider delayDuration={0}>
+      <Tooltip.Root>
+        <Tooltip.Trigger asChild>
+          <motion.div
+            ref={ref}
+            style={{ x: xSpring, scale: scaleSpring, translateZ: 0 }}
+            className="relative origin-bottom"
+          >
+            <Link
+              href={`/app-dissection/${item.slug}`}
+              className="relative block will-change-transform"
+            >
+              <Image
+                src={`/img/app-dissection/${item.slug}.jpeg`}
+                width={60}
+                height={60}
+                alt={`${item.title} icon`}
+                className="border-secondary/50 dark:border-secondary/30 aspect-square rounded-xl border shadow-sm"
+              />
+              {isActive && (
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="absolute -bottom-2 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-black dark:bg-white"
+                />
+              )}
+            </Link>
+          </motion.div>
+        </Tooltip.Trigger>
+        <Tooltip.Portal>
+          <Tooltip.Content
+            sideOffset={20}
+            className="bg-elevated dark:shadow-contrast text-primary border-secondary z-50 rounded-lg border px-2 py-1.5 text-sm font-medium shadow-sm"
+          >
+            {item.title}
+          </Tooltip.Content>
+        </Tooltip.Portal>
+      </Tooltip.Root>
+    </Tooltip.Provider>
+  );
+}

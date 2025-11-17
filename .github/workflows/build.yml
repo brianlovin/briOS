@@ -1,0 +1,49 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "22"
+
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Run lint
+        run: bun run lint
+
+      - name: Build
+        run: bun run build
+        env:
+          # Placeholder env vars for build time validation
+          # These are only used during the build process and won't affect runtime
+          # Real values are configured in Vercel for production
+          POSTMARK_CLIENT_ID: "build-placeholder"
+          DATABASE_HOST: "build-placeholder"
+          DATABASE_USERNAME: "build-placeholder"
+          DATABASE_PASSWORD: "build-placeholder"
+          JWT_SIGNING_KEY: "build-placeholder-secret-key-min-32-chars"
+          NOTION_TOKEN: "build-placeholder"
+          NOTION_STACK_DATABASE_ID: "build-placeholder"
+          NOTION_AMA_DATABASE_ID: "build-placeholder"
+          NOTION_WRITING_DATABASE_ID: "build-placeholder"
+          NOTION_DESIGN_DETAILS_EPISODES_DATABASE_ID: "build-placeholder"
+          NOTION_MUSIC_DATABASE_ID: "build-placeholder"
+          HN_TOKEN: "build-placeholder"
