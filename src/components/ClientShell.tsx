@@ -1,7 +1,7 @@
 "use client";
 
 import { useAtom } from "jotai";
-import { PropsWithChildren, useEffect } from "react";
+import { PropsWithChildren, useEffect, useLayoutEffect, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { Toaster } from "sonner";
 
@@ -15,9 +15,27 @@ import { cn } from "@/lib/utils";
 export function ClientShell({ children }: PropsWithChildren) {
   const [sidebarOpen, setSidebarOpen] = useAtom(sidebarAtom);
   const isSmallScreen = useIsSmallScreen();
+  const [isHydrated, setIsHydrated] = useState(false);
+  const [isInitialMount, setIsInitialMount] = useState(true);
 
   useScrollDelegation();
 
+  // Set sidebar state based on viewport before making app visible
+  // This prevents any flash - app stays hidden until we know the correct state
+  useLayoutEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 769px)");
+    setSidebarOpen(mediaQuery.matches);
+    // Batch state updates to avoid cascading renders
+    requestAnimationFrame(() => {
+      setIsHydrated(true);
+      // After app is visible, allow animations for future interactions
+      requestAnimationFrame(() => {
+        setIsInitialMount(false);
+      });
+    });
+  }, [setSidebarOpen]);
+
+  // Keep sidebar closed on mobile when viewport changes
   useEffect(() => {
     if (isSmallScreen) {
       setSidebarOpen(false);
@@ -40,8 +58,15 @@ export function ClientShell({ children }: PropsWithChildren) {
     <>
       <Toaster position="bottom-center" />
       <CommandMenu />
-      <main className="relative isolate mx-auto flex h-svh w-full max-w-400 overflow-hidden md:p-2">
-        <PrimarySidebar />
+      <main
+        className={cn(
+          "relative isolate mx-auto flex h-svh w-full max-w-400 overflow-hidden md:p-2",
+          {
+            invisible: !isHydrated,
+          },
+        )}
+      >
+        <PrimarySidebar suppressInitialAnimation={isInitialMount} />
 
         <div
           data-main-content

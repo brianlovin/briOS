@@ -122,7 +122,9 @@ function StackItem({ item }: { item: StackItem }) {
         </div>
 
         {/* Description column - desktop only */}
-        <div className="text-tertiary hidden text-sm md:col-span-6 md:block">{item.description}</div>
+        <div className="text-tertiary hidden text-sm md:col-span-6 md:block">
+          {item.description}
+        </div>
 
         {/* Platforms column - desktop only */}
         <div className="hidden flex-wrap gap-1 md:col-span-3 md:flex">

@@ -14,7 +14,11 @@ import { getMainNavigationItems, getProjectNavigationItems } from "@/config/navi
 import { useIsSmallScreen } from "@/hooks/useIsSmallScreen";
 import { cn } from "@/lib/utils";
 
-export function PrimarySidebar() {
+export function PrimarySidebar({
+  suppressInitialAnimation = false,
+}: {
+  suppressInitialAnimation?: boolean;
+}) {
   const isOpen = useAtomValue(sidebarAtom);
   const setIsOpen = useSetAtom(sidebarAtom);
   const pathname = usePathname();
@@ -27,6 +31,9 @@ export function PrimarySidebar() {
   const duration = 0.2;
   const ease = "easeInOut" as const;
   const transition = { duration, ease };
+
+  // Suppress animation on initial mount when app becomes visible (desktop only)
+  const shouldSuppressAnimation = suppressInitialAnimation && !isSmallScreen;
 
   return (
     <AnimatePresence initial={false}>
@@ -46,12 +53,18 @@ export function PrimarySidebar() {
 
           {/* outer container */}
           <motion.div
-            initial={isSmallScreen ? { x: "-100%" } : { width: 0, opacity: 0 }}
+            initial={
+              isSmallScreen
+                ? { x: "-100%" }
+                : shouldSuppressAnimation
+                  ? { width: "var(--primary-sidebar-width)", opacity: 1 }
+                  : { width: 0, opacity: 0 }
+            }
             animate={
               isSmallScreen ? { x: 8 } : { width: "var(--primary-sidebar-width)", opacity: 1 }
             }
             exit={isSmallScreen ? { x: "-100%" } : { width: 0, opacity: 0 }}
-            transition={transition}
+            transition={shouldSuppressAnimation ? { duration: 0 } : transition}
             data-primary-sidebar
             className={cn("group/primary-sidebar z-20 overflow-hidden", {
               "fixed top-0 bottom-0 left-0": isSmallScreen,
@@ -61,10 +74,10 @@ export function PrimarySidebar() {
             })}
           >
             <motion.div
-              initial={{ opacity: 0 }}
+              initial={shouldSuppressAnimation ? { opacity: 1 } : { opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={transition}
+              transition={shouldSuppressAnimation ? { duration: 0 } : transition}
               className={cn("flex h-full min-w-[var(--primary-sidebar-width)] flex-col", {})}
             >
               <SidebarHeader />
