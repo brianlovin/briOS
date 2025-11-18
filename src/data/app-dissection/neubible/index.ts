@@ -1,6 +1,6 @@
 import details from "./details";
 
-export default {
+const neubible = {
   title: "NeuBible",
   slug: "neubible-ios",
   createdAt: "2016-05-23T01:43:43.869Z",
@@ -9,3 +9,5 @@ export default {
   details,
   tint: "#ee3f49",
 };
+
+export default neubible;

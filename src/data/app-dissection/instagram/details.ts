@@ -1,4 +1,4 @@
-export default [
+const details = [
   {
     description:
       "Let’s start nice and simple – this is probably one of my favorite pieces of the Instagram app. When you scroll the top menu bar gets out of the way, scaling nicely back into the distance.\r\n\r\nI could see an argument both ways for adding the same treatment to the bottom tab bar, but I suppose a focus on UX might mean keeping the bar perma-present.",
@@ -114,3 +114,5 @@ export default [
     media: ["https://videodelivery.net/3c7eb6f6bd470ff4e24df8245a5db01b/downloads/default.mp4"],
   },
 ];
+
+export default details;

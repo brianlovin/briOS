@@ -1,6 +1,6 @@
 import details from "./details";
 
-export default {
+const skype = {
   title: "Skype",
   slug: "skype-ios",
   createdAt: "2016-02-29T17:05:24.451Z",
@@ -9,3 +9,5 @@ export default {
   details,
   tint: "#149eec",
 };
+
+export default skype;

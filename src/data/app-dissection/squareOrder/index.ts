@@ -1,6 +1,6 @@
 import details from "./details";
 
-export default {
+const squareOrder = {
   title: "Square Order",
   slug: "square-order-ios",
   createdAt: "2016-03-01T03:18:20.560Z",
@@ -9,3 +9,5 @@ export default {
   details,
   tint: "#2b8cd4",
 };
+
+export default squareOrder;

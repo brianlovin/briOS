@@ -1,4 +1,4 @@
-export default [
+const details = [
   {
     description:
       "*Sidebar: A few years ago I ran a small side project. Towards the end of that project I explored using Stripe as a way to accept payments online. So fortunately I have an account with a few transactions here to demonstrate the app.*\r\n\r\nStripe is one of the few companies that continues to push the use of shadows, highlights and depth in their applications. This, combined with intentional animations and clean transitions, feels a bit like the halfway point between iOS 6 and 7. Not purely-flat. Not overly-embellished.\r\n\r\nIt's also worth noting that there's no registration here, or walkthroughs or superflous messaging. This app is for existing users and there's no need for Stripe to add extra complexity here by trying to onboard prospects. ",
@@ -85,3 +85,5 @@ export default [
     media: ["https://videodelivery.net/649e6a2c20ac51d71caa1b584892218b/downloads/default.mp4"],
   },
 ];
+
+export default details;

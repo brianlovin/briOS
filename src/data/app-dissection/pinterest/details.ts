@@ -1,4 +1,4 @@
-export default [
+const details = [
   {
     description:
       "I’d love to start exploring more onboarding experiences for different apps. Onboarding and user activation is an incredibly nuanced and challenging problem for designers, and it’s an ever-evolving process to understand and improve the experience for people new to a product. I really appreciate what Pinterest does – both on their app and website – with their new user experience.\r\n\r\nThe focus here is entirely on benefits, not features. They don’t talk about pins, sharing, social media, et cetera. No – they talk about how people are using the app to solve real challenges or problems in their lives. The panning images here, accompanied by the simple value statements, make for a compelling (and intriguing) experience.",
@@ -118,3 +118,5 @@ export default [
     media: ["https://videodelivery.net/fb31bf3916096803ddb06bd676d1d4e2/downloads/default.mp4"],
   },
 ];
+
+export default details;

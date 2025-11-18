@@ -1,4 +1,4 @@
-export default [
+const details = [
   {
     description:
       "The pull-to-refresh interaction has become a universally-known gesture for smartphone users. Being so universal provides a hidden challenge for app designers: how do we stand out? Foursquare has embodied a clear simplicity in this detail – a pulsating ring, honing in on your location.\r\n\r\nI love how smooth this detail is – the way the ring fills and expands as you pull down, springing to life once released.",
@@ -65,3 +65,5 @@ export default [
     media: ["https://videodelivery.net/770db5eb2d811c58c23e824dc60587eb/downloads/default.mp4"],
   },
 ];
+
+export default details;

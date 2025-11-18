@@ -1,4 +1,4 @@
-export default [
+const details = [
   {
     description:
       "There's something magic that happens when you download an app and it opens to the thing you actually care about. This happens in about 0.1% of all apps; social sign-ins, tedious walkthroughs, or long-winded intro videos have become the norm. It's a shame because it seems that *most* apps could very realistically offer a very complete and valuable signed-out experience for people who are curious and need more signal.\r\n\r\nI'm happy to see NeuBible *just work*. No fuss, no signup, no over-the-top splash view. Nope, just the content you downloaded the app for in the first place.",
@@ -84,3 +84,5 @@ export default [
     media: ["https://videodelivery.net/b89f9e100010e477aa9ad5c28274b1d1/downloads/default.mp4"],
   },
 ];
+
+export default details;

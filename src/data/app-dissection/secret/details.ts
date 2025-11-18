@@ -1,4 +1,4 @@
-export default [
+const details = [
   {
     description:
       "Tapping a secret to view the comments section has a wonderful little animation – the card slides to the top of the screen, gently pushing the status bar out of sight.",
@@ -66,3 +66,5 @@ export default [
     media: ["https://videodelivery.net/3064976db0976341c3b53fca2e73ec8b/downloads/default.mp4"],
   },
 ];
+
+export default details;

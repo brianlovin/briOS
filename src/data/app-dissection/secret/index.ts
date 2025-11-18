@@ -1,6 +1,6 @@
 import details from "./details";
 
-export default {
+const secret = {
   title: "Secret",
   slug: "secret-ios",
   createdAt: "2016-02-29T03:03:22.573Z",
@@ -9,3 +9,5 @@ export default {
   details,
   tint: "#343434",
 };
+
+export default secret;

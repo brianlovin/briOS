@@ -1,4 +1,4 @@
-export default [
+const details = [
   {
     description:
       "I have to address up front how challenging it was to record the videos for this post. I scoured the Play store for good mirroring apps, I Googled my way down a dozen rabbit holes and eventually had to resort to Twitter to find the right answer – shoutout to [Jeremy Le Van](https://twitter.com/jeremylv) for the help! The solution: I had to download the Android SDK and platform tools in order to record the videos via command line prompts. I’m a bit shocked that we still haven’t seen a better solution here for screen recording on Android – devs, I would have paid $5-10 for an easy-to-use solution here. Wink wink.\r\n\r\nThese quirks aside, I’ve totally fallen for Lollipop’s aesthetic. Material Design has found its away across more apps and OS-level tools, making the entire experience consistent and comfortable. This lock screen (aside from the pesky debugging notification) is really slick – I love the slowly glowing ring around the lock icon.\r\n\r\nFrom a usability perspective, I still feel like Apple wins the first-user-experience battle. Slide to unlock is more clear, and iOS’s gesture hints (right-facing arrow + animation on the text) provides users with more context about what to do.",
@@ -137,3 +137,5 @@ export default [
     media: null,
   },
 ];
+
+export default details;

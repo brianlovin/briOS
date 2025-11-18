@@ -1,6 +1,6 @@
 import details from "./details";
 
-export default {
+const carousel = {
   title: "Carousel",
   slug: "carousel-ios",
   createdAt: "2016-03-01T03:52:32.356Z",
@@ -9,3 +9,5 @@ export default {
   details,
   tint: "#364451",
 };
+
+export default carousel;

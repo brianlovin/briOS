@@ -1,6 +1,6 @@
 import details from "./details";
 
-export default {
+const shorts = {
   title: "Shorts",
   slug: "shorts-ios",
   createdAt: "2016-03-27T22:03:39.154Z",
@@ -9,3 +9,5 @@ export default {
   details,
   tint: "#fda052",
 };
+
+export default shorts;

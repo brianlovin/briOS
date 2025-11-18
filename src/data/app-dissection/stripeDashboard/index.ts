@@ -1,6 +1,6 @@
 import details from "./details";
 
-export default {
+const stripeDashboard = {
   title: "Stripe",
   slug: "stripe-dashboard-ios",
   createdAt: "2016-03-06T04:15:55.737Z",
@@ -9,3 +9,5 @@ export default {
   details,
   tint: "#2289ca",
 };
+
+export default stripeDashboard;

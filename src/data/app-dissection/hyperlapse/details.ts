@@ -1,4 +1,4 @@
-export default [
+const details = [
   {
     description:
       "What better way to onboard someone into a new app than to instantly share some of the beautiful creations they’ll be able to make? Hyperlapse nails this part, highlighting the function of the app in a concise and tasteful way.\r\n\r\nMy only negative note here is that the dots at the bottom of the screen (which indicate your current page) are really hard to see. I can imagine some folks getting stuck here waiting for something to happen without realizing they need to swipe left.\r\n\r\nAlso of note: pay attention to the rounded corners of the app, throughout. A very small and subtle touch (that admittedly looks much sharper against the bezel of the iPhone) which adds a tasteful splash of character.",
@@ -66,3 +66,5 @@ export default [
     media: ["https://videodelivery.net/1428f73d71ffe126bc9532b6aa0d160c/downloads/default.mp4"],
   },
 ];
+
+export default details;

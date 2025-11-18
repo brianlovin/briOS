@@ -1,4 +1,4 @@
-export default [
+const details = [
   {
     description:
       "Let’s start: Quartz has created one of the most unique onboarding experiences I’ve ever seen. No splash screen. No signup or login flow. Instead, the app “talks” to you and guides you through a lightweight setup to turn on notifications and explains how to adjust your settings.\r\n\r\nThere’s no chrome to be seen here, which at first felt foreign and out of place. It’s one of the rare times that it feels appropriate to break the HIG and truly bury settings and preferences in favor of creating a 100% immersive UI.\r\n\r\nThere’s one thing that I can’t quite get comfortable with, however: the fake typing indicator, while enjoyable the first 2-3 times, is way too robotic and stale. For first-time use, it helps to set the context that this is a conversational app, but after seeing several articles it slows down the flow of information. The timing is metronomic, which doesn’t work out when the bubbles contain varying lengths of text.\r\n\r\nTwo nitpicks: First, every messaging app on iOS has chat bubbles appear from bottom to top. Here they appear from left to right. It seems that this should be fixed for one key reason: in a conversational app, the messages come from the keyboard and user’s input, thus moving up. In Quartz, the off-screen left of the app contains settings, so the mental model here is that the messages are coming from the settings. It’d be great to see the AI bubbles be consistent with the blue bubble’s movement.\r\n\r\nSecond, I wish the bubbles didn’t have static border radii. Messenger and iMessage both do a good job of handling stacked bubbles that adjust their corners to resemble a cohesive unit of text. I imagine that QZ will polish this out in an update.",
@@ -66,3 +66,5 @@ export default [
     media: ["https://videodelivery.net/9d40b08427b18ab811efdf028f37cdf4/downloads/default.mp4"],
   },
 ];
+
+export default details;

@@ -215,6 +215,7 @@ export function renderBlocks(blocks: ProcessedBlock[], isPreview: boolean = fals
       case "image":
         return (
           <div key={block.id}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={block.content[0].text.content}
               alt=""

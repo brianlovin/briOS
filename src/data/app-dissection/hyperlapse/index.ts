@@ -1,6 +1,6 @@
 import details from "./details";
 
-export default {
+const hyperlapse = {
   title: "Hyperlapse",
   slug: "hyperlapse-ios",
   createdAt: "2016-03-01T01:35:32.772Z",
@@ -9,3 +9,5 @@ export default {
   details,
   tint: "#ff6253",
 };
+
+export default hyperlapse;

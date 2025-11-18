@@ -1,4 +1,4 @@
-export default [
+const details = [
   {
     description:
       "Path wastes no time delighting new users with their popup design language. The light bouncing in and fading out makes these modals feel so alive. Just wonderful – we’ll see a few more instances of this style being used in all parts of the app. +1 for consistency!",
@@ -102,3 +102,5 @@ export default [
     media: ["https://videodelivery.net/14ca15b47c1877ce80cdbd3968866e28/downloads/default.mp4"],
   },
 ];
+
+export default details;

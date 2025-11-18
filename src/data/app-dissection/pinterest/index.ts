@@ -1,6 +1,6 @@
 import details from "./details";
 
-export default {
+const pinterest = {
   title: "Pinterest",
   slug: "pinterest-ios",
   createdAt: "2016-03-01T01:27:43.891Z",
@@ -9,3 +9,5 @@ export default {
   details,
   tint: "#cb2028",
 };
+
+export default pinterest;
