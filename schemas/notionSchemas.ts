@@ -56,9 +56,7 @@ export const DesignDetailsEpisodesSchema = z.object({
   "Simplecast ID": z.string().optional(),
   "Original Audio URL": z.string().optional(),
   "Image URL": z.string().optional(),
-  "Migration Status": z
-    .enum(["pending", "downloading", "uploading", "completed", "failed"])
-    .optional(),
+  "Migration Status": z.enum(["pending", "downloading", "uploading", "completed", "failed"]).optional(),
   "Has Long Description": z.boolean().optional(),
   Name: z.string().optional(),
 });
