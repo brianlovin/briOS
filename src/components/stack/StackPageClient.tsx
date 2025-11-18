@@ -89,61 +89,48 @@ export function StackPageClient({ initialData }: StackPageClientProps) {
 
 function StackItem({ item }: { item: StackItem }) {
   return (
-    <>
-      {/* Mobile version */}
-      <div className="relative flex flex-col gap-2 px-4 py-3 text-sm md:hidden">
-        {item.url && <Link target="_blank" href={item.url} className="absolute inset-0" />}
-        <div className="flex min-w-0 items-start gap-3">
+    <div className="border-secondary hover:bg-secondary group relative border-b md:dark:hover:bg-white/5">
+      {item.url && <Link target="_blank" href={item.url} className="absolute inset-0" />}
+      <div className="flex gap-3 px-4 py-3 text-sm md:grid md:grid-cols-12 md:items-start md:gap-4">
+        {/* Image - shown on mobile, hidden on desktop */}
+        {item.image && (
+          <Image
+            width={40}
+            height={40}
+            src={item.image}
+            alt=""
+            className="dark:shadow-contrast size-10 flex-none rounded-xl object-cover ring-[0.5px] ring-black/5 md:hidden"
+          />
+        )}
+
+        {/* Name + Description container (mobile), Name column (desktop) */}
+        <div className="min-w-0 flex-1 md:col-span-3 md:flex md:items-center md:gap-3">
+          {/* Image - hidden on mobile, shown on desktop */}
           {item.image && (
             <Image
-              width={40}
-              height={40}
+              width={24}
+              height={24}
               src={item.image}
               alt=""
-              className="dark:shadow-contrast size-10 flex-none rounded-xl object-cover ring-[0.5px] ring-black/5"
+              className="dark:shadow-contrast hidden size-6 flex-none rounded-md object-cover ring-[0.5px] ring-black/5 md:block"
             />
           )}
-          <div className="flex min-w-0 flex-1 flex-col">
+          <div className="min-w-0 flex-1">
             <span className="text-primary block truncate font-medium">{item.name}</span>
-            <div className="text-tertiary text-sm">{item.description}</div>
+            <div className="text-tertiary text-sm md:hidden">{item.description}</div>
           </div>
         </div>
-      </div>
 
-      {/* Desktop version */}
-      <div
-        key={item.id}
-        className="border-secondary hover:bg-secondary group relative hidden border-b md:block dark:hover:bg-white/5"
-      >
-        {item.url && <Link target="_blank" href={item.url} className="absolute inset-0" />}
-        <div className="flex flex-col gap-2 px-4 py-3 text-sm md:grid md:grid-cols-12 md:items-start md:gap-4">
-          {/* Tool column */}
-          <div className="flex min-w-0 items-center gap-3 md:col-span-3">
-            {item.image && (
-              <Image
-                width={24}
-                height={24}
-                src={item.image}
-                alt=""
-                className="dark:shadow-contrast h-6 w-6 flex-none rounded-md object-cover ring-[0.5px] ring-black/5"
-              />
-            )}
-            <div className="min-w-0 flex-1">
-              <span className="text-primary block truncate font-medium">{item.name}</span>
-            </div>
-          </div>
+        {/* Description column - desktop only */}
+        <div className="text-tertiary hidden text-sm md:col-span-6 md:block">{item.description}</div>
 
-          {/* Description column */}
-          <div className="text-tertiary text-sm md:col-span-6">{item.description}</div>
-
-          {/* Platforms column */}
-          <div className="flex flex-wrap gap-1 md:col-span-3">
-            {item.platforms?.map((platform) => (
-              <PlatformBadge key={platform} platform={platform} />
-            ))}
-          </div>
+        {/* Platforms column - desktop only */}
+        <div className="hidden flex-wrap gap-1 md:col-span-3 md:flex">
+          {item.platforms?.map((platform) => (
+            <PlatformBadge key={platform} platform={platform} />
+          ))}
         </div>
       </div>
-    </>
+    </div>
   );
 }

@@ -28,7 +28,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
-    <html lang="en" suppressHydrationWarning className="bg-[#fcfcfc] antialiased dark:bg-black">
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className="bg-white antialiased md:bg-[#fcfcfc] dark:bg-black"
+    >
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="theme-color" content="#fff" media="(prefers-color-scheme: light)" />
