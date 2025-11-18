@@ -40,7 +40,7 @@ export function ClientShell({ children }: PropsWithChildren) {
     <>
       <Toaster position="bottom-center" />
       <CommandMenu />
-      <main className="relative mx-auto flex h-screen w-full max-w-400 overflow-hidden md:p-2">
+      <main className="relative isolate mx-auto flex h-svh w-full max-w-400 overflow-hidden md:p-2">
         <PrimarySidebar />
 
         <div

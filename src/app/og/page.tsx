@@ -121,7 +121,7 @@ export default function OGTestingPage() {
   }, [hasFetched]);
 
   return (
-    <div className="min-h-screen w-full overflow-y-auto">
+    <div className="min-h-svh w-full overflow-y-auto">
       <div className="bg-tertiary mx-auto">
         <div className="grid grid-cols-1 gap-px lg:grid-cols-2">
           {ogImages.map((image) => (
