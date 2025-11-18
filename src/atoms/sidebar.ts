@@ -1,3 +1,3 @@
-import { atomWithStorage } from "jotai/utils";
+import { atom } from "jotai";
 
-export const sidebarAtom = atomWithStorage("sidebar", true);
+export const sidebarAtom = atom(false);
