@@ -1,6 +1,6 @@
 import details from "./details";
 
-export default {
+const twitter = {
   title: "Twitter",
   slug: "twitter-ios",
   createdAt: "2016-02-29T01:47:33.799Z",
@@ -9,3 +9,5 @@ export default {
   details,
   tint: "#1d8dee",
 };
+
+export default twitter;

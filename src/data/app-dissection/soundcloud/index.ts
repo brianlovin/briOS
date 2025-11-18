@@ -1,6 +1,6 @@
 import details from "./details";
 
-export default {
+const soundcloud = {
   title: "SoundCloud",
   slug: "soundcloud-ios",
   createdAt: "2016-02-29T17:29:45.884Z",
@@ -9,3 +9,5 @@ export default {
   details,
   tint: "#fc5d01",
 };
+
+export default soundcloud;

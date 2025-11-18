@@ -1,4 +1,4 @@
-export default [
+const details = [
   {
     description:
       "[Material Design](http://www.google.com/design/spec/material-design/introduction.html) is a visual language for interacting with digital interfaces. What we find in Inbox is a whole-hearted adoption of subtle motion and gestures to guide users through flows and views.\r\n\r\nThis splash page sets the tone perfectly for what users can expect in terms of interactivity, playfulness and speed. Every animation here feels paced and intentional, with the right level of stickiness and pop to each movement.",
@@ -156,3 +156,5 @@ export default [
     media: ["https://videodelivery.net/d61eef806dc4fa6c45f4b7e6dc0507cc/downloads/default.mp4"],
   },
 ];
+
+export default details;

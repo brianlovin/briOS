@@ -179,13 +179,13 @@ export function renderBlocks(blocks: ProcessedBlock[], isPreview: boolean = fals
         );
       case "bulleted_list_item":
         return (
-          <li key={block.id} className="text-secondary ml-3 list-disc leading-[1.6]">
+          <li key={block.id} className="text-primary ml-3 list-disc leading-[1.6]">
             {renderRichText(block.content)}
           </li>
         );
       case "numbered_list_item":
         return (
-          <li key={block.id} className="text-secondary ml-4 list-decimal leading-[1.6]">
+          <li key={block.id} className="text-primary ml-4 list-decimal leading-[1.6]">
             {renderRichText(block.content)}
           </li>
         );
@@ -215,6 +215,7 @@ export function renderBlocks(blocks: ProcessedBlock[], isPreview: boolean = fals
       case "image":
         return (
           <div key={block.id}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={block.content[0].text.content}
               alt=""

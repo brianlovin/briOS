@@ -1,4 +1,4 @@
-export default [
+const details = [
   {
     description:
       "Skype has adopted this really slick new design pattern for navigations and menus. This video captures the moment when you go to upload a new profile photo – notice the bounce and stretched corners of the menu as it pops into view.",
@@ -60,3 +60,5 @@ export default [
     media: ["https://videodelivery.net/839f23a5d32846c6628f5fd8e7100996/downloads/default.mp4"],
   },
 ];
+
+export default details;

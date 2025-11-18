@@ -1,6 +1,6 @@
 import details from "./details";
 
-export default {
+const tumblr = {
   title: "Tumblr",
   slug: "tumblr-ios",
   createdAt: "2016-03-01T03:46:58.394Z",
@@ -9,3 +9,5 @@ export default {
   details,
   tint: "#34465e",
 };
+
+export default tumblr;

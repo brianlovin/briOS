@@ -1,4 +1,4 @@
-export default [
+const details = [
   {
     description:
       "As you’re scrolling through your feed on Tumblr, tapping the ‘Home’ icon in the tab bar will, as expected, return you to the top of the view. What Tumblr does here though, that I’ve never seen on any other app, is toggle the ‘Home’ icon with a new ‘Return to position’ icon. Tapping once more will scroll you back down to your previous place in the feed.\r\n\r\nThis is amazing. I honestly wish other apps would do this already – Twitter, Facebook and Instagram all come to mind as places where I might accidentally tap to the top of the feed only to have lost my previous position.",
@@ -102,3 +102,5 @@ export default [
     media: ["https://videodelivery.net/54e4651f851824c786596b47f822722a/downloads/default.mp4"],
   },
 ];
+
+export default details;

@@ -1,4 +1,4 @@
-export default [
+const details = [
   {
     description:
       "Okay so this interaction is a bit jerky, with a strange black flash. I believe that’s being caused my recording software, so I won’t hold it against SoundCloud. If there’s anything I think we can take away from SoundCloud’s redesigned iOS app is the total, focused and uninterrupted prominence of listening to music.\r\n\r\nNotice that when I start playing a song, the album art fills my screen and SoundCloud’s signature waveform bubbles into view. It’s insanely minimalistic and clean, which, depending on how you use SoundCloud, is either a major win or an abysmal let-down (i.e. no more commenting). The last I heard, the SoundCloud team has intentionally stripped away features from the app and will revisit them in time.\r\n\r\nFor now, this feels like a listener’s heaven.",
@@ -42,3 +42,5 @@ export default [
     media: ["https://videodelivery.net/cfa53736edf640df772446d741a80f41/downloads/default.mp4"],
   },
 ];
+
+export default details;

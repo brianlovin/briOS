@@ -1,6 +1,6 @@
 import details from "./details";
 
-export default {
+const foursquare = {
   title: "Foursquare",
   slug: "foursquare-ios",
   createdAt: "2016-02-29T17:32:40.955Z",
@@ -9,3 +9,5 @@ export default {
   details,
   tint: "#fa4578",
 };
+
+export default foursquare;

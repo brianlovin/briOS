@@ -4,7 +4,11 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import Link from "next/link";
 import { useEffect, useMemo, useRef } from "react";
 
-import { ListeningHistoryPage, MusicItem, useListeningHistoryPaginated } from "@/hooks/useListeningHistory";
+import {
+  ListeningHistoryPage,
+  MusicItem,
+  useListeningHistoryPaginated,
+} from "@/hooks/useListeningHistory";
 
 import { LoadingSpinner } from "./ui";
 
@@ -57,6 +61,7 @@ export function ListeningHistory({ initialData }: ListeningHistoryProps = {}) {
     return items;
   }, [music, isReachingEnd]);
 
+  // eslint-disable-next-line
   const virtualizer = useVirtualizer({
     count: groupedItems.length,
     getScrollElement: () => parentRef.current,
@@ -161,7 +166,7 @@ export function ListeningHistory({ initialData }: ListeningHistoryProps = {}) {
               }}
             >
               {item.type === "header" && (
-                <div className="bg-primary sticky top-0 z-10 px-4 py-2 text-xs font-semibold uppercase tracking-wider md:top-[41px]">
+                <div className="bg-primary sticky top-0 z-10 px-4 py-2 text-xs font-semibold tracking-wider uppercase md:top-[41px]">
                   {item.date}
                 </div>
               )}
@@ -173,7 +178,7 @@ export function ListeningHistory({ initialData }: ListeningHistoryProps = {}) {
                   )}
 
                   {/* Mobile Layout */}
-                  <div className="hover:bg-secondary flex items-center gap-3 px-4 py-3 dark:hover:bg-white/5 md:hidden">
+                  <div className="hover:bg-secondary flex items-center gap-3 px-4 py-3 md:hidden dark:hover:bg-white/5">
                     {item.song.image && (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
@@ -189,7 +194,7 @@ export function ListeningHistory({ initialData }: ListeningHistoryProps = {}) {
                   </div>
 
                   {/* Desktop Layout */}
-                  <div className="hover:bg-secondary hidden h-full items-center gap-4 px-4 py-1 text-sm dark:hover:bg-white/5 md:flex">
+                  <div className="hover:bg-secondary hidden h-full items-center gap-4 px-4 py-1 text-sm md:flex dark:hover:bg-white/5">
                     <div className="flex min-w-[200px] flex-1 items-center gap-3">
                       {item.song.image && (
                         // eslint-disable-next-line @next/next/no-img-element

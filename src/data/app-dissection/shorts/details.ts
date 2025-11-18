@@ -1,4 +1,4 @@
-export default [
+const details = [
   {
     description:
       "When you first launch Shorts, the app immediately asks for notifications permissions. I'm struggling to understand why they prompt for permission here and not much further down the funnel. \r\n\r\nIt's jarring and confusing - at this point in time it's critical for an app to show what kind of value it will provide to a person, not the other way around.",
@@ -96,3 +96,5 @@ export default [
     media: ["https://videodelivery.net/68f21e8623d2d9a312f8ff0f4ad43178/downloads/default.mp4"],
   },
 ];
+
+export default details;

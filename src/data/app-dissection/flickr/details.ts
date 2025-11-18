@@ -1,4 +1,4 @@
-export default [
+const details = [
   {
     description:
       "I’ll kick things off with a small detail: the pull to search interaction. It’s really, really smooth on the app and I’m not sure the gif captures this very well. I love the subtle fade in, almost like it’s gently popping to the surface of the screen.",
@@ -120,3 +120,5 @@ export default [
     media: ["https://videodelivery.net/a3551139c00215d30f430d3b624380e1/downloads/default.mp4"],
   },
 ];
+
+export default details;

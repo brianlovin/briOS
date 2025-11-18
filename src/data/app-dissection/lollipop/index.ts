@@ -1,6 +1,6 @@
 import details from "./details";
 
-export default {
+const lollipop = {
   title: "Android 5.0",
   slug: "android-lollipop",
   createdAt: "2016-03-01T03:25:09.474Z",
@@ -9,3 +9,5 @@ export default {
   details,
   tint: "#3ddb84",
 };
+
+export default lollipop;

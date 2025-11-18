@@ -1,4 +1,4 @@
-export default [
+const details = [
   {
     description:
       "I love the warm simplicity of the app when it first opens. The transitions here are well-paced, the colors feel inviting and the illustrations create a feeling of intimacy; that’s not something to take lightly considering the size of Square as a corporation.",
@@ -114,3 +114,5 @@ export default [
     media: ["https://videodelivery.net/4a887a9b6185718c06404a462f6c92b4/downloads/default.mp4"],
   },
 ];
+
+export default details;

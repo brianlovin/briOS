@@ -1,4 +1,4 @@
-export default [
+const details = [
   {
     description:
       "When you start scrolling up and down in the calendar list view, an orange arrow appears in the lower left corner of the screen. Depending on which way you scroll, the arrow rotates so that it’s always pointing you back to ‘today.’ Tapping the arrow brings you back to ‘today.’",
@@ -41,3 +41,5 @@ export default [
     media: ["https://videodelivery.net/50d6088a416780b9feca512cf30f1684/downloads/default.mp4"],
   },
 ];
+
+export default details;

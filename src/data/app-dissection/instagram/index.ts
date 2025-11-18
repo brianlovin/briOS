@@ -1,6 +1,6 @@
 import details from "./details";
 
-export default {
+const instagram = {
   title: "Instagram",
   slug: "instagram-ios",
   createdAt: "2016-03-01T03:41:13.745Z",
@@ -9,3 +9,5 @@ export default {
   details,
   tint: "#a9dabc",
 };
+
+export default instagram;

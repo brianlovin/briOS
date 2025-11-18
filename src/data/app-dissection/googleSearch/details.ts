@@ -1,4 +1,4 @@
-export default [
+const details = [
   {
     description:
       "Launching the Google app makes it immediately clear what level of polish and interactivity we can expect from the interface. Quick transitions, snappy – yet bouncy – animations and clear movement all add up to create a wonderful first app experience.",
@@ -95,3 +95,5 @@ export default [
     media: ["https://videodelivery.net/7e2989f6cdbebbfc1bdca9fb00001f45/downloads/default.mp4"],
   },
 ];
+
+export default details;

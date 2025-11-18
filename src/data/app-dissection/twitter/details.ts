@@ -1,4 +1,4 @@
-export default [
+const details = [
   {
     description:
       "Launching the Twitter app builds energy and emotion right from the start: pay attention to the playful bouncing of the logo as it fills the screen, revealing the app’s main content.",
@@ -24,3 +24,5 @@ export default [
     media: ["https://videodelivery.net/0edd797a7951541a2b19e792f7b99dea/downloads/default.mp4"],
   },
 ];
+
+export default details;

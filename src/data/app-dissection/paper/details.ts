@@ -1,4 +1,4 @@
-export default [
+const details = [
   {
     id: "1",
     description:
@@ -168,3 +168,5 @@ export default [
     media: ["https://videodelivery.net/32aa3187190e9ff5daa52e9e3daaeb16/downloads/default.mp4"],
   },
 ];
+
+export default details;

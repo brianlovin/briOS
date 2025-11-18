@@ -1,6 +1,6 @@
 import details from "./details";
 
-export default {
+const flickr = {
   title: "Flickr",
   slug: "flickr-ios",
   createdAt: "2016-02-29T16:52:19.814Z",
@@ -9,3 +9,5 @@ export default {
   details,
   tint: "#f92a70",
 };
+
+export default flickr;

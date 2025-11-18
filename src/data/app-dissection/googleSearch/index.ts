@@ -1,6 +1,6 @@
 import details from "./details";
 
-export default {
+const googleSearch = {
   title: "Google Search",
   slug: "google-search-ios",
   createdAt: "2016-02-29T04:45:24.831Z",
@@ -9,3 +9,5 @@ export default {
   details,
   tint: "#457dee",
 };
+
+export default googleSearch;

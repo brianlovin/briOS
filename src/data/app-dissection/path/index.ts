@@ -1,6 +1,6 @@
 import details from "./details";
 
-export default {
+const path = {
   title: "Path",
   slug: "path-ios",
   createdAt: "2016-02-29T17:09:22.282Z",
@@ -9,3 +9,5 @@ export default {
   details,
   tint: "#e43017",
 };
+
+export default path;

@@ -1,6 +1,6 @@
 import details from "./details";
 
-export default {
+const paper = {
   title: "Paper",
   slug: "paper-facebook-ios",
   createdAt: "2016-02-29T02:29:54.778Z",
@@ -9,3 +9,5 @@ export default {
   details,
   tint: "#2e95f4",
 };
+
+export default paper;

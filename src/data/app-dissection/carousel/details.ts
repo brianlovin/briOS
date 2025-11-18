@@ -1,4 +1,4 @@
-export default [
+const details = [
   {
     description:
       "When you boot up the app for the first time, one of the smoothest onboarding flows I’ve seen in an app kicks into gear.\r\n\r\nSmoothness and aesthetics aside, I can’t help but to bring up the fact that the video below shows the app auto-scrolling if I don’t touch the screen within a few seconds. This tells me that, for whatever reason, people weren’t interacting with the indicative scroll gesture on the splash screen, so Dropbox had to nudge people along.\r\n\r\nI’d love to know more behind that decision to auto-scroll users to the sign-in step, but for now it tells me that somewhere in the testing process the team found that people weren’t making it past the splash view.",
@@ -101,3 +101,5 @@ export default [
   //   media: [''],
   // },
 ];
+
+export default details;

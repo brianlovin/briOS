@@ -1,6 +1,6 @@
 import details from "./details";
 
-export default {
+const inbox = {
   title: "Inbox",
   slug: "inbox-ios",
   createdAt: "2016-03-01T02:58:24.745Z",
@@ -9,3 +9,5 @@ export default {
   details,
   tint: "#3367d5",
 };
+
+export default inbox;

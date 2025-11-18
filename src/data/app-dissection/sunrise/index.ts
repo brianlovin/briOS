@@ -1,6 +1,6 @@
 import details from "./details";
 
-export default {
+const sunrise = {
   title: "Sunrise",
   slug: "sunrise-ios",
   createdAt: "2016-02-29T04:55:06.112Z",
@@ -9,3 +9,5 @@ export default {
   details,
   tint: "#fe5a5b",
 };
+
+export default sunrise;

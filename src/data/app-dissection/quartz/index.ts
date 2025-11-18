@@ -1,6 +1,6 @@
 import details from "./details";
 
-export default {
+const quartz = {
   title: "Quartz",
   slug: "quartz-ios",
   createdAt: "2016-03-01T04:03:45.536Z",
@@ -9,3 +9,5 @@ export default {
   details,
   tint: "#1d1d1d",
 };
+
+export default quartz;
