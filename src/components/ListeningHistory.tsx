@@ -24,6 +24,7 @@ export function ListeningHistory({ initialData }: ListeningHistoryProps = {}) {
   const parentRef = useRef<HTMLDivElement>(null);
   const hasTriggeredLoad = useRef(false);
 
+  // eslint-disable-next-line
   const virtualizer = useVirtualizer({
     count: !isReachingEnd ? music.length + 1 : music.length, // Add 1 for loader row if more data available
     getScrollElement: () => parentRef.current,
