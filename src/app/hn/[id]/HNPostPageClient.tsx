@@ -56,76 +56,45 @@ export default function HNPostPageClient() {
     return document.getElementById(commentId);
   };
 
-  const getCommentPosition = (element: HTMLElement) => {
-    const rect = element.getBoundingClientRect();
-    return {
-      top: rect.top,
-      bottom: rect.bottom,
-      height: rect.height,
-    };
-  };
+  const findNextComment = () => {
+    const container = scrollContainerRef.current?.closest("[data-scrollable]");
+    const containerTop = container ? container.getBoundingClientRect().top : 0;
+    // Threshold needs to account for scroll-mt-4 (16px) plus a small buffer
+    const threshold = containerTop + 20;
 
-  const isCommentVisible = (element: HTMLElement) => {
-    const { top, bottom } = getCommentPosition(element);
-    return top <= window.innerHeight && bottom >= 0;
-  };
-
-  const findFirstVisibleComment = () => {
     for (const comment of levelZeroComments) {
       if (!comment?.id) continue;
-
       const element = getCommentElement(String(comment.id));
       if (!element) continue;
 
-      if (isCommentVisible(element)) {
-        return {
-          comment,
-          element,
-          position: getCommentPosition(element),
-        };
+      const rect = element.getBoundingClientRect();
+      if (rect.top > threshold) {
+        return element;
       }
     }
     return null;
   };
 
-  const findNextComment = () => {
-    const currentVisible = findFirstVisibleComment();
-    const firstComment = levelZeroComments[0];
-    if (!currentVisible) {
-      if (!firstComment?.id) return null;
-      return getCommentElement(String(firstComment.id));
-    }
-
-    const currentIndex = levelZeroComments.findIndex(
-      (c: HackerNewsComment) => c.id === currentVisible.comment.id,
-    );
-
-    const nextComment = levelZeroComments[currentIndex + 1];
-
-    if (!nextComment?.id) return null;
-
-    return getCommentElement(String(nextComment.id));
-  };
-
   const findPreviousComment = () => {
-    const currentVisible = findFirstVisibleComment();
-    if (!currentVisible) {
-      // If no comment is visible, don't scroll
-      return null;
+    const container = scrollContainerRef.current?.closest("[data-scrollable]");
+    const containerTop = container ? container.getBoundingClientRect().top : 0;
+    // Threshold needs to account for scroll-mt-4 (16px) plus a small buffer
+    const threshold = containerTop - 20;
+
+    let bestCandidate = null;
+    for (const comment of levelZeroComments) {
+      if (!comment?.id) continue;
+      const element = getCommentElement(String(comment.id));
+      if (!element) continue;
+
+      const rect = element.getBoundingClientRect();
+      if (rect.top < threshold) {
+        bestCandidate = element;
+      } else {
+        break;
+      }
     }
-
-    const currentIndex = levelZeroComments.findIndex(
-      (c: HackerNewsComment) => c.id === currentVisible.comment.id,
-    );
-
-    // If we're at the first comment, don't scroll
-    if (currentIndex === 0) {
-      return null;
-    }
-
-    const previousComment = levelZeroComments[currentIndex - 1];
-    if (!previousComment?.id) return null;
-    return getCommentElement(String(previousComment.id));
+    return bestCandidate;
   };
 
   const scrollToNextComment = () => {
