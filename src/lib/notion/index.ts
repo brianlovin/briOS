@@ -9,11 +9,11 @@ export type {
   // Zod schemas and types
   DatabaseObjectResponse,
   DesignDetailsEpisodes,
+  GoodWebsiteItem,
   Music,
   NotionAmaItem,
   NotionAmaItemWithContent,
   NotionDesignDetailsEpisodeItem,
-  NotionGoodWebsiteItem,
   NotionItem,
   NotionListeningHistoryItem,
   NotionStackItem,

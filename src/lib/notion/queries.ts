@@ -3,11 +3,11 @@ import type { PageObjectResponse } from "@notionhq/client/build/src/api-endpoint
 import { getAllBlocks } from "./blocks";
 import { notion } from "./client";
 import {
+  type GoodWebsiteItem,
   hasProperties,
   type NotionAmaItem,
   type NotionAmaItemWithContent,
   type NotionDesignDetailsEpisodeItem,
-  type NotionGoodWebsiteItem,
   type NotionItem,
   type NotionListeningHistoryItem,
   type NotionStackItem,
@@ -106,7 +106,7 @@ export async function getStackDatabaseItems(): Promise<NotionStackItem[]> {
 
 // ===== Good Websites Database =====
 
-export async function getGoodWebsitesDatabaseItems(): Promise<NotionGoodWebsiteItem[]> {
+export async function getGoodWebsitesDatabaseItems(): Promise<GoodWebsiteItem[]> {
   try {
     const databaseId = process.env.NOTION_GOOD_WEBSITES_DATABASE_ID || "";
     const response = await notion.databases.query({
@@ -145,9 +145,9 @@ export async function getGoodWebsitesDatabaseItems(): Promise<NotionGoodWebsiteI
           url: properties.URL?.url || undefined,
           x: properties.X?.url || undefined,
           icon,
-        } as NotionGoodWebsiteItem;
+        } as GoodWebsiteItem;
       })
-      .filter((item): item is NotionGoodWebsiteItem => item !== null);
+      .filter((item): item is GoodWebsiteItem => item !== null);
 
     return items;
   } catch (error) {
