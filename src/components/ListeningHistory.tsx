@@ -191,10 +191,10 @@ export function ListeningHistory({ initialData }: ListeningHistoryProps = {}) {
         {/* Table Header - Desktop only */}
         <div className="bg-secondary md:dark:bg-tertiary border-secondary sticky top-0 z-10 hidden border-b md:block">
           <div className="flex gap-4 px-4 py-2 text-sm font-medium">
-            <div className="min-w-[200px] flex-1 text-left">Song</div>
-            <div className="min-w-[150px] flex-1 text-left">Artist</div>
-            <div className="min-w-[150px] flex-1 text-left">Album</div>
-            <div className="min-w-[120px] text-left">Played</div>
+            <div className="min-w-[200px] flex-1 text-left text-[13px]">Song</div>
+            <div className="min-w-[150px] flex-1 text-left text-[13px]">Artist</div>
+            <div className="min-w-[150px] flex-1 text-left text-[13px]">Album</div>
+            <div className="min-w-[120px] text-left text-[13px]">Played</div>
           </div>
         </div>
 

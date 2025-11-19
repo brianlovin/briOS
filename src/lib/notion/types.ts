@@ -104,6 +104,7 @@ export type GoodWebsiteItem = {
   url?: string;
   x?: string;
   icon?: string;
+  tags?: string[];
 };
 
 // AMA item types
