@@ -95,7 +95,7 @@ function HNStoriesList() {
   }
 
   return (
-    <ul ref={listRef} className="flex h-full flex-col gap-px overflow-y-auto p-1">
+    <ul ref={listRef} className="flex h-full flex-col gap-px overflow-y-auto p-2">
       {validPosts.map((post) => {
         const isSelected = post.id.toString() === currentPostId;
         return (
