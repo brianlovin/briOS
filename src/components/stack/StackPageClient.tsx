@@ -47,8 +47,14 @@ export function StackPageClient({ initialData }: StackPageClientProps) {
         <div className="flex-1" />
 
         {/* Filters */}
-        <StackFilters isLoading={isValidating && !isInitialLoading} />
+        <div className="hidden md:block">
+          <StackFilters isLoading={isValidating && !isInitialLoading} />
+        </div>
       </TopBar>
+
+      <div className="border-secondary flex border-b p-2 md:hidden">
+        <StackFilters isLoading={isValidating && !isInitialLoading} />
+      </div>
 
       {/* Table */}
       <div className="relative flex-1 overflow-auto">
