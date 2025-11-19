@@ -196,13 +196,31 @@ async function fetchBasicMetadata(url: string): Promise<{
 }
 
 /**
+ * Verify that a URL is accessible and returns a valid response
+ */
+async function verifyIconUrl(iconUrl: string): Promise<boolean> {
+  try {
+    const response = await fetch(iconUrl, {
+      method: "HEAD", // Just check headers, don't download the full file
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+      },
+    });
+    return response.ok;
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Get the best quality favicon URL for a given URL
  * This function prioritizes higher quality favicons over Google's generic service
  *
  * Priority order:
- * 1. Apple touch icon from HTML meta tags
- * 2. High-res icon from HTML meta tags
- * 3. Standard icon from HTML meta tags
+ * 1. Apple touch icon from HTML meta tags (verified to be accessible)
+ * 2. High-res icon from HTML meta tags (verified to be accessible)
+ * 3. Standard icon from HTML meta tags (verified to be accessible)
  * 4. Google's favicon service (128px for better quality)
  */
 export async function getBestFaviconUrl(url: string): Promise<string> {
@@ -215,9 +233,13 @@ export async function getBestFaviconUrl(url: string): Promise<string> {
         return `https://www.google.com/s2/favicons?sz=128&domain=${domain}`;
       }
 
-      // Only use HTTP/HTTPS URLs
+      // Only use HTTP/HTTPS URLs, and verify they're accessible
       if (isValidHttpUrl(metadata.iconUrl)) {
-        return metadata.iconUrl;
+        const isAccessible = await verifyIconUrl(metadata.iconUrl);
+        if (isAccessible) {
+          return metadata.iconUrl;
+        }
+        // If the icon URL is not accessible, fall through to Google's service
       }
     }
   } catch {
