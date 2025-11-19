@@ -13,6 +13,7 @@ export type {
   NotionAmaItem,
   NotionAmaItemWithContent,
   NotionDesignDetailsEpisodeItem,
+  NotionGoodWebsiteItem,
   NotionItem,
   NotionListeningHistoryItem,
   NotionStackItem,
@@ -52,6 +53,8 @@ export {
   getDesignDetailsEpisodeDatabaseItems,
   // Generic
   getFullContent,
+  // Good Websites
+  getGoodWebsitesDatabaseItems,
   // Listening History
   getListeningHistoryDatabaseItems,
   // Stack

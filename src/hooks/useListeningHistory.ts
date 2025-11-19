@@ -19,7 +19,7 @@ export type MusicItem = {
 export type ListeningHistoryPage = InfiniteScrollPage<MusicItem>;
 
 export function useListeningHistory() {
-  const { data, error, isLoading } = useSWR<MusicItem[]>("/api/listening-history", fetcher);
+  const { data, error, isLoading } = useSWR<MusicItem[]>("/api/listening", fetcher);
 
   return {
     music: data || [],
@@ -35,10 +35,10 @@ export function useListeningHistoryPaginated(initialData?: ListeningHistoryPage[
       if (previousPage && !previousPage.nextCursor) return null;
 
       // For the first page, just fetch with limit
-      if (index === 0) return `/api/listening-history?limit=20`;
+      if (index === 0) return `/api/listening?limit=20`;
 
       // For subsequent pages, use the cursor from the previous page
-      return `/api/listening-history?cursor=${previousPage?.nextCursor}&limit=20`;
+      return `/api/listening?cursor=${previousPage?.nextCursor}&limit=20`;
     },
     {
       fallbackData: initialData,

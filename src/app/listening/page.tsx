@@ -9,10 +9,9 @@ import { getListeningHistoryDatabaseItems } from "@/lib/notion";
 export const revalidate = 86400;
 
 export const metadata: Metadata = createMetadata({
-  title: "Listening History",
-  description:
-    "My Spotify listening history. See what music I'm currently enjoying, synced from Spotify every hour.",
-  path: "/listening-history",
+  title: "Listening",
+  description: "My listening history, synced from Spotify every hour",
+  path: "/listening",
 });
 
 export default async function ListeningPage() {
@@ -22,7 +21,7 @@ export default async function ListeningPage() {
   return (
     <div className="flex flex-1 flex-col">
       <TopBar>
-        <div className="flex-1 text-sm font-semibold">Listening history</div>
+        <div className="flex-1 text-sm font-semibold">Listening</div>
         <div className="text-quaternary hidden pr-1.5 text-sm sm:visible">
           Synced from Spotify every hour
         </div>

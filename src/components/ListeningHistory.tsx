@@ -44,32 +44,40 @@ interface ListeningHistoryRowProps {
 }
 
 function ListeningHistoryRow({ item }: ListeningHistoryRowProps) {
+  const [imageError, setImageError] = useState(false);
+
   return (
     <div className="flex h-full gap-3 px-4 py-3 text-sm md:items-center md:gap-4 md:py-1">
       {item.url && <Link target="_blank" href={item.url} className="absolute inset-0" />}
 
       {/* Image - shown on mobile, hidden on desktop */}
-      {item.image && (
+      {item.image && !imageError ? (
         <Image
           width={40}
           height={40}
           src={item.image}
           alt=""
           className="dark:shadow-contrast size-10 flex-none rounded object-cover ring-[0.5px] ring-black/5 md:hidden"
+          onError={() => setImageError(true)}
         />
+      ) : (
+        <div className="bg-tertiary size-10 flex-none rounded md:hidden" />
       )}
 
       {/* Song name + Artist (mobile), Song column (desktop) */}
       <div className="min-w-0 flex-1 md:flex md:min-w-[200px] md:items-center md:gap-3">
         {/* Image - hidden on mobile, shown on desktop */}
-        {item.image && (
+        {item.image && !imageError ? (
           <Image
             width={20}
             height={20}
             src={item.image}
             alt=""
             className="hidden size-5 flex-none rounded object-cover md:block"
+            onError={() => setImageError(true)}
           />
+        ) : (
+          <div className="bg-tertiary hidden size-5 flex-none rounded md:block" />
         )}
         <div className="min-w-0 flex-1">
           <span className="text-primary block truncate font-medium">{item.name}</span>

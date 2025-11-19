@@ -81,3 +81,12 @@ export const MusicSchema = z.object({
 });
 
 export type Music = z.infer<typeof MusicSchema>;
+
+export const GoodWebsitesSchema = z.object({
+  X: z.string().optional(),
+  URL: z.string().optional(),
+  Process: z.any().optional(),
+  Name: z.string().optional(),
+});
+
+export type GoodWebsites = z.infer<typeof GoodWebsitesSchema>;

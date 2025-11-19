@@ -1,7 +1,8 @@
 import React from "react";
 
 import { AppDissection } from "@/components/icons/AppDissection";
-import { Components } from "@/components/icons/Components";
+import { Ballot } from "@/components/icons/Ballot";
+import { BrowserTabs } from "@/components/icons/BrowserTabs";
 import { DoubleChatBubble } from "@/components/icons/DoubleChatBubble";
 import { FileText2 } from "@/components/icons/FileText2";
 import { Headphones3 } from "@/components/icons/Headphones3";
@@ -59,9 +60,9 @@ export const navigationItems: NavigationItem[] = [
   },
   {
     id: "stack",
-    label: "My Stack",
+    label: "Stack",
     href: "/stack",
-    icon: Components,
+    icon: Ballot,
     keywords: ["stack", "tools", "tech"],
     isActive: (pathname) => pathname.startsWith("/stack"),
     section: "projects",
@@ -79,10 +80,19 @@ export const navigationItems: NavigationItem[] = [
   {
     id: "music",
     label: "Listening",
-    href: "/listening-history",
+    href: "/listening",
     icon: Headphones3,
     keywords: ["listening", "music", "audio"],
-    isActive: (pathname) => pathname === "/listening-history",
+    isActive: (pathname) => pathname === "/listening",
+    section: "projects",
+  },
+  {
+    id: "good-websites",
+    label: "Good websites",
+    href: "/sites",
+    icon: BrowserTabs,
+    keywords: ["good websites", "websites", "inspiration"],
+    isActive: (pathname) => pathname.startsWith("/sites"),
     section: "projects",
   },
 ];

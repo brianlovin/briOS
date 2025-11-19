@@ -383,8 +383,8 @@ const projects = [
     external: false,
   },
   {
-    name: "Listening history",
-    href: "/listening-history",
+    name: "Listening",
+    href: "/listening",
     description: "What I'm listening to",
     external: false,
   },
