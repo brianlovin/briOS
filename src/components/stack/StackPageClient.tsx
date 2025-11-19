@@ -99,7 +99,7 @@ function StackItem({ item }: { item: StackItem }) {
   return (
     <div className="border-secondary hover:bg-secondary group relative border-b md:dark:hover:bg-white/5">
       {item.url && <Link target="_blank" href={item.url} className="absolute inset-0" />}
-      <div className="flex gap-3 px-4 py-3 text-sm md:grid md:grid-cols-12 md:items-start md:gap-4">
+      <div className="flex gap-3 px-4 py-3 text-sm md:grid md:grid-cols-12 md:items-center md:gap-4">
         {/* Icon/Image - shown on mobile, hidden on desktop */}
         {isEmoji ? (
           <div className="flex size-10 flex-none items-center justify-center rounded-xl text-2xl md:hidden">
@@ -111,7 +111,7 @@ function StackItem({ item }: { item: StackItem }) {
             height={40}
             src={iconSource}
             alt=""
-            className="dark:shadow-contrast size-10 flex-none rounded-xl object-cover ring-[0.5px] ring-black/5 md:hidden"
+            className="dark:shadow-contrast size-10 flex-none rounded-lg object-cover ring-[0.5px] ring-black/5 md:hidden"
             onError={() => setImageError(true)}
           />
         ) : (
