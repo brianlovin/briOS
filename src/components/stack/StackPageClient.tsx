@@ -91,16 +91,25 @@ export function StackPageClient({ initialData }: StackPageClientProps) {
 function StackItem({ item }: { item: StackItem }) {
   const [imageError, setImageError] = useState(false);
 
+  // Determine the icon source: prefer icon over image
+  const iconSource = item.icon || item.image;
+  // Check if the icon is an emoji (single character, not a URL)
+  const isEmoji = iconSource && !iconSource.startsWith("http") && iconSource.length <= 2;
+
   return (
     <div className="border-secondary hover:bg-secondary group relative border-b md:dark:hover:bg-white/5">
       {item.url && <Link target="_blank" href={item.url} className="absolute inset-0" />}
       <div className="flex gap-3 px-4 py-3 text-sm md:grid md:grid-cols-12 md:items-start md:gap-4">
-        {/* Image - shown on mobile, hidden on desktop */}
-        {item.image && !imageError ? (
+        {/* Icon/Image - shown on mobile, hidden on desktop */}
+        {isEmoji ? (
+          <div className="flex size-10 flex-none items-center justify-center rounded-xl text-2xl md:hidden">
+            {iconSource}
+          </div>
+        ) : iconSource && !imageError ? (
           <Image
             width={40}
             height={40}
-            src={item.image}
+            src={iconSource}
             alt=""
             className="dark:shadow-contrast size-10 flex-none rounded-xl object-cover ring-[0.5px] ring-black/5 md:hidden"
             onError={() => setImageError(true)}
@@ -111,12 +120,16 @@ function StackItem({ item }: { item: StackItem }) {
 
         {/* Name + Description container (mobile), Name column (desktop) */}
         <div className="min-w-0 flex-1 md:col-span-3 md:flex md:items-center md:gap-3">
-          {/* Image - hidden on mobile, shown on desktop */}
-          {item.image && !imageError ? (
+          {/* Icon/Image - hidden on mobile, shown on desktop */}
+          {isEmoji ? (
+            <div className="hidden size-6 flex-none items-center justify-center rounded-md text-base md:flex">
+              {iconSource}
+            </div>
+          ) : iconSource && !imageError ? (
             <Image
               width={24}
               height={24}
-              src={item.image}
+              src={iconSource}
               alt=""
               className="dark:shadow-contrast hidden size-6 flex-none rounded-md object-cover ring-[0.5px] ring-black/5 md:block"
               onError={() => setImageError(true)}

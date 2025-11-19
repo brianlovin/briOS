@@ -74,6 +74,17 @@ export async function getStackDatabaseItems(): Promise<NotionStackItem[]> {
         if (!hasProperties(page)) return null;
 
         const pageWithProps = page as PageObjectResponse;
+
+        // Extract icon from page object
+        const icon =
+          pageWithProps.icon?.type === "file"
+            ? pageWithProps.icon.file.url
+            : pageWithProps.icon?.type === "external"
+              ? pageWithProps.icon.external.url
+              : pageWithProps.icon?.type === "emoji"
+                ? pageWithProps.icon.emoji
+                : undefined;
+
         const properties = pageWithProps.properties as {
           Name?: { title: { plain_text: string }[] };
           Slug?: { rich_text: { plain_text: string }[] };
@@ -90,6 +101,7 @@ export async function getStackDatabaseItems(): Promise<NotionStackItem[]> {
           slug: properties.Slug?.rich_text[0]?.plain_text || "",
           description: properties.Description?.rich_text[0]?.plain_text || undefined,
           image: properties.Image?.url || undefined,
+          icon,
           url: properties.URL?.url || undefined,
           platforms: properties.Platforms?.multi_select.map((p) => p.name) || [],
           status: properties.Status?.select?.name || undefined,

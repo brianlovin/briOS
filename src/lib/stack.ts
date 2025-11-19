@@ -6,6 +6,7 @@ export type StackItem = {
   name: string;
   description?: string;
   image?: string;
+  icon?: string;
   url?: string;
   platforms?: string[];
   status?: string;

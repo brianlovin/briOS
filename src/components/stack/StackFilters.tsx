@@ -16,7 +16,7 @@ import { LoadingSpinner } from "../ui";
 const PLATFORMS = ["macOS", "iOS", "Web", "Physical", "Windows"];
 const STATUS_OPTIONS = [
   { label: "Actively using", value: "active" },
-  { label: "Archive", value: "inactive" },
+  { label: "Archived", value: "inactive" },
   { label: "All", value: "all" },
 ];
 

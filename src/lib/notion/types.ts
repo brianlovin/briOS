@@ -92,6 +92,7 @@ export type NotionStackItem = {
   slug: string;
   description?: string;
   image?: string;
+  icon?: string;
   url?: string;
   platforms?: string[];
   status?: string;
