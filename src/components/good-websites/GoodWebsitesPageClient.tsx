@@ -47,8 +47,14 @@ export function GoodWebsitesPageClient({ initialData }: GoodWebsitesPageClientPr
         <div className="text-sm font-medium">Good websites</div>
         <div className="flex-1" />
         {/* Filters */}
-        <GoodWebsitesFilters isLoading={isValidating && !isInitialLoading} />
+        <div className="hidden md:block">
+          <GoodWebsitesFilters isLoading={isValidating && !isInitialLoading} />
+        </div>
       </TopBar>
+
+      <div className="border-secondary flex border-b p-2 md:hidden">
+        <GoodWebsitesFilters isLoading={isValidating && !isInitialLoading} />
+      </div>
 
       {/* Table */}
       <div className="relative flex-1 overflow-auto">
