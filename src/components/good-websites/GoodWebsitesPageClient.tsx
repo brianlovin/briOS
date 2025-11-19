@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
+import { GoodWebsitesFilters } from "@/components/good-websites/GoodWebsitesFilters";
 import { TopBar } from "@/components/TopBar";
 import { LoadingSpinner } from "@/components/ui";
 import type { GoodWebsiteItem } from "@/lib/goodWebsites";
@@ -45,6 +46,8 @@ export function GoodWebsitesPageClient({ initialData }: GoodWebsitesPageClientPr
       <TopBar>
         <div className="text-sm font-medium">Good websites</div>
         <div className="flex-1" />
+        {/* Filters */}
+        <GoodWebsitesFilters isLoading={isValidating && !isInitialLoading} />
       </TopBar>
 
       {/* Table */}
@@ -52,9 +55,8 @@ export function GoodWebsitesPageClient({ initialData }: GoodWebsitesPageClientPr
         {/* Table Header - Sticky (hidden on mobile) */}
         <div className="bg-secondary md:dark:bg-tertiary border-secondary sticky top-0 z-20 hidden border-b md:block">
           <div className="grid grid-cols-12 gap-4 px-4 py-2 text-sm font-medium">
-            <div className="col-span-7 text-left">Name</div>
-            <div className="col-span-3 text-left">Site</div>
-            <div className="col-span-2 text-left">Online</div>
+            <div className="col-span-7 text-left text-[13px]">Name</div>
+            <div className="col-span-3 text-left text-[13px]">Site</div>
           </div>
         </div>
 
@@ -161,7 +163,7 @@ function GoodWebsiteItemComponent({ item }: { item: GoodWebsiteItem }) {
               className="text-tertiary hover:text-primary relative z-10 truncate text-sm"
               onClick={(e) => e.stopPropagation()}
             >
-              <XIcon />
+              <XIcon size={16} />
             </Link>
           )}
         </div>

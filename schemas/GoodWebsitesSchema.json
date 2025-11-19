@@ -7,6 +7,28 @@
       "type": "url",
       "url": {}
     },
+    "Tags": {
+      "id": "%5CMRu",
+      "name": "Tags",
+      "description": null,
+      "type": "multi_select",
+      "multi_select": {
+        "options": [
+          {
+            "id": "ac3437ae-9737-4b28-a87c-da8329a51bb4",
+            "name": "Personal site",
+            "color": "yellow",
+            "description": null
+          },
+          {
+            "id": "6bebfcab-903f-4f27-973d-af1f4f513207",
+            "name": "Company",
+            "color": "purple",
+            "description": null
+          }
+        ]
+      }
+    },
     "URL": {
       "id": "nBQE",
       "name": "URL",

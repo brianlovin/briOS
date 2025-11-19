@@ -137,6 +137,7 @@ export async function getGoodWebsitesDatabaseItems(): Promise<GoodWebsiteItem[]>
           Name?: { title: { plain_text: string }[] };
           URL?: { url: string };
           X?: { url: string };
+          Tags?: { multi_select: { name: string }[] };
         };
 
         return {
@@ -145,6 +146,7 @@ export async function getGoodWebsitesDatabaseItems(): Promise<GoodWebsiteItem[]>
           url: properties.URL?.url || undefined,
           x: properties.X?.url || undefined,
           icon,
+          tags: properties.Tags?.multi_select.map((t) => t.name) || [],
         } as GoodWebsiteItem;
       })
       .filter((item): item is GoodWebsiteItem => item !== null);

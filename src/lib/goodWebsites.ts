@@ -6,6 +6,7 @@ export type GoodWebsiteItem = {
   url?: string;
   x?: string;
   icon?: string;
+  tags?: string[];
 };
 
 export async function getGoodWebsites(): Promise<GoodWebsiteItem[]> {

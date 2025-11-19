@@ -27,10 +27,12 @@ export async function POST(request: Request) {
 
     // Validate required fields
     if (!pageId) {
+      console.error("Missing required field: data.id (pageId)", body);
       return errorResponse("Missing required field: data.id (pageId)", 400);
     }
 
     if (!urlProperty) {
+      console.error("Missing required field: data.properties.URL", body);
       return errorResponse("Missing required field: data.properties.URL", 400);
     }
 
@@ -38,6 +40,7 @@ export async function POST(request: Request) {
     const url = typeof urlProperty === "string" ? urlProperty : urlProperty.url;
 
     if (!url) {
+      console.error("URL property is empty or invalid", body);
       return errorResponse("URL property is empty or invalid", 400);
     }
 
@@ -45,18 +48,21 @@ export async function POST(request: Request) {
     try {
       new URL(url);
     } catch {
+      console.error("Invalid URL format", url, body);
       return errorResponse("Invalid URL format", 400);
     }
 
     // Step 1: Get best favicon URL
     const iconUrl = await getBestFaviconUrl(url);
     if (!iconUrl) {
+      console.error("Failed to fetch favicon", url, body);
       return errorResponse("Failed to fetch favicon", 500);
     }
 
     // Step 2: Download the favicon
     const faviconResponse = await fetch(iconUrl);
     if (!faviconResponse.ok) {
+      console.error("Failed to download favicon", url, body);
       return errorResponse("Failed to download favicon", 500);
     }
 
@@ -79,6 +85,7 @@ export async function POST(request: Request) {
     });
 
     if (!createUploadResponse.ok) {
+      console.error("Failed to create Notion file upload", body);
       return errorResponse("Failed to create Notion file upload", 500);
     }
 
@@ -99,6 +106,7 @@ export async function POST(request: Request) {
     });
 
     if (!uploadResponse.ok) {
+      console.error("Failed to upload file to Notion", body);
       return errorResponse("Failed to upload file to Notion", 500);
     }
 
@@ -122,6 +130,7 @@ export async function POST(request: Request) {
       { status: 200 },
     );
   } catch (error) {
+    console.error("Error updating good website icon", error);
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return errorResponse(`Failed to update good website icon: ${errorMessage}`, 500, error);
   }

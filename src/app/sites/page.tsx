@@ -13,9 +13,22 @@ export const metadata: Metadata = createMetadata({
   path: "/sites",
 });
 
-export default async function GoodWebsitesPage() {
-  // Fetch initial data on the server
-  const goodWebsites = await getGoodWebsites();
+export default async function GoodWebsitesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tag?: string }>;
+}) {
+  const params = await searchParams;
+  const tag = params.tag || "";
 
-  return <GoodWebsitesPageClient initialData={goodWebsites} />;
+  // Fetch initial data on the server
+  const allWebsites = await getGoodWebsites();
+
+  // Apply filters server-side to match what the API would return
+  const filteredWebsites = allWebsites.filter((item) => {
+    const tagMatch = tag ? item.tags?.includes(tag) : true;
+    return tagMatch;
+  });
+
+  return <GoodWebsitesPageClient initialData={filteredWebsites} />;
 }
