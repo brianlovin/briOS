@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 import { StackFilters } from "@/components/stack/StackFilters";
 import { TopBar } from "@/components/TopBar";
@@ -88,32 +89,40 @@ export function StackPageClient({ initialData }: StackPageClientProps) {
 }
 
 function StackItem({ item }: { item: StackItem }) {
+  const [imageError, setImageError] = useState(false);
+
   return (
     <div className="border-secondary hover:bg-secondary group relative border-b md:dark:hover:bg-white/5">
       {item.url && <Link target="_blank" href={item.url} className="absolute inset-0" />}
       <div className="flex gap-3 px-4 py-3 text-sm md:grid md:grid-cols-12 md:items-start md:gap-4">
         {/* Image - shown on mobile, hidden on desktop */}
-        {item.image && (
+        {item.image && !imageError ? (
           <Image
             width={40}
             height={40}
             src={item.image}
             alt=""
             className="dark:shadow-contrast size-10 flex-none rounded-xl object-cover ring-[0.5px] ring-black/5 md:hidden"
+            onError={() => setImageError(true)}
           />
+        ) : (
+          <div className="bg-tertiary size-10 flex-none rounded-xl md:hidden" />
         )}
 
         {/* Name + Description container (mobile), Name column (desktop) */}
         <div className="min-w-0 flex-1 md:col-span-3 md:flex md:items-center md:gap-3">
           {/* Image - hidden on mobile, shown on desktop */}
-          {item.image && (
+          {item.image && !imageError ? (
             <Image
               width={24}
               height={24}
               src={item.image}
               alt=""
               className="dark:shadow-contrast hidden size-6 flex-none rounded-md object-cover ring-[0.5px] ring-black/5 md:block"
+              onError={() => setImageError(true)}
             />
+          ) : (
+            <div className="bg-tertiary hidden size-6 flex-none rounded-md md:block" />
           )}
           <div className="min-w-0 flex-1">
             <span className="text-primary block truncate font-medium">{item.name}</span>

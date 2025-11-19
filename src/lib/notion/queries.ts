@@ -3,6 +3,7 @@ import type { PageObjectResponse } from "@notionhq/client/build/src/api-endpoint
 import { getAllBlocks } from "./blocks";
 import { notion } from "./client";
 import {
+  type GoodWebsiteItem,
   hasProperties,
   type NotionAmaItem,
   type NotionAmaItemWithContent,
@@ -99,6 +100,58 @@ export async function getStackDatabaseItems(): Promise<NotionStackItem[]> {
     return items;
   } catch (error) {
     console.error("Error fetching stack items:", error);
+    return [];
+  }
+}
+
+// ===== Good Websites Database =====
+
+export async function getGoodWebsitesDatabaseItems(): Promise<GoodWebsiteItem[]> {
+  try {
+    const databaseId = process.env.NOTION_GOOD_WEBSITES_DATABASE_ID || "";
+    const response = await notion.databases.query({
+      database_id: databaseId,
+      sorts: [
+        {
+          property: "Name",
+          direction: "ascending",
+        },
+      ],
+    });
+
+    const items = response.results
+      .map((page) => {
+        if (!hasProperties(page)) return null;
+
+        const pageWithProps = page as PageObjectResponse;
+
+        // Extract icon from page object
+        const icon =
+          pageWithProps.icon?.type === "file"
+            ? pageWithProps.icon.file.url
+            : pageWithProps.icon?.type === "external"
+              ? pageWithProps.icon.external.url
+              : undefined;
+
+        const properties = pageWithProps.properties as {
+          Name?: { title: { plain_text: string }[] };
+          URL?: { url: string };
+          X?: { url: string };
+        };
+
+        return {
+          id: pageWithProps.id,
+          name: properties.Name?.title[0]?.plain_text || "Untitled",
+          url: properties.URL?.url || undefined,
+          x: properties.X?.url || undefined,
+          icon,
+        } as GoodWebsiteItem;
+      })
+      .filter((item): item is GoodWebsiteItem => item !== null);
+
+    return items;
+  } catch (error) {
+    console.error("Error fetching good website items:", error);
     return [];
   }
 }

@@ -112,6 +112,7 @@ async function generateSchemas() {
       id: process.env.NOTION_DESIGN_DETAILS_EPISODES_DATABASE_ID,
     },
     { varName: "Music", id: process.env.NOTION_MUSIC_DATABASE_ID },
+    { varName: "GoodWebsites", id: process.env.NOTION_GOOD_WEBSITES_DATABASE_ID },
   ];
 
   const schemaLines: string[] = [

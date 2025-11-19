@@ -13,6 +13,8 @@ export {
   AMASchema,
   type DesignDetailsEpisodes,
   DesignDetailsEpisodesSchema,
+  type GoodWebsites,
+  GoodWebsitesSchema,
   type Music,
   MusicSchema,
   type Stack,
@@ -93,6 +95,15 @@ export type NotionStackItem = {
   url?: string;
   platforms?: string[];
   status?: string;
+};
+
+// Good Website item type
+export type GoodWebsiteItem = {
+  id: string;
+  name: string;
+  url?: string;
+  x?: string;
+  icon?: string;
 };
 
 // AMA item types

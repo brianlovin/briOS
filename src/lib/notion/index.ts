@@ -9,6 +9,7 @@ export type {
   // Zod schemas and types
   DatabaseObjectResponse,
   DesignDetailsEpisodes,
+  GoodWebsiteItem,
   Music,
   NotionAmaItem,
   NotionAmaItemWithContent,
@@ -52,6 +53,8 @@ export {
   getDesignDetailsEpisodeDatabaseItems,
   // Generic
   getFullContent,
+  // Good Websites
+  getGoodWebsitesDatabaseItems,
   // Listening History
   getListeningHistoryDatabaseItems,
   // Stack

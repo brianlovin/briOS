@@ -1,0 +1,32 @@
+{
+  "props": {
+    "X": {
+      "id": "Rw%5Ev",
+      "name": "X",
+      "description": null,
+      "type": "url",
+      "url": {}
+    },
+    "URL": {
+      "id": "nBQE",
+      "name": "URL",
+      "description": null,
+      "type": "url",
+      "url": {}
+    },
+    "Process": {
+      "id": "v%5E%7B%3F",
+      "name": "Process",
+      "description": null,
+      "type": "button",
+      "button": {}
+    },
+    "Name": {
+      "id": "title",
+      "name": "Name",
+      "description": null,
+      "type": "title",
+      "title": {}
+    }
+  }
+}

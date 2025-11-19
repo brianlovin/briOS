@@ -306,7 +306,7 @@ const projects = [
     external: false,
   },
   {
-    name: "My Stack",
+    name: "Stack",
     href: "/stack",
     description: "My favorite apps and tools",
     external: false,
@@ -318,9 +318,15 @@ const projects = [
     external: false,
   },
   {
-    name: "Listening history",
-    href: "/listening-history",
+    name: "Listening",
+    href: "/listening",
     description: "What I'm listening to",
+    external: false,
+  },
+  {
+    name: "Good websites",
+    href: "/sites",
+    description: "A curated collection of good websites",
     external: false,
   },
   {

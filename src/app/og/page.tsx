@@ -42,8 +42,8 @@ export default function OGTestingPage() {
     },
     {
       title: "Listening History",
-      url: "/listening-history/opengraph-image",
-      path: "/listening-history/opengraph-image",
+      url: "/listening/opengraph-image",
+      path: "/listening/opengraph-image",
     },
   ]);
 
