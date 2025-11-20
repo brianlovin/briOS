@@ -119,6 +119,7 @@ function StackItem({ item }: { item: StackItem }) {
             alt=""
             className="dark:shadow-contrast size-10 flex-none rounded-lg object-cover ring-[0.5px] ring-black/5 md:hidden"
             onError={() => setImageError(true)}
+            unoptimized
           />
         ) : (
           <div className="bg-tertiary size-10 flex-none rounded-xl md:hidden" />
@@ -139,6 +140,7 @@ function StackItem({ item }: { item: StackItem }) {
               alt=""
               className="dark:shadow-contrast hidden size-6 flex-none rounded-md object-cover ring-[0.5px] ring-black/5 md:block"
               onError={() => setImageError(true)}
+              unoptimized
             />
           ) : (
             <div className="bg-tertiary hidden size-6 flex-none rounded-md md:block" />

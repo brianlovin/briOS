@@ -109,6 +109,7 @@ function GoodWebsiteItemComponent({ item }: { item: GoodWebsiteItem }) {
             alt=""
             className="size-10 flex-none rounded-md object-cover md:hidden"
             onError={() => setIconError(true)}
+            unoptimized
           />
         ) : (
           <div className="bg-tertiary size-10 flex-none rounded-md md:hidden" />
@@ -125,6 +126,7 @@ function GoodWebsiteItemComponent({ item }: { item: GoodWebsiteItem }) {
               alt=""
               className="hidden size-6 flex-none rounded-md object-cover md:block"
               onError={() => setIconError(true)}
+              unoptimized
             />
           ) : (
             <div className="bg-tertiary hidden size-6 flex-none rounded-md md:block" />
