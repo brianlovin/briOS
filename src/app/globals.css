@@ -108,8 +108,13 @@
   }
 
   ::selection {
-    background-color: #fc532a;
-    color: white;
+    background-color: rgba(0, 154, 250, 0.1);
+    color: #0066db;
+  }
+
+  .dark ::selection {
+    background-color: rgba(240, 104, 0, 0.1);
+    color: #ff6b01;
   }
 
   .scrollbar-hidden {
