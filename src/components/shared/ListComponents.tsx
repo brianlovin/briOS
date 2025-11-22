@@ -49,23 +49,36 @@ export function List({ children, className = "" }: ListProps) {
 }
 
 export function ListItem({ children, className = "", href }: ListItemProps) {
-  const isLink = href !== undefined;
-  const isExternal = isLink && href?.startsWith("http");
-  const Element = isLink ? (isExternal ? "a" : Link) : "div";
+  const isLink = !!href;
+  const elementClassName = cn(
+    "inline-flex flex-1 items-center gap-2",
+    isLink && "group/list-item",
+    className,
+  );
+
+  if (href) {
+    const isExternal = href.startsWith("http");
+    if (isExternal) {
+      return (
+        <li className="flex">
+          <a href={href} target="_blank" className={elementClassName}>
+            {children}
+          </a>
+        </li>
+      );
+    }
+    return (
+      <li className="flex">
+        <Link href={href} className={elementClassName}>
+          {children}
+        </Link>
+      </li>
+    );
+  }
 
   return (
     <li className="flex">
-      <Element
-        href={href ?? ""}
-        target={isExternal ? "_blank" : undefined}
-        className={cn(
-          "inline-flex flex-1 items-center gap-2",
-          isLink && "group/list-item",
-          className,
-        )}
-      >
-        {children}
-      </Element>
+      <div className={elementClassName}>{children}</div>
     </li>
   );
 }

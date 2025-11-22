@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { Suspense } from "react";
 
+import { SpeakingList } from "@/components/home/SpeakingList";
+import { SpeakingListSkeleton } from "@/components/home/SpeakingListSkeleton";
 import { ArrowUpRight } from "@/components/icons/ArrowUpRight";
 import { BufferLogoSVG, GitHubIcon, XIcon, YouTubeIcon } from "@/components/icons/SocialIcons";
 import {
@@ -144,14 +147,9 @@ export default function Home() {
 
             <Section>
               <SectionHeading>Speaking</SectionHeading>
-              <List>
-                {speaking.map(({ title, date, href }) => (
-                  <ListItem href={href} key={title}>
-                    <ListItemLabel className="flex-1">{title}</ListItemLabel>
-                    <ListItemSubLabel className="font-mono opacity-80">{date}</ListItemSubLabel>
-                  </ListItem>
-                ))}
-              </List>
+              <Suspense fallback={<SpeakingListSkeleton />}>
+                <SpeakingList />
+              </Suspense>
             </Section>
           </div>
         </div>
@@ -161,119 +159,6 @@ export default function Home() {
 }
 
 // Data arrays
-const speaking = [
-  {
-    title: "Founder Fridays with Brian Lovin",
-    date: "Aug '25",
-    href: "https://www.youtube.com/watch?v=VZgrsDkZjHU",
-  },
-  {
-    title: "Design Founders Night with Designer Fund",
-    date: "Jun '25",
-    href: "https://designerfounders.substack.com/p/brian-lovin-notion-campsite",
-  },
-  {
-    title: "How Campsite built a design-led company",
-    date: "Sep '24",
-    href: "https://www.youtube.com/watch?v=aa_srknxkQw",
-  },
-  {
-    title: "FocusTime: Boring routines and capturing inspiration",
-    date: "Aug '24",
-    href: "https://risecalendar.com/blog/focus-time-brian-lovin",
-  },
-  {
-    title: "Full Stack Whatever with Ryan Nystrom",
-    date: "Dec '23",
-    href: "https://fullstackwhatever.com/episode/brian-lovin-ryan-nystrom-surrounded-by-people-doing-interesting-work",
-  },
-  {
-    title: "Deep Dive: How to level up as an IC designer",
-    date: "Nov '23",
-    href: "https://www.youtube.com/watch?v=ozU063JY4ko&t=2s",
-  },
-  {
-    title: "Deep Dive: Lessons from Campsite",
-    date: "Nov '23",
-    href: "https://www.youtube.com/watch?v=njO9OJTDSGM&t=19s",
-  },
-  {
-    title: "Design, engineering, and starting a company",
-    date: "Aug '23",
-    href: "https://open.spotify.com/episode/5rR19EwPx7wKevfaitnrZL?si=74837d42237240bd",
-  },
-  {
-    title: "Full Stack Whatever",
-    date: "Jan '23",
-    href: "https://fullstackwhatever.com/episode/brian-lovin-its-all-about-having-fun",
-  },
-  {
-    title: "The Art of Product: The art and pain of design",
-    date: "Mar '22",
-    href: "https://artofproductpodcast.com/episode-202",
-  },
-  {
-    title: "Metamuse: Personal brand",
-    date: "Mar '22",
-    href: "https://museapp.com/podcast/51-personal-brand/",
-  },
-  {
-    title: "Optimal Path: The Spectrum of design",
-    date: "Jan '22",
-    href: "https://maze.co/podcast/#brian-lovin",
-  },
-  {
-    title: "UI Breakfast: Design advising",
-    date: "Dec '21",
-    href: "https://uibreakfast.com/228-design-advisory-with-brian-lovin/",
-  },
-  {
-    title: "Design MBA: Managing side projects",
-    date: "Nov '21",
-    href: "https://designmba.show/episodes/brian-lovin",
-  },
-  {
-    title: "Progression: The rise of the senior IC",
-    date: "Jun '21",
-    href: "https://progressionapp.com/blog/podcast-26-brian-lovin-github-spectrum-design-details-on-the-rise-of-the-senior-ic/",
-  },
-  {
-    title: "Layout.fm",
-    date: "Jan '21",
-    href: "https://layout.fm/episodes/194/",
-  },
-  {
-    title: "Software Engineering Daily: GitHub Mobile",
-    date: "Jul '20",
-    href: "https://softwareengineeringdaily.com/'20/07/15/github-mobile-with-brian-lovin-and-ryan-nystrom/",
-  },
-  {
-    title: "Swift by Sundell: Building for open source",
-    date: "Feb '20",
-    href: "https://www.swiftbysundell.com/podcast/67/",
-  },
-  {
-    title: "Figma Config: Extend what's possible with Plugins",
-    date: "Feb '20",
-    href: "https://www.youtube.com/watch?v=SyS3h3kmBnY",
-  },
-  {
-    title: "Lovers Magazine",
-    date: "Jan '18",
-    href: "https://www.loversmagazine.com/interviews/brian-lovin",
-  },
-  {
-    title: "GraphQL Summit: Designing with GraphQL",
-    date: "Nov '17",
-    href: "https://www.youtube.com/watch?v=6MBBTdu8v6E",
-  },
-  {
-    title: "Design Details",
-    date: "Aug '17",
-    href: "https://designdetails.fm/episodes/3e342ac0",
-  },
-];
-
 const socials = [
   {
     name: "X",
