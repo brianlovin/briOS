@@ -10,6 +10,7 @@ import {
   type NotionDesignDetailsEpisodeItem,
   type NotionItem,
   type NotionListeningHistoryItem,
+  type NotionSpeakingItem,
   type NotionStackItem,
   type ProcessedBlock,
 } from "./types";
@@ -513,5 +514,47 @@ export async function getDesignDetailsEpisodeDatabaseItems(
   } catch (error) {
     console.error("Error fetching design details episodes:", error);
     return { items: [], nextCursor: null };
+  }
+}
+
+// ===== Speaking Database =====
+
+export async function getSpeakingItems(): Promise<NotionSpeakingItem[]> {
+  try {
+    const databaseId = process.env.NOTION_SPEAKING_DATABASE_ID || "";
+    const response = await notion.databases.query({
+      database_id: databaseId,
+      sorts: [
+        {
+          property: "Date",
+          direction: "descending",
+        },
+      ],
+    });
+
+    const items = response.results
+      .map((page) => {
+        if (!hasProperties(page)) return null;
+
+        const pageWithProps = page as PageObjectResponse;
+        const properties = pageWithProps.properties as {
+          Name?: { title: { plain_text: string }[] };
+          Date?: { date: { start: string } | null };
+          URL?: { url: string };
+        };
+
+        return {
+          id: pageWithProps.id,
+          title: properties.Name?.title[0]?.plain_text || "Untitled",
+          date: properties.Date?.date?.start || pageWithProps.created_time,
+          href: properties.URL?.url || "",
+        } as NotionSpeakingItem;
+      })
+      .filter((item): item is NotionSpeakingItem => item !== null);
+
+    return items;
+  } catch (error) {
+    console.error("Error fetching speaking items:", error);
+    return [];
   }
 }

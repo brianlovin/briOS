@@ -91,3 +91,11 @@ export const GoodWebsitesSchema = z.object({
 });
 
 export type GoodWebsites = z.infer<typeof GoodWebsitesSchema>;
+
+export const SpeakingSchema = z.object({
+  URL: z.string().optional(),
+  Date: z.string().optional(),
+  Name: z.string().optional(),
+});
+
+export type Speaking = z.infer<typeof SpeakingSchema>;

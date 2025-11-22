@@ -17,6 +17,8 @@ export {
   GoodWebsitesSchema,
   type Music,
   MusicSchema,
+  type Speaking,
+  SpeakingSchema,
   type Stack,
   StackSchema,
   type Writing,
@@ -142,6 +144,14 @@ export type NotionDesignDetailsEpisodeItem = {
   publishedDate?: string;
   imageUrl?: string;
   audioUrl?: string;
+};
+
+// Speaking item type
+export type NotionSpeakingItem = {
+  id: string;
+  title: string;
+  date: string;
+  href: string;
 };
 
 // Type guard to check if a page has properties
