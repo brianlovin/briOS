@@ -4,12 +4,18 @@ import { List, ListItem, ListItemLabel, ListItemSubLabel } from "../shared/ListC
 
 /**
  * Formats ISO date string (e.g., "2025-08-01") to display format (e.g., "Aug '25")
+ * Parses the date components directly to avoid timezone conversion issues
  */
 function formatSpeakingDate(isoDate: string): string {
-  const date = new Date(isoDate);
-  const month = date.toLocaleDateString("en-US", { month: "short" });
-  const year = date.getFullYear().toString().slice(-2);
-  return `${month} '${year}`;
+  // Parse year, month, day directly from ISO string to avoid timezone issues
+  const [year, month] = isoDate.split("-").map(Number);
+
+  // Create date in local timezone
+  const date = new Date(year, month - 1, 1);
+
+  const monthStr = date.toLocaleDateString("en-US", { month: "short" });
+  const yearStr = year.toString().slice(-2);
+  return `${monthStr} '${yearStr}`;
 }
 
 export async function SpeakingList() {

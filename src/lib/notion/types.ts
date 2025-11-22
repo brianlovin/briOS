@@ -151,7 +151,7 @@ export type NotionSpeakingItem = {
   id: string;
   title: string;
   date: string;
-  href: string;
+  href?: string;
 };
 
 // Type guard to check if a page has properties

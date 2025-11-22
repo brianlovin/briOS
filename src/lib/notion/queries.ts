@@ -547,7 +547,7 @@ export async function getSpeakingItems(): Promise<NotionSpeakingItem[]> {
           id: pageWithProps.id,
           title: properties.Name?.title[0]?.plain_text || "Untitled",
           date: properties.Date?.date?.start || pageWithProps.created_time,
-          href: properties.URL?.url || "",
+          href: properties.URL?.url || undefined,
         } as NotionSpeakingItem;
       })
       .filter((item): item is NotionSpeakingItem => item !== null);
