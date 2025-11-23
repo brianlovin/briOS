@@ -14,7 +14,9 @@ export default function NumbersPage() {
   // Set actual current time on client-side mount
   useEffect(() => {
     const now = new Date();
-    setStartOfDay(new Date(now.getFullYear(), now.getMonth(), now.getDate()));
+    requestAnimationFrame(() => {
+      setStartOfDay(new Date(now.getFullYear(), now.getMonth(), now.getDate()));
+    });
   }, []);
 
   const birthsPerSecond = 4.3;

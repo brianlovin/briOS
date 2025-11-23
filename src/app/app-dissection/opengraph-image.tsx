@@ -1,6 +1,7 @@
 import { generateOGImage } from "@/lib/og-utils";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 export const alt = "App Dissection - Brian Lovin";
 export const size = {
   width: 1200,
