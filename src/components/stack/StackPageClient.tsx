@@ -6,9 +6,7 @@ import { useState } from "react";
 
 import { StackFilters } from "@/components/stack/StackFilters";
 import { TopBar } from "@/components/TopBar";
-import { LoadingSpinner } from "@/components/ui";
 import { PlatformBadge } from "@/components/ui/PlatformBadge";
-import { useStacks } from "@/lib/hooks/useStacks";
 import type { StackItem } from "@/lib/stack";
 
 interface StackPageClientProps {
@@ -16,29 +14,6 @@ interface StackPageClientProps {
 }
 
 export function StackPageClient({ initialData }: StackPageClientProps) {
-  const { stacks, isInitialLoading, isValidating, isError } = useStacks(initialData);
-
-  // Only show full page loading on initial load (without fallback data)
-  if (isInitialLoading && stacks.length === 0) {
-    return (
-      <div className="flex-1 overflow-y-auto">
-        <div className="flex h-full flex-1 items-center justify-center">
-          <LoadingSpinner />
-        </div>
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="flex-1 overflow-y-auto">
-        <div className="flex h-32 items-center justify-center">
-          <div className="text-secondary">Error loading stack data</div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="flex h-full w-full flex-col">
       {/* Header */}
@@ -48,12 +23,12 @@ export function StackPageClient({ initialData }: StackPageClientProps) {
 
         {/* Filters */}
         <div className="hidden md:block">
-          <StackFilters isLoading={isValidating && !isInitialLoading} />
+          <StackFilters isLoading={false} />
         </div>
       </TopBar>
 
       <div className="border-secondary flex border-b p-2 md:hidden">
-        <StackFilters isLoading={isValidating && !isInitialLoading} />
+        <StackFilters isLoading={false} />
       </div>
 
       {/* Table */}
@@ -68,25 +43,16 @@ export function StackPageClient({ initialData }: StackPageClientProps) {
         </div>
 
         {/* Table Content */}
-        <div
-          className={`divide-secondary divide-y ${isValidating && !isInitialLoading ? "opacity-75 transition-opacity duration-200" : ""}`}
-        >
-          {stacks.map((item) => (
+        <div className="divide-secondary divide-y">
+          {initialData.map((item) => (
             <StackItem key={item.id} item={item} />
           ))}
         </div>
 
         {/* Empty state */}
-        {stacks.length === 0 && !isValidating && (
+        {initialData.length === 0 && (
           <div className="flex h-32 items-center justify-center">
             <div className="text-secondary">No stack items found</div>
-          </div>
-        )}
-
-        {/* Loading state for empty results during filter changes */}
-        {stacks.length === 0 && isValidating && (
-          <div className="flex h-32 items-center justify-center">
-            <div className="text-secondary">Loading filtered results...</div>
           </div>
         )}
       </div>

@@ -1,19 +1,37 @@
-import { cacheLife } from "next/cache";
-import { cacheTag } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
 import { notFound } from "next/navigation";
 
 import { renderBlocks } from "@/components/renderBlocks";
 import { CACHE_TAGS } from "@/lib/cache-tags";
-import { getFullContent } from "@/lib/notion";
+import { getDesignDetailsEpisodeDatabaseItems, getFullContent } from "@/lib/notion";
 
-export default async function EpisodePage(props: { params: Promise<{ id: string }> }) {
+async function getEpisodeContentCached(id: string) {
   "use cache";
   cacheLife("days");
   cacheTag(CACHE_TAGS.designDetailsEpisodes);
 
+  return await getFullContent(id);
+}
+
+export async function generateStaticParams() {
+  // Return at least one result for build-time validation with Cache Components
+  // Fetch the first episode to use as a static param
+  try {
+    const { items } = await getDesignDetailsEpisodeDatabaseItems(undefined, 1);
+    if (items.length > 0) {
+      return [{ id: items[0].id }];
+    }
+  } catch (error) {
+    console.error("Error fetching design details episodes for generateStaticParams:", error);
+  }
+  // Fallback to empty array if fetch fails
+  return [{ id: "" }];
+}
+
+export default async function EpisodePage(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const id = params.id;
-  const content = await getFullContent(id);
+  const content = await getEpisodeContentCached(id);
 
   if (!content) {
     notFound();

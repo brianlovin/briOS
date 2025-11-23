@@ -1,25 +1,24 @@
 "use client";
 
-import { cacheLife, cacheTag } from "next/cache";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { InfiniteScrollList } from "@/components/InfiniteScrollList";
 import { useListNavigation } from "@/hooks/useListNavigation";
-import { CACHE_TAGS } from "@/lib/cache-tags";
+import { NotionAmaItem } from "@/lib/notion";
 import { cn } from "@/lib/utils";
 
-import { useAMAQuestionsContext } from "./AMAContext";
+interface AmaListProps {
+  initialQuestions: NotionAmaItem[];
+  initialCursor: string | null;
+}
 
-export function AmaList() {
-  "use cache";
-  cacheLife("hours");
-  cacheTag(CACHE_TAGS.amaQuestions);
-
+export function AmaList({ initialQuestions, initialCursor }: AmaListProps) {
   const pathname = usePathname();
-  const { questions, setSize, size, isReachingEnd, isLoading, isLoadingMore } =
-    useAMAQuestionsContext();
+  const [questions, setQuestions] = useState<NotionAmaItem[]>(initialQuestions);
+  const [cursor, setCursor] = useState<string | null>(initialCursor);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   const currentId = pathname.split("/").pop();
   const currentIndex = useMemo(
@@ -30,11 +29,23 @@ export function AmaList() {
   useListNavigation(questions, currentIndex, (item) => `/ama/${item.id}`);
 
   const handleLoadMore = useCallback(async () => {
-    await setSize(size + 1);
-  }, [setSize, size]);
+    if (!cursor || isLoadingMore) return;
+
+    setIsLoadingMore(true);
+    try {
+      const response = await fetch(`/api/ama?cursor=${cursor}&limit=20`);
+      const data = await response.json();
+      setQuestions((prev) => [...prev, ...data.items]);
+      setCursor(data.nextCursor);
+    } catch (error) {
+      console.error("Error loading more questions:", error);
+    } finally {
+      setIsLoadingMore(false);
+    }
+  }, [cursor, isLoadingMore]);
 
   const renderQuestion = useCallback(
-    (item: (typeof questions)[0]) => {
+    (item: NotionAmaItem) => {
       const date = item.answeredAt
         ? new Date(item.answeredAt).toLocaleDateString("en-US", {
             month: "short",
@@ -68,9 +79,9 @@ export function AmaList() {
       items={questions}
       renderItem={renderQuestion}
       onLoadMore={handleLoadMore}
-      isLoading={isLoading || false}
-      isLoadingMore={isLoadingMore || false}
-      isReachingEnd={isReachingEnd || false}
+      isLoading={false}
+      isLoadingMore={isLoadingMore}
+      isReachingEnd={!cursor}
     />
   );
 }

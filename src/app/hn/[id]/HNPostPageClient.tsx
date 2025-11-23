@@ -2,20 +2,15 @@
 
 import DOMPurify from "dompurify";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { memo, useEffect, useMemo, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
 import { ArrowDown } from "@/components/icons/ArrowDown";
 import { ArrowUpRight } from "@/components/icons/ArrowUpRight";
 import { FancySeparator } from "@/components/ui/FancySeparator";
 import { IconButton } from "@/components/ui/IconButton";
-import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
-import { useHNPost } from "@/lib/hooks/useHn";
 import { stripHtmlTags } from "@/lib/utils";
-import { HackerNewsComment } from "@/types/hackernews";
-
-import { useHNPostsContext } from "../HNPostsContext";
+import { HackerNewsComment, HackerNewsPost } from "@/types/hackernews";
 
 // Sanitize HTML content from external sources (Hacker News)
 function sanitizeHtml(html: string): string {
@@ -25,17 +20,11 @@ function sanitizeHtml(html: string): string {
   });
 }
 
-export default function HNPostPageClient() {
-  const { id } = useParams();
-  const { posts } = useHNPostsContext();
+interface HNPostPageClientProps {
+  post: HackerNewsPost;
+}
 
-  // Find current post from the list to use as fallback
-  const fallbackPost = useMemo(
-    () => posts?.find((p) => p?.id.toString() === id) ?? null,
-    [posts, id],
-  );
-
-  const { post, isLoading, isError } = useHNPost(id as string, fallbackPost);
+export default function HNPostPageClient({ post }: HNPostPageClientProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef(null);
 
@@ -122,14 +111,6 @@ export default function HNPostPageClient() {
     preventDefault: true,
     description: "Scroll to previous root comment",
   });
-
-  if (isLoading)
-    return (
-      <div className="flex h-full flex-1 items-center justify-center">
-        <LoadingSpinner />
-      </div>
-    );
-  if (!post || isError) return <p>not found</p>;
 
   return (
     <>

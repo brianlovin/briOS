@@ -6,9 +6,7 @@ import { useState } from "react";
 
 import { GoodWebsitesFilters } from "@/components/good-websites/GoodWebsitesFilters";
 import { TopBar } from "@/components/TopBar";
-import { LoadingSpinner } from "@/components/ui";
 import type { GoodWebsiteItem } from "@/lib/goodWebsites";
-import { useGoodWebsites } from "@/lib/hooks/useGoodWebsites";
 
 import { XIcon } from "../icons/SocialIcons";
 
@@ -17,29 +15,6 @@ interface GoodWebsitesPageClientProps {
 }
 
 export function GoodWebsitesPageClient({ initialData }: GoodWebsitesPageClientProps) {
-  const { goodWebsites, isInitialLoading, isValidating, isError } = useGoodWebsites(initialData);
-
-  // Only show full page loading on initial load (without fallback data)
-  if (isInitialLoading && goodWebsites.length === 0) {
-    return (
-      <div className="flex-1 overflow-y-auto">
-        <div className="flex h-full flex-1 items-center justify-center">
-          <LoadingSpinner />
-        </div>
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="flex-1 overflow-y-auto">
-        <div className="flex h-32 items-center justify-center">
-          <div className="text-secondary">Error loading good websites data</div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="flex h-full w-full flex-col">
       {/* Header */}
@@ -48,12 +23,12 @@ export function GoodWebsitesPageClient({ initialData }: GoodWebsitesPageClientPr
         <div className="flex-1" />
         {/* Filters */}
         <div className="hidden md:block">
-          <GoodWebsitesFilters isLoading={isValidating && !isInitialLoading} />
+          <GoodWebsitesFilters isLoading={false} />
         </div>
       </TopBar>
 
       <div className="border-secondary flex border-b p-2 md:hidden">
-        <GoodWebsitesFilters isLoading={isValidating && !isInitialLoading} />
+        <GoodWebsitesFilters isLoading={false} />
       </div>
 
       {/* Table */}
@@ -67,25 +42,16 @@ export function GoodWebsitesPageClient({ initialData }: GoodWebsitesPageClientPr
         </div>
 
         {/* Table Content */}
-        <div
-          className={`divide-secondary divide-y ${isValidating && !isInitialLoading ? "opacity-75 transition-opacity duration-200" : ""}`}
-        >
-          {goodWebsites.map((item) => (
+        <div className="divide-secondary divide-y">
+          {initialData.map((item) => (
             <GoodWebsiteItemComponent key={item.id} item={item} />
           ))}
         </div>
 
         {/* Empty state */}
-        {goodWebsites.length === 0 && !isValidating && (
+        {initialData.length === 0 && (
           <div className="flex h-32 items-center justify-center">
             <div className="text-secondary">No good websites found</div>
-          </div>
-        )}
-
-        {/* Loading state for empty results */}
-        {goodWebsites.length === 0 && isValidating && (
-          <div className="flex h-32 items-center justify-center">
-            <div className="text-secondary">Loading good websites...</div>
           </div>
         )}
       </div>

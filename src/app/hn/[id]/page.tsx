@@ -1,10 +1,37 @@
 import type { Metadata } from "next";
 
-import { getPostById } from "@/lib/hn";
+import { cacheLife, cacheTag } from "next/cache";
+import { notFound } from "next/navigation";
+
+import { CACHE_TAGS } from "@/lib/cache-tags";
+import { getPostById, getRankedHNPosts } from "@/lib/hn";
 import { createMetadata, truncateDescription } from "@/lib/metadata";
 import { stripHtmlTags } from "@/lib/utils";
 
 import HNPostPageClient from "./HNPostPageClient";
+
+async function getHNPostCached(id: string) {
+  "use cache";
+  cacheLife({ stale: 10, revalidate: 60 });
+  cacheTag(CACHE_TAGS.hnPosts);
+
+  return await getPostById(id, true);
+}
+
+export async function generateStaticParams() {
+  // Return at least one result for build-time validation with Cache Components
+  // Fetch the first post to use as a static param
+  try {
+    const posts = await getRankedHNPosts();
+    if (posts && posts.length > 0 && posts[0]) {
+      return [{ id: posts[0].id.toString() }];
+    }
+  } catch (error) {
+    console.error("Error fetching HN posts for generateStaticParams:", error);
+  }
+  // Fallback to empty array if fetch fails
+  return [{ id: "" }];
+}
 
 export async function generateMetadata(props: {
   params: Promise<{ id: string }>;
@@ -13,7 +40,7 @@ export async function generateMetadata(props: {
   const id = params.id;
 
   try {
-    const post = await getPostById(id, false);
+    const post = await getHNPostCached(id);
 
     if (!post) {
       return {
@@ -38,6 +65,13 @@ export async function generateMetadata(props: {
   }
 }
 
-export default function HNPostPage() {
-  return <HNPostPageClient />;
+export default async function HNPostPage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
+  const post = await getHNPostCached(params.id);
+
+  if (!post) {
+    notFound();
+  }
+
+  return <HNPostPageClient post={post} />;
 }

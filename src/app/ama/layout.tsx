@@ -1,44 +1,33 @@
-"use client";
-
+import { cacheLife, cacheTag } from "next/cache";
 import React from "react";
 
 import { ListDetailLayout } from "@/components/ListDetailLayout";
-import { useAmaQuestions } from "@/lib/ama";
+import { CACHE_TAGS } from "@/lib/cache-tags";
+import { getAmaDatabaseItems } from "@/lib/notion";
 
-import { AMAQuestionsProvider } from "./AMAContext";
 import { AmaList } from "./AMAList";
 import { AskQuestionDialog } from "./AskQuestionDialog";
 
-export default function AMALayout({ children }: { children: React.ReactNode }) {
-  // Fetch questions at layout level to share with children
-  const {
-    items: questions,
-    isLoading,
-    isLoadingMore,
-    isReachingEnd,
-    isError,
-    size,
-    setSize,
-  } = useAmaQuestions();
+async function getInitialAmaQuestions() {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CACHE_TAGS.amaQuestions);
+
+  const { items, nextCursor } = await getAmaDatabaseItems(undefined, 20);
+  return { items, nextCursor };
+}
+
+export default async function AMALayout({ children }: { children: React.ReactNode }) {
+  const { items: initialQuestions, nextCursor } = await getInitialAmaQuestions();
 
   return (
-    <AMAQuestionsProvider
-      questions={questions}
-      isLoading={isLoading ?? false}
-      isLoadingMore={isLoadingMore ?? false}
-      isReachingEnd={isReachingEnd ?? false}
-      isError={isError}
-      size={size}
-      setSize={setSize}
+    <ListDetailLayout
+      headerChildren={<AskQuestionDialog />}
+      title="AMA"
+      backHref="/ama"
+      list={<AmaList initialQuestions={initialQuestions} initialCursor={nextCursor} />}
     >
-      <ListDetailLayout
-        headerChildren={<AskQuestionDialog />}
-        title="AMA"
-        backHref="/ama"
-        list={<AmaList />}
-      >
-        {children}
-      </ListDetailLayout>
-    </AMAQuestionsProvider>
+      {children}
+    </ListDetailLayout>
   );
 }

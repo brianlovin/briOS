@@ -1,45 +1,14 @@
-"use client";
-
-import { cacheLife, cacheTag } from "next/cache";
 import Image from "next/image";
-import { useParams } from "next/navigation";
-import { useEffect } from "react";
 
 import { renderBlocks } from "@/components/renderBlocks";
 import { FancySeparator } from "@/components/ui/FancySeparator";
-import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
-import { CACHE_TAGS } from "@/lib/cache-tags";
-import { useAmaQuestion } from "@/lib/hooks/useAma";
+import { NotionAmaItemWithContent } from "@/lib/notion";
 
-export default function AMADetail() {
-  "use cache";
-  cacheLife("hours");
-  cacheTag(CACHE_TAGS.amaQuestions);
+interface AMADetailProps {
+  question: NotionAmaItemWithContent;
+}
 
-  const { id } = useParams();
-
-  // Fetch the full question with content blocks from the API
-  const { question, isLoading, isError } = useAmaQuestion(id as string);
-
-  // Update document title when question is available
-  useEffect(() => {
-    if (question?.title) {
-      document.title = `${question.title} | Brian Lovin`;
-    }
-  }, [question?.title]);
-
-  if (isLoading) {
-    return (
-      <div className="flex h-full flex-1 items-center justify-center">
-        <LoadingSpinner />
-      </div>
-    );
-  }
-
-  if (!question || isError) {
-    return <p>Question not found</p>;
-  }
-
+export default function AMADetail({ question }: AMADetailProps) {
   const answeredAt = question.answeredAt
     ? new Date(question.answeredAt).toLocaleDateString("en-US", {
         month: "short",
