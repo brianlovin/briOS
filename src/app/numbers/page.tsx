@@ -1,24 +1,60 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Calculator } from "@/components/icons/Calculator";
 import { LiveNumber } from "@/components/LiveNumber";
 import { TopBar } from "@/components/TopBar";
 
 export default function NumbersPage() {
-  // Use lazy initialization to defer Date creation until client-side mount
-  const [startOfDay] = useState(() => {
+  // Initialize with fixed date to avoid new Date() during prerender
+  const [startOfDay, setStartOfDay] = useState<Date | null>(null);
+  const [populationBaseTime] = useState(new Date("2024-01-01T00:00:00Z"));
+
+  // Set actual current time on client-side mount
+  useEffect(() => {
     const now = new Date();
-    return new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  });
+    setStartOfDay(new Date(now.getFullYear(), now.getMonth(), now.getDate()));
+  }, []);
 
   const birthsPerSecond = 4.3;
   const deathsPerSecond = 2.0;
   const populationRate = birthsPerSecond - deathsPerSecond;
 
   const populationBase = 8118000000;
-  const [populationBaseTime] = useState(() => new Date("2024-01-01T00:00:00Z"));
+
+  // Don't render time-dependent counters until we have the current time
+  if (!startOfDay) {
+    return (
+      <div className="flex flex-1 flex-col">
+        <TopBar>
+          <Calculator />
+          <div className="flex-1 text-sm font-semibold">Numbers</div>
+        </TopBar>
+        <div className="flex-1 overflow-y-auto p-8">
+          <div className="grid gap-8 text-4xl sm:grid-cols-2 md:grid-cols-3">
+            <div className="flex flex-col gap-2">
+              <div className="text-secondary text-sm">World Population</div>
+              <LiveNumber
+                base={populationBase}
+                baseTime={populationBaseTime}
+                rate={populationRate}
+                className="text-primary"
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <div className="text-secondary text-sm">Births Today</div>
+              <div className="text-primary font-mono">Loading...</div>
+            </div>
+            <div className="flex flex-col gap-2">
+              <div className="text-secondary text-sm">Deaths Today</div>
+              <div className="text-primary font-mono">Loading...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-1 flex-col">
