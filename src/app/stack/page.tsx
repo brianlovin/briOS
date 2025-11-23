@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
+import { cacheLife, cacheTag } from "next/cache";
 
 import { StackPageClient } from "@/components/stack/StackPageClient";
+import { CACHE_TAGS } from "@/lib/cache-tags";
 import { createMetadata } from "@/lib/metadata";
 import { getStacks } from "@/lib/stack";
-
-// Revalidate the page every 24 hours
-export const revalidate = 86400;
 
 export const metadata: Metadata = createMetadata({
   title: "Stack",
@@ -19,6 +18,10 @@ export default async function StackPage({
 }: {
   searchParams: Promise<{ status?: string; platform?: string }>;
 }) {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CACHE_TAGS.stacks);
+
   const params = await searchParams;
   const status = params.status || "active";
   const platform = params.platform || "";

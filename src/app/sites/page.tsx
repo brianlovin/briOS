@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
+import { cacheLife, cacheTag } from "next/cache";
 
 import { GoodWebsitesPageClient } from "@/components/good-websites/GoodWebsitesPageClient";
+import { CACHE_TAGS } from "@/lib/cache-tags";
 import { getGoodWebsites } from "@/lib/goodWebsites";
 import { createMetadata } from "@/lib/metadata";
-
-// Revalidate the page every 24 hours
-export const revalidate = 86400;
 
 export const metadata: Metadata = createMetadata({
   title: "Good websites",
@@ -18,6 +17,10 @@ export default async function GoodWebsitesPage({
 }: {
   searchParams: Promise<{ tag?: string }>;
 }) {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CACHE_TAGS.websites);
+
   const params = await searchParams;
   const tag = params.tag || "";
 

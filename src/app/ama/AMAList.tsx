@@ -1,16 +1,22 @@
 "use client";
 
+import { cacheLife, cacheTag } from "next/cache";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useMemo } from "react";
 
 import { InfiniteScrollList } from "@/components/InfiniteScrollList";
 import { useListNavigation } from "@/hooks/useListNavigation";
+import { CACHE_TAGS } from "@/lib/cache-tags";
 import { cn } from "@/lib/utils";
 
 import { useAMAQuestionsContext } from "./AMAContext";
 
 export function AmaList() {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CACHE_TAGS.amaQuestions);
+
   const pathname = usePathname();
   const { questions, setSize, size, isReachingEnd, isLoading, isLoadingMore } =
     useAMAQuestionsContext();

@@ -1,6 +1,7 @@
 "use client";
 
 import { useAtomValue } from "jotai";
+import { cacheLife, cacheTag } from "next/cache";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
@@ -9,6 +10,7 @@ import React, { useMemo, useRef } from "react";
 import { hnSubscribedAtom } from "@/atoms/hnSubscription";
 import { ListDetailLayout } from "@/components/ListDetailLayout";
 import { useListNavigation } from "@/hooks/useListNavigation";
+import { CACHE_TAGS } from "@/lib/cache-tags";
 import { useHNPosts } from "@/lib/hooks/useHn";
 import { cn } from "@/lib/utils";
 import { HackerNewsPost } from "@/types/hackernews";
@@ -49,6 +51,10 @@ export default function HNLayout({ children }: { children: React.ReactNode }) {
 }
 
 function HNStoriesList() {
+  "use cache";
+  cacheLife({ stale: 10, revalidate: 60 });
+  cacheTag(CACHE_TAGS.hnPosts);
+
   const pathname = usePathname();
   const { posts, isLoading, isError } = useHNPostsContext();
   const listRef = useRef<HTMLUListElement>(null);

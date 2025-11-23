@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cacheLife, cacheTag } from "next/cache";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -6,12 +7,10 @@ import { renderBlocks } from "@/components/renderBlocks";
 import { List, ListItem, ListItemLabel } from "@/components/shared/ListComponents";
 import { TopBar } from "@/components/TopBar";
 import { FancySeparator } from "@/components/ui/FancySeparator";
+import { CACHE_TAGS } from "@/lib/cache-tags";
 import { createArticleJsonLd, createMetadata, truncateDescription } from "@/lib/metadata";
 import { getWritingPostContentBySlug } from "@/lib/notion";
 import { getAllWritingPosts } from "@/lib/writing";
-
-// Revalidate the page every 24 hours
-export const revalidate = 86400;
 
 // Generate static params for all writing posts at build time
 export async function generateStaticParams() {
@@ -57,6 +56,10 @@ function getRandomPosts<T>(posts: T[], count: number): T[] {
 }
 
 export default async function WritingPostPage(props: { params: Promise<{ slug: string }> }) {
+  "use cache";
+  cacheLife("days");
+  cacheTag(CACHE_TAGS.writingPosts);
+
   const params = await props.params;
   const slug = params.slug;
   const content = await getWritingPostContentBySlug(slug);

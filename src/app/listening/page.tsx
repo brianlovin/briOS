@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
+import { cacheLife, cacheTag } from "next/cache";
 
 import { ListeningHistory } from "@/components/ListeningHistory";
 import { TopBar } from "@/components/TopBar";
+import { CACHE_TAGS } from "@/lib/cache-tags";
 import { createMetadata } from "@/lib/metadata";
 import { getListeningHistoryDatabaseItems } from "@/lib/notion";
-
-// Revalidate the page every 24 hours
-export const revalidate = 86400;
 
 export const metadata: Metadata = createMetadata({
   title: "Listening",
@@ -15,6 +14,10 @@ export const metadata: Metadata = createMetadata({
 });
 
 export default async function ListeningPage() {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CACHE_TAGS.listening);
+
   // Fetch initial page of music data on the server
   const initialPage = await getListeningHistoryDatabaseItems(undefined, 20);
 

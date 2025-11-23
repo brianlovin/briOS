@@ -16,18 +16,6 @@
         "format": "number"
       }
     },
-    "Journal": {
-      "id": "R%3E%3Ck",
-      "name": "Journal",
-      "description": null,
-      "type": "relation",
-      "relation": {
-        "database_id": "1e8c711c-0ceb-80ec-ac8b-e3e864400a7d",
-        "data_source_id": "1e8c711c-0ceb-809e-82e2-000b04ef46d4",
-        "type": "single_property",
-        "single_property": {}
-      }
-    },
     "Spotify URL": {
       "id": "UOaG",
       "name": "Spotify URL",

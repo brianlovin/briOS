@@ -1,5 +1,6 @@
 "use client";
 
+import { cacheLife, cacheTag } from "next/cache";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useCallback, useMemo } from "react";
@@ -9,6 +10,7 @@ import { ListDetailLayout } from "@/components/ListDetailLayout";
 import { useDesignDetailsEpisodes } from "@/hooks/useDesignDetailsEpisodes";
 import { useListNavigation } from "@/hooks/useListNavigation";
 import { useScrollToSelected } from "@/hooks/useScrollToSelected";
+import { CACHE_TAGS } from "@/lib/cache-tags";
 import { cn } from "@/lib/utils";
 
 export default function DesignDetailsLayout({ children }: { children: React.ReactNode }) {
@@ -20,6 +22,10 @@ export default function DesignDetailsLayout({ children }: { children: React.Reac
 }
 
 function EpisodeList() {
+  "use cache";
+  cacheLife("days");
+  cacheTag(CACHE_TAGS.designDetailsEpisodes);
+
   const pathname = usePathname();
   const {
     items: episodes,

@@ -1,9 +1,16 @@
+import { cacheLife } from "next/cache";
+import { cacheTag } from "next/cache";
 import { notFound } from "next/navigation";
 
 import { renderBlocks } from "@/components/renderBlocks";
+import { CACHE_TAGS } from "@/lib/cache-tags";
 import { getFullContent } from "@/lib/notion";
 
 export default async function EpisodePage(props: { params: Promise<{ id: string }> }) {
+  "use cache";
+  cacheLife("days");
+  cacheTag(CACHE_TAGS.designDetailsEpisodes);
+
   const params = await props.params;
   const id = params.id;
   const content = await getFullContent(id);

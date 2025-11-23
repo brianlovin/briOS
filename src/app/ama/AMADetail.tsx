@@ -1,5 +1,6 @@
 "use client";
 
+import { cacheLife, cacheTag } from "next/cache";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
@@ -7,9 +8,14 @@ import { useEffect } from "react";
 import { renderBlocks } from "@/components/renderBlocks";
 import { FancySeparator } from "@/components/ui/FancySeparator";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { CACHE_TAGS } from "@/lib/cache-tags";
 import { useAmaQuestion } from "@/lib/hooks/useAma";
 
 export default function AMADetail() {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CACHE_TAGS.amaQuestions);
+
   const { id } = useParams();
 
   // Fetch the full question with content blocks from the API
