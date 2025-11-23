@@ -1,19 +1,24 @@
 "use client";
 
+import { useState } from "react";
+
 import { Calculator } from "@/components/icons/Calculator";
 import { LiveNumber } from "@/components/LiveNumber";
 import { TopBar } from "@/components/TopBar";
 
 export default function NumbersPage() {
-  const now = new Date();
-  const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  // Use lazy initialization to defer Date creation until client-side mount
+  const [startOfDay] = useState(() => {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  });
 
   const birthsPerSecond = 4.3;
   const deathsPerSecond = 2.0;
   const populationRate = birthsPerSecond - deathsPerSecond;
 
   const populationBase = 8118000000;
-  const populationBaseTime = new Date("2024-01-01T00:00:00Z");
+  const [populationBaseTime] = useState(() => new Date("2024-01-01T00:00:00Z"));
 
   return (
     <div className="flex flex-1 flex-col">
