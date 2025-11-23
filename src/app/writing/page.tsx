@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { cacheLife } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
 
 import {
   List,
@@ -9,6 +9,7 @@ import {
   SectionHeading,
 } from "@/components/shared/ListComponents";
 import { TopBar } from "@/components/TopBar";
+import { CACHE_TAGS } from "@/lib/cache-tags";
 import { createMetadata } from "@/lib/metadata";
 import { getAllWritingPosts } from "@/lib/writing";
 
@@ -22,6 +23,7 @@ export const metadata: Metadata = createMetadata({
 export default async function WritingPage() {
   "use cache";
   cacheLife("days");
+  cacheTag(CACHE_TAGS.writingPosts);
 
   const posts = await getAllWritingPosts();
 

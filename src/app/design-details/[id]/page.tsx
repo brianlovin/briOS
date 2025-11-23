@@ -1,12 +1,14 @@
-import { cacheLife } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
 import { notFound } from "next/navigation";
 
 import { renderBlocks } from "@/components/renderBlocks";
+import { CACHE_TAGS } from "@/lib/cache-tags";
 import { getDesignDetailsEpisodeDatabaseItems, getFullContent } from "@/lib/notion";
 
 export async function generateStaticParams() {
   "use cache";
   cacheLife("days");
+  cacheTag(CACHE_TAGS.designDetailsEpisodes);
 
   // Generate static params for the first 30 podcast episodes
   const { items } = await getDesignDetailsEpisodeDatabaseItems(undefined, 30);
@@ -19,6 +21,7 @@ export async function generateStaticParams() {
 export default async function EpisodePage(props: { params: Promise<{ id: string }> }) {
   "use cache";
   cacheLife("days");
+  cacheTag(CACHE_TAGS.designDetailsEpisodes);
 
   const params = await props.params;
   const id = params.id;

@@ -1,3 +1,6 @@
+import { cacheLife, cacheTag } from "next/cache";
+
+import { CACHE_TAGS } from "@/lib/cache-tags";
 import { getSpeakingItems } from "@/lib/notion/queries";
 
 import { List, ListItem, ListItemLabel, ListItemSubLabel } from "../shared/ListComponents";
@@ -19,6 +22,10 @@ function formatSpeakingDate(isoDate: string): string {
 }
 
 export async function SpeakingList() {
+  "use cache";
+  cacheLife("days");
+  cacheTag(CACHE_TAGS.speaking);
+
   const speakingItems = await getSpeakingItems();
 
   return (
