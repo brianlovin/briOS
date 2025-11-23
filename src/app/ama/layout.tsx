@@ -1,44 +1,38 @@
-"use client";
+import { cacheLife, cacheTag } from "next/cache";
+import React, { Suspense } from "react";
 
-import React from "react";
-
+import { AMAPageSkeleton } from "@/components/ama/AMAPageSkeleton";
 import { ListDetailLayout } from "@/components/ListDetailLayout";
-import { useAmaQuestions } from "@/lib/ama";
+import { CACHE_TAGS } from "@/lib/cache-tags";
+import { getAmaDatabaseItems } from "@/lib/notion";
 
-import { AMAQuestionsProvider } from "./AMAContext";
-import { AmaList } from "./AMAList";
+import { AMAListClient } from "./AMAListClient";
 import { AskQuestionDialog } from "./AskQuestionDialog";
 
-export default function AMALayout({ children }: { children: React.ReactNode }) {
-  // Fetch questions at layout level to share with children
-  const {
-    items: questions,
-    isLoading,
-    isLoadingMore,
-    isReachingEnd,
-    isError,
-    size,
-    setSize,
-  } = useAmaQuestions();
+async function AMAList() {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CACHE_TAGS.amaQuestions);
 
+  // Fetch initial page of questions on the server
+  const initialPage = await getAmaDatabaseItems(undefined, 20);
+
+  return <AMAListClient initialData={[initialPage]} />;
+}
+
+export default function AMALayout({ children }: { children: React.ReactNode }) {
   return (
-    <AMAQuestionsProvider
-      questions={questions}
-      isLoading={isLoading ?? false}
-      isLoadingMore={isLoadingMore ?? false}
-      isReachingEnd={isReachingEnd ?? false}
-      isError={isError}
-      size={size}
-      setSize={setSize}
+    <ListDetailLayout
+      headerChildren={<AskQuestionDialog />}
+      title="AMA"
+      backHref="/ama"
+      list={
+        <Suspense fallback={<AMAPageSkeleton />}>
+          <AMAList />
+        </Suspense>
+      }
     >
-      <ListDetailLayout
-        headerChildren={<AskQuestionDialog />}
-        title="AMA"
-        backHref="/ama"
-        list={<AmaList />}
-      >
-        {children}
-      </ListDetailLayout>
-    </AMAQuestionsProvider>
+      {children}
+    </ListDetailLayout>
   );
 }

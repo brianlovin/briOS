@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -10,11 +11,11 @@ import { createArticleJsonLd, createMetadata, truncateDescription } from "@/lib/
 import { getWritingPostContentBySlug } from "@/lib/notion";
 import { getAllWritingPosts } from "@/lib/writing";
 
-// Revalidate the page every 24 hours
-export const revalidate = 86400;
-
 // Generate static params for all writing posts at build time
 export async function generateStaticParams() {
+  "use cache";
+  cacheLife("days");
+
   const posts = await getAllWritingPosts();
 
   return posts
@@ -28,6 +29,9 @@ export async function generateStaticParams() {
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
+  "use cache";
+  cacheLife("days");
+
   const params = await props.params;
   const slug = params.slug;
   const content = await getWritingPostContentBySlug(slug);
@@ -57,6 +61,9 @@ function getRandomPosts<T>(posts: T[], count: number): T[] {
 }
 
 export default async function WritingPostPage(props: { params: Promise<{ slug: string }> }) {
+  "use cache";
+  cacheLife("days");
+
   const params = await props.params;
   const slug = params.slug;
   const content = await getWritingPostContentBySlug(slug);

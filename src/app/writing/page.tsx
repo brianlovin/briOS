@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cacheLife } from "next/cache";
 
 import {
   List,
@@ -11,9 +12,6 @@ import { TopBar } from "@/components/TopBar";
 import { createMetadata } from "@/lib/metadata";
 import { getAllWritingPosts } from "@/lib/writing";
 
-// Revalidate the page every 24 hours
-export const revalidate = 86400;
-
 export const metadata: Metadata = createMetadata({
   title: "Writing",
   description:
@@ -22,6 +20,9 @@ export const metadata: Metadata = createMetadata({
 });
 
 export default async function WritingPage() {
+  "use cache";
+  cacheLife("days");
+
   const posts = await getAllWritingPosts();
 
   // Group posts by year

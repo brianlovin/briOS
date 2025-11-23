@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import { cacheLife, cacheTag } from "next/cache";
+import { Suspense } from "react";
 
 import { StackPageClient } from "@/components/stack/StackPageClient";
+import { StackPageSkeleton } from "@/components/stack/StackPageSkeleton";
+import { CACHE_TAGS } from "@/lib/cache-tags";
 import { createMetadata } from "@/lib/metadata";
 import { getStacks } from "@/lib/stack";
-
-// Revalidate the page every 24 hours
-export const revalidate = 86400;
 
 export const metadata: Metadata = createMetadata({
   title: "Stack",
@@ -14,11 +15,15 @@ export const metadata: Metadata = createMetadata({
   path: "/stack",
 });
 
-export default async function StackPage({
+async function StackContent({
   searchParams,
 }: {
   searchParams: Promise<{ status?: string; platform?: string }>;
 }) {
+  "use cache: private";
+  cacheLife("hours");
+  cacheTag(CACHE_TAGS.stacks);
+
   const params = await searchParams;
   const status = params.status || "active";
   const platform = params.platform || "";
@@ -36,4 +41,16 @@ export default async function StackPage({
   });
 
   return <StackPageClient initialData={filteredStacks} />;
+}
+
+export default async function StackPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ status?: string; platform?: string }>;
+}) {
+  return (
+    <Suspense fallback={<StackPageSkeleton />}>
+      <StackContent searchParams={searchParams} />
+    </Suspense>
+  );
 }

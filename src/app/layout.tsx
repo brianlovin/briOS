@@ -3,8 +3,10 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter, Source_Serif_4 } from "next/font/google";
 import { PropsWithChildren } from "react";
+import { Toaster } from "sonner";
 
-import { ClientShell } from "@/components/ClientShell";
+import { AppShell } from "@/components/AppShell";
+import { CommandMenu } from "@/components/CommandMenu";
 import { DEFAULT_METADATA, SITE_CONFIG } from "@/lib/metadata";
 import { cn } from "@/lib/utils";
 
@@ -40,7 +42,9 @@ export default function RootLayout({ children }: PropsWithChildren) {
       </head>
       <body className={cn(inter.variable, ptSerif.variable)}>
         <Providers>
-          <ClientShell>{children}</ClientShell>
+          <Toaster position="bottom-center" />
+          <CommandMenu />
+          <AppShell>{children}</AppShell>
         </Providers>
       </body>
     </html>

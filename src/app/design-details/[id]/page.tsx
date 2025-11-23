@@ -1,7 +1,16 @@
 import { notFound } from "next/navigation";
 
 import { renderBlocks } from "@/components/renderBlocks";
-import { getFullContent } from "@/lib/notion";
+import { getDesignDetailsEpisodeDatabaseItems, getFullContent } from "@/lib/notion";
+
+export async function generateStaticParams() {
+  // Generate static params for the first 30 podcast episodes
+  const { items } = await getDesignDetailsEpisodeDatabaseItems(undefined, 30);
+
+  return items.map((item) => ({
+    id: item.id,
+  }));
+}
 
 export default async function EpisodePage(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;

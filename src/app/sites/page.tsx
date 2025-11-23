@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import { cacheLife, cacheTag } from "next/cache";
+import { Suspense } from "react";
 
 import { GoodWebsitesPageClient } from "@/components/good-websites/GoodWebsitesPageClient";
+import { GoodWebsitesPageSkeleton } from "@/components/good-websites/GoodWebsitesPageSkeleton";
+import { CACHE_TAGS } from "@/lib/cache-tags";
 import { getGoodWebsites } from "@/lib/goodWebsites";
 import { createMetadata } from "@/lib/metadata";
-
-// Revalidate the page every 24 hours
-export const revalidate = 86400;
 
 export const metadata: Metadata = createMetadata({
   title: "Good websites",
@@ -13,11 +14,11 @@ export const metadata: Metadata = createMetadata({
   path: "/sites",
 });
 
-export default async function GoodWebsitesPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ tag?: string }>;
-}) {
+async function WebsitesContent({ searchParams }: { searchParams: Promise<{ tag?: string }> }) {
+  "use cache: private";
+  cacheLife("days");
+  cacheTag(CACHE_TAGS.websites);
+
   const params = await searchParams;
   const tag = params.tag || "";
 
@@ -31,4 +32,16 @@ export default async function GoodWebsitesPage({
   });
 
   return <GoodWebsitesPageClient initialData={filteredWebsites} />;
+}
+
+export default async function GoodWebsitesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tag?: string }>;
+}) {
+  return (
+    <Suspense fallback={<GoodWebsitesPageSkeleton />}>
+      <WebsitesContent searchParams={searchParams} />
+    </Suspense>
+  );
 }
