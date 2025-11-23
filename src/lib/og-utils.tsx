@@ -78,7 +78,7 @@ export async function generateOGImage({ title, url }: OGImageProps) {
 
     const [interRegularFont, interSemiBoldFont, avatarData] = await Promise.all([
       loadGoogleFont("Inter", 400, allText),
-      loadGoogleFont("Inter", 600, allText),
+      loadGoogleFont("Inter", 700, allText),
       loadAvatar(),
     ]);
 
@@ -115,17 +115,17 @@ export async function generateOGImage({ title, url }: OGImageProps) {
               style={{
                 fontSize: TITLE_SIZE,
                 fontFamily: "Inter",
-                fontWeight: 600,
+                fontWeight: 700,
                 color: PRIMARY_COLOR,
                 lineHeight: 1.2,
-                letterSpacing: "-0.02em",
+                letterSpacing: "-0.12rem",
                 display: "-webkit-box",
                 WebkitLineClamp: 3,
                 WebkitBoxOrient: "vertical",
                 overflow: "hidden",
               }}
             >
-              {title}
+              {title.length > 80 ? title.slice(0, 80) + "..." : title}
             </div>
             <div
               style={{
@@ -154,7 +154,7 @@ export async function generateOGImage({ title, url }: OGImageProps) {
             name: "Inter",
             data: interSemiBoldFont,
             style: "normal",
-            weight: 600,
+            weight: 700,
           },
         ],
       },
