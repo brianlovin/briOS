@@ -16,7 +16,7 @@ export const metadata: Metadata = createMetadata({
 
 async function WebsitesContent({ searchParams }: { searchParams: Promise<{ tag?: string }> }) {
   "use cache: private";
-  cacheLife("days");
+  cacheLife("hours");
   cacheTag(CACHE_TAGS.websites);
 
   const params = await searchParams;
