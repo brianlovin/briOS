@@ -4,9 +4,6 @@ import { StackPageClient } from "@/components/stack/StackPageClient";
 import { createMetadata } from "@/lib/metadata";
 import { getStacks } from "@/lib/stack";
 
-// Revalidate the page every 24 hours
-export const revalidate = 86400;
-
 export const metadata: Metadata = createMetadata({
   title: "Stack",
   description:

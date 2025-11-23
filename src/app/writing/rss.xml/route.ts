@@ -3,8 +3,6 @@ import { Feed } from "feed";
 import { SITE_CONFIG } from "@/lib/metadata";
 import { getAllWritingPosts } from "@/lib/writing";
 
-export const revalidate = 86400; // 24 hour cache, matching other API routes
-
 export async function GET() {
   try {
     // Create the feed

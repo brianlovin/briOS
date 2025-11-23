@@ -11,9 +11,6 @@ import { TopBar } from "@/components/TopBar";
 import { createMetadata } from "@/lib/metadata";
 import { getAllWritingPosts } from "@/lib/writing";
 
-// Revalidate the page every 24 hours
-export const revalidate = 86400;
-
 export const metadata: Metadata = createMetadata({
   title: "Writing",
   description:
