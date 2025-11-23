@@ -1,18 +1,26 @@
 "use client";
 
 import { useAtomValue } from "jotai";
+import { useEffect, useState } from "react";
 
 import { hnSubscribedAtom } from "@/atoms/hnSubscription";
 
 import { SubscribeDialog } from "./SubscribeDialog";
 
 export function HNHeaderClient() {
-  const today = new Date();
-  const formattedDate = today.toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
+  const [formattedDate, setFormattedDate] = useState<string>("");
+
+  useEffect(() => {
+    const today = new Date();
+    const formatted = today.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
+    requestAnimationFrame(() => {
+      setFormattedDate(formatted);
+    });
+  }, []);
 
   const hnSubscribed = useAtomValue(hnSubscribedAtom);
 
