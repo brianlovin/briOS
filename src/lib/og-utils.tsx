@@ -18,20 +18,40 @@ export const URL_SIZE = 32;
 // Avatar
 export const AVATAR_SIZE = 100;
 
-// Font loading from Google Fonts
+// Font loading from Google Fonts with timeout
 async function loadGoogleFont(font: string, weight: number, text: string): Promise<ArrayBuffer> {
+  const timeout = 5000; // 5 second timeout
+
   try {
     const url = `https://fonts.googleapis.com/css2?family=${font}:wght@${weight}&text=${encodeURIComponent(text)}`;
 
-    const css = await (await fetch(url)).text();
-    const resource = css.match(/src: url\((.+)\) format\('(opentype|truetype)'\)/);
+    // Fetch with timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
 
-    if (resource) {
-      const response = await fetch(resource[1]);
-      if (response.status === 200) {
-        const buffer = await response.arrayBuffer();
-        return buffer;
+    try {
+      const cssResponse = await fetch(url, { signal: controller.signal });
+      const css = await cssResponse.text();
+      const resource = css.match(/src: url\((.+)\) format\('(opentype|truetype)'\)/);
+
+      if (resource) {
+        const fontController = new AbortController();
+        const fontTimeoutId = setTimeout(() => fontController.abort(), timeout);
+
+        try {
+          const response = await fetch(resource[1], { signal: fontController.signal });
+          if (response.status === 200) {
+            const buffer = await response.arrayBuffer();
+            clearTimeout(fontTimeoutId);
+            clearTimeout(timeoutId);
+            return buffer;
+          }
+        } finally {
+          clearTimeout(fontTimeoutId);
+        }
       }
+    } finally {
+      clearTimeout(timeoutId);
     }
 
     throw new Error(`Failed to load font: ${font} ${weight}`);
@@ -125,7 +145,7 @@ export async function generateOGImage({ title, url }: OGImageProps) {
                 overflow: "hidden",
               }}
             >
-              {title}
+              {title.length > 80 ? title.slice(0, 80) + "..." : title}
             </div>
             <div
               style={{
