@@ -10,6 +10,7 @@ import { LoadingSpinner } from "@/components/ui";
 import type { GoodWebsiteItem } from "@/lib/goodWebsites";
 import { useGoodWebsites } from "@/lib/hooks/useGoodWebsites";
 
+import { Linked } from "../icons/Linked";
 import { XIcon } from "../icons/SocialIcons";
 
 interface GoodWebsitesPageClientProps {
@@ -112,7 +113,9 @@ function GoodWebsiteItemComponent({ item }: { item: GoodWebsiteItem }) {
             unoptimized
           />
         ) : (
-          <div className="bg-tertiary size-10 flex-none rounded-md md:hidden" />
+          <div className="flex size-10 flex-none items-center justify-center rounded-md md:hidden">
+            <Linked className="text-neutral-500" />
+          </div>
         )}
 
         {/* Name column - contains icon on desktop */}
@@ -129,7 +132,9 @@ function GoodWebsiteItemComponent({ item }: { item: GoodWebsiteItem }) {
               unoptimized
             />
           ) : (
-            <div className="bg-tertiary hidden size-6 flex-none rounded-md md:block" />
+            <div className="hidden size-6 flex-none items-center justify-center rounded-md md:flex">
+              <Linked className="text-neutral-500" />
+            </div>
           )}
           <div className="min-w-0 flex-1">
             <span className="text-primary block truncate font-medium">{item.name}</span>

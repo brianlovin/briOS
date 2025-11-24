@@ -1,12 +1,13 @@
 import { cachedResponse, errorResponse } from "@/lib/api-utils";
-import { getGoodWebsitesDatabaseItems } from "@/lib/notion";
+import { getGoodWebsites } from "@/lib/goodWebsites";
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const tag = searchParams.get("tag") || "";
 
-    const items = await getGoodWebsitesDatabaseItems();
+    // Use the same function as the page to get randomized results
+    const items = await getGoodWebsites();
 
     // Filter items based on query parameters
     const filteredItems = items.filter((item) => {
@@ -14,7 +15,8 @@ export async function GET(request: Request) {
       return tagMatch;
     });
 
-    return cachedResponse(filteredItems, 86400); // 24 hour cache
+    // Cache for 5 minutes to match ISR revalidation
+    return cachedResponse(filteredItems, 300);
   } catch (error) {
     console.error("Error fetching good website items:", error);
     return errorResponse("Failed to fetch good website items");
