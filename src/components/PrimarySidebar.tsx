@@ -159,7 +159,7 @@ export function SidebarItem({
         <span
           className={cn(
             "group-hover/sidebar-item:text-primary flex h-5 w-5 items-center justify-center",
-            { "text-primary": isActive, "text-tertiary": !isActive },
+            { "text-primary": isActive, "text-neutral-500": !isActive },
           )}
         >
           {icon}
