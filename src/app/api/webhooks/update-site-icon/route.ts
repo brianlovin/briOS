@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { errorResponse } from "@/lib/api-utils";
+import { optimizeSiteIcon } from "@/lib/image-processing/optimize";
 import { notion } from "@/lib/notion";
 import { uploadBufferToR2 } from "@/lib/r2/storage";
 import { getBestFaviconUrl } from "@/lib/utils/favicon";
@@ -15,8 +16,9 @@ import { getBestFaviconUrl } from "@/lib/utils/favicon";
  * 1. Extract page ID and URL from Notion webhook
  * 2. Fetch favicon from URL
  * 3. Download favicon as buffer
- * 4. Upload to R2 storage
- * 5. Update Notion page icon with R2 URL
+ * 4. Optimize favicon (resize to max 80x80px, compress)
+ * 5. Upload to R2 storage
+ * 6. Update Notion page icon with R2 URL
  */
 export async function POST(request: Request) {
   try {
@@ -67,13 +69,20 @@ export async function POST(request: Request) {
       return errorResponse("Failed to download favicon", 500);
     }
 
-    const faviconBuffer = await faviconResponse.arrayBuffer();
-    const contentType = faviconResponse.headers.get("content-type") || "image/png";
+    const faviconArrayBuffer = await faviconResponse.arrayBuffer();
+    const faviconBuffer = Buffer.from(faviconArrayBuffer);
 
-    // Step 3: Upload favicon to R2
-    const r2Url = await uploadBufferToR2(faviconBuffer, contentType);
+    // Step 3: Optimize the favicon (resize to max 80x80px, compress)
+    const optimized = await optimizeSiteIcon(faviconBuffer);
 
-    // Step 4: Update Notion page icon with R2 URL
+    console.log(
+      `Optimized favicon: ${optimized.width}x${optimized.height}, ${(optimized.optimizedSize / 1024).toFixed(2)}KB (saved ${optimized.savings.toFixed(1)}%)`,
+    );
+
+    // Step 4: Upload optimized favicon to R2
+    const r2Url = await uploadBufferToR2(optimized.buffer, optimized.contentType);
+
+    // Step 5: Update Notion page icon with R2 URL
     await notion.pages.update({
       page_id: pageId,
       icon: {
