@@ -33,10 +33,16 @@ function getExtensionFromContentType(contentType: string): string {
  * Uploads an image buffer directly to R2 storage
  * Returns the public R2 URL
  */
-export async function uploadBufferToR2(buffer: ArrayBuffer, contentType: string): Promise<string> {
+export async function uploadBufferToR2(
+  buffer: ArrayBuffer | Buffer,
+  contentType: string,
+): Promise<string> {
   try {
+    // Convert to Buffer if needed
+    const bufferData = Buffer.isBuffer(buffer) ? buffer : Buffer.from(buffer);
+
     // Generate a unique filename based on content hash
-    const hash = crypto.createHash("sha256").update(Buffer.from(buffer)).digest("hex");
+    const hash = crypto.createHash("sha256").update(bufferData).digest("hex");
     const extension = getExtensionFromContentType(contentType);
     const filename = `notion-images/${hash}${extension}`;
 
@@ -45,7 +51,7 @@ export async function uploadBufferToR2(buffer: ArrayBuffer, contentType: string)
       new PutObjectCommand({
         Bucket: BUCKET_NAME,
         Key: filename,
-        Body: Buffer.from(buffer),
+        Body: bufferData,
         ContentType: contentType,
         CacheControl: "public, max-age=31536000, immutable", // Cache for 1 year
       }),
