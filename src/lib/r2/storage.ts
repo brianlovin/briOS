@@ -10,7 +10,7 @@ const s3Client = new S3Client({
   },
 });
 
-const BUCKET_NAME = process.env.S3_BUCKET!;
+const BUCKET_NAME = process.env.R2_BUCKET_NAME!;
 // R2 public URL - using R2.dev subdomain for public access
 const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL!;
 
