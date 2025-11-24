@@ -57,7 +57,7 @@ function ListeningHistoryRow({ item }: ListeningHistoryRowProps) {
           height={40}
           src={item.image}
           alt=""
-          className="dark:shadow-contrast size-10 flex-none rounded object-cover ring-[0.5px] ring-black/5 md:hidden"
+          className="size-10 flex-none rounded object-cover ring-[0.5px] ring-black/10 md:hidden dark:ring-white/10"
           onError={() => setImageError(true)}
         />
       ) : (
@@ -73,7 +73,7 @@ function ListeningHistoryRow({ item }: ListeningHistoryRowProps) {
             height={20}
             src={item.image}
             alt=""
-            className="hidden size-5 flex-none rounded object-cover md:block"
+            className="hidden size-5 flex-none rounded object-cover ring-[0.5px] ring-black/5 md:block dark:ring-white/5"
             onError={() => setImageError(true)}
           />
         ) : (
