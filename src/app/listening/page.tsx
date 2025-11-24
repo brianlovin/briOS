@@ -5,9 +5,6 @@ import { TopBar } from "@/components/TopBar";
 import { createMetadata } from "@/lib/metadata";
 import { getListeningHistoryDatabaseItems } from "@/lib/notion";
 
-// Revalidate the page every 24 hours
-export const revalidate = 86400;
-
 export const metadata: Metadata = createMetadata({
   title: "Listening",
   description: "My listening history, synced from Spotify every hour",

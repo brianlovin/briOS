@@ -4,9 +4,6 @@ import { GoodWebsitesPageClient } from "@/components/good-websites/GoodWebsitesP
 import { getGoodWebsites } from "@/lib/goodWebsites";
 import { createMetadata } from "@/lib/metadata";
 
-// Revalidate the page every 24 hours
-export const revalidate = 86400;
-
 export const metadata: Metadata = createMetadata({
   title: "Good websites",
   description: "A curated collection of inspirational good websites",
