@@ -41,7 +41,6 @@ export function AppDissectionDetail({ post }: Props) {
           </Link>
           <div className="text-quaternary text-sm font-medium">/</div>
           <div className="line-clamp-1 text-sm font-medium">{post.title}</div>
-          <div className="text-tertiary ml-auto hidden text-sm sm:flex">{date}</div>
         </div>
       </TopBar>
 
