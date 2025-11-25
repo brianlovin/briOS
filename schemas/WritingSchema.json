@@ -28,6 +28,13 @@
       "type": "url",
       "url": {}
     },
+    "Optimize images": {
+      "id": "fKdx",
+      "name": "Optimize images",
+      "description": null,
+      "type": "button",
+      "button": {}
+    },
     "Name": {
       "id": "title",
       "name": "Name",

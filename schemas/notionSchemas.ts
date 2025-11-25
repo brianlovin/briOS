@@ -9,6 +9,7 @@ export const StackSchema = z.object({
   Image: z.string().optional(),
   URL: z.string().optional(),
   Platforms: z.array(z.enum(["Windows", "Web", "Physical", "macOS", "iOS"])).optional(),
+  "Process icon": z.any().optional(),
   Status: z.enum(["Inactive", "Active"]).optional(),
   Name: z.string().optional(),
 });
@@ -30,6 +31,7 @@ export const WritingSchema = z.object({
   Excerpt: z.string().optional(),
   Published: z.string().optional(),
   FeatureImage: z.string().optional(),
+  "Optimize images": z.any().optional(),
   Name: z.string().optional(),
 });
 

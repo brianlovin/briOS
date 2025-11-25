@@ -68,6 +68,13 @@
         ]
       }
     },
+    "Process icon": {
+      "id": "nYqJ",
+      "name": "Process icon",
+      "description": null,
+      "type": "button",
+      "button": {}
+    },
     "Status": {
       "id": "zNHC",
       "name": "Status",
