@@ -93,3 +93,11 @@ export async function optimizeImage(
 export async function optimizeSiteIcon(buffer: Buffer): Promise<OptimizedImage> {
   return optimizeImage(buffer, { maxSize: 80, quality: 90 });
 }
+
+/**
+ * Optimize an image for blog posts (keep original size, high quality compression)
+ */
+export async function optimizeWritingImage(buffer: Buffer): Promise<OptimizedImage> {
+  // Use a very large maxSize to prevent resizing, only compress
+  return optimizeImage(buffer, { maxSize: 4000, quality: 90 });
+}
