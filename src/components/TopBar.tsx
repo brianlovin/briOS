@@ -21,7 +21,7 @@ export function TopBar({ children, className }: PropsWithChildren<{ className?: 
           "pl-2": !primarySidebarOpen || isSmallScreen,
           "pl-4": primarySidebarOpen && !isSmallScreen,
           // On mobile: always solid bg and higher z-index to stay on top of menu
-          "relative z-30 bg-black": isSmallScreen,
+          "relative z-30 bg-white dark:bg-black": isSmallScreen,
         },
         className,
       )}

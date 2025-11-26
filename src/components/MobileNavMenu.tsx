@@ -31,7 +31,7 @@ export function MobileNavMenu() {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.98 }}
           transition={{ duration: 0.15 }}
-          className="fixed inset-0 top-11 z-20 flex origin-top flex-col bg-black"
+          className="fixed inset-0 top-11 z-20 flex origin-top flex-col bg-white dark:bg-black"
         >
           {/* Navigation - TopBar stays on top, menu opens below */}
           <nav className="flex-1 overflow-y-auto px-4 py-6">
