@@ -24,9 +24,13 @@ export async function SpeakingList() {
   return (
     <List>
       {speakingItems.map(({ id, title, date, href }) => (
-        <ListItem href={href} key={id}>
-          <ListItemLabel className="flex-1">{title}</ListItemLabel>
-          <ListItemSubLabel className="font-mono opacity-80">
+        <ListItem
+          href={href}
+          key={id}
+          className="flex-col items-start gap-0.5 md:flex-row md:items-center md:gap-3"
+        >
+          <ListItemLabel className="line-clamp-2 flex-1 md:line-clamp-1">{title}</ListItemLabel>
+          <ListItemSubLabel className="font-mono text-[19px] opacity-80">
             {formatSpeakingDate(date)}
           </ListItemSubLabel>
         </ListItem>

@@ -118,7 +118,9 @@ export default async function WritingPostPage(props: { params: Promise<{ slug: s
             )}
           </div>
 
-          <div className="flex min-w-0 flex-col gap-4 text-base">{renderBlocks(blocks)}</div>
+          <div className="flex min-w-0 flex-col gap-4 text-base md:text-lg">
+            {renderBlocks(blocks)}
+          </div>
         </div>
 
         <FancySeparator />

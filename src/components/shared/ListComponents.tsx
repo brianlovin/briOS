@@ -51,7 +51,7 @@ export function List({ children, className = "" }: ListProps) {
 export function ListItem({ children, className = "", href }: ListItemProps) {
   const isLink = !!href;
   const elementClassName = cn(
-    "inline-flex flex-1 items-center gap-2",
+    "inline-flex flex-1 text-xl items-center gap-2",
     isLink && "group/list-item",
     className,
   );

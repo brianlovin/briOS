@@ -314,11 +314,10 @@
 
   /* Body text link styling - unified across all rendering pipelines */
   .link-body {
-    color: var(--text-color-secondary);
-    font-weight: 500;
-    text-decoration: underline;
-    text-decoration-color: theme(colors.neutral.300);
-    text-decoration-thickness: 1px;
+    color: inherit;
+    text-decoration: dotted underline;
+    text-decoration-color: var(--text-color-quaternary);
+    text-decoration-thickness: 2px;
     text-underline-offset: 2px;
     word-break: break-word;
   }
@@ -326,11 +325,6 @@
   .link-body:hover {
     color: var(--text-color-primary);
   }
-
-  .dark .link-body {
-    text-decoration-color: theme(colors.neutral.600);
-  }
-
   /* Inline code styling */
   .prose code {
     background-color: var(--background-color-tertiary);
