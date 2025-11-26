@@ -131,15 +131,15 @@ export default function Home() {
                     href={href}
                     className="flex-col items-start gap-0 sm:flex-row sm:items-center sm:gap-2"
                   >
-                    <ListItemLabel className="sm:line-clamp-1">{name}</ListItemLabel>
-                    <div className="flex flex-1 items-center gap-2">
-                      <ListItemSubLabel className="flex-1">{description}</ListItemSubLabel>
+                    <div className="flex items-center gap-2">
+                      <ListItemLabel className="sm:line-clamp-1">{name}</ListItemLabel>
                       {external && (
-                        <ListItemSubLabel className="shrink-0 font-mono opacity-80">
-                          <ArrowUpRight />
+                        <ListItemSubLabel className="shrink-0 font-mono">
+                          <ArrowUpRight className="text-primary" />
                         </ListItemSubLabel>
                       )}
                     </div>
+                    <ListItemSubLabel className="flex-1">{description}</ListItemSubLabel>
                   </ListItem>
                 ))}
               </List>
