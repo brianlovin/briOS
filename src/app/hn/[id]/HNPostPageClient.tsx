@@ -148,7 +148,7 @@ export default function HNPostPageClient() {
               <Link
                 href={post.url}
                 target="_blank"
-                className="text-tertiary flex items-center gap-1 text-sm"
+                className="text-tertiary hover:text-primary flex items-center gap-1 text-sm"
               >
                 <span>{post.domain}</span>
                 <ArrowUpRight size={16} />
