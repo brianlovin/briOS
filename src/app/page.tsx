@@ -35,10 +35,10 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
       />
       <div className="flex flex-1 flex-col">
-        <TopBar className="border-b-0 md:hidden" />
+        <TopBar className="border-b-0 sm:hidden" />
 
         <div className="flex-1 overflow-y-auto">
-          <div className="text-primary mx-auto flex max-w-xl flex-1 flex-col gap-16 py-16 leading-[1.6] md:py-32">
+          <div className="text-primary mx-auto flex max-w-xl flex-1 flex-col gap-16 py-16 leading-[1.6] sm:py-32">
             <Section>
               <Image
                 src="/img/avatar.jpg"
@@ -78,7 +78,7 @@ export default function Home() {
 
             <Section>
               <SectionHeading>Work</SectionHeading>
-              <List className="gap-6 sm:gap-2.5">
+              <List className="gap-8">
                 {work.map(({ name, href, role, period, icon }) => (
                   <ListItem
                     key={name}
@@ -91,15 +91,17 @@ export default function Home() {
                         height={40}
                         src={icon.src}
                         alt={icon.alt}
-                        className="mb-2 h-5 w-5 rounded-md select-none sm:mb-0"
+                        className="mb-2 size-7 rounded-md select-none sm:mb-0 sm:size-5"
                         draggable={false}
                       />
                     ) : (
-                      <icon.component className="text-primary" />
+                      <icon.component className="text-primary mb-2 size-7 sm:mb-0 sm:size-5" />
                     )}
-                    <ListItemLabel>{name}</ListItemLabel>
-                    <ListItemSubLabel className="flex-1">{role}</ListItemSubLabel>
-                    <ListItemSubLabel className="font-mono text-[19px] opacity-80">
+                    <div className="flex items-center gap-2 sm:contents">
+                      <ListItemLabel>{name}</ListItemLabel>
+                      <ListItemSubLabel>{role}</ListItemSubLabel>
+                    </div>
+                    <ListItemSubLabel className="font-mono text-[19px] opacity-80 sm:ml-auto">
                       {period}
                     </ListItemSubLabel>
                   </ListItem>

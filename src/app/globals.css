@@ -315,7 +315,7 @@
   /* Body text link styling - unified across all rendering pipelines */
   .link-body {
     color: inherit;
-    text-decoration: dotted underline;
+    text-decoration: underline;
     text-decoration-color: var(--text-color-quaternary);
     text-decoration-thickness: 2px;
     text-underline-offset: 2px;
