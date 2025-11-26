@@ -35,78 +35,63 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
       />
       <div className="flex flex-1 flex-col">
-        <TopBar className="border-b-0" />
+        <TopBar className="border-b-0 md:hidden" />
 
         <div className="flex-1 overflow-y-auto">
-          <div className="text-secondary mx-auto flex max-w-xl flex-1 flex-col gap-16 py-16 leading-[1.6]">
+          <div className="text-primary mx-auto flex max-w-xl flex-1 flex-col gap-16 py-16 leading-[1.6] md:py-32">
             <Section>
               <Image
                 src="/img/avatar.jpg"
                 alt="Brian Lovin"
-                width={44}
-                height={44}
+                width={60}
+                height={60}
                 draggable={false}
                 className="mb-8 rounded-full select-none"
               />
-              <p className="text-pretty">
-                Hey, I&apos;m Brian. I&apos;m a software designer currently living in San Francisco.
-              </p>
 
-              <p>
-                I&apos;m currently designing AI products at{" "}
-                <InlineLink href="https://notion.com">Notion</InlineLink>. Before Notion, I was the
-                co-founder of <InlineLink href="https://campsite.com">Campsite</InlineLink>, an app
-                that combined posts, docs, calls, and chat to enable thoughtful team collaboration.
-              </p>
-              <p>
-                Before Campsite, I spent four years designing the{" "}
-                <InlineLink href="https://github.com/mobile">GitHub Mobile</InlineLink> apps. I
-                joined GitHub after they acquired my first startup,{" "}
-                <InlineLink href="https://spectrum.chat">Spectrum</InlineLink>, a platform for
-                branded communities to have better public conversations.
-              </p>
-              <p>
-                Before Spectrum, I designed payments experiences at Facebook, working across{" "}
-                <InlineLink href="https://facebook.com">Facebook</InlineLink>,{" "}
-                <InlineLink href="https://messenger.com">Messenger</InlineLink>,{" "}
-                <InlineLink href="https://whatsapp.com">WhatsApp</InlineLink>, and{" "}
-                <InlineLink href="https://instagram.com">Instagram</InlineLink>. I originally cut my
-                teeth as the first product designer at{" "}
-                <InlineLink href="https://buffer.com">Buffer</InlineLink>.
-              </p>
-              <p>
-                Along the way, I was a co-host of the{" "}
-                <InlineLink href="https://designdetails.fm">Design Details</InlineLink> podcast for
-                nine years, a weekly conversation about design process and culture. I also created{" "}
-                <InlineLink href="https://staff.design">Staff Design</InlineLink>, an interview
-                project about navigating the individual contributor career path.
+              <p className="text-2xl font-semibold">Brian Lovin</p>
+
+              <p className="text-secondary text-2xl font-semibold text-pretty">
+                I’m a software designer living in San Francisco, currently making AI products at{" "}
+                <InlineLink href="https://notion.com">Notion</InlineLink>.
               </p>
             </Section>
 
-            <Section>
-              <SectionHeading>Online</SectionHeading>
-              <List>
-                {socials.map(({ name, href, icon: Icon }) => (
-                  <ListItem key={name} href={href}>
-                    <Icon className="text-primary select-none" />
-                    <ListItemLabel>{name}</ListItemLabel>
-                  </ListItem>
-                ))}
-              </List>
+            <Section className="flex flex-row gap-2">
+              <ListItem href="https://x.com/brian_lovin" className="group p-2">
+                <XIcon size={24} className="text-quaternary group-hover:text-primary select-none" />
+              </ListItem>
+              <ListItem href="https://www.youtube.com/@brian_lovin" className="group p-2">
+                <YouTubeIcon
+                  size={28}
+                  className="text-quaternary select-none group-hover:text-[#FF0302]"
+                  playIconClassName="fill-[var(--background-color-elevated)]  group-hover:fill-white"
+                />
+              </ListItem>
+              <ListItem href="https://github.com/brianlovin" className="group p-2">
+                <GitHubIcon
+                  size={24}
+                  className="text-quaternary group-hover:text-primary select-none"
+                />
+              </ListItem>
             </Section>
 
             <Section>
               <SectionHeading>Work</SectionHeading>
-              <List>
+              <List className="gap-6 sm:gap-2.5">
                 {work.map(({ name, href, role, period, icon }) => (
-                  <ListItem key={name} href={href}>
+                  <ListItem
+                    key={name}
+                    href={href}
+                    className="flex-col items-start gap-0.5 sm:flex-row sm:items-center sm:gap-3"
+                  >
                     {icon.type === "image" ? (
                       <Image
                         width={40}
                         height={40}
                         src={icon.src}
                         alt={icon.alt}
-                        className="h-5 w-5 rounded-md select-none"
+                        className="mb-2 h-5 w-5 rounded-md select-none sm:mb-0"
                         draggable={false}
                       />
                     ) : (
@@ -114,7 +99,9 @@ export default function Home() {
                     )}
                     <ListItemLabel>{name}</ListItemLabel>
                     <ListItemSubLabel className="flex-1">{role}</ListItemSubLabel>
-                    <ListItemSubLabel className="font-mono opacity-80">{period}</ListItemSubLabel>
+                    <ListItemSubLabel className="font-mono text-[19px] opacity-80">
+                      {period}
+                    </ListItemSubLabel>
                   </ListItem>
                 ))}
               </List>
@@ -155,25 +142,6 @@ export default function Home() {
     </>
   );
 }
-
-// Data arrays
-const socials = [
-  {
-    name: "X",
-    href: "https://x.com/brian_lovin",
-    icon: XIcon,
-  },
-  {
-    name: "YouTube",
-    href: "https://www.youtube.com/@brian_lovin",
-    icon: YouTubeIcon,
-  },
-  {
-    name: "GitHub",
-    href: "https://github.com/brianlovin",
-    icon: GitHubIcon,
-  },
-];
 
 const projects = [
   {
