@@ -38,7 +38,7 @@ export function AmaList() {
         : undefined;
       const isSelected = item.id === currentId;
       return (
-        <li key={item.id} data-id={item.id}>
+        <li key={item.id} data-id={item.id} className="scroll-my-2">
           <Link
             className={cn(
               "hover:bg-tertiary flex flex-col gap-0.5 rounded-md px-3.5 py-3 text-sm",
