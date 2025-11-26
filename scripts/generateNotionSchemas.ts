@@ -153,10 +153,15 @@ async function generateSchemas() {
     schemaLines.push(`export type ${db.varName} = z.infer<typeof ${db.varName}Schema>;\n`);
   }
 
-  const output = schemaLines.join("\n");
+  const output = schemaLines.join("\n") + "\n";
   const outPath = path.join(process.cwd(), "schemas", "notionSchemas.ts");
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
   fs.writeFileSync(outPath, output);
+
+  // Run prettier on the generated file
+  const { execSync } = await import("child_process");
+  execSync(`bun run prettier --write "${outPath}"`, { stdio: "inherit" });
+
   console.log(`✅ Notion schemas generated at ${outPath}`);
 }
 
