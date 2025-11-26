@@ -65,7 +65,7 @@ export default function Home() {
                 <YouTubeIcon
                   size={32}
                   className="text-quaternary select-none group-hover:text-[#FF0302]"
-                  playIconClassName="fill-[var(--background-color-elevated)]  group-hover:fill-white"
+                  playIconClassName="fill-[var(--background-color-primary)] sm:fill-[var(--background-color-elevated)]  group-hover:fill-white"
                 />
               </ListItem>
               <ListItem href="https://github.com/brianlovin" className="group p-2">

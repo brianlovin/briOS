@@ -20,7 +20,6 @@ export function PrimarySidebar({
   suppressInitialAnimation?: boolean;
 }) {
   const isOpen = useAtomValue(sidebarAtom);
-  const setIsOpen = useSetAtom(sidebarAtom);
   const pathname = usePathname();
   const isSmallScreen = useIsSmallScreen();
 
@@ -32,102 +31,68 @@ export function PrimarySidebar({
   const ease = "easeInOut" as const;
   const transition = { duration, ease };
 
-  // Suppress animation on initial mount when app becomes visible (desktop only)
-  const shouldSuppressAnimation = suppressInitialAnimation && !isSmallScreen;
+  // Don't render on mobile - MobileNavMenu handles that
+  if (isSmallScreen) return null;
 
   return (
     <AnimatePresence initial={false}>
       {isOpen && (
-        <>
-          {/* scrim */}
-          {isSmallScreen && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration }}
-              className="fixed inset-0 z-20 bg-black/50 dark:bg-black/70"
-              onClick={() => setIsOpen(false)}
-            />
-          )}
-
-          {/* outer container */}
+        <motion.div
+          initial={
+            suppressInitialAnimation
+              ? { width: "var(--primary-sidebar-width)", opacity: 1 }
+              : { width: 0, opacity: 0 }
+          }
+          animate={{ width: "var(--primary-sidebar-width)", opacity: 1 }}
+          exit={{ width: 0, opacity: 0 }}
+          transition={suppressInitialAnimation ? { duration: 0 } : transition}
+          data-primary-sidebar
+          className="group/primary-sidebar z-20 flex-none overflow-hidden"
+        >
           <motion.div
-            initial={
-              isSmallScreen
-                ? { x: "-100%" }
-                : shouldSuppressAnimation
-                  ? { width: "var(--primary-sidebar-width)", opacity: 1 }
-                  : { width: 0, opacity: 0 }
-            }
-            animate={
-              isSmallScreen ? { x: 8 } : { width: "var(--primary-sidebar-width)", opacity: 1 }
-            }
-            exit={isSmallScreen ? { x: "-100%" } : { width: 0, opacity: 0 }}
-            transition={shouldSuppressAnimation ? { duration: 0 } : transition}
-            data-primary-sidebar
-            className={cn("group/primary-sidebar z-20 overflow-hidden", {
-              "fixed top-0 bottom-0 left-0": isSmallScreen,
-              "flex-none": !isSmallScreen,
-              "dark:shadow-contrast bg-elevated my-2 rounded-lg border shadow-xl dark:border-0":
-                isSmallScreen && isOpen,
-            })}
+            initial={suppressInitialAnimation ? { opacity: 1 } : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={suppressInitialAnimation ? { duration: 0 } : transition}
+            className="flex h-full min-w-[var(--primary-sidebar-width)] flex-col"
           >
-            <motion.div
-              initial={shouldSuppressAnimation ? { opacity: 1 } : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={shouldSuppressAnimation ? { duration: 0 } : transition}
-              className={cn("flex h-full min-w-[var(--primary-sidebar-width)] flex-col", {})}
-            >
-              <SidebarHeader />
+            <SidebarHeader />
 
-              <div className="flex flex-1 flex-col gap-px overflow-y-auto px-1 py-4">
-                {mainNavItems.map((item) => {
-                  const IconComponent = item.icon;
-                  return (
-                    <SidebarItem
-                      key={item.id}
-                      icon={<IconComponent />}
-                      label={item.label}
-                      href={item.href}
-                      isActive={item.isActive?.(pathname) ?? false}
-                      onClick={() => {
-                        if (isSmallScreen) {
-                          setIsOpen(false);
-                        }
-                      }}
-                    />
-                  );
-                })}
+            <div className="flex flex-1 flex-col gap-px overflow-y-auto px-1 py-4">
+              {mainNavItems.map((item) => {
+                const IconComponent = item.icon;
+                return (
+                  <SidebarItem
+                    key={item.id}
+                    icon={<IconComponent />}
+                    label={item.label}
+                    href={item.href}
+                    isActive={item.isActive?.(pathname) ?? false}
+                  />
+                );
+              })}
 
-                <div className="mt-4 px-3 pb-1">
-                  <span className="text-quaternary text-[13px] font-medium select-none">
-                    Projects
-                  </span>
-                </div>
-
-                {projectNavItems.map((item) => {
-                  const IconComponent = item.icon;
-                  return (
-                    <SidebarItem
-                      key={item.id}
-                      icon={<IconComponent />}
-                      label={item.label}
-                      href={item.href}
-                      isActive={item.isActive?.(pathname) ?? false}
-                      onClick={() => {
-                        if (isSmallScreen) {
-                          setIsOpen(false);
-                        }
-                      }}
-                    />
-                  );
-                })}
+              <div className="mt-4 px-3 pb-1">
+                <span className="text-quaternary text-[13px] font-medium select-none">
+                  Projects
+                </span>
               </div>
-            </motion.div>
+
+              {projectNavItems.map((item) => {
+                const IconComponent = item.icon;
+                return (
+                  <SidebarItem
+                    key={item.id}
+                    icon={<IconComponent />}
+                    label={item.label}
+                    href={item.href}
+                    isActive={item.isActive?.(pathname) ?? false}
+                  />
+                );
+              })}
+            </div>
           </motion.div>
-        </>
+        </motion.div>
       )}
     </AnimatePresence>
   );
@@ -183,15 +148,13 @@ export function SidebarItem({
 
 function SidebarHeader() {
   const setIsOpen = useSetAtom(sidebarAtom);
-  const isOpen = useAtomValue(sidebarAtom);
-  const isSmallScreen = useIsSmallScreen();
 
   return (
     <div className="mr-2 ml-1 flex h-11 flex-none items-center justify-between select-none">
       <Link href="/" className="flex items-center gap-2 px-2 py-1">
         <Image
           src="/img/avatar.jpg"
-          alt="Notion logo"
+          alt="Brian Lovin"
           width={40}
           height={40}
           className="h-5 w-5 rounded-full"
@@ -202,13 +165,8 @@ function SidebarHeader() {
 
       <IconButton
         size="sm"
-        onClick={() => setIsOpen(!isOpen)}
-        className={cn(
-          "text-quaternary opacity-0 transition-opacity duration-200 group-hover/primary-sidebar:opacity-100",
-          {
-            "opacity-100": isOpen && isSmallScreen,
-          },
-        )}
+        onClick={() => setIsOpen(false)}
+        className="text-quaternary opacity-0 transition-opacity duration-200 group-hover/primary-sidebar:opacity-100"
       >
         <DoubleChevronLeft size={28} className="group-hover/button:text-primary" />
       </IconButton>
