@@ -51,6 +51,10 @@ function renderRichText(richText: RichTextContent[]) {
 
     // If there's already a link annotation, use it as-is with word-break styling
     if (link) {
+      // Only truncate if the content itself is a URL, not descriptive text
+      const isContentUrl = URL_REGEX.test(content);
+      URL_REGEX.lastIndex = 0; // Reset regex state after test
+
       element = (
         <a
           key={index}
@@ -60,7 +64,7 @@ function renderRichText(richText: RichTextContent[]) {
           className="link-body"
           title={link}
         >
-          {truncateUrl(content)}
+          {isContentUrl ? truncateUrl(content) : content}
         </a>
       );
     } else {
@@ -84,148 +88,197 @@ function renderRichText(richText: RichTextContent[]) {
   });
 }
 
-export function renderBlocks(blocks: ProcessedBlock[], isPreview: boolean = false) {
-  return blocks.map((block) => {
-    if (isPreview) {
-      // For preview mode, render all blocks as paragraphs with rich text
-      if (block.type === "table" && block.tableRows) {
-        return (
-          <p key={block.id} className="text-secondary leading-[1.6]">
-            [Table with {block.tableRows.length} rows]
-          </p>
-        );
-      }
+function renderSingleBlock(block: ProcessedBlock, isPreview: boolean): ReactNode {
+  if (isPreview) {
+    // For preview mode, render all blocks as paragraphs with rich text
+    if (block.type === "table" && block.tableRows) {
       return (
         <p key={block.id} className="text-secondary leading-[1.6]">
-          {renderRichText(block.content)}
+          [Table with {block.tableRows.length} rows]
         </p>
       );
     }
+    return (
+      <p key={block.id} className="text-secondary leading-[1.6]">
+        {renderRichText(block.content)}
+      </p>
+    );
+  }
 
-    // Full rendering mode - handle table blocks with their children rows
-    if (block.type === "table" && block.tableRows) {
+  // Full rendering mode - handle table blocks with their children rows
+  if (block.type === "table" && block.tableRows) {
+    return (
+      <div key={block.id} className="my-6 overflow-x-auto">
+        <table className="border-secondary w-full border-collapse rounded-md border text-sm">
+          <tbody>
+            {block.tableRows.map((row, rowIndex) => {
+              const cells = row.cells || [];
+              const isHeaderRow = rowIndex === 0 && block.hasColumnHeader;
+
+              return (
+                <tr key={row.id} className={isHeaderRow ? "bg-tertiary" : ""}>
+                  {cells.map((cell, cellIndex) => {
+                    const cellContent = cell.map(
+                      (richText: RichTextItemResponse, index: number) => (
+                        <span key={index}>{richText.plain_text}</span>
+                      ),
+                    );
+
+                    const CellComponent = isHeaderRow ? "th" : "td";
+
+                    return (
+                      <CellComponent
+                        key={cellIndex}
+                        className={`border-secondary border px-3 py-2 text-left ${
+                          isHeaderRow ? "text-primary font-semibold" : "text-secondary"
+                        }`}
+                      >
+                        {cellContent.length > 0 ? cellContent : ""}
+                      </CellComponent>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+  switch (block.type) {
+    case "quote":
       return (
-        <div key={block.id} className="my-6 overflow-x-auto">
-          <table className="border-secondary w-full border-collapse rounded-md border text-sm">
-            <tbody>
-              {block.tableRows.map((row, rowIndex) => {
-                const cells = row.cells || [];
-                const isHeaderRow = rowIndex === 0 && block.hasColumnHeader;
-
-                return (
-                  <tr key={row.id} className={isHeaderRow ? "bg-tertiary" : ""}>
-                    {cells.map((cell, cellIndex) => {
-                      const cellContent = cell.map(
-                        (richText: RichTextItemResponse, index: number) => (
-                          <span key={index}>{richText.plain_text}</span>
-                        ),
-                      );
-
-                      const CellComponent = isHeaderRow ? "th" : "td";
-
-                      return (
-                        <CellComponent
-                          key={cellIndex}
-                          className={`border-secondary border px-3 py-2 text-left ${
-                            isHeaderRow ? "text-primary font-semibold" : "text-secondary"
-                          }`}
-                        >
-                          {cellContent.length > 0 ? cellContent : ""}
-                        </CellComponent>
-                      );
-                    })}
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+        <blockquote
+          key={block.id}
+          className="border-primary text-tertiary border-l-3 pl-5 leading-[1.6]"
+        >
+          {renderRichText(block.content)}
+        </blockquote>
+      );
+    case "paragraph":
+      return (
+        <p key={block.id} className="text-primary leading-[1.6]">
+          {renderRichText(block.content)}
+        </p>
+      );
+    case "heading_1":
+      return (
+        <h1 key={block.id} className="text-primary mt-6 font-sans text-3xl font-bold">
+          {renderRichText(block.content)}
+        </h1>
+      );
+    case "heading_2":
+      return (
+        <h2 key={block.id} className="text-primary mt-6 font-sans text-2xl font-bold">
+          {renderRichText(block.content)}
+        </h2>
+      );
+    case "heading_3":
+      return (
+        <h3 key={block.id} className="text-primary mt-5 font-sans text-xl font-bold">
+          {renderRichText(block.content)}
+        </h3>
+      );
+    case "bulleted_list_item":
+      return (
+        <li key={block.id} className="text-primary leading-[1.6]">
+          {renderRichText(block.content)}
+        </li>
+      );
+    case "numbered_list_item":
+      return (
+        <li key={block.id} className="text-primary leading-[1.6]">
+          {renderRichText(block.content)}
+        </li>
+      );
+    case "to_do":
+      return (
+        <div key={block.id} className="text-secondary flex items-start gap-2 leading-[1.6]">
+          <input type="checkbox" disabled className="mt-1" />
+          <span>{renderRichText(block.content)}</span>
         </div>
       );
+    case "toggle":
+      return (
+        <details key={block.id} className="text-secondary leading-[1.6]">
+          <summary>{renderRichText(block.content)}</summary>
+        </details>
+      );
+    case "code":
+      return (
+        <CodeBlock
+          key={block.id}
+          code={block.content.map((text) => text.text.content).join("")}
+          language={block.language || "plaintext"}
+        />
+      );
+    case "divider":
+      return <hr key={block.id} className="border-primary my-6 border-t" />;
+    case "image":
+      return (
+        <div key={block.id}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={block.content[0].text.content}
+            alt=""
+            className="w-full rounded-lg"
+            loading="lazy"
+          />
+        </div>
+      );
+    default:
+      return null;
+  }
+}
+
+export function renderBlocks(blocks: ProcessedBlock[], isPreview: boolean = false): ReactNode[] {
+  const result: ReactNode[] = [];
+  let i = 0;
+
+  while (i < blocks.length) {
+    const block = blocks[i];
+
+    // Group consecutive bulleted list items
+    if (block.type === "bulleted_list_item" && !isPreview) {
+      const listItems: ReactNode[] = [];
+      const startIndex = i;
+
+      while (i < blocks.length && blocks[i].type === "bulleted_list_item") {
+        listItems.push(renderSingleBlock(blocks[i], isPreview));
+        i++;
+      }
+
+      result.push(
+        <ul key={`ul-${blocks[startIndex].id}`} className="ml-4 list-disc">
+          {listItems}
+        </ul>,
+      );
+      continue;
     }
 
-    switch (block.type) {
-      case "quote":
-        return (
-          <blockquote
-            key={block.id}
-            className="border-primary text-tertiary border-l-3 pl-5 leading-[1.6]"
-          >
-            {renderRichText(block.content)}
-          </blockquote>
-        );
-      case "paragraph":
-        return (
-          <p key={block.id} className="text-primary leading-[1.6]">
-            {renderRichText(block.content)}
-          </p>
-        );
-      case "heading_1":
-        return (
-          <h1 key={block.id} className="text-primary mt-6 font-sans text-3xl font-bold">
-            {renderRichText(block.content)}
-          </h1>
-        );
-      case "heading_2":
-        return (
-          <h2 key={block.id} className="text-primary mt-6 font-sans text-2xl font-bold">
-            {renderRichText(block.content)}
-          </h2>
-        );
-      case "heading_3":
-        return (
-          <h3 key={block.id} className="text-primary mt-5 font-sans text-xl font-bold">
-            {renderRichText(block.content)}
-          </h3>
-        );
-      case "bulleted_list_item":
-        return (
-          <li key={block.id} className="text-primary ml-3 list-disc leading-[1.6]">
-            {renderRichText(block.content)}
-          </li>
-        );
-      case "numbered_list_item":
-        return (
-          <li key={block.id} className="text-primary ml-4 list-decimal leading-[1.6]">
-            {renderRichText(block.content)}
-          </li>
-        );
-      case "to_do":
-        return (
-          <div key={block.id} className="text-secondary flex items-start gap-2 leading-[1.6]">
-            <input type="checkbox" disabled className="mt-1" />
-            <span>{renderRichText(block.content)}</span>
-          </div>
-        );
-      case "toggle":
-        return (
-          <details key={block.id} className="text-secondary leading-[1.6]">
-            <summary>{renderRichText(block.content)}</summary>
-          </details>
-        );
-      case "code":
-        return (
-          <CodeBlock
-            key={block.id}
-            code={block.content.map((text) => text.text.content).join("")}
-            language={block.language || "plaintext"}
-          />
-        );
-      case "divider":
-        return <hr key={block.id} className="border-primary my-6 border-t" />;
-      case "image":
-        return (
-          <div key={block.id}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={block.content[0].text.content}
-              alt=""
-              className="w-full rounded-lg"
-              loading="lazy"
-            />
-          </div>
-        );
-      default:
-        return null;
+    // Group consecutive numbered list items
+    if (block.type === "numbered_list_item" && !isPreview) {
+      const listItems: ReactNode[] = [];
+      const startIndex = i;
+
+      while (i < blocks.length && blocks[i].type === "numbered_list_item") {
+        listItems.push(renderSingleBlock(blocks[i], isPreview));
+        i++;
+      }
+
+      result.push(
+        <ol key={`ol-${blocks[startIndex].id}`} className="ml-4 list-decimal">
+          {listItems}
+        </ol>,
+      );
+      continue;
     }
-  });
+
+    // Render non-list blocks normally
+    result.push(renderSingleBlock(block, isPreview));
+    i++;
+  }
+
+  return result;
 }
