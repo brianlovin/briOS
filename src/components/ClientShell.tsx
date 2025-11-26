@@ -7,6 +7,7 @@ import { Toaster } from "sonner";
 
 import { sidebarAtom } from "@/atoms/sidebar";
 import { CommandMenu } from "@/components/CommandMenu";
+import { MobileNavMenu } from "@/components/MobileNavMenu";
 import { PrimarySidebar } from "@/components/PrimarySidebar";
 import { useIsSmallScreen } from "@/hooks/useIsSmallScreen";
 import { useScrollDelegation } from "@/hooks/useScrollDelegation";
@@ -58,6 +59,7 @@ export function ClientShell({ children }: PropsWithChildren) {
     <>
       <Toaster position="bottom-center" />
       <CommandMenu />
+      <MobileNavMenu />
       <main
         className={cn(
           "relative isolate mx-auto flex h-svh w-full max-w-400 overflow-hidden md:p-2",

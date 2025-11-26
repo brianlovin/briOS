@@ -4,7 +4,7 @@ import { useAtom } from "jotai";
 import { PropsWithChildren } from "react";
 
 import { sidebarAtom } from "@/atoms/sidebar";
-import { Menu } from "@/components/icons/Menu";
+import { MenuToggle } from "@/components/icons/MenuToggle";
 import { IconButton } from "@/components/ui/IconButton";
 import { useIsSmallScreen } from "@/hooks/useIsSmallScreen";
 import { cn } from "@/lib/utils";
@@ -20,13 +20,15 @@ export function TopBar({ children, className }: PropsWithChildren<{ className?: 
         {
           "pl-2": !primarySidebarOpen || isSmallScreen,
           "pl-4": primarySidebarOpen && !isSmallScreen,
+          // On mobile: always solid bg and higher z-index to stay on top of menu
+          "relative z-30 bg-black": isSmallScreen,
         },
         className,
       )}
     >
       {(!primarySidebarOpen || isSmallScreen) && (
-        <IconButton onClick={() => setPrimarySidebarOpen(true)}>
-          <Menu />
+        <IconButton onClick={() => setPrimarySidebarOpen(!primarySidebarOpen)}>
+          <MenuToggle isOpen={primarySidebarOpen && isSmallScreen} />
         </IconButton>
       )}
 
