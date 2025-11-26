@@ -58,19 +58,19 @@ export default function Home() {
             </Section>
 
             <Section className="flex flex-row gap-2">
-              <ListItem href="https://x.com/brian_lovin" className="group p-2">
-                <XIcon size={24} className="text-quaternary group-hover:text-primary select-none" />
+              <ListItem href="https://x.com/brian_lovin" className="group -ml-1 p-2">
+                <XIcon size={28} className="text-quaternary group-hover:text-primary select-none" />
               </ListItem>
               <ListItem href="https://www.youtube.com/@brian_lovin" className="group p-2">
                 <YouTubeIcon
-                  size={28}
+                  size={32}
                   className="text-quaternary select-none group-hover:text-[#FF0302]"
                   playIconClassName="fill-[var(--background-color-elevated)]  group-hover:fill-white"
                 />
               </ListItem>
               <ListItem href="https://github.com/brianlovin" className="group p-2">
                 <GitHubIcon
-                  size={24}
+                  size={28}
                   className="text-quaternary group-hover:text-primary select-none"
                 />
               </ListItem>
