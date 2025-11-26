@@ -7,6 +7,7 @@ import React from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
 import { getAllNavigationItems } from "@/config/navigation";
+import { MOD_KEY } from "@/lib/keyboard";
 
 export function CommandMenu() {
   const [value, setValue] = React.useState("linear");
@@ -20,7 +21,7 @@ export function CommandMenu() {
 
   // Global hotkey to open command menu
   useHotkeys(
-    "mod+k",
+    `${MOD_KEY}+k`,
     (e) => {
       e.preventDefault();
       setOpen(!open);

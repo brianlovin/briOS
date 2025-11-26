@@ -11,6 +11,7 @@ import { MobileNavMenu } from "@/components/MobileNavMenu";
 import { PrimarySidebar } from "@/components/PrimarySidebar";
 import { useIsSmallScreen } from "@/hooks/useIsSmallScreen";
 import { useScrollDelegation } from "@/hooks/useScrollDelegation";
+import { MOD_KEY } from "@/lib/keyboard";
 import { cn } from "@/lib/utils";
 
 export function ClientShell({ children }: PropsWithChildren) {
@@ -45,7 +46,7 @@ export function ClientShell({ children }: PropsWithChildren) {
 
   // Add hotkey for toggling sidebar
   useHotkeys(
-    "mod+period",
+    `${MOD_KEY}+period`,
     () => {
       setSidebarOpen(!sidebarOpen);
     },
