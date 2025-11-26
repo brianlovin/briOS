@@ -3,8 +3,7 @@
 import { useAtomValue } from "jotai";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
-import React, { useMemo, useRef } from "react";
+import React, { useMemo } from "react";
 
 import { hnSubscribedAtom } from "@/atoms/hnSubscription";
 import { ListDetailLayout } from "@/components/ListDetailLayout";
@@ -51,7 +50,6 @@ export default function HNLayout({ children }: { children: React.ReactNode }) {
 function HNStoriesList() {
   const pathname = usePathname();
   const { posts, isLoading, isError } = useHNPostsContext();
-  const listRef = useRef<HTMLUListElement>(null);
 
   // Filter out null posts
   const validPosts = useMemo(
@@ -67,16 +65,6 @@ function HNStoriesList() {
   );
 
   useListNavigation(validPosts, currentIndex, (item) => `/hn/${item.id}`);
-
-  // Scroll to keep selected item visible
-  useEffect(() => {
-    if (listRef.current && currentIndex !== -1) {
-      const selectedElement = listRef.current.querySelector(`[data-post-id="${currentPostId}"]`);
-      if (selectedElement) {
-        selectedElement.scrollIntoView({ block: "nearest" });
-      }
-    }
-  }, [currentIndex, currentPostId]);
 
   if (isLoading) {
     return (
@@ -95,11 +83,11 @@ function HNStoriesList() {
   }
 
   return (
-    <ul ref={listRef} className="flex h-full flex-col gap-px overflow-y-auto p-2">
+    <ul className="flex h-full flex-col gap-px overflow-y-auto p-2">
       {validPosts.map((post) => {
         const isSelected = post.id.toString() === currentPostId;
         return (
-          <li key={post.id} data-post-id={post.id}>
+          <li key={post.id} data-id={post.id} className="scroll-my-2">
             <Link
               className={cn(
                 "hover:bg-tertiary flex flex-col gap-0.5 rounded-md px-3.5 py-3 text-sm",

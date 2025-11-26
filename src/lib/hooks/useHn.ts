@@ -1,9 +1,13 @@
 "use client";
 
-import useSWR from "swr";
+import useSWR, { preload } from "swr";
 
 import { getPostById } from "@/lib/hn";
 import { HackerNewsPost } from "@/types/hackernews";
+
+export function prefetchHNPost(id: string) {
+  preload(`hn-post-${id}`, async () => await getPostById(id, true));
+}
 
 const fetcher = async (url: string) => {
   const res = await fetch(url);

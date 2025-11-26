@@ -8,7 +8,6 @@ import { InfiniteScrollList } from "@/components/InfiniteScrollList";
 import { ListDetailLayout } from "@/components/ListDetailLayout";
 import { useDesignDetailsEpisodes } from "@/hooks/useDesignDetailsEpisodes";
 import { useListNavigation } from "@/hooks/useListNavigation";
-import { useScrollToSelected } from "@/hooks/useScrollToSelected";
 import { cn } from "@/lib/utils";
 
 export default function DesignDetailsLayout({ children }: { children: React.ReactNode }) {
@@ -37,7 +36,6 @@ function EpisodeList() {
   );
 
   useListNavigation(episodes, currentIndex, (item) => `/design-details/${item.id}`);
-  useScrollToSelected(currentId, currentIndex);
 
   const handleLoadMore = useCallback(async () => {
     await setSize(size + 1);
@@ -54,7 +52,7 @@ function EpisodeList() {
         : undefined;
 
       return (
-        <li key={ep.id} data-id={ep.id}>
+        <li key={ep.id} data-id={ep.id} className="scroll-my-2">
           <Link
             className={cn("hover:bg-tertiary flex w-full flex-col rounded-md px-3.5 py-2 text-sm", {
               "bg-tertiary": isSelected,
