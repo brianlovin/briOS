@@ -4,6 +4,7 @@ import { Suspense } from "react";
 
 import { SpeakingList } from "@/components/home/SpeakingList";
 import { SpeakingListSkeleton } from "@/components/home/SpeakingListSkeleton";
+import { HomeTopBar } from "@/components/HomeTopBar";
 import { ArrowUpRight } from "@/components/icons/ArrowUpRight";
 import { BufferLogoSVG, GitHubIcon, XIcon, YouTubeIcon } from "@/components/icons/SocialIcons";
 import {
@@ -15,7 +16,6 @@ import {
   Section,
   SectionHeading,
 } from "@/components/shared/ListComponents";
-import { HomeTopBar } from "@/components/HomeTopBar";
 import { createMetadata, createPersonJsonLd } from "@/lib/metadata";
 
 export const metadata: Metadata = createMetadata({
