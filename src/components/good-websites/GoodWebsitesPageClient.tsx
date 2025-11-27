@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { GoodWebsitesFilters } from "@/components/good-websites/GoodWebsitesFilters";
-import { TopBar } from "@/components/TopBar";
 import { LoadingSpinner } from "@/components/ui";
 import type { GoodWebsiteItem } from "@/lib/goodWebsites";
 import { useGoodWebsites } from "@/lib/hooks/useGoodWebsites";
@@ -43,16 +42,6 @@ export function GoodWebsitesPageClient({ initialData }: GoodWebsitesPageClientPr
 
   return (
     <div className="flex h-full w-full flex-col">
-      {/* Header */}
-      <TopBar>
-        <div className="font-medium">Good websites</div>
-        <div className="flex-1" />
-        {/* Filters */}
-        <div className="hidden md:block">
-          <GoodWebsitesFilters isLoading={isValidating && !isInitialLoading} />
-        </div>
-      </TopBar>
-
       <div className="border-secondary flex border-b p-2 md:hidden">
         <GoodWebsitesFilters isLoading={isValidating && !isInitialLoading} />
       </div>
@@ -60,7 +49,7 @@ export function GoodWebsitesPageClient({ initialData }: GoodWebsitesPageClientPr
       {/* Table */}
       <div className="relative flex-1 overflow-auto">
         {/* Table Header - Sticky (hidden on mobile) */}
-        <div className="bg-secondary md:dark:bg-tertiary border-secondary sticky top-0 z-20 hidden border-b md:block">
+        <div className="bg-secondary border-secondary sticky top-0 z-20 hidden border-b md:block">
           <div className="grid grid-cols-12 gap-4 px-4 py-2 text-sm font-medium">
             <div className="col-span-7 text-left text-[13px]">Name</div>
             <div className="col-span-3 text-left text-[13px]">Site</div>

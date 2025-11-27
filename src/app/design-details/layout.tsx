@@ -6,15 +6,18 @@ import React, { useCallback, useMemo } from "react";
 
 import { InfiniteScrollList } from "@/components/InfiniteScrollList";
 import { ListDetailLayout } from "@/components/ListDetailLayout";
+import { ListDetailWrapper } from "@/components/ListDetailWrapper";
 import { useDesignDetailsEpisodes } from "@/hooks/useDesignDetailsEpisodes";
 import { useListNavigation } from "@/hooks/useListNavigation";
 import { cn } from "@/lib/utils";
 
 export default function DesignDetailsLayout({ children }: { children: React.ReactNode }) {
   return (
-    <ListDetailLayout title="Design Details" backHref="/design-details" list={<EpisodeList />}>
-      {children}
-    </ListDetailLayout>
+    <ListDetailWrapper>
+      <ListDetailLayout title="Design Details" backHref="/design-details" list={<EpisodeList />}>
+        {children}
+      </ListDetailLayout>
+    </ListDetailWrapper>
   );
 }
 

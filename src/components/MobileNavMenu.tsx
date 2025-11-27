@@ -9,19 +9,26 @@ import React from "react";
 import { sidebarAtom } from "@/atoms/sidebar";
 import { GitHubIcon, XIcon, YouTubeIcon } from "@/components/icons/SocialIcons";
 import { getMainNavigationItems, getProjectNavigationItems } from "@/config/navigation";
-import { useIsSmallScreen } from "@/hooks/useIsSmallScreen";
 import { cn } from "@/lib/utils";
 
 export function MobileNavMenu() {
   const isOpen = useAtomValue(sidebarAtom);
   const setIsOpen = useSetAtom(sidebarAtom);
   const pathname = usePathname();
-  const isSmallScreen = useIsSmallScreen();
 
   const mainNavItems = React.useMemo(() => getMainNavigationItems(), []);
   const projectNavItems = React.useMemo(() => getProjectNavigationItems(), []);
 
-  if (!isSmallScreen) return null;
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, setIsOpen]);
 
   return (
     <AnimatePresence>
@@ -112,14 +119,14 @@ function MobileNavLink({
 }) {
   return (
     <Link href={href} onClick={onClick}>
-      <span
-        className={cn("block py-2 text-xl font-semibold", {
+      <div
+        className={cn("py-2 text-xl font-semibold", {
           "text-primary": isActive,
-          "text-tertiary": !isActive,
+          "text-tertiary hover:text-primary": !isActive,
         })}
       >
         {children}
-      </span>
+      </div>
     </Link>
   );
 }

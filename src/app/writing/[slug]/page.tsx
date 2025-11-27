@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { renderBlocks } from "@/components/renderBlocks";
 import { List, ListItem, ListItemLabel } from "@/components/shared/ListComponents";
-import { TopBar } from "@/components/TopBar";
 import { FancySeparator } from "@/components/ui/FancySeparator";
 import { createArticleJsonLd, createMetadata, truncateDescription } from "@/lib/metadata";
 import { getWritingPostContentBySlug } from "@/lib/notion";
@@ -64,12 +62,6 @@ export default async function WritingPostPage(props: { params: Promise<{ slug: s
 
   const { blocks, metadata } = content;
 
-  const date = new Date(metadata.published || metadata.createdTime).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-
   // Get all posts and select 5 random ones (excluding current post)
   const allPosts = await getAllWritingPosts();
   const otherPosts = allPosts.filter((post) => post.slug && post.slug !== slug);
@@ -90,16 +82,6 @@ export default async function WritingPostPage(props: { params: Promise<{ slug: s
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
-      <TopBar className="pr-3">
-        <div className="flex flex-1 items-center gap-2">
-          <Link href="/writing" className="hover:text-primary text-secondary font-medium">
-            Writing
-          </Link>
-          <div className="text-quaternary font-medium">/</div>
-          <div className="line-clamp-1 font-medium">{metadata.title}</div>
-          <div className="text-tertiary ml-auto hidden font-medium sm:flex">{date}</div>
-        </div>
-      </TopBar>
       <div className="min-w-0 flex-1 overflow-y-auto">
         <div className="mx-auto flex max-w-3xl flex-1 flex-col gap-8 px-4 py-12 md:px-6 lg:px-8 lg:py-16 xl:py-20">
           <div className="flex flex-col gap-2">

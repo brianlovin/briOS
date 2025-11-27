@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
-import { TopBar } from "@/components/TopBar";
 import { allAppDissectionItems, AppDissectionItemType } from "@/data/app-dissection";
 import { createMetadata } from "@/lib/metadata";
 
@@ -16,10 +15,6 @@ export const metadata: Metadata = createMetadata({
 export default function AppDissectionIndex() {
   return (
     <div className="@container flex flex-1 flex-col overflow-hidden">
-      <TopBar>
-        <div className="text-primary flex-1 font-medium">App Dissection</div>
-      </TopBar>
-
       <div className="flex-1 overflow-y-auto">
         <div className="mx-auto grid w-full grid-cols-3 gap-1 p-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 lg:p-8">
           {allAppDissectionItems.map((item) => (

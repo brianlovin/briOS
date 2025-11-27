@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { StackFilters } from "@/components/stack/StackFilters";
-import { TopBar } from "@/components/TopBar";
 import { LoadingSpinner } from "@/components/ui";
 import { PlatformBadge } from "@/components/ui/PlatformBadge";
 import { useStacks } from "@/lib/hooks/useStacks";
@@ -41,25 +40,15 @@ export function StackPageClient({ initialData }: StackPageClientProps) {
 
   return (
     <div className="flex h-full w-full flex-col">
-      {/* Header */}
-      <TopBar>
-        <div className="font-medium">My Stack</div>
-        <div className="flex-1" />
-
-        {/* Filters */}
-        <div className="hidden md:block">
-          <StackFilters isLoading={isValidating && !isInitialLoading} />
-        </div>
-      </TopBar>
-
-      <div className="border-secondary flex border-b p-2 md:hidden">
+      {/* Filters */}
+      <div className="border-secondary flex border-b p-2">
         <StackFilters isLoading={isValidating && !isInitialLoading} />
       </div>
 
       {/* Table */}
       <div className="relative flex-1 overflow-auto">
         {/* Table Header - Sticky (hidden on mobile) */}
-        <div className="bg-secondary md:dark:bg-tertiary border-secondary sticky top-0 z-10 hidden border-b md:block">
+        <div className="bg-secondary border-secondary sticky top-0 z-10 hidden border-b md:block">
           <div className="grid grid-cols-12 gap-4 px-4 py-2 text-sm font-medium">
             <div className="col-span-3 text-left text-[13px]">Name</div>
             <div className="col-span-6 text-left text-[13px]">Description</div>

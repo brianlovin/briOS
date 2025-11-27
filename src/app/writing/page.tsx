@@ -7,7 +7,6 @@ import {
   Section,
   SectionHeading,
 } from "@/components/shared/ListComponents";
-import { TopBar } from "@/components/TopBar";
 import { createMetadata } from "@/lib/metadata";
 import { getAllWritingPosts } from "@/lib/writing";
 
@@ -36,28 +35,23 @@ export default async function WritingPage() {
   const sortedYears = Object.keys(postsByYear).sort((a, b) => parseInt(b) - parseInt(a));
 
   return (
-    <>
-      <TopBar>
-        <div className="flex-1 font-medium">Writing</div>
-      </TopBar>
-      <div data-scrollable className="flex-1 overflow-y-auto">
-        <div className="text-secondary mx-auto flex max-w-xl flex-1 flex-col gap-16 py-16 leading-[1.6]">
-          {sortedYears.map((year) => (
-            <Section key={year}>
-              <SectionHeading>{year}</SectionHeading>
-              <List>
-                {postsByYear[year]
-                  .filter((post) => post.slug) // Only show posts that have slugs
-                  .map((post) => (
-                    <ListItem key={post.id} href={`/writing/${post.slug}`}>
-                      <ListItemLabel className="line-clamp-none">{post.title}</ListItemLabel>
-                    </ListItem>
-                  ))}
-              </List>
-            </Section>
-          ))}
-        </div>
+    <div data-scrollable className="flex-1 overflow-y-auto">
+      <div className="text-secondary mx-auto flex max-w-xl flex-1 flex-col gap-16 py-16 leading-[1.6]">
+        {sortedYears.map((year) => (
+          <Section key={year}>
+            <SectionHeading>{year}</SectionHeading>
+            <List>
+              {postsByYear[year]
+                .filter((post) => post.slug) // Only show posts that have slugs
+                .map((post) => (
+                  <ListItem key={post.id} href={`/writing/${post.slug}`}>
+                    <ListItemLabel className="line-clamp-none">{post.title}</ListItemLabel>
+                  </ListItem>
+                ))}
+            </List>
+          </Section>
+        ))}
       </div>
-    </>
+    </div>
   );
 }

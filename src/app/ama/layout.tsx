@@ -3,11 +3,11 @@
 import React from "react";
 
 import { ListDetailLayout } from "@/components/ListDetailLayout";
+import { ListDetailWrapper } from "@/components/ListDetailWrapper";
 import { useAmaQuestions } from "@/lib/ama";
 
 import { AMAQuestionsProvider } from "./AMAContext";
 import { AmaList } from "./AMAList";
-import { AskQuestionDialog } from "./AskQuestionDialog";
 
 export default function AMALayout({ children }: { children: React.ReactNode }) {
   // Fetch questions at layout level to share with children
@@ -31,14 +31,11 @@ export default function AMALayout({ children }: { children: React.ReactNode }) {
       size={size}
       setSize={setSize}
     >
-      <ListDetailLayout
-        headerChildren={<AskQuestionDialog />}
-        title="AMA"
-        backHref="/ama"
-        list={<AmaList />}
-      >
-        {children}
-      </ListDetailLayout>
+      <ListDetailWrapper>
+        <ListDetailLayout backHref="/ama" list={<AmaList />}>
+          {children}
+        </ListDetailLayout>
+      </ListDetailWrapper>
     </AMAQuestionsProvider>
   );
 }

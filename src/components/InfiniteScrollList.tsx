@@ -28,7 +28,7 @@ export function InfiniteScrollList<T>({
   isLoading,
   isLoadingMore,
   isReachingEnd,
-  className = "flex w-full h-full gap-px p-2 overflow-y-auto flex-col",
+  className = "flex w-full gap-px p-2 flex-col",
   loadingComponent,
   rootMargin = "50px",
   threshold = 0.1,

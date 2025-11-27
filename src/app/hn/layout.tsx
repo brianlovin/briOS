@@ -1,12 +1,11 @@
 "use client";
 
-import { useAtomValue } from "jotai";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useMemo } from "react";
 
-import { hnSubscribedAtom } from "@/atoms/hnSubscription";
 import { ListDetailLayout } from "@/components/ListDetailLayout";
+import { ListDetailWrapper } from "@/components/ListDetailWrapper";
 import { useListNavigation } from "@/hooks/useListNavigation";
 import { useHNPosts } from "@/lib/hooks/useHn";
 import { cn } from "@/lib/utils";
@@ -14,35 +13,17 @@ import { HackerNewsPost } from "@/types/hackernews";
 
 import { LoadingSpinner } from "../../components/ui/LoadingSpinner";
 import { HNPostsProvider, useHNPostsContext } from "./HNPostsContext";
-import { SubscribeDialog } from "./SubscribeDialog";
 
 export default function HNLayout({ children }: { children: React.ReactNode }) {
-  const today = new Date();
-  const formattedDate = today.toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
-
-  // Fetch posts at layout level to share with children
   const { data: posts, isLoading, isError } = useHNPosts();
-  const hnSubscribed = useAtomValue(hnSubscribedAtom);
 
   return (
     <HNPostsProvider posts={posts} isLoading={isLoading} isError={isError}>
-      <ListDetailLayout
-        title="Hacker News"
-        backHref="/hn"
-        list={<HNStoriesList />}
-        headerChildren={
-          <>
-            <div className="text-quaternary hidden text-sm sm:flex">{formattedDate}</div>
-            {!hnSubscribed && <SubscribeDialog />}
-          </>
-        }
-      >
-        {children}
-      </ListDetailLayout>
+      <ListDetailWrapper>
+        <ListDetailLayout backHref="/hn" list={<HNStoriesList />}>
+          {children}
+        </ListDetailLayout>
+      </ListDetailWrapper>
     </HNPostsProvider>
   );
 }
@@ -83,7 +64,7 @@ function HNStoriesList() {
   }
 
   return (
-    <ul className="flex h-full flex-col gap-px overflow-y-auto p-2">
+    <ul className="flex flex-col gap-px p-2">
       {validPosts.map((post) => {
         const isSelected = post.id.toString() === currentPostId;
         return (

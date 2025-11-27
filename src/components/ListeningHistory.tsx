@@ -1,6 +1,6 @@
 "use client";
 
-import { useVirtualizer } from "@tanstack/react-virtual";
+import { useWindowVirtualizer } from "@tanstack/react-virtual";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -115,6 +115,7 @@ export function ListeningHistory({ initialData }: ListeningHistoryProps = {}) {
   const {
     items: music,
     isLoading,
+    isLoadingMore,
     isError,
     setSize,
     size,
@@ -124,10 +125,8 @@ export function ListeningHistory({ initialData }: ListeningHistoryProps = {}) {
   const hasTriggeredLoad = useRef(false);
   const isMobile = useIsMobile();
 
-  // eslint-disable-next-line
-  const virtualizer = useVirtualizer({
+  const virtualizer = useWindowVirtualizer({
     count: !isReachingEnd ? music.length + 1 : music.length, // Add 1 for loader row if more data available
-    getScrollElement: () => parentRef.current,
     estimateSize: () => (isMobile ? 64 : 40), // Mobile: 64px (py-3 + 40px image + text), Desktop: 40px
     overscan: 10, // Render 10 extra items outside viewport for smooth scrolling
   });
@@ -139,25 +138,28 @@ export function ListeningHistory({ initialData }: ListeningHistoryProps = {}) {
     virtualizer.measure();
   }, [isMobile, virtualizer]);
 
-  // Reset trigger when loading completes or data changes
+  // Reset trigger when loading completes (isLoadingMore goes from true to false)
   useEffect(() => {
-    if (!isLoading && hasTriggeredLoad.current) {
+    if (!isLoadingMore && hasTriggeredLoad.current) {
       hasTriggeredLoad.current = false;
     }
-  }, [isLoading, music.length]); // Dependency array now includes music.length
+  }, [isLoadingMore]);
 
   // Effect to load more items when the loader row becomes visible
   useEffect(() => {
     const loaderItemVisible = items.some((item) => item.index === music.length);
 
-    if (loaderItemVisible && !isReachingEnd && !isLoading && !hasTriggeredLoad.current) {
-      hasTriggeredLoad.current = true; // Set this immediately
-      // Defer setSize call slightly
-      setTimeout(() => {
-        setSize(size + 1);
-      }, 0);
+    if (
+      loaderItemVisible &&
+      !isReachingEnd &&
+      !isLoading &&
+      !isLoadingMore &&
+      !hasTriggeredLoad.current
+    ) {
+      hasTriggeredLoad.current = true;
+      setSize(size + 1);
     }
-  }, [items, music.length, isReachingEnd, isLoading, size, setSize]);
+  }, [items, music.length, isReachingEnd, isLoading, isLoadingMore, size, setSize]);
 
   if (isLoading && music.length === 0) {
     return (
@@ -180,16 +182,10 @@ export function ListeningHistory({ initialData }: ListeningHistoryProps = {}) {
   }
 
   return (
-    <div
-      ref={parentRef}
-      className="flex-1 overflow-auto"
-      style={{
-        contain: "strict",
-      }}
-    >
+    <div ref={parentRef} className="flex-1">
       <div className="min-w-fit">
         {/* Table Header - Desktop only */}
-        <div className="bg-secondary md:dark:bg-tertiary border-secondary sticky top-0 z-10 hidden border-b md:block">
+        <div className="bg-secondary border-secondary sticky top-0 z-10 hidden border-b md:block">
           <div className="flex gap-4 px-4 py-2 text-sm font-medium">
             <div className="min-w-[200px] flex-1 text-left text-[13px]">Song</div>
             <div className="min-w-[150px] flex-1 text-left text-[13px]">Artist</div>

@@ -3,46 +3,35 @@
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 
-import { TopBar } from "@/components/TopBar";
 import { cn } from "@/lib/utils";
 
 export type ListDetailLayoutProps = {
-  title: string;
   backHref: string;
   list: ReactNode;
   children: ReactNode;
-  headerChildren?: ReactNode;
 };
 
-export function ListDetailLayout({
-  title,
-  backHref,
-  list,
-  children,
-  headerChildren,
-}: ListDetailLayoutProps) {
+export function ListDetailLayout({ backHref, list, children }: ListDetailLayoutProps) {
   const pathname = usePathname();
   const isDetailPage = pathname !== backHref && pathname !== `${backHref}/`;
 
   return (
-    <div className="@container flex w-full flex-1 flex-col">
-      <TopBar>
-        <div className="text-primary font-medium">{title}</div>
-        {headerChildren}
-      </TopBar>
-
-      <div className="flex flex-1 overflow-hidden">
+    <div className="@container flex min-h-0 w-full flex-1 flex-col">
+      <div className="flex min-h-0 flex-1">
         <div
-          className={cn("w-full border-r @3xl:max-w-(--secondary-sidebar-width)", {
-            "hidden @3xl:flex": isDetailPage,
-          })}
+          className={cn(
+            "flex min-h-0 w-full flex-col border-r @3xl:max-w-(--secondary-sidebar-width)",
+            {
+              "hidden @3xl:flex": isDetailPage,
+            },
+          )}
         >
-          {list}
+          <div className="min-h-0 flex-1 overflow-y-auto">{list}</div>
         </div>
 
         <div
           data-scrollable
-          className={cn("flex flex-1 flex-col overflow-y-auto", {
+          className={cn("flex min-h-0 flex-1 flex-col overflow-y-auto", {
             "hidden @3xl:flex": !isDetailPage,
           })}
         >
