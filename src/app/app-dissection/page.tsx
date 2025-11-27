@@ -30,7 +30,7 @@ function AppDissectionItem({ item }: { item: AppDissectionItemType }) {
   return (
     <Link
       href={`/app-dissection/${item.slug}`}
-      className="group/app hover:bg-tertiary relative flex flex-none flex-col items-center justify-center gap-3 overflow-hidden rounded-xl px-3 py-6"
+      className="group/app hover:bg-tertiary dark:hover:shadow-contrast dark:hover:bg-secondary relative flex flex-none flex-col items-center justify-center gap-3 overflow-hidden rounded-xl px-3 py-6"
     >
       <Image
         width={48}

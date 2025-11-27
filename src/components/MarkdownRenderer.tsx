@@ -64,7 +64,7 @@ export function MarkdownRenderer({ children }: MarkdownRendererProps) {
   };
 
   return (
-    <div className="prose prose-neutral dark:prose-invert max-w-none">
+    <div className="prose-lg prose-neutral dark:prose-invert max-w-none">
       {renderMarkdown(children)}
     </div>
   );
