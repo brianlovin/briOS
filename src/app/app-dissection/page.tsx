@@ -17,7 +17,7 @@ export default function AppDissectionIndex() {
   return (
     <div className="@container flex flex-1 flex-col overflow-hidden">
       <TopBar>
-        <div className="text-primary flex-1 text-sm font-medium">App Dissection</div>
+        <div className="text-primary flex-1 font-medium">App Dissection</div>
       </TopBar>
 
       <div className="flex-1 overflow-y-auto">

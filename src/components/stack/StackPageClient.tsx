@@ -43,7 +43,7 @@ export function StackPageClient({ initialData }: StackPageClientProps) {
     <div className="flex h-full w-full flex-col">
       {/* Header */}
       <TopBar>
-        <div className="text-sm font-medium">My Stack</div>
+        <div className="font-medium">My Stack</div>
         <div className="flex-1" />
 
         {/* Filters */}

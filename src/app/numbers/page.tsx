@@ -19,7 +19,7 @@ export default function NumbersPage() {
     <div className="flex flex-1 flex-col">
       <TopBar>
         <Calculator />
-        <div className="flex-1 text-sm font-semibold">Numbers</div>
+        <div className="flex-1 font-semibold">Numbers</div>
       </TopBar>
 
       <div className="flex-1 overflow-y-auto p-8">

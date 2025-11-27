@@ -45,7 +45,7 @@ export function GoodWebsitesPageClient({ initialData }: GoodWebsitesPageClientPr
     <div className="flex h-full w-full flex-col">
       {/* Header */}
       <TopBar>
-        <div className="text-sm font-medium">Good websites</div>
+        <div className="font-medium">Good websites</div>
         <div className="flex-1" />
         {/* Filters */}
         <div className="hidden md:block">

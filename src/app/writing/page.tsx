@@ -38,7 +38,7 @@ export default async function WritingPage() {
   return (
     <>
       <TopBar>
-        <div className="flex-1 text-sm font-medium">Writing</div>
+        <div className="flex-1 font-medium">Writing</div>
       </TopBar>
       <div data-scrollable className="flex-1 overflow-y-auto">
         <div className="text-secondary mx-auto flex max-w-xl flex-1 flex-col gap-16 py-16 leading-[1.6]">

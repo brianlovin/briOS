@@ -33,7 +33,7 @@ export default function Home() {
       />
       <div className="flex flex-1 flex-col">
         <TopBar>
-          <div className="flex-1 text-sm font-semibold">About</div>
+          <div className="flex-1 font-semibold">About</div>
         </TopBar>
 
         <div className="flex-1 overflow-y-auto">
@@ -48,8 +48,7 @@ export default function Home() {
                 className="mb-8 rounded-full select-none"
               />
               <p className="text-pretty">
-                Hey, I&apos;m Brian Lovin. I&apos;m a designer and software engineer living in San
-                Francisco.
+                I&apos;m a designer and software engineer living in San Francisco.
               </p>
 
               <p>

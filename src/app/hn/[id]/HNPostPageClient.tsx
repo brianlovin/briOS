@@ -179,10 +179,10 @@ export default function HNPostPageClient() {
               size="lg"
               variant="default"
               onClick={scrollToNextComment}
-              className="pointer-events-auto rounded-full"
+              className="pointer-events-auto size-12 rounded-full"
               aria-label="Next comment"
             >
-              <ArrowDown strokeWidth={2} />
+              <ArrowDown strokeWidth={2} size={24} />
             </IconButton>
           </div>
         )}

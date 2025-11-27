@@ -18,7 +18,7 @@ export default async function ListeningPage() {
   return (
     <div className="flex flex-1 flex-col">
       <TopBar>
-        <div className="flex-1 text-sm font-semibold">Listening</div>
+        <div className="flex-1 font-semibold">Listening</div>
         <div className="text-quaternary hidden pr-1.5 text-sm sm:visible">
           Synced from Spotify every hour
         </div>

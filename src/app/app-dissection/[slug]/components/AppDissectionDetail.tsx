@@ -33,14 +33,11 @@ export function AppDissectionDetail({ post }: Props) {
     <>
       <TopBar className="pr-3">
         <div className="flex flex-1 items-center gap-2">
-          <Link
-            href="/app-dissection"
-            className="text-secondary hover:text-primary text-sm font-medium"
-          >
+          <Link href="/app-dissection" className="text-secondary hover:text-primary font-medium">
             App Dissection
           </Link>
-          <div className="text-quaternary text-sm font-medium">/</div>
-          <div className="line-clamp-1 text-sm font-medium">{post.title}</div>
+          <div className="text-quaternary font-medium">/</div>
+          <div className="line-clamp-1 font-medium">{post.title}</div>
         </div>
       </TopBar>
 

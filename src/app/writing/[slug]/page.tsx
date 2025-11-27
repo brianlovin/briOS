@@ -92,12 +92,12 @@ export default async function WritingPostPage(props: { params: Promise<{ slug: s
       />
       <TopBar className="pr-3">
         <div className="flex flex-1 items-center gap-2">
-          <Link href="/writing" className="hover:text-primary text-secondary text-sm font-medium">
+          <Link href="/writing" className="hover:text-primary text-secondary font-medium">
             Writing
           </Link>
-          <div className="text-quaternary text-sm font-medium">/</div>
-          <div className="line-clamp-1 text-sm font-medium">{metadata.title}</div>
-          <div className="text-tertiary ml-auto hidden text-sm sm:flex">{date}</div>
+          <div className="text-quaternary font-medium">/</div>
+          <div className="line-clamp-1 font-medium">{metadata.title}</div>
+          <div className="text-tertiary ml-auto hidden font-medium sm:flex">{date}</div>
         </div>
       </TopBar>
       <div className="min-w-0 flex-1 overflow-y-auto">
