@@ -47,7 +47,7 @@ export default function AMALayout({ children }: { children: React.ReactNode }) {
             <div>
               {/* Mobile: always visible */}
               <div
-                className={cn("flex flex-col gap-3 px-3 py-3 md:hidden", {
+                className={cn("flex flex-col px-3 py-3 md:hidden", {
                   "border-b border-black/10 bg-linear-to-t from-neutral-50 to-white dark:border-white/10 dark:from-neutral-950 dark:to-black":
                     showForm,
                 })}
@@ -62,9 +62,11 @@ export default function AMALayout({ children }: { children: React.ReactNode }) {
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
-                      className="overflow-hidden p-1"
+                      className="overflow-hidden"
                     >
-                      <AskQuestionForm onComplete={() => setShowForm(false)} autoFocus />
+                      <div className="mt-3">
+                        <AskQuestionForm onComplete={() => setShowForm(false)} autoFocus />
+                      </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -81,7 +83,7 @@ export default function AMALayout({ children }: { children: React.ReactNode }) {
                   >
                     <div
                       className={cn(
-                        "hidden flex-col gap-3 overflow-hidden px-3 py-3 md:flex",
+                        "hidden flex-col overflow-hidden px-3 py-3 md:flex",
                         showForm && "border-b border-black/10 dark:border-white/10",
                       )}
                     >
@@ -97,7 +99,9 @@ export default function AMALayout({ children }: { children: React.ReactNode }) {
                             exit={{ opacity: 0, height: 0 }}
                             className="overflow-hidden p-1"
                           >
-                            <AskQuestionForm onComplete={() => setShowForm(false)} autoFocus />
+                            <div className="mt-3">
+                              <AskQuestionForm onComplete={() => setShowForm(false)} autoFocus />
+                            </div>
                           </motion.div>
                         )}
                       </AnimatePresence>
