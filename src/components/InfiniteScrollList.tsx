@@ -4,6 +4,24 @@ import React, { useCallback, useEffect, useRef } from "react";
 
 import { LoadingSpinner } from "./ui";
 
+/**
+ * Find the nearest scrollable parent element
+ */
+function getScrollableParent(element: HTMLElement | null): HTMLElement | null {
+  if (!element) return null;
+
+  let parent = element.parentElement;
+  while (parent) {
+    const style = getComputedStyle(parent);
+    const overflowY = style.overflowY;
+    if (overflowY === "auto" || overflowY === "scroll") {
+      return parent;
+    }
+    parent = parent.parentElement;
+  }
+  return null;
+}
+
 export interface InfiniteScrollListProps<T> {
   as?: "ul" | "div";
   items: T[];
@@ -28,7 +46,7 @@ export function InfiniteScrollList<T>({
   isLoading,
   isLoadingMore,
   isReachingEnd,
-  className = "flex w-full h-full gap-px p-2 overflow-y-auto flex-col",
+  className = "flex w-full gap-0.5 p-3 flex-col",
   loadingComponent,
   rootMargin = "50px",
   threshold = 0.1,
@@ -63,8 +81,14 @@ export function InfiniteScrollList<T>({
 
   useEffect(() => {
     const loadMoreElement = loadMoreRef.current;
+    const listElement = listRef.current;
 
     if (!loadMoreElement || isReachingEnd) return;
+
+    // Find the scrollable parent to use as the IntersectionObserver root
+    // This prevents issues with fixed-positioned containers where using
+    // root: null would observe viewport intersection instead of scroll container
+    const scrollableParent = getScrollableParent(listElement);
 
     let timeoutId: NodeJS.Timeout;
 
@@ -80,7 +104,7 @@ export function InfiniteScrollList<T>({
         }
       },
       {
-        root: null,
+        root: scrollableParent,
         rootMargin,
         threshold,
       },

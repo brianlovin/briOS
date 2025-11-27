@@ -12,7 +12,6 @@ import {
   Section,
   SectionHeading,
 } from "@/components/shared/ListComponents";
-import { TopBar } from "@/components/TopBar";
 import { createMetadata, createPersonJsonLd } from "@/lib/metadata";
 
 export const metadata: Metadata = createMetadata({
@@ -31,137 +30,131 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
       />
-      <div className="flex flex-1 flex-col">
-        <TopBar>
-          <div className="flex-1 font-semibold">About</div>
-        </TopBar>
+      <div className="flex flex-1 flex-col overflow-y-auto">
+        <div className="text-secondary mx-auto flex max-w-xl flex-1 flex-col gap-16 py-16 leading-[1.6]">
+          <Section>
+            <Image
+              src="/img/avatar.jpg"
+              alt="Brian Lovin"
+              width={44}
+              height={44}
+              draggable={false}
+              className="mb-8 rounded-full select-none"
+            />
+            <p className="text-pretty">
+              I&apos;m a designer and software engineer living in San Francisco.
+            </p>
 
-        <div className="flex-1 overflow-y-auto">
-          <div className="text-secondary mx-auto flex max-w-xl flex-1 flex-col gap-16 py-16 leading-[1.6]">
-            <Section>
-              <Image
-                src="/img/avatar.jpg"
-                alt="Brian Lovin"
-                width={44}
-                height={44}
-                draggable={false}
-                className="mb-8 rounded-full select-none"
-              />
-              <p className="text-pretty">
-                I&apos;m a designer and software engineer living in San Francisco.
-              </p>
+            <p>
+              I&apos;m currently designing AI products at{" "}
+              <InlineLink href="https://notion.com">Notion</InlineLink>. Before Notion, I was the
+              co-founder of <InlineLink href="https://campsite.com">Campsite</InlineLink>, an app
+              that combined posts, docs, calls, and chat to enable thoughtful team collaboration.
+            </p>
+            <p>
+              Before Campsite, I spent four years designing the{" "}
+              <InlineLink href="https://github.com/mobile">GitHub Mobile</InlineLink> apps. I joined
+              GitHub after they acquired my first startup,{" "}
+              <InlineLink href="https://spectrum.chat">Spectrum</InlineLink>, a platform for branded
+              communities to have better public conversations.
+            </p>
+            <p>
+              Before Spectrum, I designed payments experiences at Facebook, working across{" "}
+              <InlineLink href="https://facebook.com">Facebook</InlineLink>,{" "}
+              <InlineLink href="https://messenger.com">Messenger</InlineLink>,{" "}
+              <InlineLink href="https://whatsapp.com">WhatsApp</InlineLink>, and{" "}
+              <InlineLink href="https://instagram.com">Instagram</InlineLink>. I originally cut my
+              teeth as the first product designer at{" "}
+              <InlineLink href="https://buffer.com">Buffer</InlineLink>.
+            </p>
+            <p>
+              Along the way, I was a co-host of the{" "}
+              <InlineLink href="https://designdetails.fm">Design Details</InlineLink> podcast for
+              nine years, a weekly conversation about design process and culture. I also created{" "}
+              <InlineLink href="https://staff.design">Staff Design</InlineLink>, an interview
+              project about navigating the individual contributor career path.
+            </p>
+          </Section>
 
-              <p>
-                I&apos;m currently designing AI products at{" "}
-                <InlineLink href="https://notion.com">Notion</InlineLink>. Before Notion, I was the
-                co-founder of <InlineLink href="https://campsite.com">Campsite</InlineLink>, an app
-                that combined posts, docs, calls, and chat to enable thoughtful team collaboration.
-              </p>
-              <p>
-                Before Campsite, I spent four years designing the{" "}
-                <InlineLink href="https://github.com/mobile">GitHub Mobile</InlineLink> apps. I
-                joined GitHub after they acquired my first startup,{" "}
-                <InlineLink href="https://spectrum.chat">Spectrum</InlineLink>, a platform for
-                branded communities to have better public conversations.
-              </p>
-              <p>
-                Before Spectrum, I designed payments experiences at Facebook, working across{" "}
-                <InlineLink href="https://facebook.com">Facebook</InlineLink>,{" "}
-                <InlineLink href="https://messenger.com">Messenger</InlineLink>,{" "}
-                <InlineLink href="https://whatsapp.com">WhatsApp</InlineLink>, and{" "}
-                <InlineLink href="https://instagram.com">Instagram</InlineLink>. I originally cut my
-                teeth as the first product designer at{" "}
-                <InlineLink href="https://buffer.com">Buffer</InlineLink>.
-              </p>
-              <p>
-                Along the way, I was a co-host of the{" "}
-                <InlineLink href="https://designdetails.fm">Design Details</InlineLink> podcast for
-                nine years, a weekly conversation about design process and culture. I also created{" "}
-                <InlineLink href="https://staff.design">Staff Design</InlineLink>, an interview
-                project about navigating the individual contributor career path.
-              </p>
-            </Section>
+          <Section>
+            <SectionHeading>Online</SectionHeading>
+            <List>
+              {socials.map(({ name, href, icon: Icon }) => (
+                <ListItem key={name} href={href}>
+                  <Icon className="text-primary select-none" />
+                  <ListItemLabel>{name}</ListItemLabel>
+                </ListItem>
+              ))}
+            </List>
+          </Section>
 
-            <Section>
-              <SectionHeading>Online</SectionHeading>
-              <List>
-                {socials.map(({ name, href, icon: Icon }) => (
-                  <ListItem key={name} href={href}>
-                    <Icon className="text-primary select-none" />
-                    <ListItemLabel>{name}</ListItemLabel>
-                  </ListItem>
-                ))}
-              </List>
-            </Section>
+          <Section>
+            <SectionHeading>Work</SectionHeading>
+            <List>
+              {work.map(({ name, href, role, period, icon }) => (
+                <ListItem key={name} href={href}>
+                  {icon.type === "image" ? (
+                    <Image
+                      width={40}
+                      height={40}
+                      src={icon.src}
+                      alt={icon.alt}
+                      className="h-5 w-5 rounded-md select-none"
+                      draggable={false}
+                    />
+                  ) : (
+                    <icon.component className="text-primary" />
+                  )}
+                  <ListItemLabel>{name}</ListItemLabel>
+                  <ListItemSubLabel className="flex-1">{role}</ListItemSubLabel>
+                  <ListItemSubLabel className="font-mono opacity-80">{period}</ListItemSubLabel>
+                </ListItem>
+              ))}
+            </List>
+          </Section>
 
-            <Section>
-              <SectionHeading>Work</SectionHeading>
-              <List>
-                {work.map(({ name, href, role, period, icon }) => (
-                  <ListItem key={name} href={href}>
-                    {icon.type === "image" ? (
-                      <Image
-                        width={40}
-                        height={40}
-                        src={icon.src}
-                        alt={icon.alt}
-                        className="h-5 w-5 rounded-md select-none"
-                        draggable={false}
-                      />
-                    ) : (
-                      <icon.component className="text-primary" />
-                    )}
-                    <ListItemLabel>{name}</ListItemLabel>
-                    <ListItemSubLabel className="flex-1">{role}</ListItemSubLabel>
-                    <ListItemSubLabel className="font-mono opacity-80">{period}</ListItemSubLabel>
-                  </ListItem>
-                ))}
-              </List>
-            </Section>
+          <Section>
+            <SectionHeading>Projects</SectionHeading>
+            <List>
+              {projects.map(({ name, href, description, external }) => (
+                <ListItem key={name} href={href}>
+                  <ListItemLabel>{name}</ListItemLabel>
+                  <ListItemSubLabel>{description}</ListItemSubLabel>
+                  {external && (
+                    <ListItemSubLabel className="font-mono opacity-80">
+                      <ArrowUpRight />
+                    </ListItemSubLabel>
+                  )}
+                </ListItem>
+              ))}
+            </List>
+          </Section>
 
-            <Section>
-              <SectionHeading>Projects</SectionHeading>
-              <List>
-                {projects.map(({ name, href, description, external }) => (
-                  <ListItem key={name} href={href}>
-                    <ListItemLabel>{name}</ListItemLabel>
-                    <ListItemSubLabel>{description}</ListItemSubLabel>
-                    {external && (
-                      <ListItemSubLabel className="font-mono opacity-80">
-                        <ArrowUpRight />
-                      </ListItemSubLabel>
-                    )}
-                  </ListItem>
-                ))}
-              </List>
-            </Section>
+          <Section>
+            <SectionHeading>Speaking</SectionHeading>
+            <List>
+              {speaking.map(({ title, date, href }) => (
+                <ListItem href={href} key={title}>
+                  <ListItemLabel className="flex-1">{title}</ListItemLabel>
+                  <ListItemSubLabel className="font-mono opacity-80">{date}</ListItemSubLabel>
+                </ListItem>
+              ))}
+            </List>
+          </Section>
 
-            <Section>
-              <SectionHeading>Speaking</SectionHeading>
-              <List>
-                {speaking.map(({ title, date, href }) => (
-                  <ListItem href={href} key={title}>
-                    <ListItemLabel className="flex-1">{title}</ListItemLabel>
-                    <ListItemSubLabel className="font-mono opacity-80">{date}</ListItemSubLabel>
-                  </ListItem>
-                ))}
-              </List>
-            </Section>
-
-            <Section>
-              <SectionHeading>Investments</SectionHeading>
-              <List>
-                {investments.map(({ name, href, sublabel }) => (
-                  <ListItem key={name} href={href}>
-                    <ListItemLabel>{name}</ListItemLabel>
-                    {sublabel && (
-                      <ListItemSubLabel className="select-none">{sublabel}</ListItemSubLabel>
-                    )}
-                  </ListItem>
-                ))}
-              </List>
-            </Section>
-          </div>
+          <Section>
+            <SectionHeading>Investments</SectionHeading>
+            <List>
+              {investments.map(({ name, href, sublabel }) => (
+                <ListItem key={name} href={href}>
+                  <ListItemLabel>{name}</ListItemLabel>
+                  {sublabel && (
+                    <ListItemSubLabel className="select-none">{sublabel}</ListItemSubLabel>
+                  )}
+                </ListItem>
+              ))}
+            </List>
+          </Section>
         </div>
       </div>
     </>

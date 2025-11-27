@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { useEffect } from "react";
 
 import { renderBlocks } from "@/components/renderBlocks";
+import { PageTitle } from "@/components/Typography";
 import { FancySeparator } from "@/components/ui/FancySeparator";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { useAmaQuestion } from "@/lib/hooks/useAma";
@@ -33,6 +34,14 @@ export default function AMADetail() {
     return <p>Question not found</p>;
   }
 
+  const createdAt = question.createdAt
+    ? new Date(question.createdAt).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    : undefined;
+
   const answeredAt = question.answeredAt
     ? new Date(question.answeredAt).toLocaleDateString("en-US", {
         month: "short",
@@ -43,17 +52,20 @@ export default function AMADetail() {
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-10 p-4 md:p-8">
-      <div className="flex flex-col gap-2">
-        {question.answeredAt && (
-          <span className="text-quaternary mt-4 text-sm">Asked {answeredAt}</span>
+      <div className="flex flex-col gap-6">
+        {question.createdAt && <span className="text-tertiary">Asked {createdAt}</span>}
+        <PageTitle>{question.title}</PageTitle>
+        {question.description && (
+          <span className="text-secondary text-lg">{question.description}</span>
         )}
-        <h1 className="text-primary text-3xl font-semibold xl:text-4xl">{question.title}</h1>
-        {question.description && <span className="text-secondary">{question.description}</span>}
       </div>
 
       <FancySeparator />
 
-      <div className="flex flex-col gap-6">{renderBlocks(question.blocks)}</div>
+      <div className="flex flex-col gap-6 text-lg">
+        {question.answeredAt && <span className="text-tertiary">Answered {answeredAt}</span>}
+        {renderBlocks(question.blocks)}
+      </div>
     </div>
   );
 }

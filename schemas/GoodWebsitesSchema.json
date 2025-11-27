@@ -36,9 +36,9 @@
       "type": "url",
       "url": {}
     },
-    "Process": {
+    "Process favicon": {
       "id": "v%5E%7B%3F",
-      "name": "Process",
+      "name": "Process favicon",
       "description": null,
       "type": "button",
       "button": {}

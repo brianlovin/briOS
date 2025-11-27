@@ -38,18 +38,18 @@ export function AmaList() {
         : undefined;
       const isSelected = item.id === currentId;
       return (
-        <li key={item.id} data-id={item.id} className="scroll-my-2">
+        <li key={item.id} data-id={item.id} className="scroll-my-3">
           <Link
             className={cn(
-              "hover:bg-tertiary flex flex-col gap-0.5 rounded-md px-3.5 py-3 text-sm",
+              "hover:bg-tertiary dark:hover:bg-secondary dark:hover:shadow-contrast flex flex-col gap-0.5 rounded-md px-3.5 py-3",
               {
-                "bg-tertiary": isSelected,
+                "bg-tertiary dark:bg-secondary dark:shadow-contrast": isSelected,
               },
             )}
             href={`/ama/${item.id}`}
           >
             <span className="text-primary line-clamp-3 font-medium">{item.title}</span>
-            {date && <span className="text-quaternary text-sm">{date}</span>}
+            {date && <span className="text-quaternary">{date}</span>}
           </Link>
         </li>
       );

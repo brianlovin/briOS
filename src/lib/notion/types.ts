@@ -117,6 +117,7 @@ export type NotionAmaItem = {
   description: string | null;
   status: string;
   answeredAt: string;
+  createdAt: string;
 };
 
 export type NotionAmaItemWithContent = NotionAmaItem & {

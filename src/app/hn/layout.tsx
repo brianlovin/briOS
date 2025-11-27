@@ -1,12 +1,12 @@
 "use client";
 
-import { useAtomValue } from "jotai";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useMemo } from "react";
 
-import { hnSubscribedAtom } from "@/atoms/hnSubscription";
 import { ListDetailLayout } from "@/components/ListDetailLayout";
+import { ListDetailWrapper } from "@/components/ListDetailWrapper";
+import { useTopBarActions } from "@/components/TopBarActions";
 import { useListNavigation } from "@/hooks/useListNavigation";
 import { useHNPosts } from "@/lib/hooks/useHn";
 import { cn } from "@/lib/utils";
@@ -14,35 +14,33 @@ import { HackerNewsPost } from "@/types/hackernews";
 
 import { LoadingSpinner } from "../../components/ui/LoadingSpinner";
 import { HNPostsProvider, useHNPostsContext } from "./HNPostsContext";
-import { SubscribeDialog } from "./SubscribeDialog";
 
 export default function HNLayout({ children }: { children: React.ReactNode }) {
-  const today = new Date();
-  const formattedDate = today.toLocaleDateString("en-US", {
-    month: "long",
+  const { data: posts, isLoading, isError } = useHNPosts();
+  const today = new Date().toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
     day: "numeric",
     year: "numeric",
   });
 
-  // Fetch posts at layout level to share with children
-  const { data: posts, isLoading, isError } = useHNPosts();
-  const hnSubscribed = useAtomValue(hnSubscribedAtom);
+  const topBarContent = useMemo(
+    () => (
+      <span className="text-tertiary hidden font-mono text-sm tracking-tight md:block">
+        {today}
+      </span>
+    ),
+    [today],
+  );
+  useTopBarActions(topBarContent);
 
   return (
     <HNPostsProvider posts={posts} isLoading={isLoading} isError={isError}>
-      <ListDetailLayout
-        title="Hacker News"
-        backHref="/hn"
-        list={<HNStoriesList />}
-        headerChildren={
-          <>
-            <div className="text-quaternary hidden text-sm sm:flex">{formattedDate}</div>
-            {!hnSubscribed && <SubscribeDialog />}
-          </>
-        }
-      >
-        {children}
-      </ListDetailLayout>
+      <ListDetailWrapper>
+        <ListDetailLayout backHref="/hn" list={<HNStoriesList />}>
+          {children}
+        </ListDetailLayout>
+      </ListDetailWrapper>
     </HNPostsProvider>
   );
 }
@@ -76,23 +74,23 @@ function HNStoriesList() {
 
   if (isError || (validPosts.length === 0 && !isLoading)) {
     return (
-      <div className="text-quaternary flex flex-1 items-center justify-center text-sm">
+      <div className="text-quaternary flex flex-1 items-center justify-center">
         Unable to load stories
       </div>
     );
   }
 
   return (
-    <ul className="flex h-full flex-col gap-px overflow-y-auto p-2">
+    <ul className="flex flex-col gap-0.5 p-3">
       {validPosts.map((post) => {
         const isSelected = post.id.toString() === currentPostId;
         return (
-          <li key={post.id} data-id={post.id} className="scroll-my-2">
+          <li key={post.id} data-id={post.id} className="scroll-my-3">
             <Link
               className={cn(
-                "hover:bg-tertiary flex flex-col gap-0.5 rounded-md px-3.5 py-3 text-sm",
+                "hover:bg-tertiary dark:hover:bg-secondary dark:hover:shadow-contrast flex flex-col gap-0.5 rounded-md px-3.5 py-3",
                 {
-                  "bg-tertiary": isSelected,
+                  "bg-tertiary dark:bg-secondary dark:shadow-contrast": isSelected,
                 },
               )}
               href={`/hn/${post.id}`}
