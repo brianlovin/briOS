@@ -65,7 +65,7 @@ export function MobileNavMenu() {
             </div>
 
             {/* Social links */}
-            <div className="mt-8 flex flex-row gap-4">
+            <div className="mt-8 flex flex-row items-center gap-4">
               <Link
                 href="https://x.com/brian_lovin"
                 className="text-quaternary hover:text-primary -ml-2 p-2"
