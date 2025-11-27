@@ -24,7 +24,7 @@ export function ClientShell({ children }: PropsWithChildren) {
   // Set sidebar state based on viewport before making app visible
   // This prevents any flash - app stays hidden until we know the correct state
   useLayoutEffect(() => {
-    const mediaQuery = window.matchMedia("(min-width: 769px)");
+    const mediaQuery = window.matchMedia("(min-width: 768px)");
     setSidebarOpen(mediaQuery.matches);
     // Batch state updates to avoid cascading renders
     requestAnimationFrame(() => {

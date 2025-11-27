@@ -15,7 +15,7 @@ import {
   Section,
   SectionHeading,
 } from "@/components/shared/ListComponents";
-import { TopBar } from "@/components/TopBar";
+import { HomeTopBar } from "@/components/HomeTopBar";
 import { createMetadata, createPersonJsonLd } from "@/lib/metadata";
 
 export const metadata: Metadata = createMetadata({
@@ -35,7 +35,7 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
       />
       <div className="flex flex-1 flex-col">
-        <TopBar className="border-b-0 md:hidden" />
+        <HomeTopBar />
 
         <div className="flex-1 overflow-y-auto">
           <div className="text-primary mx-auto flex max-w-xl flex-1 flex-col gap-16 py-16 leading-[1.6] sm:py-32">
