@@ -64,7 +64,7 @@ export function GoodWebsitesPageClient({ initialData }: GoodWebsitesPageClientPr
         <div className="relative flex-1 overflow-auto">
           {/* Table Header - Sticky (hidden on mobile) */}
           <div className="bg-secondary border-secondary sticky top-0 z-20 hidden border-b md:block dark:bg-neutral-950">
-            <div className="grid grid-cols-12 gap-4 px-4 py-2 text-sm font-medium">
+            <div className="grid grid-cols-12 gap-4 px-4 py-2 font-medium">
               <div className="col-span-7 text-left">Name</div>
               <div className="col-span-3 text-left">Site</div>
             </div>
@@ -104,7 +104,7 @@ function GoodWebsiteItemComponent({ item }: { item: GoodWebsiteItem }) {
   return (
     <div className="border-secondary hover:bg-secondary group relative border-b md:dark:hover:bg-white/5">
       {item.url && <Link target="_blank" href={item.url} className="absolute inset-0" />}
-      <div className="flex gap-3 px-4 py-3 text-sm md:grid md:grid-cols-12 md:items-center md:gap-4">
+      <div className="flex gap-3 px-4 py-3 md:grid md:grid-cols-12 md:items-center md:gap-4">
         {/* Icon - shown on mobile, hidden on desktop */}
         {item.icon && !iconError ? (
           <Image
