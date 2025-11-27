@@ -18,5 +18,5 @@ export function PlatformBadge({ platform, className = "" }: PlatformBadgeProps) 
     platformColors[platform as keyof typeof platformColors] ||
     "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300";
 
-  return <Badge className={`${colorClasses} text-xs font-medium ${className}`}>{platform}</Badge>;
+  return <Badge className={`${colorClasses} text-sm font-medium ${className}`}>{platform}</Badge>;
 }
