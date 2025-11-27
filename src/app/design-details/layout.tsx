@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 export default function DesignDetailsLayout({ children }: { children: React.ReactNode }) {
   return (
     <ListDetailWrapper>
-      <ListDetailLayout title="Design Details" backHref="/design-details" list={<EpisodeList />}>
+      <ListDetailLayout backHref="/design-details" list={<EpisodeList />}>
         {children}
       </ListDetailLayout>
     </ListDetailWrapper>
