@@ -309,7 +309,16 @@
   }
 
   .prose a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--text-color-quaternary);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 2px;
     word-break: break-word;
+  }
+
+  .prose a:hover {
+    color: var(--text-color-primary);
   }
 
   /* Body text link styling - unified across all rendering pipelines */
@@ -331,7 +340,7 @@
     color: var(--text-color-primary);
     padding: 0.125rem 0.25rem;
     border-radius: 0.25rem;
-    font-size: 0.875em;
+    font-size: 0.925em;
     font-weight: 400;
     font-family:
       ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
@@ -353,7 +362,7 @@
     color: var(--text-color-primary);
     padding: 0;
     border-radius: 0;
-    font-size: 0.875rem;
+    font-size: 0.925rem;
     line-height: 1.5;
   }
 

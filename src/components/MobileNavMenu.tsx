@@ -30,18 +30,29 @@ export function MobileNavMenu() {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, setIsOpen]);
 
+  React.useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
   return (
     <AnimatePresence>
       {isOpen && (
         <motion.div
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.98 }}
+          exit={{ opacity: 0, scale: 0.99 }}
           transition={{ duration: 0.15 }}
           className="fixed inset-0 top-11 z-20 flex origin-top flex-col bg-white dark:bg-black"
         >
           {/* Navigation - TopBar stays on top, menu opens below */}
-          <nav className="flex-1 overflow-y-auto px-4 py-6">
+          <nav className="flex-1 overflow-y-auto px-4 py-6 md:px-6">
             <div className="flex flex-col gap-1">
               {mainNavItems.map((item) => (
                 <MobileNavLink

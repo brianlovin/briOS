@@ -7,6 +7,7 @@ import {
   Section,
   SectionHeading,
 } from "@/components/shared/ListComponents";
+import { PageTitle } from "@/components/Typography";
 import { createMetadata } from "@/lib/metadata";
 import { getAllWritingPosts } from "@/lib/writing";
 
@@ -36,7 +37,10 @@ export default async function WritingPage() {
 
   return (
     <div data-scrollable className="flex-1 overflow-y-auto">
-      <div className="text-secondary mx-auto flex max-w-xl flex-1 flex-col gap-16 py-16 leading-[1.6]">
+      <div className="mx-auto flex max-w-xl flex-1 flex-col gap-16 py-16 leading-[1.6]">
+        <Section>
+          <PageTitle>Writing</PageTitle>
+        </Section>
         {sortedYears.map((year) => (
           <Section key={year}>
             <SectionHeading>{year}</SectionHeading>

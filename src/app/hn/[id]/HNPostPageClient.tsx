@@ -1,13 +1,16 @@
 "use client";
 
 import DOMPurify from "dompurify";
+import { useAtomValue } from "jotai";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { memo, useEffect, useMemo, useRef } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
+import { hnSubscribedAtom } from "@/atoms/hnSubscription";
 import { ArrowDown } from "@/components/icons/ArrowDown";
 import { ArrowUpRight } from "@/components/icons/ArrowUpRight";
+import { PageTitle } from "@/components/Typography";
 import { FancySeparator } from "@/components/ui/FancySeparator";
 import { IconButton } from "@/components/ui/IconButton";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
@@ -15,6 +18,7 @@ import { useHNPost } from "@/lib/hooks/useHn";
 import { stripHtmlTags } from "@/lib/utils";
 import { HackerNewsComment } from "@/types/hackernews";
 
+import { HNDigestCard } from "../HNDigestCard";
 import { useHNPostsContext } from "../HNPostsContext";
 
 // Sanitize HTML content from external sources (Hacker News)
@@ -28,6 +32,7 @@ function sanitizeHtml(html: string): string {
 export default function HNPostPageClient() {
   const { id } = useParams();
   const { posts } = useHNPostsContext();
+  const isSubscribed = useAtomValue(hnSubscribedAtom);
 
   // Find current post from the list to use as fallback
   const fallbackPost = useMemo(
@@ -142,22 +147,24 @@ export default function HNPostPageClient() {
               rel="noopener noreferrer"
               className="block text-3xl font-semibold xl:text-4xl"
             >
-              <h1 ref={titleRef}>{post.title}</h1>
+              <PageTitle ref={titleRef}>{post.title}</PageTitle>
             </Link>
             {post.url && (
               <Link
                 href={post.url}
                 target="_blank"
-                className="text-tertiary hover:text-primary flex items-center gap-1 text-sm"
+                className="text-tertiary hover:text-primary flex items-center gap-1 self-start"
               >
                 <span>{post.domain}</span>
                 <ArrowUpRight size={16} />
               </Link>
             )}
 
+            <HNDigestCard className="mt-8" />
+
             {post.content && (
               <div
-                className="comment prose max-w-full"
+                className="comment prose-lg max-w-full"
                 dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }}
               />
             )}
@@ -168,6 +175,13 @@ export default function HNPostPageClient() {
           {post?.comments && !!post.comments.length && (
             <div className="relative flex flex-1 flex-col pt-8 md:pt-12">
               <PostComments comments={post.comments} />
+            </div>
+          )}
+
+          {!isSubscribed && post?.comments && !!post.comments.length && (
+            <div className="pt-8 md:pt-12">
+              <FancySeparator />
+              <HNDigestCard className="mt-8" />
             </div>
           )}
         </div>
@@ -199,7 +213,7 @@ export function PostComments({ comments }: { comments: HackerNewsComment[] }) {
           comments.length > 0 &&
           comments.map((comment) => <PostComment key={comment.id} comment={comment} />)}
         {comments && comments.length === 0 && (
-          <p className="text-quaternary text-sm italic">No comments yet...</p>
+          <p className="text-quaternary italic">No comments yet...</p>
         )}
       </div>
     </div>
@@ -214,10 +228,10 @@ function LevelZeroComment({ comment }: { comment: HackerNewsComment }) {
         id={comment.id ? String(comment.id) : ""}
         href={comment.id ? `#${comment.id}` : "#"}
       >
-        <p className="text-quaternary font-mono text-sm">{`${comment.user}`}</p>
+        <p className="text-quaternary font-mono text-[15px]">{`${comment.user}`}</p>
       </a>
       <div
-        className={"comment prose max-w-full pt-1"}
+        className={"comment prose-lg max-w-full pt-1"}
         dangerouslySetInnerHTML={{ __html: sanitizeHtml(comment.content ?? "") }}
       />
       {comment.comments &&
@@ -244,16 +258,16 @@ function ChildComment({ comment }: { comment: HackerNewsComment }) {
   }
 
   return (
-    <div className={`border-l-1 ${color} mt-4 flex shrink flex-col pl-4`}>
+    <div className={`border-l-2 ${color} mt-4 flex shrink flex-col pl-4`}>
       <a
         className="inline-block scroll-mt-4 font-normal"
         id={comment.id ? String(comment.id) : ""}
         href={comment.id ? `#${comment.id}` : "#"}
       >
-        <p className="text-quaternary font-mono text-sm">{`${comment.user}`}</p>
+        <p className="text-quaternary font-mono">{`${comment.user}`}</p>
       </a>
       <div
-        className={"prose max-w-full pt-1"}
+        className={"prose-lg max-w-full pt-1"}
         dangerouslySetInnerHTML={{ __html: sanitizeHtml(comment.content ?? "") }}
       />
       {comment.comments &&

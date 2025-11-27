@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { renderBlocks } from "@/components/renderBlocks";
 import { List, ListItem, ListItemLabel } from "@/components/shared/ListComponents";
+import { PageTitle } from "@/components/Typography";
 import { FancySeparator } from "@/components/ui/FancySeparator";
 import { createArticleJsonLd, createMetadata, truncateDescription } from "@/lib/metadata";
 import { getWritingPostContentBySlug } from "@/lib/notion";
@@ -76,28 +77,26 @@ export default async function WritingPostPage(props: { params: Promise<{ slug: s
     modifiedTime: metadata.createdTime,
   });
 
+  const cleanDate = new Date(metadata.published || metadata.createdTime).toLocaleDateString(
+    "en-US",
+    {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    },
+  );
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
-      <div className="min-w-0 flex-1 overflow-y-auto">
+      <div className="min-w-0 flex-1">
         <div className="mx-auto flex max-w-3xl flex-1 flex-col gap-8 px-4 py-12 md:px-6 lg:px-8 lg:py-16 xl:py-20">
-          <div className="flex flex-col gap-2">
-            <h1 className="text-primary text-3xl font-bold -tracking-[0.64px] xl:text-4xl">
-              {metadata.title}
-            </h1>
-            {metadata.source && (
-              <a
-                href={metadata.source}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-tertiary hover:underline"
-              >
-                {metadata.source}
-              </a>
-            )}
+          <div className="flex flex-col gap-4">
+            <PageTitle>{metadata.title}</PageTitle>
+            <p className="text-tertiary">{cleanDate}</p>
           </div>
 
           <div className="flex min-w-0 flex-col gap-4 text-base md:text-lg">
@@ -110,6 +109,7 @@ export default async function WritingPostPage(props: { params: Promise<{ slug: s
         <div className="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-12 md:px-6 lg:px-8 lg:py-16 xl:py-20">
           {randomPosts.length > 0 && (
             <div className="flex flex-col gap-4">
+              <div className="h-1 w-5 rounded-full bg-[#FC532A]" />
               <h2 className="text-tertiary text-base">Read next</h2>
               <List>
                 {randomPosts.map((post) => (

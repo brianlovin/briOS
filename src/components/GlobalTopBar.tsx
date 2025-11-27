@@ -7,8 +7,10 @@ import { useEffect, useState } from "react";
 
 import { sidebarAtom } from "@/atoms/sidebar";
 import { navigationItems } from "@/config/navigation";
+import { cn } from "@/lib/utils";
 
 import { MenuToggle } from "./icons/MenuToggle";
+import { TopBarActionsSlot } from "./TopBarActions";
 import { IconButton } from "./ui/IconButton";
 
 export function BreadcrumbDivider() {
@@ -73,24 +75,31 @@ export function GlobalTopBar() {
   const shouldShow = isHomePage ? isVisible : true;
 
   return (
-    <div
-      onClick={handleClick}
-      className={`sticky top-0 z-10 flex h-14 cursor-pointer items-center gap-3 self-start bg-white px-3 dark:bg-black ${
-        isHomePage
-          ? `transition-opacity duration-150 ${shouldShow ? "opacity-100" : "pointer-events-none opacity-0"}`
-          : ""
-      }`}
-    >
-      <IconButton className="rounded-full" size="lg" onClick={() => setIsOpen(!isOpen)}>
-        <MenuToggle isOpen={isOpen} />
-      </IconButton>
-      <BreadcrumbLabel href="/">Brian Lovin</BreadcrumbLabel>
-      {currentNavItem && (
-        <>
-          <BreadcrumbDivider />
-          <BreadcrumbLabel href={currentNavItem.href}>{currentNavItem.label}</BreadcrumbLabel>
-        </>
-      )}
-    </div>
+    <>
+      <div
+        onClick={handleClick}
+        className={cn(
+          "sticky top-0 z-20 flex h-14 items-center gap-3 self-start bg-white px-3 dark:bg-black",
+          {
+            "transition-opacity duration-150": isHomePage,
+            "opacity-100": shouldShow && isHomePage,
+            "pointer-events-none opacity-0": !shouldShow && isHomePage,
+            "bg-white dark:bg-black": isOpen,
+          },
+        )}
+      >
+        <IconButton className="rounded-full" size="lg" onClick={() => setIsOpen(!isOpen)}>
+          <MenuToggle isOpen={isOpen} />
+        </IconButton>
+        <BreadcrumbLabel href="/">Brian Lovin</BreadcrumbLabel>
+        {currentNavItem && (
+          <>
+            <BreadcrumbDivider />
+            <BreadcrumbLabel href={currentNavItem.href}>{currentNavItem.label}</BreadcrumbLabel>
+          </>
+        )}
+        <TopBarActionsSlot />
+      </div>
+    </>
   );
 }

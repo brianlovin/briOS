@@ -31,7 +31,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
     <html
       lang="en"
       suppressHydrationWarning
-      className="bg-white subpixel-antialiased md:bg-[#fcfcfc] dark:bg-black"
+      className="bg-white subpixel-antialiased dark:bg-black"
     >
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
