@@ -34,7 +34,7 @@ export default function Home() {
       />
       <div className="flex flex-1 flex-col">
         <div className="flex-1 overflow-y-auto">
-          <div className="text-primary mx-auto flex max-w-xl flex-1 flex-col gap-16 py-16 leading-[1.6] sm:py-32">
+          <div className="text-primary mx-auto flex max-w-2xl flex-1 flex-col gap-16 py-16 leading-[1.6] sm:py-32">
             <Section>
               <Image
                 src="/img/avatar.jpg"
@@ -63,7 +63,7 @@ export default function Home() {
                 <YouTubeIcon
                   size={32}
                   className="text-quaternary select-none group-hover:text-[#FF0302]"
-                  playIconClassName="fill-[var(--background-color-primary)] sm:fill-[var(--background-color-elevated)]  group-hover:fill-white"
+                  playIconClassName="fill-[var(--background-color-main)] sm:fill-[var(--background-color-elevated)]  group-hover:fill-white"
                 />
               </ListItem>
               <ListItem href="https://github.com/brianlovin" className="group p-2">
@@ -72,6 +72,29 @@ export default function Home() {
                   className="text-quaternary group-hover:text-primary select-none"
                 />
               </ListItem>
+            </Section>
+
+            <Section>
+              <SectionHeading>Projects</SectionHeading>
+              <List>
+                {projects.map(({ name, href, description, external }) => (
+                  <ListItem
+                    key={name}
+                    href={href}
+                    className="flex-col items-start gap-0 sm:flex-row sm:items-center sm:gap-2"
+                  >
+                    <div className="flex items-center gap-2">
+                      <ListItemLabel className="sm:line-clamp-1">{name}</ListItemLabel>
+                      {external && (
+                        <ListItemSubLabel className="shrink-0 font-mono">
+                          <ArrowUpRight className="text-primary" />
+                        </ListItemSubLabel>
+                      )}
+                    </div>
+                    <ListItemSubLabel className="flex-1">{description}</ListItemSubLabel>
+                  </ListItem>
+                ))}
+              </List>
             </Section>
 
             <Section>
@@ -108,29 +131,6 @@ export default function Home() {
             </Section>
 
             <Section>
-              <SectionHeading>Projects</SectionHeading>
-              <List>
-                {projects.map(({ name, href, description, external }) => (
-                  <ListItem
-                    key={name}
-                    href={href}
-                    className="flex-col items-start gap-0 sm:flex-row sm:items-center sm:gap-2"
-                  >
-                    <div className="flex items-center gap-2">
-                      <ListItemLabel className="sm:line-clamp-1">{name}</ListItemLabel>
-                      {external && (
-                        <ListItemSubLabel className="shrink-0 font-mono">
-                          <ArrowUpRight className="text-primary" />
-                        </ListItemSubLabel>
-                      )}
-                    </div>
-                    <ListItemSubLabel className="flex-1">{description}</ListItemSubLabel>
-                  </ListItem>
-                ))}
-              </List>
-            </Section>
-
-            <Section>
               <SectionHeading>Speaking</SectionHeading>
               <Suspense fallback={<SpeakingListSkeleton />}>
                 <SpeakingList />
@@ -144,6 +144,12 @@ export default function Home() {
 }
 
 const projects = [
+  {
+    name: "Writing",
+    href: "/writing",
+    description: "Notes on software and other things",
+    external: false,
+  },
   {
     name: "HN",
     href: "/hn",

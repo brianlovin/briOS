@@ -369,4 +369,61 @@
   .prose p {
     overflow-wrap: anywhere;
   }
+
+  /* Comment styling for HN and other external HTML content */
+  .comment {
+    min-width: 0;
+  }
+
+  .comment a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--text-color-quaternary);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 2px;
+    word-break: break-word;
+  }
+
+  .comment a:hover {
+    color: var(--text-color-primary);
+  }
+
+  .comment p {
+    overflow-wrap: anywhere;
+  }
+
+  /* Inline code styling */
+  .comment code {
+    background-color: var(--background-color-tertiary);
+    color: var(--text-color-primary);
+    padding: 0.125rem 0.25rem;
+    border-radius: 0.25rem;
+    font-size: 0.925em;
+    font-weight: 400;
+    font-family:
+      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+      monospace;
+    overflow-wrap: anywhere;
+  }
+
+  /* Code blocks styling */
+  .comment pre {
+    background-color: var(--background-color-tertiary);
+    border: 0.5px solid var(--border-color-primary);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 0.5rem 0;
+  }
+
+  .comment pre code {
+    background-color: transparent;
+    color: var(--text-color-primary);
+    padding: 0;
+    border-radius: 0;
+    font-size: 0.925rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
 }

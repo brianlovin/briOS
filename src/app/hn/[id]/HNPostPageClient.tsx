@@ -138,8 +138,8 @@ export default function HNPostPageClient() {
 
   return (
     <>
-      <div ref={scrollContainerRef} className="relative flex flex-col px-4 md:px-6 lg:px-8">
-        <div className="mx-auto flex w-full max-w-3xl flex-col">
+      <div ref={scrollContainerRef} className="relative flex min-w-0 flex-col px-4 md:px-6 lg:px-8">
+        <div className="mx-auto flex w-full max-w-3xl min-w-0 flex-col">
           <div className="flex flex-col gap-4 py-8 md:py-12">
             <Link
               href={post.url}
@@ -207,8 +207,8 @@ export default function HNPostPageClient() {
 
 export function PostComments({ comments }: { comments: HackerNewsComment[] }) {
   return (
-    <div className="relative flex flex-1 flex-col gap-10">
-      <div className="flex w-full flex-1 flex-col gap-10">
+    <div className="relative flex min-w-0 flex-1 flex-col gap-10">
+      <div className="flex w-full min-w-0 flex-1 flex-col gap-10">
         {comments &&
           comments.length > 0 &&
           comments.map((comment) => <PostComment key={comment.id} comment={comment} />)}
@@ -258,7 +258,7 @@ function ChildComment({ comment }: { comment: HackerNewsComment }) {
   }
 
   return (
-    <div className={`border-l-2 ${color} mt-4 flex shrink flex-col pl-4`}>
+    <div className={`border-l-2 ${color} mt-4 flex min-w-0 shrink flex-col pl-4`}>
       <a
         className="inline-block scroll-mt-4 font-normal"
         id={comment.id ? String(comment.id) : ""}
@@ -267,7 +267,7 @@ function ChildComment({ comment }: { comment: HackerNewsComment }) {
         <p className="text-quaternary font-mono">{`${comment.user}`}</p>
       </a>
       <div
-        className={"prose-lg max-w-full pt-1"}
+        className={"comment prose-lg max-w-full pt-1"}
         dangerouslySetInnerHTML={{ __html: sanitizeHtml(comment.content ?? "") }}
       />
       {comment.comments &&

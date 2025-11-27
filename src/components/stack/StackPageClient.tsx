@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { ListDetailWrapper } from "@/components/ListDetailWrapper";
 import { StackFilters } from "@/components/stack/StackFilters";
@@ -11,12 +11,24 @@ import { PlatformBadge } from "@/components/ui/PlatformBadge";
 import { useStacks } from "@/lib/hooks/useStacks";
 import type { StackItem } from "@/lib/stack";
 
+import { useTopBarActions } from "../TopBarActions";
+
 interface StackPageClientProps {
   initialData: StackItem[];
 }
 
 export function StackPageClient({ initialData }: StackPageClientProps) {
   const { stacks, isInitialLoading, isValidating, isError } = useStacks(initialData);
+
+  const topBarContent = useMemo(
+    () => (
+      <span className="hidden md:block">
+        <StackFilters />
+      </span>
+    ),
+    [],
+  );
+  useTopBarActions(topBarContent);
 
   // Only show full page loading on initial load (without fallback data)
   if (isInitialLoading && stacks.length === 0) {
@@ -43,7 +55,7 @@ export function StackPageClient({ initialData }: StackPageClientProps) {
     <ListDetailWrapper>
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Filters */}
-        <div className="border-secondary flex border-b p-2">
+        <div className="border-secondary flex border-b p-4 md:hidden">
           <StackFilters isLoading={isValidating && !isInitialLoading} />
         </div>
 

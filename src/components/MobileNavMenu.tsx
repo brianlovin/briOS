@@ -52,7 +52,7 @@ export function MobileNavMenu() {
           className="fixed inset-0 top-11 z-20 flex origin-top flex-col bg-white dark:bg-black"
         >
           {/* Navigation - TopBar stays on top, menu opens below */}
-          <nav className="flex-1 overflow-y-auto px-4 py-6 md:px-6">
+          <nav className="flex-1 overflow-y-auto p-6">
             <div className="flex flex-col gap-1">
               {mainNavItems.map((item) => (
                 <MobileNavLink

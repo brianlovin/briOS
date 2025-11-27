@@ -42,6 +42,13 @@
         ]
       }
     },
+    "Button": {
+      "id": "wDov",
+      "name": "Button",
+      "description": null,
+      "type": "button",
+      "button": {}
+    },
     "Description": {
       "id": "%7DVyi",
       "name": "Description",

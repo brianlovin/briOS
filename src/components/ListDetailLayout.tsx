@@ -26,12 +26,20 @@ export function ListDetailLayout({ backHref, list, children }: ListDetailLayoutP
             },
           )}
         >
-          <div className="min-h-0 flex-1 overflow-y-auto">{list}</div>
+          <div
+            data-list-container
+            data-scroll-priority={!isDetailPage ? "true" : undefined}
+            className="min-h-0 flex-1 overflow-y-auto"
+          >
+            {list}
+          </div>
         </div>
 
         <div
           data-scrollable
-          className={cn("flex min-h-0 flex-1 flex-col overflow-y-auto", {
+          data-detail-container
+          data-scroll-priority={isDetailPage ? "true" : undefined}
+          className={cn("flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto", {
             "hidden @3xl:flex": !isDetailPage,
           })}
         >

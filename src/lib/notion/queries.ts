@@ -317,6 +317,7 @@ export async function getAmaItemContent(pageId: string): Promise<NotionAmaItemWi
       Description?: { rich_text: { plain_text: string }[] };
       Status?: { select: { name: string } | null };
       "Answered At"?: { date: { start: string } | null };
+      "Created At"?: { date: { start: string } | null };
     };
 
     const item: NotionAmaItem = {
@@ -325,6 +326,7 @@ export async function getAmaItemContent(pageId: string): Promise<NotionAmaItemWi
       description: properties.Description?.rich_text[0]?.plain_text || null,
       status: properties.Status?.select?.name || "Unanswered",
       answeredAt: properties["Answered At"]?.date?.start || pageWithProps.created_time,
+      createdAt: properties["Created At"]?.date?.start || pageWithProps.created_time,
     };
 
     const blocks = await getAllBlocks(pageId);
@@ -373,6 +375,7 @@ export async function getAmaDatabaseItems(
           Description?: { rich_text: { plain_text: string }[] };
           Status?: { select: { name: string } | null };
           "Answered At"?: { date: { start: string } | null };
+          "Created At"?: { date: { start: string } | null };
         };
 
         const basicItem: NotionAmaItem = {
@@ -381,6 +384,7 @@ export async function getAmaDatabaseItems(
           description: properties.Description?.rich_text[0]?.plain_text || "",
           status: properties.Status?.select?.name || "Unanswered",
           answeredAt: properties["Answered At"]?.date?.start || pageWithProps.created_time,
+          createdAt: properties["Created At"]?.date?.start || pageWithProps.created_time,
         };
 
         return basicItem;

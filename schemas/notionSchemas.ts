@@ -20,6 +20,7 @@ export const AMASchema = z.object({
   "Answered At": z.string().optional(),
   "Created At": z.string().optional(),
   Status: z.enum(["Won't answer", "Unanswered", "Answered"]).optional(),
+  Button: z.any().optional(),
   Description: z.string().optional(),
   Name: z.string().optional(),
 });
@@ -88,7 +89,7 @@ export const GoodWebsitesSchema = z.object({
   X: z.string().optional(),
   Tags: z.array(z.enum(["Personal site", "Company"])).optional(),
   URL: z.string().optional(),
-  Process: z.any().optional(),
+  "Process favicon": z.any().optional(),
   Name: z.string().optional(),
 });
 

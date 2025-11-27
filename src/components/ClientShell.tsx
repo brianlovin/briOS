@@ -5,13 +5,10 @@ import { Toaster } from "sonner";
 
 import { CommandMenu } from "@/components/CommandMenu";
 import { MobileNavMenu } from "@/components/MobileNavMenu";
-import { useScrollDelegation } from "@/hooks/useScrollDelegation";
 
 import { GlobalTopBar } from "./GlobalTopBar";
 
 export function ClientShell({ children }: PropsWithChildren) {
-  useScrollDelegation();
-
   return (
     <>
       <Toaster position="bottom-center" />
