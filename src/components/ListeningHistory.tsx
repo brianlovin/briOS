@@ -126,6 +126,7 @@ export function ListeningHistory({ initialData }: ListeningHistoryProps = {}) {
   const hasTriggeredLoad = useRef(false);
   const isMobile = useIsMobile();
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const virtualizer = useVirtualizer({
     count: !isReachingEnd ? music.length + 1 : music.length, // Add 1 for loader row if more data available
     getScrollElement: () => scrollContainerRef.current,

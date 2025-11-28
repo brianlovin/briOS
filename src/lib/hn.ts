@@ -12,15 +12,8 @@ const log = (...args: unknown[]) => {
   }
 };
 
-const logError = (...args: unknown[]) => {
-  if (process.env.NODE_ENV === "development") {
-    console.error(...args);
-  }
-};
-
 export async function getPostIds(): Promise<number[]> {
   const ids = await externalFetcher<number[]>(`${TOP_BASE_URL}/topstories.json`);
-  log(`[HN] Fetched ${ids.length} top story IDs`);
   return ids;
 }
 
@@ -31,15 +24,8 @@ export async function getPostById(
   async function getPost(): Promise<HackerNewsPost | null> {
     try {
       const post = await externalFetcher<HackerNewsPost>(`${ITEM_BASE_URL}/item/${id}.json`);
-      log(`[HN] Fetched post ${id}:`, {
-        title: post.title,
-        type: post.type,
-        points: post.points,
-        commentsCount: post.comments_count,
-      });
       return post;
-    } catch (error) {
-      logError(`[HN] Failed to fetch post ${id}:`, error);
+    } catch {
       return null;
     }
   }
@@ -52,7 +38,6 @@ export async function getPostById(
     if (!comment) return null;
 
     if (comment.level > 3) {
-      log(`[HN] Trimming comment at level ${comment.level}`);
       return null;
     }
 
@@ -70,10 +55,6 @@ export async function getPostById(
     .map(trimComments)
     .filter(Boolean) as HackerNewsComment[];
 
-  log(
-    `[HN] Trimmed comments from ${data.comments.length} to ${shortComments.length} root comments`,
-  );
-
   const cleanUrl = data.domain ? `${data.url}` : `${BASE_URL}/hn/${data.id}`;
 
   const post: HackerNewsPost = {
@@ -87,7 +68,6 @@ export async function getPostById(
 
 export async function getHNPosts(): Promise<(HackerNewsPost | null)[]> {
   const topPostIds = await getPostIds();
-  log(`[HN] Fetching top 24 posts from ${topPostIds.length} story IDs`);
 
   const postPromises = topPostIds
     .slice(0, 24)
@@ -95,19 +75,14 @@ export async function getHNPosts(): Promise<(HackerNewsPost | null)[]> {
 
   const posts = await Promise.all([...postPromises]);
 
-  const validPosts = posts.filter(Boolean);
-  log(`[HN] Successfully fetched ${validPosts.length} out of 24 posts`);
-
-  return posts;
+  return posts.filter(Boolean);
 }
 
 export async function getRankedHNPosts(): Promise<HackerNewsPost[]> {
   const topPostIds = await getPostIds();
-  log(`[HN Filtered] Starting with ${topPostIds.length} total story IDs`);
 
   // Fetch 200 most recent posts
   const filtered = topPostIds.sort((a: number, b: number) => b - a).slice(0, 200);
-  log(`[HN Filtered] Filtered to top 200 most recent IDs`);
 
   const postPromises = filtered.map(async (id: number) => await getPostById(id.toString(), false));
   const posts = await Promise.all([...postPromises]);
@@ -117,21 +92,17 @@ export async function getRankedHNPosts(): Promise<HackerNewsPost[]> {
 
   // Filter out null posts
   const validPosts = posts.filter((post): post is HackerNewsPost => post !== null);
-  log(`[HN Filtered] ${validPosts.length} valid posts fetched`);
 
   // Only show links (exclude jobs, polls)
   const links = validPosts.filter((post) => post.type === "link");
-  log(`[HN Filtered] ${links.length} posts are links (filtered out jobs/polls)`);
 
   // Only show posts from last 24 hours
   const withinLastDay = links.filter((post) => post.time > oneDayAgo);
-  log(`[HN Filtered] ${withinLastDay.length} posts within last 24 hours`);
 
   // Filter by minimum engagement (50+ points OR 20+ comments)
   const highEngagement = withinLastDay.filter(
     (post) => (post.points || 0) >= 50 || post.comments_count >= 20,
   );
-  log(`[HN Filtered] ${highEngagement.length} posts with high engagement`);
 
   // Sort by weighted score: points + (comments * 0.75) + recency bonus
   const sorted = highEngagement.sort((a, b) => {
