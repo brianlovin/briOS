@@ -160,8 +160,6 @@ export default function HNPostPageClient() {
               </Link>
             )}
 
-            <HNDigestCard className="mt-8" />
-
             {post.content && (
               <div
                 className="comment prose-lg max-w-full"
@@ -169,6 +167,8 @@ export default function HNPostPageClient() {
               />
             )}
           </div>
+
+          <HNDigestCard className="mb-12" />
 
           <FancySeparator />
 
