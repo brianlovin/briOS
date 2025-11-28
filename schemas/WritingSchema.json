@@ -35,6 +35,13 @@
       "type": "button",
       "button": {}
     },
+    "Created time": {
+      "id": "xX%60%3A",
+      "name": "Created time",
+      "description": null,
+      "type": "created_time",
+      "created_time": {}
+    },
     "Name": {
       "id": "title",
       "name": "Name",

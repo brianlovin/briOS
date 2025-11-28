@@ -1,11 +1,14 @@
-import type { DatabaseObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import type {
+  DatabaseObjectResponse,
+  DataSourceObjectResponse,
+} from "@notionhq/client/build/src/api-endpoints";
 import fs from "fs";
 import path from "path";
 
 import { notion } from "../src/lib/notion/client";
 
 // Type for database property configurations
-type DatabaseProperty = DatabaseObjectResponse["properties"][string];
+type DatabaseProperty = DataSourceObjectResponse["properties"][string];
 
 /** Properly escape string for use in generated TypeScript code */
 function escapeForTypeScript(str: string): string {
@@ -128,11 +131,23 @@ async function generateSchemas() {
       continue;
     }
 
+    // First retrieve the database to get the data source ID
     const database = (await notion.databases.retrieve({
       database_id: db.id,
     })) as DatabaseObjectResponse;
 
-    const props = database.properties;
+    const dataSourceId = database.data_sources[0]?.id;
+    if (!dataSourceId) {
+      console.warn(`Skipping ${db.varName} — no data source found`);
+      continue;
+    }
+
+    // Then retrieve the data source to get properties
+    const dataSource = (await notion.dataSources.retrieve({
+      data_source_id: dataSourceId,
+    })) as DataSourceObjectResponse;
+
+    const props = dataSource.properties;
 
     // save this to a file
     fs.writeFileSync(

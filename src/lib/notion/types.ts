@@ -1,8 +1,10 @@
 import type {
   BlockObjectResponse,
   DatabaseObjectResponse,
+  DataSourceObjectResponse,
   PageObjectResponse,
   PartialDatabaseObjectResponse,
+  PartialDataSourceObjectResponse,
   PartialPageObjectResponse,
   RichTextItemResponse,
 } from "@notionhq/client/build/src/api-endpoints";
@@ -35,12 +37,14 @@ export type {
   RichTextItemResponse,
 };
 
-// Type for any page response (full or partial)
+// Type for any page response (full or partial) - includes data source types for v5 SDK
 export type PageResponse =
   | PageObjectResponse
   | PartialPageObjectResponse
   | PartialDatabaseObjectResponse
-  | DatabaseObjectResponse;
+  | DatabaseObjectResponse
+  | DataSourceObjectResponse
+  | PartialDataSourceObjectResponse;
 
 // Utility type to extract rich text content
 export type RichTextContent = {
