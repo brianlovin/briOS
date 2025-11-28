@@ -41,7 +41,7 @@
       "description": null,
       "type": "formula",
       "formula": {
-        "expression": "     {{notion:block_property:MWCP:00000000-0000-0000-0000-000000000000:30816cbc-deb8-4977-8ae8-d92f0669fb36}} + \"-\" +\n     formatDate({{notion:block_property:rVH%3D:00000000-0000-0000-0000-000000000000:30816cbc-deb8-4977-8ae8-d92f0669fb36}}, \"yyyy-MM-dd'T'HH:mm:ssX\")"
+        "expression": "     {{notion:block_property:MWCP:1eac711c-0ceb-8035-87fa-000bbec76c6e:30816cbc-deb8-4977-8ae8-d92f0669fb36}} + \"-\" +\n     formatDate({{notion:block_property:rVH%3D:1eac711c-0ceb-8035-87fa-000bbec76c6e:30816cbc-deb8-4977-8ae8-d92f0669fb36}}, \"yyyy-MM-dd'T'HH:mm:ssX\")"
       }
     },
     "Artist": {
