@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 
 import { createMetadata } from "@/lib/metadata";
 
-import { AMACard } from "./AMACard";
-
 export const metadata: Metadata = createMetadata({
   title: "AMA",
   description:
@@ -12,9 +10,5 @@ export const metadata: Metadata = createMetadata({
 });
 
 export default function AMAPage() {
-  return (
-    <div className="bg-secondary dark:bg-primary flex flex-1 items-center justify-center p-4 md:p-6 lg:p-8">
-      <AMACard className="bg-elevated max-w-xl shadow-xs" />
-    </div>
-  );
+  return <div className="bg-secondary dark:bg-primary flex flex-1" />;
 }
