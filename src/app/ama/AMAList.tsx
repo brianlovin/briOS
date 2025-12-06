@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useCallback, useMemo } from "react";
 
 import { InfiniteScrollList } from "@/components/InfiniteScrollList";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { useListNavigation } from "@/hooks/useListNavigation";
 import { cn } from "@/lib/utils";
 
@@ -41,7 +42,7 @@ export function AmaList() {
         <li key={item.id} data-id={item.id} className="scroll-my-3">
           <Link
             className={cn(
-              "hover:bg-tertiary dark:hover:bg-secondary dark:hover:shadow-contrast flex flex-col gap-0.5 rounded-md px-3.5 py-3",
+              "hover:bg-tertiary border-secondary dark:hover:bg-secondary dark:hover:shadow-contrast flex flex-col gap-0.5 border-b px-3.5 py-3 md:rounded-lg md:border-b-0",
               {
                 "bg-tertiary dark:bg-secondary dark:shadow-contrast": isSelected,
               },
@@ -56,6 +57,14 @@ export function AmaList() {
     },
     [currentId],
   );
+
+  if (isLoading) {
+    return (
+      <div className="flex h-full flex-1 items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   return (
     <InfiniteScrollList

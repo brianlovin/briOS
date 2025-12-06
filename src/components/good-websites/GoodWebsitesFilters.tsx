@@ -50,10 +50,9 @@ export function GoodWebsitesFilters({ isLoading }: GoodWebsitesFiltersProps) {
   };
 
   return (
-    <div className="flex items-center gap-2">
-      {isLoading && <LoadingSpinner />}
+    <div className="flex items-center gap-2 md:flex-row-reverse">
       <Select value={currentTag} onValueChange={handleTagChange}>
-        <SelectTrigger className="h-7 w-auto flex-none pr-1.5 pl-2.5 not-last-of-type:self-start">
+        <SelectTrigger>
           <SelectValue placeholder="All" />
         </SelectTrigger>
         <SelectContent>
@@ -65,6 +64,7 @@ export function GoodWebsitesFilters({ isLoading }: GoodWebsitesFiltersProps) {
           ))}
         </SelectContent>
       </Select>
+      {isLoading && <LoadingSpinner />}
     </div>
   );
 }

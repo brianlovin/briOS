@@ -62,7 +62,7 @@ export function AskQuestionForm({
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           placeholder="Ask me anything..."
-          className="bg-elevated rounded-full pb-2.5 pl-4 text-[15px]"
+          className="bg-elevated rounded-full pb-2.5 pl-4"
           required
           disabled={submitting}
           autoFocus={autoFocus}
@@ -73,7 +73,7 @@ export function AskQuestionForm({
           value={details}
           onChange={(e) => setDetails(e.target.value)}
           placeholder="Additional context (optional)..."
-          className="bg-elevated min-h-0 resize-none rounded-2xl px-4 py-2.5 text-[15px]"
+          className="bg-elevated min-h-0 resize-none rounded-2xl px-4 py-2.5"
           rows={2}
           disabled={submitting}
         />

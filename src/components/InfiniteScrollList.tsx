@@ -46,7 +46,7 @@ export function InfiniteScrollList<T>({
   isLoading,
   isLoadingMore,
   isReachingEnd,
-  className = "flex w-full gap-0.5 p-3 flex-col",
+  className = "flex w-full gap-0.5 md:p-3 flex-col",
   loadingComponent,
   rootMargin = "50px",
   threshold = 0.1,

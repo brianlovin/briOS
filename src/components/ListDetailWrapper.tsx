@@ -17,7 +17,7 @@ export function ListDetailWrapper({ children }: PropsWithChildren) {
   }, []);
 
   return (
-    <div className="border-secondary fixed inset-x-0 top-14 bottom-0 flex flex-col overflow-hidden md:border-t">
+    <div className="fixed inset-x-0 top-14 bottom-0 flex flex-col overflow-hidden md:border-t">
       {children}
     </div>
   );

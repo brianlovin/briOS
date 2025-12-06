@@ -1,7 +1,6 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 
 import { ListDetailLayout } from "@/components/ListDetailLayout";
@@ -16,10 +15,7 @@ import { AskQuestionForm } from "./AskQuestionForm";
 
 export default function AMALayout({ children }: { children: React.ReactNode }) {
   const [showForm, setShowForm] = useState(false);
-  const pathname = usePathname();
-  const isDetailView = pathname !== "/ama";
 
-  // Fetch questions at layout level to share with children
   const {
     items: questions,
     isLoading,
@@ -44,71 +40,27 @@ export default function AMALayout({ children }: { children: React.ReactNode }) {
         <ListDetailLayout
           backHref="/ama"
           list={
-            <div>
-              {/* Mobile: always visible */}
-              <div
-                className={cn("flex flex-col px-3 py-3 md:hidden", {
-                  "border-b border-black/10 bg-linear-to-t from-neutral-50 to-white dark:border-white/10 dark:from-neutral-950 dark:to-black":
-                    showForm,
-                })}
-              >
+            <div className="flex h-full flex-1 flex-col">
+              <div className={cn("flex-col px-3 py-3 md:pb-0")}>
                 <Button onClick={() => setShowForm(!showForm)} variant="secondary" fullWidth>
                   Ask a question
                 </Button>
 
-                <AnimatePresence>
+                <AnimatePresence initial={false}>
                   {showForm && (
                     <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
+                      initial={{ opacity: 0, height: 0, scale: 0.98 }}
+                      animate={{ opacity: 1, height: "auto", scale: 1 }}
+                      exit={{ opacity: 0, height: 0, scale: 0.98 }}
                       className="overflow-hidden"
                     >
-                      <div className="mt-3">
+                      <div className="mt-3 px-0.5">
                         <AskQuestionForm onComplete={() => setShowForm(false)} autoFocus />
                       </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
               </div>
-
-              {/* Desktop: animate in when viewing a question */}
-              <AnimatePresence>
-                {isDetailView && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="overflow-hidden"
-                  >
-                    <div
-                      className={cn(
-                        "hidden flex-col overflow-hidden px-3 py-3 md:flex",
-                        showForm && "border-b border-black/10 dark:border-white/10",
-                      )}
-                    >
-                      <Button onClick={() => setShowForm(!showForm)} variant="secondary" fullWidth>
-                        Ask a question
-                      </Button>
-
-                      <AnimatePresence>
-                        {showForm && (
-                          <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            className="overflow-hidden p-1"
-                          >
-                            <div className="mt-3">
-                              <AskQuestionForm onComplete={() => setShowForm(false)} autoFocus />
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
 
               <AmaList />
             </div>

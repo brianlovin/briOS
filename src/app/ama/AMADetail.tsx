@@ -42,18 +42,10 @@ export default function AMADetail() {
       })
     : undefined;
 
-  const answeredAt = question.answeredAt
-    ? new Date(question.answeredAt).toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      })
-    : undefined;
-
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-10 p-4 md:p-8">
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-10 p-4 md:px-8 md:py-12">
       <div className="flex flex-col gap-6">
-        {question.createdAt && <span className="text-tertiary">Asked {createdAt}</span>}
+        {question.createdAt && <span className="text-tertiary text-lg">Asked {createdAt}</span>}
         <PageTitle>{question.title}</PageTitle>
         {question.description && (
           <span className="text-secondary text-lg">{question.description}</span>
@@ -62,10 +54,7 @@ export default function AMADetail() {
 
       <FancySeparator />
 
-      <div className="flex flex-col gap-6 text-lg">
-        {question.answeredAt && <span className="text-tertiary">Answered {answeredAt}</span>}
-        {renderBlocks(question.blocks)}
-      </div>
+      <div className="flex flex-col gap-6 text-lg">{renderBlocks(question.blocks)}</div>
     </div>
   );
 }

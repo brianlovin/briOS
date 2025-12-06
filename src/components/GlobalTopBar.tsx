@@ -67,18 +67,18 @@ function findScrollTarget(): HTMLElement | null {
 }
 
 export function BreadcrumbDivider() {
-  return <div className="text-quaternary font-medium">/</div>;
+  return <div className="text-quaternary font-medium opacity-50 dark:opacity-70">/</div>;
 }
 
 export function BreadcrumbLabel({ href, children }: { href?: string; children: React.ReactNode }) {
   if (href) {
     return (
-      <Link href={href} className="text-primary font-medium">
+      <Link href={href} className="text-primary p-2 font-medium">
         {children}
       </Link>
     );
   }
-  return <span className="text-primary font-medium">{children}</span>;
+  return <span className="text-primary p-2 font-medium">{children}</span>;
 }
 
 export function GlobalTopBar() {
@@ -110,7 +110,7 @@ export function GlobalTopBar() {
       <div
         onClick={handleClick}
         className={cn(
-          "sticky top-0 z-20 flex h-14 items-center gap-3 self-start bg-white px-3 dark:bg-black",
+          "sticky top-0 z-20 flex h-14 items-center gap-1 self-start bg-white px-3 dark:bg-black",
           {
             "bg-white dark:bg-black": isOpen,
           },

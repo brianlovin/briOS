@@ -149,7 +149,7 @@ export default function HNPostPageClient() {
             >
               <PageTitle ref={titleRef}>{post.title}</PageTitle>
             </Link>
-            {post.url && (
+            {post.url && post.domain && (
               <Link
                 href={post.url}
                 target="_blank"
