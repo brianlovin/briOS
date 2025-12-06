@@ -64,14 +64,14 @@ function HNStoriesList() {
   }
 
   return (
-    <ul className="flex flex-col gap-0.5 p-3">
+    <ul className="flex flex-col gap-0.5 md:p-3">
       {validPosts.map((post) => {
         const isSelected = post.id.toString() === currentPostId;
         return (
           <li key={post.id} data-id={post.id} className="scroll-my-3">
             <Link
               className={cn(
-                "hover:bg-tertiary dark:hover:bg-secondary dark:hover:shadow-contrast flex flex-col gap-0.5 rounded-md px-3.5 py-3",
+                "hover:bg-tertiary border-secondary dark:hover:bg-secondary dark:hover:shadow-contrast flex flex-col gap-0.5 border-b px-3.5 py-3 md:rounded-lg md:border-b-0",
                 {
                   "bg-tertiary dark:bg-secondary dark:shadow-contrast": isSelected,
                 },
