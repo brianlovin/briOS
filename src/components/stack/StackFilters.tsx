@@ -69,7 +69,7 @@ export function StackFilters({ isLoading }: StackFiltersProps) {
   };
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 md:flex-row-reverse">
       <Select value={currentStatus} onValueChange={handleStatusChange}>
         <SelectTrigger className="h-7 w-auto flex-none pr-1.5 pl-2.5 not-last-of-type:self-start">
           <SelectValue />
