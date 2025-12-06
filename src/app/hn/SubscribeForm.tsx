@@ -74,7 +74,7 @@ export function SubscribeForm({ onComplete, className }: SubscribeFormProps) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
-            className="bg-elevated rounded-full pr-12 pb-2.5 pl-4 text-[15px]"
+            className="bg-elevated rounded-full pr-12 pb-2.5 pl-4"
             required
           />
           <button
