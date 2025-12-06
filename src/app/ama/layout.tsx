@@ -40,7 +40,7 @@ export default function AMALayout({ children }: { children: React.ReactNode }) {
         <ListDetailLayout
           backHref="/ama"
           list={
-            <div>
+            <div className="flex h-full flex-1 flex-col">
               <div className={cn("flex-col px-3 pt-3")}>
                 <Button onClick={() => setShowForm(!showForm)} variant="secondary" fullWidth>
                   Ask a question
@@ -49,9 +49,9 @@ export default function AMALayout({ children }: { children: React.ReactNode }) {
                 <AnimatePresence initial={false}>
                   {showForm && (
                     <motion.div
-                      initial={{ opacity: 0, height: 0, scale: 0.95 }}
+                      initial={{ opacity: 0, height: 0, scale: 0.98 }}
                       animate={{ opacity: 1, height: "auto", scale: 1 }}
-                      exit={{ opacity: 0, height: 0, scale: 0.95 }}
+                      exit={{ opacity: 0, height: 0, scale: 0.98 }}
                       className="overflow-hidden"
                     >
                       <div className="mt-3 px-0.5">

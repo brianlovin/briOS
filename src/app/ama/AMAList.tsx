@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useCallback, useMemo } from "react";
 
 import { InfiniteScrollList } from "@/components/InfiniteScrollList";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { useListNavigation } from "@/hooks/useListNavigation";
 import { cn } from "@/lib/utils";
 
@@ -56,6 +57,14 @@ export function AmaList() {
     },
     [currentId],
   );
+
+  if (isLoading) {
+    return (
+      <div className="flex h-full flex-1 items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   return (
     <InfiniteScrollList
