@@ -1,3 +1,5 @@
+import { cache } from "react";
+
 import { externalFetcher } from "@/lib/fetcher";
 import { HackerNewsComment, HackerNewsPost } from "@/types/hackernews";
 
@@ -17,54 +19,54 @@ export async function getPostIds(): Promise<number[]> {
   return ids;
 }
 
-export async function getPostById(
-  id: string,
-  includeComments = false,
-): Promise<HackerNewsPost | null> {
-  async function getPost(): Promise<HackerNewsPost | null> {
-    try {
-      const post = await externalFetcher<HackerNewsPost>(`${ITEM_BASE_URL}/item/${id}.json`);
-      return post;
-    } catch {
-      return null;
-    }
-  }
-
-  const data = await getPost();
-
-  if (!data) return null;
-
-  function trimComments(comment: HackerNewsComment): HackerNewsComment | null {
-    if (!comment) return null;
-
-    if (comment.level > 3) {
-      return null;
+// Wrapped with React cache() for request-level deduplication during SSR
+export const getPostById = cache(
+  async (id: string, includeComments = false): Promise<HackerNewsPost | null> => {
+    async function getPost(): Promise<HackerNewsPost | null> {
+      try {
+        const post = await externalFetcher<HackerNewsPost>(`${ITEM_BASE_URL}/item/${id}.json`);
+        return post;
+      } catch {
+        return null;
+      }
     }
 
-    return {
-      ...comment,
-      comments: comment.comments
-        .slice(0, 8)
-        .map(trimComments)
-        .filter(Boolean) as HackerNewsComment[],
+    const data = await getPost();
+
+    if (!data) return null;
+
+    function trimComments(comment: HackerNewsComment): HackerNewsComment | null {
+      if (!comment) return null;
+
+      if (comment.level > 3) {
+        return null;
+      }
+
+      return {
+        ...comment,
+        comments: comment.comments
+          .slice(0, 8)
+          .map(trimComments)
+          .filter(Boolean) as HackerNewsComment[],
+      };
+    }
+
+    const shortComments = data.comments
+      .slice(0, 12)
+      .map(trimComments)
+      .filter(Boolean) as HackerNewsComment[];
+
+    const cleanUrl = data.domain ? `${data.url}` : `${BASE_URL}/hn/${data.id}`;
+
+    const post: HackerNewsPost = {
+      ...data,
+      url: cleanUrl,
+      comments: includeComments ? shortComments : [],
     };
-  }
 
-  const shortComments = data.comments
-    .slice(0, 12)
-    .map(trimComments)
-    .filter(Boolean) as HackerNewsComment[];
-
-  const cleanUrl = data.domain ? `${data.url}` : `${BASE_URL}/hn/${data.id}`;
-
-  const post: HackerNewsPost = {
-    ...data,
-    url: cleanUrl,
-    comments: includeComments ? shortComments : [],
-  };
-
-  return post;
-}
+    return post;
+  },
+);
 
 export async function getHNPosts(): Promise<(HackerNewsPost | null)[]> {
   const topPostIds = await getPostIds();
