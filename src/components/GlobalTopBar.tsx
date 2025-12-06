@@ -67,7 +67,7 @@ function findScrollTarget(): HTMLElement | null {
 }
 
 export function BreadcrumbDivider() {
-  return <div className="text-quaternary font-medium">/</div>;
+  return <div className="text-quaternary font-medium opacity-50 dark:opacity-70">/</div>;
 }
 
 export function BreadcrumbLabel({ href, children }: { href?: string; children: React.ReactNode }) {
