@@ -39,7 +39,7 @@
     --background-color-quaternary: rgba(255, 255, 255, 0.03);
     --background-color-elevated: var(--color-neutral-900);
 
-    --border-color-primary: rgba(255, 255, 255, 0.15);
+    --border-color-primary: rgba(255, 255, 255, 0.12);
     --border-color-secondary: rgba(255, 255, 255, 0.1);
 
     --scrollbar-color: var(--color-neutral-600);
