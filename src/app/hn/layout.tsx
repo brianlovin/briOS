@@ -6,7 +6,6 @@ import React, { useMemo } from "react";
 
 import { ListDetailLayout } from "@/components/ListDetailLayout";
 import { ListDetailWrapper } from "@/components/ListDetailWrapper";
-import { useTopBarActions } from "@/components/TopBarActions";
 import { useListNavigation } from "@/hooks/useListNavigation";
 import { useHNPosts } from "@/lib/hooks/useHn";
 import { cn } from "@/lib/utils";
@@ -17,22 +16,6 @@ import { HNPostsProvider, useHNPostsContext } from "./HNPostsContext";
 
 export default function HNLayout({ children }: { children: React.ReactNode }) {
   const { data: posts, isLoading, isError } = useHNPosts();
-  const today = new Date().toLocaleDateString("en-US", {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-
-  const topBarContent = useMemo(
-    () => (
-      <span className="text-tertiary hidden font-mono text-sm tracking-tight md:block">
-        {today}
-      </span>
-    ),
-    [today],
-  );
-  useTopBarActions(topBarContent);
 
   return (
     <HNPostsProvider posts={posts} isLoading={isLoading} isError={isError}>
