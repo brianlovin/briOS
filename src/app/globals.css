@@ -21,8 +21,8 @@
   --background-color-quaternary: var(--color-neutral-200);
   --background-color-elevated: var(--color-white);
 
-  --border-color-primary: rgba(0, 0, 0, 0.1);
-  --border-color-secondary: rgba(0, 0, 0, 0.07);
+  --border-color-primary: rgba(0, 0, 0, 0.12);
+  --border-color-secondary: rgba(0, 0, 0, 0.09);
 
   --scrollbar-color: var(--color-neutral-300);
 
@@ -39,8 +39,8 @@
     --background-color-quaternary: rgba(255, 255, 255, 0.03);
     --background-color-elevated: var(--color-neutral-900);
 
-    --border-color-primary: rgba(255, 255, 255, 0.1);
-    --border-color-secondary: rgba(255, 255, 255, 0.08);
+    --border-color-primary: rgba(255, 255, 255, 0.15);
+    --border-color-secondary: rgba(255, 255, 255, 0.1);
 
     --scrollbar-color: var(--color-neutral-600);
   }
