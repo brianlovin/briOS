@@ -46,3 +46,4 @@ next-env.d.ts
 
 # notion data
 data-exports/
+.loupe/

@@ -1,0 +1,98 @@
+{
+  "props": {
+    "Status": {
+      "id": "Kat%3C",
+      "name": "Status",
+      "description": null,
+      "type": "select",
+      "select": {
+        "options": [
+          {
+            "id": "r}p~",
+            "name": "Todo",
+            "color": "gray",
+            "description": null
+          },
+          {
+            "id": "~Pxx",
+            "name": "Doing",
+            "color": "yellow",
+            "description": null
+          },
+          {
+            "id": "{\\T|",
+            "name": "Done",
+            "color": "green",
+            "description": null
+          },
+          {
+            "id": "7fa3fb19-d350-44d4-9093-60105b8e98eb",
+            "name": "Archived",
+            "color": "default",
+            "description": null
+          }
+        ]
+      }
+    },
+    "Type": {
+      "id": "Pq%7Ck",
+      "name": "Type",
+      "description": null,
+      "type": "select",
+      "select": {
+        "options": [
+          {
+            "id": "29232a3e-4b5f-49cb-92c0-ccda7994c4e9",
+            "name": "Bug",
+            "color": "yellow",
+            "description": null
+          },
+          {
+            "id": "d151e86e-5f5b-48f7-ac75-bcabc4b78c1a",
+            "name": "Refactor",
+            "color": "gray",
+            "description": null
+          },
+          {
+            "id": "2c1a8305-04a0-40e0-9b92-ab25cc52dfa5",
+            "name": "Infra",
+            "color": "brown",
+            "description": null
+          },
+          {
+            "id": "8a23ec9c-9745-4240-ad80-2473544e5b8a",
+            "name": "Feature",
+            "color": "pink",
+            "description": null
+          },
+          {
+            "id": "f3f9b78d-b377-4c87-8cea-979ceab21ca2",
+            "name": "Content",
+            "color": "orange",
+            "description": null
+          },
+          {
+            "id": "08599e44-0a19-4dc0-a207-6c0eb8a57b1b",
+            "name": "Design",
+            "color": "blue",
+            "description": null
+          }
+        ]
+      }
+    },
+    "Created time": {
+      "id": "v%60Yr",
+      "name": "Created time",
+      "description": null,
+      "type": "created_time",
+      "created_time": {}
+    },
+    "Name": {
+      "id": "title",
+      "name": "Name",
+      "description": null,
+      "type": "title",
+      "title": {}
+    }
+  }
+}

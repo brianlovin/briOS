@@ -103,3 +103,12 @@ export const SpeakingSchema = z.object({
 });
 
 export type Speaking = z.infer<typeof SpeakingSchema>;
+
+export const SiteIdeasSchema = z.object({
+  Status: z.enum(["Todo", "Doing", "Done", "Archived"]).optional(),
+  Type: z.enum(["Bug", "Refactor", "Infra", "Feature", "Content", "Design"]).optional(),
+  "Created time": z.string().optional(),
+  Name: z.string().optional(),
+});
+
+export type SiteIdeas = z.infer<typeof SiteIdeasSchema>;
