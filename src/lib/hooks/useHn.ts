@@ -2,12 +2,7 @@
 
 import useSWR, { preload } from "swr";
 
-import { getPostById } from "@/lib/hn";
 import { HackerNewsPost } from "@/types/hackernews";
-
-export function prefetchHNPost(id: string) {
-  preload(`hn-post-${id}`, async () => await getPostById(id, true));
-}
 
 const fetcher = async (url: string) => {
   const res = await fetch(url);
@@ -15,11 +10,15 @@ const fetcher = async (url: string) => {
   return res.json();
 };
 
+export function prefetchHNPost(id: string) {
+  preload(`/api/hn/${id}`, fetcher);
+}
+
 export function useHNPosts(fallbackData?: (HackerNewsPost | null)[]) {
   const { data, error, isLoading } = useSWR<(HackerNewsPost | null)[]>("/api/hn", fetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
-    refreshInterval: 1000 * 60 * 5, // 5 minutes
+    refreshInterval: 1000 * 60 * 60, // 1 hour
     fallbackData,
   });
 
@@ -31,16 +30,12 @@ export function useHNPosts(fallbackData?: (HackerNewsPost | null)[]) {
 }
 
 export function useHNPost(id: string, fallbackData?: HackerNewsPost | null) {
-  const { data, error, isLoading } = useSWR<HackerNewsPost | null>(
-    `hn-post-${id}`,
-    async () => await getPostById(id, true),
-    {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      refreshInterval: 1000 * 60 * 5, // 5 minutes
-      fallbackData,
-    },
-  );
+  const { data, error, isLoading } = useSWR<HackerNewsPost | null>(`/api/hn/${id}`, fetcher, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    refreshInterval: 1000 * 60 * 60, // 1 hour
+    fallbackData,
+  });
 
   return {
     post: data || fallbackData,
