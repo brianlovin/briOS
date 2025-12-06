@@ -118,7 +118,7 @@ function GoodWebsiteItemComponent({ item }: { item: GoodWebsiteItem }) {
           />
         ) : (
           <div className="flex size-12 flex-none items-center justify-center rounded-md md:hidden">
-            <Linked className="text-neutral-500" />
+            <Linked size={24} className="text-quaternary" />
           </div>
         )}
 
@@ -137,7 +137,7 @@ function GoodWebsiteItemComponent({ item }: { item: GoodWebsiteItem }) {
             />
           ) : (
             <div className="hidden size-8 flex-none items-center justify-center rounded-md md:flex">
-              <Linked className="text-neutral-500" />
+              <Linked size={24} className="text-quaternary" />
             </div>
           )}
           <div className="min-w-0 flex-1">

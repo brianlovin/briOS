@@ -1,8 +1,8 @@
 import { IconProps } from "./types";
 
-export function Linked({ size = 20, ...rest }: IconProps) {
+export function Linked({ size = 20, className, ...rest }: IconProps) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" {...rest} fill="none">
+    <svg width={size} height={size} viewBox="0 0 24 24" {...rest} fill="none" className={className}>
       <path
         d="M11 14.25H12.5C15.1234 14.25 17.25 12.1234 17.25 9.5C17.25 6.87665 15.1234 4.75 12.5 4.75H9C6.65279 4.75 4.75 6.65279 4.75 9V10.25"
         stroke="currentColor"
