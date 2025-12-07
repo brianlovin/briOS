@@ -11,6 +11,9 @@ export const metadata: Metadata = createMetadata({
   path: "/stack",
 });
 
+// Revalidate every hour (3600 seconds) for ISR
+export const revalidate = 3600;
+
 export default async function StackPage({
   searchParams,
 }: {

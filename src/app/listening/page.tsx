@@ -10,6 +10,9 @@ export const metadata: Metadata = createMetadata({
   path: "/listening",
 });
 
+// Revalidate every hour (3600 seconds) for ISR - matches Spotify sync frequency
+export const revalidate = 3600;
+
 export default async function ListeningPage() {
   // Fetch initial page of music data on the server
   const initialPage = await getListeningHistoryDatabaseItems(undefined, 20);

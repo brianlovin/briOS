@@ -1,15 +1,11 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
-import {
-  List,
-  ListItem,
-  ListItemLabel,
-  Section,
-  SectionHeading,
-} from "@/components/shared/ListComponents";
+import { Section } from "@/components/shared/ListComponents";
 import { PageTitle } from "@/components/Typography";
+import { WritingPostsList } from "@/components/writing/WritingPostsList";
+import { WritingPostsListSkeleton } from "@/components/writing/WritingPostsListSkeleton";
 import { createMetadata } from "@/lib/metadata";
-import { getAllWritingPosts } from "@/lib/writing";
 
 export const metadata: Metadata = createMetadata({
   title: "Writing",
@@ -18,43 +14,16 @@ export const metadata: Metadata = createMetadata({
   path: "/writing",
 });
 
-export default async function WritingPage() {
-  const posts = await getAllWritingPosts();
-
-  // Group posts by year
-  const postsByYear: Record<string, typeof posts> = {};
-  posts.forEach((post) => {
-    const publishedDate = post.published || post.createdTime;
-    const year = new Date(publishedDate).getFullYear().toString();
-    if (!postsByYear[year]) {
-      postsByYear[year] = [];
-    }
-    postsByYear[year].push(post);
-  });
-
-  // Sort years in descending order
-  const sortedYears = Object.keys(postsByYear).sort((a, b) => parseInt(b) - parseInt(a));
-
+export default function WritingPage() {
   return (
     <div data-scrollable className="flex-1 overflow-y-auto">
       <div className="mx-auto flex max-w-xl flex-1 flex-col gap-16 py-16 leading-[1.6]">
         <Section>
           <PageTitle>Writing</PageTitle>
         </Section>
-        {sortedYears.map((year) => (
-          <Section key={year}>
-            <SectionHeading>{year}</SectionHeading>
-            <List>
-              {postsByYear[year]
-                .filter((post) => post.slug) // Only show posts that have slugs
-                .map((post) => (
-                  <ListItem key={post.id} href={`/writing/${post.slug}`}>
-                    <ListItemLabel className="line-clamp-none">{post.title}</ListItemLabel>
-                  </ListItem>
-                ))}
-            </List>
-          </Section>
-        ))}
+        <Suspense fallback={<WritingPostsListSkeleton />}>
+          <WritingPostsList />
+        </Suspense>
       </div>
     </div>
   );
