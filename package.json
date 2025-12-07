@@ -14,7 +14,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.817.0",
+    "@aws-sdk/client-s3": "^3.946.0",
     "@notionhq/client": "^5.4.0",
     "@planetscale/database": "^1.19.0",
     "@radix-ui/react-accordion": "^1.2.10",
