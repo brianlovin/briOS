@@ -10,6 +10,8 @@ export const metadata: Metadata = createMetadata({
   path: "/listening",
 });
 
+export const revalidate = 3600;
+
 export default async function ListeningPage() {
   // Fetch initial page of music data on the server
   const initialPage = await getListeningHistoryDatabaseItems(undefined, 20);

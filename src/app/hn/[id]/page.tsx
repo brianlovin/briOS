@@ -6,6 +6,8 @@ import { stripHtmlTags } from "@/lib/utils";
 
 import HNPostPageClient from "./HNPostPageClient";
 
+export const revalidate = 3600;
+
 export async function generateMetadata(props: {
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
