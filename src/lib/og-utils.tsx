@@ -83,63 +83,61 @@ export async function generateOGImage({ title, url }: OGImageProps) {
     ]);
 
     return new ImageResponse(
-      (
-        <div
-          style={{
-            width: OG_WIDTH,
-            height: OG_HEIGHT,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            padding: OG_PADDING,
-            backgroundColor: "white",
-          }}
-        >
-          {/* Avatar at the top */}
-          <div style={{ display: "flex" }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={avatarData}
-              alt="Avatar"
-              width={AVATAR_SIZE}
-              height={AVATAR_SIZE}
-              style={{
-                borderRadius: "50%",
-              }}
-            />
-          </div>
+      <div
+        style={{
+          width: OG_WIDTH,
+          height: OG_HEIGHT,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          padding: OG_PADDING,
+          backgroundColor: "white",
+        }}
+      >
+        {/* Avatar at the top */}
+        <div style={{ display: "flex" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={avatarData}
+            alt="Avatar"
+            width={AVATAR_SIZE}
+            height={AVATAR_SIZE}
+            style={{
+              borderRadius: "50%",
+            }}
+          />
+        </div>
 
-          {/* Title and URL at the bottom */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-            <div
-              style={{
-                fontSize: TITLE_SIZE,
-                fontFamily: "Inter",
-                fontWeight: 700,
-                color: PRIMARY_COLOR,
-                lineHeight: 1.2,
-                letterSpacing: "-0.12rem",
-                display: "-webkit-box",
-                WebkitLineClamp: 3,
-                WebkitBoxOrient: "vertical",
-                overflow: "hidden",
-              }}
-            >
-              {title.length > 80 ? title.slice(0, 80) + "..." : title}
-            </div>
-            <div
-              style={{
-                fontSize: URL_SIZE,
-                fontFamily: "Inter",
-                fontWeight: 400,
-                color: TERTIARY_COLOR,
-              }}
-            >
-              brianlovin.com
-            </div>
+        {/* Title and URL at the bottom */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+          <div
+            style={{
+              fontSize: TITLE_SIZE,
+              fontFamily: "Inter",
+              fontWeight: 700,
+              color: PRIMARY_COLOR,
+              lineHeight: 1.2,
+              letterSpacing: "-0.12rem",
+              display: "-webkit-box",
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+            }}
+          >
+            {title.length > 80 ? title.slice(0, 80) + "..." : title}
+          </div>
+          <div
+            style={{
+              fontSize: URL_SIZE,
+              fontFamily: "Inter",
+              fontWeight: 400,
+              color: TERTIARY_COLOR,
+            }}
+          >
+            brianlovin.com
           </div>
         </div>
-      ),
+      </div>,
       {
         width: OG_WIDTH,
         height: OG_HEIGHT,
