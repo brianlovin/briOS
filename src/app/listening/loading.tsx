@@ -4,10 +4,7 @@ function ListeningTableSkeleton() {
   return (
     <div className="divide-secondary divide-y">
       {Array.from({ length: 15 }).map((_, i) => (
-        <div
-          key={i}
-          className="animate-pulse px-4 py-3 md:flex md:items-center md:gap-4 md:py-2"
-        >
+        <div key={i} className="animate-pulse px-4 py-3 md:flex md:items-center md:gap-4 md:py-2">
           {/* Mobile: Album art + Song/Artist */}
           <div className="flex gap-3 md:min-w-[200px] md:flex-1 md:gap-3">
             <div className="bg-tertiary size-12 flex-none rounded-lg md:size-8 md:rounded-md" />
