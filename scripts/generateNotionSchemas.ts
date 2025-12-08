@@ -152,7 +152,7 @@ async function generateSchemas() {
     // save this to a file
     fs.writeFileSync(
       path.join(process.cwd(), "schemas", `${db.varName}Schema.json`),
-      JSON.stringify({ props }, null, 2),
+      JSON.stringify({ props }, null, 2) + "\n",
     );
 
     const propLines: string[] = [];
