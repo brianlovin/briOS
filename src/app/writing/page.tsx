@@ -18,6 +18,8 @@ export const metadata: Metadata = createMetadata({
   path: "/writing",
 });
 
+export const revalidate = 3600;
+
 export default async function WritingPage() {
   const posts = await getAllWritingPosts();
 

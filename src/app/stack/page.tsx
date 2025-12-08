@@ -11,6 +11,8 @@ export const metadata: Metadata = createMetadata({
   path: "/stack",
 });
 
+export const revalidate = 3600;
+
 export default async function StackPage({
   searchParams,
 }: {

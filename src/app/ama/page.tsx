@@ -9,6 +9,8 @@ export const metadata: Metadata = createMetadata({
   path: "/ama",
 });
 
+export const revalidate = 3600;
+
 export default function AMAPage() {
   return <div className="bg-secondary dark:bg-primary flex flex-1" />;
 }

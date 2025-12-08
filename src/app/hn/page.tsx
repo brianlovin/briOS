@@ -10,6 +10,8 @@ export const metadata: Metadata = createMetadata({
   path: "/hn",
 });
 
+export const revalidate = 3600;
+
 export default function HNPage() {
   return <HNPageClient />;
 }

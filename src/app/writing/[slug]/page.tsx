@@ -9,6 +9,8 @@ import { createArticleJsonLd, createMetadata, truncateDescription } from "@/lib/
 import { getWritingPostContentBySlug } from "@/lib/notion";
 import { getAllWritingPosts } from "@/lib/writing";
 
+export const revalidate = 3600;
+
 // Generate static params for all writing posts at build time
 export async function generateStaticParams() {
   const posts = await getAllWritingPosts();
