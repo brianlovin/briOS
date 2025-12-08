@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 export type ListDetailLayoutProps = {
   backHref: string;
   list: ReactNode;
-  children: ReactNode;
+  children?: ReactNode;
 };
 
 export function ListDetailLayout({ backHref, list, children }: ListDetailLayoutProps) {

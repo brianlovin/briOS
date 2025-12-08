@@ -32,11 +32,7 @@ export default function AMALoading() {
             <AMAListSkeleton />
           </div>
         }
-      >
-        <div className="text-quaternary flex h-full items-center justify-center">
-          Select a question to read
-        </div>
-      </ListDetailLayout>
+      />
     </ListDetailWrapper>
   );
 }

@@ -4,7 +4,6 @@ import { Suspense } from "react";
 import { Section } from "@/components/shared/ListComponents";
 import { PageTitle } from "@/components/Typography";
 import { WritingPostsList } from "@/components/writing/WritingPostsList";
-import { WritingPostsListSkeleton } from "@/components/writing/WritingPostsListSkeleton";
 import { createMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = createMetadata({
@@ -21,7 +20,7 @@ export default function WritingPage() {
         <Section>
           <PageTitle>Writing</PageTitle>
         </Section>
-        <Suspense fallback={<WritingPostsListSkeleton />}>
+        <Suspense>
           <WritingPostsList />
         </Suspense>
       </div>

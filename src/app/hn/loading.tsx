@@ -19,11 +19,7 @@ function HNStoriesListSkeleton() {
 export default function HNLoading() {
   return (
     <ListDetailWrapper>
-      <ListDetailLayout backHref="/hn" list={<HNStoriesListSkeleton />}>
-        <div className="text-quaternary flex h-full items-center justify-center">
-          Select a story to read
-        </div>
-      </ListDetailLayout>
+      <ListDetailLayout backHref="/hn" list={<HNStoriesListSkeleton />} />
     </ListDetailWrapper>
   );
 }

@@ -9,7 +9,7 @@ function StackTableSkeleton() {
           className="animate-pulse px-4 py-3 md:grid md:grid-cols-12 md:items-center md:gap-4"
         >
           {/* Mobile: Icon + Name/Description */}
-          <div className="flex gap-3 md:col-span-3 md:gap-3">
+          <div className="flex items-center gap-3 md:col-span-3 md:gap-3">
             <div className="bg-tertiary size-12 flex-none rounded-lg md:size-8 md:rounded-md" />
             <div className="flex min-w-0 flex-1 flex-col gap-1.5 md:gap-1">
               <div className="bg-tertiary h-4 w-32 rounded-full md:h-3.5" />

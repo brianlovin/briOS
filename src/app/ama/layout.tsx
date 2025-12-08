@@ -41,7 +41,7 @@ export default function AMALayout({ children }: { children: React.ReactNode }) {
           backHref="/ama"
           list={
             <div className="flex h-full flex-1 flex-col">
-              <div className={cn("flex-col px-3 py-3 md:pb-0")}>
+              <div className={cn("flex-col px-3 pt-4 pb-3 md:pb-0")}>
                 <Button onClick={() => setShowForm(!showForm)} variant="secondary" fullWidth>
                   Ask a question
                 </Button>

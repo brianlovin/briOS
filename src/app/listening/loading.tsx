@@ -4,9 +4,12 @@ function ListeningTableSkeleton() {
   return (
     <div className="divide-secondary divide-y">
       {Array.from({ length: 15 }).map((_, i) => (
-        <div key={i} className="animate-pulse px-4 py-3 md:flex md:items-center md:gap-4 md:py-2">
+        <div
+          key={i}
+          className="h-14 animate-pulse px-4 py-3 md:flex md:items-center md:gap-4 md:py-2.5"
+        >
           {/* Mobile: Album art + Song/Artist */}
-          <div className="flex gap-3 md:min-w-[200px] md:flex-1 md:gap-3">
+          <div className="flex items-center gap-3 md:min-w-[200px] md:flex-1 md:gap-3">
             <div className="bg-tertiary size-12 flex-none rounded-lg md:size-8 md:rounded-md" />
             <div className="flex min-w-0 flex-1 flex-col gap-1.5 md:gap-1">
               <div className="bg-tertiary h-4 w-44 rounded-full md:h-3.5" />
@@ -14,11 +17,17 @@ function ListeningTableSkeleton() {
             </div>
           </div>
           {/* Desktop: Artist */}
-          <div className="bg-tertiary hidden h-3.5 min-w-[150px] flex-1 rounded-full md:block md:w-32" />
+          <div className="hidden min-w-[150px] flex-1 md:block">
+            <div className="bg-tertiary h-3.5 w-24 rounded-full" />
+          </div>
           {/* Desktop: Album */}
-          <div className="bg-tertiary hidden h-3.5 min-w-[150px] flex-1 rounded-full md:block md:w-40" />
+          <div className="hidden min-w-[150px] flex-1 md:block">
+            <div className="bg-tertiary h-3.5 w-32 rounded-full" />
+          </div>
           {/* Desktop: Played date */}
-          <div className="bg-tertiary hidden h-3.5 min-w-[120px] rounded-full md:block md:w-24" />
+          <div className="hidden min-w-[120px] md:block">
+            <div className="bg-tertiary h-3.5 w-20 rounded-full" />
+          </div>
         </div>
       ))}
     </div>
