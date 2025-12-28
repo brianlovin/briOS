@@ -55,6 +55,14 @@ export const DEFAULT_METADATA: Metadata = {
     index: true,
     follow: true,
   },
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      // ICO fallback for legacy and Windows
+      { url: "/favicon.ico", sizes: "16x16 32x32" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "192x192" }],
+  },
 };
 
 interface CreateMetadataParams {
