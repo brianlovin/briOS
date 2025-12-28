@@ -3,6 +3,7 @@ name: send daily digest
 on:
   schedule:
     - cron: "0 23 * * *"
+  workflow_dispatch:
 
 jobs:
   send-hacker-news-digest:
