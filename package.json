@@ -27,7 +27,7 @@
     "@radix-ui/react-select": "^2.2.5",
     "@radix-ui/react-slot": "^1.1.2",
     "@radix-ui/react-tooltip": "^1.2.7",
-    "@tanstack/react-virtual": "^3.13.9",
+    "@tanstack/react-virtual": "^3.13.13",
     "@types/dompurify": "^3.2.0",
     "@upstash/redis": "^1.36.0",
     "@vercel/og": "^0.8.5",
