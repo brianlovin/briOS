@@ -1,6 +1,7 @@
 import { generateOGImage } from "@/lib/og-utils";
 
 export const runtime = "nodejs";
+export const revalidate = 86400; // 24 hours
 export const alt = "Writing - Brian Lovin";
 export const size = {
   width: 1200,
