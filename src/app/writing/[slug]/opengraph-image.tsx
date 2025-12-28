@@ -2,6 +2,7 @@ import { getWritingPostContentBySlug } from "@/lib/notion";
 import { generateOGImage } from "@/lib/og-utils";
 
 export const runtime = "nodejs";
+export const revalidate = 86400; // 24 hours
 export const size = {
   width: 1200,
   height: 630,

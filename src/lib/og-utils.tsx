@@ -1,6 +1,16 @@
 import { ImageResponse } from "@vercel/og";
-import fs from "fs";
+import fs from "fs/promises";
 import path from "path";
+
+// Timeout helper for network requests
+const FONT_TIMEOUT_MS = 5000;
+
+async function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  const timeout = new Promise<never>((_, reject) =>
+    setTimeout(() => reject(new Error(`Operation timed out after ${ms}ms`)), ms),
+  );
+  return Promise.race([promise, timeout]);
+}
 
 // OG Image dimensions
 export const OG_WIDTH = 1200;
@@ -18,33 +28,28 @@ export const URL_SIZE = 32;
 // Avatar
 export const AVATAR_SIZE = 100;
 
-// Font loading from Google Fonts
+// Font loading from Google Fonts with timeout protection
 async function loadGoogleFont(font: string, weight: number, text: string): Promise<ArrayBuffer> {
-  try {
-    const url = `https://fonts.googleapis.com/css2?family=${font}:wght@${weight}&text=${encodeURIComponent(text)}`;
+  const url = `https://fonts.googleapis.com/css2?family=${font}:wght@${weight}&text=${encodeURIComponent(text)}`;
 
-    const css = await (await fetch(url)).text();
-    const resource = css.match(/src: url\((.+)\) format\('(opentype|truetype)'\)/);
+  const cssResponse = await withTimeout(fetch(url), FONT_TIMEOUT_MS);
+  const css = await cssResponse.text();
+  const resource = css.match(/src: url\((.+)\) format\('(opentype|truetype)'\)/);
 
-    if (resource) {
-      const response = await fetch(resource[1]);
-      if (response.status === 200) {
-        const buffer = await response.arrayBuffer();
-        return buffer;
-      }
+  if (resource) {
+    const fontResponse = await withTimeout(fetch(resource[1]), FONT_TIMEOUT_MS);
+    if (fontResponse.status === 200) {
+      return fontResponse.arrayBuffer();
     }
-
-    throw new Error(`Failed to load font: ${font} ${weight}`);
-  } catch (error) {
-    console.error(`[OG] Error loading font ${font} ${weight}:`, error);
-    throw error;
   }
+
+  throw new Error(`Failed to load font: ${font} ${weight}`);
 }
 
-// Load avatar as base64
+// Load avatar as base64 (async file I/O)
 export async function loadAvatar(): Promise<string> {
   const avatarPath = path.join(process.cwd(), "public/img/avatar.jpg");
-  const avatarBuffer = fs.readFileSync(avatarPath);
+  const avatarBuffer = await fs.readFile(avatarPath);
   const base64 = avatarBuffer.toString("base64");
   return `data:image/jpeg;base64,${base64}`;
 }

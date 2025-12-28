@@ -10,7 +10,7 @@ export const metadata: Metadata = createMetadata({
   path: "/sites",
 });
 
-// Revalidate every 5 minutes (300 seconds) for ISR
+// Revalidate every hour (3600 seconds) for ISR
 export const revalidate = 3600;
 
 export default async function GoodWebsitesPage({
