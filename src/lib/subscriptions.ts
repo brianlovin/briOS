@@ -1,78 +1,62 @@
-import { connect } from "@planetscale/database";
+import { Redis } from "@upstash/redis";
 
 /**
- * Email subscription database management
+ * Email subscription management using Upstash Redis
  */
 
-// TypeScript interface for subscription rows
+// TypeScript interface for subscription rows (keeping interface for compatibility)
 export interface EmailSubscriptionRow {
   email: string;
   type: string;
 }
 
 // Environment validation
-if (!process.env.DATABASE_HOST) {
-  throw new Error("DATABASE_HOST environment variable is not set");
+if (!process.env.UPSTASH_REDIS_REST_URL) {
+  throw new Error("UPSTASH_REDIS_REST_URL environment variable is not set");
 }
 
-if (!process.env.DATABASE_USERNAME) {
-  throw new Error("DATABASE_USERNAME environment variable is not set");
+if (!process.env.UPSTASH_REDIS_REST_TOKEN) {
+  throw new Error("UPSTASH_REDIS_REST_TOKEN environment variable is not set");
 }
 
-if (!process.env.DATABASE_PASSWORD) {
-  throw new Error("DATABASE_PASSWORD environment variable is not set");
-}
-
-// Create singleton PlanetScale database connection
-const db = connect({
-  host: process.env.DATABASE_HOST,
-  username: process.env.DATABASE_USERNAME,
-  password: process.env.DATABASE_PASSWORD,
+// Create singleton Redis client
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
 });
 
-// Constant for HN subscription type
-const HN_TYPE = "HACKER_NEWS";
+// Redis key for HN subscribers set
+const HN_SUBSCRIBERS_KEY = "hn:subscribers";
 
 /**
  * Fetch all email subscribers for Hacker News digest
  */
 export async function getHNSubscribers(): Promise<EmailSubscriptionRow[]> {
-  const result = await db.execute(`SELECT * FROM EmailSubscription WHERE type = ?`, [HN_TYPE]);
-  return result.rows as EmailSubscriptionRow[];
+  const emails = await redis.smembers(HN_SUBSCRIBERS_KEY);
+  return emails.map((email) => ({ email, type: "HACKER_NEWS" }));
 }
 
 /**
  * Fetch a single subscriber by email
  */
 export async function getSubscriberByEmail(email: string): Promise<EmailSubscriptionRow | null> {
-  const result = await db.execute(
-    `SELECT * FROM EmailSubscription WHERE email = ? AND type = ? LIMIT 1`,
-    [email, HN_TYPE],
-  );
-  return (result.rows[0] as EmailSubscriptionRow) || null;
+  const exists = await redis.sismember(HN_SUBSCRIBERS_KEY, email);
+  return exists ? { email, type: "HACKER_NEWS" } : null;
 }
 
 /**
  * Delete a subscription by email
  */
 export async function deleteSubscription(email: string): Promise<boolean> {
-  const result = await db.execute(`DELETE FROM EmailSubscription WHERE email = ? AND type = ?`, [
-    email,
-    HN_TYPE,
-  ]);
-  return result.rowsAffected > 0;
+  const removed = await redis.srem(HN_SUBSCRIBERS_KEY, email);
+  return removed > 0;
 }
 
 /**
  * Get count of HN subscribers
  */
 export async function getHNSubscriberCount(): Promise<number> {
-  const result = await db.execute(
-    `SELECT COUNT(*) as count FROM EmailSubscription WHERE type = ?`,
-    [HN_TYPE],
-  );
-  const row = result.rows[0] as { count: number };
-  return row.count;
+  return await redis.scard(HN_SUBSCRIBERS_KEY);
 }
 
 /**
@@ -82,13 +66,26 @@ export async function createSubscription(
   email: string,
 ): Promise<{ success: boolean; alreadyExists: boolean }> {
   // Check if subscription already exists
-  const existing = await getSubscriberByEmail(email);
-  if (existing) {
+  const exists = await redis.sismember(HN_SUBSCRIBERS_KEY, email);
+  if (exists) {
     return { success: false, alreadyExists: true };
   }
 
-  // Insert new subscription
-  await db.execute(`INSERT INTO EmailSubscription (email, type) VALUES (?, ?)`, [email, HN_TYPE]);
-
+  // Add to subscribers set
+  await redis.sadd(HN_SUBSCRIBERS_KEY, email);
   return { success: true, alreadyExists: false };
+}
+
+/**
+ * Bulk add subscribers (for backfill)
+ */
+export async function bulkAddSubscribers(emails: string[]): Promise<number> {
+  if (emails.length === 0) return 0;
+  // Use pipeline for bulk operations
+  const pipeline = redis.pipeline();
+  for (const email of emails) {
+    pipeline.sadd(HN_SUBSCRIBERS_KEY, email);
+  }
+  await pipeline.exec();
+  return emails.length;
 }

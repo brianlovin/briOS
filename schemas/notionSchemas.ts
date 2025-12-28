@@ -33,6 +33,7 @@ export const WritingSchema = z.object({
   Published: z.string().optional(),
   FeatureImage: z.string().optional(),
   "Optimize images": z.any().optional(),
+  "Auto-draft": z.any().optional(),
   "Created time": z.string().optional(),
   Name: z.string().optional(),
 });
