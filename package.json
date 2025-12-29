@@ -53,7 +53,7 @@
     "sonner": "^2.0.3",
     "swr": "^2.3.3",
     "tailwind-merge": "^3.2.0",
-    "zod": "^4.1.12"
+    "zod": "^4.2.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
