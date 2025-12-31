@@ -70,10 +70,18 @@ export function BreadcrumbDivider() {
   return <div className="text-quaternary font-medium opacity-50 dark:opacity-70">/</div>;
 }
 
-export function BreadcrumbLabel({ href, children }: { href?: string; children: React.ReactNode }) {
+export function BreadcrumbLabel({
+  href,
+  children,
+  onClick,
+}: {
+  href?: string;
+  children: React.ReactNode;
+  onClick?: () => void;
+}) {
   if (href) {
     return (
-      <Link href={href} className="text-primary p-2 font-medium">
+      <Link href={href} className="text-primary p-2 font-medium" onClick={onClick}>
         {children}
       </Link>
     );
@@ -119,11 +127,17 @@ export function GlobalTopBar() {
         <IconButton className="rounded-full" size="lg" onClick={() => setIsOpen(!isOpen)}>
           <MenuToggle isOpen={isOpen} />
         </IconButton>
-        {!isHomePage && <BreadcrumbLabel href="/">Brian Lovin</BreadcrumbLabel>}
+        {!isHomePage && (
+          <BreadcrumbLabel href="/" onClick={() => setIsOpen(false)}>
+            Brian Lovin
+          </BreadcrumbLabel>
+        )}
         {currentNavItem && !isHomePage && (
           <>
             <BreadcrumbDivider />
-            <BreadcrumbLabel href={currentNavItem.href}>{currentNavItem.label}</BreadcrumbLabel>
+            <BreadcrumbLabel href={currentNavItem.href} onClick={() => setIsOpen(false)}>
+              {currentNavItem.label}
+            </BreadcrumbLabel>
           </>
         )}
         <TopBarActionsSlot />
