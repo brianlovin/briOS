@@ -73,10 +73,7 @@
 @layer base {
   * {
     -webkit-tap-highlight-color: transparent;
-    /*
-      Temporarily fix a bug in Chrome
-      Ref https://twitter.com/Eramdam/status/1750934375200661609
-    */
+    /* Prevent browsers from synthesizing bold weights for fonts that don't include them */
     font-synthesis-weight: none;
     scrollbar-width: thin;
     scrollbar-color: var(--scrollbar-color) transparent;
