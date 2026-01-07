@@ -1,0 +1,7 @@
+{
+    "scripts": {
+        "setup": "./scripts/conductor-setup.sh",
+        "run": "bun run generate-schemas && bun run dev"
+    },
+    "runScriptMode": "nonconcurrent"
+}
