@@ -44,7 +44,7 @@
         "sonner": "^2.0.3",
         "swr": "^2.3.3",
         "tailwind-merge": "^3.2.0",
-        "zod": "^4.1.12",
+        "zod": "^4.2.1",
       },
       "devDependencies": {
         "@tailwindcss/postcss": "^4",
@@ -1457,7 +1457,7 @@
 
     "yoga-layout": ["yoga-layout@3.2.1", "", {}, "sha512-0LPOt3AxKqMdFBZA3HBAt/t/8vIKq7VaQYbuA8WxCgung+p9TVyKRYdpvCb80HcdTN2NkbIKbhNwKUfm3tQywQ=="],
 
-    "zod": ["zod@4.1.12", "", {}, "sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ=="],
+    "zod": ["zod@4.2.1", "", {}, "sha512-0wZ1IRqGGhMP76gLqz8EyfBXKk0J2qo2+H3fi4mcUP/KtTocoX08nmIAHl1Z2kJIZbZee8KOpBCSNPRgauucjw=="],
 
     "zod-validation-error": ["zod-validation-error@3.5.4", "", { "peerDependencies": { "zod": "^3.24.4" } }, "sha512-+hEiRIiPobgyuFlEojnqjJnhFvg4r/i3cqgcm67eehZf/WBaK3g6cD02YU9mtdVxZjv8CzCA9n/Rhrs3yAAvAw=="],
 
