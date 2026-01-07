@@ -36,7 +36,7 @@ jobs:
           # These are only used during the build process and won't affect runtime
           # Real values are configured in Vercel for production
           POSTMARK_CLIENT_ID: "build-placeholder"
-          UPSTASH_REDIS_REST_URL: "build-placeholder"
+          UPSTASH_REDIS_REST_URL: "https://build-placeholder.upstash.io"
           UPSTASH_REDIS_REST_TOKEN: "build-placeholder"
           JWT_SIGNING_KEY: "build-placeholder-secret-key-min-32-chars"
           NOTION_TOKEN: "build-placeholder"
