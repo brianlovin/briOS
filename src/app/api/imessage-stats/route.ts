@@ -1,6 +1,12 @@
 import { z } from "zod";
+import { Redis } from "@upstash/redis";
 
 import { errorResponse } from "@/lib/api-utils";
+
+const redis = new Redis({
+  url: process.env.UPSTASH_IMESSAGE_STATS_REST_URL!,
+  token: process.env.UPSTASH_IMESSAGE_STATS_REST_TOKEN!,
+});
 
 const analyticsSchema = z.object({
   contacts: z.number().int().min(0),
@@ -13,7 +19,7 @@ const analyticsSchema = z.object({
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const validatedData = analyticsSchema.parse(body);
+    const data = analyticsSchema.parse(body);
 
     const restUrl = process.env.UPSTASH_IMESSAGE_STATS_REST_URL;
     const restToken = process.env.UPSTASH_IMESSAGE_STATS_REST_TOKEN;
@@ -28,43 +34,19 @@ export async function POST(request: Request) {
 
     const runData = {
       runId,
-      contacts: validatedData.contacts,
-      messages: validatedData.messages,
-      years: validatedData.years,
-      words: validatedData.words,
-      llmUsed: validatedData.llmUsed,
+      contacts: data.contacts,
+      messages: data.messages,
+      years: data.years,
+      words: data.words,
+      llmUsed: data.llmUsed,
       timestamp,
     };
 
-    const summaryData = {
-      runId,
-      contacts: validatedData.contacts,
-      messages: validatedData.messages,
-      y: validatedData.years,
-      w: validatedData.words,
-      l: validatedData.llmUsed ? 1 : 0,
-    };
-
-    // Store raw run data only - aggregations can be computed from runs sorted set
-    const pipelineCommands = [
-      ["HSET", `run:${runId}`, "data", JSON.stringify(runData)],
-      ["ZADD", "runs", timestamp, JSON.stringify(summaryData)],
-    ];
-
-    const response = await fetch(`${restUrl}/pipeline`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${restToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(pipelineCommands),
+    // Store run data in sorted set, scored by timestamp for time-based queries
+    await redis.zadd("runs", {
+      score: timestamp,
+      member: JSON.stringify(runData),
     });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Upstash pipeline error:", errorText);
-      return errorResponse("Failed to store analytics", 500);
-    }
 
     return Response.json({ success: true, runId });
   } catch (error) {
