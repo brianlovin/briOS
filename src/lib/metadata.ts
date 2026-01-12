@@ -78,7 +78,6 @@ interface CreateMetadataParams {
 
 /**
  * Create metadata for a page with optional overrides
- * Merges with DEFAULT_METADATA to ensure all defaults (icons, metadataBase, etc.) are included
  *
  * @example
  * ```ts
@@ -103,18 +102,13 @@ export function createMetadata(params: CreateMetadataParams = {}): Metadata {
 
   const url = `${SITE_CONFIG.url}${path}`;
 
-  // Merge with DEFAULT_METADATA to ensure icons, metadataBase, and other defaults are included
   const metadata: Metadata = {
-    ...DEFAULT_METADATA,
-    // Override title if provided
-    ...(title && { title }),
-    // Override description if provided
-    ...(description && { description }),
-    // Merge openGraph with defaults
+    title,
+    description,
     openGraph: {
-      ...DEFAULT_METADATA.openGraph,
       type,
       url,
+      siteName: SITE_CONFIG.name,
       title: title || SITE_CONFIG.title,
       description,
       // Only include images if explicitly provided, otherwise Next.js will use opengraph-image.tsx
@@ -135,15 +129,14 @@ export function createMetadata(params: CreateMetadataParams = {}): Metadata {
           authors: [SITE_CONFIG.author.name],
         }),
     },
-    // Merge twitter with defaults
     twitter: {
-      ...DEFAULT_METADATA.twitter,
+      card: SITE_CONFIG.social.twitter.cardType,
       title: title || SITE_CONFIG.title,
       description,
+      creator: SITE_CONFIG.author.twitter,
       // Only include images if explicitly provided, otherwise Next.js will use opengraph-image.tsx
       ...(image && { images: [image] }),
     },
-    // Override robots if noIndex is set
     robots: {
       index: !noIndex,
       follow: !noIndex,
