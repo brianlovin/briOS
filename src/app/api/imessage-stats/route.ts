@@ -45,16 +45,10 @@ export async function POST(request: Request) {
       l: validatedData.llmUsed ? 1 : 0,
     };
 
-    // Execute Redis commands via Upstash REST API pipeline
+    // Store raw run data only - aggregations can be computed from runs sorted set
     const pipelineCommands = [
       ["HSET", `run:${runId}`, "data", JSON.stringify(runData)],
       ["ZADD", "runs", timestamp, JSON.stringify(summaryData)],
-      ["INCRBY", "total:contacts", validatedData.contacts],
-      ["INCRBY", "total:messages", validatedData.messages],
-      ["INCRBY", "total:years", validatedData.years],
-      ["INCRBY", "total:words", validatedData.words],
-      ["INCR", "total:runs"],
-      ...(validatedData.llmUsed ? [["INCR", "total:llmUsed"]] : []),
     ];
 
     const response = await fetch(`${restUrl}/pipeline`, {

@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { Suspense } from "react";
 
+import { SpeakingList } from "@/components/home/SpeakingList";
+import { SpeakingListSkeleton } from "@/components/home/SpeakingListSkeleton";
 import { ArrowUpRight } from "@/components/icons/ArrowUpRight";
 import { BufferLogoSVG, GitHubIcon, XIcon, YouTubeIcon } from "@/components/icons/SocialIcons";
 import {
-  InlineLink,
   List,
   ListItem,
   ListItemLabel,
@@ -15,10 +17,7 @@ import {
 import { createMetadata, createPersonJsonLd } from "@/lib/metadata";
 
 export const metadata: Metadata = createMetadata({
-  title: "Brian Lovin",
-  description:
-    "Brian Lovin is a designer and software engineer living in San Francisco, currently designing AI products at Notion.",
-  path: "/",
+  path: "/about",
 });
 
 export default function Home() {
@@ -30,330 +29,116 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
       />
-      <div className="flex flex-1 flex-col overflow-y-auto">
-        <div className="text-secondary mx-auto flex max-w-xl flex-1 flex-col gap-16 py-16 leading-[1.6]">
-          <Section>
-            <Image
-              src="/img/avatar.jpg"
-              alt="Brian Lovin"
-              width={44}
-              height={44}
-              draggable={false}
-              className="mb-8 rounded-full select-none"
-            />
-            <p className="text-pretty">
-              I&apos;m a designer and software engineer living in San Francisco.
-            </p>
+      <div className="flex flex-1 flex-col">
+        <div className="flex-1 overflow-y-auto">
+          <div className="text-primary mx-auto flex max-w-2xl flex-1 flex-col gap-16 py-16 leading-[1.6] sm:py-32">
+            <Section>
+              <Image
+                src="/img/avatar.jpg"
+                alt="Brian Lovin"
+                width={60}
+                height={60}
+                draggable={false}
+                className="mb-8 rounded-full select-none"
+              />
 
-            <p>
-              I&apos;m currently designing AI products at{" "}
-              <InlineLink href="https://notion.com">Notion</InlineLink>. Before Notion, I was the
-              co-founder of <InlineLink href="https://campsite.com">Campsite</InlineLink>, an app
-              that combined posts, docs, calls, and chat to enable thoughtful team collaboration.
-            </p>
-            <p>
-              Before Campsite, I spent four years designing the{" "}
-              <InlineLink href="https://github.com/mobile">GitHub Mobile</InlineLink> apps. I joined
-              GitHub after they acquired my first startup,{" "}
-              <InlineLink href="https://spectrum.chat">Spectrum</InlineLink>, a platform for branded
-              communities to have better public conversations.
-            </p>
-            <p>
-              Before Spectrum, I designed payments experiences at Facebook, working across{" "}
-              <InlineLink href="https://facebook.com">Facebook</InlineLink>,{" "}
-              <InlineLink href="https://messenger.com">Messenger</InlineLink>,{" "}
-              <InlineLink href="https://whatsapp.com">WhatsApp</InlineLink>, and{" "}
-              <InlineLink href="https://instagram.com">Instagram</InlineLink>. I originally cut my
-              teeth as the first product designer at{" "}
-              <InlineLink href="https://buffer.com">Buffer</InlineLink>.
-            </p>
-            <p>
-              Along the way, I was a co-host of the{" "}
-              <InlineLink href="https://designdetails.fm">Design Details</InlineLink> podcast for
-              nine years, a weekly conversation about design process and culture. I also created{" "}
-              <InlineLink href="https://staff.design">Staff Design</InlineLink>, an interview
-              project about navigating the individual contributor career path.
-            </p>
-          </Section>
+              <h1 id="home-title" className="text-2xl font-semibold">
+                Brian Lovin
+              </h1>
 
-          <Section>
-            <SectionHeading>Online</SectionHeading>
-            <List>
-              {socials.map(({ name, href, icon: Icon }) => (
-                <ListItem key={name} href={href}>
-                  <Icon className="text-primary select-none" />
-                  <ListItemLabel>{name}</ListItemLabel>
-                </ListItem>
-              ))}
-            </List>
-          </Section>
+              <p className="text-secondary text-2xl font-semibold text-pretty">
+                I’m a software designer living in San Francisco, currently making AI products at{" "}
+                Notion.
+              </p>
+            </Section>
 
-          <Section>
-            <SectionHeading>Work</SectionHeading>
-            <List>
-              {work.map(({ name, href, role, period, icon }) => (
-                <ListItem key={name} href={href}>
-                  {icon.type === "image" ? (
-                    <Image
-                      width={40}
-                      height={40}
-                      src={icon.src}
-                      alt={icon.alt}
-                      className="h-5 w-5 rounded-md select-none"
-                      draggable={false}
-                    />
-                  ) : (
-                    <icon.component className="text-primary" />
-                  )}
-                  <ListItemLabel>{name}</ListItemLabel>
-                  <ListItemSubLabel className="flex-1">{role}</ListItemSubLabel>
-                  <ListItemSubLabel className="font-mono opacity-80">{period}</ListItemSubLabel>
-                </ListItem>
-              ))}
-            </List>
-          </Section>
+            <Section className="flex flex-row gap-2">
+              <ListItem href="https://x.com/brian_lovin" className="group -ml-1 p-2">
+                <XIcon size={28} className="text-quaternary group-hover:text-primary select-none" />
+              </ListItem>
+              <ListItem href="https://www.youtube.com/@brian_lovin" className="group p-2">
+                <YouTubeIcon
+                  size={32}
+                  className="text-quaternary select-none group-hover:text-[#FF0302]"
+                  playIconClassName="fill-[var(--background-color-main)] sm:fill-[var(--background-color-elevated)]  group-hover:fill-white"
+                />
+              </ListItem>
+              <ListItem href="https://github.com/brianlovin" className="group p-2">
+                <GitHubIcon
+                  size={28}
+                  className="text-quaternary group-hover:text-primary select-none"
+                />
+              </ListItem>
+            </Section>
 
-          <Section>
-            <SectionHeading>Projects</SectionHeading>
-            <List>
-              {projects.map(({ name, href, description, external }) => (
-                <ListItem key={name} href={href}>
-                  <ListItemLabel>{name}</ListItemLabel>
-                  <ListItemSubLabel>{description}</ListItemSubLabel>
-                  {external && (
-                    <ListItemSubLabel className="font-mono opacity-80">
-                      <ArrowUpRight />
+            <Section>
+              <SectionHeading>Projects</SectionHeading>
+              <List>
+                {projects.map(({ name, href, description, external }) => (
+                  <ListItem
+                    key={name}
+                    href={href}
+                    className="flex-col items-start gap-0 sm:flex-row sm:items-center sm:gap-2"
+                  >
+                    <div className="flex items-center gap-2">
+                      <ListItemLabel className="sm:line-clamp-1">{name}</ListItemLabel>
+                      {external && (
+                        <ListItemSubLabel className="shrink-0 font-mono">
+                          <ArrowUpRight className="text-primary" />
+                        </ListItemSubLabel>
+                      )}
+                    </div>
+                    <ListItemSubLabel className="flex-1">{description}</ListItemSubLabel>
+                  </ListItem>
+                ))}
+              </List>
+            </Section>
+
+            <Section>
+              <SectionHeading>Work</SectionHeading>
+              <List className="gap-8">
+                {work.map(({ name, href, role, period, icon }) => (
+                  <ListItem
+                    key={name}
+                    href={href}
+                    className="flex-col items-start gap-0.5 sm:flex-row sm:items-center sm:gap-3"
+                  >
+                    {icon.type === "image" ? (
+                      <Image
+                        width={40}
+                        height={40}
+                        src={icon.src}
+                        alt={icon.alt}
+                        className="mb-2 size-7 rounded-md select-none sm:mb-0 sm:size-5"
+                        draggable={false}
+                      />
+                    ) : (
+                      <icon.component className="text-primary mb-2 size-7 sm:mb-0 sm:size-5" />
+                    )}
+                    <div className="flex items-center gap-2 sm:contents">
+                      <ListItemLabel>{name}</ListItemLabel>
+                      <ListItemSubLabel>{role}</ListItemSubLabel>
+                    </div>
+                    <ListItemSubLabel className="font-mono text-[19px] opacity-80 sm:ml-auto">
+                      {period}
                     </ListItemSubLabel>
-                  )}
-                </ListItem>
-              ))}
-            </List>
-          </Section>
+                  </ListItem>
+                ))}
+              </List>
+            </Section>
 
-          <Section>
-            <SectionHeading>Speaking</SectionHeading>
-            <List>
-              {speaking.map(({ title, date, href }) => (
-                <ListItem href={href} key={title}>
-                  <ListItemLabel className="flex-1">{title}</ListItemLabel>
-                  <ListItemSubLabel className="font-mono opacity-80">{date}</ListItemSubLabel>
-                </ListItem>
-              ))}
-            </List>
-          </Section>
-
-          <Section>
-            <SectionHeading>Investments</SectionHeading>
-            <List>
-              {investments.map(({ name, href, sublabel }) => (
-                <ListItem key={name} href={href}>
-                  <ListItemLabel>{name}</ListItemLabel>
-                  {sublabel && (
-                    <ListItemSubLabel className="select-none">{sublabel}</ListItemSubLabel>
-                  )}
-                </ListItem>
-              ))}
-            </List>
-          </Section>
+            <Section>
+              <SectionHeading>Speaking</SectionHeading>
+              <Suspense fallback={<SpeakingListSkeleton />}>
+                <SpeakingList />
+              </Suspense>
+            </Section>
+          </div>
         </div>
       </div>
     </>
   );
 }
-
-// Data arrays
-const speaking = [
-  {
-    title: "Founder Fridays with Brian Lovin",
-    date: "Aug '25",
-    href: "https://www.youtube.com/watch?v=VZgrsDkZjHU",
-  },
-  {
-    title: "Design Founders Night with Designer Fund",
-    date: "Jun '25",
-    href: "https://designerfounders.substack.com/p/brian-lovin-notion-campsite",
-  },
-  {
-    title: "How Campsite built a design-led company",
-    date: "Sep '24",
-    href: "https://www.youtube.com/watch?v=aa_srknxkQw",
-  },
-  {
-    title: "FocusTime: Boring routines and capturing inspiration",
-    date: "Aug '24",
-    href: "https://risecalendar.com/blog/focus-time-brian-lovin",
-  },
-  {
-    title: "Full Stack Whatever with Ryan Nystrom",
-    date: "Dec '23",
-    href: "https://fullstackwhatever.com/episode/brian-lovin-ryan-nystrom-surrounded-by-people-doing-interesting-work",
-  },
-  {
-    title: "Deep Dive: How to level up as an IC designer",
-    date: "Nov '23",
-    href: "https://www.youtube.com/watch?v=ozU063JY4ko&t=2s",
-  },
-  {
-    title: "Deep Dive: Lessons from Campsite",
-    date: "Nov '23",
-    href: "https://www.youtube.com/watch?v=njO9OJTDSGM&t=19s",
-  },
-  {
-    title: "Design, engineering, and starting a company",
-    date: "Aug '23",
-    href: "https://open.spotify.com/episode/5rR19EwPx7wKevfaitnrZL?si=74837d42237240bd",
-  },
-  {
-    title: "Full Stack Whatever",
-    date: "Jan '23",
-    href: "https://fullstackwhatever.com/episode/brian-lovin-its-all-about-having-fun",
-  },
-  {
-    title: "The Art of Product: The art and pain of design",
-    date: "Mar '22",
-    href: "https://artofproductpodcast.com/episode-202",
-  },
-  {
-    title: "Metamuse: Personal brand",
-    date: "Mar '22",
-    href: "https://museapp.com/podcast/51-personal-brand/",
-  },
-  {
-    title: "Optimal Path: The Spectrum of design",
-    date: "Jan '22",
-    href: "https://maze.co/podcast/#brian-lovin",
-  },
-  {
-    title: "UI Breakfast: Design advising",
-    date: "Dec '21",
-    href: "https://uibreakfast.com/228-design-advisory-with-brian-lovin/",
-  },
-  {
-    title: "Design MBA: Managing side projects",
-    date: "Nov '21",
-    href: "https://designmba.show/episodes/brian-lovin",
-  },
-  {
-    title: "Progression: The rise of the senior IC",
-    date: "Jun '21",
-    href: "https://progressionapp.com/blog/podcast-26-brian-lovin-github-spectrum-design-details-on-the-rise-of-the-senior-ic/",
-  },
-  {
-    title: "Layout.fm",
-    date: "Jan '21",
-    href: "https://layout.fm/episodes/194/",
-  },
-  {
-    title: "Software Engineering Daily: GitHub Mobile",
-    date: "Jul '20",
-    href: "https://softwareengineeringdaily.com/'20/07/15/github-mobile-with-brian-lovin-and-ryan-nystrom/",
-  },
-  {
-    title: "Swift by Sundell: Building for open source",
-    date: "Feb '20",
-    href: "https://www.swiftbysundell.com/podcast/67/",
-  },
-  {
-    title: "Figma Config: Extend what's possible with Plugins",
-    date: "Feb '20",
-    href: "https://www.youtube.com/watch?v=SyS3h3kmBnY",
-  },
-  {
-    title: "Lovers Magazine",
-    date: "Jan '18",
-    href: "https://www.loversmagazine.com/interviews/brian-lovin",
-  },
-  {
-    title: "GraphQL Summit: Designing with GraphQL",
-    date: "Nov '17",
-    href: "https://www.youtube.com/watch?v=6MBBTdu8v6E",
-  },
-  {
-    title: "Design Details",
-    date: "Aug '17",
-    href: "https://designdetails.fm/episodes/3e342ac0",
-  },
-];
-
-const investments = [
-  {
-    name: "Dashworks",
-    href: "https://dashworks.ai",
-    sublabel: "Acquired",
-  },
-  {
-    name: "Liveblocks",
-    href: "https://liveblocks.io",
-  },
-  {
-    name: "Zed",
-    href: "https://zed.dev",
-  },
-  {
-    name: "Ambrook",
-    href: "https://ambrook.com",
-  },
-  {
-    name: "Muse",
-    href: "https://museapp.com",
-  },
-  {
-    name: "Equals",
-    href: "https://equals.com",
-  },
-  {
-    name: "tldraw",
-    href: "https://tldraw.com",
-  },
-  {
-    name: "Diagram",
-    href: "https://diagram.com",
-    sublabel: "Acquired",
-  },
-  {
-    name: "Copilot",
-    href: "https://copilot.money/",
-  },
-  {
-    name: "Hex",
-    href: "https://hex.tech",
-  },
-  {
-    name: "Stellate",
-    href: "https://stellate.co",
-    sublabel: "Acquired",
-  },
-  {
-    name: "Eraser",
-    href: "https://eraser.io",
-  },
-  {
-    name: "Gumroad",
-    href: "https://gumroad.com",
-  },
-  {
-    name: "Any Distance",
-    href: "https://apps.apple.com/us/app/any-distance-running-tracker/id1545233932",
-  },
-];
-
-const socials = [
-  {
-    name: "X",
-    href: "https://x.com/brian_lovin",
-    icon: XIcon,
-  },
-  {
-    name: "YouTube",
-    href: "https://www.youtube.com/@brian_lovin",
-    icon: YouTubeIcon,
-  },
-  {
-    name: "GitHub",
-    href: "https://github.com/brianlovin",
-    icon: GitHubIcon,
-  },
-];
 
 const projects = [
   {
