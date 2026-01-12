@@ -5,6 +5,9 @@ import { errorResponse } from "@/lib/api-utils";
 const analyticsSchema = z.object({
   contacts: z.number().int().min(0),
   messages: z.number().int().min(0),
+  years: z.number().min(0),
+  words: z.number().int().min(0),
+  llmUsed: z.boolean(),
 });
 
 export async function POST(request: Request) {
@@ -27,6 +30,9 @@ export async function POST(request: Request) {
       runId,
       contacts: validatedData.contacts,
       messages: validatedData.messages,
+      years: validatedData.years,
+      words: validatedData.words,
+      llmUsed: validatedData.llmUsed,
       timestamp,
     };
 
@@ -34,6 +40,9 @@ export async function POST(request: Request) {
       runId,
       contacts: validatedData.contacts,
       messages: validatedData.messages,
+      y: validatedData.years,
+      w: validatedData.words,
+      l: validatedData.llmUsed ? 1 : 0,
     };
 
     // Execute Redis commands via Upstash REST API pipeline
@@ -42,7 +51,10 @@ export async function POST(request: Request) {
       ["ZADD", "runs", timestamp, JSON.stringify(summaryData)],
       ["INCRBY", "total:contacts", validatedData.contacts],
       ["INCRBY", "total:messages", validatedData.messages],
+      ["INCRBY", "total:years", validatedData.years],
+      ["INCRBY", "total:words", validatedData.words],
       ["INCR", "total:runs"],
+      ...(validatedData.llmUsed ? [["INCR", "total:llmUsed"]] : []),
     ];
 
     const response = await fetch(`${restUrl}/pipeline`, {
