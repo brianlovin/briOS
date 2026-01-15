@@ -44,12 +44,21 @@ export const DEFAULT_METADATA: Metadata = {
     siteName: SITE_CONFIG.name,
     title: SITE_CONFIG.title,
     description: SITE_CONFIG.description,
+    images: [
+      {
+        url: "/img/og.png",
+        width: SITE_CONFIG.ogImage.width,
+        height: SITE_CONFIG.ogImage.height,
+        alt: SITE_CONFIG.title,
+      },
+    ],
   },
   twitter: {
     card: SITE_CONFIG.social.twitter.cardType,
     title: SITE_CONFIG.title,
     description: SITE_CONFIG.description,
     creator: SITE_CONFIG.author.twitter,
+    images: ["/img/og.png"],
   },
   robots: {
     index: true,
@@ -102,6 +111,8 @@ export function createMetadata(params: CreateMetadataParams = {}): Metadata {
 
   const url = `${SITE_CONFIG.url}${path}`;
 
+  const ogImage = image || "/img/og.png";
+
   const metadata: Metadata = {
     title,
     description,
@@ -111,17 +122,14 @@ export function createMetadata(params: CreateMetadataParams = {}): Metadata {
       siteName: SITE_CONFIG.name,
       title: title || SITE_CONFIG.title,
       description,
-      // Only include images if explicitly provided, otherwise Next.js will use opengraph-image.tsx
-      ...(image && {
-        images: [
-          {
-            url: image,
-            width: SITE_CONFIG.ogImage.width,
-            height: SITE_CONFIG.ogImage.height,
-            alt: title || SITE_CONFIG.title,
-          },
-        ],
-      }),
+      images: [
+        {
+          url: ogImage,
+          width: SITE_CONFIG.ogImage.width,
+          height: SITE_CONFIG.ogImage.height,
+          alt: title || SITE_CONFIG.title,
+        },
+      ],
       ...(type === "article" &&
         publishedTime && {
           publishedTime,
@@ -134,8 +142,7 @@ export function createMetadata(params: CreateMetadataParams = {}): Metadata {
       title: title || SITE_CONFIG.title,
       description,
       creator: SITE_CONFIG.author.twitter,
-      // Only include images if explicitly provided, otherwise Next.js will use opengraph-image.tsx
-      ...(image && { images: [image] }),
+      images: [ogImage],
     },
     robots: {
       index: !noIndex,
@@ -200,8 +207,7 @@ export function createArticleJsonLd(params: ArticleJsonLdParams) {
       name: SITE_CONFIG.author.name,
       url: SITE_CONFIG.url,
     },
-    // Use opengraph-image.png from Next.js if no custom image provided
-    image: image || `${SITE_CONFIG.url}${path}/opengraph-image.png`,
+    image: image || `${SITE_CONFIG.url}/img/og.png`,
   };
 }
 
