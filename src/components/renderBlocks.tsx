@@ -250,7 +250,7 @@ export function renderBlocks(blocks: ProcessedBlock[], isPreview: boolean = fals
       }
 
       result.push(
-        <ul key={`ul-${blocks[startIndex].id}`} className="ml-4 list-disc">
+        <ul key={`ul-${blocks[startIndex].id}`} className="ml-4 list-disc space-y-1">
           {listItems}
         </ul>,
       );
@@ -268,7 +268,7 @@ export function renderBlocks(blocks: ProcessedBlock[], isPreview: boolean = fals
       }
 
       result.push(
-        <ol key={`ol-${blocks[startIndex].id}`} className="ml-4 list-decimal">
+        <ol key={`ol-${blocks[startIndex].id}`} className="ml-4 list-decimal space-y-1">
           {listItems}
         </ol>,
       );
