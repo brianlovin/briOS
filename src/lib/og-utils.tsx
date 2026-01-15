@@ -1,6 +1,4 @@
 import { ImageResponse } from "@vercel/og";
-import fs from "fs/promises";
-import path from "path";
 
 // Timeout helper for network requests
 const FONT_TIMEOUT_MS = 5000;
@@ -46,11 +44,22 @@ async function loadGoogleFont(font: string, weight: number, text: string): Promi
   throw new Error(`Failed to load font: ${font} ${weight}`);
 }
 
-// Load avatar as base64 (async file I/O)
+// Load avatar via HTTP fetch (works in both dev and production)
 export async function loadAvatar(): Promise<string> {
-  const avatarPath = path.join(process.cwd(), "public/img/avatar.jpg");
-  const avatarBuffer = await fs.readFile(avatarPath);
-  const base64 = avatarBuffer.toString("base64");
+  // Use VERCEL_URL in Vercel deployments, otherwise fall back to production URL
+  // (localhost won't work during static builds when no server is running)
+  const baseUrl = process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : "https://brianlovin.com";
+  const avatarUrl = `${baseUrl}/img/avatar.jpg`;
+
+  const response = await withTimeout(fetch(avatarUrl), FONT_TIMEOUT_MS);
+  if (!response.ok) {
+    throw new Error(`Failed to load avatar: ${response.status}`);
+  }
+
+  const arrayBuffer = await response.arrayBuffer();
+  const base64 = Buffer.from(arrayBuffer).toString("base64");
   return `data:image/jpeg;base64,${base64}`;
 }
 
