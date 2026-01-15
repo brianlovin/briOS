@@ -44,14 +44,10 @@ async function loadGoogleFont(font: string, weight: number, text: string): Promi
   throw new Error(`Failed to load font: ${font} ${weight}`);
 }
 
-// Load avatar via HTTP fetch (works in both dev and production)
+// Load avatar via HTTP fetch from production URL
+// Always use the canonical URL since preview deployments may not be ready during build
 export async function loadAvatar(): Promise<string> {
-  // Use VERCEL_URL in Vercel deployments, otherwise fall back to production URL
-  // (localhost won't work during static builds when no server is running)
-  const baseUrl = process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : "https://brianlovin.com";
-  const avatarUrl = `${baseUrl}/img/avatar.jpg`;
+  const avatarUrl = "https://brianlovin.com/img/avatar.jpg";
 
   const response = await withTimeout(fetch(avatarUrl), FONT_TIMEOUT_MS);
   if (!response.ok) {
