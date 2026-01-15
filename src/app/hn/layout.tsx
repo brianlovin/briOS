@@ -79,7 +79,7 @@ function HNStoriesList() {
               href={`/hn/${post.id}`}
             >
               <span className="text-primary line-clamp-2 font-medium">{post.title}</span>
-              <span className="text-quaternary">{post.domain || "No domain"}</span>
+              {post.domain && <span className="text-quaternary">{post.domain}</span>}
             </Link>
           </li>
         );
