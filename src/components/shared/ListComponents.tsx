@@ -19,10 +19,18 @@ export function SectionHeading({
 }
 
 export function InlineLink({ href, children }: PropsWithChildren<{ href: string }>) {
+  const isExternal = href.startsWith("http");
+  if (isExternal) {
+    return (
+      <a href={href} target="_blank" className="link-body">
+        {children}
+      </a>
+    );
+  }
   return (
-    <a href={href} target="_blank" className="link-body">
+    <Link href={href} className="link-body">
       {children}
-    </a>
+    </Link>
   );
 }
 

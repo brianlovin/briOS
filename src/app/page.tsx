@@ -1,20 +1,17 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { Suspense } from "react";
 
-import { SpeakingList } from "@/components/home/SpeakingList";
-import { SpeakingListSkeleton } from "@/components/home/SpeakingListSkeleton";
-import { ArrowUpRight } from "@/components/icons/ArrowUpRight";
-import { BufferLogoSVG, GitHubIcon, XIcon, YouTubeIcon } from "@/components/icons/SocialIcons";
+import { ProjectsList } from "@/components/home/ProjectsList";
+import { GitHubIcon, XIcon, YouTubeIcon } from "@/components/icons/SocialIcons";
 import {
   List,
   ListItem,
   ListItemLabel,
-  ListItemSubLabel,
   Section,
   SectionHeading,
 } from "@/components/shared/ListComponents";
 import { createMetadata, createPersonJsonLd } from "@/lib/metadata";
+import { getWritingDatabaseItems } from "@/lib/notion";
 
 export const metadata: Metadata = createMetadata({
   title: "Brian Lovin",
@@ -23,8 +20,11 @@ export const metadata: Metadata = createMetadata({
   path: "/",
 });
 
-export default function Home() {
+export const revalidate = 3600;
+
+export default async function Home() {
   const personJsonLd = createPersonJsonLd();
+  const { items: recentPosts } = await getWritingDatabaseItems(undefined, 5);
 
   return (
     <>
@@ -50,8 +50,8 @@ export default function Home() {
               </h1>
 
               <p className="text-secondary text-2xl font-semibold text-pretty">
-                I’m a software designer living in San Francisco, currently making AI products at{" "}
-                Notion.
+                I&apos;m a software designer living in San Francisco, currently making AI products
+                at Notion.
               </p>
             </Section>
 
@@ -76,65 +76,22 @@ export default function Home() {
 
             <Section>
               <SectionHeading>Projects</SectionHeading>
+              <ProjectsList />
+            </Section>
+
+            <Section>
+              <SectionHeading>Recent writing</SectionHeading>
               <List>
-                {projects.map(({ name, href, description, external }) => (
-                  <ListItem
-                    key={name}
-                    href={href}
-                    className="flex-col items-start gap-0 sm:flex-row sm:items-center sm:gap-2"
-                  >
-                    <div className="flex items-center gap-2">
-                      <ListItemLabel className="sm:line-clamp-1">{name}</ListItemLabel>
-                      {external && (
-                        <ListItemSubLabel className="shrink-0 font-mono">
-                          <ArrowUpRight className="text-primary" />
-                        </ListItemSubLabel>
-                      )}
-                    </div>
-                    <ListItemSubLabel className="flex-1">{description}</ListItemSubLabel>
-                  </ListItem>
-                ))}
+                {recentPosts
+                  .filter((post) => post.slug)
+                  .map((post) => {
+                    return (
+                      <ListItem key={post.id} href={`/writing/${post.slug}`}>
+                        <ListItemLabel className="line-clamp-none">{post.title}</ListItemLabel>
+                      </ListItem>
+                    );
+                  })}
               </List>
-            </Section>
-
-            <Section>
-              <SectionHeading>Work</SectionHeading>
-              <List className="gap-8">
-                {work.map(({ name, href, role, period, icon }) => (
-                  <ListItem
-                    key={name}
-                    href={href}
-                    className="flex-col items-start gap-0.5 sm:flex-row sm:items-center sm:gap-3"
-                  >
-                    {icon.type === "image" ? (
-                      <Image
-                        width={40}
-                        height={40}
-                        src={icon.src}
-                        alt={icon.alt}
-                        className="mb-2 size-7 rounded-md select-none sm:mb-0 sm:size-5"
-                        draggable={false}
-                      />
-                    ) : (
-                      <icon.component className="text-primary mb-2 size-7 sm:mb-0 sm:size-5" />
-                    )}
-                    <div className="flex items-center gap-2 sm:contents">
-                      <ListItemLabel>{name}</ListItemLabel>
-                      <ListItemSubLabel>{role}</ListItemSubLabel>
-                    </div>
-                    <ListItemSubLabel className="font-mono text-[19px] opacity-80 sm:ml-auto">
-                      {period}
-                    </ListItemSubLabel>
-                  </ListItem>
-                ))}
-              </List>
-            </Section>
-
-            <Section>
-              <SectionHeading>Speaking</SectionHeading>
-              <Suspense fallback={<SpeakingListSkeleton />}>
-                <SpeakingList />
-              </Suspense>
             </Section>
           </div>
         </div>
@@ -142,151 +99,3 @@ export default function Home() {
     </>
   );
 }
-
-const projects = [
-  {
-    name: "Writing",
-    href: "/writing",
-    description: "Notes on software and other things",
-    external: false,
-  },
-  {
-    name: "HN",
-    href: "/hn",
-    description: "A minimal hacker news reader",
-    external: false,
-  },
-  {
-    name: "App Dissection",
-    href: "/app-dissection",
-    description: "Breaking down well-designed apps",
-    external: false,
-  },
-  {
-    name: "Stack",
-    href: "/stack",
-    description: "My favorite apps and tools",
-    external: false,
-  },
-  {
-    name: "AMA",
-    href: "/ama",
-    description: "Ask me anything",
-    external: false,
-  },
-  {
-    name: "Listening",
-    href: "/listening",
-    description: "What I'm listening to",
-    external: false,
-  },
-  {
-    name: "Good websites",
-    href: "/sites",
-    description: "A curated collection of good websites",
-    external: false,
-  },
-  {
-    name: "Staff Design",
-    href: "https://staff.design",
-    description: "Navigating the IC career path",
-    external: true,
-  },
-  {
-    name: "Design Details",
-    href: "https://designdetails.fm",
-    description: "A podcast about design and technology",
-    external: true,
-  },
-  {
-    name: "How to Computer Better",
-    href: "https://brianlovin.notion.site/how-to-computer-better",
-    description: "Get good at computering",
-    external: true,
-  },
-  {
-    name: "Crit",
-    href: "https://www.youtube.com/playlist?list=PLJu44Klx1pB_8GSOUeDNDllPICvMJKSut",
-    description: "App design critique",
-    external: true,
-  },
-];
-
-type WorkIcon =
-  | { type: "image"; src: string; alt: string }
-  | { type: "svg"; component: React.ComponentType<{ className?: string }> };
-
-interface WorkItem {
-  name: string;
-  href: string;
-  role: string;
-  period: string;
-  icon: WorkIcon;
-}
-
-const work: WorkItem[] = [
-  {
-    name: "Notion",
-    href: "https://notion.com",
-    role: "Product Designer",
-    period: "Current",
-    icon: {
-      type: "image",
-      src: "/img/notion.png",
-      alt: "Notion",
-    },
-  },
-  {
-    name: "Campsite",
-    href: "https://campsite.com",
-    role: "Co-founder",
-    period: "2022–25",
-    icon: {
-      type: "image",
-      src: "/img/campsite.png",
-      alt: "Campsite",
-    },
-  },
-  {
-    name: "GitHub",
-    href: "https://github.com/mobile",
-    role: "Product Designer",
-    period: "2018–22",
-    icon: {
-      type: "svg",
-      component: GitHubIcon,
-    },
-  },
-  {
-    name: "Spectrum",
-    href: "https://spectrum.chat",
-    role: "Co-founder",
-    period: "2017–18",
-    icon: {
-      type: "image",
-      src: "/img/spectrum.png",
-      alt: "Spectrum",
-    },
-  },
-  {
-    name: "Facebook",
-    href: "https://facebook.com",
-    role: "Product Designer",
-    period: "2015–17",
-    icon: {
-      type: "image",
-      src: "/img/facebook.png",
-      alt: "Facebook",
-    },
-  },
-  {
-    name: "Buffer",
-    href: "https://buffer.com",
-    role: "Product Designer",
-    period: "2013–15",
-    icon: {
-      type: "svg",
-      component: BufferLogoSVG,
-    },
-  },
-];

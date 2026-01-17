@@ -109,7 +109,7 @@ export default async function WritingPostPage(props: { params: Promise<{ slug: s
         <div className="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-12 md:px-6 lg:px-8 lg:py-16 xl:py-20">
           {randomPosts.length > 0 && (
             <div className="flex flex-col gap-4">
-              <div className="h-1 w-5 rounded-full bg-[#FC532A]" />
+              <div className="bg-brand h-1 w-5 rounded-full" />
               <h2 className="text-tertiary text-base">Read next</h2>
               <List>
                 {randomPosts.map((post) => (
