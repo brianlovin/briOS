@@ -7,6 +7,7 @@ import { DoubleChatBubble } from "@/components/icons/DoubleChatBubble";
 import { FileText2 } from "@/components/icons/FileText2";
 import { Headphones3 } from "@/components/icons/Headphones3";
 import { Home } from "@/components/icons/Home";
+import { Person } from "@/components/icons/Person";
 import { Triangle } from "@/components/icons/Triangle";
 import { IconProps } from "@/components/icons/types";
 
@@ -28,6 +29,15 @@ export const navigationItems: NavigationItem[] = [
     icon: Home,
     keywords: ["home", "dashboard"],
     isActive: (pathname) => pathname === "/",
+    section: "main",
+  },
+  {
+    id: "about",
+    label: "About",
+    href: "/about",
+    icon: Person,
+    keywords: ["about", "bio", "me"],
+    isActive: (pathname) => pathname === "/about",
     section: "main",
   },
   {

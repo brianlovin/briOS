@@ -12,7 +12,8 @@
   --text-color-tertiary: var(--color-neutral-500);
   --text-color-quaternary: var(--color-neutral-400);
 
-  --text-color-campsite: #ff591e;
+  --text-color-brand: #fc532a;
+  --background-color-brand: #fc532a;
 
   --background-color-main: var(--color-neutral-50);
   --background-color-primary: var(--color-white);
@@ -55,7 +56,8 @@
   --text-color-tertiary: var(--text-color-tertiary);
   --text-color-quaternary: var(--text-color-quaternary);
 
-  --text-color-campsite: var(--text-color-campsite);
+  --text-color-brand: var(--text-color-brand);
+  --background-color-brand: var(--background-color-brand);
 
   --font-family-serif: var(--font-serif), serif;
 

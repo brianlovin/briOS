@@ -7,6 +7,13 @@
       "type": "url",
       "url": {}
     },
+    "NEW Process": {
+      "id": "TIuf",
+      "name": "NEW Process",
+      "description": null,
+      "type": "button",
+      "button": {}
+    },
     "Tags": {
       "id": "%5CMRu",
       "name": "Tags",

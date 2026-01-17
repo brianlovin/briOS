@@ -1,7 +1,7 @@
 {
-    "scripts": {
-        "setup": "./scripts/conductor-setup.sh",
-        "run": "bun run generate-schemas && bun run dev -p ${CONDUCTOR_PORT:-3000}"
-    },
-    "runScriptMode": "nonconcurrent"
+  "scripts": {
+    "setup": "./scripts/conductor-setup.sh",
+    "run": "bun run generate-schemas && bun run dev -p ${CONDUCTOR_PORT:-3000}"
+  },
+  "runScriptMode": "nonconcurrent"
 }
