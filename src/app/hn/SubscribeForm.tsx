@@ -8,6 +8,19 @@ import { ArrowUp } from "@/components/icons/ArrowUp";
 import { Checkmark } from "@/components/icons/Checkmark";
 import { Input } from "@/components/ui/Input";
 
+const FUN_EMAIL_PLACEHOLDERS = [
+  "mark@lumonindustries.com", // Severance
+  "richard@piedpiper.com", // Silicon Valley
+  "don@sterlingcooper.com", // Mad Men
+  "carmy@thebeef.com", // The Bear
+  "ted@afcrichmond.com", // Ted Lasso
+  "michael@dundermifflin.com", // The Office
+  "leslie@pawneecity.gov", // Parks and Rec
+  "kendall@waystar.com", // Succession
+  "neo@metacortex.com", // The Matrix
+  "peter@initech.com", // Office Space
+];
+
 interface SubscribeFormProps {
   onComplete?: () => void;
   className?: string;
@@ -19,6 +32,9 @@ export function SubscribeForm({ onComplete, className }: SubscribeFormProps) {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const setHnSubscribed = useSetAtom(hnSubscribedAtom);
+
+  const placeholder =
+    FUN_EMAIL_PLACEHOLDERS[new Date().getDate() % FUN_EMAIL_PLACEHOLDERS.length];
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -73,7 +89,7 @@ export function SubscribeForm({ onComplete, className }: SubscribeFormProps) {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
+            placeholder={placeholder}
             className="bg-elevated rounded-full pr-12 pb-2.5 pl-4"
             required
           />
