@@ -87,6 +87,7 @@ export type NotionItem = {
   previewBlocks?: ProcessedBlock[];
   source?: string;
   slug?: string;
+  shortId?: string;
   excerpt?: string;
   featureImage?: string;
 };

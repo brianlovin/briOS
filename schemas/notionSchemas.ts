@@ -29,10 +29,12 @@ export type AMA = z.infer<typeof AMASchema>;
 
 export const WritingSchema = z.object({
   Slug: z.string().optional(),
+  "Generate Short ID": z.any().optional(),
   Excerpt: z.string().optional(),
   Published: z.string().optional(),
   FeatureImage: z.string().optional(),
   "Optimize images": z.any().optional(),
+  "Short ID": z.string().optional(),
   "Created time": z.string().optional(),
   Name: z.string().optional(),
 });

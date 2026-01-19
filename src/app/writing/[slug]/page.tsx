@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { renderBlocks } from "@/components/renderBlocks";
 import { List, ListItem, ListItemLabel } from "@/components/shared/ListComponents";
 import { PageTitle } from "@/components/Typography";
 import { FancySeparator } from "@/components/ui/FancySeparator";
 import { createArticleJsonLd, createMetadata, truncateDescription } from "@/lib/metadata";
-import { getWritingPostContentBySlug } from "@/lib/notion";
+import { getWritingPostByShortId, getWritingPostContentBySlug } from "@/lib/notion";
+import { buildSlug, extractShortIdFromSlug } from "@/lib/short-id";
 import { getAllWritingPosts } from "@/lib/writing";
 
 export const revalidate = 3600;
@@ -16,9 +17,9 @@ export async function generateStaticParams() {
   const posts = await getAllWritingPosts();
 
   return posts
-    .filter((post) => post.slug) // Only include posts with slugs
+    .filter((post) => post.shortId) // Only include posts with Short IDs
     .map((post) => ({
-      slug: post.slug,
+      slug: buildSlug(post.title, post.shortId!),
     }));
 }
 
@@ -28,7 +29,15 @@ export async function generateMetadata(props: {
 }): Promise<Metadata> {
   const params = await props.params;
   const slug = params.slug;
-  const content = await getWritingPostContentBySlug(slug);
+
+  // Try to extract Short ID from the URL
+  const shortId = extractShortIdFromSlug(slug);
+  let content = shortId ? await getWritingPostByShortId(shortId) : null;
+
+  // Fallback to legacy slug lookup
+  if (!content) {
+    content = await getWritingPostContentBySlug(slug);
+  }
 
   if (!content) {
     return {};
@@ -36,13 +45,16 @@ export async function generateMetadata(props: {
 
   const { metadata } = content;
 
+  // Use the canonical URL with Short ID if available
+  const canonicalSlug = metadata.shortId ? buildSlug(metadata.title, metadata.shortId) : slug;
+
   // Extract text content from blocks for description
   const description = metadata.excerpt || "A post by Brian Lovin";
 
   return createMetadata({
     title: metadata.title,
     description: truncateDescription(description),
-    path: `/writing/${slug}`,
+    path: `/writing/${canonicalSlug}`,
     type: "article",
     publishedTime: metadata.published || metadata.createdTime,
     modifiedTime: metadata.createdTime,
@@ -57,7 +69,21 @@ function getRandomPosts<T>(posts: T[], count: number): T[] {
 export default async function WritingPostPage(props: { params: Promise<{ slug: string }> }) {
   const params = await props.params;
   const slug = params.slug;
-  const content = await getWritingPostContentBySlug(slug);
+
+  // Try to extract Short ID from the URL
+  const shortId = extractShortIdFromSlug(slug);
+  let content = shortId ? await getWritingPostByShortId(shortId) : null;
+
+  // Fallback to legacy slug lookup
+  if (!content) {
+    content = await getWritingPostContentBySlug(slug);
+
+    // If found via legacy lookup and has a Short ID, redirect to canonical URL
+    if (content && content.metadata.shortId) {
+      const canonicalSlug = buildSlug(content.metadata.title, content.metadata.shortId);
+      redirect(`/writing/${canonicalSlug}`);
+    }
+  }
 
   if (!content) {
     notFound();
@@ -65,16 +91,19 @@ export default async function WritingPostPage(props: { params: Promise<{ slug: s
 
   const { blocks, metadata } = content;
 
+  // Use canonical slug for all URLs
+  const canonicalSlug = metadata.shortId ? buildSlug(metadata.title, metadata.shortId) : slug;
+
   // Get all posts and select 5 random ones (excluding current post)
   const allPosts = await getAllWritingPosts();
-  const otherPosts = allPosts.filter((post) => post.slug && post.slug !== slug);
+  const otherPosts = allPosts.filter((post) => post.shortId && post.shortId !== metadata.shortId);
   const randomPosts = getRandomPosts(otherPosts, 5);
 
   // Generate JSON-LD structured data
   const articleJsonLd = createArticleJsonLd({
     title: metadata.title,
     description: metadata.excerpt || "A post by Brian Lovin",
-    path: `/writing/${slug}`,
+    path: `/writing/${canonicalSlug}`,
     publishedTime: metadata.published || metadata.createdTime,
     modifiedTime: metadata.createdTime,
   });
@@ -113,7 +142,7 @@ export default async function WritingPostPage(props: { params: Promise<{ slug: s
               <h2 className="text-tertiary text-base">Read next</h2>
               <List>
                 {randomPosts.map((post) => (
-                  <ListItem key={post.id} href={`/writing/${post.slug}`}>
+                  <ListItem key={post.id} href={`/writing/${buildSlug(post.title, post.shortId!)}`}>
                     <ListItemLabel>{post.title}</ListItemLabel>
                   </ListItem>
                 ))}

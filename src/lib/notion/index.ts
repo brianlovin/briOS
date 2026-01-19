@@ -61,9 +61,15 @@ export {
   getStackDatabaseItems,
   // Writing
   getWritingDatabaseItems,
+  getWritingPostByShortId,
   getWritingPostContent,
   getWritingPostContentBySlug,
 } from "./queries";
 
 // Mutations
-export { createAmaQuestion, createStackItem, updateStackItem } from "./mutations";
+export {
+  createAmaQuestion,
+  createStackItem,
+  updateStackItem,
+  updateWritingShortId,
+} from "./mutations";

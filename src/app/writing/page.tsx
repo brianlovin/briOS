@@ -9,6 +9,7 @@ import {
 } from "@/components/shared/ListComponents";
 import { PageTitle } from "@/components/Typography";
 import { createMetadata } from "@/lib/metadata";
+import { buildSlug } from "@/lib/short-id";
 import { getAllWritingPosts } from "@/lib/writing";
 
 export const metadata: Metadata = createMetadata({
@@ -48,9 +49,9 @@ export default async function WritingPage() {
             <SectionHeading>{year}</SectionHeading>
             <List>
               {postsByYear[year]
-                .filter((post) => post.slug) // Only show posts that have slugs
+                .filter((post) => post.shortId) // Only show posts that have Short IDs
                 .map((post) => (
-                  <ListItem key={post.id} href={`/writing/${post.slug}`}>
+                  <ListItem key={post.id} href={`/writing/${buildSlug(post.title, post.shortId!)}`}>
                     <ListItemLabel className="line-clamp-none">{post.title}</ListItemLabel>
                   </ListItem>
                 ))}

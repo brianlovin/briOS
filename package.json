@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "generate-schemas": "bun scripts/generateNotionSchemas.ts",
+    "backfill-short-ids": "bun scripts/backfillShortIds.ts",
     "predev": "bun run generate-schemas",
     "prestart": "bun run generate-schemas",
     "dev": "next dev --turbopack",

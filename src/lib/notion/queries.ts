@@ -233,6 +233,7 @@ export async function getWritingDatabaseItems(
         Published?: { date: { start: string } | null };
         URL?: { url: string };
         Slug?: { rich_text: { plain_text: string }[] };
+        "Short ID"?: { rich_text: { plain_text: string }[] };
         Excerpt?: { rich_text: { plain_text: string }[] };
         FeatureImage?: { url: string };
       };
@@ -246,6 +247,7 @@ export async function getWritingDatabaseItems(
         published: properties.Published?.date?.start || pageWithProps.created_time,
         source: properties.URL?.url?.replace("https://", ""),
         slug: properties.Slug?.rich_text[0]?.plain_text || "",
+        shortId: properties["Short ID"]?.rich_text[0]?.plain_text || undefined,
         excerpt: properties.Excerpt?.rich_text[0]?.plain_text || "",
         featureImage: properties.FeatureImage?.url || undefined,
       } as NotionItem;
@@ -275,6 +277,7 @@ export async function getWritingPostContent(
       Published?: { date: { start: string } | null };
       URL?: { url: string };
       Slug?: { rich_text: { plain_text: string }[] };
+      "Short ID"?: { rich_text: { plain_text: string }[] };
       Excerpt?: { rich_text: { plain_text: string }[] };
       FeatureImage?: { url: string };
     };
@@ -288,6 +291,7 @@ export async function getWritingPostContent(
       published: properties.Published?.date?.start || pageWithProps.created_time,
       source: properties.URL?.url?.replace("https://", ""),
       slug: properties.Slug?.rich_text[0]?.plain_text || "",
+      shortId: properties["Short ID"]?.rich_text[0]?.plain_text || undefined,
       excerpt: properties.Excerpt?.rich_text[0]?.plain_text || "",
       featureImage: properties.FeatureImage?.url || undefined,
     };
@@ -327,6 +331,36 @@ export async function getWritingPostContentBySlug(
     return getWritingPostContent(page.id);
   } catch (error) {
     console.error(`Error fetching writing post content for slug ${slug}:`, error);
+    return null;
+  }
+}
+
+export async function getWritingPostByShortId(
+  shortId: string,
+): Promise<{ blocks: ProcessedBlock[]; metadata: NotionItem } | null> {
+  try {
+    const databaseId = process.env.NOTION_WRITING_DATABASE_ID || "";
+    const dataSourceId = await getDataSourceId(databaseId);
+    const response = await notion.dataSources.query({
+      data_source_id: dataSourceId,
+      filter: {
+        property: "Short ID",
+        rich_text: {
+          equals: shortId,
+        },
+      },
+    });
+
+    if (response.results.length === 0) {
+      return null;
+    }
+
+    const page = response.results[0];
+    if (!hasProperties(page)) return null;
+
+    return getWritingPostContent(page.id);
+  } catch (error) {
+    console.error(`Error fetching writing post content for short ID ${shortId}:`, error);
     return null;
   }
 }
