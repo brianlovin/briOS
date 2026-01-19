@@ -196,3 +196,23 @@ export async function createAmaQuestion(title: string, description?: string) {
     properties: properties as any,
   });
 }
+
+// ===== Writing Mutations =====
+
+export async function updateWritingShortId(pageId: string, shortId: string) {
+  try {
+    const response = await notion.pages.update({
+      page_id: pageId,
+      properties: {
+        "Short ID": {
+          rich_text: [{ text: { content: shortId } }],
+        },
+      } as any,
+    });
+
+    return response;
+  } catch (error) {
+    console.error(`Error updating short ID for page ${pageId}:`, error);
+    throw error;
+  }
+}

@@ -12,6 +12,7 @@ import {
 } from "@/components/shared/ListComponents";
 import { createMetadata, createPersonJsonLd } from "@/lib/metadata";
 import { getWritingDatabaseItems } from "@/lib/notion";
+import { buildSlug } from "@/lib/short-id";
 
 export const metadata: Metadata = createMetadata({
   title: "Brian Lovin",
@@ -83,10 +84,13 @@ export default async function Home() {
               <SectionHeading>Recent writing</SectionHeading>
               <List>
                 {recentPosts
-                  .filter((post) => post.slug)
+                  .filter((post) => post.shortId)
                   .map((post) => {
                     return (
-                      <ListItem key={post.id} href={`/writing/${post.slug}`}>
+                      <ListItem
+                        key={post.id}
+                        href={`/writing/${buildSlug(post.title, post.shortId!)}`}
+                      >
                         <ListItemLabel className="line-clamp-none">{post.title}</ListItemLabel>
                       </ListItem>
                     );

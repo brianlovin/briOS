@@ -1,6 +1,7 @@
 import { Feed } from "feed";
 
 import { SITE_CONFIG } from "@/lib/metadata";
+import { buildSlug } from "@/lib/short-id";
 import { getAllWritingPosts } from "@/lib/writing";
 
 export async function GET() {
@@ -28,27 +29,29 @@ export async function GET() {
     // Fetch all writing posts
     const posts = await getAllWritingPosts();
 
-    // Add each post to the feed
-    posts.forEach((post) => {
-      const postUrl = `${SITE_CONFIG.url}/writing/${post.slug}`;
-      const publishDate = new Date(post.published || post.createdTime);
+    // Add each post to the feed (only posts with Short IDs)
+    posts
+      .filter((post) => post.shortId)
+      .forEach((post) => {
+        const postUrl = `${SITE_CONFIG.url}/writing/${buildSlug(post.title, post.shortId!)}`;
+        const publishDate = new Date(post.published || post.createdTime);
 
-      feed.addItem({
-        title: post.title,
-        id: post.id,
-        link: postUrl,
-        description: post.excerpt || "",
-        date: publishDate,
-        published: publishDate,
-        image: post.featureImage,
-        author: [
-          {
-            name: SITE_CONFIG.author.name,
-            link: SITE_CONFIG.url,
-          },
-        ],
+        feed.addItem({
+          title: post.title,
+          id: post.id,
+          link: postUrl,
+          description: post.excerpt || "",
+          date: publishDate,
+          published: publishDate,
+          image: post.featureImage,
+          author: [
+            {
+              name: SITE_CONFIG.author.name,
+              link: SITE_CONFIG.url,
+            },
+          ],
+        });
       });
-    });
 
     // Return RSS XML with proper content-type
     return new Response(feed.rss2(), {

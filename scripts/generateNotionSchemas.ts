@@ -149,10 +149,10 @@ async function generateSchemas() {
 
     const props = dataSource.properties;
 
-    // save this to a file
+    // save this to a file (with trailing newline)
     fs.writeFileSync(
       path.join(process.cwd(), "schemas", `${db.varName}Schema.json`),
-      JSON.stringify({ props }, null, 2),
+      JSON.stringify({ props }, null, 2) + "\n",
     );
 
     const propLines: string[] = [];

@@ -7,6 +7,13 @@
       "type": "rich_text",
       "rich_text": {}
     },
+    "Generate Short ID": {
+      "id": "GiQF",
+      "name": "Generate Short ID",
+      "description": null,
+      "type": "button",
+      "button": {}
+    },
     "Excerpt": {
       "id": "I%5Dtv",
       "name": "Excerpt",
@@ -34,6 +41,13 @@
       "description": null,
       "type": "button",
       "button": {}
+    },
+    "Short ID": {
+      "id": "sBA%5D",
+      "name": "Short ID",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
     },
     "Created time": {
       "id": "xX%60%3A",
