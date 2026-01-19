@@ -60,4 +60,3 @@ These scripts were used for one-time data migrations and are rarely needed:
 - `backfillStacksToNotion.ts` — Migrated JSON stack data to Notion
 - `backfillAmaToNotion.ts` — Migrated AMA questions to Notion
 - `migrateSimplecast.ts` — Mirrored podcast episodes to S3
-- `backfillShortIds.ts` — Generates Short IDs for existing writing posts
