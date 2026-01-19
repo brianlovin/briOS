@@ -79,7 +79,7 @@ function renderRichText(richText: RichTextContent[]) {
     if (annotations.underline) element = <u key={index}>{element}</u>;
     if (annotations.code)
       element = (
-        <code className="bg-tertiary rounded px-1 py-0.5 text-sm" key={index}>
+        <code className="bg-tertiary rounded px-1 py-0.5 text-base" key={index}>
           {element}
         </code>
       );

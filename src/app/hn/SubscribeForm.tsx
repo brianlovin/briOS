@@ -33,8 +33,7 @@ export function SubscribeForm({ onComplete, className }: SubscribeFormProps) {
   const [success, setSuccess] = useState(false);
   const setHnSubscribed = useSetAtom(hnSubscribedAtom);
 
-  const placeholder =
-    FUN_EMAIL_PLACEHOLDERS[new Date().getDate() % FUN_EMAIL_PLACEHOLDERS.length];
+  const placeholder = FUN_EMAIL_PLACEHOLDERS[new Date().getDate() % FUN_EMAIL_PLACEHOLDERS.length];
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();

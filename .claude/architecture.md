@@ -13,6 +13,7 @@
 ## UI Layer
 
 **Layout system**:
+
 - `PrimarySidebar` — Collapsible navigation sidebar
 - `CommandMenu` — Global command palette
 - `ListDetailLayout` — Consistent list-detail navigation pattern
