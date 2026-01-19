@@ -8,18 +8,33 @@ import { ArrowUp } from "@/components/icons/ArrowUp";
 import { Checkmark } from "@/components/icons/Checkmark";
 import { Input } from "@/components/ui/Input";
 
+const FUN_EMAIL_PLACEHOLDERS = [
+  "mark@lumonindustries.com", // Severance
+  "richard@piedpiper.com", // Silicon Valley
+  "don@sterlingcooper.com", // Mad Men
+  "carmy@thebeef.com", // The Bear
+  "ted@afcrichmond.com", // Ted Lasso
+  "michael@dundermifflin.com", // The Office
+  "leslie@pawneecity.gov", // Parks and Rec
+  "kendall@waystar.com", // Succession
+  "neo@metacortex.com", // The Matrix
+  "peter@initech.com", // Office Space
+];
+
 interface SubscribeFormProps {
   onComplete?: () => void;
   className?: string;
-  placeholder: string;
 }
 
-export function SubscribeForm({ onComplete, className, placeholder }: SubscribeFormProps) {
+export function SubscribeForm({ onComplete, className }: SubscribeFormProps) {
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const setHnSubscribed = useSetAtom(hnSubscribedAtom);
+
+  const placeholder =
+    FUN_EMAIL_PLACEHOLDERS[new Date().getDate() % FUN_EMAIL_PLACEHOLDERS.length];
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();

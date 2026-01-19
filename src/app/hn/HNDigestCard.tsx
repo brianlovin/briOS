@@ -8,12 +8,7 @@ import { cn } from "@/lib/utils";
 
 import { SubscribeForm } from "./SubscribeForm";
 
-interface HNDigestCardProps {
-  className?: string;
-  emailPlaceholder: string;
-}
-
-export function HNDigestCard({ className, emailPlaceholder }: HNDigestCardProps) {
+export function HNDigestCard({ className }: { className?: string }) {
   const [isSubscribed, setIsSubscribed] = useAtom(hnSubscribedAtom);
 
   const date = new Date().toLocaleDateString("en-US", {
@@ -43,7 +38,7 @@ export function HNDigestCard({ className, emailPlaceholder }: HNDigestCardProps)
             </p>
           </div>
 
-          <SubscribeForm className="w-full" placeholder={emailPlaceholder} />
+          <SubscribeForm className="w-full" />
         </div>
 
         <button

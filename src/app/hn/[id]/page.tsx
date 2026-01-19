@@ -4,7 +4,6 @@ import { getPostById } from "@/lib/hn";
 import { createMetadata, truncateDescription } from "@/lib/metadata";
 import { stripHtmlTags } from "@/lib/utils";
 
-import { getRandomEmailPlaceholder } from "../constants";
 import HNPostPageClient from "./HNPostPageClient";
 
 export const revalidate = 3600;
@@ -47,6 +46,5 @@ export async function generateMetadata(props: {
 }
 
 export default function HNPostPage() {
-  const emailPlaceholder = getRandomEmailPlaceholder();
-  return <HNPostPageClient emailPlaceholder={emailPlaceholder} />;
+  return <HNPostPageClient />;
 }
