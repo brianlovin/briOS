@@ -1,12 +1,25 @@
 "use client";
 
 import { useSetAtom } from "jotai";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { hnSubscribedAtom } from "@/atoms/hnSubscription";
 import { ArrowUp } from "@/components/icons/ArrowUp";
 import { Checkmark } from "@/components/icons/Checkmark";
 import { Input } from "@/components/ui/Input";
+
+const FUN_EMAIL_PLACEHOLDERS = [
+  "mark@lumonindustries.com", // Severance
+  "richard@piedpiper.com", // Silicon Valley
+  "don@sterlingcooper.com", // Mad Men
+  "carmy@thebeef.com", // The Bear
+  "ted@afcrichmond.com", // Ted Lasso
+  "michael@dundermifflin.com", // The Office
+  "leslie@pawneecity.gov", // Parks and Rec
+  "kendall@waystar.com", // Succession
+  "neo@metacortex.com", // The Matrix
+  "peter@initech.com", // Office Space
+];
 
 interface SubscribeFormProps {
   onComplete?: () => void;
@@ -18,7 +31,13 @@ export function SubscribeForm({ onComplete, className }: SubscribeFormProps) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [placeholder, setPlaceholder] = useState(FUN_EMAIL_PLACEHOLDERS[0]);
   const setHnSubscribed = useSetAtom(hnSubscribedAtom);
+
+  useEffect(() => {
+    const randomIndex = Math.floor(Math.random() * FUN_EMAIL_PLACEHOLDERS.length);
+    setPlaceholder(FUN_EMAIL_PLACEHOLDERS[randomIndex]);
+  }, []);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -73,7 +92,7 @@ export function SubscribeForm({ onComplete, className }: SubscribeFormProps) {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
+            placeholder={placeholder}
             className="bg-elevated rounded-full pr-12 pb-2.5 pl-4"
             required
           />
