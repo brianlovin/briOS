@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { createMetadata } from "@/lib/metadata";
 
+import { getRandomEmailPlaceholder } from "./constants";
 import { HNPageClient } from "./HNPageClient";
 
 export const metadata: Metadata = {
@@ -18,5 +19,6 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 export default function HNPage() {
-  return <HNPageClient />;
+  const emailPlaceholder = getRandomEmailPlaceholder();
+  return <HNPageClient emailPlaceholder={emailPlaceholder} />;
 }

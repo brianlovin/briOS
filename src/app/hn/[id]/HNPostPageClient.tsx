@@ -29,7 +29,11 @@ function sanitizeHtml(html: string): string {
   });
 }
 
-export default function HNPostPageClient() {
+interface HNPostPageClientProps {
+  emailPlaceholder: string;
+}
+
+export default function HNPostPageClient({ emailPlaceholder }: HNPostPageClientProps) {
   const { id } = useParams();
   const { posts } = useHNPostsContext();
   const isSubscribed = useAtomValue(hnSubscribedAtom);
@@ -168,7 +172,7 @@ export default function HNPostPageClient() {
             )}
           </div>
 
-          <HNDigestCard className="mb-12" />
+          <HNDigestCard className="mb-12" emailPlaceholder={emailPlaceholder} />
 
           <FancySeparator />
 
@@ -181,7 +185,7 @@ export default function HNPostPageClient() {
           {!isSubscribed && post?.comments && !!post.comments.length && (
             <div className="pt-8 md:pt-12">
               <FancySeparator />
-              <HNDigestCard className="mt-8" />
+              <HNDigestCard className="mt-8" emailPlaceholder={emailPlaceholder} />
             </div>
           )}
         </div>

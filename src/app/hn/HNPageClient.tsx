@@ -7,7 +7,11 @@ import { SpeechBubble } from "@/components/icons/SpeechBubble";
 
 import { HNDigestCard } from "./HNDigestCard";
 
-export function HNPageClient() {
+interface HNPageClientProps {
+  emailPlaceholder: string;
+}
+
+export function HNPageClient({ emailPlaceholder }: HNPageClientProps) {
   const isSubscribed = useAtomValue(hnSubscribedAtom);
 
   return (
@@ -15,7 +19,7 @@ export function HNPageClient() {
       {isSubscribed ? (
         <SpeechBubble size={100} className="opacity-10" />
       ) : (
-        <HNDigestCard className="bg-elevated max-w-xl shadow-xs" />
+        <HNDigestCard className="bg-elevated max-w-xl shadow-xs" emailPlaceholder={emailPlaceholder} />
       )}
     </div>
   );
