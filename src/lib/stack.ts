@@ -10,6 +10,8 @@ export type StackItem = {
   url?: string;
   platforms?: string[];
   status?: string;
+  previewImage?: string;
+  previewStatus?: "Queued" | "Processing" | "Done" | "Error";
 };
 
 export async function getStacks(): Promise<StackItem[]> {

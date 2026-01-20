@@ -14,6 +14,7 @@ export * from "./Collapsible";
 export * from "./ContextMenu";
 export * from "./DropdownMenu";
 export * from "./HoverCard";
+export * from "./PreviewCard";
 export * from "./Select";
 export * from "./Textarea";
 export * from "./Tooltip";

@@ -103,6 +103,8 @@ export type NotionStackItem = {
   url?: string;
   platforms?: string[];
   status?: string;
+  previewImage?: string;
+  previewStatus?: "Queued" | "Processing" | "Done" | "Error";
 };
 
 // Good Website item type
@@ -113,6 +115,8 @@ export type GoodWebsiteItem = {
   x?: string;
   icon?: string;
   tags?: string[];
+  previewImage?: string;
+  previewStatus?: "Queued" | "Processing" | "Done" | "Error";
 };
 
 // AMA item types

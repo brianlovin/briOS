@@ -101,3 +101,39 @@ export async function optimizeWritingImage(buffer: Buffer): Promise<OptimizedIma
   // Use a very large maxSize to prevent resizing, only compress
   return optimizeImage(buffer, { maxSize: 4000, quality: 90 });
 }
+
+/**
+ * Optimize a screenshot for site previews
+ * Converts to WebP at 1200x630 (OG image aspect ratio) for optimal display
+ */
+export async function optimizeSitePreview(buffer: Buffer): Promise<OptimizedImage> {
+  const image = sharp(buffer);
+
+  // Resize to preview dimensions, cropping from top
+  // 1200x630 is the standard OG image ratio (1.91:1)
+  const processedImage = image
+    .resize(1200, 630, {
+      fit: "cover",
+      position: "top", // Crop from top to keep the header/hero visible
+    })
+    .webp({
+      quality: 85,
+      effort: 6,
+    });
+
+  const optimizedBuffer = await processedImage.toBuffer();
+  const optimizedMetadata = await sharp(optimizedBuffer).metadata();
+
+  const savings = buffer.length > 0 ? (1 - optimizedBuffer.length / buffer.length) * 100 : 0;
+
+  return {
+    buffer: optimizedBuffer,
+    format: "webp",
+    contentType: "image/webp",
+    width: optimizedMetadata.width || 1200,
+    height: optimizedMetadata.height || 630,
+    originalSize: buffer.length,
+    optimizedSize: optimizedBuffer.length,
+    savings,
+  };
+}
