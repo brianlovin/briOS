@@ -1,30 +1,47 @@
 "use client";
 
-import * as TooltipPrimitive from "@radix-ui/react-tooltip";
+import { Tooltip as BaseUITooltip } from "@base-ui/react/tooltip";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-const TooltipProvider = TooltipPrimitive.Provider;
+const TooltipProvider = BaseUITooltip.Provider;
 
-const Tooltip = TooltipPrimitive.Root;
+const Tooltip = BaseUITooltip.Root;
 
-const TooltipTrigger = TooltipPrimitive.Trigger;
+const TooltipTrigger = BaseUITooltip.Trigger;
+
+const TooltipPortal = BaseUITooltip.Portal;
+
+const TooltipPositioner = BaseUITooltip.Positioner;
+
+interface TooltipContentProps extends React.ComponentPropsWithoutRef<typeof BaseUITooltip.Popup> {
+  sideOffset?: number;
+  side?: "top" | "bottom" | "left" | "right";
+}
 
 const TooltipContent = React.forwardRef<
-  React.ElementRef<typeof TooltipPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>
->(({ className, sideOffset = 4, ...props }, ref) => (
-  <TooltipPrimitive.Content
-    ref={ref}
-    sideOffset={sideOffset}
-    className={cn(
-      "border-secondary bg-primary text-primary animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 overflow-hidden rounded-md border px-3 py-1.5 text-sm shadow-md",
-      className,
-    )}
-    {...props}
-  />
+  React.ElementRef<typeof BaseUITooltip.Popup>,
+  TooltipContentProps
+>(({ className, sideOffset = 4, side = "top", children, ...props }, ref) => (
+  <TooltipPortal>
+    <TooltipPositioner side={side} sideOffset={sideOffset}>
+      <BaseUITooltip.Popup
+        ref={ref}
+        className={cn(
+          "border-secondary bg-primary text-primary z-50 overflow-hidden rounded-md border px-3 py-1.5 text-sm shadow-md",
+          "origin-(--transform-origin) transition-[transform,scale,opacity] duration-150",
+          "data-[starting-style]:scale-95 data-[starting-style]:opacity-0",
+          "data-[ending-style]:scale-95 data-[ending-style]:opacity-0",
+          className,
+        )}
+        {...props}
+      >
+        {children}
+      </BaseUITooltip.Popup>
+    </TooltipPositioner>
+  </TooltipPortal>
 ));
-TooltipContent.displayName = TooltipPrimitive.Content.displayName;
+TooltipContent.displayName = "TooltipContent";
 
-export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger };
+export { Tooltip, TooltipContent, TooltipPortal, TooltipPositioner, TooltipProvider, TooltipTrigger };
