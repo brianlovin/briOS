@@ -54,14 +54,16 @@ export function StackFilters({ isLoading }: StackFiltersProps) {
     router.push(`/stack${query ? `?${query}` : ""}`);
   };
 
-  const handleStatusChange = (value: string) => {
+  const handleStatusChange = (value: string | null) => {
+    if (value === null) return;
     // Update local state immediately for instant UI feedback
     setCurrentStatus(value);
     // Then update URL which triggers data refetch
     updateParam("status", value);
   };
 
-  const handlePlatformChange = (value: string) => {
+  const handlePlatformChange = (value: string | null) => {
+    if (value === null) return;
     // Update local state immediately for instant UI feedback
     setCurrentPlatform(value);
     // Then update URL which triggers data refetch

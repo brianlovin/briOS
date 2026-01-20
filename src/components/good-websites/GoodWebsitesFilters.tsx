@@ -42,7 +42,8 @@ export function GoodWebsitesFilters({ isLoading }: GoodWebsitesFiltersProps) {
     router.push(`/sites${query ? `?${query}` : ""}`);
   };
 
-  const handleTagChange = (value: string) => {
+  const handleTagChange = (value: string | null) => {
+    if (value === null) return;
     // Update local state immediately for instant UI feedback
     setCurrentTag(value);
     // Then update URL which triggers data refetch
