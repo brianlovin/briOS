@@ -119,6 +119,8 @@ export async function getStackDatabaseItems(): Promise<NotionStackItem[]> {
           URL?: { url: string };
           Platforms?: { multi_select: { name: string }[] };
           Status?: { select: { name: string } | null };
+          "Preview Image"?: { url: string };
+          "Preview Status"?: { select: { name: string } | null };
         };
 
         return {
@@ -131,6 +133,13 @@ export async function getStackDatabaseItems(): Promise<NotionStackItem[]> {
           url: properties.URL?.url || undefined,
           platforms: properties.Platforms?.multi_select.map((p) => p.name) || [],
           status: properties.Status?.select?.name || undefined,
+          previewImage: properties["Preview Image"]?.url || undefined,
+          previewStatus: properties["Preview Status"]?.select?.name as
+            | "Queued"
+            | "Processing"
+            | "Done"
+            | "Error"
+            | undefined,
         } as NotionStackItem;
       })
       .filter((item): item is NotionStackItem => item !== null);
@@ -177,6 +186,8 @@ export async function getGoodWebsitesDatabaseItems(): Promise<GoodWebsiteItem[]>
           URL?: { url: string };
           X?: { url: string };
           Tags?: { multi_select: { name: string }[] };
+          "Preview Image"?: { url: string };
+          "Preview Status"?: { select: { name: string } | null };
         };
 
         return {
@@ -186,6 +197,13 @@ export async function getGoodWebsitesDatabaseItems(): Promise<GoodWebsiteItem[]>
           x: properties.X?.url || undefined,
           icon,
           tags: properties.Tags?.multi_select.map((t) => t.name) || [],
+          previewImage: properties["Preview Image"]?.url || undefined,
+          previewStatus: properties["Preview Status"]?.select?.name as
+            | "Queued"
+            | "Processing"
+            | "Done"
+            | "Error"
+            | undefined,
         } as GoodWebsiteItem;
       })
       .filter((item): item is GoodWebsiteItem => item !== null);

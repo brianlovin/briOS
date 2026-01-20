@@ -157,14 +157,11 @@ async function optimizeImageBlock(block: ImageBlock): Promise<{
 
 export async function POST(request: Request) {
   try {
-    // Verify webhook secret if configured
-    // Notion automations should include header: x-webhook-secret: <NOTION_WEBHOOK_VERIFICATION_SECRET>
+    // Verify webhook secret
     const webhookSecret = process.env.NOTION_WEBHOOK_VERIFICATION_SECRET;
-    if (webhookSecret) {
-      const providedSecret = request.headers.get("x-webhook-secret");
-      if (providedSecret !== webhookSecret) {
-        return errorResponse("Unauthorized", 401);
-      }
+    const providedSecret = request.headers.get("x-webhook-secret");
+    if (!webhookSecret || providedSecret !== webhookSecret) {
+      return errorResponse("Unauthorized", 401);
     }
 
     const body = await request.json();

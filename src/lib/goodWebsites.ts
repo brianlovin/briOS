@@ -7,6 +7,8 @@ export type GoodWebsiteItem = {
   x?: string;
   icon?: string;
   tags?: string[];
+  previewImage?: string;
+  previewStatus?: "Queued" | "Processing" | "Done" | "Error";
 };
 
 // Seeded random number generator for consistent randomization within time windows
