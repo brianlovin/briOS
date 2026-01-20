@@ -1,4 +1,3 @@
-import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
 
@@ -48,14 +47,25 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, fullWidth, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button";
+  ({ className, variant, size, fullWidth, asChild = false, children, ...props }, ref) => {
+    const combinedClassName = cn(buttonVariants({ variant, size, fullWidth, className }));
+
+    if (asChild && React.isValidElement(children)) {
+      return React.cloneElement(children as React.ReactElement<{ className?: string; ref?: React.Ref<HTMLButtonElement> }>, {
+        className: cn(combinedClassName, (children as React.ReactElement<{ className?: string }>).props.className),
+        ref,
+        ...props,
+      });
+    }
+
     return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, fullWidth, className }))}
+      <button
+        className={combinedClassName}
         ref={ref}
         {...props}
-      />
+      >
+        {children}
+      </button>
     );
   },
 );
