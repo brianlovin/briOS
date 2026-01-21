@@ -114,3 +114,12 @@ export const SpeakingSchema = z.object({
 });
 
 export type Speaking = z.infer<typeof SpeakingSchema>;
+
+export const TILSchema = z.object({
+  "Generate Short ID": z.any().optional(),
+  Published: z.string().optional(),
+  "Short ID": z.string().optional(),
+  Title: z.string().optional(),
+});
+
+export type TIL = z.infer<typeof TILSchema>;

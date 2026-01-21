@@ -15,6 +15,8 @@ import {
   type NotionListeningHistoryItem,
   type NotionSpeakingItem,
   type NotionStackItem,
+  type NotionTilItem,
+  type NotionTilItemWithContent,
   type ProcessedBlock,
 } from "./types";
 
@@ -644,5 +646,122 @@ export async function getSpeakingItems(): Promise<NotionSpeakingItem[]> {
   } catch (error) {
     console.error("Error fetching speaking items:", error);
     return [];
+  }
+}
+
+// ===== TIL Database =====
+
+export async function getTilDatabaseItems(
+  cursor?: string,
+  pageSize: number = 20,
+): Promise<{ items: NotionTilItem[]; nextCursor: string | null }> {
+  try {
+    const databaseId = process.env.NOTION_TIL_DATABASE_ID || "";
+    const dataSourceId = await getDataSourceId(databaseId);
+    const response = await notion.dataSources.query({
+      data_source_id: dataSourceId,
+      page_size: pageSize,
+      ...(cursor ? { start_cursor: cursor } : {}),
+      filter: {
+        property: "Published",
+        date: {
+          is_not_empty: true,
+        },
+      },
+      sorts: [
+        {
+          property: "Published",
+          direction: "descending",
+        },
+      ],
+    });
+
+    const items = response.results
+      .map((page) => {
+        if (!hasProperties(page)) return null;
+
+        const pageWithProps = page as PageObjectResponse;
+        const properties = pageWithProps.properties as {
+          Title?: { title: { plain_text: string }[] };
+          Published?: { date: { start: string } | null };
+          "Short ID"?: { rich_text: { plain_text: string }[] };
+        };
+
+        return {
+          id: pageWithProps.id,
+          title: properties.Title?.title.map((t) => t.plain_text).join("") || "Untitled",
+          published: properties.Published?.date?.start || pageWithProps.created_time,
+          shortId: properties["Short ID"]?.rich_text[0]?.plain_text || undefined,
+        } as NotionTilItem;
+      })
+      .filter((item): item is NotionTilItem => item !== null);
+
+    return {
+      items,
+      nextCursor: response.has_more ? (response.next_cursor as string) : null,
+    };
+  } catch (error) {
+    console.error("Error fetching TIL items:", error);
+    return { items: [], nextCursor: null };
+  }
+}
+
+export async function getTilItemContent(pageId: string): Promise<NotionTilItemWithContent | null> {
+  try {
+    const page = await notion.pages.retrieve({ page_id: pageId });
+
+    if (!hasProperties(page)) return null;
+
+    const pageWithProps = page as PageObjectResponse;
+    const properties = pageWithProps.properties as {
+      Title?: { title: { plain_text: string }[] };
+      Published?: { date: { start: string } | null };
+      "Short ID"?: { rich_text: { plain_text: string }[] };
+    };
+
+    const item: NotionTilItem = {
+      id: pageWithProps.id,
+      title: properties.Title?.title.map((t) => t.plain_text).join("") || "Untitled",
+      published: properties.Published?.date?.start || pageWithProps.created_time,
+      shortId: properties["Short ID"]?.rich_text[0]?.plain_text || undefined,
+    };
+
+    const blocks = await getAllBlocks(pageId);
+
+    return {
+      ...item,
+      blocks,
+    };
+  } catch (error) {
+    console.error(`Error fetching TIL item content for page ${pageId}:`, error);
+    return null;
+  }
+}
+
+export async function getTilByShortId(shortId: string): Promise<NotionTilItemWithContent | null> {
+  try {
+    const databaseId = process.env.NOTION_TIL_DATABASE_ID || "";
+    const dataSourceId = await getDataSourceId(databaseId);
+    const response = await notion.dataSources.query({
+      data_source_id: dataSourceId,
+      filter: {
+        property: "Short ID",
+        rich_text: {
+          equals: shortId,
+        },
+      },
+    });
+
+    if (response.results.length === 0) {
+      return null;
+    }
+
+    const page = response.results[0];
+    if (!hasProperties(page)) return null;
+
+    return getTilItemContent(page.id);
+  } catch (error) {
+    console.error(`Error fetching TIL item for short ID ${shortId}:`, error);
+    return null;
   }
 }

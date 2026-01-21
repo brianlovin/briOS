@@ -23,6 +23,8 @@ export {
   SpeakingSchema,
   type Stack,
   StackSchema,
+  type TIL,
+  TILSchema,
   type Writing,
   WritingSchema,
 } from "../../../schemas/notionSchemas";
@@ -162,6 +164,18 @@ export type NotionSpeakingItem = {
   title: string;
   date: string;
   href?: string;
+};
+
+// TIL item type
+export type NotionTilItem = {
+  id: string;
+  title: string;
+  published: string;
+  shortId?: string;
+};
+
+export type NotionTilItemWithContent = NotionTilItem & {
+  blocks: ProcessedBlock[];
 };
 
 // Type guard to check if a page has properties
