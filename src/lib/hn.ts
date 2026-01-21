@@ -1,6 +1,7 @@
 import { cache } from "react";
 
 import { externalFetcher } from "@/lib/fetcher";
+import { getCachedPost, getCachedTopIds, setCachedPost, setCachedTopIds } from "@/lib/hn-cache";
 import { HackerNewsComment, HackerNewsPost } from "@/types/hackernews";
 
 const BASE_URL = "https://brianlovin.com";
@@ -15,56 +16,80 @@ const log = (...args: unknown[]) => {
 };
 
 export async function getPostIds(): Promise<number[]> {
+  // Try Redis cache first
+  const cachedIds = await getCachedTopIds();
+  if (cachedIds) {
+    log("[HN] Using cached top IDs");
+    return cachedIds;
+  }
+
   const ids = await externalFetcher<number[]>(`${TOP_BASE_URL}/topstories.json`);
+
+  // Cache the IDs
+  await setCachedTopIds(ids);
+
   return ids;
+}
+
+// Helper to trim comments to reduce payload size
+function trimComments(comment: HackerNewsComment): HackerNewsComment | null {
+  if (!comment) return null;
+
+  if (comment.level > 3) {
+    return null;
+  }
+
+  return {
+    ...comment,
+    comments: comment.comments.slice(0, 8).map(trimComments).filter(Boolean) as HackerNewsComment[],
+  };
+}
+
+// Helper to process raw post data into final format
+function processPost(data: HackerNewsPost, includeComments: boolean): HackerNewsPost {
+  const shortComments = data.comments
+    .slice(0, 12)
+    .map(trimComments)
+    .filter(Boolean) as HackerNewsComment[];
+
+  const cleanUrl = data.domain ? `${data.url}` : `${BASE_URL}/hn/${data.id}`;
+
+  return {
+    ...data,
+    url: cleanUrl,
+    comments: includeComments ? shortComments : [],
+  };
+}
+
+// Fetch post from external API (no caching)
+async function fetchPostFromApi(id: string): Promise<HackerNewsPost | null> {
+  try {
+    const post = await externalFetcher<HackerNewsPost>(`${ITEM_BASE_URL}/item/${id}.json`);
+    return post;
+  } catch {
+    return null;
+  }
 }
 
 // Wrapped with React cache() for request-level deduplication during SSR
 export const getPostById = cache(
   async (id: string, includeComments = false): Promise<HackerNewsPost | null> => {
-    async function getPost(): Promise<HackerNewsPost | null> {
-      try {
-        const post = await externalFetcher<HackerNewsPost>(`${ITEM_BASE_URL}/item/${id}.json`);
-        return post;
-      } catch {
-        return null;
-      }
+    // Try Redis cache first
+    const cached = await getCachedPost(id);
+    if (cached) {
+      log(`[HN] Cache hit for post ${id}`);
+      return processPost(cached, includeComments);
     }
 
-    const data = await getPost();
+    log(`[HN] Cache miss for post ${id}`);
+    const data = await fetchPostFromApi(id);
 
     if (!data) return null;
 
-    function trimComments(comment: HackerNewsComment): HackerNewsComment | null {
-      if (!comment) return null;
+    // Cache the raw post data (with full comments for reuse)
+    await setCachedPost(id, data);
 
-      if (comment.level > 3) {
-        return null;
-      }
-
-      return {
-        ...comment,
-        comments: comment.comments
-          .slice(0, 8)
-          .map(trimComments)
-          .filter(Boolean) as HackerNewsComment[],
-      };
-    }
-
-    const shortComments = data.comments
-      .slice(0, 12)
-      .map(trimComments)
-      .filter(Boolean) as HackerNewsComment[];
-
-    const cleanUrl = data.domain ? `${data.url}` : `${BASE_URL}/hn/${data.id}`;
-
-    const post: HackerNewsPost = {
-      ...data,
-      url: cleanUrl,
-      comments: includeComments ? shortComments : [],
-    };
-
-    return post;
+    return processPost(data, includeComments);
   },
 );
 

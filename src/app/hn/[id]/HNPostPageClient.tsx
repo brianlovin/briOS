@@ -16,7 +16,7 @@ import { IconButton } from "@/components/ui/IconButton";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { useHNPost } from "@/lib/hooks/useHn";
 import { stripHtmlTags } from "@/lib/utils";
-import { HackerNewsComment } from "@/types/hackernews";
+import { HackerNewsComment, HackerNewsPost } from "@/types/hackernews";
 
 import { HNDigestCard } from "../HNDigestCard";
 import { useHNPostsContext } from "../HNPostsContext";
@@ -29,15 +29,19 @@ function sanitizeHtml(html: string): string {
   });
 }
 
-export default function HNPostPageClient() {
+interface HNPostPageClientProps {
+  initialPost?: HackerNewsPost | null;
+}
+
+export default function HNPostPageClient({ initialPost }: HNPostPageClientProps) {
   const { id } = useParams();
   const { posts } = useHNPostsContext();
   const isSubscribed = useAtomValue(hnSubscribedAtom);
 
-  // Find current post from the list to use as fallback
+  // Use server-provided initialPost first, then fall back to context posts
   const fallbackPost = useMemo(
-    () => posts?.find((p) => p?.id.toString() === id) ?? null,
-    [posts, id],
+    () => initialPost ?? posts?.find((p) => p?.id.toString() === id) ?? null,
+    [initialPost, posts, id],
   );
 
   const { post, isLoading, isError } = useHNPost(id as string, fallbackPost);
