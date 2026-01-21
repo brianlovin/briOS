@@ -21,6 +21,13 @@
       "type": "url",
       "url": {}
     },
+    "Capture screenshot": {
+      "id": "OE%60l",
+      "name": "Capture screenshot",
+      "description": null,
+      "type": "button",
+      "button": {}
+    },
     "Preview Image": {
       "id": "VCxA",
       "name": "Preview Image",

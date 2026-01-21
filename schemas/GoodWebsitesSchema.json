@@ -48,20 +48,6 @@
       "type": "url",
       "url": {}
     },
-    "Capture site preview": {
-      "id": "SK%40V",
-      "name": "Capture site preview",
-      "description": null,
-      "type": "button",
-      "button": {}
-    },
-    "NEW Process": {
-      "id": "TIuf",
-      "name": "NEW Process",
-      "description": null,
-      "type": "button",
-      "button": {}
-    },
     "Tags": {
       "id": "%5CMRu",
       "name": "Tags",

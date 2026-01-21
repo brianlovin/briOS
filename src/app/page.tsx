@@ -95,6 +95,9 @@ export default async function Home() {
                       </ListItem>
                     );
                   })}
+                <ListItem href="/writing">
+                  <ListItemLabel className="text-tertiary">View all</ListItemLabel>
+                </ListItem>
               </List>
             </Section>
           </div>
