@@ -8,13 +8,13 @@ let redis: Redis | null = null;
 function getRedis(): Redis | null {
   if (redis) return redis;
 
-  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
+  if (!process.env.UPSTASH_HN_CACHE_REST_URL || !process.env.UPSTASH_HN_CACHE_REST_TOKEN) {
     return null;
   }
 
   redis = new Redis({
-    url: process.env.UPSTASH_REDIS_REST_URL,
-    token: process.env.UPSTASH_REDIS_REST_TOKEN,
+    url: process.env.UPSTASH_HN_CACHE_REST_URL,
+    token: process.env.UPSTASH_HN_CACHE_REST_TOKEN,
   });
 
   return redis;
@@ -74,15 +74,15 @@ export async function getCachedTopIds(): Promise<number[] | null> {
 }
 
 /**
- * Cache top post IDs (shorter TTL since this changes more frequently)
+ * Cache top post IDs
  */
 export async function setCachedTopIds(ids: number[]): Promise<void> {
   const client = getRedis();
   if (!client) return;
 
   try {
-    // Cache for 10 minutes since top stories change frequently
-    await client.set(HN_TOP_IDS_KEY, ids, { ex: 600 });
+    // Cache for 1 hour to match page revalidate and post TTL
+    await client.set(HN_TOP_IDS_KEY, ids, { ex: CACHE_TTL });
   } catch (error) {
     console.error("[HN Cache] Error writing top IDs to cache:", error);
   }
