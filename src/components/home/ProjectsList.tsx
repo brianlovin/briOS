@@ -64,7 +64,7 @@ const projects = [
   {
     name: "How to Computer Better",
     href: "https://brianlovin.notion.site/how-to-computer-better",
-    description: "Get good at computering",
+    description: "A living list of tips, shortcuts, and so on",
     external: true,
   },
   {
