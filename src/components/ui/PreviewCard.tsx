@@ -145,7 +145,7 @@ export function PreviewCardProvider({ children }: PreviewCardProviderProps) {
               side="bottom"
               sideOffset={8}
               collisionPadding={20}
-              collisionAvoidance={{ side: "shift", align: "shift" }}
+              collisionAvoidance={{ side: "flip", align: "shift" }}
               className="pointer-events-none z-50"
             >
               <BaseUITooltip.Tooltip.Popup
