@@ -1,11 +1,59 @@
 {
   "props": {
+    "Preview Status": {
+      "id": "%3A%3DFa",
+      "name": "Preview Status",
+      "description": null,
+      "type": "select",
+      "select": {
+        "options": [
+          {
+            "id": "7c7deb05-c598-437d-84a9-6993b37ad583",
+            "name": "Queued",
+            "color": "yellow",
+            "description": null
+          },
+          {
+            "id": "e4e84e67-b9f4-4265-98dd-328d3b47d7a2",
+            "name": "Processing",
+            "color": "blue",
+            "description": null
+          },
+          {
+            "id": "2a632a56-6392-4b34-abd3-358ac4fb98c3",
+            "name": "Done",
+            "color": "green",
+            "description": null
+          },
+          {
+            "id": "7e02210c-1a4d-4713-9b87-099e5fe7a321",
+            "name": "Error",
+            "color": "red",
+            "description": null
+          }
+        ]
+      }
+    },
+    "Preview Error": {
+      "id": "%3E%60%3BT",
+      "name": "Preview Error",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
     "X": {
       "id": "Rw%5Ev",
       "name": "X",
       "description": null,
       "type": "url",
       "url": {}
+    },
+    "Capture site preview": {
+      "id": "SK%40V",
+      "name": "Capture site preview",
+      "description": null,
+      "type": "button",
+      "button": {}
     },
     "NEW Process": {
       "id": "TIuf",
@@ -42,6 +90,20 @@
       "description": null,
       "type": "url",
       "url": {}
+    },
+    "Preview Image": {
+      "id": "o%5Csj",
+      "name": "Preview Image",
+      "description": null,
+      "type": "url",
+      "url": {}
+    },
+    "Preview Updated": {
+      "id": "p%5CDY",
+      "name": "Preview Updated",
+      "description": null,
+      "type": "date",
+      "date": {}
     },
     "Process favicon": {
       "id": "v%5E%7B%3F",

@@ -9,7 +9,9 @@ const HoverCard = BaseUIPreviewCard.Root;
 
 const HoverCardTrigger = BaseUIPreviewCard.Trigger;
 
-interface HoverCardContentProps extends React.ComponentPropsWithoutRef<typeof BaseUIPreviewCard.Popup> {
+interface HoverCardContentProps extends React.ComponentPropsWithoutRef<
+  typeof BaseUIPreviewCard.Popup
+> {
   align?: "start" | "center" | "end";
   sideOffset?: number;
 }

@@ -21,6 +21,13 @@
       "type": "url",
       "url": {}
     },
+    "Preview Image": {
+      "id": "VCxA",
+      "name": "Preview Image",
+      "description": null,
+      "type": "url",
+      "url": {}
+    },
     "URL": {
       "id": "YOu%3A",
       "name": "URL",
@@ -68,6 +75,20 @@
         ]
       }
     },
+    "Preview Updated": {
+      "id": "%5CfD%3C",
+      "name": "Preview Updated",
+      "description": null,
+      "type": "date",
+      "date": {}
+    },
+    "Preview Error": {
+      "id": "j%3COP",
+      "name": "Preview Error",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
     "Process icon": {
       "id": "nYqJ",
       "name": "Process icon",
@@ -92,6 +113,40 @@
             "id": "cI\\O",
             "name": "Active",
             "color": "green",
+            "description": null
+          }
+        ]
+      }
+    },
+    "Preview Status": {
+      "id": "~%3E%7Cb",
+      "name": "Preview Status",
+      "description": null,
+      "type": "select",
+      "select": {
+        "options": [
+          {
+            "id": "071f605f-2ac9-4361-8823-4f8d9b0312dd",
+            "name": "Queued",
+            "color": "yellow",
+            "description": null
+          },
+          {
+            "id": "ec365b04-3c32-4bdb-b471-4a3c8a4165be",
+            "name": "Processing",
+            "color": "blue",
+            "description": null
+          },
+          {
+            "id": "eb8dcdcd-882b-4a69-b551-4ce5ccff4396",
+            "name": "Done",
+            "color": "green",
+            "description": null
+          },
+          {
+            "id": "6abadbe2-b813-439e-aa43-1e5d43687945",
+            "name": "Error",
+            "color": "red",
             "description": null
           }
         ]

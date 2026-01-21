@@ -1,3 +1,4 @@
+import { mergeProps } from "@base-ui/react/merge-props";
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
 
@@ -51,19 +52,20 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const combinedClassName = cn(buttonVariants({ variant, size, fullWidth, className }));
 
     if (asChild && React.isValidElement(children)) {
-      return React.cloneElement(children as React.ReactElement<{ className?: string; ref?: React.Ref<HTMLButtonElement> }>, {
-        className: cn(combinedClassName, (children as React.ReactElement<{ className?: string }>).props.className),
-        ref,
+      const childProps = (children as React.ReactElement<Record<string, unknown>>).props;
+      const mergedProps = mergeProps(childProps, {
+        className: cn(combinedClassName, childProps.className as string | undefined),
         ...props,
+      });
+      // eslint-disable-next-line react-hooks/refs -- forwarding ref object, not reading .current
+      return React.cloneElement(children as React.ReactElement<Record<string, unknown>>, {
+        ...mergedProps,
+        ref,
       });
     }
 
     return (
-      <button
-        className={combinedClassName}
-        ref={ref}
-        {...props}
-      >
+      <button className={combinedClassName} ref={ref} {...props}>
         {children}
       </button>
     );

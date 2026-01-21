@@ -154,7 +154,7 @@ function AppIcon({ mouseLeft, item, currentSlug }: AppIconProps) {
         </Tooltip.Trigger>
         <Tooltip.Portal>
           <Tooltip.Positioner side="bottom" sideOffset={20}>
-            <Tooltip.Popup className="bg-elevated dark:shadow-contrast text-primary border-secondary z-50 rounded-lg border px-2 py-1.5 text-sm font-medium shadow-sm origin-(--transform-origin) transition-[transform,scale,opacity] duration-150 data-[starting-style]:scale-95 data-[starting-style]:opacity-0 data-[ending-style]:scale-95 data-[ending-style]:opacity-0">
+            <Tooltip.Popup className="bg-elevated dark:shadow-contrast text-primary border-secondary z-50 origin-(--transform-origin) rounded-lg border px-2 py-1.5 text-sm font-medium shadow-sm transition-[transform,scale,opacity] duration-150 data-[ending-style]:scale-95 data-[ending-style]:opacity-0 data-[starting-style]:scale-95 data-[starting-style]:opacity-0">
               {item.title}
             </Tooltip.Popup>
           </Tooltip.Positioner>

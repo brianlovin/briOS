@@ -17,7 +17,7 @@ export const DialogContent = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof BaseUIDialog.Popup>
 >(({ className, children, ...props }, ref) => (
   <DialogPortal>
-    <DialogBackdrop className="fixed inset-0 z-50 bg-black/50 transition-opacity duration-150 data-[starting-style]:opacity-0 data-[ending-style]:opacity-0" />
+    <DialogBackdrop className="fixed inset-0 z-50 bg-black/50 transition-opacity duration-150 data-[ending-style]:opacity-0 data-[starting-style]:opacity-0" />
     <BaseUIDialog.Popup
       ref={ref}
       className={cn(

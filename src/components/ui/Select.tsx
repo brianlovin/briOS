@@ -62,32 +62,26 @@ const SelectScrollDownButton = React.forwardRef<
 ));
 SelectScrollDownButton.displayName = "SelectScrollDownButton";
 
-interface SelectContentProps extends React.ComponentPropsWithoutRef<typeof BaseUISelect.Popup> {
-  position?: "popper" | "item-aligned";
-}
-
 const SelectContent = React.forwardRef<
   React.ElementRef<typeof BaseUISelect.Popup>,
-  SelectContentProps
->(({ className, children, position = "popper", ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof BaseUISelect.Popup>
+>(({ className, children, ...props }, ref) => (
   <BaseUISelect.Portal>
-    <BaseUISelect.Positioner sideOffset={4}>
+    <BaseUISelect.Positioner sideOffset={4} className="z-[100]">
       <BaseUISelect.Popup
         ref={ref}
         className={cn(
-          "dark:shadow-contrast bg-primary text-primary relative z-50 max-h-96 min-w-32 overflow-hidden rounded-xl border shadow-md dark:bg-neutral-800",
+          "dark:shadow-contrast bg-primary text-primary relative max-h-96 min-w-32 overflow-hidden rounded-xl border shadow-md dark:bg-neutral-800",
           "origin-(--transform-origin) transition-[transform,scale,opacity] duration-150",
           "data-[starting-style]:scale-95 data-[starting-style]:opacity-0",
           "data-[ending-style]:scale-95 data-[ending-style]:opacity-0",
-          position === "popper" && "data-[side=bottom]:translate-y-1",
+          "data-[side=bottom]:translate-y-1",
           className,
         )}
         {...props}
       >
         <SelectScrollUpButton />
-        <BaseUISelect.List className="p-1 outline-none">
-          {children}
-        </BaseUISelect.List>
+        <BaseUISelect.List className="p-1 outline-none">{children}</BaseUISelect.List>
         <SelectScrollDownButton />
       </BaseUISelect.Popup>
     </BaseUISelect.Positioner>
@@ -131,10 +125,7 @@ const SelectItem = React.forwardRef<
 SelectItem.displayName = "SelectItem";
 
 const SelectSeparator = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={cn("bg-secondary -mx-1 my-1 h-px", className)}
-    {...props}
-  />
+  <div className={cn("bg-secondary -mx-1 my-1 h-px", className)} {...props} />
 );
 SelectSeparator.displayName = "SelectSeparator";
 

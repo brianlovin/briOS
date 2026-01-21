@@ -3,13 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/Select";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/Select";
 
 import { LoadingSpinner } from "../ui";
 
@@ -70,12 +64,14 @@ export function StackFilters({ isLoading }: StackFiltersProps) {
     updateParam("platform", value);
   };
 
+  const currentStatusLabel = STATUS_OPTIONS.find((opt) => opt.value === currentStatus)?.label;
+  const currentPlatformLabel =
+    currentPlatform === "all-platforms" ? "All Platforms" : currentPlatform;
+
   return (
     <div className="flex items-center gap-2 md:flex-row-reverse">
       <Select value={currentStatus} onValueChange={handleStatusChange}>
-        <SelectTrigger>
-          <SelectValue />
-        </SelectTrigger>
+        <SelectTrigger>{currentStatusLabel}</SelectTrigger>
         <SelectContent>
           {STATUS_OPTIONS.map((opt) => (
             <SelectItem key={opt.value} value={opt.value}>
@@ -86,9 +82,7 @@ export function StackFilters({ isLoading }: StackFiltersProps) {
       </Select>
 
       <Select value={currentPlatform} onValueChange={handlePlatformChange}>
-        <SelectTrigger>
-          <SelectValue placeholder="All Platforms" />
-        </SelectTrigger>
+        <SelectTrigger>{currentPlatformLabel}</SelectTrigger>
         <SelectContent>
           <SelectItem value="all-platforms">All Platforms</SelectItem>
           {PLATFORMS.map((p) => (
