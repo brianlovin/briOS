@@ -13,8 +13,50 @@ function isValidHttpUrl(iconUrl: string): boolean {
 /**
  * Check if a URL is a base64 data URL
  */
-function isDataUrl(iconUrl: string): boolean {
+export function isDataUrl(iconUrl: string): boolean {
   return iconUrl.startsWith("data:");
+}
+
+/**
+ * Parse a data URL and extract the buffer and content type
+ * Returns null if the data URL is invalid or not base64 encoded
+ */
+export function parseDataUrl(dataUrl: string): { buffer: Buffer; contentType: string } | null {
+  if (!isDataUrl(dataUrl)) {
+    return null;
+  }
+
+  // Data URL format: data:[<mediatype>][;base64],<data>
+  const match = dataUrl.match(/^data:([^;,]+)?(?:;base64)?,(.*)$/);
+  if (!match) {
+    return null;
+  }
+
+  const contentType = match[1] || "application/octet-stream";
+  const data = match[2];
+
+  if (!data) {
+    return null;
+  }
+
+  // Check if it's base64 encoded (most common case)
+  if (dataUrl.includes(";base64,")) {
+    try {
+      const buffer = Buffer.from(data, "base64");
+      return { buffer, contentType };
+    } catch {
+      return null;
+    }
+  }
+
+  // URL-encoded data (less common)
+  try {
+    const decoded = decodeURIComponent(data);
+    const buffer = Buffer.from(decoded);
+    return { buffer, contentType };
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -128,19 +170,20 @@ async function fetchBasicMetadata(url: string): Promise<{
       return undefined;
     };
 
-    // Try to extract high-quality icons in order of preference, filtering out data URLs
+    // Try to extract high-quality icons in order of preference
+    // Data URLs (base64 encoded) are now supported
     const candidateIcons: string[] = [];
 
     // 1. Apple touch icon (usually highest quality, 180x180 or similar)
     const appleIcon =
       extractLinkHref("apple-touch-icon") || extractLinkHref("apple-touch-icon-precomposed");
-    if (appleIcon && !appleIcon.startsWith("data:")) candidateIcons.push(appleIcon);
+    if (appleIcon) candidateIcons.push(appleIcon);
 
     // 2. High-res icon with sizes attribute
     const highResIcon = headContent.match(
       /<link[^>]*\s+rel=["']icon["'][^>]*\s+sizes=["'](?:192x192|256x256|512x512)[^>]*\s+href=["']([^"']+)["']/i,
     );
-    if (highResIcon && highResIcon[1] && !highResIcon[1].startsWith("data:")) {
+    if (highResIcon && highResIcon[1]) {
       candidateIcons.push(highResIcon[1]);
     }
 
@@ -152,7 +195,7 @@ async function fetchBasicMetadata(url: string): Promise<{
 
     for (const pattern of patterns) {
       const match = headContent.match(pattern);
-      if (match && match[1] && !match[1].startsWith("data:")) {
+      if (match && match[1]) {
         candidateIcons.push(match[1]);
         break;
       }
@@ -161,10 +204,10 @@ async function fetchBasicMetadata(url: string): Promise<{
     // 4. Any icon or shortcut icon
     const standardIcon =
       extractLinkHref("icon") || extractLinkHref("shortcut icon") || extractLinkHref("shortcut");
-    if (standardIcon && !standardIcon.startsWith("data:")) candidateIcons.push(standardIcon);
+    if (standardIcon) candidateIcons.push(standardIcon);
 
     // 5. OG image as last resort (sometimes sites use their logo as og:image)
-    if (ogImage && ogImage.includes("logo") && !ogImage.startsWith("data:")) {
+    if (ogImage && ogImage.includes("logo")) {
       candidateIcons.push(ogImage);
     }
 
@@ -227,10 +270,9 @@ export async function getBestFaviconUrl(url: string): Promise<string> {
   try {
     const metadata = await fetchBasicMetadata(url);
     if (metadata.iconUrl) {
-      // Skip data URLs (base64 encoded images) as they can be very large
+      // Data URLs (base64 encoded) can be returned directly - no verification needed
       if (isDataUrl(metadata.iconUrl)) {
-        const domain = new URL(url).hostname;
-        return `https://www.google.com/s2/favicons?sz=128&domain=${domain}`;
+        return metadata.iconUrl;
       }
 
       // Only use HTTP/HTTPS URLs, and verify they're accessible
