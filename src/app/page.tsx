@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 
 import { ProjectsList } from "@/components/home/ProjectsList";
 import { GitHubIcon, XIcon, YouTubeIcon } from "@/components/icons/SocialIcons";
@@ -81,7 +82,9 @@ export default async function Home() {
             </Section>
 
             <Section>
-              <SectionHeading>Recent writing</SectionHeading>
+              <Link href="/writing">
+                <SectionHeading>Writing</SectionHeading>
+              </Link>
               <List>
                 {recentPosts
                   .filter((post) => post.shortId)
@@ -96,7 +99,7 @@ export default async function Home() {
                     );
                   })}
                 <ListItem href="/writing">
-                  <ListItemLabel className="text-tertiary">View all</ListItemLabel>
+                  <ListItemLabel className="text-quaternary">View all</ListItemLabel>
                 </ListItem>
               </List>
             </Section>
