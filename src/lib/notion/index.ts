@@ -17,6 +17,8 @@ export type {
   NotionItem,
   NotionListeningHistoryItem,
   NotionStackItem,
+  NotionTilItem,
+  NotionTilItemWithContent,
   PageObjectResponse,
   PageResponse,
   PartialDatabaseObjectResponse,
@@ -26,6 +28,7 @@ export type {
   RichTextContent,
   RichTextItemResponse,
   Stack,
+  TIL,
   Writing,
 } from "./types";
 
@@ -35,6 +38,7 @@ export {
   DesignDetailsEpisodesSchema,
   MusicSchema,
   StackSchema,
+  TILSchema,
   WritingSchema,
 } from "./types";
 
@@ -59,6 +63,10 @@ export {
   getListeningHistoryDatabaseItems,
   // Stack
   getStackDatabaseItems,
+  // TIL
+  getTilByShortId,
+  getTilDatabaseItems,
+  getTilItemContent,
   // Writing
   getWritingDatabaseItems,
   getWritingPostByShortId,

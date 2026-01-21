@@ -38,6 +38,12 @@ const projects = [
     external: false,
   },
   {
+    name: "TIL",
+    href: "/til",
+    description: "Today I learned",
+    external: false,
+  },
+  {
     name: "Listening",
     href: "/listening",
     description: "What I'm listening to",

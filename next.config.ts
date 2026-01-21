@@ -10,6 +10,11 @@ const nextConfig: NextConfig = {
         destination: "/writing/rss.xml",
         permanent: true,
       },
+      {
+        source: "/til/:path(rss|RSS|Rss|feed|Feed)",
+        destination: "/til/rss.xml",
+        permanent: true,
+      },
     ];
   },
   devIndicators: false,

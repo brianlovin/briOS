@@ -7,6 +7,7 @@ import { DoubleChatBubble } from "@/components/icons/DoubleChatBubble";
 import { FileText2 } from "@/components/icons/FileText2";
 import { Headphones3 } from "@/components/icons/Headphones3";
 import { Home } from "@/components/icons/Home";
+import { LightBulb } from "@/components/icons/LightBulb";
 import { Person } from "@/components/icons/Person";
 import { Triangle } from "@/components/icons/Triangle";
 import { IconProps } from "@/components/icons/types";
@@ -86,7 +87,15 @@ export const navigationItems: NavigationItem[] = [
     isActive: (pathname) => pathname.startsWith("/ama"),
     section: "projects",
   },
-
+  {
+    id: "til",
+    label: "TIL",
+    href: "/til",
+    icon: LightBulb,
+    keywords: ["til", "today i learned", "notes", "learnings"],
+    isActive: (pathname) => pathname.startsWith("/til"),
+    section: "projects",
+  },
   {
     id: "music",
     label: "Listening",
