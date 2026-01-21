@@ -1,6 +1,5 @@
 "use client";
 
-import DOMPurify from "dompurify";
 import { useAtomValue } from "jotai";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -16,28 +15,44 @@ import { IconButton } from "@/components/ui/IconButton";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { useHNPost } from "@/lib/hooks/useHn";
 import { stripHtmlTags } from "@/lib/utils";
-import { HackerNewsComment } from "@/types/hackernews";
+import { HackerNewsComment, HackerNewsPost } from "@/types/hackernews";
 
 import { HNDigestCard } from "../HNDigestCard";
 import { useHNPostsContext } from "../HNPostsContext";
 
+// Lazily initialize DOMPurify to avoid SSR issues
+let DOMPurify: typeof import("dompurify").default | null = null;
+
+function getDOMPurify() {
+  if (typeof window !== "undefined" && !DOMPurify) {
+    DOMPurify = require("dompurify").default;
+  }
+  return DOMPurify;
+}
+
 // Sanitize HTML content from external sources (Hacker News)
 function sanitizeHtml(html: string): string {
-  return DOMPurify.sanitize(html, {
+  const purify = getDOMPurify();
+  if (!purify) return html; // SSR fallback - will be sanitized on hydration
+  return purify.sanitize(html, {
     ALLOWED_TAGS: ["p", "a", "code", "pre", "em", "strong", "i", "b", "br"],
     ALLOWED_ATTR: ["href", "rel", "target"],
   });
 }
 
-export default function HNPostPageClient() {
+interface HNPostPageClientProps {
+  initialPost?: HackerNewsPost | null;
+}
+
+export default function HNPostPageClient({ initialPost }: HNPostPageClientProps) {
   const { id } = useParams();
   const { posts } = useHNPostsContext();
   const isSubscribed = useAtomValue(hnSubscribedAtom);
 
-  // Find current post from the list to use as fallback
+  // Use server-provided initialPost first, then fall back to context posts
   const fallbackPost = useMemo(
-    () => posts?.find((p) => p?.id.toString() === id) ?? null,
-    [posts, id],
+    () => initialPost ?? posts?.find((p) => p?.id.toString() === id) ?? null,
+    [initialPost, posts, id],
   );
 
   const { post, isLoading, isError } = useHNPost(id as string, fallbackPost);
