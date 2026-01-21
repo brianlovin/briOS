@@ -1,6 +1,5 @@
 "use client";
 
-import DOMPurify from "dompurify";
 import { useAtomValue } from "jotai";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -21,9 +20,21 @@ import { HackerNewsComment, HackerNewsPost } from "@/types/hackernews";
 import { HNDigestCard } from "../HNDigestCard";
 import { useHNPostsContext } from "../HNPostsContext";
 
+// Lazily initialize DOMPurify to avoid SSR issues
+let DOMPurify: typeof import("dompurify").default | null = null;
+
+function getDOMPurify() {
+  if (typeof window !== "undefined" && !DOMPurify) {
+    DOMPurify = require("dompurify").default;
+  }
+  return DOMPurify;
+}
+
 // Sanitize HTML content from external sources (Hacker News)
 function sanitizeHtml(html: string): string {
-  return DOMPurify.sanitize(html, {
+  const purify = getDOMPurify();
+  if (!purify) return html; // SSR fallback - will be sanitized on hydration
+  return purify.sanitize(html, {
     ALLOWED_TAGS: ["p", "a", "code", "pre", "em", "strong", "i", "b", "br"],
     ALLOWED_ATTR: ["href", "rel", "target"],
   });
