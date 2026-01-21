@@ -3,6 +3,15 @@ import path from "path";
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ["@sparticuz/chromium"],
+  async redirects() {
+    return [
+      {
+        source: "/writing/:path(rss|RSS|Rss|feed|Feed)",
+        destination: "/writing/rss.xml",
+        permanent: true,
+      },
+    ];
+  },
   devIndicators: false,
   turbopack: {
     root: path.resolve(__dirname),
