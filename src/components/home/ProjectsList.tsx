@@ -52,7 +52,7 @@ const projects = [
   {
     name: "Staff Design",
     href: "https://staff.design",
-    description: "Navigating the IC career path",
+    description: "Interview series about the IC career path",
     external: true,
   },
   {
