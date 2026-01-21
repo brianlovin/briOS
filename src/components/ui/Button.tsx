@@ -1,4 +1,4 @@
-import { Slot } from "@radix-ui/react-slot";
+import { mergeProps } from "@base-ui/react/merge-props";
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
 
@@ -48,14 +48,26 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, fullWidth, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button";
+  ({ className, variant, size, fullWidth, asChild = false, children, ...props }, ref) => {
+    const combinedClassName = cn(buttonVariants({ variant, size, fullWidth, className }));
+
+    if (asChild && React.isValidElement(children)) {
+      const childProps = (children as React.ReactElement<Record<string, unknown>>).props;
+      const mergedProps = mergeProps(childProps, {
+        className: cn(combinedClassName, childProps.className as string | undefined),
+        ...props,
+      });
+      // eslint-disable-next-line react-hooks/refs -- forwarding ref object, not reading .current
+      return React.cloneElement(children as React.ReactElement<Record<string, unknown>>, {
+        ...mergedProps,
+        ref,
+      });
+    }
+
     return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, fullWidth, className }))}
-        ref={ref}
-        {...props}
-      />
+      <button className={combinedClassName} ref={ref} {...props}>
+        {children}
+      </button>
     );
   },
 );

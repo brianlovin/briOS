@@ -1,29 +1,41 @@
 "use client";
 
-import * as HoverCardPrimitive from "@radix-ui/react-hover-card";
+import { PreviewCard as BaseUIPreviewCard } from "@base-ui/react/preview-card";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-const HoverCard = HoverCardPrimitive.Root;
+const HoverCard = BaseUIPreviewCard.Root;
 
-const HoverCardTrigger = HoverCardPrimitive.Trigger;
+const HoverCardTrigger = BaseUIPreviewCard.Trigger;
+
+interface HoverCardContentProps extends React.ComponentPropsWithoutRef<
+  typeof BaseUIPreviewCard.Popup
+> {
+  align?: "start" | "center" | "end";
+  sideOffset?: number;
+}
 
 const HoverCardContent = React.forwardRef<
-  React.ElementRef<typeof HoverCardPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof HoverCardPrimitive.Content>
+  React.ElementRef<typeof BaseUIPreviewCard.Popup>,
+  HoverCardContentProps
 >(({ className, align = "center", sideOffset = 4, ...props }, ref) => (
-  <HoverCardPrimitive.Content
-    ref={ref}
-    align={align}
-    sideOffset={sideOffset}
-    className={cn(
-      "border-secondary bg-primary text-primary data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 w-64 rounded-md border p-4 shadow-md outline-none",
-      className,
-    )}
-    {...props}
-  />
+  <BaseUIPreviewCard.Portal>
+    <BaseUIPreviewCard.Positioner align={align} sideOffset={sideOffset}>
+      <BaseUIPreviewCard.Popup
+        ref={ref}
+        className={cn(
+          "border-secondary bg-primary text-primary z-50 w-64 rounded-md border p-4 shadow-md outline-none",
+          "origin-(--transform-origin) transition-[transform,scale,opacity] duration-150",
+          "data-[starting-style]:scale-95 data-[starting-style]:opacity-0",
+          "data-[ending-style]:scale-95 data-[ending-style]:opacity-0",
+          className,
+        )}
+        {...props}
+      />
+    </BaseUIPreviewCard.Positioner>
+  </BaseUIPreviewCard.Portal>
 ));
-HoverCardContent.displayName = HoverCardPrimitive.Content.displayName;
+HoverCardContent.displayName = "HoverCardContent";
 
 export { HoverCard, HoverCardContent, HoverCardTrigger };

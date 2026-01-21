@@ -7,10 +7,14 @@ export const StackSchema = z.object({
   Slug: z.string().optional(),
   Description: z.string().optional(),
   Image: z.string().optional(),
+  "Preview Image": z.string().optional(),
   URL: z.string().optional(),
   Platforms: z.array(z.enum(["Windows", "Web", "Physical", "macOS", "iOS"])).optional(),
+  "Preview Updated": z.string().optional(),
+  "Preview Error": z.string().optional(),
   "Process icon": z.any().optional(),
   Status: z.enum(["Inactive", "Active"]).optional(),
+  "Preview Status": z.enum(["Queued", "Processing", "Done", "Error"]).optional(),
   Name: z.string().optional(),
 });
 
@@ -89,10 +93,15 @@ export const MusicSchema = z.object({
 export type Music = z.infer<typeof MusicSchema>;
 
 export const GoodWebsitesSchema = z.object({
+  "Preview Status": z.enum(["Queued", "Processing", "Done", "Error"]).optional(),
+  "Preview Error": z.string().optional(),
   X: z.string().optional(),
+  "Capture site preview": z.any().optional(),
   "NEW Process": z.any().optional(),
   Tags: z.array(z.enum(["Personal site", "Company"])).optional(),
   URL: z.string().optional(),
+  "Preview Image": z.string().optional(),
+  "Preview Updated": z.string().optional(),
   "Process favicon": z.any().optional(),
   Name: z.string().optional(),
 });

@@ -3,13 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/Select";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/Select";
 
 import { LoadingSpinner } from "../ui";
 
@@ -42,19 +36,20 @@ export function GoodWebsitesFilters({ isLoading }: GoodWebsitesFiltersProps) {
     router.push(`/sites${query ? `?${query}` : ""}`);
   };
 
-  const handleTagChange = (value: string) => {
+  const handleTagChange = (value: string | null) => {
+    if (value === null) return;
     // Update local state immediately for instant UI feedback
     setCurrentTag(value);
     // Then update URL which triggers data refetch
     updateParam("tag", value);
   };
 
+  const currentTagLabel = currentTag === "all" ? "All" : currentTag;
+
   return (
     <div className="flex items-center gap-2 md:flex-row-reverse">
       <Select value={currentTag} onValueChange={handleTagChange}>
-        <SelectTrigger>
-          <SelectValue placeholder="All" />
-        </SelectTrigger>
+        <SelectTrigger>{currentTagLabel}</SelectTrigger>
         <SelectContent>
           <SelectItem value="all">All</SelectItem>
           {TAGS.map((tag) => (

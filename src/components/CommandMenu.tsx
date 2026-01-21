@@ -1,6 +1,6 @@
 "use client";
 
-import * as Dialog from "@radix-ui/react-dialog";
+import { Dialog } from "@base-ui/react/dialog";
 import { Command } from "cmdk";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -65,8 +65,8 @@ export function CommandMenu() {
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-white/80 dark:bg-black/80" />
-        <Dialog.Content className="fixed top-16 left-1/2 z-50 w-full max-w-xl -translate-x-1/2 transform">
+        <Dialog.Backdrop className="fixed inset-0 z-50 bg-white/80 transition-opacity duration-150 data-[ending-style]:opacity-0 data-[starting-style]:opacity-0 dark:bg-black/80" />
+        <Dialog.Popup className="fixed top-16 left-1/2 z-50 w-full max-w-xl -translate-x-1/2 transform transition-[transform,opacity] duration-150 data-[ending-style]:scale-95 data-[ending-style]:opacity-0 data-[starting-style]:scale-95 data-[starting-style]:opacity-0">
           <Dialog.Title className="sr-only">Command menu</Dialog.Title>
           <div className="dark:shadow-contrast bg-elevated relative w-full max-w-lg rounded-xl border shadow-md dark:border-0">
             <Command value={value} onValueChange={(v: string) => setValue(v)} className="w-full">
@@ -99,7 +99,7 @@ export function CommandMenu() {
               </Command.List>
             </Command>
           </div>
-        </Dialog.Content>
+        </Dialog.Popup>
       </Dialog.Portal>
     </Dialog.Root>
   );

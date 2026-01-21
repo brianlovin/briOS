@@ -1,6 +1,6 @@
 "use client";
 
-import * as Tooltip from "@radix-ui/react-tooltip";
+import { Tooltip } from "@base-ui/react/tooltip";
 import { motion, MotionValue, useMotionValue, useSpring, useTransform } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -121,42 +121,43 @@ function AppIcon({ mouseLeft, item, currentSlug }: AppIconProps) {
   const xSpring = useSpring(x, SPRING);
 
   return (
-    <Tooltip.Provider delayDuration={0}>
+    <Tooltip.Provider delay={0}>
       <Tooltip.Root>
-        <Tooltip.Trigger asChild>
-          <motion.div
-            ref={ref}
-            style={{ x: xSpring, scale: scaleSpring, translateZ: 0 }}
-            className="relative origin-bottom"
+        <Tooltip.Trigger
+          render={
+            <motion.div
+              ref={ref}
+              style={{ x: xSpring, scale: scaleSpring, translateZ: 0 }}
+              className="relative origin-bottom"
+            />
+          }
+        >
+          <Link
+            href={`/app-dissection/${item.slug}`}
+            className="relative block will-change-transform"
           >
-            <Link
-              href={`/app-dissection/${item.slug}`}
-              className="relative block will-change-transform"
-            >
-              <Image
-                src={`/img/app-dissection/${item.slug}.jpeg`}
-                width={60}
-                height={60}
-                alt={`${item.title} icon`}
-                className="border-secondary/50 dark:border-secondary/30 aspect-square rounded-xl border shadow-sm"
+            <Image
+              src={`/img/app-dissection/${item.slug}.jpeg`}
+              width={60}
+              height={60}
+              alt={`${item.title} icon`}
+              className="border-secondary/50 dark:border-secondary/30 aspect-square rounded-xl border shadow-sm"
+            />
+            {isActive && (
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="absolute -bottom-2 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-black dark:bg-white"
               />
-              {isActive && (
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="absolute -bottom-2 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-black dark:bg-white"
-                />
-              )}
-            </Link>
-          </motion.div>
+            )}
+          </Link>
         </Tooltip.Trigger>
         <Tooltip.Portal>
-          <Tooltip.Content
-            sideOffset={20}
-            className="bg-elevated dark:shadow-contrast text-primary border-secondary z-50 rounded-lg border px-2 py-1.5 text-sm font-medium shadow-sm"
-          >
-            {item.title}
-          </Tooltip.Content>
+          <Tooltip.Positioner side="bottom" sideOffset={20}>
+            <Tooltip.Popup className="bg-elevated dark:shadow-contrast text-primary border-secondary z-50 origin-(--transform-origin) rounded-lg border px-2 py-1.5 text-sm font-medium shadow-sm transition-[transform,scale,opacity] duration-150 data-[ending-style]:scale-95 data-[ending-style]:opacity-0 data-[starting-style]:scale-95 data-[starting-style]:opacity-0">
+              {item.title}
+            </Tooltip.Popup>
+          </Tooltip.Positioner>
         </Tooltip.Portal>
       </Tooltip.Root>
     </Tooltip.Provider>

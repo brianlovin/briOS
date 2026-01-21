@@ -24,11 +24,9 @@ export function TopBarActionsProvider({ children }: { children: ReactNode }) {
 
 export function useTopBarActions(content: ReactNode) {
   const context = useContext(TopBarActionsContext);
-  if (!context) {
-    throw new Error("useTopBarActions must be used within TopBarActionsProvider");
-  }
 
   useLayoutEffect(() => {
+    if (!context) return;
     context.setContent(content);
     return () => context.setContent(null);
   }, [content, context]);
