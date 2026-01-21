@@ -1,9 +1,9 @@
 import { ArrowUpRight } from "@/components/icons/ArrowUpRight";
 import {
-    List,
-    ListItem,
-    ListItemLabel,
-    ListItemSubLabel,
+  List,
+  ListItem,
+  ListItemLabel,
+  ListItemSubLabel,
 } from "@/components/shared/ListComponents";
 
 const projects = [
@@ -40,7 +40,7 @@ const projects = [
   {
     name: "Listening",
     href: "/listening",
-    description: "What I'm listening to",
+    description: "Music in rotation",
     external: false,
   },
   {
