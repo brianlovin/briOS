@@ -1,18 +1,12 @@
 import { ArrowUpRight } from "@/components/icons/ArrowUpRight";
 import {
-  List,
-  ListItem,
-  ListItemLabel,
-  ListItemSubLabel,
+    List,
+    ListItem,
+    ListItemLabel,
+    ListItemSubLabel,
 } from "@/components/shared/ListComponents";
 
 const projects = [
-  {
-    name: "Writing",
-    href: "/writing",
-    description: "Notes on software and other things",
-    external: false,
-  },
   {
     name: "HN",
     href: "/hn",
