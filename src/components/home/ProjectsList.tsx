@@ -70,7 +70,7 @@ const projects = [
   {
     name: "Crit",
     href: "https://www.youtube.com/playlist?list=PLJu44Klx1pB_8GSOUeDNDllPICvMJKSut",
-    description: "App design critique",
+    description: "Solicited app redesigns",
     external: true,
   },
   {
