@@ -175,15 +175,17 @@ async function generateSchemas() {
   fs.writeFileSync(outPath, output);
 
   // Run prettier on the generated file
-  const { execSync } = await import("child_process");
-  execSync(`bun run prettier --write "${outPath}"`, { stdio: "inherit" });
+  try {
+    const { execSync } = await import("child_process");
+    execSync(`bunx prettier --write "${outPath}"`, { stdio: "inherit" });
+  } catch (err) {
+    console.warn("⚠️  Prettier formatting failed, but file was generated:", err);
+  }
 
   console.log(`✅ Notion schemas generated at ${outPath}`);
 }
 
-if (require.main === module) {
-  generateSchemas().catch((err) => {
-    console.error("Failed to generate schemas", err);
-    process.exit(1);
-  });
-}
+generateSchemas().catch((err) => {
+  console.error("Failed to generate schemas", err);
+  process.exit(1);
+});
