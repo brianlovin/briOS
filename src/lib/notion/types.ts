@@ -103,6 +103,7 @@ export type NotionStackItem = {
   url?: string;
   platforms?: string[];
   status?: string;
+  createdTime: string;
   previewImage?: string;
   previewStatus?: "Queued" | "Processing" | "Done" | "Error";
 };

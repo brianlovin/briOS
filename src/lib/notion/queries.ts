@@ -122,6 +122,7 @@ export async function getStackDatabaseItems(): Promise<NotionStackItem[]> {
           URL?: { url: string };
           Platforms?: { multi_select: { name: string }[] };
           Status?: { select: { name: string } | null };
+          "Created time"?: { created_time: string };
           "Preview Image"?: { url: string };
           "Preview Status"?: { select: { name: string } | null };
         };
@@ -136,6 +137,7 @@ export async function getStackDatabaseItems(): Promise<NotionStackItem[]> {
           url: properties.URL?.url || undefined,
           platforms: properties.Platforms?.multi_select.map((p) => p.name) || [],
           status: properties.Status?.select?.name || undefined,
+          createdTime: properties["Created time"]?.created_time || pageWithProps.created_time,
           previewImage: properties["Preview Image"]?.url || undefined,
           previewStatus: properties["Preview Status"]?.select?.name as
             | "Queued"

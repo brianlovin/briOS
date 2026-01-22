@@ -25,6 +25,16 @@ const nextConfig: NextConfig = {
         destination: "/ama/rss.xml",
         permanent: true,
       },
+      {
+        source: "/app-dissection/:path(rss|RSS|Rss|feed|Feed)",
+        destination: "/app-dissection/rss.xml",
+        permanent: true,
+      },
+      {
+        source: "/stack/:path(rss|RSS|Rss|feed|Feed)",
+        destination: "/stack/rss.xml",
+        permanent: true,
+      },
     ];
   },
   devIndicators: false,
