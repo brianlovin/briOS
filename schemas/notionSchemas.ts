@@ -96,6 +96,7 @@ export type Music = z.infer<typeof MusicSchema>;
 
 export const GoodWebsitesSchema = z.object({
   "Preview Status": z.enum(["Queued", "Processing", "Done", "Error"]).optional(),
+  "Created time": z.string().optional(),
   "Preview Error": z.string().optional(),
   X: z.string().optional(),
   Tags: z.array(z.enum(["Personal site", "Company"])).optional(),

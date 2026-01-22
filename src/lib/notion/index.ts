@@ -10,6 +10,7 @@ export type {
   DatabaseObjectResponse,
   DesignDetailsEpisodes,
   GoodWebsiteItem,
+  GoodWebsiteItemWithDate,
   Music,
   NotionAmaItem,
   NotionAmaItemWithContent,
@@ -59,6 +60,7 @@ export {
   getFullContent,
   // Good Websites
   getGoodWebsitesDatabaseItems,
+  getGoodWebsitesDatabaseItemsForRss,
   // Listening History
   getListeningHistoryDatabaseItems,
   // Stack

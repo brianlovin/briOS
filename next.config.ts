@@ -16,6 +16,11 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/sites/:path(rss|RSS|Rss|feed|Feed)",
+        destination: "/sites/rss.xml",
+        permanent: true,
+      },
+      {
         source: "/ama/:path(rss|RSS|Rss|feed|Feed)",
         destination: "/ama/rss.xml",
         permanent: true,

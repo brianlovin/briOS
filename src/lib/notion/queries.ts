@@ -7,6 +7,7 @@ import { getAllBlocks } from "./blocks";
 import { notion } from "./client";
 import {
   type GoodWebsiteItem,
+  type GoodWebsiteItemWithDate,
   hasProperties,
   type NotionAmaItem,
   type NotionAmaItemWithContent,
@@ -215,6 +216,69 @@ export async function getGoodWebsitesDatabaseItems(): Promise<GoodWebsiteItem[]>
     return items;
   } catch (error) {
     console.error("Error fetching good website items:", error);
+    return [];
+  }
+}
+
+export async function getGoodWebsitesDatabaseItemsForRss(): Promise<GoodWebsiteItemWithDate[]> {
+  try {
+    const databaseId = process.env.NOTION_GOOD_WEBSITES_DATABASE_ID || "";
+    const dataSourceId = await getDataSourceId(databaseId);
+    const response = await notion.dataSources.query({
+      data_source_id: dataSourceId,
+      sorts: [
+        {
+          property: "Created time",
+          direction: "descending",
+        },
+      ],
+    });
+
+    const items = response.results
+      .map((page) => {
+        if (!hasProperties(page)) return null;
+
+        const pageWithProps = page as PageObjectResponse;
+
+        const icon =
+          pageWithProps.icon?.type === "file"
+            ? pageWithProps.icon.file.url
+            : pageWithProps.icon?.type === "external"
+              ? pageWithProps.icon.external.url
+              : undefined;
+
+        const properties = pageWithProps.properties as {
+          Name?: { title: { plain_text: string }[] };
+          URL?: { url: string };
+          X?: { url: string };
+          Tags?: { multi_select: { name: string }[] };
+          "Preview Image"?: { url: string };
+          "Preview Status"?: { select: { name: string } | null };
+          "Created time"?: { created_time: string };
+        };
+
+        return {
+          id: pageWithProps.id,
+          name: properties.Name?.title[0]?.plain_text || "Untitled",
+          url: properties.URL?.url || undefined,
+          x: properties.X?.url || undefined,
+          icon,
+          tags: properties.Tags?.multi_select.map((t) => t.name) || [],
+          previewImage: properties["Preview Image"]?.url || undefined,
+          previewStatus: properties["Preview Status"]?.select?.name as
+            | "Queued"
+            | "Processing"
+            | "Done"
+            | "Error"
+            | undefined,
+          createdTime: properties["Created time"]?.created_time || pageWithProps.created_time,
+        } as GoodWebsiteItemWithDate;
+      })
+      .filter((item): item is GoodWebsiteItemWithDate => item !== null);
+
+    return items;
+  } catch (error) {
+    console.error("Error fetching good website items for RSS:", error);
     return [];
   }
 }

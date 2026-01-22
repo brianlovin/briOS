@@ -122,6 +122,11 @@ export type GoodWebsiteItem = {
   previewStatus?: "Queued" | "Processing" | "Done" | "Error";
 };
 
+// Good Website item type with date for RSS feed
+export type GoodWebsiteItemWithDate = GoodWebsiteItem & {
+  createdTime: string;
+};
+
 // AMA item types
 export type NotionAmaItem = {
   id: string;
