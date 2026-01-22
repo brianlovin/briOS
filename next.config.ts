@@ -42,6 +42,7 @@ const nextConfig: NextConfig = {
     root: path.resolve(__dirname),
   },
   images: {
+    qualities: [100, 75],
     remotePatterns: [
       {
         protocol: "https",
@@ -59,6 +60,11 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "s3.us-west-2.amazonaws.com",
+      },
+      // R2 public bucket for optimized images
+      {
+        protocol: "https",
+        hostname: "pub-69346df8bffc4907bbde2b554f176e29.r2.dev",
       },
     ],
   },
