@@ -23,8 +23,6 @@ export {
   SpeakingSchema,
   type Stack,
   StackSchema,
-  type TIL,
-  TILSchema,
   type Writing,
   WritingSchema,
 } from "../../../schemas/notionSchemas";
