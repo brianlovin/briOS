@@ -10,6 +10,7 @@ export type StackItem = {
   url?: string;
   platforms?: string[];
   status?: string;
+  createdTime: string;
   previewImage?: string;
   previewStatus?: "Queued" | "Processing" | "Done" | "Error";
 };

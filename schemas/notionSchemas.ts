@@ -8,6 +8,7 @@ export const StackSchema = z.object({
   Description: z.string().optional(),
   Image: z.string().optional(),
   "Capture screenshot": z.any().optional(),
+  "Created time": z.string().optional(),
   "Preview Image": z.string().optional(),
   URL: z.string().optional(),
   Platforms: z.array(z.enum(["Windows", "Web", "Physical", "macOS", "iOS"])).optional(),
