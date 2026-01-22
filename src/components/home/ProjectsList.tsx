@@ -8,12 +8,6 @@ import {
 
 const projects = [
   {
-    name: "Writing",
-    href: "/writing",
-    description: "Notes on software and other things",
-    external: false,
-  },
-  {
     name: "HN",
     href: "/hn",
     description: "A minimal hacker news reader",
@@ -46,13 +40,13 @@ const projects = [
   {
     name: "Listening",
     href: "/listening",
-    description: "What I'm listening to",
+    description: "Music in rotation",
     external: false,
   },
   {
     name: "Good websites",
     href: "/sites",
-    description: "A curated collection of good websites",
+    description: "My collection of well-designed websites",
     external: false,
   },
   {
@@ -70,7 +64,7 @@ const projects = [
   {
     name: "How to Computer Better",
     href: "https://brianlovin.notion.site/how-to-computer-better",
-    description: "Get good at computering",
+    description: "How to use a computer better",
     external: true,
   },
   {
@@ -82,7 +76,7 @@ const projects = [
   {
     name: "How Terminals Work",
     href: "https://how-terminals-work.vercel.app/",
-    description: "A visual guide",
+    description: "A visual guide to understand terminals",
     external: true,
   },
 ];

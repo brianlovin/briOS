@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { ProjectsList } from "@/components/home/ProjectsList";
+import { ChevronRight } from "@/components/icons/ChevronRight";
 import { GitHubIcon, XIcon, YouTubeIcon } from "@/components/icons/SocialIcons";
 import {
   List,
@@ -77,13 +78,14 @@ export default async function Home() {
             </Section>
 
             <Section>
-              <SectionHeading>Projects</SectionHeading>
-              <ProjectsList />
-            </Section>
-
-            <Section>
-              <Link href="/writing">
-                <SectionHeading>Writing</SectionHeading>
+              <Link href="/writing" className="group flex items-center">
+                <SectionHeading className="group-hover:text-primary transition-colors">
+                  Writing
+                </SectionHeading>
+                <ChevronRight
+                  size={32}
+                  className="text-quaternary group-hover:text-primary transition-all duration-150 group-hover:translate-x-0.5"
+                />
               </Link>
               <List>
                 {recentPosts
@@ -98,10 +100,12 @@ export default async function Home() {
                       </ListItem>
                     );
                   })}
-                <ListItem href="/writing">
-                  <ListItemLabel className="text-quaternary">View all</ListItemLabel>
-                </ListItem>
               </List>
+            </Section>
+
+            <Section>
+              <SectionHeading>Projects</SectionHeading>
+              <ProjectsList />
             </Section>
           </div>
         </div>
