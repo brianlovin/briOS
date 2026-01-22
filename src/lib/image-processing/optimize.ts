@@ -1,5 +1,7 @@
 import sharp from "sharp";
 
+import { extractBestImageFromIco, isIcoBuffer } from "./ico";
+
 interface OptimizeImageOptions {
   maxSize?: number; // Maximum width or height in pixels
   quality?: number; // Quality setting (1-100)
@@ -26,7 +28,18 @@ export async function optimizeImage(
 ): Promise<OptimizedImage> {
   const { maxSize = 80, quality = 90 } = options;
 
-  const image = sharp(buffer);
+  // Handle ICO files by extracting the best embedded image
+  let imageBuffer = buffer;
+  if (isIcoBuffer(buffer)) {
+    const extracted = extractBestImageFromIco(buffer);
+    if (extracted) {
+      imageBuffer = extracted;
+    } else {
+      throw new Error("ICO file does not contain any extractable PNG images");
+    }
+  }
+
+  const image = sharp(imageBuffer);
   const metadata = await image.metadata();
 
   // Resize if needed (maintain aspect ratio)
