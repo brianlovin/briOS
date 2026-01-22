@@ -120,6 +120,13 @@ async function generateSchemas() {
     { varName: "TIL", id: process.env.NOTION_TIL_DATABASE_ID },
   ];
 
+  const configuredDatabases = databases.filter((db) => db.id);
+  if (configuredDatabases.length === 0) {
+    console.log("ℹ️  No NOTION_*_DATABASE_ID env vars set. Skipping schema generation.");
+    console.log("   This is expected for contributors without Notion access.");
+    return;
+  }
+
   const schemaLines: string[] = [
     "// ⚠️ AUTO-GENERATED FILE — DO NOT EDIT MANUALLY",
     "// Run `bun run generate-schemas` to regenerate.\n",
@@ -175,17 +182,15 @@ async function generateSchemas() {
   fs.writeFileSync(outPath, output);
 
   // Run prettier on the generated file
-  try {
-    const { execSync } = await import("child_process");
-    execSync(`bunx prettier --write "${outPath}"`, { stdio: "inherit" });
-  } catch (err) {
-    console.warn("⚠️  Prettier formatting failed, but file was generated:", err);
-  }
+  const { execSync } = await import("child_process");
+  execSync(`bun run prettier --write "${outPath}"`, { stdio: "inherit" });
 
   console.log(`✅ Notion schemas generated at ${outPath}`);
 }
 
-generateSchemas().catch((err) => {
-  console.error("Failed to generate schemas", err);
-  process.exit(1);
-});
+if (require.main === module) {
+  generateSchemas().catch((err) => {
+    console.error("Failed to generate schemas", err);
+    process.exit(1);
+  });
+}

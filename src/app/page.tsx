@@ -78,18 +78,13 @@ export default async function Home() {
             </Section>
 
             <Section>
-              <SectionHeading>Projects</SectionHeading>
-              <ProjectsList />
-            </Section>
-
-            <Section>
-              <Link href="/writing" className="flex items-center gap-1 group">
+              <Link href="/writing" className="group flex items-center">
                 <SectionHeading className="group-hover:text-primary transition-colors">
                   Writing
                 </SectionHeading>
                 <ChevronRight
                   size={32}
-                  className="text-quaternary group-hover:text-primary transition-all duration-200 group-hover:translate-x-2"
+                  className="text-quaternary group-hover:text-primary transition-all duration-150 group-hover:translate-x-0.5"
                 />
               </Link>
               <List>
@@ -106,6 +101,11 @@ export default async function Home() {
                     );
                   })}
               </List>
+            </Section>
+
+            <Section>
+              <SectionHeading>Projects</SectionHeading>
+              <ProjectsList />
             </Section>
           </div>
         </div>

@@ -46,13 +46,13 @@ const projects = [
   {
     name: "Good websites",
     href: "/sites",
-    description: "A curated collection of inspiration",
+    description: "My collection of well-designed websites",
     external: false,
   },
   {
     name: "Staff Design",
     href: "https://staff.design",
-    description: "Interview series about the IC career path",
+    description: "Navigating the IC career path",
     external: true,
   },
   {
@@ -64,7 +64,7 @@ const projects = [
   {
     name: "How to Computer Better",
     href: "https://brianlovin.notion.site/how-to-computer-better",
-    description: "A living list of tips, shortcuts, and so on",
+    description: "How to use a computer better",
     external: true,
   },
   {
@@ -76,7 +76,7 @@ const projects = [
   {
     name: "How Terminals Work",
     href: "https://how-terminals-work.vercel.app/",
-    description: "A visual guide",
+    description: "A visual guide to understand terminals",
     external: true,
   },
 ];
