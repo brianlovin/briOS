@@ -29,6 +29,7 @@ export type {
   RichTextContent,
   RichTextItemResponse,
   Stack,
+  TIL,
   Writing,
 } from "./types";
 
@@ -38,6 +39,7 @@ export {
   DesignDetailsEpisodesSchema,
   MusicSchema,
   StackSchema,
+  TILSchema,
   WritingSchema,
 } from "./types";
 
