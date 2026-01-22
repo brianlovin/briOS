@@ -2,15 +2,22 @@ import type { Metadata } from "next";
 
 import { TilFeed } from "@/components/TilFeed";
 import { PageTitle } from "@/components/Typography";
-import { createMetadata } from "@/lib/metadata";
+import { createMetadata, SITE_CONFIG } from "@/lib/metadata";
 import { getTilDatabaseItems } from "@/lib/notion";
 import { getTilEntriesWithContent } from "@/lib/til";
 
-export const metadata: Metadata = createMetadata({
-  title: "TIL",
-  description: "Today I Learned - Quick notes and discoveries from Brian Lovin.",
-  path: "/til",
-});
+export const metadata: Metadata = {
+  ...createMetadata({
+    title: "TIL",
+    description: "Today I Learned - Quick notes and discoveries from Brian Lovin.",
+    path: "/til",
+  }),
+  alternates: {
+    types: {
+      "application/rss+xml": `${SITE_CONFIG.url}/til/rss.xml`,
+    },
+  },
+};
 
 export const revalidate = 3600; // 1 hour ISR
 

@@ -2,16 +2,23 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
-import { createMetadata } from "@/lib/metadata";
+import { createMetadata, SITE_CONFIG } from "@/lib/metadata";
 import { getAppDissectionDatabaseItems } from "@/lib/notion/queries";
 import { formatPublishedDate, type NotionAppDissectionItem } from "@/lib/notion/types";
 
-export const metadata: Metadata = createMetadata({
-  title: "App Dissection",
-  description:
-    "Breaking down the design details of well-crafted mobile apps. In-depth analysis of UI patterns, interactions, and user experience.",
-  path: "/app-dissection",
-});
+export const metadata: Metadata = {
+  ...createMetadata({
+    title: "App Dissection",
+    description:
+      "Breaking down the design details of well-crafted mobile apps. In-depth analysis of UI patterns, interactions, and user experience.",
+    path: "/app-dissection",
+  }),
+  alternates: {
+    types: {
+      "application/rss+xml": `${SITE_CONFIG.url}/app-dissection/rss.xml`,
+    },
+  },
+};
 
 export default async function AppDissectionIndex() {
   const items = await getAppDissectionDatabaseItems();
