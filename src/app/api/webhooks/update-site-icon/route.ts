@@ -4,7 +4,7 @@ import { errorResponse } from "@/lib/api-utils";
 import { optimizeSiteIcon } from "@/lib/image-processing/optimize";
 import { notion } from "@/lib/notion";
 import { uploadBufferToR2 } from "@/lib/r2/storage";
-import { getBestFaviconUrl } from "@/lib/utils/favicon";
+import { getBestFaviconUrl, isDataUrl, parseDataUrl } from "@/lib/utils/favicon";
 
 /**
  * Webhook endpoint to fetch and upload good website favicon to R2
@@ -62,22 +62,35 @@ export async function POST(request: Request) {
       return errorResponse("Invalid URL format", 400);
     }
 
-    // Step 1: Get best favicon URL
+    // Step 1: Get best favicon URL (may be HTTP URL or data URL)
     const iconUrl = await getBestFaviconUrl(url);
     if (!iconUrl) {
       console.error("Failed to fetch favicon", url, body);
       return errorResponse("Failed to fetch favicon", 500);
     }
 
-    // Step 2: Download the favicon
-    const faviconResponse = await fetch(iconUrl);
-    if (!faviconResponse.ok) {
-      console.error("Failed to download favicon", url, body);
-      return errorResponse("Failed to download favicon", 500);
-    }
+    // Step 2: Get favicon as buffer (handle both data URLs and HTTP URLs)
+    let faviconBuffer: Buffer;
 
-    const faviconArrayBuffer = await faviconResponse.arrayBuffer();
-    const faviconBuffer = Buffer.from(faviconArrayBuffer);
+    if (isDataUrl(iconUrl)) {
+      // Parse base64 data URL directly
+      const parsed = parseDataUrl(iconUrl);
+      if (!parsed) {
+        console.error("Failed to parse data URL favicon", url, body);
+        return errorResponse("Failed to parse data URL favicon", 500);
+      }
+      faviconBuffer = parsed.buffer;
+    } else {
+      // Download favicon from HTTP URL
+      const faviconResponse = await fetch(iconUrl);
+      if (!faviconResponse.ok) {
+        console.error("Failed to download favicon", url, body);
+        return errorResponse("Failed to download favicon", 500);
+      }
+
+      const faviconArrayBuffer = await faviconResponse.arrayBuffer();
+      faviconBuffer = Buffer.from(faviconArrayBuffer);
+    }
 
     // Step 3: Optimize the favicon (resize to max 80x80px, compress)
     const optimized = await optimizeSiteIcon(faviconBuffer);
