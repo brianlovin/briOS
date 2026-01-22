@@ -28,6 +28,13 @@
       "type": "button",
       "button": {}
     },
+    "Created time": {
+      "id": "RV%5E%5D",
+      "name": "Created time",
+      "description": null,
+      "type": "created_time",
+      "created_time": {}
+    },
     "Preview Image": {
       "id": "VCxA",
       "name": "Preview Image",
