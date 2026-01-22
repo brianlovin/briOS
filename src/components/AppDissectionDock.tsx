@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
 
-import { allAppDissectionItems } from "@/data/app-dissection";
+import type { NotionAppDissectionItem } from "@/lib/notion/types";
 
 const SCALE = 1.4; // max scale factor of an icon
 const DISTANCE = 110; // pixels before mouse affects an icon
@@ -19,13 +19,13 @@ const SPRING = {
 
 // Number of items to show on each side of current item
 const ITEMS_PER_SIDE_DESKTOP = 3; // Shows 7 total (current + 3 on each side)
-// const ITEMS_PER_SIDE_MOBILE = 2; // Shows 5 total on mobile (for future responsive implementation)
 
 interface Props {
+  items: NotionAppDissectionItem[];
   currentSlug: string;
 }
 
-export function AppDissectionDock({ currentSlug }: Props) {
+export function AppDissectionDock({ items, currentSlug }: Props) {
   const mouseLeft = useMotionValue(-Infinity);
   const mouseRight = useMotionValue(-Infinity);
   const left = useTransform(mouseLeft, [0, 40], [0, -40]);
@@ -34,7 +34,7 @@ export function AppDissectionDock({ currentSlug }: Props) {
   const rightSpring = useSpring(right, SPRING);
 
   // Find current item index
-  const currentIndex = allAppDissectionItems.findIndex((item) => item.slug === currentSlug);
+  const currentIndex = items.findIndex((item) => item.slug === currentSlug);
 
   // Calculate visible items - always try to show 7 total, redistributing as needed
   const totalToShow = ITEMS_PER_SIDE_DESKTOP * 2 + 1; // 7 for desktop (3 + 1 + 3)
@@ -46,17 +46,17 @@ export function AppDissectionDock({ currentSlug }: Props) {
 
   // Adjust if we're near the beginning - show more on the right
   if (startIndex < 0) {
-    endIndex = Math.min(allAppDissectionItems.length, endIndex + Math.abs(startIndex));
+    endIndex = Math.min(items.length, endIndex + Math.abs(startIndex));
     startIndex = 0;
   }
 
   // Adjust if we're near the end - show more on the left
-  if (endIndex > allAppDissectionItems.length) {
-    startIndex = Math.max(0, startIndex - (endIndex - allAppDissectionItems.length));
-    endIndex = allAppDissectionItems.length;
+  if (endIndex > items.length) {
+    startIndex = Math.max(0, startIndex - (endIndex - items.length));
+    endIndex = items.length;
   }
 
-  const visibleItems = allAppDissectionItems.slice(startIndex, endIndex);
+  const visibleItems = items.slice(startIndex, endIndex);
 
   return (
     <div className="relative mx-auto flex items-center gap-2">
@@ -89,7 +89,7 @@ export function AppDissectionDock({ currentSlug }: Props) {
 
 interface AppIconProps {
   mouseLeft: MotionValue;
-  item: (typeof allAppDissectionItems)[number];
+  item: NotionAppDissectionItem;
   currentSlug: string;
 }
 
@@ -136,13 +136,19 @@ function AppIcon({ mouseLeft, item, currentSlug }: AppIconProps) {
             href={`/app-dissection/${item.slug}`}
             className="relative block will-change-transform"
           >
-            <Image
-              src={`/img/app-dissection/${item.slug}.jpeg`}
-              width={60}
-              height={60}
-              alt={`${item.title} icon`}
-              className="border-secondary/50 dark:border-secondary/30 aspect-square rounded-xl border shadow-sm"
-            />
+            {item.icon ? (
+              <Image
+                src={item.icon}
+                width={60}
+                height={60}
+                alt={`${item.name} icon`}
+                className="border-secondary/50 dark:border-secondary/30 aspect-square rounded-xl border shadow-sm"
+              />
+            ) : (
+              <div className="border-secondary/50 dark:border-secondary/30 bg-tertiary flex h-[60px] w-[60px] items-center justify-center rounded-xl border shadow-sm">
+                <span className="text-tertiary text-xl font-medium">{item.name.charAt(0)}</span>
+              </div>
+            )}
             {isActive && (
               <motion.div
                 initial={{ scale: 0 }}
@@ -155,7 +161,7 @@ function AppIcon({ mouseLeft, item, currentSlug }: AppIconProps) {
         <Tooltip.Portal>
           <Tooltip.Positioner side="bottom" sideOffset={20}>
             <Tooltip.Popup className="bg-elevated dark:shadow-contrast text-primary border-secondary z-50 origin-(--transform-origin) rounded-lg border px-2 py-1.5 text-sm font-medium shadow-sm transition-[transform,scale,opacity] duration-150 data-[ending-style]:scale-95 data-[ending-style]:opacity-0 data-[starting-style]:scale-95 data-[starting-style]:opacity-0">
-              {item.title}
+              {item.name}
             </Tooltip.Popup>
           </Tooltip.Positioner>
         </Tooltip.Portal>

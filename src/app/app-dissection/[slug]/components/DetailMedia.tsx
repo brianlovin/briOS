@@ -1,30 +1,30 @@
 "use client";
 
-import { MarkdownRenderer } from "@/components/MarkdownRenderer";
-import { AppDissectionItemDetailType } from "@/data/app-dissection";
+import { renderBlocks } from "@/components/renderBlocks";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import type { AppDissectionDetail } from "@/lib/notion/types";
 
 interface Props {
-  detail: AppDissectionItemDetailType;
+  detail: AppDissectionDetail;
 }
 
-export function DesignDetailMedia(props: Props) {
-  const { detail } = props;
+export function DesignDetailMedia({ detail }: Props) {
   const { ref, isVisible } = useIntersectionObserver({
     threshold: 0.1,
     freezeOnceVisible: true,
   });
 
+  const orientation = detail.video?.orientation || "portrait";
+  const videoUrls = detail.video?.urls || [];
+
   return (
     <div ref={ref} className="flex flex-col">
       <h2 className="text-primary mb-4 text-2xl font-semibold">{detail.title}</h2>
-      <div className="prose-lg">
-        <MarkdownRenderer>{detail.description}</MarkdownRenderer>
-      </div>
+      <div className="prose-lg">{renderBlocks(detail.descriptionBlocks)}</div>
 
-      {isVisible && detail.media && (
+      {isVisible && videoUrls.length > 0 && (
         <div className="bg-tertiary dark:bg-secondary mt-8 mb-4 flex items-center justify-center rounded-xl p-2 md:p-4 xl:rounded-2xl">
-          {detail.media.map((src) => (
+          {videoUrls.map((src) => (
             <video
               playsInline
               muted
@@ -33,8 +33,8 @@ export function DesignDetailMedia(props: Props) {
               preload="metadata"
               key={src}
               style={{
-                minHeight: `${detail.orientation === "landscape" ? "320px" : "680px"}`,
-                maxWidth: `${detail.orientation === "landscape" ? "100%" : "400px"}`,
+                minHeight: orientation === "landscape" ? "320px" : "680px",
+                maxWidth: orientation === "landscape" ? "100%" : "400px",
               }}
               className="h-full w-full overflow-hidden rounded-md"
             >
