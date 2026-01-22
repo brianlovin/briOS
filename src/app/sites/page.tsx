@@ -2,13 +2,20 @@ import type { Metadata } from "next";
 
 import { GoodWebsitesPageClient } from "@/components/good-websites/GoodWebsitesPageClient";
 import { getGoodWebsites } from "@/lib/goodWebsites";
-import { createMetadata } from "@/lib/metadata";
+import { createMetadata, SITE_CONFIG } from "@/lib/metadata";
 
-export const metadata: Metadata = createMetadata({
-  title: "Good websites",
-  description: "A curated collection of inspirational good websites",
-  path: "/sites",
-});
+export const metadata: Metadata = {
+  ...createMetadata({
+    title: "Good websites",
+    description: "A curated collection of inspirational good websites",
+    path: "/sites",
+  }),
+  alternates: {
+    types: {
+      "application/rss+xml": `${SITE_CONFIG.url}/sites/rss.xml`,
+    },
+  },
+};
 
 // Revalidate every hour (3600 seconds) for ISR
 export const revalidate = 3600;

@@ -1,15 +1,22 @@
 import type { Metadata } from "next";
 
 import { StackPageClient } from "@/components/stack/StackPageClient";
-import { createMetadata } from "@/lib/metadata";
+import { createMetadata, SITE_CONFIG } from "@/lib/metadata";
 import { getStacks } from "@/lib/stack";
 
-export const metadata: Metadata = createMetadata({
-  title: "Stack",
-  description:
-    "Apps, tools, and services I use every day. My personal stack of productivity tools and software.",
-  path: "/stack",
-});
+export const metadata: Metadata = {
+  ...createMetadata({
+    title: "Stack",
+    description:
+      "Apps, tools, and services I use every day. My personal stack of productivity tools and software.",
+    path: "/stack",
+  }),
+  alternates: {
+    types: {
+      "application/rss+xml": `${SITE_CONFIG.url}/stack/rss.xml`,
+    },
+  },
+};
 
 export const revalidate = 3600;
 
