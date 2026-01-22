@@ -8,6 +8,7 @@ export const StackSchema = z.object({
   Description: z.string().optional(),
   Image: z.string().optional(),
   "Capture screenshot": z.any().optional(),
+  "Created time": z.string().optional(),
   "Preview Image": z.string().optional(),
   URL: z.string().optional(),
   Platforms: z.array(z.enum(["Windows", "Web", "Physical", "macOS", "iOS"])).optional(),
@@ -95,6 +96,7 @@ export type Music = z.infer<typeof MusicSchema>;
 
 export const GoodWebsitesSchema = z.object({
   "Preview Status": z.enum(["Queued", "Processing", "Done", "Error"]).optional(),
+  "Created time": z.string().optional(),
   "Preview Error": z.string().optional(),
   X: z.string().optional(),
   Tags: z.array(z.enum(["Personal site", "Company"])).optional(),
@@ -114,12 +116,3 @@ export const SpeakingSchema = z.object({
 });
 
 export type Speaking = z.infer<typeof SpeakingSchema>;
-
-export const TILSchema = z.object({
-  "Generate Short ID": z.any().optional(),
-  Published: z.string().optional(),
-  "Short ID": z.string().optional(),
-  Title: z.string().optional(),
-});
-
-export type TIL = z.infer<typeof TILSchema>;

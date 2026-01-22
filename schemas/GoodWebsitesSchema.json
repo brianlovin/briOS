@@ -34,6 +34,13 @@
         ]
       }
     },
+    "Created time": {
+      "id": "%3CEXI",
+      "name": "Created time",
+      "description": null,
+      "type": "created_time",
+      "created_time": {}
+    },
     "Preview Error": {
       "id": "%3E%60%3BT",
       "name": "Preview Error",
