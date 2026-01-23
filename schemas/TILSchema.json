@@ -21,6 +21,15 @@
       "type": "rich_text",
       "rich_text": {}
     },
+    "Likes": {
+      "id": "oGFR",
+      "name": "Likes",
+      "description": null,
+      "type": "number",
+      "number": {
+        "format": "number"
+      }
+    },
     "Title": {
       "id": "title",
       "name": "Title",

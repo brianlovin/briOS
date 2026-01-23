@@ -14,6 +14,15 @@
       "type": "rich_text",
       "rich_text": {}
     },
+    "Likes": {
+      "id": "C%3Dw%7C",
+      "name": "Likes",
+      "description": null,
+      "type": "number",
+      "number": {
+        "format": "number"
+      }
+    },
     "Image": {
       "id": "IRWG",
       "name": "Image",

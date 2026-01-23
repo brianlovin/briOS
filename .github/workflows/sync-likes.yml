@@ -1,0 +1,13 @@
+name: sync likes to notion
+
+on:
+  schedule:
+    - cron: "0 * * * *" # Every hour
+  workflow_dispatch:
+
+jobs:
+  sync-likes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: sync likes to notion
+        run: curl "https://brianlovin.com/api/likes/sync?token=${{ secrets.LIKES_SYNC_TOKEN }}"

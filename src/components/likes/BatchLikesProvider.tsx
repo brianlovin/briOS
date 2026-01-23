@@ -1,0 +1,50 @@
+"use client";
+
+import { ReactNode, useEffect, useMemo, useState } from "react";
+
+import { BatchLikesContext, type LikeData } from "@/lib/hooks/useLikes";
+
+interface BatchLikesProviderProps {
+  pageIds: string[];
+  initialData?: Record<string, LikeData>;
+  children: ReactNode;
+}
+
+export function BatchLikesProvider({ pageIds, initialData, children }: BatchLikesProviderProps) {
+  const [fetchedData, setFetchedData] = useState<Record<string, LikeData>>({});
+
+  // Fetch data client-side only if no initial data provided
+  // Note: pageIds should be memoized by the parent component
+  useEffect(() => {
+    if (initialData || pageIds.length === 0) return;
+
+    const controller = new AbortController();
+
+    const fetchBatchLikes = async () => {
+      try {
+        const res = await fetch(`/api/likes/batch?ids=${pageIds.join(",")}`, {
+          signal: controller.signal,
+        });
+        if (res.ok) {
+          const data: Record<string, LikeData> = await res.json();
+          setFetchedData(data);
+        }
+      } catch (error) {
+        if (error instanceof Error && error.name === "AbortError") return;
+        console.error("Error fetching batch likes:", error);
+      }
+    };
+
+    fetchBatchLikes();
+
+    return () => controller.abort();
+  }, [pageIds, initialData]);
+
+  // Use initial data if provided, otherwise use fetched data
+  const contextValue = useMemo(
+    () => ({ initialData: initialData ?? fetchedData }),
+    [initialData, fetchedData],
+  );
+
+  return <BatchLikesContext.Provider value={contextValue}>{children}</BatchLikesContext.Provider>;
+}

@@ -28,6 +28,15 @@
       "type": "date",
       "date": {}
     },
+    "Likes": {
+      "id": "%5BtHB",
+      "name": "Likes",
+      "description": null,
+      "type": "number",
+      "number": {
+        "format": "number"
+      }
+    },
     "FeatureImage": {
       "id": "%5D%40yA",
       "name": "FeatureImage",

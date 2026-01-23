@@ -6,6 +6,7 @@ import { z } from "zod";
 export const StackSchema = z.object({
   Slug: z.string().optional(),
   Description: z.string().optional(),
+  Likes: z.number().optional(),
   Image: z.string().optional(),
   "Capture screenshot": z.any().optional(),
   "Created time": z.string().optional(),
@@ -25,6 +26,7 @@ export type Stack = z.infer<typeof StackSchema>;
 export const AMASchema = z.object({
   "Answered At": z.string().optional(),
   "Created At": z.string().optional(),
+  Likes: z.number().optional(),
   Status: z.enum(["Won't answer", "Unanswered", "Answered"]).optional(),
   Button: z.any().optional(),
   Description: z.string().optional(),
@@ -38,6 +40,7 @@ export const WritingSchema = z.object({
   "Generate Short ID": z.any().optional(),
   Excerpt: z.string().optional(),
   Published: z.string().optional(),
+  Likes: z.number().optional(),
   FeatureImage: z.string().optional(),
   "Optimize images": z.any().optional(),
   "Short ID": z.string().optional(),
@@ -103,6 +106,7 @@ export const GoodWebsitesSchema = z.object({
   URL: z.string().optional(),
   "Preview Image": z.string().optional(),
   "Preview Updated": z.string().optional(),
+  Likes: z.number().optional(),
   "Process favicon": z.any().optional(),
   Name: z.string().optional(),
 });
@@ -121,6 +125,7 @@ export const TILSchema = z.object({
   "Generate Short ID": z.any().optional(),
   Published: z.string().optional(),
   "Short ID": z.string().optional(),
+  Likes: z.number().optional(),
   Title: z.string().optional(),
 });
 

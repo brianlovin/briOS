@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import useSWR from "swr";
 
 import { InfiniteScrollList } from "@/components/InfiniteScrollList";
+import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
+import { LikeButton } from "@/components/likes/LikeButton";
 import { renderBlocks } from "@/components/renderBlocks";
 import { fetcher } from "@/lib/fetcher";
 import type { NotionTilItem, NotionTilItemWithContent } from "@/lib/notion";
@@ -56,7 +58,13 @@ function TilEntry({
   return (
     <article className="grid grid-cols-1 gap-2 sm:grid-cols-[140px_1fr] sm:items-baseline sm:gap-6 md:grid-cols-[180px_1fr]">
       {/* Date column */}
-      <div className="text-tertiary text-base">{formatDate(entry.published)}</div>
+      <div className="flex flex-col md:items-end">
+        <div className="text-tertiary text-base">{formatDate(entry.published)}</div>
+        {/* Like button - visible on sm+ screens */}
+        <div className="mt-3 hidden sm:block">
+          <LikeButton pageId={entry.id} />
+        </div>
+      </div>
 
       {/* Content column */}
       <div className="flex flex-col gap-3">
@@ -76,6 +84,11 @@ function TilEntry({
         ) : (
           <TilEntryContent entryId={entry.id} />
         )}
+
+        {/* Like button - visible only on mobile, below content */}
+        <div className="mt-1 sm:hidden">
+          <LikeButton pageId={entry.id} />
+        </div>
       </div>
     </article>
   );
@@ -92,22 +105,27 @@ export function TilFeed({ initialEntries }: TilFeedProps) {
   // Use API-fetched items if available, otherwise fall back to initial entries
   const entries = items.length > 0 ? items : initialEntries;
 
+  // Collect all page IDs for batch likes fetching
+  const pageIds = useMemo(() => entries.map((entry) => entry.id), [entries]);
+
   const loadMore = useCallback(async () => {
     await setSize(size + 1);
   }, [setSize, size]);
 
   return (
-    <InfiniteScrollList
-      as="div"
-      items={entries}
-      renderItem={(entry) => (
-        <TilEntry key={entry.id} entry={entry} initialContent={initialContentMap.get(entry.id)} />
-      )}
-      onLoadMore={loadMore}
-      isLoading={isLoading ?? false}
-      isLoadingMore={isLoadingMore ?? false}
-      isReachingEnd={isReachingEnd ?? false}
-      className="flex flex-col gap-12 px-4"
-    />
+    <BatchLikesProvider pageIds={pageIds}>
+      <InfiniteScrollList
+        as="div"
+        items={entries}
+        renderItem={(entry) => (
+          <TilEntry key={entry.id} entry={entry} initialContent={initialContentMap.get(entry.id)} />
+        )}
+        onLoadMore={loadMore}
+        isLoading={isLoading ?? false}
+        isLoadingMore={isLoadingMore ?? false}
+        isReachingEnd={isReachingEnd ?? false}
+        className="flex flex-col gap-12 px-4"
+      />
+    </BatchLikesProvider>
   );
 }
