@@ -110,6 +110,50 @@ export async function addLike(userId: string, pageId: string): Promise<number> {
 }
 
 /**
+ * Remove a like from a user to a page
+ * Returns the new total count and user likes
+ */
+export async function removeLike(
+  userId: string,
+  pageId: string,
+): Promise<{ count: number; userLikes: number }> {
+  const client = getLikesRedis();
+  if (!client) return { count: 0, userLikes: 0 };
+
+  try {
+    // Get current user likes to check if we can decrement
+    const currentUserLikes = await getUserLikeCount(userId, pageId);
+    if (currentUserLikes <= 0) {
+      const count = await getLikeCount(pageId);
+      return { count, userLikes: 0 };
+    }
+
+    const pipeline = client.pipeline();
+
+    // Decrement total count
+    pipeline.decr(`${TOTAL_PREFIX}${pageId}`);
+
+    // Decrement user's like count for this page
+    pipeline.decr(`${USER_LIKES_PREFIX}${userId}:${pageId}`);
+
+    const results = await pipeline.exec();
+
+    const newCount = Math.max(0, (results[0] as number) ?? 0);
+    const newUserLikes = Math.max(0, (results[1] as number) ?? 0);
+
+    // If user has no more likes, remove from the set
+    if (newUserLikes === 0) {
+      await client.srem(`${USERS_PREFIX}${pageId}`, userId);
+    }
+
+    return { count: newCount, userLikes: newUserLikes };
+  } catch (error) {
+    console.error("[Likes] Error removing like:", error);
+    return { count: 0, userLikes: 0 };
+  }
+}
+
+/**
  * Check rate limit for an IP address
  * Returns true if rate limited, false if allowed
  */

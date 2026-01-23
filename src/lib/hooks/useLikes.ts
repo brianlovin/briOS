@@ -64,6 +64,37 @@ export function useLikes(pageId: string) {
     );
   };
 
+  const removeLike = async () => {
+    const currentData = data ?? initialData;
+    const currentUserLikes = currentData?.userLikes ?? 0;
+    if (currentUserLikes <= 0) return;
+
+    // Optimistic update
+    const newUserLikes = currentUserLikes - 1;
+    const optimisticData: LikeData = {
+      count: Math.max(0, (currentData?.count ?? 0) - 1),
+      userLikes: newUserLikes,
+      hasLiked: newUserLikes > 0,
+      canLike: true,
+    };
+
+    await mutate(
+      `/api/likes/${pageId}`,
+      async () => {
+        const res = await fetch(`/api/likes/${pageId}`, { method: "DELETE" });
+        if (!res.ok) {
+          throw new Error("Failed to remove like");
+        }
+        return res.json();
+      },
+      {
+        optimisticData,
+        rollbackOnError: true,
+        revalidate: false,
+      },
+    );
+  };
+
   const likeData = data ?? initialData;
 
   return {
@@ -74,5 +105,6 @@ export function useLikes(pageId: string) {
     isLoading: isLoading && !initialData,
     isError: error,
     addLike,
+    removeLike,
   };
 }
