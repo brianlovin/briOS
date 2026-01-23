@@ -1,10 +1,12 @@
 import { Feed } from "feed";
 
-import { allAppDissectionItems } from "@/data/app-dissection";
 import { SITE_CONFIG } from "@/lib/metadata";
+import { getAppDissectionDatabaseItems } from "@/lib/notion/queries";
 
 export async function GET() {
   try {
+    const items = await getAppDissectionDatabaseItems();
+
     const feed = new Feed({
       title: `${SITE_CONFIG.name} - App Dissection`,
       description: "Detailed design breakdowns of iOS and Android apps",
@@ -24,15 +26,15 @@ export async function GET() {
       },
     });
 
-    allAppDissectionItems.forEach((item) => {
+    items.forEach((item) => {
       const itemUrl = `${SITE_CONFIG.url}/app-dissection/${item.slug}`;
-      const publishDate = new Date(item.createdAt);
+      const publishDate = new Date(item.published);
 
       feed.addItem({
-        title: item.title,
+        title: item.name,
         id: item.slug,
         link: itemUrl,
-        description: item.description,
+        description: item.description || `Design breakdown of ${item.name}`,
         date: publishDate,
         published: publishDate,
         author: [

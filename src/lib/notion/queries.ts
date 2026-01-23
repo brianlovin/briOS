@@ -6,11 +6,15 @@ import type {
 import { getAllBlocks } from "./blocks";
 import { notion } from "./client";
 import {
+  type AppDissectionDetail,
   type GoodWebsiteItem,
   type GoodWebsiteItemWithDate,
   hasProperties,
+  isValidVideoMetadata,
   type NotionAmaItem,
   type NotionAmaItemWithContent,
+  type NotionAppDissectionItem,
+  type NotionAppDissectionItemWithContent,
   type NotionDesignDetailsEpisodeItem,
   type NotionItem,
   type NotionListeningHistoryItem,
@@ -828,6 +832,201 @@ export async function getTilByShortId(shortId: string): Promise<NotionTilItemWit
     return getTilItemContent(page.id);
   } catch (error) {
     console.error(`Error fetching TIL item for short ID ${shortId}:`, error);
+    return null;
+  }
+}
+
+// ===== App Dissection Database =====
+
+export async function getAppDissectionDatabaseItems(): Promise<NotionAppDissectionItem[]> {
+  try {
+    const databaseId = process.env.NOTION_APP_DISSECTION_DATABASE_ID || "";
+    const dataSourceId = await getDataSourceId(databaseId);
+    const response = await notion.dataSources.query({
+      data_source_id: dataSourceId,
+      filter: {
+        property: "Status",
+        select: {
+          equals: "Published",
+        },
+      },
+      sorts: [
+        {
+          property: "Published",
+          direction: "descending",
+        },
+      ],
+    });
+
+    const items = response.results
+      .map((page) => {
+        if (!hasProperties(page)) return null;
+
+        const pageWithProps = page as PageObjectResponse;
+
+        const icon =
+          pageWithProps.icon?.type === "file"
+            ? pageWithProps.icon.file.url
+            : pageWithProps.icon?.type === "external"
+              ? pageWithProps.icon.external.url
+              : "";
+
+        const properties = pageWithProps.properties as {
+          Name?: { title: { plain_text: string }[] };
+          Slug?: { rich_text: { plain_text: string }[] };
+          Published?: { date: { start: string } | null };
+          Icon?: { url: string };
+          Status?: { select: { name: string } | null };
+        };
+
+        return {
+          id: pageWithProps.id,
+          name: properties.Name?.title[0]?.plain_text || "Untitled",
+          slug: properties.Slug?.rich_text[0]?.plain_text || "",
+          description: "", // Description is in page content, not properties
+          published: properties.Published?.date?.start || pageWithProps.created_time,
+          icon: properties.Icon?.url || icon,
+          status: properties.Status?.select?.name || "Draft",
+        } as NotionAppDissectionItem;
+      })
+      .filter((item): item is NotionAppDissectionItem => item !== null);
+
+    return items;
+  } catch (error) {
+    console.error("Error fetching app dissection items:", error);
+    return [];
+  }
+}
+
+export async function getAppDissectionItemBySlug(
+  slug: string,
+): Promise<NotionAppDissectionItemWithContent | null> {
+  try {
+    const databaseId = process.env.NOTION_APP_DISSECTION_DATABASE_ID || "";
+    const dataSourceId = await getDataSourceId(databaseId);
+    const response = await notion.dataSources.query({
+      data_source_id: dataSourceId,
+      filter: {
+        and: [
+          {
+            property: "Slug",
+            rich_text: {
+              equals: slug,
+            },
+          },
+          {
+            property: "Status",
+            select: {
+              equals: "Published",
+            },
+          },
+        ],
+      },
+    });
+
+    if (response.results.length === 0) {
+      return null;
+    }
+
+    const page = response.results[0];
+    if (!hasProperties(page)) return null;
+
+    const pageWithProps = page as PageObjectResponse;
+
+    const icon =
+      pageWithProps.icon?.type === "file"
+        ? pageWithProps.icon.file.url
+        : pageWithProps.icon?.type === "external"
+          ? pageWithProps.icon.external.url
+          : "";
+
+    const properties = pageWithProps.properties as {
+      Name?: { title: { plain_text: string }[] };
+      Slug?: { rich_text: { plain_text: string }[] };
+      Published?: { date: { start: string } | null };
+      Icon?: { url: string };
+      Status?: { select: { name: string } | null };
+    };
+
+    // Get all blocks from the page
+    const blocks = await getAllBlocks(page.id);
+
+    // Parse blocks into intro and detail sections
+    // Structure: intro paragraphs, divider, then sections (heading_2 + paragraphs + code block)
+    const introBlocks: ProcessedBlock[] = [];
+    const details: AppDissectionDetail[] = [];
+
+    let currentDetail: AppDissectionDetail | null = null;
+    let inIntro = true;
+
+    for (const block of blocks) {
+      // Divider marks end of intro
+      if (block.type === "divider") {
+        inIntro = false;
+        continue;
+      }
+
+      if (inIntro) {
+        introBlocks.push(block);
+        continue;
+      }
+
+      // Heading 2 starts a new detail section
+      if (block.type === "heading_2") {
+        // Save previous detail if exists
+        if (currentDetail) {
+          details.push(currentDetail);
+        }
+        // Start new detail
+        currentDetail = {
+          title: block.content.map((c) => c.text.content).join(""),
+          descriptionBlocks: [],
+        };
+        continue;
+      }
+
+      // Code block with JSON video metadata
+      if (block.type === "code" && block.language === "json" && currentDetail) {
+        const jsonContent = block.content.map((c) => c.text.content).join("");
+        try {
+          const parsed = JSON.parse(jsonContent);
+          if (isValidVideoMetadata(parsed)) {
+            currentDetail.video = parsed;
+          } else {
+            // Valid JSON but not video metadata, treat as regular content
+            currentDetail.descriptionBlocks.push(block);
+          }
+        } catch {
+          // Not valid JSON, treat as regular content
+          currentDetail.descriptionBlocks.push(block);
+        }
+        continue;
+      }
+
+      // Other blocks go into current detail's description
+      if (currentDetail) {
+        currentDetail.descriptionBlocks.push(block);
+      }
+    }
+
+    // Don't forget the last detail
+    if (currentDetail) {
+      details.push(currentDetail);
+    }
+
+    return {
+      id: pageWithProps.id,
+      name: properties.Name?.title[0]?.plain_text || "Untitled",
+      slug: properties.Slug?.rich_text[0]?.plain_text || "",
+      description: "", // Will be rendered from introBlocks
+      published: properties.Published?.date?.start || pageWithProps.created_time,
+      icon: properties.Icon?.url || icon,
+      status: properties.Status?.select?.name || "Draft",
+      introBlocks,
+      details,
+    };
+  } catch (error) {
+    console.error(`Error fetching app dissection item for slug ${slug}:`, error);
     return null;
   }
 }

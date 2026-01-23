@@ -184,6 +184,34 @@ export type NotionTilItemWithContent = NotionTilItem & {
   blocks: ProcessedBlock[];
 };
 
+// App Dissection types
+export type NotionAppDissectionItem = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  published: string;
+  icon: string;
+  status: string;
+};
+
+export type AppDissectionVideoMetadata = {
+  type: "app-dissection-video";
+  urls: string[];
+  orientation: "portrait" | "landscape";
+};
+
+export type AppDissectionDetail = {
+  title: string;
+  descriptionBlocks: ProcessedBlock[];
+  video?: AppDissectionVideoMetadata;
+};
+
+export type NotionAppDissectionItemWithContent = NotionAppDissectionItem & {
+  introBlocks: ProcessedBlock[];
+  details: AppDissectionDetail[];
+};
+
 // Type guard to check if a page has properties
 export function hasProperties(
   page: PageResponse,
@@ -205,4 +233,33 @@ export function isBlockObjectResponse(block: unknown): block is BlockObjectRespo
 // Helper to extract plain text from rich text array
 export function extractPlainText(richText: RichTextItemResponse[]): string {
   return richText.map((text) => text.plain_text).join("");
+}
+
+// Format a date string (YYYY-MM-DD) to "Month Year" format
+export function formatPublishedDate(dateString: string): string {
+  const [year, month] = dateString.split("-").map(Number);
+  return new Date(Date.UTC(year, month - 1, 1)).toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+}
+
+// Extract plain text description from processed blocks
+export function extractDescriptionFromBlocks(blocks: ProcessedBlock[]): string {
+  return blocks
+    .filter((block) => block.type === "paragraph")
+    .map((block) => block.content.map((c) => c.text.content).join(""))
+    .join(" ");
+}
+
+// Type guard for video metadata validation
+export function isValidVideoMetadata(parsed: unknown): parsed is AppDissectionVideoMetadata {
+  return (
+    typeof parsed === "object" &&
+    parsed !== null &&
+    (parsed as AppDissectionVideoMetadata).type === "app-dissection-video" &&
+    Array.isArray((parsed as AppDissectionVideoMetadata).urls) &&
+    ["portrait", "landscape"].includes((parsed as AppDissectionVideoMetadata).orientation)
+  );
 }

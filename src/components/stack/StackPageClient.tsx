@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
@@ -22,6 +23,15 @@ interface StackPageClientProps {
 
 export function StackPageClient({ initialData, initialLikes }: StackPageClientProps) {
   const { stacks, isInitialLoading, isValidating, isError } = useStacks(initialData);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const handlePlatformFilter = (platform: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("platform", platform);
+    router.push(`/stack?${params.toString()}`);
+  };
 
   // Collect all page IDs for batch likes fetching
   const pageIds = useMemo(() => stacks.map((item) => item.id), [stacks]);
@@ -84,7 +94,11 @@ export function StackPageClient({ initialData, initialLikes }: StackPageClientPr
                 className={`divide-secondary divide-y ${isValidating && !isInitialLoading ? "opacity-75 transition-opacity duration-200" : ""}`}
               >
                 {stacks.map((item) => (
-                  <StackItemComponent key={item.id} item={item} />
+                  <StackItemComponent
+                    key={item.id}
+                    item={item}
+                    onPlatformClick={handlePlatformFilter}
+                  />
                 ))}
               </div>
 
@@ -109,7 +123,12 @@ export function StackPageClient({ initialData, initialLikes }: StackPageClientPr
   );
 }
 
-function StackItemComponent({ item }: { item: StackItemType }) {
+interface StackItemComponentProps {
+  item: StackItemType;
+  onPlatformClick: (platform: string, e: React.MouseEvent) => void;
+}
+
+function StackItemComponent({ item, onPlatformClick }: StackItemComponentProps) {
   const [imageError, setImageError] = useState(false);
 
   // Determine the icon source: prefer icon over image
@@ -193,7 +212,11 @@ function StackItemComponent({ item }: { item: StackItemType }) {
       {/* Platforms column - desktop only */}
       <div className="hidden flex-wrap gap-1 md:col-span-3 md:flex">
         {item.platforms?.map((platform) => (
-          <PlatformBadge key={platform} platform={platform} />
+          <PlatformBadge
+            key={platform}
+            platform={platform}
+            onClick={(e) => onPlatformClick(platform, e)}
+          />
         ))}
       </div>
 
