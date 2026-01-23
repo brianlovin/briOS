@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 
 import { ListDetailWrapper } from "@/components/ListDetailWrapper";
@@ -18,6 +19,15 @@ interface StackPageClientProps {
 
 export function StackPageClient({ initialData }: StackPageClientProps) {
   const { stacks, isInitialLoading, isValidating, isError } = useStacks(initialData);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const handlePlatformFilter = (platform: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("platform", platform);
+    router.push(`/stack?${params.toString()}`);
+  };
 
   const topBarContent = useMemo(
     () => (
@@ -75,7 +85,11 @@ export function StackPageClient({ initialData }: StackPageClientProps) {
               className={`divide-secondary divide-y ${isValidating && !isInitialLoading ? "opacity-75 transition-opacity duration-200" : ""}`}
             >
               {stacks.map((item) => (
-                <StackItemComponent key={item.id} item={item} />
+                <StackItemComponent
+                  key={item.id}
+                  item={item}
+                  onPlatformClick={handlePlatformFilter}
+                />
               ))}
             </div>
 
@@ -99,7 +113,12 @@ export function StackPageClient({ initialData }: StackPageClientProps) {
   );
 }
 
-function StackItemComponent({ item }: { item: StackItemType }) {
+interface StackItemComponentProps {
+  item: StackItemType;
+  onPlatformClick: (platform: string, e: React.MouseEvent) => void;
+}
+
+function StackItemComponent({ item, onPlatformClick }: StackItemComponentProps) {
   const [imageError, setImageError] = useState(false);
 
   // Determine the icon source: prefer icon over image
@@ -178,7 +197,11 @@ function StackItemComponent({ item }: { item: StackItemType }) {
       {/* Platforms column - desktop only */}
       <div className="hidden flex-wrap gap-1 md:col-span-3 md:flex">
         {item.platforms?.map((platform) => (
-          <PlatformBadge key={platform} platform={platform} />
+          <PlatformBadge
+            key={platform}
+            platform={platform}
+            onClick={(e) => onPlatformClick(platform, e)}
+          />
         ))}
       </div>
     </div>
