@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 
+import { LikeButton } from "@/components/likes/LikeButton";
 import { renderBlocks } from "@/components/renderBlocks";
 import { PageTitle } from "@/components/Typography";
 import { FancySeparator } from "@/components/ui/FancySeparator";
@@ -50,6 +51,9 @@ export default function AMADetail() {
         {question.description && (
           <span className="text-secondary text-lg">{question.description}</span>
         )}
+        <div className="w-fit">
+          <LikeButton pageId={question.id} />
+        </div>
       </div>
 
       <FancySeparator />

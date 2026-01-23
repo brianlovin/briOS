@@ -4,10 +4,13 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 
+import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
+import { LikeButton } from "@/components/likes/LikeButton";
 import { ListDetailWrapper } from "@/components/ListDetailWrapper";
 import { StackFilters } from "@/components/stack/StackFilters";
 import { LoadingSpinner, PreviewCardProvider, PreviewCardTrigger } from "@/components/ui";
 import { PlatformBadge } from "@/components/ui/PlatformBadge";
+import type { LikeData } from "@/lib/hooks/useLikes";
 import { useStacks } from "@/lib/hooks/useStacks";
 import type { StackItem as StackItemType } from "@/lib/stack";
 
@@ -15,9 +18,10 @@ import { useTopBarActions } from "../TopBarActions";
 
 interface StackPageClientProps {
   initialData: StackItemType[];
+  initialLikes?: Record<string, LikeData>;
 }
 
-export function StackPageClient({ initialData }: StackPageClientProps) {
+export function StackPageClient({ initialData, initialLikes }: StackPageClientProps) {
   const { stacks, isInitialLoading, isValidating, isError } = useStacks(initialData);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -28,6 +32,9 @@ export function StackPageClient({ initialData }: StackPageClientProps) {
     params.set("platform", platform);
     router.push(`/stack?${params.toString()}`);
   };
+
+  // Collect all page IDs for batch likes fetching
+  const pageIds = useMemo(() => stacks.map((item) => item.id), [stacks]);
 
   const topBarContent = useMemo(
     () => (
@@ -61,55 +68,58 @@ export function StackPageClient({ initialData }: StackPageClientProps) {
   }
 
   return (
-    <PreviewCardProvider>
-      <ListDetailWrapper>
-        <div className="flex flex-1 flex-col overflow-hidden">
-          {/* Filters */}
-          <div className="border-secondary flex border-b p-4 md:hidden">
-            <StackFilters isLoading={isValidating && !isInitialLoading} />
-          </div>
-
-          {/* Table */}
-          <div className="relative flex-1 overflow-auto">
-            {/* Table Header - Sticky (hidden on mobile) */}
-            <div className="bg-secondary border-secondary sticky top-0 z-10 hidden border-b md:block dark:bg-neutral-950">
-              <div className="grid grid-cols-12 gap-4 px-4 py-2 text-sm font-medium">
-                <div className="col-span-3 text-left">Name</div>
-                <div className="col-span-6 text-left">Description</div>
-                <div className="col-span-3 text-left">Platforms</div>
-              </div>
+    <BatchLikesProvider pageIds={pageIds} initialData={initialLikes}>
+      <PreviewCardProvider>
+        <ListDetailWrapper>
+          <div className="flex flex-1 flex-col overflow-hidden">
+            {/* Filters */}
+            <div className="border-secondary flex border-b p-4 md:hidden">
+              <StackFilters isLoading={isValidating && !isInitialLoading} />
             </div>
 
-            {/* Table Content */}
-            <div
-              className={`divide-secondary divide-y ${isValidating && !isInitialLoading ? "opacity-75 transition-opacity duration-200" : ""}`}
-            >
-              {stacks.map((item) => (
-                <StackItemComponent
-                  key={item.id}
-                  item={item}
-                  onPlatformClick={handlePlatformFilter}
-                />
-              ))}
+            {/* Table */}
+            <div className="relative flex-1 overflow-auto">
+              {/* Table Header - Sticky (hidden on mobile) */}
+              <div className="bg-secondary border-secondary sticky top-0 z-10 hidden border-b md:block dark:bg-neutral-950">
+                <div className="grid grid-cols-12 gap-4 px-4 py-2 text-sm font-medium">
+                  <div className="col-span-3 text-left">Name</div>
+                  <div className="col-span-5 text-left">Description</div>
+                  <div className="col-span-3 text-left">Platforms</div>
+                  <div className="col-span-1 text-left">Likes</div>
+                </div>
+              </div>
+
+              {/* Table Content */}
+              <div
+                className={`divide-secondary divide-y ${isValidating && !isInitialLoading ? "opacity-75 transition-opacity duration-200" : ""}`}
+              >
+                {stacks.map((item) => (
+                  <StackItemComponent
+                    key={item.id}
+                    item={item}
+                    onPlatformClick={handlePlatformFilter}
+                  />
+                ))}
+              </div>
+
+              {/* Empty state */}
+              {stacks.length === 0 && !isValidating && (
+                <div className="flex h-32 items-center justify-center">
+                  <div className="text-secondary">No stack items found</div>
+                </div>
+              )}
+
+              {/* Loading state for empty results during filter changes */}
+              {stacks.length === 0 && isValidating && (
+                <div className="flex h-32 items-center justify-center">
+                  <div className="text-secondary">Loading filtered results...</div>
+                </div>
+              )}
             </div>
-
-            {/* Empty state */}
-            {stacks.length === 0 && !isValidating && (
-              <div className="flex h-32 items-center justify-center">
-                <div className="text-secondary">No stack items found</div>
-              </div>
-            )}
-
-            {/* Loading state for empty results during filter changes */}
-            {stacks.length === 0 && isValidating && (
-              <div className="flex h-32 items-center justify-center">
-                <div className="text-secondary">Loading filtered results...</div>
-              </div>
-            )}
           </div>
-        </div>
-      </ListDetailWrapper>
-    </PreviewCardProvider>
+        </ListDetailWrapper>
+      </PreviewCardProvider>
+    </BatchLikesProvider>
   );
 }
 
@@ -191,8 +201,13 @@ function StackItemComponent({ item, onPlatformClick }: StackItemComponentProps) 
         </div>
       </div>
 
+      {/* Like button - mobile only, positioned at start */}
+      <div className="flex-none self-center md:hidden" onClick={(e) => e.stopPropagation()}>
+        <LikeButton pageId={item.id} />
+      </div>
+
       {/* Description column - desktop only */}
-      <div className="text-tertiary hidden md:col-span-6 md:block">{item.description}</div>
+      <div className="text-tertiary hidden md:col-span-5 md:block">{item.description}</div>
 
       {/* Platforms column - desktop only */}
       <div className="hidden flex-wrap gap-1 md:col-span-3 md:flex">
@@ -203,6 +218,11 @@ function StackItemComponent({ item, onPlatformClick }: StackItemComponentProps) 
             onClick={(e) => onPlatformClick(platform, e)}
           />
         ))}
+      </div>
+
+      {/* Likes column - desktop only */}
+      <div className="hidden md:col-span-1 md:block" onClick={(e) => e.stopPropagation()}>
+        <LikeButton pageId={item.id} />
       </div>
     </div>
   );

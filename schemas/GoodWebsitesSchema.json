@@ -98,6 +98,15 @@
       "type": "date",
       "date": {}
     },
+    "Likes": {
+      "id": "p%60LM",
+      "name": "Likes",
+      "description": null,
+      "type": "number",
+      "number": {
+        "format": "number"
+      }
+    },
     "Process favicon": {
       "id": "v%5E%7B%3F",
       "name": "Process favicon",

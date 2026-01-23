@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 
+import { LikeButton } from "@/components/likes/LikeButton";
 import { renderBlocks } from "@/components/renderBlocks";
 import { getFullContent } from "@/lib/notion";
 
@@ -24,6 +25,7 @@ export default async function EpisodePage(props: { params: Promise<{ id: string 
       <div className="flex flex-col gap-1">
         <h1 className="text-primary text-2xl font-semibold">{metadata.title}</h1>
         <span className="text-quaternary text-sm">{date}</span>
+        <LikeButton pageId={metadata.id} />
       </div>
       <div className="flex flex-col gap-6">{renderBlocks(blocks)}</div>
     </div>

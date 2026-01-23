@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { LikeButton } from "@/components/likes/LikeButton";
 import { renderBlocks } from "@/components/renderBlocks";
 import { PageTitle } from "@/components/Typography";
 import { createArticleJsonLd, createMetadata, truncateDescription } from "@/lib/metadata";
@@ -94,6 +95,7 @@ export default async function TilEntryPage(props: { params: Promise<{ slug: stri
           </div>
 
           <div className="flex min-w-0 flex-col gap-4 text-lg">{renderBlocks(content.blocks)}</div>
+          <LikeButton pageId={content.id} />
         </div>
       </div>
     </>

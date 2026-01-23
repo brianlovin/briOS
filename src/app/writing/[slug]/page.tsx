@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 
+import { LikeButton } from "@/components/likes/LikeButton";
 import { renderBlocks } from "@/components/renderBlocks";
 import { List, ListItem, ListItemLabel } from "@/components/shared/ListComponents";
 import { PageTitle } from "@/components/Typography";
@@ -128,6 +129,9 @@ export default async function WritingPostPage(props: { params: Promise<{ slug: s
           <div className="flex flex-col gap-6">
             <p className="text-tertiary">{cleanDate}</p>
             <PageTitle>{metadata.title}</PageTitle>
+            <div className="w-fit">
+              <LikeButton pageId={metadata.id} />
+            </div>
           </div>
 
           <div className="flex min-w-0 flex-col gap-4 text-lg">{renderBlocks(blocks)}</div>
