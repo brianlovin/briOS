@@ -73,7 +73,7 @@ function generateParticles(intensity: number) {
 }
 
 export function LikeButton({ pageId, className }: LikeButtonProps) {
-  const { count, userLikes, canLike, isLoading, addLike } = useLikes(pageId);
+  const { count, userLikes, canLike, isLoading, addLike, removeLike } = useLikes(pageId);
   const [isShaking, setIsShaking] = useState(false);
   const [particles, setParticles] = useState<ReturnType<typeof generateParticles>>([]);
   const [particleKey, setParticleKey] = useState(0);
@@ -128,6 +128,21 @@ export function LikeButton({ pageId, className }: LikeButtonProps) {
     }
   };
 
+  const handleContextMenu = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (isLoading || userLikes <= 0) return;
+
+    // Subtle feedback for unlike
+    buttonScale.set(0.98);
+    heartScale.set(0.9);
+    setTimeout(() => {
+      buttonScale.set(1);
+      heartScale.set(1);
+    }, 100);
+
+    await removeLike();
+  };
+
   const isFilled = userLikes > 0;
   const fillProgress = userLikes / MAX_LIKES_PER_USER;
 
@@ -146,6 +161,7 @@ export function LikeButton({ pageId, className }: LikeButtonProps) {
         variant="ghost"
         size="sm"
         onClick={handleClick}
+        onContextMenu={handleContextMenu}
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
         onPointerLeave={handlePointerUp}

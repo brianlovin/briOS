@@ -9,6 +9,7 @@ import {
   getMaxLikesPerUser,
   getUserLikeCount,
   hasUserLiked,
+  removeLike,
 } from "@/lib/likes-redis";
 import { getClientIp, hashUserIp } from "@/lib/user-hash";
 
@@ -83,5 +84,44 @@ export async function POST(request: Request, props: { params: Promise<{ id: stri
     }
     console.error("Error adding like:", error);
     return errorResponse("Failed to add like");
+  }
+}
+
+export async function DELETE(request: Request, props: { params: Promise<{ id: string }> }) {
+  try {
+    const params = await props.params;
+    const { id } = paramsSchema.parse(params);
+
+    const ip = getClientIp(request);
+    const userId = hashUserIp(ip);
+
+    // Check rate limit first
+    const isRateLimited = await checkRateLimit(ip);
+    if (isRateLimited) {
+      return errorResponse("Rate limit exceeded. Try again later.", 429);
+    }
+
+    // Check if user has likes to remove
+    const userLikes = await getUserLikeCount(userId, id);
+    if (userLikes <= 0) {
+      return errorResponse("No likes to remove", 400);
+    }
+
+    // Remove the like
+    const { count: newCount, userLikes: newUserLikes } = await removeLike(userId, id);
+    const maxLikes = getMaxLikesPerUser();
+
+    return NextResponse.json({
+      count: newCount,
+      userLikes: newUserLikes,
+      hasLiked: newUserLikes > 0,
+      canLike: newUserLikes < maxLikes,
+    });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return errorResponse("Invalid page ID", 400);
+    }
+    console.error("Error removing like:", error);
+    return errorResponse("Failed to remove like");
   }
 }
