@@ -154,7 +154,7 @@ export function LikeButton({ pageId, className }: LikeButtonProps) {
   return (
     <motion.div
       style={{ scale: buttonSpring }}
-      animate={isShaking ? { x: [0, -5, 5, -5, 5, -3, 3, 0] } : {}}
+      animate={isShaking ? { x: [0, -4.5, 4.5, -4.5, 4.5, -2.7, 2.7, 0] } : {}}
       transition={{ duration: 0.4, ease: "easeInOut" }}
     >
       <Button
