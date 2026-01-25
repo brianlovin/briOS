@@ -37,6 +37,11 @@ export default function RootLayout({ children }: PropsWithChildren) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="theme-color" content="#fff" media="(prefers-color-scheme: light)" />
         <meta name="theme-color" content="rgb(10, 10, 10)" media="(prefers-color-scheme: dark)" />
+        <script
+          defer
+          src="https://my-analytics-broken-fog-8153.fly.dev/tracker.js"
+          data-site-id="5de00909-54eb-48a0-bfa9-12e023184d22"
+        />
       </head>
       <body className={cn(inter.variable, ptSerif.variable)}>
         <Providers>
