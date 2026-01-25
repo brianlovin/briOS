@@ -16,13 +16,21 @@ interface LikeButtonProps {
 
 function AnimatedDigit({ digit, direction }: { digit: string; direction: "up" | "down" }) {
   return (
-    <div className="relative inline-flex h-[1em] w-[0.6em] items-center justify-center overflow-hidden">
+    <div
+      className="relative inline-flex h-[1em] w-[0.6em] items-center justify-center overflow-hidden"
+      style={{
+        maskImage:
+          "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
+        WebkitMaskImage:
+          "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
+      }}
+    >
       <AnimatePresence mode="popLayout" initial={false}>
         <motion.span
           key={digit}
-          initial={{ y: direction === "up" ? "100%" : "-100%", opacity: 0 }}
-          animate={{ y: "0%", opacity: 1 }}
-          exit={{ y: direction === "up" ? "-100%" : "100%", opacity: 0 }}
+          initial={{ y: direction === "up" ? "100%" : "-100%", filter: "blur(4px)" }}
+          animate={{ y: "0%", filter: "blur(0px)" }}
+          exit={{ y: direction === "up" ? "-100%" : "100%", filter: "blur(4px)" }}
           transition={{
             type: "spring",
             stiffness: 500,
@@ -195,12 +203,13 @@ export function LikeButton({ pageId, className }: LikeButtonProps) {
                     key={i}
                     className="absolute top-1/2 left-1/2 rounded-full bg-red-400"
                     style={{ width: p.size, height: p.size }}
-                    initial={{ x: "-50%", y: "-50%", scale: 1, opacity: 1 }}
+                    initial={{ x: "-50%", y: "-50%", scale: 1, opacity: 1, filter: "blur(0px)" }}
                     animate={{
                       x: `calc(-50% + ${Math.cos(p.angle) * p.distance}px)`,
                       y: `calc(-50% + ${Math.sin(p.angle) * p.distance}px)`,
                       scale: 0,
                       opacity: 0,
+                      filter: `blur(${Math.round(p.distance / 12)}px)`,
                     }}
                     transition={{ duration: p.duration, ease: "easeOut" }}
                   />
