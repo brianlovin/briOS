@@ -19,7 +19,8 @@ function AnimatedDigit({ digit, direction }: { digit: string; direction: "up" | 
     <div
       className="relative inline-flex h-[1em] w-[0.6em] items-center justify-center overflow-hidden"
       style={{
-        maskImage: "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
+        maskImage:
+          "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
         WebkitMaskImage:
           "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
       }}
