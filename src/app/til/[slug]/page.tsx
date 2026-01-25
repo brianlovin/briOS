@@ -95,7 +95,9 @@ export default async function TilEntryPage(props: { params: Promise<{ slug: stri
           </div>
 
           <div className="flex min-w-0 flex-col gap-4 text-lg">{renderBlocks(content.blocks)}</div>
-          <LikeButton pageId={content.id} />
+          <div className="w-fit">
+            <LikeButton pageId={content.id} />
+          </div>
         </div>
       </div>
     </>

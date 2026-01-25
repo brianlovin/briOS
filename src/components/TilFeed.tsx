@@ -86,7 +86,7 @@ function TilEntry({
         )}
 
         {/* Like button - visible only on mobile, below content */}
-        <div className="mt-1 sm:hidden">
+        <div className="mt-1 w-fit sm:hidden">
           <LikeButton pageId={entry.id} />
         </div>
       </div>
