@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 
+import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { LikeButton } from "@/components/likes/LikeButton";
 import { renderBlocks } from "@/components/renderBlocks";
 import { List, ListItem, ListItemLabel } from "@/components/shared/ListComponents";
 import { PageTitle } from "@/components/Typography";
 import { FancySeparator } from "@/components/ui/FancySeparator";
+import { getServerLikes } from "@/lib/likes-server";
 import { createArticleJsonLd, createMetadata, truncateDescription } from "@/lib/metadata";
 import { getWritingPostByShortId, getWritingPostContentBySlug } from "@/lib/notion";
 import { buildSlug, extractShortIdFromSlug } from "@/lib/short-id";
@@ -95,8 +97,13 @@ export default async function WritingPostPage(props: { params: Promise<{ slug: s
   // Use canonical slug for all URLs
   const canonicalSlug = metadata.shortId ? buildSlug(metadata.title, metadata.shortId) : slug;
 
-  // Get all posts and select 5 random ones (excluding current post)
-  const allPosts = await getAllWritingPosts();
+  // Fetch likes and related posts in parallel
+  const [initialLikes, allPosts] = await Promise.all([
+    getServerLikes([metadata.id]),
+    getAllWritingPosts(),
+  ]);
+
+  // Get 5 random posts (excluding current post)
   const otherPosts = allPosts.filter((post) => post.shortId && post.shortId !== metadata.shortId);
   const randomPosts = getRandomPosts(otherPosts, 5);
 
@@ -129,9 +136,11 @@ export default async function WritingPostPage(props: { params: Promise<{ slug: s
           <div className="flex flex-col gap-6">
             <p className="text-tertiary">{cleanDate}</p>
             <PageTitle>{metadata.title}</PageTitle>
-            <div className="w-fit">
-              <LikeButton pageId={metadata.id} />
-            </div>
+            <BatchLikesProvider pageIds={[metadata.id]} initialData={initialLikes}>
+              <div className="w-fit">
+                <LikeButton pageId={metadata.id} />
+              </div>
+            </BatchLikesProvider>
           </div>
 
           <div className="flex min-w-0 flex-col gap-4 text-lg">{renderBlocks(blocks)}</div>
