@@ -29,7 +29,7 @@
     "dompurify": "^3.3.0",
     "fathom-client": "^3.7.2",
     "feed": "^5.1.0",
-    "jotai": "^2.16.0",
+    "jotai": "^2.16.2",
     "jsonwebtoken": "^9.0.3",
     "motion": "^12.23.26",
     "next": "^16.1.2",
