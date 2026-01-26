@@ -2,6 +2,8 @@ import { Feed } from "feed";
 
 import { getAmaQuestions } from "@/lib/ama";
 import { SITE_CONFIG } from "@/lib/metadata";
+import { getAmaItemContent } from "@/lib/notion/queries";
+import { extractPreviewText } from "@/lib/notion/types";
 
 export async function GET() {
   try {
@@ -26,15 +28,41 @@ export async function GET() {
 
     const questions = await getAmaQuestions();
 
-    questions.forEach((question) => {
+    // Fetch content for all questions in parallel (gracefully handle failures)
+    const questionsWithContent = await Promise.all(
+      questions.map(async (question) => {
+        try {
+          const content = await getAmaItemContent(question.id);
+          return { question, content };
+        } catch {
+          return { question, content: null };
+        }
+      }),
+    );
+
+    questionsWithContent.forEach(({ question, content }) => {
       const questionUrl = `${SITE_CONFIG.url}/ama/${question.id}`;
       const publishDate = new Date(question.answeredAt);
+
+      // Build description with question details and answer preview
+      const descriptionParts: string[] = [];
+      if (question.description) {
+        descriptionParts.push(question.description);
+      }
+      if (content?.blocks) {
+        const answerPreview = extractPreviewText(content.blocks, { maxBlocks: 3 });
+        if (answerPreview) {
+          descriptionParts.push("---");
+          descriptionParts.push(answerPreview);
+        }
+      }
+      const description = descriptionParts.join("\n\n") || `AMA: ${question.title}`;
 
       feed.addItem({
         title: question.title,
         id: question.id,
         link: questionUrl,
-        description: question.description || `AMA: ${question.title}`,
+        description,
         date: publishDate,
         published: publishDate,
         author: [

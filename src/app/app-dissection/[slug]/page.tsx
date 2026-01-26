@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import { createArticleJsonLd, createMetadata, truncateDescription } from "@/lib/metadata";
 import { getAppDissectionDatabaseItems, getAppDissectionItemBySlug } from "@/lib/notion/queries";
-import { extractDescriptionFromBlocks } from "@/lib/notion/types";
+import { extractPreviewText } from "@/lib/notion/types";
 
 import { AppDissectionDetail } from "./components/AppDissectionDetail";
 
@@ -26,7 +26,7 @@ export async function generateMetadata(props: {
     };
   }
 
-  const descriptionText = extractDescriptionFromBlocks(post.introBlocks);
+  const descriptionText = extractPreviewText(post.introBlocks, { separator: " " });
 
   return createMetadata({
     title: `${post.name} - App Dissection`,
@@ -48,7 +48,7 @@ export default async function AppDissectionPostPage(props: { params: Promise<{ s
     notFound();
   }
 
-  const descriptionText = extractDescriptionFromBlocks(post.introBlocks);
+  const descriptionText = extractPreviewText(post.introBlocks, { separator: " " });
 
   // Generate JSON-LD structured data
   const articleJsonLd = createArticleJsonLd({

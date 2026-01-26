@@ -29,11 +29,21 @@ export async function GET() {
     websites.forEach((website) => {
       const publishDate = new Date(website.createdTime);
 
+      // Build description with view link and tags
+      const descriptionParts: string[] = [];
+      if (website.url) {
+        descriptionParts.push(`View: ${website.url}`);
+      }
+      if (website.tags?.length) {
+        descriptionParts.push(`Tags: ${website.tags.join(", ")}`);
+      }
+      const description = descriptionParts.join("\n\n") || "A good website";
+
       feed.addItem({
         title: website.name,
         id: website.id,
         link: website.url || `${SITE_CONFIG.url}/sites`,
-        description: website.tags?.length ? `Tags: ${website.tags.join(", ")}` : "A good website",
+        description,
         date: publishDate,
         published: publishDate,
         author: [

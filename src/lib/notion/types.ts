@@ -245,12 +245,15 @@ export function formatPublishedDate(dateString: string): string {
   });
 }
 
-// Extract plain text description from processed blocks
-export function extractDescriptionFromBlocks(blocks: ProcessedBlock[]): string {
-  return blocks
-    .filter((block) => block.type === "paragraph")
-    .map((block) => block.content.map((c) => c.text.content).join(""))
-    .join(" ");
+// Extract plain text from processed blocks
+export function extractPreviewText(
+  blocks: ProcessedBlock[],
+  options: { maxBlocks?: number; separator?: string } = {},
+): string {
+  const { maxBlocks, separator = "\n\n" } = options;
+  const paragraphs = blocks.filter((block) => block.type === "paragraph");
+  const limited = maxBlocks ? paragraphs.slice(0, maxBlocks) : paragraphs;
+  return limited.map((block) => block.content.map((c) => c.text.content).join("")).join(separator);
 }
 
 // Type guard for video metadata validation
