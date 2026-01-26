@@ -2,7 +2,7 @@ import { Feed } from "feed";
 
 import { SITE_CONFIG } from "@/lib/metadata";
 import { getAppDissectionDatabaseItems, getAppDissectionItemBySlug } from "@/lib/notion/queries";
-import { extractPreviewText } from "@/lib/notion/rss-utils";
+import { extractPreviewText } from "@/lib/notion/types";
 
 export async function GET() {
   try {
@@ -27,11 +27,15 @@ export async function GET() {
       },
     });
 
-    // Fetch content for all items in parallel
+    // Fetch content for all items in parallel (gracefully handle failures)
     const itemsWithContent = await Promise.all(
       items.map(async (item) => {
-        const content = await getAppDissectionItemBySlug(item.slug);
-        return { item, content };
+        try {
+          const content = await getAppDissectionItemBySlug(item.slug);
+          return { item, content };
+        } catch {
+          return { item, content: null };
+        }
       }),
     );
 
@@ -42,13 +46,13 @@ export async function GET() {
       // Build description with intro text and view link
       const descriptionParts: string[] = [];
       if (content?.introBlocks) {
-        const introText = extractPreviewText(content.introBlocks, 1);
+        const introText = extractPreviewText(content.introBlocks, { maxBlocks: 1 });
         if (introText) {
           descriptionParts.push(introText);
         }
       }
       descriptionParts.push(`View full dissection: ${itemUrl}`);
-      const description = descriptionParts.join("\n\n") || `Design breakdown of ${item.name}`;
+      const description = descriptionParts.join("\n\n");
 
       feed.addItem({
         title: item.name,

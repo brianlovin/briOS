@@ -3,7 +3,7 @@ import { Feed } from "feed";
 import { getAmaQuestions } from "@/lib/ama";
 import { SITE_CONFIG } from "@/lib/metadata";
 import { getAmaItemContent } from "@/lib/notion/queries";
-import { extractPreviewText } from "@/lib/notion/rss-utils";
+import { extractPreviewText } from "@/lib/notion/types";
 
 export async function GET() {
   try {
@@ -28,11 +28,15 @@ export async function GET() {
 
     const questions = await getAmaQuestions();
 
-    // Fetch content for all questions in parallel
+    // Fetch content for all questions in parallel (gracefully handle failures)
     const questionsWithContent = await Promise.all(
       questions.map(async (question) => {
-        const content = await getAmaItemContent(question.id);
-        return { question, content };
+        try {
+          const content = await getAmaItemContent(question.id);
+          return { question, content };
+        } catch {
+          return { question, content: null };
+        }
       }),
     );
 
@@ -46,7 +50,7 @@ export async function GET() {
         descriptionParts.push(question.description);
       }
       if (content?.blocks) {
-        const answerPreview = extractPreviewText(content.blocks, 3);
+        const answerPreview = extractPreviewText(content.blocks, { maxBlocks: 3 });
         if (answerPreview) {
           descriptionParts.push("---");
           descriptionParts.push(answerPreview);

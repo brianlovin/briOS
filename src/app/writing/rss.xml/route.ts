@@ -2,7 +2,7 @@ import { Feed } from "feed";
 
 import { SITE_CONFIG } from "@/lib/metadata";
 import { getWritingPostContent } from "@/lib/notion/queries";
-import { extractPreviewText } from "@/lib/notion/rss-utils";
+import { extractPreviewText } from "@/lib/notion/types";
 import { buildSlug } from "@/lib/short-id";
 import { getAllWritingPosts } from "@/lib/writing";
 
@@ -32,11 +32,15 @@ export async function GET() {
     const posts = await getAllWritingPosts();
     const postsWithShortId = posts.filter((post) => post.shortId);
 
-    // Fetch content for all posts in parallel
+    // Fetch content for all posts in parallel (gracefully handle failures)
     const postsWithContent = await Promise.all(
       postsWithShortId.map(async (post) => {
-        const content = await getWritingPostContent(post.id);
-        return { post, content };
+        try {
+          const content = await getWritingPostContent(post.id);
+          return { post, content };
+        } catch {
+          return { post, content: null };
+        }
       }),
     );
 
@@ -48,7 +52,7 @@ export async function GET() {
       // Build description with content preview and view link
       const descriptionParts: string[] = [];
       if (content?.blocks) {
-        const previewText = extractPreviewText(content.blocks, 2);
+        const previewText = extractPreviewText(content.blocks, { maxBlocks: 2 });
         if (previewText) {
           descriptionParts.push(previewText);
         }

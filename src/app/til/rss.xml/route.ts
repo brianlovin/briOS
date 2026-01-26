@@ -2,7 +2,7 @@ import { Feed } from "feed";
 
 import { SITE_CONFIG } from "@/lib/metadata";
 import { getTilItemContent } from "@/lib/notion/queries";
-import { extractPreviewText } from "@/lib/notion/rss-utils";
+import { extractPreviewText } from "@/lib/notion/types";
 import { buildSlug } from "@/lib/short-id";
 import { getAllTilEntries } from "@/lib/til";
 
@@ -30,11 +30,15 @@ export async function GET() {
     const entries = await getAllTilEntries();
     const entriesWithShortId = entries.filter((entry) => entry.shortId);
 
-    // Fetch content for all entries in parallel
+    // Fetch content for all entries in parallel (gracefully handle failures)
     const entriesWithContent = await Promise.all(
       entriesWithShortId.map(async (entry) => {
-        const content = await getTilItemContent(entry.id);
-        return { entry, content };
+        try {
+          const content = await getTilItemContent(entry.id);
+          return { entry, content };
+        } catch {
+          return { entry, content: null };
+        }
       }),
     );
 
@@ -45,7 +49,7 @@ export async function GET() {
       // Build description with first paragraph and view link
       const descriptionParts: string[] = [];
       if (content?.blocks) {
-        const previewText = extractPreviewText(content.blocks, 1);
+        const previewText = extractPreviewText(content.blocks, { maxBlocks: 1 });
         if (previewText) {
           descriptionParts.push(previewText);
         }
