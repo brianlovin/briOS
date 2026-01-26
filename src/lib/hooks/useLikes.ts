@@ -25,7 +25,7 @@ export function useLikes(pageId: string) {
 
   const { data, error, isLoading } = useSWR<LikeData>(
     pageId ? `/api/likes/${pageId}` : null,
-    // Don't fetch if we have initial data - rely on optimistic updates
+    // Don't fetch individually if batch context provides data
     initialData ? null : fetcher,
     {
       revalidateOnFocus: false,

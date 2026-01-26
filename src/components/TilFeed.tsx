@@ -9,12 +9,14 @@ import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { LikeButton } from "@/components/likes/LikeButton";
 import { renderBlocks } from "@/components/renderBlocks";
 import { fetcher } from "@/lib/fetcher";
+import type { LikeData } from "@/lib/hooks/useLikes";
 import type { NotionTilItem, NotionTilItemWithContent } from "@/lib/notion";
 import { buildSlug } from "@/lib/short-id";
 import { useTilEntries } from "@/lib/til";
 
 interface TilFeedProps {
   initialEntries: NotionTilItemWithContent[];
+  initialLikes?: Record<string, LikeData>;
 }
 
 function formatDate(dateString: string) {
@@ -94,7 +96,7 @@ function TilEntry({
   );
 }
 
-export function TilFeed({ initialEntries }: TilFeedProps) {
+export function TilFeed({ initialEntries, initialLikes }: TilFeedProps) {
   const { items, isLoading, isLoadingMore, isReachingEnd, setSize, size } = useTilEntries();
 
   // Build a map of initial content for quick lookup
@@ -113,7 +115,7 @@ export function TilFeed({ initialEntries }: TilFeedProps) {
   }, [setSize, size]);
 
   return (
-    <BatchLikesProvider pageIds={pageIds}>
+    <BatchLikesProvider pageIds={pageIds} initialData={initialLikes}>
       <InfiniteScrollList
         as="div"
         items={entries}

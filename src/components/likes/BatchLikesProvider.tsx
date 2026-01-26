@@ -13,10 +13,9 @@ interface BatchLikesProviderProps {
 export function BatchLikesProvider({ pageIds, initialData, children }: BatchLikesProviderProps) {
   const [fetchedData, setFetchedData] = useState<Record<string, LikeData>>({});
 
-  // Fetch data client-side only if no initial data provided
-  // Note: pageIds should be memoized by the parent component
+  // Always fetch user-specific data client-side (SSR only provides counts)
   useEffect(() => {
-    if (initialData || pageIds.length === 0) return;
+    if (pageIds.length === 0) return;
 
     const controller = new AbortController();
 
@@ -38,11 +37,13 @@ export function BatchLikesProvider({ pageIds, initialData, children }: BatchLike
     fetchBatchLikes();
 
     return () => controller.abort();
-  }, [pageIds, initialData]);
+  }, [pageIds]);
 
-  // Use initial data if provided, otherwise use fetched data
+  // Use fetched data (has user-specific info) if available, fall back to SSR counts
   const contextValue = useMemo(
-    () => ({ initialData: initialData ?? fetchedData }),
+    () => ({
+      initialData: Object.keys(fetchedData).length > 0 ? fetchedData : (initialData ?? {}),
+    }),
     [initialData, fetchedData],
   );
 
