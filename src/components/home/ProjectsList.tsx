@@ -79,6 +79,12 @@ const projects = [
     description: "A visual guide to understand terminals",
     external: true,
   },
+  {
+    name: "HN CLI",
+    href: "https://github.com/brianlovin/hn-cli",
+    description: "A command-line interface for Hacker News",
+    external: true,
+  },
 ];
 
 interface ProjectsListProps {

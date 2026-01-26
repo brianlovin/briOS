@@ -17,7 +17,7 @@ import { useHNPost } from "@/lib/hooks/useHn";
 import { stripHtmlTags } from "@/lib/utils";
 import { HackerNewsComment, HackerNewsPost } from "@/types/hackernews";
 
-import { HNDigestCard } from "../HNDigestCard";
+import { HNCLIUpsell, HNDigestCard } from "../HNDigestCard";
 import { useHNPostsContext } from "../HNPostsContext";
 
 // Lazily initialize DOMPurify to avoid SSR issues
@@ -183,7 +183,12 @@ export default function HNPostPageClient({ initialPost }: HNPostPageClientProps)
             )}
           </div>
 
-          <HNDigestCard className="mb-12" />
+          {!isSubscribed && (
+            <div className="mb-12 flex flex-col gap-4">
+              <HNDigestCard />
+              <HNCLIUpsell />
+            </div>
+          )}
 
           <FancySeparator />
 
@@ -196,7 +201,10 @@ export default function HNPostPageClient({ initialPost }: HNPostPageClientProps)
           {!isSubscribed && post?.comments && !!post.comments.length && (
             <div className="pt-8 md:pt-12">
               <FancySeparator />
-              <HNDigestCard className="mt-8" />
+              <div className="mt-8 flex flex-col gap-4">
+                <HNDigestCard />
+                <HNCLIUpsell />
+              </div>
             </div>
           )}
         </div>

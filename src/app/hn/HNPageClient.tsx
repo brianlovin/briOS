@@ -5,7 +5,7 @@ import { useAtomValue } from "jotai";
 import { hnSubscribedAtom } from "@/atoms/hnSubscription";
 import { SpeechBubble } from "@/components/icons/SpeechBubble";
 
-import { HNDigestCard } from "./HNDigestCard";
+import { HNCLIUpsell, HNDigestCard } from "./HNDigestCard";
 
 export function HNPageClient() {
   const isSubscribed = useAtomValue(hnSubscribedAtom);
@@ -15,7 +15,10 @@ export function HNPageClient() {
       {isSubscribed ? (
         <SpeechBubble size={100} className="opacity-10" />
       ) : (
-        <HNDigestCard className="bg-elevated max-w-xl shadow-xs" />
+        <div className="flex w-full max-w-xl flex-col gap-4">
+          <HNDigestCard className="bg-elevated shadow-xs" />
+          <HNCLIUpsell />
+        </div>
       )}
     </div>
   );

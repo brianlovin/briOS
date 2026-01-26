@@ -1,12 +1,43 @@
 "use client";
 import { useAtom } from "jotai";
+import { useState } from "react";
 
-import { hnSubscribedAtom } from "@/atoms/hnSubscription";
+import { hnCliCopiedAtom, hnSubscribedAtom } from "@/atoms/hnSubscription";
 import { Close } from "@/components/icons/Close";
 import { Triangle } from "@/components/icons/Triangle";
 import { cn } from "@/lib/utils";
 
 import { SubscribeForm } from "./SubscribeForm";
+
+const CLI_COMMAND = "npm install -g @brianlovin/hn-cli";
+
+export function HNCLIUpsell({ className }: { className?: string }) {
+  const [isSubscribed] = useAtom(hnSubscribedAtom);
+  const [hasCopied, setHasCopied] = useAtom(hnCliCopiedAtom);
+  const [showCopied, setShowCopied] = useState(false);
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(CLI_COMMAND);
+    setShowCopied(true);
+    setTimeout(() => {
+      setShowCopied(false);
+      setHasCopied(true);
+    }, 1500);
+  };
+
+  if (isSubscribed || hasCopied) return null;
+
+  return (
+    <div className={cn("text-center font-mono text-sm", className)}>
+      <button
+        onClick={handleCopy}
+        className="text-tertiary hover:text-secondary cursor-pointer transition-colors"
+      >
+        {showCopied ? "Copied!" : CLI_COMMAND}
+      </button>
+    </div>
+  );
+}
 
 export function HNDigestCard({ className }: { className?: string }) {
   const [isSubscribed, setIsSubscribed] = useAtom(hnSubscribedAtom);
