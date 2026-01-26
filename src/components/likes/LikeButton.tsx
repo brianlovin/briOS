@@ -32,12 +32,14 @@ function AnimatedDigit({ digit, direction }: { digit: string; direction: "up" | 
           animate={{ y: "0%", filter: "blur(0px)" }}
           exit={{ y: direction === "up" ? "-100%" : "100%", filter: "blur(4px)" }}
           transition={{
-            type: "spring",
-            stiffness: 500,
-            damping: 30,
-            mass: 0.8,
+            duration: 0.2,
+            ease: [0.25, 0.1, 0.25, 1],
           }}
           className="absolute leading-none"
+          style={{
+            willChange: "transform",
+            backfaceVisibility: "hidden",
+          }}
         >
           {digit}
         </motion.span>
