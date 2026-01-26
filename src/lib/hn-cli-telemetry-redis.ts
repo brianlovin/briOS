@@ -57,7 +57,11 @@ export async function trackUser(userId: string): Promise<void> {
 /**
  * Store a batch of events from a user
  */
-export async function storeEvents(userId: string, events: TelemetryEvent[]): Promise<void> {
+export async function storeEvents(
+  userId: string,
+  events: TelemetryEvent[],
+  version?: string,
+): Promise<void> {
   const client = getTelemetryRedis();
   if (!client || events.length === 0) return;
 
@@ -70,6 +74,7 @@ export async function storeEvents(userId: string, events: TelemetryEvent[]): Pro
       // Store the full event in a list for that day
       const eventData = JSON.stringify({
         userId,
+        version,
         event: event.event,
         timestamp: event.timestamp,
         properties: event.properties,

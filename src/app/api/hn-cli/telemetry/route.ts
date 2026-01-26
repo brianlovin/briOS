@@ -12,6 +12,7 @@ const eventSchema = z.object({
 
 const bodySchema = z.object({
   userId: z.string().uuid(),
+  version: z.string().max(20).optional(),
   events: z.array(eventSchema).min(1).max(100),
 });
 
@@ -24,10 +25,10 @@ export async function POST(request: Request) {
       return errorResponse("Invalid request body", 400, parsed.error.flatten());
     }
 
-    const { userId, events } = parsed.data;
+    const { userId, version, events } = parsed.data;
 
     await trackUser(userId);
-    await storeEvents(userId, events);
+    await storeEvents(userId, events, version);
 
     return NextResponse.json({ ok: true });
   } catch (error) {
