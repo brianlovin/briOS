@@ -1,7 +1,8 @@
 import { Feed } from "feed";
 
 import { SITE_CONFIG } from "@/lib/metadata";
-import { getAppDissectionDatabaseItems } from "@/lib/notion/queries";
+import { getAppDissectionDatabaseItems, getAppDissectionItemBySlug } from "@/lib/notion/queries";
+import { extractPreviewText } from "@/lib/notion/rss-utils";
 
 export async function GET() {
   try {
@@ -26,15 +27,34 @@ export async function GET() {
       },
     });
 
-    items.forEach((item) => {
+    // Fetch content for all items in parallel
+    const itemsWithContent = await Promise.all(
+      items.map(async (item) => {
+        const content = await getAppDissectionItemBySlug(item.slug);
+        return { item, content };
+      }),
+    );
+
+    itemsWithContent.forEach(({ item, content }) => {
       const itemUrl = `${SITE_CONFIG.url}/app-dissection/${item.slug}`;
       const publishDate = new Date(item.published);
+
+      // Build description with intro text and view link
+      const descriptionParts: string[] = [];
+      if (content?.introBlocks) {
+        const introText = extractPreviewText(content.introBlocks, 1);
+        if (introText) {
+          descriptionParts.push(introText);
+        }
+      }
+      descriptionParts.push(`View full dissection: ${itemUrl}`);
+      const description = descriptionParts.join("\n\n") || `Design breakdown of ${item.name}`;
 
       feed.addItem({
         title: item.name,
         id: item.slug,
         link: itemUrl,
-        description: item.description || `Design breakdown of ${item.name}`,
+        description,
         date: publishDate,
         published: publishDate,
         author: [
