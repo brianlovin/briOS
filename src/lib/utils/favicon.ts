@@ -172,12 +172,25 @@ async function fetchBasicMetadata(url: string): Promise<{
 
     // Try to extract high-quality icons in order of preference
     // Data URLs (base64 encoded) are now supported
+    // Note: ICO files are deprioritized because they often contain only BMP data
+    // which is harder to process than PNG/SVG formats
     const candidateIcons: string[] = [];
 
+    // Helper to check if URL points to an ICO file
+    const isIcoFile = (url: string): boolean => {
+      try {
+        const pathname = new URL(url, "http://example.com").pathname.toLowerCase();
+        return pathname.endsWith(".ico");
+      } catch {
+        return url.toLowerCase().endsWith(".ico");
+      }
+    };
+
     // 1. Apple touch icon (usually highest quality, 180x180 or similar)
+    // Skip if it's an ICO file - these often don't contain extractable PNG data
     const appleIcon =
       extractLinkHref("apple-touch-icon") || extractLinkHref("apple-touch-icon-precomposed");
-    if (appleIcon) candidateIcons.push(appleIcon);
+    if (appleIcon && !isIcoFile(appleIcon)) candidateIcons.push(appleIcon);
 
     // 2. High-res icon with sizes attribute
     const highResIcon = headContent.match(
@@ -201,12 +214,16 @@ async function fetchBasicMetadata(url: string): Promise<{
       }
     }
 
-    // 4. Any icon or shortcut icon
+    // 4. Any icon or shortcut icon (prefer non-ICO)
     const standardIcon =
       extractLinkHref("icon") || extractLinkHref("shortcut icon") || extractLinkHref("shortcut");
-    if (standardIcon) candidateIcons.push(standardIcon);
+    if (standardIcon && !isIcoFile(standardIcon)) candidateIcons.push(standardIcon);
 
-    // 5. OG image as last resort (sometimes sites use their logo as og:image)
+    // 5. ICO files as lower priority fallback (may not have extractable PNG data)
+    if (appleIcon && isIcoFile(appleIcon)) candidateIcons.push(appleIcon);
+    if (standardIcon && isIcoFile(standardIcon)) candidateIcons.push(standardIcon);
+
+    // 6. OG image as last resort (sometimes sites use their logo as og:image)
     if (ogImage && ogImage.includes("logo")) {
       candidateIcons.push(ogImage);
     }
