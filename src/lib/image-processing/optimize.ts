@@ -31,11 +31,11 @@ export async function optimizeImage(
   // Handle ICO files by extracting the best embedded image
   let imageBuffer = buffer;
   if (isIcoBuffer(buffer)) {
-    const extracted = extractBestImageFromIco(buffer);
+    const extracted = await extractBestImageFromIco(buffer);
     if (extracted) {
       imageBuffer = extracted;
     } else {
-      throw new Error("ICO file does not contain any extractable PNG images");
+      throw new Error("Failed to extract image from ICO file");
     }
   }
 
