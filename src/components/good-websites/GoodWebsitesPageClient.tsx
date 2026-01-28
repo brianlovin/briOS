@@ -4,6 +4,8 @@ import Image from "next/image";
 import { useMemo, useState } from "react";
 
 import { GoodWebsitesFilters } from "@/components/good-websites/GoodWebsitesFilters";
+import { GoodWebsiteGalleryItem } from "@/components/good-websites/GoodWebsiteGalleryItem";
+import { ViewToggle, type ViewMode } from "@/components/good-websites/ViewToggle";
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { LikeButton } from "@/components/likes/LikeButton";
 import { ListDetailWrapper } from "@/components/ListDetailWrapper";
@@ -23,17 +25,19 @@ interface GoodWebsitesPageClientProps {
 
 export function GoodWebsitesPageClient({ initialData, initialLikes }: GoodWebsitesPageClientProps) {
   const { goodWebsites, isInitialLoading, isValidating, isError } = useGoodWebsites(initialData);
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
 
   // Collect all page IDs for batch likes fetching
   const pageIds = useMemo(() => goodWebsites.map((item) => item.id), [goodWebsites]);
 
   const topBarContent = useMemo(
     () => (
-      <span className="hidden md:block">
+      <span className="hidden items-center gap-3 md:flex">
+        <ViewToggle view={viewMode} onChange={setViewMode} />
         <GoodWebsitesFilters />
       </span>
     ),
-    [],
+    [viewMode],
   );
   useTopBarActions(topBarContent);
 
@@ -64,30 +68,44 @@ export function GoodWebsitesPageClient({ initialData, initialLikes }: GoodWebsit
         <ListDetailWrapper>
           <div className="flex flex-1 flex-col overflow-hidden">
             {/* Filters - mobile only */}
-            <div className="border-secondary flex border-b p-4 md:hidden">
+            <div className="border-secondary flex items-center justify-between border-b p-4 md:hidden">
+              <ViewToggle view={viewMode} onChange={setViewMode} />
               <GoodWebsitesFilters isLoading={isValidating && !isInitialLoading} />
             </div>
 
-            {/* Table */}
+            {/* Content */}
             <div className="relative flex-1 overflow-auto">
-              {/* Table Header - Sticky (hidden on mobile) */}
-              <div className="bg-secondary border-secondary sticky top-0 z-20 hidden border-b md:block dark:bg-neutral-950">
-                <div className="grid grid-cols-12 gap-4 px-4 py-2 font-medium">
-                  <div className="col-span-7 text-left">Name</div>
-                  <div className="col-span-3 text-left">Site</div>
-                  <div className="col-span-1" />
-                  <div className="col-span-1" />
-                </div>
-              </div>
+              {viewMode === "list" ? (
+                <>
+                  {/* Table Header - Sticky (hidden on mobile) */}
+                  <div className="bg-secondary border-secondary sticky top-0 z-20 hidden border-b md:block dark:bg-neutral-950">
+                    <div className="grid grid-cols-12 gap-4 px-4 py-2 font-medium">
+                      <div className="col-span-7 text-left">Name</div>
+                      <div className="col-span-3 text-left">Site</div>
+                      <div className="col-span-1" />
+                      <div className="col-span-1" />
+                    </div>
+                  </div>
 
-              {/* Table Content */}
-              <div
-                className={`divide-secondary divide-y ${isValidating && !isInitialLoading ? "opacity-75 transition-opacity duration-200" : ""}`}
-              >
-                {goodWebsites.map((item) => (
-                  <GoodWebsiteItemComponent key={item.id} item={item} />
-                ))}
-              </div>
+                  {/* Table Content */}
+                  <div
+                    className={`divide-secondary divide-y ${isValidating && !isInitialLoading ? "opacity-75 transition-opacity duration-200" : ""}`}
+                  >
+                    {goodWebsites.map((item) => (
+                      <GoodWebsiteItemComponent key={item.id} item={item} />
+                    ))}
+                  </div>
+                </>
+              ) : (
+                /* Gallery View */
+                <div
+                  className={`grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3 ${isValidating && !isInitialLoading ? "opacity-75 transition-opacity duration-200" : ""}`}
+                >
+                  {goodWebsites.map((item) => (
+                    <GoodWebsiteGalleryItem key={item.id} item={item} />
+                  ))}
+                </div>
+              )}
 
               {/* Empty state */}
               {goodWebsites.length === 0 && !isValidating && (
