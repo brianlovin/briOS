@@ -15,3 +15,9 @@ Personal website built with Next.js and Notion as CMS.
 
 - [Architecture](.claude/architecture.md) — Data flow, UI patterns, tech stack
 - [Commands](.claude/commands.md) — All available scripts and their usage
+
+## Verification
+
+After making changes:
+- `bun run lint` - Run ESLint
+- `bun run build` - Production build
