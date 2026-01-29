@@ -187,9 +187,9 @@ export function LikeButton({ pageId, className, variant = "default" }: LikeButto
           ],
           variant === "ghost-light" && [
             "text-white saturate-150 backdrop-blur-3xl",
-            isFilled
-              ? "bg-black/90 text-red-400 hover:bg-black/90 hover:text-red-300"
-              : "bg-black/50 hover:bg-black/90",
+            // Use ! to override Button's ghost hover styles
+            isFilled ? "!bg-black/90 hover:!bg-black/90" : "!bg-black/50 hover:!bg-black/90",
+            isFilled && "text-red-400 hover:text-red-300",
           ],
           className,
         )}
