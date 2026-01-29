@@ -30,6 +30,13 @@
         "format": "number"
       }
     },
+    "Created time": {
+      "id": "sKAI",
+      "name": "Created time",
+      "description": null,
+      "type": "created_time",
+      "created_time": {}
+    },
     "Title": {
       "id": "title",
       "name": "Title",

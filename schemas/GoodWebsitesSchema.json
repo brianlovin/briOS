@@ -48,6 +48,13 @@
       "type": "rich_text",
       "rich_text": {}
     },
+    "Capture Screenshot": {
+      "id": "MQRi",
+      "name": "Capture Screenshot",
+      "description": null,
+      "type": "button",
+      "button": {}
+    },
     "X": {
       "id": "Rw%5Ev",
       "name": "X",
@@ -76,6 +83,13 @@
           }
         ]
       }
+    },
+    "Preview Image Dark": {
+      "id": "cn%5Do",
+      "name": "Preview Image Dark",
+      "description": null,
+      "type": "url",
+      "url": {}
     },
     "URL": {
       "id": "nBQE",

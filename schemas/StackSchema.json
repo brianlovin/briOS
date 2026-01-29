@@ -30,13 +30,6 @@
       "type": "url",
       "url": {}
     },
-    "Capture screenshot": {
-      "id": "OE%60l",
-      "name": "Capture screenshot",
-      "description": null,
-      "type": "button",
-      "button": {}
-    },
     "Created time": {
       "id": "RV%5E%5D",
       "name": "Created time",
@@ -47,6 +40,13 @@
     "Preview Image": {
       "id": "VCxA",
       "name": "Preview Image",
+      "description": null,
+      "type": "url",
+      "url": {}
+    },
+    "Preview Image Dark": {
+      "id": "VGAv",
+      "name": "Preview Image Dark",
       "description": null,
       "type": "url",
       "url": {}
@@ -104,6 +104,13 @@
       "description": null,
       "type": "date",
       "date": {}
+    },
+    "Capture Screenshot": {
+      "id": "d%3AnZ",
+      "name": "Capture Screenshot",
+      "description": null,
+      "type": "button",
+      "button": {}
     },
     "Preview Error": {
       "id": "j%3COP",

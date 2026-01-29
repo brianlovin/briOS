@@ -8,6 +8,7 @@ export type GoodWebsiteItem = {
   icon?: string;
   tags?: string[];
   previewImage?: string;
+  previewImageDark?: string;
   previewStatus?: "Queued" | "Processing" | "Done" | "Error";
 };
 

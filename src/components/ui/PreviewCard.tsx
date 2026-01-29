@@ -5,11 +5,14 @@ import {
   createContext,
   type ReactNode,
   useContext,
+  useEffect,
   useMemo,
   useState,
   useSyncExternalStore,
 } from "react";
 
+import { PlaceholderShader } from "@/components/ui/PlaceholderShader";
+import { imageCache } from "@/lib/imageCache";
 import { cn } from "@/lib/utils";
 
 export type PreviewCardPayload = {
@@ -18,6 +21,7 @@ export type PreviewCardPayload = {
   description?: string;
   icon?: string;
   previewImage?: string;
+  previewImageDark?: string;
 };
 
 type PreviewCardHandle = ReturnType<typeof BaseUITooltip.Tooltip.createHandle<PreviewCardPayload>>;
@@ -41,34 +45,37 @@ export function usePreviewCardHandle() {
   return usePreviewCardContext().handle;
 }
 
-function GlobeIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={1.5}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"
-      />
-    </svg>
-  );
-}
-
 function PreviewFallback() {
   return (
-    <div className="bg-tertiary flex aspect-[40/21] w-full items-center justify-center">
-      <GlobeIcon className="text-quaternary size-8" />
+    <div className="bg-tertiary relative aspect-[40/21] w-full overflow-hidden">
+      <PlaceholderShader />
     </div>
   );
 }
 
-function PreviewImage({ src, name }: { src: string; name: string }) {
-  const [status, setStatus] = useState<"loading" | "loaded" | "error">("loading");
+function PreviewImage({ src, srcDark, name }: { src: string; srcDark?: string; name: string }) {
+  const isCached = imageCache.has(src);
+  const [status, setStatus] = useState<"loading" | "loaded" | "error">(
+    isCached ? "loaded" : "loading",
+  );
+
+  // Preload image using Image API to avoid broken image flicker
+  useEffect(() => {
+    if (isCached) return;
+
+    const img = new Image();
+    img.onload = () => {
+      imageCache.add(src);
+      setStatus("loaded");
+    };
+    img.onerror = () => setStatus("error");
+    img.src = src;
+
+    return () => {
+      img.onload = null;
+      img.onerror = null;
+    };
+  }, [src, isCached]);
 
   if (status === "error") {
     return <PreviewFallback />;
@@ -76,24 +83,17 @@ function PreviewImage({ src, name }: { src: string; name: string }) {
 
   return (
     <div className="bg-tertiary relative aspect-[40/21] w-full overflow-hidden">
-      {status === "loading" && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-quaternary flex flex-col items-center gap-2">
-            <GlobeIcon className="size-8" />
-          </div>
-        </div>
+      {status === "loading" && <PlaceholderShader />}
+      {status === "loaded" && (
+        <picture className="absolute inset-0">
+          {srcDark && <source srcSet={srcDark} media="(prefers-color-scheme: dark)" />}
+          <img
+            src={src}
+            alt={`Preview of ${name}`}
+            className="h-full w-full object-cover object-top"
+          />
+        </picture>
       )}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={src}
-        alt={`Preview of ${name}`}
-        className={cn(
-          "h-full w-full object-cover object-top transition-opacity duration-300",
-          status === "loaded" ? "opacity-100" : "opacity-0",
-        )}
-        onLoad={() => setStatus("loaded")}
-        onError={() => setStatus("error")}
-      />
     </div>
   );
 }
@@ -161,7 +161,11 @@ export function PreviewCardProvider({ children }: PreviewCardProviderProps) {
                 {payload && (
                   <div className="flex flex-col">
                     {payload.previewImage ? (
-                      <PreviewImage src={payload.previewImage} name={payload.name} />
+                      <PreviewImage
+                        src={payload.previewImage}
+                        srcDark={payload.previewImageDark}
+                        name={payload.name}
+                      />
                     ) : (
                       <PreviewFallback />
                     )}

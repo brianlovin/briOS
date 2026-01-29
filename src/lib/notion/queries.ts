@@ -128,6 +128,7 @@ export async function getStackDatabaseItems(): Promise<NotionStackItem[]> {
           Status?: { select: { name: string } | null };
           "Created time"?: { created_time: string };
           "Preview Image"?: { url: string };
+          "Preview Image Dark"?: { url: string };
           "Preview Status"?: { select: { name: string } | null };
         };
 
@@ -143,6 +144,7 @@ export async function getStackDatabaseItems(): Promise<NotionStackItem[]> {
           status: properties.Status?.select?.name || undefined,
           createdTime: properties["Created time"]?.created_time || pageWithProps.created_time,
           previewImage: properties["Preview Image"]?.url || undefined,
+          previewImageDark: properties["Preview Image Dark"]?.url || undefined,
           previewStatus: properties["Preview Status"]?.select?.name as
             | "Queued"
             | "Processing"
@@ -196,6 +198,7 @@ export async function getGoodWebsitesDatabaseItems(): Promise<GoodWebsiteItem[]>
           X?: { url: string };
           Tags?: { multi_select: { name: string }[] };
           "Preview Image"?: { url: string };
+          "Preview Image Dark"?: { url: string };
           "Preview Status"?: { select: { name: string } | null };
         };
 
@@ -207,6 +210,7 @@ export async function getGoodWebsitesDatabaseItems(): Promise<GoodWebsiteItem[]>
           icon,
           tags: properties.Tags?.multi_select.map((t) => t.name) || [],
           previewImage: properties["Preview Image"]?.url || undefined,
+          previewImageDark: properties["Preview Image Dark"]?.url || undefined,
           previewStatus: properties["Preview Status"]?.select?.name as
             | "Queued"
             | "Processing"
@@ -257,6 +261,7 @@ export async function getGoodWebsitesDatabaseItemsForRss(): Promise<GoodWebsiteI
           X?: { url: string };
           Tags?: { multi_select: { name: string }[] };
           "Preview Image"?: { url: string };
+          "Preview Image Dark"?: { url: string };
           "Preview Status"?: { select: { name: string } | null };
           "Created time"?: { created_time: string };
         };
@@ -269,6 +274,7 @@ export async function getGoodWebsitesDatabaseItemsForRss(): Promise<GoodWebsiteI
           icon,
           tags: properties.Tags?.multi_select.map((t) => t.name) || [],
           previewImage: properties["Preview Image"]?.url || undefined,
+          previewImageDark: properties["Preview Image Dark"]?.url || undefined,
           previewStatus: properties["Preview Status"]?.select?.name as
             | "Queued"
             | "Processing"

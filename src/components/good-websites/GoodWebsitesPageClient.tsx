@@ -1,9 +1,13 @@
 "use client";
 
+import { useAtom } from "jotai";
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 
+import { sitesViewModeAtom } from "@/atoms/sitesViewMode";
+import { GoodWebsiteGalleryItem } from "@/components/good-websites/GoodWebsiteGalleryItem";
 import { GoodWebsitesFilters } from "@/components/good-websites/GoodWebsitesFilters";
+import { ViewToggle } from "@/components/good-websites/ViewToggle";
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { LikeButton } from "@/components/likes/LikeButton";
 import { ListDetailWrapper } from "@/components/ListDetailWrapper";
@@ -21,24 +25,33 @@ interface GoodWebsitesPageClientProps {
   initialLikes?: Record<string, LikeData>;
 }
 
+// Hydration check using useSyncExternalStore to avoid layout flicker
+const subscribe = () => () => {};
+const getSnapshot = () => true;
+const getServerSnapshot = () => false;
+
 export function GoodWebsitesPageClient({ initialData, initialLikes }: GoodWebsitesPageClientProps) {
   const { goodWebsites, isInitialLoading, isValidating, isError } = useGoodWebsites(initialData);
+  const [viewMode, setViewMode] = useAtom(sitesViewModeAtom);
+  const isHydrated = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   // Collect all page IDs for batch likes fetching
   const pageIds = useMemo(() => goodWebsites.map((item) => item.id), [goodWebsites]);
 
   const topBarContent = useMemo(
     () => (
-      <span className="hidden md:block">
+      <span className="hidden items-center gap-3 md:flex">
+        <ViewToggle view={viewMode} onChange={setViewMode} />
         <GoodWebsitesFilters />
       </span>
     ),
-    [],
+    [viewMode, setViewMode],
   );
   useTopBarActions(topBarContent);
 
-  // Only show full page loading on initial load (without fallback data)
-  if (isInitialLoading && goodWebsites.length === 0) {
+  // Wait for hydration to avoid layout flicker from view mode preference
+  // Also show loading on initial data load (without fallback data)
+  if (!isHydrated || (isInitialLoading && goodWebsites.length === 0)) {
     return (
       <ListDetailWrapper>
         <div className="flex h-full flex-1 items-center justify-center">
@@ -64,30 +77,44 @@ export function GoodWebsitesPageClient({ initialData, initialLikes }: GoodWebsit
         <ListDetailWrapper>
           <div className="flex flex-1 flex-col overflow-hidden">
             {/* Filters - mobile only */}
-            <div className="border-secondary flex border-b p-4 md:hidden">
+            <div className="border-secondary flex items-center justify-between border-b p-4 md:hidden">
+              <ViewToggle view={viewMode} onChange={setViewMode} />
               <GoodWebsitesFilters isLoading={isValidating && !isInitialLoading} />
             </div>
 
-            {/* Table */}
+            {/* Content */}
             <div className="relative flex-1 overflow-auto">
-              {/* Table Header - Sticky (hidden on mobile) */}
-              <div className="bg-secondary border-secondary sticky top-0 z-20 hidden border-b md:block dark:bg-neutral-950">
-                <div className="grid grid-cols-12 gap-4 px-4 py-2 font-medium">
-                  <div className="col-span-7 text-left">Name</div>
-                  <div className="col-span-3 text-left">Site</div>
-                  <div className="col-span-1" />
-                  <div className="col-span-1" />
-                </div>
-              </div>
+              {viewMode === "list" ? (
+                <>
+                  {/* Table Header - Sticky (hidden on mobile) */}
+                  <div className="bg-secondary border-secondary sticky top-0 z-20 hidden border-b md:block dark:bg-neutral-950">
+                    <div className="grid grid-cols-12 gap-4 px-4 py-2 font-medium">
+                      <div className="col-span-7 text-left">Name</div>
+                      <div className="col-span-3 text-left">Site</div>
+                      <div className="col-span-1" />
+                      <div className="col-span-1" />
+                    </div>
+                  </div>
 
-              {/* Table Content */}
-              <div
-                className={`divide-secondary divide-y ${isValidating && !isInitialLoading ? "opacity-75 transition-opacity duration-200" : ""}`}
-              >
-                {goodWebsites.map((item) => (
-                  <GoodWebsiteItemComponent key={item.id} item={item} />
-                ))}
-              </div>
+                  {/* Table Content */}
+                  <div
+                    className={`divide-secondary divide-y ${isValidating && !isInitialLoading ? "opacity-75 transition-opacity duration-200" : ""}`}
+                  >
+                    {goodWebsites.map((item) => (
+                      <GoodWebsiteItemComponent key={item.id} item={item} />
+                    ))}
+                  </div>
+                </>
+              ) : (
+                /* Gallery View */
+                <div
+                  className={`bg-tertiary grid grid-cols-1 gap-0.5 p-0.5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 dark:bg-transparent ${isValidating && !isInitialLoading ? "opacity-75 transition-opacity duration-200" : ""}`}
+                >
+                  {goodWebsites.map((item) => (
+                    <GoodWebsiteGalleryItem key={item.id} item={item} />
+                  ))}
+                </div>
+              )}
 
               {/* Empty state */}
               {goodWebsites.length === 0 && !isValidating && (
@@ -231,6 +258,7 @@ function GoodWebsiteItemComponent({ item }: { item: GoodWebsiteItem }) {
           name: item.name,
           icon: item.icon,
           previewImage: item.previewImage,
+          previewImageDark: item.previewImageDark,
         }}
       >
         {content}

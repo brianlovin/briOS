@@ -239,6 +239,7 @@ function StackItemComponent({ item, onPlatformClick }: StackItemComponentProps) 
           description: item.description,
           icon: iconSource && !isEmoji ? iconSource : undefined,
           previewImage: item.previewImage,
+          previewImageDark: item.previewImageDark,
         }}
       >
         {content}

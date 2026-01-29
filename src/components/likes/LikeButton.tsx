@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 interface LikeButtonProps {
   pageId: string;
   className?: string;
+  variant?: "default" | "ghost-light";
 }
 
 function AnimatedDigit({ digit, direction }: { digit: string; direction: "up" | "down" }) {
@@ -82,7 +83,7 @@ function generateParticles(intensity: number) {
   }));
 }
 
-export function LikeButton({ pageId, className }: LikeButtonProps) {
+export function LikeButton({ pageId, className, variant = "default" }: LikeButtonProps) {
   const { count, userLikes, canLike, isLoading, addLike, removeLike } = useLikes(pageId);
   const [isShaking, setIsShaking] = useState(false);
   const [particles, setParticles] = useState<ReturnType<typeof generateParticles>>([]);
@@ -177,8 +178,19 @@ export function LikeButton({ pageId, className }: LikeButtonProps) {
         onPointerLeave={handlePointerUp}
         disabled={isLoading}
         className={cn(
-          "hover:bg-secondary dark:bg-elevated dark:shadow-contrast text-quaternary h-7 flex-row gap-1 rounded-full bg-white pr-2.5 pl-2 shadow-sm ring-[0.5px] ring-black/10 disabled:opacity-100 dark:text-neutral-500 dark:ring-white/10",
-          isFilled && "text-red-500 hover:text-red-600",
+          "h-7 flex-row gap-1 rounded-full pr-2.5 pl-2 disabled:opacity-100",
+          variant === "default" && [
+            "text-quaternary bg-white shadow-sm ring-[0.5px] ring-black/10",
+            "hover:bg-secondary",
+            "dark:bg-elevated dark:shadow-contrast dark:text-neutral-500 dark:ring-white/10",
+            isFilled && "text-red-500 hover:text-red-600",
+          ],
+          variant === "ghost-light" && [
+            "text-white saturate-150 backdrop-blur-3xl",
+            // Use ! to override Button's ghost hover styles
+            isFilled ? "!bg-black/90 hover:!bg-black/90" : "!bg-black/50 hover:!bg-black/90",
+            isFilled && "text-red-400 hover:text-red-300",
+          ],
           className,
         )}
         aria-label={`Like this. Current likes: ${count}. You've liked ${userLikes} times.`}
