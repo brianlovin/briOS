@@ -1,36 +1,16 @@
 "use client";
 
-import { Dithering } from "@paper-design/shaders-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useTheme } from "next-themes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { LikeButton } from "@/components/likes/LikeButton";
+import { PlaceholderShader } from "@/components/ui/PlaceholderShader";
 import type { GoodWebsiteItem } from "@/lib/goodWebsites";
 import { useLikes } from "@/lib/hooks/useLikes";
-import { cn } from "@/lib/utils";
+import { imageCache } from "@/lib/imageCache";
 
 interface GoodWebsiteGalleryItemProps {
   item: GoodWebsiteItem;
-}
-
-function PlaceholderShader() {
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
-
-  return (
-    <Dithering
-      speed={0.17}
-      shape="warp"
-      type="4x4"
-      size={3.4}
-      scale={1.98}
-      colorBack="#00000000"
-      colorFront={isDark ? "#1F1F1F" : "#eeeeee"}
-      className="absolute inset-0"
-      style={{ backgroundColor: isDark ? "#000000" : "#f6f7f8", width: "100%", height: "100%" }}
-    />
-  );
 }
 
 const hoverAnimationProps = {
@@ -41,9 +21,31 @@ const hoverAnimationProps = {
 };
 
 export function GoodWebsiteGalleryItem({ item }: GoodWebsiteGalleryItemProps) {
-  const [imageStatus, setImageStatus] = useState<"loading" | "loaded" | "error">("loading");
+  // Check if image is already cached (from previous view or browser cache)
+  const isCached = item.previewImage ? imageCache.has(item.previewImage) : false;
+  const [imageStatus, setImageStatus] = useState<"loading" | "loaded" | "error">(
+    isCached ? "loaded" : "loading",
+  );
   const [isHovered, setIsHovered] = useState(false);
   const { hasLiked } = useLikes(item.id);
+
+  // Preload image using Image API to avoid broken image flicker
+  useEffect(() => {
+    if (!item.previewImage || isCached) return;
+
+    const img = new Image();
+    img.onload = () => {
+      imageCache.add(item.previewImage!);
+      setImageStatus("loaded");
+    };
+    img.onerror = () => setImageStatus("error");
+    img.src = item.previewImage;
+
+    return () => {
+      img.onload = null;
+      img.onerror = null;
+    };
+  }, [item.previewImage, isCached]);
 
   const handleClick = () => {
     if (item.url?.trim()) window.open(item.url, "_blank", "noopener,noreferrer");
@@ -61,18 +63,18 @@ export function GoodWebsiteGalleryItem({ item }: GoodWebsiteGalleryItemProps) {
         {item.previewImage && imageStatus !== "error" ? (
           <>
             {imageStatus === "loading" && <PlaceholderShader />}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={item.previewImage}
-              alt={`Preview of ${item.name}`}
-              className={cn(
-                "h-full w-full object-cover object-top transition-all duration-300",
-                imageStatus === "loaded" ? "opacity-100" : "opacity-0",
-                "group-hover:scale-105",
-              )}
-              onLoad={() => setImageStatus("loaded")}
-              onError={() => setImageStatus("error")}
-            />
+            {imageStatus === "loaded" && (
+              <picture className="absolute inset-0 transition-transform duration-300 group-hover:scale-[1.02]">
+                {item.previewImageDark && (
+                  <source srcSet={item.previewImageDark} media="(prefers-color-scheme: dark)" />
+                )}
+                <img
+                  src={item.previewImage}
+                  alt={`Preview of ${item.name}`}
+                  className="h-full w-full object-cover object-top"
+                />
+              </picture>
+            )}
           </>
         ) : (
           <PlaceholderShader />
@@ -81,7 +83,7 @@ export function GoodWebsiteGalleryItem({ item }: GoodWebsiteGalleryItemProps) {
         {/* Site name pill - always visible on mobile, animated on desktop */}
         <div className="pointer-events-none absolute inset-0 flex flex-col justify-end p-4">
           {/* Mobile: always visible, no animation */}
-          <div className="flex h-7 min-w-0 items-center self-start rounded-full bg-black/50 px-2.5 saturate-150 backdrop-blur-3xl hover:bg-black/90 sm:hidden">
+          <div className="flex h-7 min-w-0 items-center self-start rounded-full bg-black/50 px-2.5 saturate-150 backdrop-blur-3xl sm:hidden">
             <span className="truncate text-sm font-medium text-white">{item.name}</span>
           </div>
           {/* Desktop: animated on hover */}
