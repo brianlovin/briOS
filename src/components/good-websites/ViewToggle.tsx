@@ -2,7 +2,6 @@
 
 import { Grid } from "@/components/icons/Grid";
 import { UnorderedList } from "@/components/icons/UnorderedList";
-import { IconButton } from "@/components/ui";
 import { cn } from "@/lib/utils";
 
 export type ViewMode = "list" | "gallery";
@@ -14,33 +13,35 @@ interface ViewToggleProps {
 
 export function ViewToggle({ view, onChange }: ViewToggleProps) {
   return (
-    <div className="border-secondary flex rounded-md border">
-      <IconButton
-        variant="ghost"
-        size="sm"
+    <div className="dark:shadow-contrast bg-primary flex h-9 items-center gap-0.5 rounded-lg px-1 shadow-xs ring ring-black/10 dark:bg-white/5">
+      <button
+        type="button"
         className={cn(
-          "rounded-r-none border-r-0",
-          view === "list" ? "bg-tertiary" : "bg-transparent",
+          "flex h-7 w-7 items-center justify-center rounded-md",
+          view === "list"
+            ? "text-brand bg-[rgba(240,104,0,0.1)]"
+            : "text-quaternary hover:text-tertiary",
         )}
         onClick={() => onChange("list")}
         aria-label="List view"
         aria-pressed={view === "list"}
       >
-        <UnorderedList size={16} />
-      </IconButton>
-      <IconButton
-        variant="ghost"
-        size="sm"
+        <UnorderedList size={20} />
+      </button>
+      <button
+        type="button"
         className={cn(
-          "border-secondary rounded-l-none border-l",
-          view === "gallery" ? "bg-tertiary" : "bg-transparent",
+          "flex h-7 w-7 items-center justify-center rounded-md",
+          view === "gallery"
+            ? "text-brand bg-[rgba(240,104,0,0.1)]"
+            : "text-quaternary hover:text-tertiary",
         )}
         onClick={() => onChange("gallery")}
         aria-label="Gallery view"
         aria-pressed={view === "gallery"}
       >
-        <Grid size={16} />
-      </IconButton>
+        <Grid size={20} filled={view === "gallery"} />
+      </button>
     </div>
   );
 }

@@ -179,12 +179,18 @@ export function LikeButton({ pageId, className, variant = "default" }: LikeButto
         disabled={isLoading}
         className={cn(
           "h-7 flex-row gap-1 rounded-full pr-2.5 pl-2 disabled:opacity-100",
-          variant === "default" &&
-            "hover:bg-secondary dark:bg-elevated dark:shadow-contrast text-quaternary bg-white shadow-sm ring-[0.5px] ring-black/10 dark:text-neutral-500 dark:ring-white/10",
-          variant === "ghost-light" &&
-            "bg-white/20 text-white/80 backdrop-blur-sm hover:bg-white/30",
-          isFilled && variant === "default" && "text-red-500 hover:text-red-600",
-          isFilled && variant === "ghost-light" && "text-red-400 hover:text-red-300",
+          variant === "default" && [
+            "text-quaternary bg-white shadow-sm ring-[0.5px] ring-black/10",
+            "hover:bg-secondary",
+            "dark:bg-elevated dark:shadow-contrast dark:text-neutral-500 dark:ring-white/10",
+            isFilled && "text-red-500 hover:text-red-600",
+          ],
+          variant === "ghost-light" && [
+            "text-white saturate-150 backdrop-blur-3xl",
+            isFilled
+              ? "bg-black/90 text-red-400 hover:bg-black/90 hover:text-red-300"
+              : "bg-black/50 hover:bg-black/90",
+          ],
           className,
         )}
         aria-label={`Like this. Current likes: ${count}. You've liked ${userLikes} times.`}

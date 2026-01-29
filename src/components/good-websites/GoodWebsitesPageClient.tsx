@@ -1,11 +1,13 @@
 "use client";
 
+import { useAtom } from "jotai";
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 
-import { GoodWebsitesFilters } from "@/components/good-websites/GoodWebsitesFilters";
+import { sitesViewModeAtom } from "@/atoms/sitesViewMode";
 import { GoodWebsiteGalleryItem } from "@/components/good-websites/GoodWebsiteGalleryItem";
-import { ViewToggle, type ViewMode } from "@/components/good-websites/ViewToggle";
+import { GoodWebsitesFilters } from "@/components/good-websites/GoodWebsitesFilters";
+import { ViewToggle } from "@/components/good-websites/ViewToggle";
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { LikeButton } from "@/components/likes/LikeButton";
 import { ListDetailWrapper } from "@/components/ListDetailWrapper";
@@ -23,9 +25,15 @@ interface GoodWebsitesPageClientProps {
   initialLikes?: Record<string, LikeData>;
 }
 
+// Hydration check using useSyncExternalStore to avoid layout flicker
+const subscribe = () => () => {};
+const getSnapshot = () => true;
+const getServerSnapshot = () => false;
+
 export function GoodWebsitesPageClient({ initialData, initialLikes }: GoodWebsitesPageClientProps) {
   const { goodWebsites, isInitialLoading, isValidating, isError } = useGoodWebsites(initialData);
-  const [viewMode, setViewMode] = useState<ViewMode>("list");
+  const [viewMode, setViewMode] = useAtom(sitesViewModeAtom);
+  const isHydrated = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   // Collect all page IDs for batch likes fetching
   const pageIds = useMemo(() => goodWebsites.map((item) => item.id), [goodWebsites]);
@@ -37,12 +45,13 @@ export function GoodWebsitesPageClient({ initialData, initialLikes }: GoodWebsit
         <GoodWebsitesFilters />
       </span>
     ),
-    [viewMode],
+    [viewMode, setViewMode],
   );
   useTopBarActions(topBarContent);
 
-  // Only show full page loading on initial load (without fallback data)
-  if (isInitialLoading && goodWebsites.length === 0) {
+  // Wait for hydration to avoid layout flicker from view mode preference
+  // Also show loading on initial data load (without fallback data)
+  if (!isHydrated || (isInitialLoading && goodWebsites.length === 0)) {
     return (
       <ListDetailWrapper>
         <div className="flex h-full flex-1 items-center justify-center">
@@ -99,7 +108,7 @@ export function GoodWebsitesPageClient({ initialData, initialLikes }: GoodWebsit
               ) : (
                 /* Gallery View */
                 <div
-                  className={`grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3 ${isValidating && !isInitialLoading ? "opacity-75 transition-opacity duration-200" : ""}`}
+                  className={`bg-tertiary grid grid-cols-1 gap-0.5 p-0.5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 dark:bg-transparent ${isValidating && !isInitialLoading ? "opacity-75 transition-opacity duration-200" : ""}`}
                 >
                   {goodWebsites.map((item) => (
                     <GoodWebsiteGalleryItem key={item.id} item={item} />

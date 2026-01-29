@@ -1,61 +1,66 @@
 "use client";
 
+import { Dithering } from "@paper-design/shaders-react";
+import { AnimatePresence, motion } from "motion/react";
+import { useTheme } from "next-themes";
 import { useState } from "react";
 
 import { LikeButton } from "@/components/likes/LikeButton";
 import type { GoodWebsiteItem } from "@/lib/goodWebsites";
+import { useLikes } from "@/lib/hooks/useLikes";
 import { cn } from "@/lib/utils";
-
-import { Linked } from "../icons/Linked";
 
 interface GoodWebsiteGalleryItemProps {
   item: GoodWebsiteItem;
 }
 
-function GlobeIcon({ className }: { className?: string }) {
+function PlaceholderShader() {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+
   return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={1.5}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"
-      />
-    </svg>
+    <Dithering
+      speed={0.17}
+      shape="warp"
+      type="4x4"
+      size={3.4}
+      scale={1.98}
+      colorBack="#00000000"
+      colorFront={isDark ? "#1F1F1F" : "#eeeeee"}
+      className="absolute inset-0"
+      style={{ backgroundColor: isDark ? "#000000" : "#f6f7f8", width: "100%", height: "100%" }}
+    />
   );
 }
 
+const hoverAnimationProps = {
+  initial: { opacity: 0, y: 4, scale: 0.96 },
+  animate: { opacity: 1, y: 0, scale: 1 },
+  exit: { opacity: 0, y: 4, scale: 0.96 },
+  transition: { duration: 0.15, ease: "easeOut" as const },
+};
+
 export function GoodWebsiteGalleryItem({ item }: GoodWebsiteGalleryItemProps) {
   const [imageStatus, setImageStatus] = useState<"loading" | "loaded" | "error">("loading");
+  const [isHovered, setIsHovered] = useState(false);
+  const { hasLiked } = useLikes(item.id);
 
   const handleClick = () => {
-    if (item.url) window.open(item.url, "_blank", "noopener,noreferrer");
+    if (item.url?.trim()) window.open(item.url, "_blank", "noopener,noreferrer");
   };
-
-  const formattedUrl = item.url
-    ?.replace(/^https?:\/\//, "")
-    .replace(/\/$/, "")
-    .replace("www.", "");
 
   return (
     <div
-      className="group relative cursor-pointer overflow-hidden rounded-lg"
+      className="group rounded-px relative cursor-pointer overflow-hidden"
       onClick={handleClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       {/* Thumbnail */}
-      <div className="bg-tertiary relative aspect-[40/21] w-full overflow-hidden">
+      <div className="bg-tertiary relative aspect-40/21 w-full overflow-hidden">
         {item.previewImage && imageStatus !== "error" ? (
           <>
-            {imageStatus === "loading" && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <GlobeIcon className="text-quaternary size-8" />
-              </div>
-            )}
+            {imageStatus === "loading" && <PlaceholderShader />}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={item.previewImage}
@@ -70,31 +75,47 @@ export function GoodWebsiteGalleryItem({ item }: GoodWebsiteGalleryItemProps) {
             />
           </>
         ) : (
-          <div className="flex h-full w-full items-center justify-center">
-            <GlobeIcon className="text-quaternary size-8" />
-          </div>
+          <PlaceholderShader />
         )}
 
-        {/* Hover overlay */}
-        <div
-          className={cn(
-            "absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4",
-            "opacity-0 transition-opacity duration-200 group-hover:opacity-100",
-          )}
-        >
-          <div className="flex items-end justify-between gap-2">
-            <div className="min-w-0 flex-1">
-              <div className="text-sm font-medium text-white">{item.name}</div>
-              {formattedUrl && (
-                <div className="flex items-center gap-1 text-xs text-white/70">
-                  <Linked size={12} />
-                  <span className="truncate">{formattedUrl}</span>
-                </div>
-              )}
-            </div>
-            <div onClick={(e) => e.stopPropagation()}>
+        {/* Site name pill - always visible on mobile, animated on desktop */}
+        <div className="pointer-events-none absolute inset-0 flex flex-col justify-end p-4">
+          {/* Mobile: always visible, no animation */}
+          <div className="flex h-7 min-w-0 items-center self-start rounded-full bg-black/50 px-2.5 saturate-150 backdrop-blur-3xl hover:bg-black/90 sm:hidden">
+            <span className="truncate text-sm font-medium text-white">{item.name}</span>
+          </div>
+          {/* Desktop: animated on hover */}
+          <AnimatePresence>
+            {isHovered && (
+              <motion.div
+                className="pointer-events-auto hidden h-7 min-w-0 items-center self-start rounded-full bg-black/50 px-2.5 saturate-150 backdrop-blur-3xl hover:bg-black/90 sm:flex"
+                {...hoverAnimationProps}
+              >
+                <span className="truncate text-sm font-medium text-white">{item.name}</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Like button - always visible on mobile, or when liked, otherwise animated on hover */}
+        <div className="absolute right-4 bottom-4" onClick={(e) => e.stopPropagation()}>
+          {/* Mobile: always visible */}
+          <div className="sm:hidden">
+            <LikeButton pageId={item.id} variant="ghost-light" />
+          </div>
+          {/* Desktop: permanently visible if liked, otherwise animated on hover */}
+          <div className="hidden sm:block">
+            {hasLiked ? (
               <LikeButton pageId={item.id} variant="ghost-light" />
-            </div>
+            ) : (
+              <AnimatePresence>
+                {isHovered && (
+                  <motion.div {...hoverAnimationProps}>
+                    <LikeButton pageId={item.id} variant="ghost-light" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            )}
           </div>
         </div>
       </div>

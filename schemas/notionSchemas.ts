@@ -102,6 +102,7 @@ export const GoodWebsitesSchema = z.object({
   "Created time": z.string().optional(),
   "Preview Error": z.string().optional(),
   X: z.string().optional(),
+  "Capture screenshot": z.any().optional(),
   Tags: z.array(z.enum(["Personal site", "Company"])).optional(),
   URL: z.string().optional(),
   "Preview Image": z.string().optional(),
@@ -126,6 +127,7 @@ export const TILSchema = z.object({
   Published: z.string().optional(),
   "Short ID": z.string().optional(),
   Likes: z.number().optional(),
+  "Created time": z.string().optional(),
   Title: z.string().optional(),
 });
 

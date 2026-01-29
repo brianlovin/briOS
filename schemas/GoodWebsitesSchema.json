@@ -55,6 +55,13 @@
       "type": "url",
       "url": {}
     },
+    "Capture screenshot": {
+      "id": "VCbn",
+      "name": "Capture screenshot",
+      "description": null,
+      "type": "button",
+      "button": {}
+    },
     "Tags": {
       "id": "%5CMRu",
       "name": "Tags",
