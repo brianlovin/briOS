@@ -48,19 +48,19 @@
       "type": "rich_text",
       "rich_text": {}
     },
+    "Capture Screenshot": {
+      "id": "MQRi",
+      "name": "Capture Screenshot",
+      "description": null,
+      "type": "button",
+      "button": {}
+    },
     "X": {
       "id": "Rw%5Ev",
       "name": "X",
       "description": null,
       "type": "url",
       "url": {}
-    },
-    "Capture screenshot": {
-      "id": "VCbn",
-      "name": "Capture screenshot",
-      "description": null,
-      "type": "button",
-      "button": {}
     },
     "Tags": {
       "id": "%5CMRu",
@@ -83,6 +83,13 @@
           }
         ]
       }
+    },
+    "Preview Image Dark": {
+      "id": "cn%5Do",
+      "name": "Preview Image Dark",
+      "description": null,
+      "type": "url",
+      "url": {}
     },
     "URL": {
       "id": "nBQE",

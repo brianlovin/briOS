@@ -107,6 +107,7 @@ export type NotionStackItem = {
   status?: string;
   createdTime: string;
   previewImage?: string;
+  previewImageDark?: string;
   previewStatus?: "Queued" | "Processing" | "Done" | "Error";
 };
 

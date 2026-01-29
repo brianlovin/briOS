@@ -258,6 +258,7 @@ function GoodWebsiteItemComponent({ item }: { item: GoodWebsiteItem }) {
           name: item.name,
           icon: item.icon,
           previewImage: item.previewImage,
+          previewImageDark: item.previewImageDark,
         }}
       >
         {content}
