@@ -7,7 +7,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/u
 
 import { LoadingSpinner } from "../ui";
 
-const TAGS = ["Personal site", "Company"];
+const TAGS = [
+  { value: "Personal site", label: "Personal" },
+  { value: "Company", label: "Company" },
+];
 
 interface GoodWebsitesFiltersProps {
   isLoading?: boolean;
@@ -44,7 +47,8 @@ export function GoodWebsitesFilters({ isLoading }: GoodWebsitesFiltersProps) {
     updateParam("tag", value);
   };
 
-  const currentTagLabel = currentTag === "all" ? "All" : currentTag;
+  const currentTagLabel =
+    currentTag === "all" ? "All" : (TAGS.find((t) => t.value === currentTag)?.label ?? currentTag);
 
   return (
     <div className="flex items-center gap-2 md:flex-row-reverse">
@@ -53,8 +57,8 @@ export function GoodWebsitesFilters({ isLoading }: GoodWebsitesFiltersProps) {
         <SelectContent>
           <SelectItem value="all">All</SelectItem>
           {TAGS.map((tag) => (
-            <SelectItem key={tag} value={tag}>
-              {tag}
+            <SelectItem key={tag.value} value={tag.value}>
+              {tag.label}
             </SelectItem>
           ))}
         </SelectContent>
