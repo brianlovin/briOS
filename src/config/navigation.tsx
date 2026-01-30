@@ -108,10 +108,10 @@ export const navigationItems: NavigationItem[] = [
   },
   {
     id: "good-websites",
-    label: "Good websites",
+    label: "Sites",
     href: "/sites",
     icon: BrowserTabs,
-    keywords: ["good websites", "websites", "inspiration"],
+    keywords: ["sites", "good websites", "websites", "inspiration"],
     isActive: (pathname) => pathname.startsWith("/sites"),
     section: "projects",
   },

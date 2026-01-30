@@ -44,9 +44,9 @@ const projects = [
     external: false,
   },
   {
-    name: "Good websites",
+    name: "Sites",
     href: "/sites",
-    description: "My collection of well-designed websites",
+    description: "A curated list of well-designed websites",
     external: false,
   },
   {
