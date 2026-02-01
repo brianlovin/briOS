@@ -3,6 +3,7 @@ import React from "react";
 import { AppDissection } from "@/components/icons/AppDissection";
 import { Ballot } from "@/components/icons/Ballot";
 import { BrowserTabs } from "@/components/icons/BrowserTabs";
+import { Calculator } from "@/components/icons/Calculator";
 import { DoubleChatBubble } from "@/components/icons/DoubleChatBubble";
 import { FileText2 } from "@/components/icons/FileText2";
 import { Headphones3 } from "@/components/icons/Headphones3";
@@ -121,6 +122,15 @@ export const navigationItems: NavigationItem[] = [
     href: "https://github.com/brianlovin/hn-cli",
     icon: Terminal,
     keywords: ["hn", "cli", "hacker news", "terminal"],
+    isActive: () => false,
+    section: "projects",
+  },
+  {
+    id: "tax-ui",
+    label: "Tax UI",
+    href: "https://tax-ui.brianlovin.com/",
+    icon: Calculator,
+    keywords: ["tax", "taxes", "returns", "chat", "visualize"],
     isActive: () => false,
     section: "projects",
   },

@@ -178,6 +178,12 @@
             "name": "Error",
             "color": "red",
             "description": null
+          },
+          {
+            "id": "b0f09923-9d88-4f94-8030-d28cdc62dda1",
+            "name": "Pending",
+            "color": "pink",
+            "description": null
           }
         ]
       }

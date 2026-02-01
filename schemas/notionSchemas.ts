@@ -18,7 +18,7 @@ export const StackSchema = z.object({
   "Preview Error": z.string().optional(),
   "Process icon": z.any().optional(),
   Status: z.enum(["Inactive", "Active"]).optional(),
-  "Preview Status": z.enum(["Queued", "Processing", "Done", "Error"]).optional(),
+  "Preview Status": z.enum(["Queued", "Processing", "Done", "Error", "Pending"]).optional(),
   Name: z.string().optional(),
 });
 
@@ -99,7 +99,7 @@ export const MusicSchema = z.object({
 export type Music = z.infer<typeof MusicSchema>;
 
 export const GoodWebsitesSchema = z.object({
-  "Preview Status": z.enum(["Queued", "Processing", "Done", "Error"]).optional(),
+  "Preview Status": z.enum(["Queued", "Processing", "Done", "Error", "Pending"]).optional(),
   "Created time": z.string().optional(),
   "Preview Error": z.string().optional(),
   "Capture Screenshot": z.any().optional(),

@@ -82,7 +82,13 @@ const projects = [
   {
     name: "HN CLI",
     href: "https://github.com/brianlovin/hn-cli",
-    description: "A command-line interface for Hacker News",
+    description: "Hacker News in your terminal",
+    external: true,
+  },
+  {
+    name: "Tax UI",
+    href: "https://tax-ui.brianlovin.com/",
+    description: "Chat with your tax returns",
     external: true,
   },
 ];

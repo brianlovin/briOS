@@ -30,6 +30,12 @@
             "name": "Error",
             "color": "red",
             "description": null
+          },
+          {
+            "id": "a04ff414-aac0-4c0e-a399-d23305af9575",
+            "name": "Pending",
+            "color": "brown",
+            "description": null
           }
         ]
       }
