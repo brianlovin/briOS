@@ -4,9 +4,8 @@
   "private": true,
   "scripts": {
     "generate-schemas": "bun scripts/generateNotionSchemas.ts",
-    "predev": "bun run generate-schemas",
     "prestart": "bun run generate-schemas",
-    "dev": "next dev --turbopack",
+    "dev": "bun run generate-schemas & next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
