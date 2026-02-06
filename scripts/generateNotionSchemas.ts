@@ -141,7 +141,7 @@ async function generateSchemas() {
     }
 
     // Delay between databases to avoid Notion rate limits
-    if (i > 0) await new Promise((resolve) => setTimeout(resolve, 350));
+    if (i > 0) await new Promise((resolve) => setTimeout(resolve, 500));
 
     // First retrieve the database to get the data source ID
     const database = (await notion.databases.retrieve({
@@ -155,7 +155,7 @@ async function generateSchemas() {
     }
 
     // Small delay before second API call
-    await new Promise((resolve) => setTimeout(resolve, 350));
+    await new Promise((resolve) => setTimeout(resolve, 500));
 
     // Then retrieve the data source to get properties
     const dataSource = (await notion.dataSources.retrieve({
