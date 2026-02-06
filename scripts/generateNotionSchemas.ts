@@ -133,11 +133,15 @@ async function generateSchemas() {
     'import { z } from "zod";\n',
   ];
 
-  for (const db of databases) {
+  for (let i = 0; i < databases.length; i++) {
+    const db = databases[i];
     if (!db.id) {
       console.warn(`Skipping ${db.varName} — no ID provided`);
       continue;
     }
+
+    // Delay between databases to avoid Notion rate limits
+    if (i > 0) await new Promise((resolve) => setTimeout(resolve, 350));
 
     // First retrieve the database to get the data source ID
     const database = (await notion.databases.retrieve({
@@ -149,6 +153,9 @@ async function generateSchemas() {
       console.warn(`Skipping ${db.varName} — no data source found`);
       continue;
     }
+
+    // Small delay before second API call
+    await new Promise((resolve) => setTimeout(resolve, 350));
 
     // Then retrieve the data source to get properties
     const dataSource = (await notion.dataSources.retrieve({
