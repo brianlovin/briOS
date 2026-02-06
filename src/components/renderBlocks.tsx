@@ -88,6 +88,18 @@ function renderRichText(richText: RichTextContent[]) {
   });
 }
 
+function renderChildList(children: ProcessedBlock[]): ReactNode {
+  const hasBulleted = children.some((c) => c.type === "bulleted_list_item");
+  const hasNumbered = children.some((c) => c.type === "numbered_list_item");
+  const Tag = hasNumbered && !hasBulleted ? "ol" : "ul";
+  const listClass =
+    Tag === "ol" ? "ml-4 list-decimal space-y-1 mt-1" : "ml-4 list-disc space-y-1 mt-1";
+
+  return (
+    <Tag className={listClass}>{children.map((child) => renderSingleBlock(child, false))}</Tag>
+  );
+}
+
 function renderSingleBlock(block: ProcessedBlock, isPreview: boolean): ReactNode {
   if (isPreview) {
     // For preview mode, render all blocks as paragraphs with rich text
@@ -184,12 +196,14 @@ function renderSingleBlock(block: ProcessedBlock, isPreview: boolean): ReactNode
       return (
         <li key={block.id} className="text-primary leading-[1.6]">
           {renderRichText(block.content)}
+          {block.children && block.children.length > 0 && renderChildList(block.children)}
         </li>
       );
     case "numbered_list_item":
       return (
         <li key={block.id} className="text-primary leading-[1.6]">
           {renderRichText(block.content)}
+          {block.children && block.children.length > 0 && renderChildList(block.children)}
         </li>
       );
     case "to_do":
