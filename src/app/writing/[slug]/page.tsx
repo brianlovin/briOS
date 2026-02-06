@@ -143,7 +143,9 @@ export default async function WritingPostPage(props: { params: Promise<{ slug: s
             </BatchLikesProvider>
           </div>
 
-          <div className="flex min-w-0 flex-col gap-4 text-lg">{renderBlocks(blocks)}</div>
+          <div className="notion-blocks flex min-w-0 flex-col gap-4 text-lg">
+            {renderBlocks(blocks)}
+          </div>
         </div>
 
         <FancySeparator />

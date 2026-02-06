@@ -35,7 +35,7 @@ export default async function EpisodePage(props: { params: Promise<{ id: string 
           <LikeButton pageId={metadata.id} />
         </BatchLikesProvider>
       </div>
-      <div className="flex flex-col gap-6">{renderBlocks(blocks)}</div>
+      <div className="notion-blocks flex flex-col gap-6">{renderBlocks(blocks)}</div>
     </div>
   );
 }

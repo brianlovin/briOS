@@ -58,7 +58,9 @@ export default function AMADetail() {
 
       <FancySeparator />
 
-      <div className="flex flex-col gap-6 text-lg">{renderBlocks(question.blocks)}</div>
+      <div className="notion-blocks flex flex-col gap-6 text-lg">
+        {renderBlocks(question.blocks)}
+      </div>
     </div>
   );
 }
