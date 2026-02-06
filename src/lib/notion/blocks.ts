@@ -221,6 +221,28 @@ export async function getAllBlocks(pageId: string): Promise<ProcessedBlock[]> {
           }
         }
 
+        // If this is a list item with children, fetch nested list items
+        if (
+          (blockObj.type === "bulleted_list_item" || blockObj.type === "numbered_list_item") &&
+          blockObj.has_children &&
+          processedBlock
+        ) {
+          try {
+            const childrenResponse = await notion.blocks.children.list({
+              block_id: blockObj.id,
+              page_size: 100,
+            });
+
+            const children = childrenResponse.results
+              .map((childBlock) => processBlockFromResponse(childBlock as BlockObjectResponse))
+              .filter((child): child is ProcessedBlock => child !== null);
+
+            processedBlock.children = children;
+          } catch (error) {
+            console.error(`Error fetching list children for ${blockObj.id}:`, error);
+          }
+        }
+
         return processedBlock;
       }),
     );

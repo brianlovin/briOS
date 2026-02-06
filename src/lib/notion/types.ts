@@ -76,6 +76,7 @@ export type ProcessedBlock = {
   hasRowHeader?: boolean;
   cells?: RichTextItemResponse[][];
   tableRows?: ProcessedBlock[];
+  children?: ProcessedBlock[];
 };
 
 // Generic Notion item metadata
