@@ -92,8 +92,7 @@ function renderChildList(children: ProcessedBlock[]): ReactNode {
   const hasBulleted = children.some((c) => c.type === "bulleted_list_item");
   const hasNumbered = children.some((c) => c.type === "numbered_list_item");
   const Tag = hasNumbered && !hasBulleted ? "ol" : "ul";
-  const listClass =
-    Tag === "ol" ? "ml-4 list-decimal space-y-1 mt-1" : "ml-4 list-disc space-y-1 mt-1";
+  const listClass = Tag === "ol" ? "space-y-2 mt-2" : "list-disc space-y-2 mt-2";
 
   return (
     <Tag className={listClass}>{children.map((child) => renderSingleBlock(child, false))}</Tag>
@@ -264,7 +263,7 @@ export function renderBlocks(blocks: ProcessedBlock[], isPreview: boolean = fals
       }
 
       result.push(
-        <ul key={`ul-${blocks[startIndex].id}`} className="ml-4 list-disc space-y-1">
+        <ul key={`ul-${blocks[startIndex].id}`} className="list-disc space-y-2">
           {listItems}
         </ul>,
       );
@@ -282,7 +281,7 @@ export function renderBlocks(blocks: ProcessedBlock[], isPreview: boolean = fals
       }
 
       result.push(
-        <ol key={`ol-${blocks[startIndex].id}`} className="ml-4 list-decimal space-y-1">
+        <ol key={`ol-${blocks[startIndex].id}`} className="space-y-2">
           {listItems}
         </ol>,
       );
