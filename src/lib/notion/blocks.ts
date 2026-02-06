@@ -195,59 +195,49 @@ export async function getAllBlocks(pageId: string): Promise<ProcessedBlock[]> {
       nextCursor = nextPage.next_cursor;
     }
 
-    // Process blocks directly from the API response, handling table children
-    const blockContents = await Promise.all(
-      allBlocks.map(async (block) => {
+    // Process all blocks synchronously first (no API calls)
+    const processed: { block: BlockObjectResponse; processed: ProcessedBlock | null }[] =
+      allBlocks.map((block) => {
         const blockObj = block as BlockObjectResponse;
-        const processedBlock = processBlockFromResponse(blockObj);
+        return { block: blockObj, processed: processBlockFromResponse(blockObj) };
+      });
 
-        // If this is a table block with children, fetch the table_row children
-        if (blockObj.type === "table" && blockObj.has_children && processedBlock) {
-          try {
-            const childrenResponse = await notion.blocks.children.list({
-              block_id: blockObj.id,
-              page_size: 100,
-            });
+    // Fetch children sequentially to avoid rate limiting
+    for (const { block: blockObj, processed: processedBlock } of processed) {
+      if (!processedBlock || !blockObj.has_children) continue;
 
-            // Process the table_row children
-            const tableRows = childrenResponse.results
-              .map((childBlock) => processBlockFromResponse(childBlock as BlockObjectResponse))
-              .filter((row): row is ProcessedBlock => row !== null && row.type === "table_row");
-
-            // Store the rows in the table block
-            processedBlock.tableRows = tableRows;
-          } catch (error) {
-            console.error(`Error fetching table children for ${blockObj.id}:`, error);
-          }
+      if (blockObj.type === "table") {
+        try {
+          const childrenResponse = await notion.blocks.children.list({
+            block_id: blockObj.id,
+            page_size: 100,
+          });
+          processedBlock.tableRows = childrenResponse.results
+            .map((childBlock) => processBlockFromResponse(childBlock as BlockObjectResponse))
+            .filter((row): row is ProcessedBlock => row !== null && row.type === "table_row");
+        } catch (error) {
+          console.error(`Error fetching table children for ${blockObj.id}:`, error);
         }
+      }
 
-        // If this is a list item with children, fetch nested list items
-        if (
-          (blockObj.type === "bulleted_list_item" || blockObj.type === "numbered_list_item") &&
-          blockObj.has_children &&
-          processedBlock
-        ) {
-          try {
-            const childrenResponse = await notion.blocks.children.list({
-              block_id: blockObj.id,
-              page_size: 100,
-            });
-
-            const children = childrenResponse.results
-              .map((childBlock) => processBlockFromResponse(childBlock as BlockObjectResponse))
-              .filter((child): child is ProcessedBlock => child !== null);
-
-            processedBlock.children = children;
-          } catch (error) {
-            console.error(`Error fetching list children for ${blockObj.id}:`, error);
-          }
+      if (blockObj.type === "bulleted_list_item" || blockObj.type === "numbered_list_item") {
+        try {
+          const childrenResponse = await notion.blocks.children.list({
+            block_id: blockObj.id,
+            page_size: 100,
+          });
+          processedBlock.children = childrenResponse.results
+            .map((childBlock) => processBlockFromResponse(childBlock as BlockObjectResponse))
+            .filter((child): child is ProcessedBlock => child !== null);
+        } catch (error) {
+          console.error(`Error fetching list children for ${blockObj.id}:`, error);
         }
+      }
+    }
 
-        return processedBlock;
-      }),
-    );
-
-    return blockContents.filter((block): block is ProcessedBlock => block !== null);
+    return processed
+      .map(({ processed: p }) => p)
+      .filter((block): block is ProcessedBlock => block !== null);
   } catch (error) {
     console.error(`Error fetching blocks for page ${pageId}:`, error);
     return [];
