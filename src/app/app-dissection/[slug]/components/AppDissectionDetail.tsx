@@ -42,7 +42,7 @@ export function AppDissectionDetail({ post, allItems }: Props) {
         </div>
 
         {/* Intro description from Notion blocks */}
-        <div className="prose-lg">{renderBlocks(post.introBlocks)}</div>
+        <div className="notion-blocks prose-lg">{renderBlocks(post.introBlocks)}</div>
 
         {/* Details */}
         <div className="flex flex-col gap-12">

@@ -99,7 +99,9 @@ export default async function TilEntryPage(props: { params: Promise<{ slug: stri
             <PageTitle>{content.title}</PageTitle>
           </div>
 
-          <div className="flex min-w-0 flex-col gap-4 text-lg">{renderBlocks(content.blocks)}</div>
+          <div className="notion-blocks flex min-w-0 flex-col gap-4 text-lg">
+            {renderBlocks(content.blocks)}
+          </div>
           <BatchLikesProvider pageIds={[content.id]} initialData={initialLikes}>
             <div className="w-fit">
               <LikeButton pageId={content.id} />

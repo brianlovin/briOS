@@ -44,7 +44,7 @@ function TilEntryContent({ entryId }: { entryId: string }) {
     return null;
   }
 
-  return <div className="flex flex-col gap-3">{renderBlocks(data.blocks)}</div>;
+  return <div className="notion-blocks flex flex-col gap-3">{renderBlocks(data.blocks)}</div>;
 }
 
 function TilEntry({
@@ -82,7 +82,9 @@ function TilEntry({
 
         {/* Inline expanded content */}
         {hasInitialContent ? (
-          <div className="flex flex-col gap-3">{renderBlocks(initialContent.blocks)}</div>
+          <div className="notion-blocks flex flex-col gap-3">
+            {renderBlocks(initialContent.blocks)}
+          </div>
         ) : (
           <TilEntryContent entryId={entry.id} />
         )}
