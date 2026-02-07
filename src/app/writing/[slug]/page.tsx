@@ -13,7 +13,7 @@ import { getWritingPostByShortId, getWritingPostContentBySlug } from "@/lib/noti
 import { buildSlug, extractShortIdFromSlug } from "@/lib/short-id";
 import { getAllWritingPosts } from "@/lib/writing";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 // Generate metadata for each writing post
 export async function generateMetadata(props: {

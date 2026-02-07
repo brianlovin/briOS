@@ -10,7 +10,7 @@ import { createArticleJsonLd, createMetadata, truncateDescription } from "@/lib/
 import { getTilByShortId } from "@/lib/notion";
 import { buildSlug, extractShortIdFromSlug } from "@/lib/short-id";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 // Generate metadata for each TIL entry
 export async function generateMetadata(props: {
