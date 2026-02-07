@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
 
 import AMADetail from "@/app/ama/AMADetail";
+import { getAmaQuestions } from "@/lib/ama";
 import { createMetadata, truncateDescription } from "@/lib/metadata";
 import { getAmaItemContent } from "@/lib/notion";
 
 export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  const questions = await getAmaQuestions();
+  return questions.map((q) => ({ id: q.id }));
+}
 
 export async function generateMetadata(props: {
   params: Promise<{ id: string }>;

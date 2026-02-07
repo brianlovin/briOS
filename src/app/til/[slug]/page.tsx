@@ -13,13 +13,11 @@ import { getAllTilEntries } from "@/lib/til";
 
 export const revalidate = 3600;
 
-// Generate static params for the 10 most recent TIL entries at build time
 export async function generateStaticParams() {
   const entries = await getAllTilEntries();
 
   return entries
     .filter((entry) => entry.shortId)
-    .slice(0, 10) // Only prebuild 10 most recent
     .map((entry) => ({
       slug: buildSlug(entry.title, entry.shortId!),
     }));

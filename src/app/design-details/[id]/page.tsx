@@ -4,7 +4,14 @@ import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { LikeButton } from "@/components/likes/LikeButton";
 import { renderBlocks } from "@/components/renderBlocks";
 import { getServerLikes } from "@/lib/likes-server";
-import { getFullContent } from "@/lib/notion";
+import { getDesignDetailsEpisodeDatabaseItems, getFullContent } from "@/lib/notion";
+
+export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  const { items } = await getDesignDetailsEpisodeDatabaseItems(undefined, 100);
+  return items.map((episode) => ({ id: episode.id }));
+}
 
 export default async function EpisodePage(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;

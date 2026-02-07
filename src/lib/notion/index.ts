@@ -63,6 +63,8 @@ export {
   getGoodWebsitesDatabaseItemsForRss,
   // Listening History
   getListeningHistoryDatabaseItems,
+  // Speaking
+  getSpeakingItems,
   // Stack
   getStackDatabaseItems,
   // TIL
@@ -75,6 +77,9 @@ export {
   getWritingPostContent,
   getWritingPostContentBySlug,
 } from "./queries";
+
+// Cache
+export { invalidateNotionCache } from "./cache";
 
 // Mutations
 export {
