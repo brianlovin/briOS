@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   },
 };
 
-export const revalidate = 3600; // 1 hour ISR
+export const dynamic = "force-dynamic";
 
 export default async function TilPage() {
   // Fetch the first 10 entries for SSR

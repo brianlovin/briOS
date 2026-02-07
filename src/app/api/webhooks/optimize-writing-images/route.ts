@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import { errorResponse } from "@/lib/api-utils";
 import { optimizeWritingImage } from "@/lib/image-processing/optimize";
-import { notion } from "@/lib/notion";
+import { invalidateNotionCache, notion } from "@/lib/notion";
 import { uploadBufferToR2 } from "@/lib/r2/storage";
 
 /**
@@ -226,6 +226,9 @@ export async function POST(request: Request) {
 
     const totalSavings =
       totalOriginalSize > 0 ? ((1 - totalOptimizedSize / totalOriginalSize) * 100).toFixed(1) : "0";
+
+    // Invalidate cached content for this writing post
+    await invalidateNotionCache(`notion:writing:content:${pageId}`);
 
     console.log("=".repeat(50));
     console.log(`✅ Optimization complete!`);

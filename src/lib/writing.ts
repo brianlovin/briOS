@@ -1,4 +1,3 @@
-import { unstable_cache } from "next/cache";
 import { cache } from "react";
 
 import { InfiniteScrollPage, useInfiniteScroll } from "@/hooks/useInfiniteScroll";
@@ -29,12 +28,5 @@ async function fetchAllWritingPosts(): Promise<NotionItem[]> {
   return allPosts;
 }
 
-// Cross-request cache: avoids re-fetching from Notion on every ISR revalidation
-const getCachedWritingPosts = unstable_cache(fetchAllWritingPosts, ["writing-posts"], {
-  revalidate: 3600,
-  tags: ["writing-posts"],
-});
-
 // Request-level dedup: prevents duplicate calls within a single render
-// (e.g. generateStaticParams + page component during build)
-export const getAllWritingPosts = cache(getCachedWritingPosts);
+export const getAllWritingPosts = cache(fetchAllWritingPosts);

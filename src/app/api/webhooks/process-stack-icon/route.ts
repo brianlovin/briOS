@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import { errorResponse } from "@/lib/api-utils";
 import { optimizeSiteIcon } from "@/lib/image-processing/optimize";
-import { notion } from "@/lib/notion";
+import { invalidateNotionCache, notion } from "@/lib/notion";
 import { uploadBufferToR2 } from "@/lib/r2/storage";
 
 /**
@@ -87,6 +87,9 @@ export async function POST(request: Request) {
         external: { url: r2Url },
       },
     });
+
+    // Invalidate stack cache so the updated icon is picked up
+    await invalidateNotionCache("notion:stack:*");
 
     return NextResponse.json(
       {

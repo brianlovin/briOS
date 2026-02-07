@@ -6,6 +6,8 @@ import { renderBlocks } from "@/components/renderBlocks";
 import { getServerLikes } from "@/lib/likes-server";
 import { getFullContent } from "@/lib/notion";
 
+export const dynamic = "force-dynamic";
+
 export default async function EpisodePage(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const id = params.id;

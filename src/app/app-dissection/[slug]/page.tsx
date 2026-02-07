@@ -7,12 +7,7 @@ import { extractPreviewText } from "@/lib/notion/types";
 
 import { AppDissectionDetail } from "./components/AppDissectionDetail";
 
-export async function generateStaticParams() {
-  const items = await getAppDissectionDatabaseItems();
-  return items.map((item) => ({
-    slug: item.slug,
-  }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;

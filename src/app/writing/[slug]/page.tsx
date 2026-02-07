@@ -13,18 +13,7 @@ import { getWritingPostByShortId, getWritingPostContentBySlug } from "@/lib/noti
 import { buildSlug, extractShortIdFromSlug } from "@/lib/short-id";
 import { getAllWritingPosts } from "@/lib/writing";
 
-export const revalidate = 3600;
-
-// Generate static params for all writing posts at build time
-export async function generateStaticParams() {
-  const posts = await getAllWritingPosts();
-
-  return posts
-    .filter((post) => post.shortId) // Only include posts with Short IDs
-    .map((post) => ({
-      slug: buildSlug(post.title, post.shortId!),
-    }));
-}
+export const dynamic = "force-dynamic";
 
 // Generate metadata for each writing post
 export async function generateMetadata(props: {

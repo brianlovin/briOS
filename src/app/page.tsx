@@ -13,8 +13,8 @@ import {
   SectionHeading,
 } from "@/components/shared/ListComponents";
 import { createMetadata, createPersonJsonLd } from "@/lib/metadata";
-import { getWritingDatabaseItems } from "@/lib/notion";
 import { buildSlug } from "@/lib/short-id";
+import { getAllWritingPosts } from "@/lib/writing";
 
 export const metadata: Metadata = createMetadata({
   title: "Brian Lovin",
@@ -23,11 +23,12 @@ export const metadata: Metadata = createMetadata({
   path: "/",
 });
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const personJsonLd = createPersonJsonLd();
-  const { items: recentPosts } = await getWritingDatabaseItems(undefined, 5);
+  const allPosts = await getAllWritingPosts();
+  const recentPosts = allPosts.slice(0, 5);
 
   return (
     <>
