@@ -9,19 +9,8 @@ import { getServerLikes } from "@/lib/likes-server";
 import { createArticleJsonLd, createMetadata, truncateDescription } from "@/lib/metadata";
 import { getTilByShortId } from "@/lib/notion";
 import { buildSlug, extractShortIdFromSlug } from "@/lib/short-id";
-import { getAllTilEntries } from "@/lib/til";
 
 export const revalidate = 3600;
-
-export async function generateStaticParams() {
-  const entries = await getAllTilEntries();
-
-  return entries
-    .filter((entry) => entry.shortId)
-    .map((entry) => ({
-      slug: buildSlug(entry.title, entry.shortId!),
-    }));
-}
 
 // Generate metadata for each TIL entry
 export async function generateMetadata(props: {

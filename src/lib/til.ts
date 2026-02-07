@@ -1,4 +1,3 @@
-import { unstable_cache } from "next/cache";
 import { cache } from "react";
 
 import { InfiniteScrollPage, useInfiniteScroll } from "@/hooks/useInfiniteScroll";
@@ -34,12 +33,7 @@ async function fetchAllTilEntries(): Promise<NotionTilItem[]> {
   return allEntries;
 }
 
-const getCachedTilEntries = unstable_cache(fetchAllTilEntries, ["til-entries"], {
-  revalidate: 3600,
-  tags: ["til-entries"],
-});
-
-export const getAllTilEntries = cache(getCachedTilEntries);
+export const getAllTilEntries = cache(fetchAllTilEntries);
 
 export async function getTilEntriesWithContent(
   entries: NotionTilItem[],

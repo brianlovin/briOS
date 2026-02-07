@@ -15,17 +15,6 @@ import { getAllWritingPosts } from "@/lib/writing";
 
 export const revalidate = 3600;
 
-// Generate static params for all writing posts at build time
-export async function generateStaticParams() {
-  const posts = await getAllWritingPosts();
-
-  return posts
-    .filter((post) => post.shortId) // Only include posts with Short IDs
-    .map((post) => ({
-      slug: buildSlug(post.title, post.shortId!),
-    }));
-}
-
 // Generate metadata for each writing post
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;

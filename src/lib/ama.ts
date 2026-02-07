@@ -1,4 +1,3 @@
-import { unstable_cache } from "next/cache";
 import { cache } from "react";
 
 import { InfiniteScrollPage, useInfiniteScroll } from "@/hooks/useInfiniteScroll";
@@ -17,12 +16,7 @@ async function fetchAllAmaQuestions(): Promise<AmaQuestion[]> {
   return all;
 }
 
-const getCachedAmaQuestions = unstable_cache(fetchAllAmaQuestions, ["ama-questions"], {
-  revalidate: 3600,
-  tags: ["ama-questions"],
-});
-
-export const getAmaQuestions = cache(getCachedAmaQuestions);
+export const getAmaQuestions = cache(fetchAllAmaQuestions);
 
 export type AmaPage = InfiniteScrollPage<AmaQuestion>;
 
