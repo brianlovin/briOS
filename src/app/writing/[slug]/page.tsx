@@ -58,6 +58,7 @@ export async function generateMetadata(props: {
     title: metadata.title,
     description: truncateDescription(description),
     path: `/writing/${canonicalSlug}`,
+    image: metadata.featureImage,
     type: "article",
     publishedTime: metadata.published || metadata.createdTime,
     modifiedTime: metadata.createdTime,
@@ -114,6 +115,7 @@ export default async function WritingPostPage(props: { params: Promise<{ slug: s
     path: `/writing/${canonicalSlug}`,
     publishedTime: metadata.published || metadata.createdTime,
     modifiedTime: metadata.createdTime,
+    image: metadata.featureImage,
   });
 
   const cleanDate = new Date(metadata.published || metadata.createdTime).toLocaleDateString(
