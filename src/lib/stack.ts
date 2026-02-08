@@ -1,4 +1,4 @@
-import { getStackDatabaseItems } from "@/lib/notion";
+import { getStackItems } from "@/db/queries/stack";
 
 export type StackItem = {
   id: string;
@@ -17,11 +17,11 @@ export type StackItem = {
 };
 
 export async function getStacks(): Promise<StackItem[]> {
-  const items = await getStackDatabaseItems();
+  const items = await getStackItems();
   return items as StackItem[];
 }
 
 export async function getStackBySlug(slug: string): Promise<StackItem | undefined> {
-  const items = await getStackDatabaseItems();
+  const items = await getStackItems();
   return items.find((item) => item.slug === slug);
 }

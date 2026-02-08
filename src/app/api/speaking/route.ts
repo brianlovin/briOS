@@ -1,9 +1,9 @@
+import { getSpeakingEvents } from "@/db/queries/speaking";
 import { cachedResponse, errorResponse } from "@/lib/api-utils";
-import { getSpeakingItems } from "@/lib/notion/queries";
 
 export async function GET() {
   try {
-    const items = await getSpeakingItems();
+    const items = await getSpeakingEvents();
 
     return cachedResponse(items, 86400); // 24 hour cache
   } catch (error) {

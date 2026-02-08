@@ -1,4 +1,4 @@
-import { getGoodWebsitesDatabaseItems, getGoodWebsitesDatabaseItemsForRss } from "@/lib/notion";
+import { getGoodWebsiteItems, getGoodWebsiteItemsForRss } from "@/db/queries/good-websites";
 
 export type GoodWebsiteItem = {
   id: string;
@@ -39,7 +39,7 @@ function shuffleWithSeed<T>(array: T[], seed: number): T[] {
 }
 
 export async function getGoodWebsites(): Promise<GoodWebsiteItem[]> {
-  const items = await getGoodWebsitesDatabaseItems();
+  const items = await getGoodWebsiteItems();
 
   // Create a seed based on 5-minute intervals
   // This ensures the same order for all users within a 5-minute window
@@ -54,5 +54,5 @@ export async function getGoodWebsites(): Promise<GoodWebsiteItem[]> {
 }
 
 export async function getGoodWebsitesForRss(): Promise<GoodWebsiteItemWithDate[]> {
-  return getGoodWebsitesDatabaseItemsForRss();
+  return getGoodWebsiteItemsForRss();
 }

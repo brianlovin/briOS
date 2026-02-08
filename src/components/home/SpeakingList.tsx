@@ -1,4 +1,4 @@
-import { getSpeakingItems } from "@/lib/notion/queries";
+import { getSpeakingEvents } from "@/db/queries/speaking";
 
 import { List, ListItem, ListItemLabel, ListItemSubLabel } from "../shared/ListComponents";
 
@@ -19,7 +19,7 @@ function formatSpeakingDate(isoDate: string): string {
 }
 
 export async function SpeakingList() {
-  const speakingItems = await getSpeakingItems();
+  const speakingItems = await getSpeakingEvents();
 
   return (
     <List>

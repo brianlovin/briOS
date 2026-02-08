@@ -1,5 +1,5 @@
+import { getStackItems } from "@/db/queries/stack";
 import { cachedResponse, errorResponse } from "@/lib/api-utils";
-import { getStackDatabaseItems } from "@/lib/notion";
 
 export async function GET(request: Request) {
   try {
@@ -7,7 +7,7 @@ export async function GET(request: Request) {
     const status = searchParams.get("status") || "active";
     const platform = searchParams.get("platform") || "";
 
-    const items = await getStackDatabaseItems();
+    const items = await getStackItems();
 
     // Filter items based on query parameters
     const filteredItems = items.filter((item) => {

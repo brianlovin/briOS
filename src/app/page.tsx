@@ -14,7 +14,7 @@ import {
 } from "@/components/shared/ListComponents";
 import { createMetadata, createPersonJsonLd } from "@/lib/metadata";
 import { buildSlug } from "@/lib/short-id";
-import { getAllWritingPosts } from "@/lib/writing";
+import { getAllWritingPosts } from "@/lib/writing.server";
 
 export const metadata: Metadata = createMetadata({
   title: "Brian Lovin",

@@ -1,24 +1,21 @@
 import Image from "next/image";
 
 import { AppDissectionDock } from "@/components/AppDissectionDock";
-import { renderBlocks } from "@/components/renderBlocks";
+import { MarkdownContent } from "@/components/MarkdownContent";
 import { PageTitle } from "@/components/Typography";
 import { FancySeparator } from "@/components/ui/FancySeparator";
-import {
-  formatPublishedDate,
-  type NotionAppDissectionItem,
-  type NotionAppDissectionItemWithContent,
-} from "@/lib/notion/types";
+import type { AppDissectionItem, AppDissectionItemWithContent } from "@/db/queries/app-dissection";
+import { formatPublishedDate } from "@/lib/date-utils";
 
 import { DesignDetailMedia } from "./DetailMedia";
 
 interface Props {
-  post: NotionAppDissectionItemWithContent;
-  allItems: NotionAppDissectionItem[];
+  post: AppDissectionItemWithContent;
+  allItems: AppDissectionItem[];
 }
 
 export function AppDissectionDetail({ post, allItems }: Props) {
-  const date = formatPublishedDate(post.published);
+  const date = formatPublishedDate(post.publishedAt.split("T")[0]);
 
   return (
     <div className="flex-1 overflow-y-auto">
@@ -41,8 +38,12 @@ export function AppDissectionDetail({ post, allItems }: Props) {
           </div>
         </div>
 
-        {/* Intro description from Notion blocks */}
-        <div className="notion-blocks prose-lg">{renderBlocks(post.introBlocks)}</div>
+        {/* Intro description from markdown */}
+        {post.introContent && (
+          <div className="notion-blocks prose-lg">
+            <MarkdownContent content={post.introContent} />
+          </div>
+        )}
 
         {/* Details */}
         <div className="flex flex-col gap-12">

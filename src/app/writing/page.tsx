@@ -10,7 +10,7 @@ import {
 import { PageTitle } from "@/components/Typography";
 import { createMetadata } from "@/lib/metadata";
 import { buildSlug } from "@/lib/short-id";
-import { getAllWritingPosts } from "@/lib/writing";
+import { getAllWritingPosts } from "@/lib/writing.server";
 
 export const metadata: Metadata = createMetadata({
   title: "Writing",
@@ -27,7 +27,7 @@ export default async function WritingPage() {
   // Group posts by year
   const postsByYear: Record<string, typeof posts> = {};
   posts.forEach((post) => {
-    const publishedDate = post.published || post.createdTime;
+    const publishedDate = post.publishedAt;
     const year = new Date(publishedDate).getFullYear().toString();
     if (!postsByYear[year]) {
       postsByYear[year] = [];

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 import AMADetail from "@/app/ama/AMADetail";
+import { getAmaQuestionById } from "@/db/queries/ama";
 import { createMetadata, truncateDescription } from "@/lib/metadata";
-import { getAmaItemContent } from "@/lib/notion";
 
 export const dynamic = "force-dynamic";
 
@@ -13,18 +13,18 @@ export async function generateMetadata(props: {
   const id = params.id;
 
   try {
-    const item = await getAmaItemContent(id);
+    const question = await getAmaQuestionById(id);
 
-    if (!item) {
+    if (!question) {
       return {
         title: "AMA Question Not Found",
       };
     }
 
-    const description = item.description || `Question answered by Brian Lovin`;
+    const description = question.description || `Question answered by Brian Lovin`;
 
     return createMetadata({
-      title: item.title,
+      title: question.title,
       description: truncateDescription(description),
       path: `/ama/${id}`,
     });

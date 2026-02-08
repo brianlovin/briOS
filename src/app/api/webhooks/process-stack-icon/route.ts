@@ -1,23 +1,23 @@
 import { NextResponse } from "next/server";
 
+import { getStackItemByNotionId, updateStackItemByNotionId } from "@/db/queries/stack";
 import { errorResponse } from "@/lib/api-utils";
 import { optimizeSiteIcon } from "@/lib/image-processing/optimize";
-import { invalidateNotionCache, notion } from "@/lib/notion";
 import { uploadBufferToR2 } from "@/lib/r2/storage";
 
 /**
- * Webhook endpoint to optimize existing Notion page icon and upload to R2
+ * Webhook endpoint to optimize existing page icon and upload to R2
  *
  * POST /api/webhooks/process-stack-icon
- * Notion automation payload: { data: { id } }
+ * Payload: { data: { id } }
  *
  * Flow:
- * 1. Extract page ID from Notion webhook
- * 2. Fetch page from Notion to get existing icon URL
+ * 1. Extract page ID from webhook
+ * 2. Look up stack item in Postgres to get existing icon URL
  * 3. Download the icon image as buffer
  * 4. Optimize icon (resize to max 80x80px, compress)
  * 5. Upload to R2 storage
- * 6. Update Notion page icon with R2 URL
+ * 6. Update Postgres with R2 URL
  */
 export async function POST(request: Request) {
   try {
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
 
     const body = await request.json();
 
-    // Extract page ID from Notion webhook payload
+    // Extract page ID from webhook payload
     const pageId = body.data?.id;
 
     // Validate required fields
@@ -39,25 +39,20 @@ export async function POST(request: Request) {
       return errorResponse("Missing required field: data.id (pageId)", 400);
     }
 
-    // Step 1: Fetch the page from Notion to get the current icon
-    const page = await notion.pages.retrieve({ page_id: pageId });
-
-    // Extract icon URL from page
-    let iconUrl: string | undefined;
-    if ("icon" in page && page.icon) {
-      if (page.icon.type === "external") {
-        iconUrl = page.icon.external.url;
-      } else if (page.icon.type === "file") {
-        iconUrl = page.icon.file.url;
-      }
+    // Step 1: Look up the stack item in Postgres
+    const item = await getStackItemByNotionId(pageId);
+    if (!item) {
+      console.error("Stack item not found for notionId:", pageId);
+      return errorResponse("Stack item not found", 404);
     }
 
+    const iconUrl = item.icon || item.image;
     if (!iconUrl) {
       console.error("Page has no icon to process", pageId, body);
       return errorResponse("Page has no icon to process", 400);
     }
 
-    console.log(`Processing icon for page ${pageId}: ${iconUrl}`);
+    console.log(`Processing icon for stack item ${item.id}: ${iconUrl}`);
 
     // Step 2: Download the icon
     const iconResponse = await fetch(iconUrl);
@@ -79,17 +74,8 @@ export async function POST(request: Request) {
     // Step 4: Upload optimized icon to R2
     const r2Url = await uploadBufferToR2(optimized.buffer, optimized.contentType);
 
-    // Step 5: Update Notion page icon with R2 URL
-    await notion.pages.update({
-      page_id: pageId,
-      icon: {
-        type: "external",
-        external: { url: r2Url },
-      },
-    });
-
-    // Invalidate stack cache so the updated icon is picked up
-    await invalidateNotionCache("notion:stack:*");
+    // Step 5: Update Postgres with R2 URL
+    await updateStackItemByNotionId(pageId, { icon: r2Url });
 
     return NextResponse.json(
       {

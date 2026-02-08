@@ -3,11 +3,11 @@ import { notFound } from "next/navigation";
 
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { LikeButton } from "@/components/likes/LikeButton";
-import { renderBlocks } from "@/components/renderBlocks";
+import { MarkdownContent } from "@/components/MarkdownContent";
 import { PageTitle } from "@/components/Typography";
+import { getTilEntryByShortId } from "@/db/queries/til";
 import { getServerLikes } from "@/lib/likes-server";
 import { createArticleJsonLd, createMetadata, truncateDescription } from "@/lib/metadata";
-import { getTilByShortId } from "@/lib/notion";
 import { buildSlug, extractShortIdFromSlug } from "@/lib/short-id";
 
 export const dynamic = "force-dynamic";
@@ -24,19 +24,19 @@ export async function generateMetadata(props: {
     return {};
   }
 
-  const content = await getTilByShortId(shortId);
-  if (!content) {
+  const entry = await getTilEntryByShortId(shortId);
+  if (!entry) {
     return {};
   }
 
-  const canonicalSlug = content.shortId ? buildSlug(content.title, content.shortId) : slug;
+  const canonicalSlug = entry.shortId ? buildSlug(entry.title, entry.shortId) : slug;
 
   return createMetadata({
-    title: content.title,
-    description: truncateDescription(`TIL: ${content.title}`),
+    title: entry.title,
+    description: truncateDescription(`TIL: ${entry.title}`),
     path: `/til/${canonicalSlug}`,
     type: "article",
-    publishedTime: content.published,
+    publishedTime: entry.publishedAt,
   });
 }
 
@@ -49,17 +49,17 @@ export default async function TilEntryPage(props: { params: Promise<{ slug: stri
     notFound();
   }
 
-  const content = await getTilByShortId(shortId);
-  if (!content) {
+  const entry = await getTilEntryByShortId(shortId);
+  if (!entry) {
     notFound();
   }
 
-  const canonicalSlug = content.shortId ? buildSlug(content.title, content.shortId) : slug;
+  const canonicalSlug = entry.shortId ? buildSlug(entry.title, entry.shortId) : slug;
 
   // Fetch likes server-side
-  const initialLikes = await getServerLikes([content.id]);
+  const initialLikes = await getServerLikes([entry.id]);
 
-  const cleanDate = new Date(content.published).toLocaleDateString("en-US", {
+  const cleanDate = new Date(entry.publishedAt).toLocaleDateString("en-US", {
     month: "long",
     day: "numeric",
     year: "numeric",
@@ -67,10 +67,10 @@ export default async function TilEntryPage(props: { params: Promise<{ slug: stri
   });
 
   const articleJsonLd = createArticleJsonLd({
-    title: content.title,
-    description: `TIL: ${content.title}`,
+    title: entry.title,
+    description: `TIL: ${entry.title}`,
     path: `/til/${canonicalSlug}`,
-    publishedTime: content.published,
+    publishedTime: entry.publishedAt,
   });
 
   return (
@@ -83,15 +83,15 @@ export default async function TilEntryPage(props: { params: Promise<{ slug: stri
         <div className="mx-auto flex max-w-3xl flex-1 flex-col gap-8 px-4 py-12 md:px-6 lg:px-8 lg:py-16 xl:py-20">
           <div className="flex flex-col gap-4">
             <p className="text-tertiary">TIL on {cleanDate}</p>
-            <PageTitle>{content.title}</PageTitle>
+            <PageTitle>{entry.title}</PageTitle>
           </div>
 
           <div className="notion-blocks flex min-w-0 flex-col gap-4 text-lg">
-            {renderBlocks(content.blocks)}
+            <MarkdownContent content={entry.content} />
           </div>
-          <BatchLikesProvider pageIds={[content.id]} initialData={initialLikes}>
+          <BatchLikesProvider pageIds={[entry.id]} initialData={initialLikes}>
             <div className="w-fit">
-              <LikeButton pageId={content.id} />
+              <LikeButton pageId={entry.id} />
             </div>
           </BatchLikesProvider>
         </div>

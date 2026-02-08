@@ -1,11 +1,11 @@
 "use client";
 
-import { renderBlocks } from "@/components/renderBlocks";
+import { MarkdownContent } from "@/components/MarkdownContent";
+import type { AppDissectionDetailItem } from "@/db/queries/app-dissection";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
-import type { AppDissectionDetail } from "@/lib/notion/types";
 
 interface Props {
-  detail: AppDissectionDetail;
+  detail: AppDissectionDetailItem;
 }
 
 export function DesignDetailMedia({ detail }: Props) {
@@ -20,7 +20,11 @@ export function DesignDetailMedia({ detail }: Props) {
   return (
     <div ref={ref} className="flex flex-col">
       <h2 className="text-primary mb-4 text-2xl font-semibold">{detail.title}</h2>
-      <div className="notion-blocks prose-lg">{renderBlocks(detail.descriptionBlocks)}</div>
+      {detail.description && (
+        <div className="notion-blocks prose-lg">
+          <MarkdownContent content={detail.description} />
+        </div>
+      )}
 
       {isVisible && videoUrls.length > 0 && (
         <div className="bg-tertiary dark:bg-secondary mt-8 mb-4 flex items-center justify-center rounded-xl p-2 md:p-4 xl:rounded-2xl">

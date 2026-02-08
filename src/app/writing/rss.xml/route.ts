@@ -1,10 +1,9 @@
 import { Feed } from "feed";
 
+import { getWritingPostByShortId } from "@/db/queries/writing";
 import { SITE_CONFIG } from "@/lib/metadata";
-import { getWritingPostContent } from "@/lib/notion/queries";
-import { extractPreviewText } from "@/lib/notion/types";
 import { buildSlug } from "@/lib/short-id";
-import { getAllWritingPosts } from "@/lib/writing";
+import { getAllWritingPosts } from "@/lib/writing.server";
 
 export async function GET() {
   try {
@@ -32,12 +31,12 @@ export async function GET() {
     const posts = await getAllWritingPosts();
     const postsWithShortId = posts.filter((post) => post.shortId);
 
-    // Fetch content for all posts in parallel (gracefully handle failures)
+    // Fetch content for posts that have short IDs
     const postsWithContent = await Promise.all(
       postsWithShortId.map(async (post) => {
         try {
-          const content = await getWritingPostContent(post.id);
-          return { post, content };
+          const fullPost = await getWritingPostByShortId(post.shortId!);
+          return { post, content: fullPost?.content ?? null };
         } catch {
           return { post, content: null };
         }
@@ -47,14 +46,15 @@ export async function GET() {
     // Add each post to the feed
     postsWithContent.forEach(({ post, content }) => {
       const postUrl = `${SITE_CONFIG.url}/writing/${buildSlug(post.title, post.shortId!)}`;
-      const publishDate = new Date(post.published || post.createdTime);
+      const publishDate = new Date(post.publishedAt);
 
       // Build description with content preview and view link
       const descriptionParts: string[] = [];
-      if (content?.blocks) {
-        const previewText = extractPreviewText(content.blocks, { maxBlocks: 2 });
-        if (previewText) {
-          descriptionParts.push(previewText);
+      if (content) {
+        // Use first ~500 chars of markdown as preview
+        const preview = content.slice(0, 500).split("\n\n").slice(0, 2).join("\n\n");
+        if (preview) {
+          descriptionParts.push(preview);
         }
       } else if (post.excerpt) {
         descriptionParts.push(post.excerpt);
@@ -69,7 +69,7 @@ export async function GET() {
         description,
         date: publishDate,
         published: publishDate,
-        image: post.featureImage,
+        image: post.featureImage ?? undefined,
         author: [
           {
             name: SITE_CONFIG.author.name,

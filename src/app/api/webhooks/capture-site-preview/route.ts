@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 
+import { getGoodWebsiteByNotionId, updateGoodWebsiteByNotionId } from "@/db/queries/good-websites";
 import { errorResponse } from "@/lib/api-utils";
 import { optimizeSitePreview } from "@/lib/image-processing/optimize";
-import { notion } from "@/lib/notion";
 import { uploadBufferToR2 } from "@/lib/r2/storage";
 import { captureScreenshot } from "@/lib/screenshot";
 
@@ -10,15 +10,15 @@ import { captureScreenshot } from "@/lib/screenshot";
  * Webhook endpoint to capture a website screenshot and store it in R2
  *
  * POST /api/webhooks/capture-site-preview
- * Notion automation payload: { data: { id, properties: { URL } } }
+ * Payload: { data: { id, properties: { URL } } }
  *
  * Flow:
- * 1. Extract page ID and URL from Notion webhook
+ * 1. Extract page ID and URL from webhook
  * 2. Set status to "Processing"
  * 3. Capture screenshot using Puppeteer
  * 4. Optimize image (resize, compress to WebP)
  * 5. Upload to R2 storage
- * 6. Update Notion page with preview URL and status
+ * 6. Update Postgres with preview URL and status
  */
 export async function POST(request: Request) {
   try {
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
 
     const body = await request.json();
 
-    // Extract page ID and URL from Notion webhook payload
+    // Extract page ID and URL from webhook payload
     const pageId = body.data?.id;
     const urlProperty = body.data?.properties?.URL;
 
@@ -46,7 +46,7 @@ export async function POST(request: Request) {
       return errorResponse("Missing required field: data.properties.URL", 400);
     }
 
-    // Extract URL from Notion property object
+    // Extract URL from property object
     const url = typeof urlProperty === "string" ? urlProperty : urlProperty.url;
 
     if (!url) {
@@ -63,12 +63,13 @@ export async function POST(request: Request) {
     }
 
     // Check current status to prevent duplicate processing
-    const currentPage = await notion.pages.retrieve({ page_id: pageId });
-    const currentStatus = (
-      currentPage as { properties: { "Preview Status"?: { select?: { name: string } | null } } }
-    ).properties?.["Preview Status"]?.select?.name;
+    const currentItem = await getGoodWebsiteByNotionId(pageId);
+    if (!currentItem) {
+      console.error("Good website not found for notionId:", pageId);
+      return errorResponse("Good website not found", 404);
+    }
 
-    if (currentStatus === "Processing") {
+    if (currentItem.previewStatus === "Processing") {
       console.log(`Page ${pageId} is already being processed, skipping`);
       return NextResponse.json(
         { success: true, message: "Already processing", skipped: true },
@@ -77,13 +78,7 @@ export async function POST(request: Request) {
     }
 
     // Step 1: Set status to Processing
-    await notion.pages.update({
-      page_id: pageId,
-      properties: {
-        "Preview Status": { select: { name: "Processing" } },
-        "Preview Error": { rich_text: [] }, // Clear any previous error
-      },
-    });
+    await updateGoodWebsiteByNotionId(pageId, { previewStatus: "Processing" });
 
     try {
       // Step 2: Capture screenshot
@@ -101,14 +96,10 @@ export async function POST(request: Request) {
       const r2Url = await uploadBufferToR2(optimized.buffer, optimized.contentType);
       console.log(`Uploaded to R2: ${r2Url}`);
 
-      // Step 5: Update Notion page with success
-      await notion.pages.update({
-        page_id: pageId,
-        properties: {
-          "Preview Status": { select: { name: "Done" } },
-          "Preview Image": { url: r2Url },
-          "Preview Updated": { date: { start: new Date().toISOString() } },
-        },
+      // Step 5: Update Postgres with success
+      await updateGoodWebsiteByNotionId(pageId, {
+        previewStatus: "Done",
+        previewImage: r2Url,
       });
 
       return NextResponse.json(
@@ -120,19 +111,10 @@ export async function POST(request: Request) {
         { status: 200 },
       );
     } catch (captureError) {
-      // Update Notion with error status
-      const errorMessage = captureError instanceof Error ? captureError.message : "Unknown error";
+      // Update Postgres with error status
       console.error("Error capturing screenshot:", captureError);
 
-      await notion.pages.update({
-        page_id: pageId,
-        properties: {
-          "Preview Status": { select: { name: "Error" } },
-          "Preview Error": {
-            rich_text: [{ text: { content: errorMessage.slice(0, 2000) } }],
-          },
-        },
-      });
+      await updateGoodWebsiteByNotionId(pageId, { previewStatus: "Error" });
 
       throw captureError;
     }

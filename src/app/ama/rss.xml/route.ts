@@ -1,9 +1,8 @@
 import { Feed } from "feed";
 
-import { getAmaQuestions } from "@/lib/ama";
+import { getAmaQuestionById } from "@/db/queries/ama";
+import { getAmaQuestions } from "@/lib/ama.server";
 import { SITE_CONFIG } from "@/lib/metadata";
-import { getAmaItemContent } from "@/lib/notion/queries";
-import { extractPreviewText } from "@/lib/notion/types";
 
 export async function GET() {
   try {
@@ -28,19 +27,19 @@ export async function GET() {
 
     const questions = await getAmaQuestions();
 
-    // Fetch content for all questions in parallel (gracefully handle failures)
+    // Fetch full content for all questions in parallel
     const questionsWithContent = await Promise.all(
       questions.map(async (question) => {
         try {
-          const content = await getAmaItemContent(question.id);
-          return { question, content };
+          const full = await getAmaQuestionById(question.id);
+          return { question, answer: full?.answer ?? null };
         } catch {
-          return { question, content: null };
+          return { question, answer: null };
         }
       }),
     );
 
-    questionsWithContent.forEach(({ question, content }) => {
+    questionsWithContent.forEach(({ question, answer }) => {
       const questionUrl = `${SITE_CONFIG.url}/ama/${question.id}`;
       const publishDate = new Date(question.answeredAt);
 
@@ -49,11 +48,11 @@ export async function GET() {
       if (question.description) {
         descriptionParts.push(question.description);
       }
-      if (content?.blocks) {
-        const answerPreview = extractPreviewText(content.blocks, { maxBlocks: 3 });
-        if (answerPreview) {
+      if (answer) {
+        const preview = answer.slice(0, 500).split("\n\n").slice(0, 3).join("\n\n");
+        if (preview) {
           descriptionParts.push("---");
-          descriptionParts.push(answerPreview);
+          descriptionParts.push(preview);
         }
       }
       const description = descriptionParts.join("\n\n") || `AMA: ${question.title}`;

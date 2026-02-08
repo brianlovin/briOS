@@ -2,11 +2,11 @@
 
 import useSWR from "swr";
 
+import type { SpeakingEvent } from "@/db/queries/speaking";
 import { fetcher } from "@/lib/fetcher";
-import type { NotionSpeakingItem } from "@/lib/notion/types";
 
-export function useSpeaking(fallbackData?: NotionSpeakingItem[]) {
-  const { data, error, isLoading, isValidating, mutate } = useSWR<NotionSpeakingItem[]>(
+export function useSpeaking(fallbackData?: SpeakingEvent[]) {
+  const { data, error, isLoading, isValidating, mutate } = useSWR<SpeakingEvent[]>(
     "/api/speaking",
     fetcher,
     {
