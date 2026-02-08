@@ -1,3 +1,4 @@
+import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 import {
@@ -87,6 +88,8 @@ export async function POST(request: Request) {
     // Update Postgres with the new Short ID
     console.log(`Updating post with Short ID: ${shortId}`);
     await updateWritingPostShortId(post.id, shortId);
+
+    revalidateTag("writing", { expire: 0 });
 
     console.log(`✅ Successfully generated Short ID: ${shortId} for "${post.title}"\n`);
 

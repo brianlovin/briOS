@@ -1,3 +1,4 @@
+import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
 import { createAmaQuestion, getAmaQuestions } from "@/db/queries/ama";
@@ -35,6 +36,7 @@ export async function POST(request: Request) {
     const validatedData = createQuestionSchema.parse(body);
 
     const result = await createAmaQuestion(validatedData.title, validatedData.description);
+    revalidateTag("ama", { expire: 0 });
     return cachedResponse({ id: result.id }, 0);
   } catch (error) {
     if (error instanceof z.ZodError) {
