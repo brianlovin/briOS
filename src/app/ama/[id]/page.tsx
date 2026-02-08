@@ -4,8 +4,6 @@ import AMADetail from "@/app/ama/AMADetail";
 import { getAmaQuestionById } from "@/db/queries/ama";
 import { createMetadata, truncateDescription } from "@/lib/metadata";
 
-export const dynamic = "force-dynamic";
-
 export async function generateMetadata(props: {
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {

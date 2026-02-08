@@ -19,8 +19,6 @@ export const metadata: Metadata = createMetadata({
   path: "/writing",
 });
 
-export const dynamic = "force-dynamic";
-
 export default async function WritingPage() {
   const posts = await getAllWritingPosts();
 

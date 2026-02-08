@@ -16,8 +16,6 @@ export const metadata: Metadata = {
   },
 };
 
-export const revalidate = 3600;
-
 export default function AMAPage() {
   return <div className="bg-secondary dark:bg-primary flex flex-1" />;
 }

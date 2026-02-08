@@ -19,8 +19,6 @@ export const metadata: Metadata = {
   },
 };
 
-export const dynamic = "force-dynamic";
-
 export default async function TilPage() {
   // Fetch the first 10 entries with content for SSR
   const { items: initialEntries } = await getTilEntriesWithContent(undefined, 10);

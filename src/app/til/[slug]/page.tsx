@@ -5,12 +5,15 @@ import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { LikeButton } from "@/components/likes/LikeButton";
 import { MarkdownContent } from "@/components/MarkdownContent";
 import { PageTitle } from "@/components/Typography";
-import { getTilEntryByShortId } from "@/db/queries/til";
+import { getAllTilSlugs, getTilEntryByShortId } from "@/db/queries/til";
 import { getServerLikes } from "@/lib/likes-server";
 import { createArticleJsonLd, createMetadata, truncateDescription } from "@/lib/metadata";
 import { buildSlug, extractShortIdFromSlug } from "@/lib/short-id";
 
-export const dynamic = "force-dynamic";
+export async function generateStaticParams() {
+  const entries = await getAllTilSlugs();
+  return entries.filter((e) => e.shortId).map((e) => ({ slug: buildSlug(e.title, e.shortId!) }));
+}
 
 // Generate metadata for each TIL entry
 export async function generateMetadata(props: {

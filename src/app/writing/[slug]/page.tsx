@@ -7,13 +7,20 @@ import { MarkdownContent } from "@/components/MarkdownContent";
 import { List, ListItem, ListItemLabel } from "@/components/shared/ListComponents";
 import { PageTitle } from "@/components/Typography";
 import { FancySeparator } from "@/components/ui/FancySeparator";
-import { getWritingPostByShortId, getWritingPostBySlug } from "@/db/queries/writing";
+import {
+  getAllWritingPostSlugs,
+  getWritingPostByShortId,
+  getWritingPostBySlug,
+} from "@/db/queries/writing";
 import { getServerLikes } from "@/lib/likes-server";
 import { createArticleJsonLd, createMetadata, truncateDescription } from "@/lib/metadata";
 import { buildSlug, extractShortIdFromSlug } from "@/lib/short-id";
 import { getAllWritingPosts } from "@/lib/writing.server";
 
-export const dynamic = "force-dynamic";
+export async function generateStaticParams() {
+  const posts = await getAllWritingPostSlugs();
+  return posts.filter((p) => p.shortId).map((p) => ({ slug: buildSlug(p.title, p.shortId!) }));
+}
 
 // Generate metadata for each writing post
 export async function generateMetadata(props: {
@@ -50,8 +57,22 @@ export async function generateMetadata(props: {
   });
 }
 
-function getRandomPosts<T>(posts: T[], count: number): T[] {
-  const shuffled = [...posts].sort(() => Math.random() - 0.5);
+// Seeded random to produce stable "Read next" picks within each revalidation window
+function seededRandom(seed: number): () => number {
+  let state = seed;
+  return () => {
+    state = (state * 1103515245 + 12345) & 0x7fffffff;
+    return state / 0x7fffffff;
+  };
+}
+
+function getRandomPosts<T>(posts: T[], count: number, seed: number): T[] {
+  const shuffled = [...posts];
+  const random = seededRandom(seed);
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
   return shuffled.slice(0, count);
 }
 
@@ -88,8 +109,10 @@ export default async function WritingPostPage(props: { params: Promise<{ slug: s
   ]);
 
   // Get 5 random posts (excluding current post)
+  // Seed from post identity so each post gets a unique but stable "Read next" set
+  const seed = (post.shortId ?? post.id).split("").reduce((a, c) => a + c.charCodeAt(0), 0);
   const otherPosts = allPosts.filter((p) => p.shortId && p.shortId !== post.shortId);
-  const randomPosts = getRandomPosts(otherPosts, 5);
+  const randomPosts = getRandomPosts(otherPosts, 5, seed);
 
   // Generate JSON-LD structured data
   const articleJsonLd = createArticleJsonLd({

@@ -1,12 +1,19 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { getAppDissectionBySlug, getAppDissections } from "@/db/queries/app-dissection";
+import {
+  getAllAppDissectionSlugs,
+  getAppDissectionBySlug,
+  getAppDissections,
+} from "@/db/queries/app-dissection";
 import { createArticleJsonLd, createMetadata, truncateDescription } from "@/lib/metadata";
 
 import { AppDissectionDetail } from "./components/AppDissectionDetail";
 
-export const dynamic = "force-dynamic";
+export async function generateStaticParams() {
+  const items = await getAllAppDissectionSlugs();
+  return items.map((item) => ({ slug: item.slug }));
+}
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;
