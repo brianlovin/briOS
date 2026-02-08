@@ -1,4 +1,5 @@
 import { desc, eq } from "drizzle-orm";
+import { cacheLife, cacheTag } from "next/cache";
 
 import { db } from "../client";
 import { writingPosts } from "../schema/writing";
@@ -22,6 +23,10 @@ export async function getWritingPosts(
   cursor?: string,
   limit: number = 20,
 ): Promise<{ items: WritingPost[]; nextCursor: string | null }> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("writing");
+
   const offset = cursor ? parseInt(cursor, 10) : 0;
 
   const rows = await db
@@ -56,6 +61,10 @@ export async function getWritingPosts(
 }
 
 export async function getWritingPostBySlug(slug: string): Promise<WritingPostWithContent | null> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("writing");
+
   const [row] = await db.select().from(writingPosts).where(eq(writingPosts.slug, slug)).limit(1);
 
   if (!row) return null;
@@ -65,6 +74,10 @@ export async function getWritingPostBySlug(slug: string): Promise<WritingPostWit
 export async function getWritingPostByShortId(
   shortId: string,
 ): Promise<WritingPostWithContent | null> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("writing");
+
   const [row] = await db
     .select()
     .from(writingPosts)
@@ -76,6 +89,10 @@ export async function getWritingPostByShortId(
 }
 
 export async function getWritingPostById(id: string): Promise<WritingPostWithContent | null> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("writing");
+
   const [row] = await db.select().from(writingPosts).where(eq(writingPosts.id, id)).limit(1);
 
   if (!row) return null;
@@ -105,6 +122,10 @@ export async function updateWritingPostShortId(id: string, shortId: string): Pro
 export async function getAllWritingPostSlugs(): Promise<
   { slug: string; shortId: string | null; title: string }[]
 > {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("writing");
+
   const rows = await db
     .select({
       slug: writingPosts.slug,

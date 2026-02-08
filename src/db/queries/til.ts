@@ -1,4 +1,5 @@
 import { desc, eq } from "drizzle-orm";
+import { cacheLife, cacheTag } from "next/cache";
 
 import { db } from "../client";
 import { tilEntries } from "../schema/til";
@@ -18,6 +19,10 @@ export async function getTilEntries(
   cursor?: string,
   limit: number = 20,
 ): Promise<{ items: TilEntry[]; nextCursor: string | null }> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("til");
+
   const offset = cursor ? parseInt(cursor, 10) : 0;
 
   const rows = await db
@@ -44,6 +49,10 @@ export async function getTilEntries(
 }
 
 export async function getTilEntryByShortId(shortId: string): Promise<TilEntryWithContent | null> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("til");
+
   const [row] = await db.select().from(tilEntries).where(eq(tilEntries.shortId, shortId)).limit(1);
 
   if (!row) return null;
@@ -51,6 +60,10 @@ export async function getTilEntryByShortId(shortId: string): Promise<TilEntryWit
 }
 
 export async function getTilEntryById(id: string): Promise<TilEntryWithContent | null> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("til");
+
   const [row] = await db.select().from(tilEntries).where(eq(tilEntries.id, id)).limit(1);
 
   if (!row) return null;
@@ -61,6 +74,10 @@ export async function getTilEntriesWithContent(
   cursor?: string,
   limit: number = 20,
 ): Promise<{ items: TilEntryWithContent[]; nextCursor: string | null }> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("til");
+
   const offset = cursor ? parseInt(cursor, 10) : 0;
 
   const rows = await db
@@ -77,6 +94,10 @@ export async function getTilEntriesWithContent(
 }
 
 export async function getAllTilSlugs(): Promise<{ shortId: string | null; title: string }[]> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("til");
+
   const rows = await db
     .select({
       shortId: tilEntries.shortId,

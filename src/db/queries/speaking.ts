@@ -1,4 +1,5 @@
 import { desc } from "drizzle-orm";
+import { cacheLife, cacheTag } from "next/cache";
 
 import { db } from "../client";
 import { speakingEvents } from "../schema/speaking";
@@ -11,6 +12,10 @@ export type SpeakingEvent = {
 };
 
 export async function getSpeakingEvents(): Promise<SpeakingEvent[]> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("speaking");
+
   const rows = await db.select().from(speakingEvents).orderBy(desc(speakingEvents.date));
 
   return rows.map((row) => ({

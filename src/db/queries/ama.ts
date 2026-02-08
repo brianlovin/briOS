@@ -1,4 +1,5 @@
 import { desc, eq, or } from "drizzle-orm";
+import { cacheLife, cacheTag } from "next/cache";
 
 import { db } from "../client";
 import { amaQuestions } from "../schema/ama";
@@ -20,6 +21,10 @@ export async function getAmaQuestions(
   cursor?: string,
   limit: number = 20,
 ): Promise<{ items: AmaQuestion[]; nextCursor: string | null }> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("ama");
+
   const offset = cursor ? parseInt(cursor, 10) : 0;
 
   const rows = await db
@@ -51,6 +56,10 @@ export async function getAmaQuestions(
 }
 
 export async function getAmaQuestionById(id: string): Promise<AmaQuestionWithAnswer | null> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("ama");
+
   // Try UUID first, fall back to notionId for backwards-compatible URLs
   const [row] = await db
     .select()
@@ -79,6 +88,10 @@ export async function createAmaQuestion(
 }
 
 export async function getAllAmaIds(): Promise<{ id: string }[]> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("ama");
+
   const rows = await db
     .select({ id: amaQuestions.id })
     .from(amaQuestions)

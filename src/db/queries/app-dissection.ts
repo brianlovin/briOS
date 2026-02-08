@@ -1,4 +1,5 @@
 import { asc, desc, eq } from "drizzle-orm";
+import { cacheLife, cacheTag } from "next/cache";
 
 import { db } from "../client";
 import { appDissectionDetails, appDissections } from "../schema/app-dissection";
@@ -31,6 +32,10 @@ export type AppDissectionItemWithContent = AppDissectionItem & {
 };
 
 export async function getAppDissections(): Promise<AppDissectionItem[]> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("app-dissection");
+
   const rows = await db
     .select({
       id: appDissections.id,
@@ -59,6 +64,10 @@ export async function getAppDissections(): Promise<AppDissectionItem[]> {
 export async function getAppDissectionBySlug(
   slug: string,
 ): Promise<AppDissectionItemWithContent | null> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("app-dissection");
+
   const [appRow] = await db
     .select()
     .from(appDissections)
@@ -103,6 +112,10 @@ export async function getAppDissectionBySlug(
 }
 
 export async function getAllAppDissectionSlugs(): Promise<{ slug: string }[]> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("app-dissection");
+
   const rows = await db
     .select({ slug: appDissections.slug })
     .from(appDissections)

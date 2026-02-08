@@ -1,4 +1,5 @@
 import { desc, eq, or } from "drizzle-orm";
+import { cacheLife, cacheTag } from "next/cache";
 
 import { db } from "../client";
 import { designDetailsEpisodes } from "../schema/design-details";
@@ -20,6 +21,10 @@ export type DesignDetailsEpisodeWithContent = DesignDetailsEpisode & {
 };
 
 export async function getDesignDetailsEpisodes(): Promise<DesignDetailsEpisode[]> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("design-details");
+
   const rows = await db
     .select({
       id: designDetailsEpisodes.id,
@@ -65,6 +70,10 @@ export async function getDesignDetailsEpisodesPaginated(
   }[];
   nextCursor: string | null;
 }> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("design-details");
+
   const offset = cursor ? parseInt(cursor, 10) : 0;
 
   const rows = await db
@@ -92,6 +101,10 @@ export async function getDesignDetailsEpisodesPaginated(
 export async function getDesignDetailsEpisodeById(
   id: string,
 ): Promise<DesignDetailsEpisodeWithContent | null> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("design-details");
+
   // Try UUID first, fall back to notionId for backwards-compatible URLs
   const [row] = await db
     .select()
