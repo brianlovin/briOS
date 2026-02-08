@@ -1,4 +1,4 @@
-import { cache } from "react";
+import { cacheLife, cacheTag } from "next/cache";
 
 import { externalFetcher } from "@/lib/fetcher";
 import {
@@ -134,27 +134,31 @@ async function getBatchPosts(
   return results;
 }
 
-// Wrapped with React cache() for request-level deduplication during SSR
-export const getPostById = cache(
-  async (id: string, includeComments = false): Promise<HackerNewsPost | null> => {
-    // Try Redis cache first
-    const cached = await getCachedPost(id);
-    if (cached) {
-      log(`[HN] Cache hit for post ${id}`);
-      return processPost(cached, includeComments);
-    }
+export async function getPostById(
+  id: string,
+  includeComments = false,
+): Promise<HackerNewsPost | null> {
+  "use cache";
+  cacheLife("minutes");
+  cacheTag("hn");
 
-    log(`[HN] Cache miss for post ${id}`);
-    const data = await fetchPostFromApi(id);
+  // Try Redis cache first
+  const cached = await getCachedPost(id);
+  if (cached) {
+    log(`[HN] Cache hit for post ${id}`);
+    return processPost(cached, includeComments);
+  }
 
-    if (!data) return null;
+  log(`[HN] Cache miss for post ${id}`);
+  const data = await fetchPostFromApi(id);
 
-    // Fire-and-forget cache write
-    setCachedPost(id, data).catch(() => {});
+  if (!data) return null;
 
-    return processPost(data, includeComments);
-  },
-);
+  // Fire-and-forget cache write
+  setCachedPost(id, data).catch(() => {});
+
+  return processPost(data, includeComments);
+}
 
 export async function getHNPosts(): Promise<(HackerNewsPost | null)[]> {
   const topPostIds = await getPostIds();

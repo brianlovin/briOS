@@ -1,3 +1,5 @@
+import { cacheLife, cacheTag } from "next/cache";
+
 import { getStackItems } from "@/db/queries/stack";
 
 export type StackItem = {
@@ -17,11 +19,19 @@ export type StackItem = {
 };
 
 export async function getStacks(): Promise<StackItem[]> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("stack");
+
   const items = await getStackItems();
   return items as StackItem[];
 }
 
 export async function getStackBySlug(slug: string): Promise<StackItem | undefined> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("stack");
+
   const items = await getStackItems();
   return items.find((item) => item.slug === slug);
 }

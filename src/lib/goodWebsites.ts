@@ -1,3 +1,5 @@
+import { cacheLife, cacheTag } from "next/cache";
+
 import { getGoodWebsiteItems, getGoodWebsiteItemsForRss } from "@/db/queries/good-websites";
 
 export type GoodWebsiteItem = {
@@ -39,6 +41,10 @@ function shuffleWithSeed<T>(array: T[], seed: number): T[] {
 }
 
 export async function getGoodWebsites(): Promise<GoodWebsiteItem[]> {
+  "use cache";
+  cacheLife("minutes");
+  cacheTag("sites");
+
   const items = await getGoodWebsiteItems();
 
   // Create a seed based on 5-minute intervals

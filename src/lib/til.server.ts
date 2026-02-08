@@ -1,20 +1,18 @@
-import { cache } from "react";
+import { cacheLife, cacheTag } from "next/cache";
 
 import { getTilEntries as getTilEntriesFromDb, type TilEntry } from "@/db/queries/til";
 
-async function fetchAllTilEntries(): Promise<TilEntry[]> {
-  let allEntries: TilEntry[] = [];
+export async function getAllTilEntries(): Promise<TilEntry[]> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("til");
+
+  const all: TilEntry[] = [];
   let cursor: string | undefined;
-  let hasMore = true;
-
-  while (hasMore) {
+  do {
     const { items, nextCursor } = await getTilEntriesFromDb(cursor, 100);
-    allEntries = [...allEntries, ...items];
-    cursor = nextCursor || undefined;
-    hasMore = !!nextCursor;
-  }
-
-  return allEntries;
+    all.push(...items);
+    cursor = nextCursor ?? undefined;
+  } while (cursor);
+  return all;
 }
-
-export const getAllTilEntries = cache(fetchAllTilEntries);
