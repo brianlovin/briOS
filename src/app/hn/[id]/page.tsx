@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import { getPostById } from "@/lib/hn";
 import { createMetadata, truncateDescription } from "@/lib/metadata";
 import { stripHtmlTags } from "@/lib/utils";
 
 import HNPostPageClient from "./HNPostPageClient";
-
-export const dynamic = "force-dynamic";
 
 export async function generateMetadata(props: {
   params: Promise<{ id: string }>;
@@ -45,13 +44,16 @@ export async function generateMetadata(props: {
   }
 }
 
-export default async function HNPostPage(props: { params: Promise<{ id: string }> }) {
-  const params = await props.params;
-  const id = params.id;
-
-  // Fetch post with comments on server - React cache() deduplicates with generateMetadata
+async function HNPostContent({ paramsPromise }: { paramsPromise: Promise<{ id: string }> }) {
+  const { id } = await paramsPromise;
   const post = await getPostById(id, true);
-
-  // Pass server-fetched data to client as initialData to avoid double-fetch
   return <HNPostPageClient initialPost={post} />;
+}
+
+export default function HNPostPage(props: { params: Promise<{ id: string }> }) {
+  return (
+    <Suspense>
+      <HNPostContent paramsPromise={props.params} />
+    </Suspense>
+  );
 }

@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { LikeButton } from "@/components/likes/LikeButton";
@@ -6,18 +7,14 @@ import { MarkdownContent } from "@/components/MarkdownContent";
 import { getDesignDetailsEpisodeById } from "@/db/queries/design-details";
 import { getServerLikes } from "@/lib/likes-server";
 
-export const dynamic = "force-dynamic";
-
-export default async function EpisodePage(props: { params: Promise<{ id: string }> }) {
-  const params = await props.params;
-  const id = params.id;
+async function EpisodeContent({ paramsPromise }: { paramsPromise: Promise<{ id: string }> }) {
+  const { id } = await paramsPromise;
   const episode = await getDesignDetailsEpisodeById(id);
 
   if (!episode) {
     notFound();
   }
 
-  // Fetch likes server-side
   const initialLikes = await getServerLikes([episode.id]);
 
   const date = episode.publishedAt
@@ -43,5 +40,13 @@ export default async function EpisodePage(props: { params: Promise<{ id: string 
         </div>
       )}
     </div>
+  );
+}
+
+export default function EpisodePage(props: { params: Promise<{ id: string }> }) {
+  return (
+    <Suspense>
+      <EpisodeContent paramsPromise={props.params} />
+    </Suspense>
   );
 }

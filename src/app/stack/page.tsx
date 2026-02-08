@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import { StackPageClient } from "@/components/stack/StackPageClient";
 import { getServerLikes } from "@/lib/likes-server";
@@ -19,32 +20,15 @@ export const metadata: Metadata = {
   },
 };
 
-export const dynamic = "force-dynamic";
-
-export default async function StackPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ status?: string; platform?: string }>;
-}) {
-  const params = await searchParams;
-  const status = params.status || "active";
-  const platform = params.platform || "";
-
-  // Fetch initial data on the server
+export default async function StackPage() {
   const allStacks = await getStacks();
 
-  // Apply filters server-side to match what the API would return
-  const filteredStacks = allStacks.filter((item) => {
-    const itemStatus = item.status?.toLowerCase() || "active";
-    const statusMatch = status === "all" ? true : itemStatus === status;
-    const platformMatch = platform ? item.platforms?.includes(platform) : true;
-
-    return statusMatch && platformMatch;
-  });
-
-  // Fetch likes for all items server-side
-  const pageIds = filteredStacks.map((item) => item.id);
+  const pageIds = allStacks.map((item) => item.id);
   const initialLikes = await getServerLikes(pageIds);
 
-  return <StackPageClient initialData={filteredStacks} initialLikes={initialLikes} />;
+  return (
+    <Suspense>
+      <StackPageClient initialData={allStacks} initialLikes={initialLikes} />
+    </Suspense>
+  );
 }
