@@ -15,7 +15,8 @@ interface Props {
 }
 
 export function AppDissectionDetail({ post, allItems }: Props) {
-  const date = formatPublishedDate(post.publishedAt.split("T")[0]);
+  const dateValue = post.publishedAt || post.createdAt;
+  const date = dateValue ? formatPublishedDate(dateValue.split("T")[0]) : "Unknown date";
 
   return (
     <div className="flex-1 overflow-y-auto">

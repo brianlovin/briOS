@@ -46,7 +46,7 @@ export async function GET() {
     // Add each post to the feed
     postsWithContent.forEach(({ post, content }) => {
       const postUrl = `${SITE_CONFIG.url}/writing/${buildSlug(post.title, post.shortId!)}`;
-      const publishDate = new Date(post.publishedAt);
+      const publishDate = new Date(post.publishedAt || post.createdAt);
 
       // Build description with content preview and view link
       const descriptionParts: string[] = [];

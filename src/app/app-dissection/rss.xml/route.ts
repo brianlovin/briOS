@@ -40,7 +40,7 @@ export async function GET() {
 
     itemsWithContent.forEach(({ item, content }) => {
       const itemUrl = `${SITE_CONFIG.url}/app-dissection/${item.slug}`;
-      const publishDate = new Date(item.publishedAt);
+      const publishDate = new Date(item.publishedAt || item.createdAt);
 
       // Build description with intro text and view link
       const descriptionParts: string[] = [];

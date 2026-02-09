@@ -43,7 +43,7 @@ export async function GET() {
 
     entriesWithContent.forEach(({ entry, content }) => {
       const entryUrl = `${SITE_CONFIG.url}/til/${buildSlug(entry.title, entry.shortId!)}`;
-      const publishDate = new Date(entry.publishedAt);
+      const publishDate = new Date(entry.publishedAt || entry.createdAt);
 
       // Build description with first paragraph and view link
       const descriptionParts: string[] = [];

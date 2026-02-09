@@ -39,7 +39,7 @@ export async function generateMetadata(props: {
     description: truncateDescription(`TIL: ${entry.title}`),
     path: `/til/${canonicalSlug}`,
     type: "article",
-    publishedTime: entry.publishedAt,
+    publishedTime: entry.publishedAt || entry.createdAt,
   });
 }
 
@@ -62,18 +62,22 @@ export default async function TilEntryPage(props: { params: Promise<{ slug: stri
   // Fetch likes server-side
   const initialLikes = await getServerLikes([entry.id]);
 
-  const cleanDate = new Date(entry.publishedAt).toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-    timeZone: "UTC",
-  });
+  const publishedAt = entry.publishedAt || entry.createdAt;
+  const parsedDate = new Date(publishedAt);
+  const cleanDate = Number.isNaN(parsedDate.getTime())
+    ? "Unknown date"
+    : parsedDate.toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+        timeZone: "UTC",
+      });
 
   const articleJsonLd = createArticleJsonLd({
     title: entry.title,
     description: `TIL: ${entry.title}`,
     path: `/til/${canonicalSlug}`,
-    publishedTime: entry.publishedAt,
+    publishedTime: publishedAt,
   });
 
   return (

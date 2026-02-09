@@ -32,13 +32,14 @@ export async function generateMetadata(props: {
     .slice(0, 200)
     .replace(/[#*_\n]/g, " ")
     .trim();
+  const publishedAt = post.publishedAt || post.createdAt;
 
   return createMetadata({
     title: `${post.name} - App Dissection`,
     description: truncateDescription(descriptionText),
     path: `/app-dissection/${post.slug}`,
     type: "article",
-    publishedTime: post.publishedAt,
+    publishedTime: publishedAt,
   });
 }
 
@@ -58,13 +59,14 @@ export default async function AppDissectionPostPage(props: { params: Promise<{ s
     .slice(0, 200)
     .replace(/[#*_\n]/g, " ")
     .trim();
+  const publishedAt = post.publishedAt || post.createdAt;
 
   // Generate JSON-LD structured data
   const articleJsonLd = createArticleJsonLd({
     title: `${post.name} - App Dissection`,
     description: descriptionText,
     path: `/app-dissection/${post.slug}`,
-    publishedTime: post.publishedAt,
+    publishedTime: publishedAt,
   });
 
   return (

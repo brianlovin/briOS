@@ -38,7 +38,8 @@ export default async function AppDissectionIndex() {
 }
 
 function AppDissectionCard({ item }: { item: AppDissectionItem }) {
-  const date = formatPublishedDate(item.publishedAt.split("T")[0]);
+  const dateValue = item.publishedAt || item.createdAt;
+  const date = dateValue ? formatPublishedDate(dateValue.split("T")[0]) : "Unknown date";
 
   return (
     <Link

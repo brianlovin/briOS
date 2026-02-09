@@ -1,6 +1,6 @@
 import { cacheLife, cacheTag } from "next/cache";
 
-import { getStackItems } from "@/db/queries/stack";
+import { getStackItemBySlug, getStackItems } from "@/db/queries/stack";
 
 export type StackItem = {
   id: string;
@@ -32,6 +32,6 @@ export async function getStackBySlug(slug: string): Promise<StackItem | undefine
   cacheLife("hours");
   cacheTag("stack");
 
-  const items = await getStackItems();
-  return items.find((item) => item.slug === slug);
+  const item = await getStackItemBySlug(slug);
+  return item ?? undefined;
 }

@@ -53,7 +53,7 @@ export async function generateMetadata(props: {
     path: `/writing/${canonicalSlug}`,
     image: post.featureImage ?? undefined,
     type: "article",
-    publishedTime: post.publishedAt,
+    publishedTime: post.publishedAt || post.createdAt,
   });
 }
 
@@ -114,20 +114,25 @@ export default async function WritingPostPage(props: { params: Promise<{ slug: s
   const otherPosts = allPosts.filter((p) => p.shortId && p.shortId !== post.shortId);
   const randomPosts = getRandomPosts(otherPosts, 5, seed);
 
+  const publishedAt = post.publishedAt || post.createdAt;
+
   // Generate JSON-LD structured data
   const articleJsonLd = createArticleJsonLd({
     title: post.title,
     description: post.excerpt || "A post by Brian Lovin",
     path: `/writing/${canonicalSlug}`,
-    publishedTime: post.publishedAt,
+    publishedTime: publishedAt,
     image: post.featureImage ?? undefined,
   });
 
-  const cleanDate = new Date(post.publishedAt).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+  const parsedDate = new Date(publishedAt);
+  const cleanDate = Number.isNaN(parsedDate.getTime())
+    ? "Unknown date"
+    : parsedDate.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
 
   return (
     <>

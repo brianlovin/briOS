@@ -25,8 +25,9 @@ export default async function WritingPage() {
   // Group posts by year
   const postsByYear: Record<string, typeof posts> = {};
   posts.forEach((post) => {
-    const publishedDate = post.publishedAt;
-    const year = new Date(publishedDate).getFullYear().toString();
+    const dateValue = post.publishedAt || post.createdAt;
+    const parsed = new Date(dateValue);
+    const year = Number.isNaN(parsed.getTime()) ? "Unknown" : parsed.getFullYear().toString();
     if (!postsByYear[year]) {
       postsByYear[year] = [];
     }

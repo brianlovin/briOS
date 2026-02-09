@@ -20,7 +20,9 @@ interface TilFeedProps {
 }
 
 function formatDate(dateString: string) {
-  return new Date(dateString).toLocaleDateString("en-US", {
+  const parsed = new Date(dateString);
+  if (Number.isNaN(parsed.getTime())) return "Unknown date";
+  return parsed.toLocaleDateString("en-US", {
     month: "long",
     day: "numeric",
     year: "numeric",
@@ -65,7 +67,9 @@ function TilEntry({
     <article className="grid grid-cols-1 gap-2 sm:grid-cols-[140px_1fr] sm:items-baseline sm:gap-6 md:grid-cols-[180px_1fr]">
       {/* Date column */}
       <div className="flex flex-col md:items-end">
-        <div className="text-tertiary text-base">{formatDate(entry.publishedAt)}</div>
+        <div className="text-tertiary text-base">
+          {formatDate(entry.publishedAt || entry.createdAt)}
+        </div>
         {/* Like button - visible on sm+ screens */}
         <div className="mt-3 hidden sm:block">
           <LikeButton pageId={entry.id} />
