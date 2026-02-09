@@ -12,6 +12,7 @@ export type WritingPost = {
   excerpt: string | null;
   featureImage: string | null;
   publishedAt: string;
+  createdAt: string;
   notionId: string | null;
 };
 
@@ -38,6 +39,7 @@ export async function getWritingPosts(
       excerpt: writingPosts.excerpt,
       featureImage: writingPosts.featureImage,
       publishedAt: writingPosts.publishedAt,
+      createdAt: writingPosts.createdAt,
       notionId: writingPosts.notionId,
     })
     .from(writingPosts)
@@ -53,6 +55,7 @@ export async function getWritingPosts(
     excerpt: row.excerpt,
     featureImage: row.featureImage,
     publishedAt: row.publishedAt?.toISOString() ?? "",
+    createdAt: row.createdAt.toISOString(),
     notionId: row.notionId,
   }));
 
@@ -148,6 +151,7 @@ function mapRowToPostWithContent(row: typeof writingPosts.$inferSelect): Writing
     content: row.content ?? "",
     featureImage: row.featureImage,
     publishedAt: row.publishedAt?.toISOString() ?? "",
+    createdAt: row.createdAt.toISOString(),
     notionId: row.notionId,
   };
 }

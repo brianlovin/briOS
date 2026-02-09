@@ -39,6 +39,28 @@ export async function getStackItems(): Promise<StackItem[]> {
   }));
 }
 
+export async function getStackItemBySlug(slug: string): Promise<StackItem | null> {
+  const [row] = await db.select().from(stackItems).where(eq(stackItems.slug, slug)).limit(1);
+
+  if (!row) return null;
+
+  return {
+    id: row.id,
+    name: row.name,
+    slug: row.slug,
+    description: row.description ?? undefined,
+    image: row.image ?? undefined,
+    icon: row.icon ?? undefined,
+    url: row.url ?? undefined,
+    platforms: row.platforms ?? [],
+    status: row.status ?? undefined,
+    createdTime: row.createdAt.toISOString(),
+    previewImage: row.previewImage ?? undefined,
+    previewImageDark: row.previewImageDark ?? undefined,
+    previewStatus: (row.previewStatus as StackItem["previewStatus"]) ?? undefined,
+  };
+}
+
 export async function createStackItem(data: {
   name: string;
   slug?: string;

@@ -61,14 +61,20 @@ export async function getAmaQuestionById(id: string): Promise<AmaQuestionWithAns
   cacheTag("ama");
 
   // Try UUID first, fall back to notionId for backwards-compatible URLs
-  const [row] = await db
-    .select()
-    .from(amaQuestions)
-    .where(or(eq(amaQuestions.id, id), eq(amaQuestions.notionId, id)))
-    .limit(1);
+  const [row] = isUuid(id)
+    ? await db
+        .select()
+        .from(amaQuestions)
+        .where(or(eq(amaQuestions.id, id), eq(amaQuestions.notionId, id)))
+        .limit(1)
+    : await db.select().from(amaQuestions).where(eq(amaQuestions.notionId, id)).limit(1);
 
   if (!row) return null;
   return mapRowToQuestionWithAnswer(row);
+}
+
+function isUuid(value: string): boolean {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
 }
 
 export async function createAmaQuestion(

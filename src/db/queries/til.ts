@@ -9,6 +9,7 @@ export type TilEntry = {
   title: string;
   shortId: string | null;
   publishedAt: string;
+  createdAt: string;
 };
 
 export type TilEntryWithContent = TilEntry & {
@@ -31,6 +32,7 @@ export async function getTilEntries(
       title: tilEntries.title,
       shortId: tilEntries.shortId,
       publishedAt: tilEntries.publishedAt,
+      createdAt: tilEntries.createdAt,
     })
     .from(tilEntries)
     .orderBy(desc(tilEntries.publishedAt))
@@ -42,6 +44,7 @@ export async function getTilEntries(
     title: row.title,
     shortId: row.shortId,
     publishedAt: row.publishedAt?.toISOString() ?? "",
+    createdAt: row.createdAt.toISOString(),
   }));
 
   const nextCursor = items.length === limit ? String(offset + limit) : null;
@@ -116,5 +119,6 @@ function mapRowToEntryWithContent(row: typeof tilEntries.$inferSelect): TilEntry
     shortId: row.shortId,
     content: row.content ?? "",
     publishedAt: row.publishedAt?.toISOString() ?? "",
+    createdAt: row.createdAt.toISOString(),
   };
 }

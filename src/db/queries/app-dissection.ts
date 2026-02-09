@@ -11,6 +11,7 @@ export type AppDissectionItem = {
   icon: string | null;
   status: string | null;
   publishedAt: string;
+  createdAt: string;
   notionId: string | null;
 };
 
@@ -44,6 +45,7 @@ export async function getAppDissections(): Promise<AppDissectionItem[]> {
       icon: appDissections.icon,
       status: appDissections.status,
       publishedAt: appDissections.publishedAt,
+      createdAt: appDissections.createdAt,
       notionId: appDissections.notionId,
     })
     .from(appDissections)
@@ -57,6 +59,7 @@ export async function getAppDissections(): Promise<AppDissectionItem[]> {
     icon: row.icon,
     status: row.status,
     publishedAt: row.publishedAt?.toISOString() ?? "",
+    createdAt: row.createdAt.toISOString(),
     notionId: row.notionId,
   }));
 }
@@ -105,6 +108,7 @@ export async function getAppDissectionBySlug(
     icon: appRow.icon,
     status: appRow.status,
     publishedAt: appRow.publishedAt?.toISOString() ?? "",
+    createdAt: appRow.createdAt.toISOString(),
     notionId: appRow.notionId,
     introContent: appRow.introContent ?? "",
     details,
