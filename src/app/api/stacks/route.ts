@@ -1,13 +1,17 @@
+import { getStackItems } from "@/db/queries/stack";
 import { cachedResponse, errorResponse } from "@/lib/api-utils";
-import { getStackDatabaseItems } from "@/lib/notion";
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status") || "active";
     const platform = searchParams.get("platform") || "";
+    const platformLimit = 50;
+    if (platform.length > platformLimit) {
+      return errorResponse("Invalid platform", 400);
+    }
 
-    const items = await getStackDatabaseItems();
+    const items = await getStackItems();
 
     // Filter items based on query parameters
     const filteredItems = items.filter((item) => {
@@ -17,7 +21,7 @@ export async function GET(request: Request) {
       return statusMatch && platformMatch;
     });
 
-    return cachedResponse(filteredItems, 86400); // 24 hour cache
+    return cachedResponse(filteredItems, 3600); // 1 hour cache
   } catch (error) {
     console.error("Error fetching stack items:", error);
     return errorResponse("Failed to fetch stack items");

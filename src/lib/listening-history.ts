@@ -1,4 +1,4 @@
-import { getListeningHistoryDatabaseItems } from "@/lib/notion";
+import { getListeningHistoryItems } from "@/db/queries/listening";
 
 export type MusicItem = {
   id: string;
@@ -11,6 +11,6 @@ export type MusicItem = {
 };
 
 export async function getMusic(): Promise<MusicItem[]> {
-  const { items } = await getListeningHistoryDatabaseItems();
+  const { items } = await getListeningHistoryItems();
   return items as MusicItem[];
 }

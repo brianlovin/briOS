@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import { useEffect } from "react";
 
 import { LikeButton } from "@/components/likes/LikeButton";
-import { renderBlocks } from "@/components/renderBlocks";
+import { MarkdownContent } from "@/components/MarkdownContent";
 import { PageTitle } from "@/components/Typography";
 import { FancySeparator } from "@/components/ui/FancySeparator";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
@@ -13,7 +13,7 @@ import { useAmaQuestion } from "@/lib/hooks/useAma";
 export default function AMADetail() {
   const { id } = useParams();
 
-  // Fetch the full question with content blocks from the API
+  // Fetch the full question with answer from the API
   const { question, isLoading, isError } = useAmaQuestion(id as string);
 
   // Update document title when question is available
@@ -59,7 +59,7 @@ export default function AMADetail() {
       <FancySeparator />
 
       <div className="notion-blocks flex flex-col gap-6 text-lg">
-        {renderBlocks(question.blocks)}
+        {question.answer && <MarkdownContent content={question.answer} />}
       </div>
     </div>
   );

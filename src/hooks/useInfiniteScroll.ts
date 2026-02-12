@@ -33,8 +33,15 @@ export function useInfiniteScroll<T>(
     fallbackData,
   } = options;
 
+  // Skip fetching during SSR prerender to avoid uncached data access with cacheComponents.
+  // SWR returns undefined data when key is null; client hydrates with loading state, then fetches.
+  const ssrSafeGetKey = (index: number, previousPage: InfiniteScrollPage<T> | null) => {
+    if (typeof window === "undefined") return null;
+    return getKey(index, previousPage);
+  };
+
   const { data, error, size, setSize, isValidating } = useSWRInfinite<InfiniteScrollPage<T>>(
-    getKey,
+    ssrSafeGetKey,
     fetcher,
     {
       revalidateFirstPage,
@@ -46,18 +53,11 @@ export function useInfiniteScroll<T>(
     },
   );
 
-  const items = data
-    ? data.flatMap((page) => page.items)
-    : fallbackData
-      ? fallbackData.flatMap((page) => page.items)
-      : [];
+  const pages = data ?? fallbackData;
+  const items = pages ? pages.flatMap((page) => page.items) : [];
   const isLoading = !data && !error && !fallbackData;
   const isLoadingMore = data && isValidating;
-  const isReachingEnd = data
-    ? data[data.length - 1]?.nextCursor === null
-    : fallbackData
-      ? fallbackData[fallbackData.length - 1]?.nextCursor === null
-      : false;
+  const isReachingEnd = pages ? pages[pages.length - 1]?.nextCursor === null : false;
 
   return {
     items,

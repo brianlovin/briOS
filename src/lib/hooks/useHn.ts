@@ -15,7 +15,9 @@ export function prefetchHNPost(id: string) {
 }
 
 export function useHNPosts(fallbackData?: (HackerNewsPost | null)[]) {
-  const { data, error, isLoading } = useSWR<(HackerNewsPost | null)[]>("/api/hn", fetcher, {
+  // Skip fetching during SSR prerender to avoid uncached data access with cacheComponents
+  const key = typeof window === "undefined" ? null : "/api/hn";
+  const { data, error, isLoading } = useSWR<(HackerNewsPost | null)[]>(key, fetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     refreshInterval: 1000 * 60 * 60, // 1 hour

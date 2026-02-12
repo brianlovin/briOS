@@ -1,12 +1,11 @@
 import { Feed } from "feed";
 
+import { getAppDissectionBySlug, getAppDissections } from "@/db/queries/app-dissection";
 import { SITE_CONFIG } from "@/lib/metadata";
-import { getAppDissectionDatabaseItems, getAppDissectionItemBySlug } from "@/lib/notion/queries";
-import { extractPreviewText } from "@/lib/notion/types";
 
 export async function GET() {
   try {
-    const items = await getAppDissectionDatabaseItems();
+    const items = await getAppDissections();
 
     const feed = new Feed({
       title: `${SITE_CONFIG.name} - App Dissection`,
@@ -27,11 +26,11 @@ export async function GET() {
       },
     });
 
-    // Fetch content for all items in parallel (gracefully handle failures)
+    // Fetch content for all items in parallel
     const itemsWithContent = await Promise.all(
       items.map(async (item) => {
         try {
-          const content = await getAppDissectionItemBySlug(item.slug);
+          const content = await getAppDissectionBySlug(item.slug);
           return { item, content };
         } catch {
           return { item, content: null };
@@ -41,14 +40,17 @@ export async function GET() {
 
     itemsWithContent.forEach(({ item, content }) => {
       const itemUrl = `${SITE_CONFIG.url}/app-dissection/${item.slug}`;
-      const publishDate = new Date(item.published);
+      const publishDate = new Date(item.publishedAt || item.createdAt);
 
       // Build description with intro text and view link
       const descriptionParts: string[] = [];
-      if (content?.introBlocks) {
-        const introText = extractPreviewText(content.introBlocks, { maxBlocks: 1 });
-        if (introText) {
-          descriptionParts.push(introText);
+      if (content?.introContent) {
+        const preview = content.introContent
+          .slice(0, 300)
+          .replace(/[#*_\n]/g, " ")
+          .trim();
+        if (preview) {
+          descriptionParts.push(preview);
         }
       }
       descriptionParts.push(`View full dissection: ${itemUrl}`);

@@ -1,9 +1,12 @@
+import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
+import {
+  getWritingPostByNotionId,
+  getWritingPostByShortId,
+  updateWritingPostShortId,
+} from "@/db/queries/writing";
 import { errorResponse } from "@/lib/api-utils";
-import { invalidateNotionCache } from "@/lib/notion";
-import { updateWritingShortId } from "@/lib/notion/mutations";
-import { getWritingPostByShortId, getWritingPostContent } from "@/lib/notion/queries";
 import { generateShortId, isValidShortId } from "@/lib/short-id";
 
 /**
@@ -14,9 +17,10 @@ import { generateShortId, isValidShortId } from "@/lib/short-id";
  *
  * Flow:
  * 1. Extract page ID from Notion webhook
- * 2. Check if page already has a Short ID
- * 3. Generate a unique Short ID
- * 4. Update the page with the new Short ID
+ * 2. Look up post in Postgres by notionId
+ * 3. Check if it already has a Short ID
+ * 4. Generate a unique Short ID
+ * 5. Update Postgres with the new Short ID
  */
 
 const MAX_RETRIES = 5;
@@ -42,20 +46,20 @@ export async function POST(request: Request) {
 
     console.log(`\n🔑 Generating Short ID for page ${pageId}\n`);
 
-    // Check if page already has a Short ID
-    const content = await getWritingPostContent(pageId);
-    if (!content) {
-      return errorResponse("Page not found", 404);
+    // Look up by notionId in Postgres
+    const post = await getWritingPostByNotionId(pageId);
+    if (!post) {
+      return errorResponse("Page not found in database", 404);
     }
 
-    if (content.metadata.shortId && isValidShortId(content.metadata.shortId)) {
-      console.log(`Page already has Short ID: ${content.metadata.shortId}`);
+    if (post.shortId && isValidShortId(post.shortId)) {
+      console.log(`Page already has Short ID: ${post.shortId}`);
       return NextResponse.json(
         {
           success: true,
           message: "Page already has a Short ID",
-          shortId: content.metadata.shortId,
-          title: content.metadata.title,
+          shortId: post.shortId,
+          title: post.title,
         },
         { status: 200 },
       );
@@ -81,21 +85,20 @@ export async function POST(request: Request) {
       return errorResponse("Failed to generate unique Short ID after maximum retries", 500);
     }
 
-    // Update the page with the new Short ID
-    console.log(`Updating page with Short ID: ${shortId}`);
-    await updateWritingShortId(pageId, shortId);
+    // Update Postgres with the new Short ID
+    console.log(`Updating post with Short ID: ${shortId}`);
+    await updateWritingPostShortId(post.id, shortId);
 
-    // Invalidate writing cache so the new short ID is picked up
-    await invalidateNotionCache("notion:writing:*");
+    revalidateTag("writing", { expire: 0 });
 
-    console.log(`✅ Successfully generated Short ID: ${shortId} for "${content.metadata.title}"\n`);
+    console.log(`✅ Successfully generated Short ID: ${shortId} for "${post.title}"\n`);
 
     return NextResponse.json(
       {
         success: true,
         message: "Short ID generated successfully",
         shortId,
-        title: content.metadata.title,
+        title: post.title,
       },
       { status: 200 },
     );

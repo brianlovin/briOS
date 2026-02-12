@@ -1,4 +1,6 @@
-import { getStackDatabaseItems } from "@/lib/notion";
+import { cacheLife, cacheTag } from "next/cache";
+
+import { getStackItemBySlug, getStackItems } from "@/db/queries/stack";
 
 export type StackItem = {
   id: string;
@@ -17,11 +19,19 @@ export type StackItem = {
 };
 
 export async function getStacks(): Promise<StackItem[]> {
-  const items = await getStackDatabaseItems();
+  "use cache";
+  cacheLife("hours");
+  cacheTag("stack");
+
+  const items = await getStackItems();
   return items as StackItem[];
 }
 
 export async function getStackBySlug(slug: string): Promise<StackItem | undefined> {
-  const items = await getStackDatabaseItems();
-  return items.find((item) => item.slug === slug);
+  "use cache";
+  cacheLife("hours");
+  cacheTag("stack");
+
+  const item = await getStackItemBySlug(slug);
+  return item ?? undefined;
 }

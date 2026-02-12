@@ -7,20 +7,22 @@ import useSWR from "swr";
 import { InfiniteScrollList } from "@/components/InfiniteScrollList";
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { LikeButton } from "@/components/likes/LikeButton";
-import { renderBlocks } from "@/components/renderBlocks";
+import { MarkdownContent } from "@/components/MarkdownContent";
+import type { TilEntry, TilEntryWithContent } from "@/db/queries/til";
 import { fetcher } from "@/lib/fetcher";
 import type { LikeData } from "@/lib/hooks/useLikes";
-import type { NotionTilItem, NotionTilItemWithContent } from "@/lib/notion";
 import { buildSlug } from "@/lib/short-id";
 import { useTilEntries } from "@/lib/til";
 
 interface TilFeedProps {
-  initialEntries: NotionTilItemWithContent[];
+  initialEntries: TilEntryWithContent[];
   initialLikes?: Record<string, LikeData>;
 }
 
 function formatDate(dateString: string) {
-  return new Date(dateString).toLocaleDateString("en-US", {
+  const parsed = new Date(dateString);
+  if (Number.isNaN(parsed.getTime())) return "Unknown date";
+  return parsed.toLocaleDateString("en-US", {
     month: "long",
     day: "numeric",
     year: "numeric",
@@ -29,7 +31,7 @@ function formatDate(dateString: string) {
 }
 
 function TilEntryContent({ entryId }: { entryId: string }) {
-  const { data, isLoading } = useSWR<NotionTilItemWithContent>(`/api/til/${entryId}`, fetcher);
+  const { data, isLoading } = useSWR<TilEntryWithContent>(`/api/til/${entryId}`, fetcher);
 
   if (isLoading) {
     return (
@@ -40,28 +42,34 @@ function TilEntryContent({ entryId }: { entryId: string }) {
     );
   }
 
-  if (!data || data.blocks.length === 0) {
+  if (!data || !data.content) {
     return null;
   }
 
-  return <div className="notion-blocks flex flex-col gap-3">{renderBlocks(data.blocks)}</div>;
+  return (
+    <div className="notion-blocks flex flex-col gap-3">
+      <MarkdownContent content={data.content} />
+    </div>
+  );
 }
 
 function TilEntry({
   entry,
   initialContent,
 }: {
-  entry: NotionTilItem;
-  initialContent?: NotionTilItemWithContent;
+  entry: TilEntry;
+  initialContent?: TilEntryWithContent;
 }) {
   const slug = entry.shortId ? buildSlug(entry.title, entry.shortId) : null;
-  const hasInitialContent = initialContent && initialContent.blocks.length > 0;
+  const hasInitialContent = initialContent && initialContent.content;
 
   return (
     <article className="grid grid-cols-1 gap-2 sm:grid-cols-[140px_1fr] sm:items-baseline sm:gap-6 md:grid-cols-[180px_1fr]">
       {/* Date column */}
       <div className="flex flex-col md:items-end">
-        <div className="text-tertiary text-base">{formatDate(entry.published)}</div>
+        <div className="text-tertiary text-base">
+          {formatDate(entry.publishedAt || entry.createdAt)}
+        </div>
         {/* Like button - visible on sm+ screens */}
         <div className="mt-3 hidden sm:block">
           <LikeButton pageId={entry.id} />
@@ -83,7 +91,7 @@ function TilEntry({
         {/* Inline expanded content */}
         {hasInitialContent ? (
           <div className="notion-blocks flex flex-col gap-3">
-            {renderBlocks(initialContent.blocks)}
+            <MarkdownContent content={initialContent.content} />
           </div>
         ) : (
           <TilEntryContent entryId={entry.id} />
@@ -102,7 +110,7 @@ export function TilFeed({ initialEntries, initialLikes }: TilFeedProps) {
   const { items, isLoading, isLoadingMore, isReachingEnd, setSize, size } = useTilEntries();
 
   // Build a map of initial content for quick lookup
-  const initialContentMap = new Map<string, NotionTilItemWithContent>(
+  const initialContentMap = new Map<string, TilEntryWithContent>(
     initialEntries.map((entry) => [entry.id, entry]),
   );
 

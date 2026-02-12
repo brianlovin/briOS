@@ -2,15 +2,15 @@
 
 import useSWR, { preload } from "swr";
 
+import type { AmaQuestionWithAnswer } from "@/db/queries/ama";
 import { fetcher } from "@/lib/fetcher";
-import { NotionAmaItemWithContent } from "@/lib/notion";
 
 export function prefetchAmaQuestion(id: string) {
   preload(`/api/ama/${id}`, fetcher);
 }
 
-export function useAmaQuestion(id: string, fallbackData?: NotionAmaItemWithContent | null) {
-  const { data, error, isLoading } = useSWR<NotionAmaItemWithContent | null>(
+export function useAmaQuestion(id: string, fallbackData?: AmaQuestionWithAnswer | null) {
+  const { data, error, isLoading } = useSWR<AmaQuestionWithAnswer | null>(
     id ? `/api/ama/${id}` : null,
     fetcher,
     {

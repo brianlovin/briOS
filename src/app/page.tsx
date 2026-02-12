@@ -14,7 +14,7 @@ import {
 } from "@/components/shared/ListComponents";
 import { createMetadata, createPersonJsonLd } from "@/lib/metadata";
 import { buildSlug } from "@/lib/short-id";
-import { getAllWritingPosts } from "@/lib/writing";
+import { getAllWritingPosts } from "@/lib/writing.server";
 
 export const metadata: Metadata = createMetadata({
   title: "Brian Lovin",
@@ -22,8 +22,6 @@ export const metadata: Metadata = createMetadata({
     "Brian Lovin is a designer and software engineer living in San Francisco, currently designing AI products at Notion.",
   path: "/",
 });
-
-export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const personJsonLd = createPersonJsonLd();

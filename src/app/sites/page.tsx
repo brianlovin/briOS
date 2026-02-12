@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import { GoodWebsitesPageClient } from "@/components/good-websites/GoodWebsitesPageClient";
 import { getGoodWebsites } from "@/lib/goodWebsites";
@@ -18,28 +19,15 @@ export const metadata: Metadata = {
   },
 };
 
-export const dynamic = "force-dynamic";
-
-export default async function GoodWebsitesPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ tag?: string }>;
-}) {
-  const params = await searchParams;
-  const tag = params.tag || "";
-
-  // Fetch initial data on the server
+export default async function GoodWebsitesPage() {
   const allWebsites = await getGoodWebsites();
 
-  // Apply filters server-side to match what the API would return
-  const filteredWebsites = allWebsites.filter((item) => {
-    const tagMatch = tag ? item.tags?.includes(tag) : true;
-    return tagMatch;
-  });
-
-  // Fetch likes for all items server-side
-  const pageIds = filteredWebsites.map((item) => item.id);
+  const pageIds = allWebsites.map((item) => item.id);
   const initialLikes = await getServerLikes(pageIds);
 
-  return <GoodWebsitesPageClient initialData={filteredWebsites} initialLikes={initialLikes} />;
+  return (
+    <Suspense>
+      <GoodWebsitesPageClient initialData={allWebsites} initialLikes={initialLikes} />
+    </Suspense>
+  );
 }

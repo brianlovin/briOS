@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
+import type { AppDissectionItem } from "@/db/queries/app-dissection";
+import { getAppDissections } from "@/db/queries/app-dissection";
+import { formatPublishedDate } from "@/lib/date-utils";
 import { createMetadata, SITE_CONFIG } from "@/lib/metadata";
-import { getAppDissectionDatabaseItems } from "@/lib/notion/queries";
-import { formatPublishedDate, type NotionAppDissectionItem } from "@/lib/notion/types";
 
 export const metadata: Metadata = {
   ...createMetadata({
@@ -20,17 +21,15 @@ export const metadata: Metadata = {
   },
 };
 
-export const dynamic = "force-dynamic";
-
 export default async function AppDissectionIndex() {
-  const items = await getAppDissectionDatabaseItems();
+  const items = await getAppDissections();
 
   return (
     <div className="@container flex flex-1 flex-col overflow-hidden">
       <div className="flex-1 overflow-y-auto">
         <div className="mx-auto grid w-full grid-cols-3 gap-1 p-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 lg:p-8">
           {items.map((item) => (
-            <AppDissectionItem key={item.slug} item={item} />
+            <AppDissectionCard key={item.slug} item={item} />
           ))}
         </div>
       </div>
@@ -38,8 +37,9 @@ export default async function AppDissectionIndex() {
   );
 }
 
-function AppDissectionItem({ item }: { item: NotionAppDissectionItem }) {
-  const date = formatPublishedDate(item.published);
+function AppDissectionCard({ item }: { item: AppDissectionItem }) {
+  const dateValue = item.publishedAt || item.createdAt;
+  const date = dateValue ? formatPublishedDate(dateValue.split("T")[0]) : "Unknown date";
 
   return (
     <Link

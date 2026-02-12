@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
 
-import type { NotionAppDissectionItem } from "@/lib/notion/types";
+import type { AppDissectionItem } from "@/db/queries/app-dissection";
 
 const SCALE = 1.4; // max scale factor of an icon
 const DISTANCE = 110; // pixels before mouse affects an icon
@@ -21,7 +21,7 @@ const SPRING = {
 const ITEMS_PER_SIDE_DESKTOP = 3; // Shows 7 total (current + 3 on each side)
 
 interface Props {
-  items: NotionAppDissectionItem[];
+  items: AppDissectionItem[];
   currentSlug: string;
 }
 
@@ -89,7 +89,7 @@ export function AppDissectionDock({ items, currentSlug }: Props) {
 
 interface AppIconProps {
   mouseLeft: MotionValue;
-  item: NotionAppDissectionItem;
+  item: AppDissectionItem;
   currentSlug: string;
 }
 

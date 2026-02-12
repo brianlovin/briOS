@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import { createMetadata } from "@/lib/metadata";
 
@@ -15,8 +16,10 @@ export const metadata: Metadata = {
   },
 };
 
-export const revalidate = 3600;
-
 export default function HNPage() {
-  return <HNPageClient />;
+  return (
+    <Suspense>
+      <HNPageClient />
+    </Suspense>
+  );
 }

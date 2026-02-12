@@ -1,10 +1,9 @@
 import { Feed } from "feed";
 
+import { getTilEntryByShortId } from "@/db/queries/til";
 import { SITE_CONFIG } from "@/lib/metadata";
-import { getTilItemContent } from "@/lib/notion/queries";
-import { extractPreviewText } from "@/lib/notion/types";
 import { buildSlug } from "@/lib/short-id";
-import { getAllTilEntries } from "@/lib/til";
+import { getAllTilEntries } from "@/lib/til.server";
 
 export async function GET() {
   try {
@@ -30,12 +29,12 @@ export async function GET() {
     const entries = await getAllTilEntries();
     const entriesWithShortId = entries.filter((entry) => entry.shortId);
 
-    // Fetch content for all entries in parallel (gracefully handle failures)
+    // Fetch content for all entries in parallel
     const entriesWithContent = await Promise.all(
       entriesWithShortId.map(async (entry) => {
         try {
-          const content = await getTilItemContent(entry.id);
-          return { entry, content };
+          const fullEntry = await getTilEntryByShortId(entry.shortId!);
+          return { entry, content: fullEntry?.content ?? null };
         } catch {
           return { entry, content: null };
         }
@@ -44,14 +43,14 @@ export async function GET() {
 
     entriesWithContent.forEach(({ entry, content }) => {
       const entryUrl = `${SITE_CONFIG.url}/til/${buildSlug(entry.title, entry.shortId!)}`;
-      const publishDate = new Date(entry.published);
+      const publishDate = new Date(entry.publishedAt || entry.createdAt);
 
       // Build description with first paragraph and view link
       const descriptionParts: string[] = [];
-      if (content?.blocks) {
-        const previewText = extractPreviewText(content.blocks, { maxBlocks: 1 });
-        if (previewText) {
-          descriptionParts.push(previewText);
+      if (content) {
+        const preview = content.slice(0, 500).split("\n\n").slice(0, 1).join("\n\n");
+        if (preview) {
+          descriptionParts.push(preview);
         }
       }
       descriptionParts.push(`View post: ${entryUrl}`);
