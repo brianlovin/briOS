@@ -78,7 +78,14 @@ export async function sendHNDigestEmailBatch(
 
     try {
       const results = await postmarkClient.sendEmailBatchWithTemplates(messages);
-      successCount += results.length;
+      for (const result of results) {
+        if (result.ErrorCode === 0) {
+          successCount++;
+        } else {
+          console.error(`Failed to send to ${result.To}: ${result.Message}`);
+          failureCount++;
+        }
+      }
       console.log(`Sent batch of ${results.length} HN digest emails`);
     } catch (err) {
       console.error(`Error sending email batch (offset ${i}):`, err);
