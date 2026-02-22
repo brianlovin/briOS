@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { errorResponse } from "@/lib/api-utils";
-import { BASE_EMAIL, sendHNDigestEmail } from "@/lib/email";
+import { BASE_EMAIL, sendHNDigestEmailBatch } from "@/lib/email";
 import { getHNPostsForDigest } from "@/lib/hn";
 import { formatDigestDate, generateUnsubscribeUrl } from "@/lib/jwt";
 import { getHNSubscribers } from "@/lib/subscriptions";
@@ -50,30 +50,14 @@ export async function GET(request: Request) {
 
     console.log(`Sending digest to ${subscribers.length} subscribers`);
 
-    let successCount = 0;
-    let failureCount = 0;
+    const emails = subscribers.map((subscriber) => ({
+      to: subscriber.email,
+      date,
+      posts,
+      unsubscribeUrl: generateUnsubscribeUrl(subscriber.email),
+    }));
 
-    // Send emails to all subscribers
-    for (const subscriber of subscribers) {
-      try {
-        const unsubscribeUrl = generateUnsubscribeUrl(subscriber.email);
-
-        await sendHNDigestEmail({
-          to: subscriber.email,
-          date,
-          posts,
-          unsubscribeUrl,
-        });
-
-        successCount++;
-      } catch (err) {
-        console.error("Error sending HN digest email:", {
-          email: subscriber.email,
-          error: err,
-        });
-        failureCount++;
-      }
-    }
+    const { successCount, failureCount } = await sendHNDigestEmailBatch(emails);
 
     return NextResponse.json({
       status: "done",

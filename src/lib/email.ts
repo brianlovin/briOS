@@ -51,3 +51,40 @@ export async function sendHNDigestEmail({ to, date, posts, unsubscribeUrl }: Dig
 
   return result;
 }
+
+/**
+ * Send HN digest emails in batch using Postmark's batch API
+ * Postmark supports up to 500 messages per batch call
+ */
+export async function sendHNDigestEmailBatch(
+  emails: DigestEmailData[],
+): Promise<{ successCount: number; failureCount: number }> {
+  const BATCH_SIZE = 500;
+  let successCount = 0;
+  let failureCount = 0;
+
+  for (let i = 0; i < emails.length; i += BATCH_SIZE) {
+    const batch = emails.slice(i, i + BATCH_SIZE);
+    const messages = batch.map((email) => ({
+      From: BASE_EMAIL,
+      To: email.to,
+      TemplateId: POSTMARK_TEMPLATE_ID,
+      TemplateModel: {
+        date: email.date,
+        posts: email.posts,
+        unsubscribe_url: email.unsubscribeUrl,
+      },
+    }));
+
+    try {
+      const results = await postmarkClient.sendEmailBatchWithTemplates(messages);
+      successCount += results.length;
+      console.log(`Sent batch of ${results.length} HN digest emails`);
+    } catch (err) {
+      console.error(`Error sending email batch (offset ${i}):`, err);
+      failureCount += batch.length;
+    }
+  }
+
+  return { successCount, failureCount };
+}

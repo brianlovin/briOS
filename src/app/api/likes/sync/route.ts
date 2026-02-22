@@ -4,11 +4,6 @@ import { errorResponse } from "@/lib/api-utils";
 import { getAllLikeCounts } from "@/lib/likes-redis";
 import { notion } from "@/lib/notion/client";
 
-// Notion API rate limit is ~3 requests/second, so we add a delay between calls
-const NOTION_API_DELAY_MS = 350;
-
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
 export async function GET(request: Request) {
   try {
     // Verify sync token
@@ -26,24 +21,40 @@ export async function GET(request: Request) {
       return NextResponse.json({ message: "No likes to sync", synced: 0 });
     }
 
-    let synced = 0;
     const errors: string[] = [];
+    const entries = Array.from(likeCounts.entries());
 
-    // Update each page in Notion with rate limiting
-    for (const [pageId, count] of likeCounts) {
-      try {
-        await notion.pages.update({
-          page_id: pageId,
-          properties: {
-            Likes: { number: count },
-          } as Parameters<typeof notion.pages.update>[0]["properties"],
-        });
-        synced++;
-        // Add delay to respect Notion's rate limit
-        await delay(NOTION_API_DELAY_MS);
-      } catch (error) {
-        console.error(`[Likes Sync] Failed to sync page ${pageId}:`, error);
-        errors.push(pageId);
+    // Process in concurrent batches of 3 to respect Notion's ~3 req/sec rate limit
+    const CONCURRENCY = 3;
+    let synced = 0;
+
+    for (let i = 0; i < entries.length; i += CONCURRENCY) {
+      const batch = entries.slice(i, i + CONCURRENCY);
+      const results = await Promise.allSettled(
+        batch.map(([pageId, count]) =>
+          notion.pages
+            .update({
+              page_id: pageId,
+              properties: {
+                Likes: { number: count },
+              } as Parameters<typeof notion.pages.update>[0]["properties"],
+            })
+            .then(() => ({ pageId, success: true as const }))
+            .catch((error) => {
+              console.error(`[Likes Sync] Failed to sync page ${pageId}:`, error);
+              return { pageId, success: false as const };
+            }),
+        ),
+      );
+
+      for (const result of results) {
+        const value =
+          result.status === "fulfilled" ? result.value : { pageId: "unknown", success: false };
+        if (value.success) {
+          synced++;
+        } else {
+          errors.push(value.pageId);
+        }
       }
     }
 
