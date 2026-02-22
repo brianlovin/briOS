@@ -127,33 +127,31 @@
     scrollbar-gutter: "stable";
   }
 
-  /* Reset default browser padding on lists */
-  ul {
+  /* Notion block list styles — scoped to .notion-blocks */
+  .notion-blocks ul {
     padding-left: 1.75em;
   }
-
-  /* Ordered list: CSS counters with right-aligned markers */
-  ol {
+  .notion-blocks ol {
     list-style: none;
     counter-reset: item;
     padding-left: 0;
   }
-  ol > li {
+  .notion-blocks ol > li {
     counter-increment: item;
     position: relative;
     padding-left: 1.75em;
   }
-  ol > li::before {
+  .notion-blocks ol > li::before {
     content: counter(item, decimal) ".";
     position: absolute;
     left: 0;
     width: 1.25em;
     text-align: right;
   }
-  ol ol > li::before {
+  .notion-blocks ol ol > li::before {
     content: counter(item, lower-alpha) ".";
   }
-  ol ol ol > li::before {
+  .notion-blocks ol ol ol > li::before {
     content: counter(item, lower-roman) ".";
   }
 }

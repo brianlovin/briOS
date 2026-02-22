@@ -9,21 +9,8 @@ import { getServerLikes } from "@/lib/likes-server";
 import { createArticleJsonLd, createMetadata, truncateDescription } from "@/lib/metadata";
 import { getTilByShortId } from "@/lib/notion";
 import { buildSlug, extractShortIdFromSlug } from "@/lib/short-id";
-import { getAllTilEntries } from "@/lib/til";
 
-export const revalidate = 3600;
-
-// Generate static params for the 10 most recent TIL entries at build time
-export async function generateStaticParams() {
-  const entries = await getAllTilEntries();
-
-  return entries
-    .filter((entry) => entry.shortId)
-    .slice(0, 10) // Only prebuild 10 most recent
-    .map((entry) => ({
-      slug: buildSlug(entry.title, entry.shortId!),
-    }));
-}
+export const dynamic = "force-dynamic";
 
 // Generate metadata for each TIL entry
 export async function generateMetadata(props: {
@@ -99,7 +86,9 @@ export default async function TilEntryPage(props: { params: Promise<{ slug: stri
             <PageTitle>{content.title}</PageTitle>
           </div>
 
-          <div className="flex min-w-0 flex-col gap-4 text-lg">{renderBlocks(content.blocks)}</div>
+          <div className="notion-blocks flex min-w-0 flex-col gap-4 text-lg">
+            {renderBlocks(content.blocks)}
+          </div>
           <BatchLikesProvider pageIds={[content.id]} initialData={initialLikes}>
             <div className="w-fit">
               <LikeButton pageId={content.id} />

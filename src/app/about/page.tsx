@@ -17,6 +17,8 @@ import {
 } from "@/components/shared/ListComponents";
 import { createMetadata, createPersonJsonLd } from "@/lib/metadata";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = createMetadata({
   title: "About",
   description:

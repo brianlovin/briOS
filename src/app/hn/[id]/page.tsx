@@ -1,30 +1,12 @@
 import type { Metadata } from "next";
 
-import { getPostById, getPostIds } from "@/lib/hn";
+import { getPostById } from "@/lib/hn";
 import { createMetadata, truncateDescription } from "@/lib/metadata";
 import { stripHtmlTags } from "@/lib/utils";
 
 import HNPostPageClient from "./HNPostPageClient";
 
-export const revalidate = 3600;
-
-// Allow dynamic params for posts not pre-generated
-export const dynamicParams = true;
-
-// Pre-generate top 24 HN posts at build time
-export async function generateStaticParams() {
-  try {
-    const ids = await getPostIds();
-    // Pre-generate top 24 posts (matches getHNPosts behavior)
-    return ids.slice(0, 24).map((id) => ({
-      id: id.toString(),
-    }));
-  } catch (error) {
-    console.error("[HN] Error generating static params:", error);
-    // Return empty array to allow dynamic generation
-    return [];
-  }
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata(props: {
   params: Promise<{ id: string }>;

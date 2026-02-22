@@ -1,12 +1,13 @@
+import { cache } from "react";
+
 import { InfiniteScrollPage, useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { createAmaQuestion, getAmaDatabaseItems, NotionAmaItem } from "@/lib/notion";
 
 export type AmaQuestion = NotionAmaItem;
 
-export async function getAmaQuestions(): Promise<AmaQuestion[]> {
+async function fetchAllAmaQuestions(): Promise<AmaQuestion[]> {
   const all: AmaQuestion[] = [];
   let cursor: string | undefined;
-  // fetch all pages sequentially
   do {
     const { items, nextCursor } = await getAmaDatabaseItems(cursor);
     all.push(...items);
@@ -14,6 +15,8 @@ export async function getAmaQuestions(): Promise<AmaQuestion[]> {
   } while (cursor);
   return all;
 }
+
+export const getAmaQuestions = cache(fetchAllAmaQuestions);
 
 export type AmaPage = InfiniteScrollPage<AmaQuestion>;
 

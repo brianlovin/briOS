@@ -13,18 +13,7 @@ import { getWritingPostByShortId, getWritingPostContentBySlug } from "@/lib/noti
 import { buildSlug, extractShortIdFromSlug } from "@/lib/short-id";
 import { getAllWritingPosts } from "@/lib/writing";
 
-export const revalidate = 3600;
-
-// Generate static params for all writing posts at build time
-export async function generateStaticParams() {
-  const posts = await getAllWritingPosts();
-
-  return posts
-    .filter((post) => post.shortId) // Only include posts with Short IDs
-    .map((post) => ({
-      slug: buildSlug(post.title, post.shortId!),
-    }));
-}
+export const dynamic = "force-dynamic";
 
 // Generate metadata for each writing post
 export async function generateMetadata(props: {
@@ -58,6 +47,7 @@ export async function generateMetadata(props: {
     title: metadata.title,
     description: truncateDescription(description),
     path: `/writing/${canonicalSlug}`,
+    image: metadata.featureImage,
     type: "article",
     publishedTime: metadata.published || metadata.createdTime,
     modifiedTime: metadata.createdTime,
@@ -114,6 +104,7 @@ export default async function WritingPostPage(props: { params: Promise<{ slug: s
     path: `/writing/${canonicalSlug}`,
     publishedTime: metadata.published || metadata.createdTime,
     modifiedTime: metadata.createdTime,
+    image: metadata.featureImage,
   });
 
   const cleanDate = new Date(metadata.published || metadata.createdTime).toLocaleDateString(
@@ -143,7 +134,9 @@ export default async function WritingPostPage(props: { params: Promise<{ slug: s
             </BatchLikesProvider>
           </div>
 
-          <div className="flex min-w-0 flex-col gap-4 text-lg">{renderBlocks(blocks)}</div>
+          <div className="notion-blocks flex min-w-0 flex-col gap-4 text-lg">
+            {renderBlocks(blocks)}
+          </div>
         </div>
 
         <FancySeparator />

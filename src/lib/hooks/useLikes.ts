@@ -31,7 +31,6 @@ export function useLikes(pageId: string) {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       revalidateIfStale: false,
-      fallbackData: initialData,
     },
   );
 

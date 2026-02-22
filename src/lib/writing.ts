@@ -1,3 +1,5 @@
+import { cache } from "react";
+
 import { InfiniteScrollPage, useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { getWritingDatabaseItems, NotionItem } from "@/lib/notion";
 
@@ -11,7 +13,7 @@ export function useWritingPosts() {
   });
 }
 
-export async function getAllWritingPosts(): Promise<NotionItem[]> {
+async function fetchAllWritingPosts(): Promise<NotionItem[]> {
   let allPosts: NotionItem[] = [];
   let cursor: string | undefined;
   let hasMore = true;
@@ -25,3 +27,6 @@ export async function getAllWritingPosts(): Promise<NotionItem[]> {
 
   return allPosts;
 }
+
+// Request-level dedup: prevents duplicate calls within a single render
+export const getAllWritingPosts = cache(fetchAllWritingPosts);

@@ -1,3 +1,5 @@
+import { cache } from "react";
+
 import { InfiniteScrollPage, useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import {
   getTilDatabaseItems,
@@ -16,7 +18,7 @@ export function useTilEntries() {
   });
 }
 
-export async function getAllTilEntries(): Promise<NotionTilItem[]> {
+async function fetchAllTilEntries(): Promise<NotionTilItem[]> {
   let allEntries: NotionTilItem[] = [];
   let cursor: string | undefined;
   let hasMore = true;
@@ -30,6 +32,8 @@ export async function getAllTilEntries(): Promise<NotionTilItem[]> {
 
   return allEntries;
 }
+
+export const getAllTilEntries = cache(fetchAllTilEntries);
 
 export async function getTilEntriesWithContent(
   entries: NotionTilItem[],

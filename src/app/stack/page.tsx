@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   },
 };
 
-export const revalidate = 86400;
+export const dynamic = "force-dynamic";
 
 export default async function StackPage({
   searchParams,
