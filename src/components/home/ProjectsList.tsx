@@ -50,6 +50,12 @@ const projects = [
     external: false,
   },
   {
+    name: "Shiori",
+    href: "https://www.shiori.sh",
+    description: "A beautifully simple read-it-later app",
+    external: true,
+  },
+  {
     name: "Staff Design",
     href: "https://staff.design",
     description: "Navigating the IC career path",

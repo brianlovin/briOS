@@ -4,7 +4,7 @@ export function Calculator({ size = 20, ...rest }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" {...rest} fill="none">
       <path
-        stroke="#141414"
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="1.5"

@@ -2,6 +2,7 @@ import React from "react";
 
 import { AppDissection } from "@/components/icons/AppDissection";
 import { Ballot } from "@/components/icons/Ballot";
+import { Bookmark } from "@/components/icons/Bookmark";
 import { BrowserTabs } from "@/components/icons/BrowserTabs";
 import { Calculator } from "@/components/icons/Calculator";
 import { DoubleChatBubble } from "@/components/icons/DoubleChatBubble";
@@ -114,6 +115,15 @@ export const navigationItems: NavigationItem[] = [
     icon: BrowserTabs,
     keywords: ["sites", "good websites", "websites", "inspiration"],
     isActive: (pathname) => pathname.startsWith("/sites"),
+    section: "projects",
+  },
+  {
+    id: "shiori",
+    label: "Shiori",
+    href: "https://www.shiori.sh",
+    icon: Bookmark,
+    keywords: ["shiori", "read", "later", "bookmarks", "reading list"],
+    isActive: () => false,
     section: "projects",
   },
   {
