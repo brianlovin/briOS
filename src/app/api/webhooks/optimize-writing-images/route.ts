@@ -33,6 +33,17 @@ interface ImageBlock {
   };
 }
 
+interface VideoBlock {
+  id: string;
+  type: "video";
+  video: {
+    type: "external" | "file";
+    external?: { url: string };
+    file?: { url: string; expiry_time: string };
+    caption?: Array<any>;
+  };
+}
+
 interface BlockWithChildren {
   id: string;
   type: string;
@@ -155,6 +166,74 @@ async function optimizeImageBlock(block: ImageBlock): Promise<{
   }
 }
 
+/**
+ * Extract video URL from a block
+ */
+function getVideoUrl(block: VideoBlock): string | null {
+  if (block.video.type === "external" && block.video.external) {
+    return block.video.external.url;
+  } else if (block.video.type === "file" && block.video.file) {
+    return block.video.file.url;
+  }
+  return null;
+}
+
+/**
+ * Upload a single video block to R2 (no transcoding, just re-host)
+ */
+async function optimizeVideoBlock(block: VideoBlock): Promise<{
+  success: boolean;
+  originalUrl?: string;
+  newUrl?: string;
+  size?: number;
+  error?: string;
+}> {
+  try {
+    const videoUrl = getVideoUrl(block);
+    if (!videoUrl) {
+      return { success: false, error: "No video URL found" };
+    }
+
+    console.log(`  📥 Downloading video: ${videoUrl.substring(0, 80)}...`);
+
+    const videoResponse = await fetch(videoUrl);
+    if (!videoResponse.ok) {
+      return { success: false, error: "Failed to download video" };
+    }
+
+    const contentType = videoResponse.headers.get("content-type") || "video/mp4";
+    const videoBuffer = Buffer.from(await videoResponse.arrayBuffer());
+
+    console.log(
+      `  📤 Uploading video to R2 (${(videoBuffer.length / 1024 / 1024).toFixed(2)}MB)...`,
+    );
+
+    const r2Url = await uploadBufferToR2(videoBuffer, contentType);
+
+    console.log(`  💾 Updating block...`);
+    await notion.blocks.update({
+      block_id: block.id,
+      video: {
+        external: { url: r2Url },
+        caption: block.video.caption || [],
+      },
+    } as any);
+
+    return {
+      success: true,
+      originalUrl: videoUrl,
+      newUrl: r2Url,
+      size: videoBuffer.length,
+    };
+  } catch (error) {
+    console.error(`  ❌ Error processing video block:`, error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
+  }
+}
+
 export async function POST(request: Request) {
   try {
     // Verify webhook secret
@@ -175,34 +254,38 @@ export async function POST(request: Request) {
       return errorResponse("Missing required field: data.id (pageId)", 400);
     }
 
-    console.log(`\n🚀 Starting image optimization for page ${pageId}\n`);
+    console.log(`\n🚀 Starting media optimization for page ${pageId}\n`);
 
     // Step 1: Fetch all blocks from the page
     console.log("📚 Fetching all blocks...");
     const allBlocks = await getAllBlocks(pageId);
     console.log(`Found ${allBlocks.length} total blocks\n`);
 
-    // Step 2: Filter for image blocks
+    // Step 2: Filter for image and video blocks
     const imageBlocks = allBlocks.filter(
       (block) => block.type === "image",
     ) as unknown as ImageBlock[];
-    console.log(`Found ${imageBlocks.length} image blocks\n`);
+    const videoBlocks = allBlocks.filter(
+      (block) => block.type === "video",
+    ) as unknown as VideoBlock[];
+    console.log(`Found ${imageBlocks.length} image blocks, ${videoBlocks.length} video blocks\n`);
 
-    if (imageBlocks.length === 0) {
+    if (imageBlocks.length === 0 && videoBlocks.length === 0) {
       return NextResponse.json(
         {
           success: true,
-          message: "No images found in the page",
+          message: "No images or videos found in the page",
           imagesProcessed: 0,
+          videosProcessed: 0,
         },
         { status: 200 },
       );
     }
 
     // Step 3: Optimize each image
-    const results = [];
-    let successCount = 0;
-    let errorCount = 0;
+    const imageResults = [];
+    let imageSuccessCount = 0;
+    let imageErrorCount = 0;
     let totalOriginalSize = 0;
     let totalOptimizedSize = 0;
 
@@ -211,15 +294,38 @@ export async function POST(request: Request) {
       console.log(`Processing image ${i + 1}/${imageBlocks.length}:`);
 
       const result = await optimizeImageBlock(block);
-      results.push(result);
+      imageResults.push(result);
 
       if (result.success) {
-        successCount++;
+        imageSuccessCount++;
         totalOriginalSize += result.originalSize || 0;
         totalOptimizedSize += result.optimizedSize || 0;
         console.log(`  ✅ Success\n`);
       } else {
-        errorCount++;
+        imageErrorCount++;
+        console.log(`  ❌ Error: ${result.error}\n`);
+      }
+    }
+
+    // Step 4: Upload each video to R2
+    const videoResults = [];
+    let videoSuccessCount = 0;
+    let videoErrorCount = 0;
+    let totalVideoSize = 0;
+
+    for (let i = 0; i < videoBlocks.length; i++) {
+      const block = videoBlocks[i];
+      console.log(`Processing video ${i + 1}/${videoBlocks.length}:`);
+
+      const result = await optimizeVideoBlock(block);
+      videoResults.push(result);
+
+      if (result.success) {
+        videoSuccessCount++;
+        totalVideoSize += result.size || 0;
+        console.log(`  ✅ Success\n`);
+      } else {
+        videoErrorCount++;
         console.log(`  ❌ Error: ${result.error}\n`);
       }
     }
@@ -230,28 +336,43 @@ export async function POST(request: Request) {
     // Invalidate cached content for this writing post
     await invalidateNotionCache(`notion:writing:content:${pageId}`);
 
+    const successCount = imageSuccessCount + videoSuccessCount;
+    const errorCount = imageErrorCount + videoErrorCount;
+
     console.log("=".repeat(50));
     console.log(`✅ Optimization complete!`);
-    console.log(`   - Successful: ${successCount} images`);
-    console.log(`   - Failed: ${errorCount} images`);
-    console.log(`   - Total original size: ${(totalOriginalSize / 1024 / 1024).toFixed(2)}MB`);
-    console.log(`   - Total optimized size: ${(totalOptimizedSize / 1024 / 1024).toFixed(2)}MB`);
-    console.log(`   - Total savings: ${totalSavings}%`);
+    console.log(`   - Images: ${imageSuccessCount} successful, ${imageErrorCount} failed`);
+    console.log(`   - Videos: ${videoSuccessCount} successful, ${videoErrorCount} failed`);
+    console.log(`   - Image original size: ${(totalOriginalSize / 1024 / 1024).toFixed(2)}MB`);
+    console.log(`   - Image optimized size: ${(totalOptimizedSize / 1024 / 1024).toFixed(2)}MB`);
+    console.log(`   - Image savings: ${totalSavings}%`);
+    console.log(`   - Video size uploaded: ${(totalVideoSize / 1024 / 1024).toFixed(2)}MB`);
     console.log("=".repeat(50) + "\n");
 
     return NextResponse.json(
       {
         success: true,
-        message: "Writing images optimized and uploaded to R2 successfully",
+        message: "Writing media optimized and uploaded to R2 successfully",
         stats: {
-          total: imageBlocks.length,
+          images: {
+            total: imageBlocks.length,
+            successful: imageSuccessCount,
+            failed: imageErrorCount,
+            originalSize: totalOriginalSize,
+            optimizedSize: totalOptimizedSize,
+            savings: `${totalSavings}%`,
+          },
+          videos: {
+            total: videoBlocks.length,
+            successful: videoSuccessCount,
+            failed: videoErrorCount,
+            totalSize: totalVideoSize,
+          },
+          total: imageBlocks.length + videoBlocks.length,
           successful: successCount,
           failed: errorCount,
-          originalSize: totalOriginalSize,
-          optimizedSize: totalOptimizedSize,
-          savings: `${totalSavings}%`,
         },
-        results,
+        results: [...imageResults, ...videoResults],
       },
       { status: 200 },
     );

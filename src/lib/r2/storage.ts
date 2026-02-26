@@ -24,9 +24,12 @@ function getExtensionFromContentType(contentType: string): string {
     "image/svg+xml": ".svg",
     "image/x-icon": ".ico",
     "image/vnd.microsoft.icon": ".ico",
+    "video/mp4": ".mp4",
+    "video/webm": ".webm",
+    "video/quicktime": ".mov",
   };
 
-  return extensions[contentType] || ".jpg";
+  return extensions[contentType] || ".bin";
 }
 
 /**
@@ -59,7 +62,7 @@ export async function uploadBufferToR2(
 
     const r2Url = `${R2_PUBLIC_URL}/${filename}`;
 
-    console.log(`Uploaded image to R2: ${filename}`);
+    console.log(`Uploaded to R2: ${filename}`);
 
     return r2Url;
   } catch (error) {

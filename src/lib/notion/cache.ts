@@ -54,6 +54,11 @@ export async function cachedNotionQuery<T>(
   fetcher: () => Promise<T>,
   options: CachedNotionQueryOptions,
 ): Promise<T> {
+  // In development, always fetch fresh data from Notion
+  if (process.env.NODE_ENV === "development") {
+    return fetcher();
+  }
+
   const client = getRedis();
 
   // If Redis is unavailable, fall through to Notion directly

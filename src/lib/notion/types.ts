@@ -71,6 +71,7 @@ export type ProcessedBlock = {
   type: string;
   content: RichTextContent[];
   language?: string;
+  videoUrl?: string;
   tableWidth?: number;
   hasColumnHeader?: boolean;
   hasRowHeader?: boolean;

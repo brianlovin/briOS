@@ -240,6 +240,18 @@ function renderSingleBlock(block: ProcessedBlock, isPreview: boolean): ReactNode
           />
         </div>
       );
+    case "video":
+      return (
+        <div key={block.id}>
+          <video
+            src={block.videoUrl}
+            controls
+            playsInline
+            preload="metadata"
+            className="w-full rounded-lg"
+          />
+        </div>
+      );
     default:
       return null;
   }
