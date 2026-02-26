@@ -141,6 +141,17 @@ export function processBlockFromResponse(block: BlockObjectResponse): ProcessedB
         };
       }
 
+      case "video": {
+        const videoUrl =
+          block.video.type === "external" ? block.video.external.url : block.video.file.url;
+        return {
+          id: block.id,
+          type: "video",
+          content: [],
+          videoUrl,
+        };
+      }
+
       case "table":
         return {
           id: block.id,
