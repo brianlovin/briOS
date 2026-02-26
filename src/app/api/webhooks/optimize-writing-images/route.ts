@@ -333,8 +333,8 @@ export async function POST(request: Request) {
     const totalSavings =
       totalOriginalSize > 0 ? ((1 - totalOptimizedSize / totalOriginalSize) * 100).toFixed(1) : "0";
 
-    // Invalidate cached content for this writing post
-    await invalidateNotionCache(`notion:writing:content:${pageId}`);
+    // Invalidate all cached writing content (covers pageId, slug, and shortId keys)
+    await invalidateNotionCache("notion:writing:content:*");
 
     const successCount = imageSuccessCount + videoSuccessCount;
     const errorCount = imageErrorCount + videoErrorCount;
