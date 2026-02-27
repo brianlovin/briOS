@@ -31,12 +31,7 @@ const PURGE_CONFIG: Record<Exclude<ContentType, "all">, { patterns: string[]; pa
   },
 };
 
-/**
- * Cache purge endpoint designed to be called from a Notion button URL.
- *
- * Usage: GET /api/purge-cache?secret=<CACHE_PURGE_SECRET>&type=til
- */
-export async function GET(request: Request) {
+async function purgeCache(request: Request): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);
   const secret = searchParams.get("secret");
   const type = searchParams.get("type") || "all";
@@ -75,3 +70,7 @@ export async function GET(request: Request) {
     purged: results,
   });
 }
+
+/** GET for browser/curl, POST for Notion webhook buttons */
+export const GET = purgeCache;
+export const POST = purgeCache;
