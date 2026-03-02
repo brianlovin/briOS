@@ -12,7 +12,7 @@
         "@sparticuz/chromium": "^143.0.4",
         "@tanstack/react-virtual": "^3.13.18",
         "@types/dompurify": "^3.2.0",
-        "@upstash/redis": "^1.36.1",
+        "@upstash/redis": "^1.36.3",
         "@vercel/og": "^0.8.6",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
@@ -629,7 +629,7 @@
 
     "@unrs/resolver-binding-win32-x64-msvc": ["@unrs/resolver-binding-win32-x64-msvc@1.11.1", "", { "os": "win32", "cpu": "x64" }, "sha512-lrW200hZdbfRtztbygyaq/6jP6AKE8qQN2KvPcJ+x7wiD038YtnYtZ82IMNJ69GJibV7bwL3y9FgK+5w/pYt6g=="],
 
-    "@upstash/redis": ["@upstash/redis@1.36.1", "", { "dependencies": { "uncrypto": "^0.1.3" } }, "sha512-N6SjDcgXdOcTAF+7uNoY69o7hCspe9BcA7YjQdxVu5d25avljTwyLaHBW3krWjrP0FfocgMk94qyVtQbeDp39A=="],
+    "@upstash/redis": ["@upstash/redis@1.36.3", "", { "dependencies": { "uncrypto": "^0.1.3" } }, "sha512-wxo1ei4OHDHm4UGMgrNVz9QUEela9N/Iwi4p1JlHNSowQiPi+eljlGnfbZVkV0V4PIrjGtGFJt5GjWM5k28enA=="],
 
     "@vercel/og": ["@vercel/og@0.8.6", "", { "dependencies": { "@resvg/resvg-wasm": "2.4.0", "satori": "0.16.0" } }, "sha512-hBcWIOppZV14bi+eAmCZj8Elj8hVSUZJTpf1lgGBhVD85pervzQ1poM/qYfFUlPraYSZYP+ASg6To5BwYmUSGQ=="],
 
