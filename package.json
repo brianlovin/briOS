@@ -19,7 +19,7 @@
     "@sparticuz/chromium": "^143.0.4",
     "@tanstack/react-virtual": "^3.13.18",
     "@types/dompurify": "^3.2.0",
-    "@upstash/redis": "^1.36.1",
+    "@upstash/redis": "^1.36.3",
     "@vercel/og": "^0.8.6",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
