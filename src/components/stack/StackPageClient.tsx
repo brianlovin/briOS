@@ -69,9 +69,12 @@ export function StackPageClient({ initialData, initialLikes }: StackPageClientPr
       }
 
       if (tableSort.column === "description") {
+        const descriptionA = a.description || "";
+        const descriptionB = b.description || "";
+
         return tableSort.direction === "asc"
-          ? textCollator.compare(a.description, b.description)
-          : textCollator.compare(b.description, a.description);
+          ? textCollator.compare(descriptionA, descriptionB)
+          : textCollator.compare(descriptionB, descriptionA);
       }
 
       const platformsA = (a.platforms || []).join(", ");
