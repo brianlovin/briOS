@@ -4,12 +4,14 @@ import { useAtom } from "jotai";
 import Image from "next/image";
 import { useMemo, useState, useSyncExternalStore } from "react";
 
+import { sitesLikesSortOrderAtom } from "@/atoms/likesSortOrder";
 import { sitesViewModeAtom } from "@/atoms/sitesViewMode";
 import { GoodWebsiteGalleryItem } from "@/components/good-websites/GoodWebsiteGalleryItem";
 import { GoodWebsitesFilters } from "@/components/good-websites/GoodWebsitesFilters";
 import { ViewToggle } from "@/components/good-websites/ViewToggle";
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { LikeButton } from "@/components/likes/LikeButton";
+import { LikesSortHeader } from "@/components/likes/LikesSortHeader";
 import { ListDetailWrapper } from "@/components/ListDetailWrapper";
 import { LoadingSpinner, PreviewCardProvider, PreviewCardTrigger } from "@/components/ui";
 import type { GoodWebsiteItem } from "@/lib/goodWebsites";
@@ -33,10 +35,23 @@ const getServerSnapshot = () => false;
 export function GoodWebsitesPageClient({ initialData, initialLikes }: GoodWebsitesPageClientProps) {
   const { goodWebsites, isInitialLoading, isValidating, isError } = useGoodWebsites(initialData);
   const [viewMode, setViewMode] = useAtom(sitesViewModeAtom);
+  const [likesSortOrder, setLikesSortOrder] = useAtom(sitesLikesSortOrderAtom);
   const isHydrated = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   // Collect all page IDs for batch likes fetching
   const pageIds = useMemo(() => goodWebsites.map((item) => item.id), [goodWebsites]);
+  const sortedGoodWebsites = useMemo(() => {
+    if (likesSortOrder === "none") {
+      return goodWebsites;
+    }
+
+    return [...goodWebsites].sort((a, b) => {
+      const likesA = initialLikes?.[a.id]?.count ?? 0;
+      const likesB = initialLikes?.[b.id]?.count ?? 0;
+
+      return likesSortOrder === "desc" ? likesB - likesA : likesA - likesB;
+    });
+  }, [goodWebsites, initialLikes, likesSortOrder]);
 
   const topBarContent = useMemo(
     () => (
@@ -92,7 +107,20 @@ export function GoodWebsitesPageClient({ initialData, initialLikes }: GoodWebsit
                       <div className="col-span-7 text-left">Name</div>
                       <div className="col-span-3 text-left">Site</div>
                       <div className="col-span-1" />
-                      <div className="col-span-1" />
+                      <div className="col-span-1 text-left">
+                        <LikesSortHeader
+                          sortOrder={likesSortOrder}
+                          onToggle={() =>
+                            setLikesSortOrder((currentOrder) =>
+                              currentOrder === "none"
+                                ? "desc"
+                                : currentOrder === "desc"
+                                  ? "asc"
+                                  : "none",
+                            )
+                          }
+                        />
+                      </div>
                     </div>
                   </div>
 
@@ -100,7 +128,7 @@ export function GoodWebsitesPageClient({ initialData, initialLikes }: GoodWebsit
                   <div
                     className={`divide-secondary divide-y ${isValidating && !isInitialLoading ? "opacity-75 transition-opacity duration-200" : ""}`}
                   >
-                    {goodWebsites.map((item) => (
+                    {sortedGoodWebsites.map((item) => (
                       <GoodWebsiteItemComponent key={item.id} item={item} />
                     ))}
                   </div>
@@ -110,7 +138,7 @@ export function GoodWebsitesPageClient({ initialData, initialLikes }: GoodWebsit
                 <div
                   className={`bg-tertiary grid grid-cols-1 gap-0.5 p-0.5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 dark:bg-transparent ${isValidating && !isInitialLoading ? "opacity-75 transition-opacity duration-200" : ""}`}
                 >
-                  {goodWebsites.map((item) => (
+                  {sortedGoodWebsites.map((item) => (
                     <GoodWebsiteGalleryItem key={item.id} item={item} />
                   ))}
                 </div>

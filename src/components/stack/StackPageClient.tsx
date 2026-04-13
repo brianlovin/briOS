@@ -1,11 +1,14 @@
 "use client";
 
+import { useAtom } from "jotai";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 
+import { stackLikesSortOrderAtom } from "@/atoms/likesSortOrder";
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { LikeButton } from "@/components/likes/LikeButton";
+import { LikesSortHeader } from "@/components/likes/LikesSortHeader";
 import { ListDetailWrapper } from "@/components/ListDetailWrapper";
 import { StackFilters } from "@/components/stack/StackFilters";
 import { LoadingSpinner, PreviewCardProvider, PreviewCardTrigger } from "@/components/ui";
@@ -21,10 +24,16 @@ interface StackPageClientProps {
   initialLikes?: Record<string, LikeData>;
 }
 
+const subscribe = () => () => {};
+const getSnapshot = () => true;
+const getServerSnapshot = () => false;
+
 export function StackPageClient({ initialData, initialLikes }: StackPageClientProps) {
   const { stacks, isInitialLoading, isValidating, isError } = useStacks(initialData);
+  const [likesSortOrder, setLikesSortOrder] = useAtom(stackLikesSortOrderAtom);
   const router = useRouter();
   const searchParams = useSearchParams();
+  const isHydrated = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   const handlePlatformFilter = (platform: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -35,6 +44,18 @@ export function StackPageClient({ initialData, initialLikes }: StackPageClientPr
 
   // Collect all page IDs for batch likes fetching
   const pageIds = useMemo(() => stacks.map((item) => item.id), [stacks]);
+  const sortedStacks = useMemo(() => {
+    if (likesSortOrder === "none") {
+      return stacks;
+    }
+
+    return [...stacks].sort((a, b) => {
+      const likesA = initialLikes?.[a.id]?.count ?? 0;
+      const likesB = initialLikes?.[b.id]?.count ?? 0;
+
+      return likesSortOrder === "desc" ? likesB - likesA : likesA - likesB;
+    });
+  }, [stacks, initialLikes, likesSortOrder]);
 
   const topBarContent = useMemo(
     () => (
@@ -46,8 +67,7 @@ export function StackPageClient({ initialData, initialLikes }: StackPageClientPr
   );
   useTopBarActions(topBarContent);
 
-  // Only show full page loading on initial load (without fallback data)
-  if (isInitialLoading && stacks.length === 0) {
+  if (!isHydrated || (isInitialLoading && stacks.length === 0)) {
     return (
       <ListDetailWrapper>
         <div className="flex h-full flex-1 items-center justify-center">
@@ -85,7 +105,20 @@ export function StackPageClient({ initialData, initialLikes }: StackPageClientPr
                   <div className="col-span-3 text-left">Name</div>
                   <div className="col-span-5 text-left">Description</div>
                   <div className="col-span-3 text-left">Platforms</div>
-                  <div className="col-span-1 text-left">Likes</div>
+                  <div className="col-span-1 text-left">
+                    <LikesSortHeader
+                      sortOrder={likesSortOrder}
+                      onToggle={() =>
+                        setLikesSortOrder((currentOrder) =>
+                          currentOrder === "none"
+                            ? "desc"
+                            : currentOrder === "desc"
+                              ? "asc"
+                              : "none",
+                        )
+                      }
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -93,7 +126,7 @@ export function StackPageClient({ initialData, initialLikes }: StackPageClientPr
               <div
                 className={`divide-secondary divide-y ${isValidating && !isInitialLoading ? "opacity-75 transition-opacity duration-200" : ""}`}
               >
-                {stacks.map((item) => (
+                {sortedStacks.map((item) => (
                   <StackItemComponent
                     key={item.id}
                     item={item}
