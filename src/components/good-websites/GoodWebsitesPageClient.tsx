@@ -4,16 +4,20 @@ import { useAtom } from "jotai";
 import Image from "next/image";
 import { useMemo, useState, useSyncExternalStore } from "react";
 
-import { sitesLikesSortOrderAtom } from "@/atoms/likesSortOrder";
+import {
+  getNextTableSort,
+  getTableSortDirection,
+  sitesTableSortAtom,
+} from "@/atoms/likesSortOrder";
 import { sitesViewModeAtom } from "@/atoms/sitesViewMode";
 import { GoodWebsiteGalleryItem } from "@/components/good-websites/GoodWebsiteGalleryItem";
 import { GoodWebsitesFilters } from "@/components/good-websites/GoodWebsitesFilters";
 import { ViewToggle } from "@/components/good-websites/ViewToggle";
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { LikeButton } from "@/components/likes/LikeButton";
-import { LikesSortHeader } from "@/components/likes/LikesSortHeader";
 import { ListDetailWrapper } from "@/components/ListDetailWrapper";
 import { LoadingSpinner, PreviewCardProvider, PreviewCardTrigger } from "@/components/ui";
+import { TableSortHeader } from "@/components/ui/TableSortHeader";
 import type { GoodWebsiteItem } from "@/lib/goodWebsites";
 import { useGoodWebsites } from "@/lib/hooks/useGoodWebsites";
 import type { LikeData } from "@/lib/hooks/useLikes";
@@ -31,27 +35,43 @@ interface GoodWebsitesPageClientProps {
 const subscribe = () => () => {};
 const getSnapshot = () => true;
 const getServerSnapshot = () => false;
+const textCollator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
 
 export function GoodWebsitesPageClient({ initialData, initialLikes }: GoodWebsitesPageClientProps) {
   const { goodWebsites, isInitialLoading, isValidating, isError } = useGoodWebsites(initialData);
   const [viewMode, setViewMode] = useAtom(sitesViewModeAtom);
-  const [likesSortOrder, setLikesSortOrder] = useAtom(sitesLikesSortOrderAtom);
+  const [tableSort, setTableSort] = useAtom(sitesTableSortAtom);
   const isHydrated = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   // Collect all page IDs for batch likes fetching
   const pageIds = useMemo(() => goodWebsites.map((item) => item.id), [goodWebsites]);
   const sortedGoodWebsites = useMemo(() => {
-    if (likesSortOrder === "none") {
+    if (!tableSort.column || tableSort.direction === "none") {
       return goodWebsites;
     }
 
     return [...goodWebsites].sort((a, b) => {
-      const likesA = initialLikes?.[a.id]?.count ?? 0;
-      const likesB = initialLikes?.[b.id]?.count ?? 0;
+      if (tableSort.column === "likes") {
+        const likesA = initialLikes?.[a.id]?.count ?? 0;
+        const likesB = initialLikes?.[b.id]?.count ?? 0;
 
-      return likesSortOrder === "desc" ? likesB - likesA : likesA - likesB;
+        return tableSort.direction === "desc" ? likesB - likesA : likesA - likesB;
+      }
+
+      if (tableSort.column === "name") {
+        return tableSort.direction === "asc"
+          ? textCollator.compare(a.name, b.name)
+          : textCollator.compare(b.name, a.name);
+      }
+
+      const siteA = formatWebsiteUrl(a.url);
+      const siteB = formatWebsiteUrl(b.url);
+
+      return tableSort.direction === "asc"
+        ? textCollator.compare(siteA, siteB)
+        : textCollator.compare(siteB, siteA);
     });
-  }, [goodWebsites, initialLikes, likesSortOrder]);
+  }, [goodWebsites, initialLikes, tableSort]);
 
   const topBarContent = useMemo(
     () => (
@@ -104,19 +124,36 @@ export function GoodWebsitesPageClient({ initialData, initialLikes }: GoodWebsit
                   {/* Table Header - Sticky (hidden on mobile) */}
                   <div className="bg-secondary border-secondary sticky top-0 z-20 hidden border-b md:block dark:bg-neutral-950">
                     <div className="grid grid-cols-12 gap-4 px-4 py-2 font-medium">
-                      <div className="col-span-7 text-left">Name</div>
-                      <div className="col-span-3 text-left">Site</div>
+                      <div className="col-span-7 text-left">
+                        <TableSortHeader
+                          label="Name"
+                          direction={getTableSortDirection(tableSort, "name")}
+                          onToggle={() =>
+                            setTableSort((currentSort) =>
+                              getNextTableSort(currentSort, "name", "asc"),
+                            )
+                          }
+                        />
+                      </div>
+                      <div className="col-span-3 text-left">
+                        <TableSortHeader
+                          label="Site"
+                          direction={getTableSortDirection(tableSort, "site")}
+                          onToggle={() =>
+                            setTableSort((currentSort) =>
+                              getNextTableSort(currentSort, "site", "asc"),
+                            )
+                          }
+                        />
+                      </div>
                       <div className="col-span-1" />
                       <div className="col-span-1 text-left">
-                        <LikesSortHeader
-                          sortOrder={likesSortOrder}
+                        <TableSortHeader
+                          label="Likes"
+                          direction={getTableSortDirection(tableSort, "likes")}
                           onToggle={() =>
-                            setLikesSortOrder((currentOrder) =>
-                              currentOrder === "none"
-                                ? "desc"
-                                : currentOrder === "desc"
-                                  ? "asc"
-                                  : "none",
+                            setTableSort((currentSort) =>
+                              getNextTableSort(currentSort, "likes", "desc"),
                             )
                           }
                         />
@@ -163,6 +200,13 @@ export function GoodWebsitesPageClient({ initialData, initialLikes }: GoodWebsit
       </PreviewCardProvider>
     </BatchLikesProvider>
   );
+}
+
+function formatWebsiteUrl(url?: string) {
+  return (url || "")
+    .replace(/^https?:\/\//, "")
+    .replace(/\/$/, "")
+    .replace("www.", "");
 }
 
 function GoodWebsiteItemComponent({ item }: { item: GoodWebsiteItem }) {
@@ -227,12 +271,7 @@ function GoodWebsiteItemComponent({ item }: { item: GoodWebsiteItem }) {
           )}
           {/* URL - shown on mobile below name */}
           {item.url && (
-            <div className="text-tertiary truncate md:hidden">
-              {item.url
-                .replace(/^https?:\/\//, "")
-                .replace(/\/$/, "")
-                .replace("www.", "")}
-            </div>
+            <div className="text-tertiary truncate md:hidden">{formatWebsiteUrl(item.url)}</div>
           )}
         </div>
       </div>
@@ -244,14 +283,7 @@ function GoodWebsiteItemComponent({ item }: { item: GoodWebsiteItem }) {
 
       {/* Good Website URL - desktop only */}
       <div className="hidden md:col-span-3 md:block">
-        {item.url && (
-          <span className="text-tertiary truncate">
-            {item.url
-              .replace(/^https?:\/\//, "")
-              .replace(/\/$/, "")
-              .replace("www.", "")}
-          </span>
-        )}
+        {item.url && <span className="text-tertiary truncate">{formatWebsiteUrl(item.url)}</span>}
       </div>
 
       {/* X (Twitter) URL - desktop only */}

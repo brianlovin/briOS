@@ -5,14 +5,18 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState, useSyncExternalStore } from "react";
 
-import { stackLikesSortOrderAtom } from "@/atoms/likesSortOrder";
+import {
+  getNextTableSort,
+  getTableSortDirection,
+  stackTableSortAtom,
+} from "@/atoms/likesSortOrder";
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { LikeButton } from "@/components/likes/LikeButton";
-import { LikesSortHeader } from "@/components/likes/LikesSortHeader";
 import { ListDetailWrapper } from "@/components/ListDetailWrapper";
 import { StackFilters } from "@/components/stack/StackFilters";
 import { LoadingSpinner, PreviewCardProvider, PreviewCardTrigger } from "@/components/ui";
 import { PlatformBadge } from "@/components/ui/PlatformBadge";
+import { TableSortHeader } from "@/components/ui/TableSortHeader";
 import type { LikeData } from "@/lib/hooks/useLikes";
 import { useStacks } from "@/lib/hooks/useStacks";
 import type { StackItem as StackItemType } from "@/lib/stack";
@@ -27,10 +31,11 @@ interface StackPageClientProps {
 const subscribe = () => () => {};
 const getSnapshot = () => true;
 const getServerSnapshot = () => false;
+const textCollator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
 
 export function StackPageClient({ initialData, initialLikes }: StackPageClientProps) {
   const { stacks, isInitialLoading, isValidating, isError } = useStacks(initialData);
-  const [likesSortOrder, setLikesSortOrder] = useAtom(stackLikesSortOrderAtom);
+  const [tableSort, setTableSort] = useAtom(stackTableSortAtom);
   const router = useRouter();
   const searchParams = useSearchParams();
   const isHydrated = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
@@ -45,17 +50,41 @@ export function StackPageClient({ initialData, initialLikes }: StackPageClientPr
   // Collect all page IDs for batch likes fetching
   const pageIds = useMemo(() => stacks.map((item) => item.id), [stacks]);
   const sortedStacks = useMemo(() => {
-    if (likesSortOrder === "none") {
+    if (!tableSort.column || tableSort.direction === "none") {
       return stacks;
     }
 
     return [...stacks].sort((a, b) => {
-      const likesA = initialLikes?.[a.id]?.count ?? 0;
-      const likesB = initialLikes?.[b.id]?.count ?? 0;
+      if (tableSort.column === "likes") {
+        const likesA = initialLikes?.[a.id]?.count ?? 0;
+        const likesB = initialLikes?.[b.id]?.count ?? 0;
 
-      return likesSortOrder === "desc" ? likesB - likesA : likesA - likesB;
+        return tableSort.direction === "desc" ? likesB - likesA : likesA - likesB;
+      }
+
+      if (tableSort.column === "name") {
+        return tableSort.direction === "asc"
+          ? textCollator.compare(a.name, b.name)
+          : textCollator.compare(b.name, a.name);
+      }
+
+      if (tableSort.column === "description") {
+        const descriptionA = a.description || "";
+        const descriptionB = b.description || "";
+
+        return tableSort.direction === "asc"
+          ? textCollator.compare(descriptionA, descriptionB)
+          : textCollator.compare(descriptionB, descriptionA);
+      }
+
+      const platformsA = (a.platforms || []).join(", ");
+      const platformsB = (b.platforms || []).join(", ");
+
+      return tableSort.direction === "asc"
+        ? textCollator.compare(platformsA, platformsB)
+        : textCollator.compare(platformsB, platformsA);
     });
-  }, [stacks, initialLikes, likesSortOrder]);
+  }, [stacks, initialLikes, tableSort]);
 
   const topBarContent = useMemo(
     () => (
@@ -102,19 +131,44 @@ export function StackPageClient({ initialData, initialLikes }: StackPageClientPr
               {/* Table Header - Sticky (hidden on mobile) */}
               <div className="bg-secondary border-secondary sticky top-0 z-10 hidden border-b md:block dark:bg-neutral-950">
                 <div className="grid grid-cols-12 gap-4 px-4 py-2 text-sm font-medium">
-                  <div className="col-span-3 text-left">Name</div>
-                  <div className="col-span-5 text-left">Description</div>
-                  <div className="col-span-3 text-left">Platforms</div>
-                  <div className="col-span-1 text-left">
-                    <LikesSortHeader
-                      sortOrder={likesSortOrder}
+                  <div className="col-span-3 text-left">
+                    <TableSortHeader
+                      label="Name"
+                      direction={getTableSortDirection(tableSort, "name")}
                       onToggle={() =>
-                        setLikesSortOrder((currentOrder) =>
-                          currentOrder === "none"
-                            ? "desc"
-                            : currentOrder === "desc"
-                              ? "asc"
-                              : "none",
+                        setTableSort((currentSort) => getNextTableSort(currentSort, "name", "asc"))
+                      }
+                    />
+                  </div>
+                  <div className="col-span-5 text-left">
+                    <TableSortHeader
+                      label="Description"
+                      direction={getTableSortDirection(tableSort, "description")}
+                      onToggle={() =>
+                        setTableSort((currentSort) =>
+                          getNextTableSort(currentSort, "description", "asc"),
+                        )
+                      }
+                    />
+                  </div>
+                  <div className="col-span-3 text-left">
+                    <TableSortHeader
+                      label="Platforms"
+                      direction={getTableSortDirection(tableSort, "platforms")}
+                      onToggle={() =>
+                        setTableSort((currentSort) =>
+                          getNextTableSort(currentSort, "platforms", "asc"),
+                        )
+                      }
+                    />
+                  </div>
+                  <div className="col-span-1 text-left">
+                    <TableSortHeader
+                      label="Likes"
+                      direction={getTableSortDirection(tableSort, "likes")}
+                      onToggle={() =>
+                        setTableSort((currentSort) =>
+                          getNextTableSort(currentSort, "likes", "desc"),
                         )
                       }
                     />
