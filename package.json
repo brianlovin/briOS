@@ -25,7 +25,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
-    "dompurify": "^3.3.0",
+    "dompurify": "^3.3.3",
     "fathom-client": "^3.7.2",
     "feed": "^5.1.0",
     "jotai": "^2.18.0",
