@@ -27,6 +27,13 @@ const USERS_PREFIX = "likes:users:";
 const USER_LIKES_PREFIX = "likes:user:";
 const RATE_LIMIT_PREFIX = "ratelimit:likes:";
 
+/**
+ * Set of pageIds whose counts have changed since the last successful sync to
+ * Notion. The sync job reads from this set to avoid scanning every key on
+ * every run.
+ */
+export const DIRTY_SET_KEY = "likes:dirty";
+
 // Constants
 const RATE_LIMIT_WINDOW = 60; // seconds
 const RATE_LIMIT_MAX = 60; // requests per window
@@ -101,6 +108,11 @@ export async function addLike(userId: string, pageId: string): Promise<number> {
 
     const results = await pipeline.exec();
 
+    // Mark this page as dirty so the next sync picks it up.
+    // Fire-and-forget: a Redis hiccup shouldn't break the like flow — worst
+    // case, the next mutation on this page re-marks it dirty.
+    client.sadd(DIRTY_SET_KEY, pageId).catch(() => {});
+
     // First result is the new total count
     return (results[0] as number) ?? 0;
   } catch (error) {
@@ -145,6 +157,9 @@ export async function removeLike(
     if (newUserLikes === 0) {
       await client.srem(`${USERS_PREFIX}${pageId}`, userId);
     }
+
+    // Mark this page as dirty so the next sync picks it up. Fire-and-forget.
+    client.sadd(DIRTY_SET_KEY, pageId).catch(() => {});
 
     return { count: newCount, userLikes: newUserLikes };
   } catch (error) {
@@ -309,5 +324,53 @@ export async function getBatchUserLikeData(
       result.set(id, { count: 0, userLikes: 0, hasLiked: false, canLike: true });
     });
     return result;
+  }
+}
+
+/**
+ * Read up to `limit` pageIds from the dirty set WITHOUT removing them. The
+ * caller is responsible for calling `markSynced` after the corresponding
+ * Notion updates succeed. Failed updates leave entries in the set for retry.
+ */
+export async function getDirtyPageIds(limit: number): Promise<string[]> {
+  const client = getLikesRedis();
+  if (!client || limit <= 0) return [];
+
+  try {
+    const ids = await client.srandmember<string[]>(DIRTY_SET_KEY, limit);
+    return ids ?? [];
+  } catch (error) {
+    console.error("[Likes] Error reading dirty set:", error);
+    return [];
+  }
+}
+
+/**
+ * Count how many pageIds remain in the dirty set. Used by callers to decide
+ * whether to re-invoke the sync endpoint.
+ */
+export async function getDirtyCount(): Promise<number> {
+  const client = getLikesRedis();
+  if (!client) return 0;
+
+  try {
+    return (await client.scard(DIRTY_SET_KEY)) ?? 0;
+  } catch (error) {
+    console.error("[Likes] Error reading dirty set size:", error);
+    return 0;
+  }
+}
+
+/**
+ * Remove pageIds from the dirty set after they've been successfully synced.
+ */
+export async function markSynced(pageIds: string[]): Promise<void> {
+  const client = getLikesRedis();
+  if (!client || pageIds.length === 0) return;
+
+  try {
+    await client.srem(DIRTY_SET_KEY, ...pageIds);
+  } catch (error) {
+    console.error("[Likes] Error removing from dirty set:", error);
   }
 }

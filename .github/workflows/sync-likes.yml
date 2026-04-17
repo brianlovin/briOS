@@ -9,5 +9,17 @@ jobs:
   sync-likes:
     runs-on: ubuntu-latest
     steps:
-      - name: sync likes to notion
-        run: curl "https://brianlovin.com/api/likes/sync?token=${{ secrets.LIKES_SYNC_TOKEN }}"
+      - name: sync likes to notion (drain dirty set)
+        run: |
+          # Drain the dirty set across up to 5 sequential calls per tick.
+          # Each call processes up to 50 entries; this covers up to 250 dirty
+          # pages per hourly run without needing a second cron.
+          for i in 1 2 3 4 5; do
+            response=$(curl -sS "https://brianlovin.com/api/likes/sync?token=${{ secrets.LIKES_SYNC_TOKEN }}")
+            echo "Iteration $i: $response"
+            remaining=$(echo "$response" | jq -r '.remainingDirty // 0')
+            if [ "$remaining" = "0" ] || [ "$remaining" = "null" ]; then
+              break
+            fi
+            sleep 2
+          done
