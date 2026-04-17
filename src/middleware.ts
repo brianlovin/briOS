@@ -4,7 +4,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 // Lazy-initialize to avoid build-time env var errors
 let hnRatelimit: Ratelimit | null = null;
-let globalRatelimit: Ratelimit | null = null;
 
 function getHnRatelimit(): Ratelimit | null {
   if (hnRatelimit) return hnRatelimit;
@@ -18,20 +17,6 @@ function getHnRatelimit(): Ratelimit | null {
     analytics: true,
   });
   return hnRatelimit;
-}
-
-function getGlobalRatelimit(): Ratelimit | null {
-  if (globalRatelimit) return globalRatelimit;
-  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) return null;
-
-  globalRatelimit = new Ratelimit({
-    redis: Redis.fromEnv(),
-    // 60 requests per 60 seconds per IP globally
-    limiter: Ratelimit.slidingWindow(60, "60 s"),
-    prefix: "rl:global",
-    analytics: true,
-  });
-  return globalRatelimit;
 }
 
 function getIP(request: NextRequest): string {
@@ -88,28 +73,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Global rate limit for all other API routes
-  if (pathname.startsWith("/api/")) {
-    const limiter = getGlobalRatelimit();
-    if (limiter) {
-      const { success, limit, remaining, reset } = await limiter.limit(ip);
-      if (!success) {
-        return NextResponse.json(
-          { error: "Too many requests" },
-          {
-            status: 429,
-            headers: {
-              "X-RateLimit-Limit": limit.toString(),
-              "X-RateLimit-Remaining": remaining.toString(),
-              "X-RateLimit-Reset": reset.toString(),
-              "Retry-After": Math.ceil((reset - Date.now()) / 1000).toString(),
-            },
-          },
-        );
-      }
-    }
-  }
-
   return NextResponse.next();
 }
 
@@ -118,7 +81,5 @@ export const config = {
     // HN pages and API routes
     "/hn/:path*",
     "/api/hn/:path*",
-    // All other API routes
-    "/api/:path*",
   ],
 };
