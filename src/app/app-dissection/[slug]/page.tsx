@@ -7,7 +7,13 @@ import { extractPreviewText } from "@/lib/notion/types";
 
 import { AppDissectionDetail } from "./components/AppDissectionDetail";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
+export const dynamicParams = true;
+
+// Empty array — defer all path generation to first request (lazy ISR).
+export function generateStaticParams(): { slug: string }[] {
+  return [];
+}
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;

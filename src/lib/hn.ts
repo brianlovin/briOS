@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { cache } from "react";
 
 import { externalFetcher } from "@/lib/fetcher";
@@ -11,6 +12,9 @@ import {
 } from "@/lib/hn-cache";
 import { HackerNewsComment, HackerNewsPost } from "@/types/hackernews";
 
+/** Default revalidation for HN data (matches Redis cache TTL). */
+const HN_REVALIDATE = 3600;
+
 const BASE_URL = "https://brianlovin.com";
 const TOP_BASE_URL = "https://hacker-news.firebaseio.com/v0";
 const ITEM_BASE_URL = "https://api.hnpwa.com/v0";
@@ -22,8 +26,7 @@ const log = (...args: unknown[]) => {
   }
 };
 
-export async function getPostIds(): Promise<number[]> {
-  // Try Redis cache first
+const fetchPostIds = async (): Promise<number[]> => {
   try {
     const cachedIds = await getCachedTopIds();
     if (cachedIds) {
@@ -40,7 +43,12 @@ export async function getPostIds(): Promise<number[]> {
   setCachedTopIds(ids).catch(() => {});
 
   return ids;
-}
+};
+
+export const getPostIds = unstable_cache(fetchPostIds, ["hn:post-ids"], {
+  revalidate: HN_REVALIDATE,
+  tags: ["hn:post-ids"],
+});
 
 // Helper to trim comments to reduce payload size
 function trimComments(comment: HackerNewsComment): HackerNewsComment | null {
@@ -134,9 +142,8 @@ async function getBatchPosts(
   return results;
 }
 
-// Wrapped with React cache() for request-level deduplication during SSR
-export const getPostById = cache(
-  async (id: string, includeComments = false): Promise<HackerNewsPost | null> => {
+const fetchPostById = unstable_cache(
+  async (id: string, includeComments: boolean): Promise<HackerNewsPost | null> => {
     // Try Redis cache first
     const cached = await getCachedPost(id);
     if (cached) {
@@ -154,93 +161,116 @@ export const getPostById = cache(
 
     return processPost(data, includeComments);
   },
+  ["hn:post"],
+  { revalidate: HN_REVALIDATE, tags: ["hn:post"] },
 );
 
-export async function getHNPosts(): Promise<(HackerNewsPost | null)[]> {
-  const topPostIds = await getPostIds();
-  const ids = topPostIds.slice(0, 24).map((id) => id.toString());
-  const posts = await getBatchPosts(ids, false);
-  return posts.filter(Boolean);
-}
+// Wrapped with React cache() for request-level deduplication during SSR.
+// The inner unstable_cache persists across requests, so Server Components
+// rendering with these posts can be ISR'd instead of bailed to dynamic.
+export const getPostById = cache(
+  async (id: string, includeComments = false): Promise<HackerNewsPost | null> => {
+    return fetchPostById(id, includeComments);
+  },
+);
 
-export async function getRankedHNPosts(): Promise<HackerNewsPost[]> {
-  const topPostIds = await getPostIds();
+export const getHNPosts = unstable_cache(
+  async (): Promise<(HackerNewsPost | null)[]> => {
+    const topPostIds = await fetchPostIds();
+    const ids = topPostIds.slice(0, 24).map((id) => id.toString());
+    const posts = await getBatchPosts(ids, false);
+    return posts.filter(Boolean);
+  },
+  ["hn:list"],
+  { revalidate: HN_REVALIDATE, tags: ["hn:list"] },
+);
 
-  // Fetch 200 most recent posts
-  const filtered = topPostIds.sort((a: number, b: number) => b - a).slice(0, 200);
-  const ids = filtered.map((id) => id.toString());
-  const posts = await getBatchPosts(ids, false);
+export const getRankedHNPosts = unstable_cache(
+  async (): Promise<HackerNewsPost[]> => {
+    const topPostIds = await fetchPostIds();
 
-  const now = new Date().getTime() / 1000;
-  const oneDayAgo = now - 60 * 60 * 24;
+    // Fetch 200 most recent posts
+    const filtered = topPostIds.sort((a: number, b: number) => b - a).slice(0, 200);
+    const ids = filtered.map((id) => id.toString());
+    const posts = await getBatchPosts(ids, false);
 
-  // Filter out null posts
-  const validPosts = posts.filter((post): post is HackerNewsPost => post !== null);
+    const now = new Date().getTime() / 1000;
+    const oneDayAgo = now - 60 * 60 * 24;
 
-  // Only show links (exclude jobs, polls)
-  const links = validPosts.filter((post) => post.type === "link");
+    // Filter out null posts
+    const validPosts = posts.filter((post): post is HackerNewsPost => post !== null);
 
-  // Only show posts from last 24 hours
-  const withinLastDay = links.filter((post) => post.time > oneDayAgo);
+    // Only show links (exclude jobs, polls)
+    const links = validPosts.filter((post) => post.type === "link");
 
-  // Filter by minimum engagement (50+ points OR 20+ comments)
-  const highEngagement = withinLastDay.filter(
-    (post) => (post.points || 0) >= 50 || post.comments_count >= 20,
-  );
+    // Only show posts from last 24 hours
+    const withinLastDay = links.filter((post) => post.time > oneDayAgo);
 
-  // Sort by weighted score: points + (comments * 0.75) + recency bonus
-  const sorted = highEngagement.sort((a, b) => {
-    const hoursOldA = (now - a.time) / 3600;
-    const hoursOldB = (now - b.time) / 3600;
+    // Filter by minimum engagement (50+ points OR 20+ comments)
+    const highEngagement = withinLastDay.filter(
+      (post) => (post.points || 0) >= 50 || post.comments_count >= 20,
+    );
 
-    // Recency bonus: newer posts get higher scores (decays from 100 to 0 over 24 hours)
-    const recencyBonusA = Math.max(0, 100 * (1 - hoursOldA / 24));
-    const recencyBonusB = Math.max(0, 100 * (1 - hoursOldB / 24));
+    // Sort by weighted score: points + (comments * 0.75) + recency bonus
+    const sorted = highEngagement.sort((a, b) => {
+      const hoursOldA = (now - a.time) / 3600;
+      const hoursOldB = (now - b.time) / 3600;
 
-    const scoreA = (a.points || 0) + a.comments_count * 0.75 + recencyBonusA;
-    const scoreB = (b.points || 0) + b.comments_count * 0.75 + recencyBonusB;
+      // Recency bonus: newer posts get higher scores (decays from 100 to 0 over 24 hours)
+      const recencyBonusA = Math.max(0, 100 * (1 - hoursOldA / 24));
+      const recencyBonusB = Math.max(0, 100 * (1 - hoursOldB / 24));
 
-    return scoreB - scoreA;
-  });
+      const scoreA = (a.points || 0) + a.comments_count * 0.75 + recencyBonusA;
+      const scoreB = (b.points || 0) + b.comments_count * 0.75 + recencyBonusB;
 
-  const top24 = sorted.slice(0, 24);
+      return scoreB - scoreA;
+    });
 
-  log(`[HN Filtered] Returning top ${top24.length} posts by weighted score`);
+    const top24 = sorted.slice(0, 24);
 
-  return top24;
-}
+    log(`[HN Filtered] Returning top ${top24.length} posts by weighted score`);
 
-export async function getHNPostsForDigest(): Promise<HackerNewsPost[]> {
-  const topPostIds = await getPostIds();
-  log(`[HN Digest] Starting with ${topPostIds.length} total story IDs`);
+    return top24;
+  },
+  ["hn:ranked"],
+  { revalidate: HN_REVALIDATE, tags: ["hn:ranked"] },
+);
 
-  // topPostIds returns 500 by default. this can block the API route from
-  // responding for a long time while each one is fetched individually.
-  // it's much more likely that the most recent 200 (by decrementing id) are
-  // the top posts within the last 24 hours
-  const filtered = topPostIds.sort((a: number, b: number) => b - a).slice(0, 200);
-  log(`[HN Digest] Filtered to top 200 most recent IDs`);
+export const getHNPostsForDigest = unstable_cache(
+  async (): Promise<HackerNewsPost[]> => {
+    const topPostIds = await fetchPostIds();
+    log(`[HN Digest] Starting with ${topPostIds.length} total story IDs`);
 
-  const ids = filtered.map((id) => id.toString());
-  const posts = await getBatchPosts(ids, false);
+    // topPostIds returns 500 by default. this can block the API route from
+    // responding for a long time while each one is fetched individually.
+    // it's much more likely that the most recent 200 (by decrementing id) are
+    // the top posts within the last 24 hours
+    const filtered = topPostIds.sort((a: number, b: number) => b - a).slice(0, 200);
+    log(`[HN Digest] Filtered to top 200 most recent IDs`);
 
-  const now = new Date().getTime() / 1000;
-  const dayAgo = now - 60 * 60 * 24;
+    const ids = filtered.map((id) => id.toString());
+    const posts = await getBatchPosts(ids, false);
 
-  // don't return jobs or polls
-  const validPosts = posts.filter((post): post is HackerNewsPost => post !== null);
-  log(`[HN Digest] ${validPosts.length} valid posts fetched`);
+    const now = new Date().getTime() / 1000;
+    const dayAgo = now - 60 * 60 * 24;
 
-  const links = validPosts.filter((post) => post.type === "link");
-  log(`[HN Digest] ${links.length} posts are links (filtered out jobs/polls)`);
+    // don't return jobs or polls
+    const validPosts = posts.filter((post): post is HackerNewsPost => post !== null);
+    log(`[HN Digest] ${validPosts.length} valid posts fetched`);
 
-  const withinLastDay = links.filter((post) => post.time > dayAgo);
-  log(`[HN Digest] ${withinLastDay.length} posts within last 24 hours`);
+    const links = validPosts.filter((post) => post.type === "link");
+    log(`[HN Digest] ${links.length} posts are links (filtered out jobs/polls)`);
 
-  const sorted = withinLastDay.sort((a, b) => (b.points || 0) - (a.points || 0));
-  const top16 = sorted.slice(0, 16);
+    const withinLastDay = links.filter((post) => post.time > dayAgo);
+    log(`[HN Digest] ${withinLastDay.length} posts within last 24 hours`);
 
-  log(`[HN Digest] Returning top ${top16.length} posts by points`);
+    const sorted = withinLastDay.sort((a, b) => (b.points || 0) - (a.points || 0));
+    const top16 = sorted.slice(0, 16);
 
-  return top16;
-}
+    log(`[HN Digest] Returning top ${top16.length} posts by points`);
+
+    return top16;
+  },
+  ["hn:digest"],
+  { revalidate: HN_REVALIDATE, tags: ["hn:digest"] },
+);
