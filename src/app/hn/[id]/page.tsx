@@ -6,7 +6,7 @@ import { stripHtmlTags } from "@/lib/utils";
 
 import HNPostPageClient from "./HNPostPageClient";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600; // ISR: serve cached HTML, regenerate hourly
 
 export async function generateMetadata(props: {
   params: Promise<{ id: string }>;
