@@ -6,7 +6,11 @@ import { stripHtmlTags } from "@/lib/utils";
 
 import HNPostPageClient from "./HNPostPageClient";
 
-export const revalidate = 3600; // ISR: serve cached HTML, regenerate hourly
+export const revalidate = 3600;
+
+export function generateStaticParams(): { id: string }[] {
+  return [];
+}
 
 export async function generateMetadata(props: {
   params: Promise<{ id: string }>;

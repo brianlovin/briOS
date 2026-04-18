@@ -4,7 +4,11 @@ import AMADetail from "@/app/ama/AMADetail";
 import { createMetadata, truncateDescription } from "@/lib/metadata";
 import { getAmaItemContent } from "@/lib/notion";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 86400;
+
+export function generateStaticParams(): { id: string }[] {
+  return [];
+}
 
 export async function generateMetadata(props: {
   params: Promise<{ id: string }>;

@@ -1,4 +1,5 @@
 import { Redis } from "@upstash/redis";
+import { unstable_cache } from "next/cache";
 
 // Lazy-initialize Redis to avoid errors during build if env vars aren't set
 let redis: Redis | null = null;
@@ -41,7 +42,16 @@ interface CachedNotionQueryOptions {
 }
 
 /**
- * Redis-backed cache for Notion queries with stale-on-error fallback.
+ * Derive a coarse cache tag from a key like `notion:writing:content:<id>`.
+ * Returns the first two segments so a whole content type can be invalidated
+ * at once via `revalidateTag("notion:writing", "max")`.
+ */
+function deriveTag(key: string): string {
+  return key.split(":").slice(0, 2).join(":");
+}
+
+/**
+ * Inner fetch with Upstash-backed cache + stale-on-error fallback.
  *
  * 1. Check Redis — if fresh (within `ttl`), return immediately (no Notion call)
  * 2. If stale or missing — call Notion via `fetcher()`
@@ -49,24 +59,17 @@ interface CachedNotionQueryOptions {
  * 4. On Notion failure + stale cache exists — return stale data (log warning)
  * 5. On Notion failure + no cache — throw (only possible on first-ever request during outage)
  */
-export async function cachedNotionQuery<T>(
+async function upstashBackedQuery<T>(
   key: string,
   fetcher: () => Promise<T>,
   options: CachedNotionQueryOptions,
 ): Promise<T> {
-  // In development, always fetch fresh data from Notion
-  if (process.env.NODE_ENV === "development") {
-    return fetcher();
-  }
-
   const client = getRedis();
 
-  // If Redis is unavailable, fall through to Notion directly
   if (!client) {
     return fetcher();
   }
 
-  // Step 1: Check Redis
   let cached: CachedEntry<T> | null = null;
   try {
     cached = await client.get<CachedEntry<T>>(key);
@@ -81,11 +84,9 @@ export async function cachedNotionQuery<T>(
     return cached!.data;
   }
 
-  // Step 2: Stale or missing — call Notion
   try {
     const data = await fetcher();
 
-    // Step 3: On success — update Redis
     const entry: CachedEntry<T> = { data, cachedAt: now };
     try {
       await client.set(key, entry, { ex: REDIS_KEY_TTL });
@@ -95,7 +96,6 @@ export async function cachedNotionQuery<T>(
 
     return data;
   } catch (fetchError) {
-    // Step 4: On Notion failure + stale cache exists — return stale data
     if (cached) {
       console.warn(
         `[Notion Cache] Notion fetch failed for ${key}, serving stale cache from ${new Date(cached.cachedAt).toISOString()}:`,
@@ -104,9 +104,38 @@ export async function cachedNotionQuery<T>(
       return cached.data;
     }
 
-    // Step 5: On Notion failure + no cache — throw
     throw fetchError;
   }
+}
+
+/**
+ * Two-layer cache for Notion queries:
+ *
+ * 1. Next.js data cache (`unstable_cache`) — primary. Makes the I/O visible to
+ *    Next's caching system so Server Components using it can be statically
+ *    rendered / ISR'd instead of bailed to dynamic rendering.
+ * 2. Upstash Redis — secondary. Preserves the stale-on-error fallback across
+ *    Next.js cache evictions and across deployments.
+ *
+ * Dev mode bypasses both layers so local changes are visible without waiting
+ * on any cache expiry.
+ */
+export async function cachedNotionQuery<T>(
+  key: string,
+  fetcher: () => Promise<T>,
+  options: CachedNotionQueryOptions,
+): Promise<T> {
+  if (process.env.NODE_ENV === "development") {
+    return fetcher();
+  }
+
+  const tag = deriveTag(key);
+  const cached = unstable_cache(() => upstashBackedQuery<T>(key, fetcher, options), [key], {
+    revalidate: options.ttl,
+    tags: [tag, key],
+  });
+
+  return cached();
 }
 
 /**
