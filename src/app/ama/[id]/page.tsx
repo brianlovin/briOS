@@ -5,9 +5,7 @@ import { createMetadata, truncateDescription } from "@/lib/metadata";
 import { getAmaItemContent } from "@/lib/notion";
 
 export const revalidate = 86400;
-export const dynamicParams = true;
 
-// Empty array — defer all path generation to first request (lazy ISR).
 export function generateStaticParams(): { id: string }[] {
   return [];
 }

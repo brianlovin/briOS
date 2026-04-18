@@ -11,9 +11,7 @@ import { getTilByShortId } from "@/lib/notion";
 import { buildSlug, extractShortIdFromSlug } from "@/lib/short-id";
 
 export const revalidate = 3600;
-export const dynamicParams = true;
 
-// Empty array — defer all path generation to first request (lazy ISR).
 export function generateStaticParams(): { slug: string }[] {
   return [];
 }

@@ -6,12 +6,8 @@ import { stripHtmlTags } from "@/lib/utils";
 
 import HNPostPageClient from "./HNPostPageClient";
 
-export const revalidate = 3600; // ISR: serve cached HTML, regenerate hourly
-export const dynamicParams = true;
+export const revalidate = 3600;
 
-// Return empty array — no paths prerendered at build time.
-// Combined with `dynamicParams = true`, first request to any id triggers ISR
-// generation; subsequent requests within the revalidate window serve from cache.
 export function generateStaticParams(): { id: string }[] {
   return [];
 }

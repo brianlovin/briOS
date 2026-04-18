@@ -7,35 +7,44 @@ import { invalidateNotionCache } from "@/lib/notion";
 const CONTENT_TYPES = ["writing", "til", "ama", "stack", "sites", "all"] as const;
 type ContentType = (typeof CONTENT_TYPES)[number];
 
-/** Redis key patterns, Next cache tags, and paths to revalidate per content type */
+/**
+ * Redis key patterns, Next cache tags, and paths to revalidate per content type.
+ * `pagePaths` holds dynamic-segment paths that require the "page" type arg to
+ * `revalidatePath` — without it, individual slug/id pages keep serving stale HTML.
+ */
 const PURGE_CONFIG: Record<
   Exclude<ContentType, "all">,
-  { patterns: string[]; tags: string[]; paths: string[] }
+  { patterns: string[]; tags: string[]; paths: string[]; pagePaths: string[] }
 > = {
   writing: {
     patterns: ["notion:writing:*"],
     tags: ["notion:writing"],
     paths: ["/writing", "/api/writing"],
+    pagePaths: ["/writing/[slug]"],
   },
   til: {
     patterns: ["notion:til:*"],
     tags: ["notion:til"],
     paths: ["/til", "/api/til"],
+    pagePaths: ["/til/[slug]"],
   },
   ama: {
     patterns: ["notion:ama:*"],
     tags: ["notion:ama"],
     paths: ["/ama", "/api/ama"],
+    pagePaths: ["/ama/[id]"],
   },
   stack: {
     patterns: ["notion:stack:*"],
     tags: ["notion:stack"],
     paths: ["/stack", "/api/stacks"],
+    pagePaths: [],
   },
   sites: {
     patterns: ["notion:good-websites:*"],
     tags: ["notion:good-websites"],
     paths: ["/sites", "/api/sites"],
+    pagePaths: [],
   },
 };
 
@@ -75,6 +84,9 @@ async function purgeCache(request: Request): Promise<NextResponse> {
 
     for (const path of config.paths) {
       revalidatePath(path);
+    }
+    for (const path of config.pagePaths) {
+      revalidatePath(path, "page");
     }
   }
 
