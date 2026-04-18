@@ -12,15 +12,9 @@ export default async function EpisodePage(props: { params: Promise<{ id: string 
   const params = await props.params;
   const id = params.id;
 
-  // Notion fetches can fail for real reasons (rate limit, outage, malformed id)
-  // — treat any thrown error as a miss and return 404 rather than 500.
-  let content: Awaited<ReturnType<typeof getFullContent>>;
-  try {
-    content = await getFullContent(id);
-  } catch (err) {
-    console.error(`[design-details] getFullContent failed for ${id}:`, err);
-    notFound();
-  }
+  // Let Notion errors propagate to error.tsx — crawlers should see 5xx (retry)
+  // rather than a 404 that could deindex a valid URL during a transient outage.
+  const content = await getFullContent(id);
 
   if (!content) {
     notFound();
