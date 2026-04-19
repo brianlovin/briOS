@@ -11,8 +11,8 @@ function getHnRatelimit(): Ratelimit | null {
 
   hnRatelimit = new Ratelimit({
     redis: Redis.fromEnv(),
-    // 30 requests per 60 seconds per IP for HN routes
-    limiter: Ratelimit.slidingWindow(30, "60 s"),
+    // 100 requests per 60 seconds per IP for HN routes
+    limiter: Ratelimit.slidingWindow(100, "60 s"),
     prefix: "rl:hn",
     analytics: true,
   });
