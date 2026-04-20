@@ -7,7 +7,7 @@
       "dependencies": {
         "@aws-sdk/client-s3": "^3.975.0",
         "@base-ui/react": "^1.1.0",
-        "@notionhq/client": "^5.4.0",
+        "@notionhq/client": "^5.19.0",
         "@paper-design/shaders-react": "^0.0.72",
         "@sparticuz/chromium": "^143.0.4",
         "@tanstack/react-virtual": "^3.13.18",
@@ -332,7 +332,7 @@
 
     "@nolyfill/is-core-module": ["@nolyfill/is-core-module@1.0.39", "", {}, "sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA=="],
 
-    "@notionhq/client": ["@notionhq/client@5.4.0", "", {}, "sha512-SJsprS26S0Wi9CoTQp4vC8/nPpAIo1gMB4H7aJ2E/k0fWnNGIEAg984KwtzK6h9ZGaPcEaryVRSz1VVClJcVUw=="],
+    "@notionhq/client": ["@notionhq/client@5.19.0", "", {}, "sha512-9R93Yt6/OB3MP5h29WhnvIBWYVq4mzxOYn9oh0Ut642NWxOTTouv7vkwKnMj5LGAYTlot0fhmL8OK5Su5zEzCw=="],
 
     "@paper-design/shaders": ["@paper-design/shaders@0.0.72", "", {}, "sha512-rk2BFuV5ood2DaivbxJC2jQMzaB434isDUzdUQ85Cy0OWnUMuxl8kyGMR74TDPyjo3EvcHIyreNLkJdRG+GfSA=="],
 
