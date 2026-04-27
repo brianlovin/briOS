@@ -44,7 +44,7 @@ export function SubscribeForm({ onComplete, className }: SubscribeFormProps) {
     setSuccess(false);
 
     try {
-      const response = await fetch("/api/hn/subscribe", {
+      const response = await fetch("/api/hn-digest/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),

@@ -36,6 +36,11 @@ const nextConfig: NextConfig = {
         destination: "/stack/rss.xml",
         permanent: true,
       },
+      {
+        source: "/api/hn/unsubscribe",
+        destination: "/api/hn-digest/unsubscribe",
+        permanent: true,
+      },
     ];
   },
   devIndicators: false,
