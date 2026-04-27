@@ -54,7 +54,7 @@ export function verifyUnsubscribeToken(token: string): string | null {
  */
 export function generateUnsubscribeUrl(email: string): string {
   const token = generateUnsubscribeToken(email);
-  return `${BASE_URL}/api/hn/unsubscribe?token=${token}`;
+  return `${BASE_URL}/api/hn-digest/unsubscribe?token=${token}`;
 }
 
 /**

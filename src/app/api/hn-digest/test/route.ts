@@ -7,7 +7,7 @@ import { formatDigestDate, generateUnsubscribeUrl } from "@/lib/jwt";
 
 /**
  * Test endpoint for sending a sample HN digest email
- * Usage: http://localhost:3000/api/hn/test?email=your@email.com
+ * Usage: http://localhost:3000/api/hn-digest/test?email=your@email.com
  */
 export async function GET(request: Request) {
   try {

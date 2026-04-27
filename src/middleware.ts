@@ -36,19 +36,11 @@ export async function middleware(request: NextRequest) {
 
   // HN routes: validate ID parameter and apply strict rate limit
   if (pathname.startsWith("/hn") || pathname.startsWith("/api/hn")) {
-    // Validate /hn/[id] — reject non-numeric IDs early
+    // Validate /hn/[id] and /api/hn/[id] — reject non-numeric IDs early.
+    // Reject anything like /hn/garbage or /hn/../etc.
     const idMatch = pathname.match(/^\/(?:api\/)?hn\/(\d+)$/);
-    if (
-      pathname !== "/hn" &&
-      pathname !== "/api/hn" &&
-      !pathname.startsWith("/api/hn/s") &&
-      !idMatch
-    ) {
-      // Allow /api/hn/subscribe, /api/hn/unsubscribe, /api/hn/send, /api/hn/test
-      // but reject anything like /hn/garbage or /hn/../etc
-      if (!pathname.match(/^\/api\/hn\/(subscribe|unsubscribe|send|test)$/)) {
-        return NextResponse.json({ error: "Invalid HN post ID" }, { status: 400 });
-      }
+    if (pathname !== "/hn" && pathname !== "/api/hn" && !idMatch) {
+      return NextResponse.json({ error: "Invalid HN post ID" }, { status: 400 });
     }
 
     const limiter = getHnRatelimit();
