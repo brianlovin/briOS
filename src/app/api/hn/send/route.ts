@@ -39,7 +39,6 @@ export async function GET(request: Request) {
 
     const date = formatDigestDate();
 
-    // Fetch subscribers from PlanetScale
     let subscribers = await getHNSubscribers();
 
     // In development, only send to the base email for testing

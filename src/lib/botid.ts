@@ -9,7 +9,7 @@ export const HN_BOTID_PROTECTED_ROUTES = [
     advancedOptions: HN_BOTID_ADVANCED_OPTIONS,
   },
   {
-    path: "/api/hn/*",
+    path: "/api/hn/[id]",
     method: "GET",
     advancedOptions: HN_BOTID_ADVANCED_OPTIONS,
   },
