@@ -10,24 +10,10 @@ const IS_PROD = process.env.NODE_ENV === "production";
 
 export async function GET(request: Request) {
   try {
-    const { searchParams } = new URL(request.url);
-    const token = searchParams.get("token");
-    const warmup = searchParams.get("warmup");
-
-    /*
-      This API route is triggered from a GitHub action. Sometimes the function
-      can take a while to warm up though, and will time out. If it times out,
-      the action fails. So instead, in the action we actually send 2 requests -
-      the first warms up the route, the second actually processes the digest.
-    */
-    if (warmup) {
-      return NextResponse.json({ status: "Warmed up!" });
-    }
-
-    // Verify the GitHub Action token
-    const secret = process.env.HN_TOKEN;
-    if (!token || token !== secret) {
-      return errorResponse("Invalid token", 401);
+    const authHeader = request.headers.get("authorization");
+    const cronSecret = process.env.CRON_SECRET;
+    if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
+      return errorResponse("Unauthorized", 401);
     }
 
     // Fetch top HN posts for the digest
