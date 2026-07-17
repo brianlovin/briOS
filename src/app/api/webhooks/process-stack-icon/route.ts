@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { errorResponse } from "@/lib/api-utils";
+import { errorResponse, safeCompare } from "@/lib/api-utils";
 import { optimizeSiteIcon } from "@/lib/image-processing/optimize";
 import { invalidateNotionCache, notion } from "@/lib/notion";
 import { uploadBufferToR2 } from "@/lib/r2/storage";
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     // Verify webhook secret
     const webhookSecret = process.env.NOTION_WEBHOOK_VERIFICATION_SECRET;
     const providedSecret = request.headers.get("x-webhook-secret");
-    if (!webhookSecret || providedSecret !== webhookSecret) {
+    if (!safeCompare(providedSecret, webhookSecret)) {
       return errorResponse("Unauthorized", 401);
     }
 

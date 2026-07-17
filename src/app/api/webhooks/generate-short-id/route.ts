@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { errorResponse } from "@/lib/api-utils";
+import { errorResponse, safeCompare } from "@/lib/api-utils";
 import { invalidateNotionCache } from "@/lib/notion";
 import { updateWritingShortId } from "@/lib/notion/mutations";
 import { getWritingPostByShortId, getWritingPostContent } from "@/lib/notion/queries";
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     // Verify webhook secret
     const webhookSecret = process.env.NOTION_WEBHOOK_VERIFICATION_SECRET;
     const providedSecret = request.headers.get("x-webhook-secret");
-    if (!webhookSecret || providedSecret !== webhookSecret) {
+    if (!safeCompare(providedSecret, webhookSecret)) {
       return errorResponse("Unauthorized", 401);
     }
 

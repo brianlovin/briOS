@@ -1,7 +1,7 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
-import { errorResponse } from "@/lib/api-utils";
+import { errorResponse, safeCompare } from "@/lib/api-utils";
 import { invalidateNotionCache } from "@/lib/notion";
 
 const CONTENT_TYPES = ["writing", "til", "ama", "stack", "sites", "all"] as const;
@@ -53,7 +53,7 @@ async function purgeCache(request: Request): Promise<NextResponse> {
   const secret = searchParams.get("secret");
   const type = searchParams.get("type") || "all";
 
-  if (!process.env.CACHE_PURGE_SECRET || secret !== process.env.CACHE_PURGE_SECRET) {
+  if (!safeCompare(secret, process.env.CACHE_PURGE_SECRET)) {
     return errorResponse("Unauthorized", 401);
   }
 

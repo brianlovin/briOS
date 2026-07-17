@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { errorResponse } from "@/lib/api-utils";
+import { errorResponse, safeCompare } from "@/lib/api-utils";
 import { getAllLikeCounts } from "@/lib/likes-redis";
 import { notion } from "@/lib/notion/client";
 
@@ -10,7 +10,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const token = searchParams.get("token");
 
-    if (!token || token !== process.env.LIKES_SYNC_TOKEN) {
+    if (!safeCompare(token, process.env.LIKES_SYNC_TOKEN)) {
       return errorResponse("Unauthorized", 401);
     }
 
