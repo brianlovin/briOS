@@ -9,6 +9,8 @@
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
+    "test": "bun test",
+    "test:coverage": "bun test --coverage",
     "format": "prettier --write ."
   },
   "dependencies": {
