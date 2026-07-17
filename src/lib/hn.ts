@@ -10,6 +10,7 @@ import {
   setCachedPosts,
   setCachedTopIds,
 } from "@/lib/hn-cache";
+import { sanitizeExternalHtml } from "@/lib/sanitize";
 import { HackerNewsComment, HackerNewsPost } from "@/types/hackernews";
 
 /** Default revalidation for HN data (matches Redis cache TTL). */
@@ -60,6 +61,7 @@ function trimComments(comment: HackerNewsComment): HackerNewsComment | null {
 
   return {
     ...comment,
+    content: comment.content ? sanitizeExternalHtml(comment.content) : comment.content,
     comments: comment.comments.slice(0, 8).map(trimComments).filter(Boolean) as HackerNewsComment[],
   };
 }
@@ -75,6 +77,7 @@ function processPost(data: HackerNewsPost, includeComments: boolean): HackerNews
 
   return {
     ...data,
+    content: data.content ? sanitizeExternalHtml(data.content) : data.content,
     url: cleanUrl,
     comments: includeComments ? shortComments : [],
   };

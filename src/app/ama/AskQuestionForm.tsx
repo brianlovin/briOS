@@ -22,14 +22,16 @@ export function AskQuestionForm({
   const [details, setDetails] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState("");
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!question.trim()) return;
 
     setSubmitting(true);
+    setError("");
     try {
-      await fetch("/api/ama", {
+      const response = await fetch("/api/ama", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -37,6 +39,13 @@ export function AskQuestionForm({
           description: details.trim() || undefined,
         }),
       });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        setError(data?.error || "Failed to submit question. Please try again.");
+        return;
+      }
+
       setSuccess(true);
       setQuestion("");
       setDetails("");
@@ -48,7 +57,8 @@ export function AskQuestionForm({
         document.getElementById("question")?.focus();
       }, 2000);
     } catch (err) {
-      console.error(err);
+      console.error("Error submitting AMA question:", err);
+      setError("Failed to submit question. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -77,6 +87,8 @@ export function AskQuestionForm({
           rows={2}
           disabled={submitting}
         />
+
+        {error && <p className="text-sm text-red-500">{error}</p>}
 
         <div className="flex items-center justify-end gap-3">
           <AnimatePresence>

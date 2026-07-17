@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { errorResponse } from "@/lib/api-utils";
+import { errorResponse, safeCompare } from "@/lib/api-utils";
 import { BASE_EMAIL, sendHNDigestEmailBatch } from "@/lib/email";
 import { getHNPostsForDigest } from "@/lib/hn";
 import { formatDigestDate, generateUnsubscribeUrl } from "@/lib/jwt";
@@ -11,8 +11,8 @@ const IS_PROD = process.env.NODE_ENV === "production";
 export async function GET(request: Request) {
   try {
     const authHeader = request.headers.get("authorization");
-    const cronSecret = process.env.CRON_SECRET;
-    if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
+    const providedToken = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null;
+    if (!safeCompare(providedToken, process.env.CRON_SECRET)) {
       return errorResponse("Unauthorized", 401);
     }
 
