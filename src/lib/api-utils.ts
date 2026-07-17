@@ -1,4 +1,20 @@
+import { createHash, timingSafeEqual } from "crypto";
 import { NextResponse } from "next/server";
+
+/**
+ * Constant-time comparison of two secret strings.
+ *
+ * Hashing both inputs to a fixed length first avoids leaking the secret's
+ * length and prevents `timingSafeEqual` from throwing on length mismatch,
+ * while still comparing in constant time. Returns false when either value
+ * is missing so callers can treat absent secrets as unauthorized.
+ */
+export function safeCompare(a: string | null | undefined, b: string | null | undefined): boolean {
+  if (!a || !b) return false;
+  const aHash = createHash("sha256").update(a).digest();
+  const bHash = createHash("sha256").update(b).digest();
+  return timingSafeEqual(aHash, bHash);
+}
 
 /**
  * Standard error response format for API routes

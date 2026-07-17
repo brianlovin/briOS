@@ -14,30 +14,18 @@ import { FancySeparator } from "@/components/ui/FancySeparator";
 import { IconButton } from "@/components/ui/IconButton";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { useHNPost } from "@/lib/hooks/useHn";
+import { sanitizeExternalHtml } from "@/lib/sanitize";
 import { stripHtmlTags } from "@/lib/utils";
 import { HackerNewsComment, HackerNewsPost } from "@/types/hackernews";
 
 import { HNCLIUpsell, HNDigestCard } from "../HNDigestCard";
 import { useHNPostsContext } from "../HNPostsContext";
 
-// Lazily initialize DOMPurify to avoid SSR issues
-let DOMPurify: typeof import("dompurify").default | null = null;
-
-function getDOMPurify() {
-  if (typeof window !== "undefined" && !DOMPurify) {
-    DOMPurify = require("dompurify").default;
-  }
-  return DOMPurify;
-}
-
-// Sanitize HTML content from external sources (Hacker News)
+// Sanitize HTML content from external sources (Hacker News). Uses an
+// isomorphic sanitizer so content is stripped on both the server (SSR) and the
+// client — never emitting unsanitized markup into the server-rendered HTML.
 function sanitizeHtml(html: string): string {
-  const purify = getDOMPurify();
-  if (!purify) return html; // SSR fallback - will be sanitized on hydration
-  return purify.sanitize(html, {
-    ALLOWED_TAGS: ["p", "a", "code", "pre", "em", "strong", "i", "b", "br"],
-    ALLOWED_ATTR: ["href", "rel", "target"],
-  });
+  return sanitizeExternalHtml(html);
 }
 
 interface HNPostPageClientProps {
