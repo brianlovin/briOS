@@ -124,7 +124,11 @@ export function LikeButton({ pageId, className, variant = "default" }: LikeButto
     heartScale.set(1.18 + intensity * 0.15);
     setTimeout(() => heartScale.set(1), 150);
 
-    await addLike();
+    try {
+      await addLike();
+    } catch (err) {
+      console.error("Error liking:", err);
+    }
   };
 
   const handlePointerDown = () => {
@@ -151,7 +155,11 @@ export function LikeButton({ pageId, className, variant = "default" }: LikeButto
       heartScale.set(1);
     }, 100);
 
-    await removeLike();
+    try {
+      await removeLike();
+    } catch (err) {
+      console.error("Error removing like:", err);
+    }
   };
 
   const isFilled = userLikes > 0;
