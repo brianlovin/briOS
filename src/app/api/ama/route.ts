@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { cachedResponse, errorResponse } from "@/lib/api-utils";
+import { cachedResponse, errorResponse, parsePaginationParams } from "@/lib/api-utils";
 import { createAmaQuestion, getAmaDatabaseItems } from "@/lib/notion";
 
 const createQuestionSchema = z.object({
@@ -18,9 +18,7 @@ const createQuestionSchema = z.object({
 
 export async function GET(request: Request) {
   try {
-    const { searchParams } = new URL(request.url);
-    const cursor = searchParams.get("cursor") || undefined;
-    const limit = parseInt(searchParams.get("limit") || "20", 10);
+    const { cursor, limit } = parsePaginationParams(request);
     const { items, nextCursor } = await getAmaDatabaseItems(cursor, limit);
     // Cache for 24 hours - Notion content doesn't change frequently
     return cachedResponse({ items, nextCursor }, 86400);

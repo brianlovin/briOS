@@ -2,6 +2,19 @@ import { createHash, timingSafeEqual } from "crypto";
 import { NextResponse } from "next/server";
 
 /**
+ * Parse `cursor` and `limit` pagination query params from a request URL.
+ */
+export function parsePaginationParams(
+  request: Request,
+  defaultLimit: number = 20,
+): { cursor: string | undefined; limit: number } {
+  const { searchParams } = new URL(request.url);
+  const cursor = searchParams.get("cursor") || undefined;
+  const limit = parseInt(searchParams.get("limit") || String(defaultLimit), 10);
+  return { cursor, limit };
+}
+
+/**
  * Constant-time comparison of two secret strings.
  *
  * Hashing both inputs to a fixed length first avoids leaking the secret's
