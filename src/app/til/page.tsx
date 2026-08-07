@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import { TilFeed } from "@/components/TilFeed";
 import { PageTitle } from "@/components/Typography";
@@ -20,9 +21,15 @@ export const metadata: Metadata = {
   },
 };
 
-export const dynamic = "force-dynamic";
+export default function TilPage() {
+  return (
+    <Suspense fallback={null}>
+      <TilContent />
+    </Suspense>
+  );
+}
 
-export default async function TilPage() {
+async function TilContent() {
   // Fetch the first 10 entries for SSR
   const { items: initialEntries } = await getTilDatabaseItems(undefined, 10);
 

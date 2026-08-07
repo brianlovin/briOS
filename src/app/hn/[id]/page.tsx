@@ -1,16 +1,11 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import { getPostById } from "@/lib/hn";
 import { createMetadata, truncateDescription } from "@/lib/metadata";
 import { stripHtmlTags } from "@/lib/utils";
 
 import HNPostPageClient from "./HNPostPageClient";
-
-export const revalidate = 3600;
-
-export function generateStaticParams(): { id: string }[] {
-  return [];
-}
 
 export async function generateMetadata(props: {
   params: Promise<{ id: string }>;
@@ -49,7 +44,15 @@ export async function generateMetadata(props: {
   }
 }
 
-export default async function HNPostPage(props: { params: Promise<{ id: string }> }) {
+export default function HNPostPage(props: { params: Promise<{ id: string }> }) {
+  return (
+    <Suspense fallback={null}>
+      <HNPostContent params={props.params} />
+    </Suspense>
+  );
+}
+
+async function HNPostContent(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const id = params.id;
 

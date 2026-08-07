@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useMemo } from "react";
+import React, { Suspense, useMemo } from "react";
 
 import { ListDetailLayout } from "@/components/ListDetailLayout";
 import { ListDetailWrapper } from "@/components/ListDetailWrapper";
@@ -20,7 +20,14 @@ export default function HNLayout({ children }: { children: React.ReactNode }) {
   return (
     <HNPostsProvider posts={posts} isLoading={isLoading} isError={isError}>
       <ListDetailWrapper>
-        <ListDetailLayout backHref="/hn" list={<HNStoriesList />}>
+        <ListDetailLayout
+          backHref="/hn"
+          list={
+            <Suspense fallback={null}>
+              <HNStoriesList />
+            </Suspense>
+          }
+        >
           {children}
         </ListDetailLayout>
       </ListDetailWrapper>

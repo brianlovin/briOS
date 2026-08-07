@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import { StackPageClient } from "@/components/stack/StackPageClient";
 import { getServerLikes } from "@/lib/likes-server";
@@ -19,9 +20,17 @@ export const metadata: Metadata = {
   },
 };
 
-export const dynamic = "force-dynamic";
+export default function StackPage(props: {
+  searchParams: Promise<{ platform?: string; status?: string }>;
+}) {
+  return (
+    <Suspense fallback={null}>
+      <StackContent searchParams={props.searchParams} />
+    </Suspense>
+  );
+}
 
-export default async function StackPage({
+async function StackContent({
   searchParams,
 }: {
   searchParams: Promise<{ status?: string; platform?: string }>;

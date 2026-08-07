@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { LikeButton } from "@/components/likes/LikeButton";
@@ -9,12 +10,6 @@ import { getServerLikes } from "@/lib/likes-server";
 import { createArticleJsonLd, createMetadata, truncateDescription } from "@/lib/metadata";
 import { getTilByShortId } from "@/lib/notion";
 import { buildSlug, extractShortIdFromSlug } from "@/lib/short-id";
-
-export const revalidate = 3600;
-
-export function generateStaticParams(): { slug: string }[] {
-  return [];
-}
 
 // Generate metadata for each TIL entry
 export async function generateMetadata(props: {
@@ -44,7 +39,15 @@ export async function generateMetadata(props: {
   });
 }
 
-export default async function TilEntryPage(props: { params: Promise<{ slug: string }> }) {
+export default function TilEntryPage(props: { params: Promise<{ slug: string }> }) {
+  return (
+    <Suspense fallback={null}>
+      <TilEntryContent params={props.params} />
+    </Suspense>
+  );
+}
+
+async function TilEntryContent(props: { params: Promise<{ slug: string }> }) {
   const params = await props.params;
   const slug = params.slug;
 

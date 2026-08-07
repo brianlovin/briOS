@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 
 import { HomeHero } from "@/components/home/HomeHero";
 import { ProjectsList } from "@/components/home/ProjectsList";
@@ -23,9 +24,15 @@ export const metadata: Metadata = createMetadata({
   path: "/",
 });
 
-export const dynamic = "force-dynamic";
+export default function Home() {
+  return (
+    <Suspense fallback={null}>
+      <HomeContent />
+    </Suspense>
+  );
+}
 
-export default async function Home() {
+async function HomeContent() {
   const personJsonLd = createPersonJsonLd();
   const allPosts = await getAllWritingPosts();
   const recentPosts = allPosts.slice(0, 5);

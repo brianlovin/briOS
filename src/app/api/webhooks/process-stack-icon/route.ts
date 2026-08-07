@@ -1,3 +1,4 @@
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 import { errorResponse, safeCompare } from "@/lib/api-utils";
@@ -90,6 +91,9 @@ export async function POST(request: Request) {
 
     // Invalidate stack cache so the updated icon is picked up
     await invalidateNotionCache("notion:stack:*");
+    revalidateTag("notion:stack", "max");
+    revalidatePath("/stack");
+    revalidatePath("/api/stacks");
 
     return NextResponse.json(
       {

@@ -3,6 +3,8 @@ import type { NextConfig } from "next";
 import path from "path";
 
 const nextConfig: NextConfig = {
+  cacheComponents: true,
+  partialPrefetching: true,
   serverExternalPackages: ["@sparticuz/chromium"],
   async redirects() {
     return [

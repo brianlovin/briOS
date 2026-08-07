@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import {
   List,
@@ -19,9 +20,15 @@ export const metadata: Metadata = createMetadata({
   path: "/writing",
 });
 
-export const dynamic = "force-dynamic";
+export default function WritingPage() {
+  return (
+    <Suspense fallback={null}>
+      <WritingContent />
+    </Suspense>
+  );
+}
 
-export default async function WritingPage() {
+async function WritingContent() {
   const posts = await getAllWritingPosts();
 
   // Group posts by year

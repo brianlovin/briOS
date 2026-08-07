@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { LikeButton } from "@/components/likes/LikeButton";
@@ -6,9 +7,15 @@ import { renderBlocks } from "@/components/renderBlocks";
 import { getServerLikes, type LikeData } from "@/lib/likes-server";
 import { getFullContent } from "@/lib/notion";
 
-export const dynamic = "force-dynamic";
+export default function EpisodePage(props: { params: Promise<{ id: string }> }) {
+  return (
+    <Suspense fallback={null}>
+      <EpisodeContent params={props.params} />
+    </Suspense>
+  );
+}
 
-export default async function EpisodePage(props: { params: Promise<{ id: string }> }) {
+async function EpisodeContent(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const id = params.id;
 

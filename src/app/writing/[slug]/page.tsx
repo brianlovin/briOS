@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
+import { Suspense } from "react";
 
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { LikeButton } from "@/components/likes/LikeButton";
@@ -12,12 +13,6 @@ import { createArticleJsonLd, createMetadata, truncateDescription } from "@/lib/
 import { getWritingPostByShortId, getWritingPostContentBySlug } from "@/lib/notion";
 import { buildSlug, extractShortIdFromSlug } from "@/lib/short-id";
 import { getAllWritingPosts } from "@/lib/writing";
-
-export const revalidate = 3600;
-
-export function generateStaticParams(): { slug: string }[] {
-  return [];
-}
 
 // Generate metadata for each writing post
 export async function generateMetadata(props: {
@@ -63,7 +58,15 @@ function getRandomPosts<T>(posts: T[], count: number): T[] {
   return shuffled.slice(0, count);
 }
 
-export default async function WritingPostPage(props: { params: Promise<{ slug: string }> }) {
+export default function WritingPostPage(props: { params: Promise<{ slug: string }> }) {
+  return (
+    <Suspense fallback={null}>
+      <WritingPostContent params={props.params} />
+    </Suspense>
+  );
+}
+
+async function WritingPostContent(props: { params: Promise<{ slug: string }> }) {
   const params = await props.params;
   const slug = params.slug;
 

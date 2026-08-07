@@ -1,17 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 import { createArticleJsonLd, createMetadata, truncateDescription } from "@/lib/metadata";
 import { getAppDissectionDatabaseItems, getAppDissectionItemBySlug } from "@/lib/notion/queries";
 import { extractPreviewText } from "@/lib/notion/types";
 
 import { AppDissectionDetail } from "./components/AppDissectionDetail";
-
-export const revalidate = 3600;
-
-export function generateStaticParams(): { slug: string }[] {
-  return [];
-}
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;
@@ -36,7 +31,15 @@ export async function generateMetadata(props: {
   });
 }
 
-export default async function AppDissectionPostPage(props: { params: Promise<{ slug: string }> }) {
+export default function AppDissectionPostPage(props: { params: Promise<{ slug: string }> }) {
+  return (
+    <Suspense fallback={<div className="min-h-svh flex-1" />}>
+      <AppDissectionPostContent params={props.params} />
+    </Suspense>
+  );
+}
+
+async function AppDissectionPostContent(props: { params: Promise<{ slug: string }> }) {
   const params = await props.params;
   const [post, allItems] = await Promise.all([
     getAppDissectionItemBySlug(params.slug),

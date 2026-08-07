@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
 
 import { createMetadata, SITE_CONFIG } from "@/lib/metadata";
 import { getAppDissectionDatabaseItems } from "@/lib/notion/queries";
@@ -20,9 +21,15 @@ export const metadata: Metadata = {
   },
 };
 
-export const dynamic = "force-dynamic";
+export default function AppDissectionIndex() {
+  return (
+    <Suspense fallback={null}>
+      <AppDissectionContent />
+    </Suspense>
+  );
+}
 
-export default async function AppDissectionIndex() {
+async function AppDissectionContent() {
   const items = await getAppDissectionDatabaseItems();
 
   return (
