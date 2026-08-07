@@ -38,7 +38,7 @@ function GoodWebsitesFallback() {
         <div className="bg-secondary border-secondary hidden h-10 border-b md:block" />
         <div className="divide-secondary divide-y">
           {Array.from({ length: 12 }, (_, index) => (
-            <div key={index} className="flex h-10 items-center gap-4 px-4">
+            <div key={index} className="flex h-[73px] items-center gap-4 px-4 md:h-[57px]">
               <div className="bg-tertiary h-4 w-1/3 animate-pulse rounded" />
               <div className="bg-tertiary h-4 w-1/4 animate-pulse rounded" />
             </div>
