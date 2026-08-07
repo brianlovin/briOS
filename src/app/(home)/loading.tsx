@@ -1,5 +1,4 @@
-import Image from "next/image";
-
+import { HomeHero } from "@/components/home/HomeHero";
 import { List, ListItem, Section, SectionHeading } from "@/components/shared/ListComponents";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 
@@ -8,23 +7,7 @@ export default function Loading() {
     <div className="flex flex-1 flex-col">
       <div className="flex-1 overflow-y-auto">
         <div className="text-primary mx-auto flex max-w-2xl flex-1 flex-col gap-16 py-16 leading-[1.6] sm:py-32">
-          <Section>
-            <Image
-              src="/img/avatar.jpg"
-              alt="Brian Lovin"
-              width={60}
-              height={60}
-              draggable={false}
-              className="mb-8 rounded-full select-none"
-            />
-            <h1 id="home-title" className="text-2xl font-semibold">
-              Brian Lovin
-            </h1>
-            <p className="text-secondary text-2xl font-semibold text-pretty">
-              I&apos;m a software designer living in San Francisco, currently making AI products at
-              Notion.
-            </p>
-          </Section>
+          <HomeHero />
 
           <Section>
             <SectionHeading>Writing</SectionHeading>
