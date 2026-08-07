@@ -31,8 +31,8 @@ function GoodWebsitesFallback() {
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
       <div className="border-secondary flex items-center justify-between border-b p-4 md:hidden">
-        <div className="bg-tertiary h-8 w-20 animate-pulse rounded" />
-        <div className="bg-tertiary h-8 w-24 animate-pulse rounded" />
+        <div className="bg-tertiary h-9 w-20 animate-pulse rounded" />
+        <div className="bg-tertiary h-9 w-24 animate-pulse rounded" />
       </div>
       <div className="flex-1 overflow-hidden">
         <div className="bg-secondary border-secondary hidden h-10 border-b md:block" />
