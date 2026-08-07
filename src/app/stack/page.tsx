@@ -24,9 +24,30 @@ export default function StackPage(props: {
   searchParams: Promise<{ platform?: string; status?: string }>;
 }) {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<StackFallback />}>
       <StackContent searchParams={props.searchParams} />
     </Suspense>
+  );
+}
+
+function StackFallback() {
+  return (
+    <div className="flex flex-1 flex-col overflow-hidden">
+      <div className="border-secondary flex h-16 items-center border-b p-4 md:hidden">
+        <div className="bg-tertiary h-8 w-28 animate-pulse rounded" />
+      </div>
+      <div className="flex-1 overflow-hidden">
+        <div className="bg-secondary border-secondary hidden h-10 border-b md:block" />
+        <div className="divide-secondary divide-y">
+          {Array.from({ length: 12 }, (_, index) => (
+            <div key={index} className="flex h-12 items-center gap-4 px-4">
+              <div className="bg-tertiary h-4 w-1/4 animate-pulse rounded" />
+              <div className="bg-tertiary h-4 w-1/3 animate-pulse rounded" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 

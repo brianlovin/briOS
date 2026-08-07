@@ -33,7 +33,7 @@ export async function generateMetadata(props: {
 
 export default function AppDissectionPostPage(props: { params: Promise<{ slug: string }> }) {
   return (
-    <Suspense fallback={<div className="min-h-svh flex-1" />}>
+    <Suspense fallback={<div className="bg-tertiary/30 min-h-full min-w-0 flex-1 animate-pulse" />}>
       <AppDissectionPostContent params={props.params} />
     </Suspense>
   );

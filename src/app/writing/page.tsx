@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 
 import {
   List,
@@ -20,15 +19,7 @@ export const metadata: Metadata = createMetadata({
   path: "/writing",
 });
 
-export default function WritingPage() {
-  return (
-    <Suspense fallback={null}>
-      <WritingContent />
-    </Suspense>
-  );
-}
-
-async function WritingContent() {
+export default async function WritingPage() {
   const posts = await getAllWritingPosts();
 
   // Group posts by year

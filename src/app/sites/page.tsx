@@ -21,9 +21,31 @@ export const metadata: Metadata = {
 
 export default function GoodWebsitesPage(props: { searchParams: Promise<{ tag?: string }> }) {
   return (
-    <Suspense fallback={<div className="min-h-svh flex-1" />}>
+    <Suspense fallback={<GoodWebsitesFallback />}>
       <GoodWebsitesContent searchParams={props.searchParams} />
     </Suspense>
+  );
+}
+
+function GoodWebsitesFallback() {
+  return (
+    <div className="flex flex-1 flex-col overflow-hidden">
+      <div className="border-secondary flex items-center justify-between border-b p-4 md:hidden">
+        <div className="bg-tertiary h-8 w-20 animate-pulse rounded" />
+        <div className="bg-tertiary h-8 w-24 animate-pulse rounded" />
+      </div>
+      <div className="flex-1 overflow-hidden">
+        <div className="bg-secondary border-secondary hidden h-10 border-b md:block" />
+        <div className="divide-secondary divide-y">
+          {Array.from({ length: 12 }, (_, index) => (
+            <div key={index} className="flex h-10 items-center gap-4 px-4">
+              <div className="bg-tertiary h-4 w-1/3 animate-pulse rounded" />
+              <div className="bg-tertiary h-4 w-1/4 animate-pulse rounded" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 

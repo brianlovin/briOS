@@ -41,7 +41,7 @@ export async function generateMetadata(props: {
 
 export default function TilEntryPage(props: { params: Promise<{ slug: string }> }) {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<div className="bg-tertiary/30 min-h-full min-w-0 flex-1 animate-pulse" />}>
       <TilEntryContent params={props.params} />
     </Suspense>
   );

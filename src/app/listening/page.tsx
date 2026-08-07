@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 
 import { ListeningHistory } from "@/components/ListeningHistory";
 import { createMetadata } from "@/lib/metadata";
@@ -11,15 +10,7 @@ export const metadata: Metadata = createMetadata({
   path: "/listening",
 });
 
-export default function ListeningPage() {
-  return (
-    <Suspense fallback={null}>
-      <ListeningContent />
-    </Suspense>
-  );
-}
-
-async function ListeningContent() {
+export default async function ListeningPage() {
   // Fetch initial page of music data on the server
   const initialPage = await getListeningHistoryDatabaseItems(undefined, 20);
 

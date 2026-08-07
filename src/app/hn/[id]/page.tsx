@@ -46,7 +46,7 @@ export async function generateMetadata(props: {
 
 export default function HNPostPage(props: { params: Promise<{ id: string }> }) {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<div className="bg-tertiary/30 min-h-full min-w-0 flex-1 animate-pulse" />}>
       <HNPostContent params={props.params} />
     </Suspense>
   );

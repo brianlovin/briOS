@@ -23,7 +23,7 @@ export default function HNLayout({ children }: { children: React.ReactNode }) {
         <ListDetailLayout
           backHref="/hn"
           list={
-            <Suspense fallback={null}>
+            <Suspense fallback={<div className="bg-tertiary min-h-48 animate-pulse rounded" />}>
               <HNStoriesList />
             </Suspense>
           }

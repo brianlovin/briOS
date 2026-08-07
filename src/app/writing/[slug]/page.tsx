@@ -60,9 +60,28 @@ function getRandomPosts<T>(posts: T[], count: number): T[] {
 
 export default function WritingPostPage(props: { params: Promise<{ slug: string }> }) {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<WritingPostFallback />}>
       <WritingPostContent params={props.params} />
     </Suspense>
+  );
+}
+
+function WritingPostFallback() {
+  return (
+    <div className="min-w-0 flex-1">
+      <div className="mx-auto flex max-w-3xl flex-1 flex-col gap-8 px-4 py-12 md:px-6 lg:px-8 lg:py-16 xl:py-20">
+        <div className="flex flex-col gap-6">
+          <div className="bg-tertiary h-4 w-24 animate-pulse rounded" />
+          <div className="bg-tertiary h-10 w-2/3 animate-pulse rounded" />
+          <div className="bg-tertiary h-8 w-16 animate-pulse rounded" />
+        </div>
+        <div className="flex flex-col gap-4">
+          {Array.from({ length: 8 }, (_, index) => (
+            <div key={index} className="bg-tertiary h-5 w-full animate-pulse rounded" />
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 

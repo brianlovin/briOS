@@ -8,12 +8,9 @@ export default function NumbersPage() {
   const [startOfDay, setStartOfDay] = useState<Date | null>(null);
 
   useEffect(() => {
-    const timeoutId = window.setTimeout(() => {
-      const now = new Date();
-      setStartOfDay(new Date(now.getFullYear(), now.getMonth(), now.getDate()));
-    });
-
-    return () => window.clearTimeout(timeoutId);
+    const now = new Date();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setStartOfDay(new Date(now.getFullYear(), now.getMonth(), now.getDate()));
   }, []);
 
   const birthsPerSecond = 4.3;

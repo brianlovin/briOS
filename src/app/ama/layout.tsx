@@ -62,7 +62,7 @@ export default function AMALayout({ children }: { children: React.ReactNode }) {
                 </AnimatePresence>
               </div>
 
-              <Suspense fallback={null}>
+              <Suspense fallback={<div className="bg-tertiary min-h-48 animate-pulse rounded" />}>
                 <AmaList />
               </Suspense>
             </div>

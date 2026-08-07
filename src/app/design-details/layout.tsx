@@ -17,7 +17,7 @@ export default function DesignDetailsLayout({ children }: { children: React.Reac
       <ListDetailLayout
         backHref="/design-details"
         list={
-          <Suspense fallback={null}>
+          <Suspense fallback={<div className="bg-tertiary min-h-48 animate-pulse rounded" />}>
             <EpisodeList />
           </Suspense>
         }

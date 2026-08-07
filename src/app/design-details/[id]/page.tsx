@@ -9,7 +9,7 @@ import { getFullContent } from "@/lib/notion";
 
 export default function EpisodePage(props: { params: Promise<{ id: string }> }) {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<div className="bg-tertiary/30 min-h-full min-w-0 flex-1 animate-pulse" />}>
       <EpisodeContent params={props.params} />
     </Suspense>
   );
