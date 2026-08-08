@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { connection } from "next/server";
+import { Suspense } from "react";
 
+import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { createMetadata, SITE_CONFIG } from "@/lib/metadata";
 import { getAppDissectionDatabaseItems } from "@/lib/notion/queries";
 import { formatPublishedDate, type NotionAppDissectionItem } from "@/lib/notion/types";
@@ -20,18 +23,44 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function AppDissectionIndex() {
-  const items = await getAppDissectionDatabaseItems();
-
+export default function AppDissectionIndex() {
   return (
     <div className="@container flex flex-1 flex-col overflow-hidden">
       <div className="flex-1 overflow-y-auto">
-        <div className="mx-auto grid w-full grid-cols-3 gap-1 p-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 lg:p-8">
-          {items.map((item) => (
-            <AppDissectionItem key={item.slug} item={item} />
-          ))}
-        </div>
+        <Suspense fallback={<AppDissectionFallback />}>
+          <AppDissectionGrid />
+        </Suspense>
       </div>
+    </div>
+  );
+}
+
+function AppDissectionFallback() {
+  return (
+    <div className="mx-auto grid w-full grid-cols-3 gap-1 p-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 lg:p-8">
+      {Array.from({ length: 15 }, (_, index) => (
+        <div
+          key={index}
+          className="relative flex flex-none flex-col items-center justify-center gap-3 overflow-hidden rounded-xl px-3 py-6"
+        >
+          <LoadingSkeleton className="size-12 rounded-xl" />
+          <LoadingSkeleton className="h-3.5 w-24" />
+          <LoadingSkeleton className="h-3 w-16" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+async function AppDissectionGrid() {
+  await connection();
+  const items = await getAppDissectionDatabaseItems();
+
+  return (
+    <div className="mx-auto grid w-full grid-cols-3 gap-1 p-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 lg:p-8">
+      {items.map((item) => (
+        <AppDissectionItem key={item.slug} item={item} />
+      ))}
     </div>
   );
 }
