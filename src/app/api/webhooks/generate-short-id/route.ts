@@ -1,3 +1,4 @@
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 import { errorResponse, safeCompare } from "@/lib/api-utils";
@@ -87,6 +88,10 @@ export async function POST(request: Request) {
 
     // Invalidate writing cache so the new short ID is picked up
     await invalidateNotionCache("notion:writing:*");
+    revalidateTag("notion:writing", "max");
+    revalidatePath("/writing");
+    revalidatePath("/api/writing");
+    revalidatePath("/writing/[slug]", "page");
 
     console.log(`✅ Successfully generated Short ID: ${shortId} for "${content.metadata.title}"\n`);
 

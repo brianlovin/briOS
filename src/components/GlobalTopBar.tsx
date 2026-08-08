@@ -3,7 +3,7 @@
 import { useAtom } from "jotai";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCallback } from "react";
+import { Suspense, useCallback } from "react";
 
 import { sidebarAtom } from "@/atoms/sidebar";
 import { navigationItems } from "@/config/navigation";
@@ -90,10 +90,7 @@ export function BreadcrumbLabel({
 }
 
 export function GlobalTopBar() {
-  const pathname = usePathname();
   const [isOpen, setIsOpen] = useAtom(sidebarAtom);
-
-  const isHomePage = pathname === "/";
 
   const handleClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     // Check if click target is or is inside a button or link
@@ -110,9 +107,6 @@ export function GlobalTopBar() {
     }
   }, []);
 
-  // Find the matching navigation item for the current path
-  const currentNavItem = navigationItems.find((item) => item.isActive?.(pathname));
-
   return (
     <>
       <div
@@ -127,21 +121,35 @@ export function GlobalTopBar() {
         <IconButton className="rounded-full" size="lg" onClick={() => setIsOpen(!isOpen)}>
           <MenuToggle isOpen={isOpen} />
         </IconButton>
-        {!isHomePage && (
-          <BreadcrumbLabel href="/" onClick={() => setIsOpen(false)}>
-            Brian Lovin
-          </BreadcrumbLabel>
-        )}
-        {currentNavItem && !isHomePage && (
-          <>
-            <BreadcrumbDivider />
-            <BreadcrumbLabel href={currentNavItem.href} onClick={() => setIsOpen(false)}>
-              {currentNavItem.label}
-            </BreadcrumbLabel>
-          </>
-        )}
+        <Suspense fallback={<div className="h-10 w-32" aria-hidden />}>
+          <TopBarBreadcrumbs onClose={() => setIsOpen(false)} />
+        </Suspense>
         <TopBarActionsSlot />
       </div>
+    </>
+  );
+}
+
+function TopBarBreadcrumbs({ onClose }: { onClose: () => void }) {
+  const pathname = usePathname();
+  const isHomePage = pathname === "/";
+  const currentNavItem = navigationItems.find((item) => item.isActive?.(pathname));
+
+  return (
+    <>
+      {!isHomePage && (
+        <BreadcrumbLabel href="/" onClick={onClose}>
+          Brian Lovin
+        </BreadcrumbLabel>
+      )}
+      {currentNavItem && !isHomePage && (
+        <>
+          <BreadcrumbDivider />
+          <BreadcrumbLabel href={currentNavItem.href} onClick={onClose}>
+            {currentNavItem.label}
+          </BreadcrumbLabel>
+        </>
+      )}
     </>
   );
 }

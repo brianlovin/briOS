@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useCallback, useMemo } from "react";
+import React, { Suspense, useCallback, useMemo } from "react";
 
 import { InfiniteScrollList } from "@/components/InfiniteScrollList";
 import { ListDetailLayout } from "@/components/ListDetailLayout";
@@ -14,7 +14,14 @@ import { cn } from "@/lib/utils";
 export default function DesignDetailsLayout({ children }: { children: React.ReactNode }) {
   return (
     <ListDetailWrapper>
-      <ListDetailLayout backHref="/design-details" list={<EpisodeList />}>
+      <ListDetailLayout
+        backHref="/design-details"
+        list={
+          <Suspense fallback={<div className="bg-tertiary min-h-48 animate-pulse rounded" />}>
+            <EpisodeList />
+          </Suspense>
+        }
+      >
         {children}
       </ListDetailLayout>
     </ListDetailWrapper>

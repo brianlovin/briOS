@@ -38,19 +38,13 @@ function shuffleWithSeed<T>(array: T[], seed: number): T[] {
   return shuffled;
 }
 
-export async function getGoodWebsites(): Promise<GoodWebsiteItem[]> {
+export function getGoodWebsitesSeed(now: number = Date.now()): number {
+  return Math.floor(now / (5 * 60 * 1000));
+}
+
+export async function getGoodWebsites(seed: number): Promise<GoodWebsiteItem[]> {
   const items = await getGoodWebsitesDatabaseItems();
-
-  // Create a seed based on 5-minute intervals
-  // This ensures the same order for all users within a 5-minute window
-  const now = Date.now();
-  const fiveMinutes = 5 * 60 * 1000;
-  const seed = Math.floor(now / fiveMinutes);
-
-  // Randomize the order using the time-based seed
-  const randomized = shuffleWithSeed(items as GoodWebsiteItem[], seed);
-
-  return randomized;
+  return shuffleWithSeed(items as GoodWebsiteItem[], seed);
 }
 
 export async function getGoodWebsitesForRss(): Promise<GoodWebsiteItemWithDate[]> {

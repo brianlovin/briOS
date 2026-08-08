@@ -4,7 +4,7 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
+import React, { Suspense } from "react";
 
 import { sidebarAtom } from "@/atoms/sidebar";
 import { GitHubIcon, XIcon, YouTubeIcon } from "@/components/icons/SocialIcons";
@@ -14,7 +14,6 @@ import { cn } from "@/lib/utils";
 export function MobileNavMenu() {
   const isOpen = useAtomValue(sidebarAtom);
   const setIsOpen = useSetAtom(sidebarAtom);
-  const pathname = usePathname();
 
   const mainNavItems = React.useMemo(() => getMainNavigationItems(), []);
   const projectNavItems = React.useMemo(() => getProjectNavigationItems(), []);
@@ -52,68 +51,85 @@ export function MobileNavMenu() {
           className="fixed inset-0 top-11 z-20 flex origin-top flex-col bg-white dark:bg-black"
         >
           {/* Navigation - TopBar stays on top, menu opens below */}
-          <nav className="flex-1 overflow-y-auto p-6">
-            <div className="flex flex-col gap-1">
-              {mainNavItems.map((item) => (
-                <MobileNavLink
-                  key={item.id}
-                  href={item.href}
-                  isActive={item.isActive?.(pathname) ?? false}
-                  onClick={() => setIsOpen(false)}
-                >
-                  {item.label}
-                </MobileNavLink>
-              ))}
-            </div>
-
-            <div className="mt-8">
-              <span className="text-quaternary text-sm font-medium">Projects</span>
-              <div className="mt-3 flex flex-col gap-1">
-                {projectNavItems.map((item) => (
-                  <MobileNavLink
-                    key={item.id}
-                    href={item.href}
-                    isActive={item.isActive?.(pathname) ?? false}
-                    onClick={() => setIsOpen(false)}
-                  >
-                    {item.label}
-                  </MobileNavLink>
-                ))}
-              </div>
-            </div>
-
-            {/* Social links */}
-            <div className="mt-8 flex flex-row items-center gap-4">
-              <Link
-                href="https://x.com/brian_lovin"
-                className="text-quaternary hover:text-primary -ml-2 p-2"
-                onClick={() => setIsOpen(false)}
-              >
-                <XIcon size={24} />
-              </Link>
-              <Link
-                href="https://www.youtube.com/@brian_lovin"
-                className="group p-2"
-                onClick={() => setIsOpen(false)}
-              >
-                <YouTubeIcon
-                  size={28}
-                  className="text-quaternary group-hover:text-[#FF0302]"
-                  playIconClassName="fill-[var(--background-color-elevated)] group-hover:fill-white"
-                />
-              </Link>
-              <Link
-                href="https://github.com/brianlovin"
-                className="text-quaternary hover:text-primary p-2"
-                onClick={() => setIsOpen(false)}
-              >
-                <GitHubIcon size={24} />
-              </Link>
-            </div>
-          </nav>
+          <Suspense fallback={null}>
+            <MobileNavContent
+              mainNavItems={mainNavItems}
+              projectNavItems={projectNavItems}
+              onClose={() => setIsOpen(false)}
+            />
+          </Suspense>
         </motion.div>
       )}
     </AnimatePresence>
+  );
+}
+
+function MobileNavContent({
+  mainNavItems,
+  projectNavItems,
+  onClose,
+}: {
+  mainNavItems: ReturnType<typeof getMainNavigationItems>;
+  projectNavItems: ReturnType<typeof getProjectNavigationItems>;
+  onClose: () => void;
+}) {
+  const pathname = usePathname();
+
+  return (
+    <nav className="flex-1 overflow-y-auto p-6">
+      <div className="flex flex-col gap-1">
+        {mainNavItems.map((item) => (
+          <MobileNavLink
+            key={item.id}
+            href={item.href}
+            isActive={item.isActive?.(pathname) ?? false}
+            onClick={onClose}
+          >
+            {item.label}
+          </MobileNavLink>
+        ))}
+      </div>
+
+      <div className="mt-8">
+        <span className="text-quaternary text-sm font-medium">Projects</span>
+        <div className="mt-3 flex flex-col gap-1">
+          {projectNavItems.map((item) => (
+            <MobileNavLink
+              key={item.id}
+              href={item.href}
+              isActive={item.isActive?.(pathname) ?? false}
+              onClick={onClose}
+            >
+              {item.label}
+            </MobileNavLink>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-8 flex flex-row items-center gap-4">
+        <Link
+          href="https://x.com/brian_lovin"
+          className="text-quaternary hover:text-primary -ml-2 p-2"
+          onClick={onClose}
+        >
+          <XIcon size={24} />
+        </Link>
+        <Link href="https://www.youtube.com/@brian_lovin" className="group p-2" onClick={onClose}>
+          <YouTubeIcon
+            size={28}
+            className="text-quaternary group-hover:text-[#FF0302]"
+            playIconClassName="fill-[var(--background-color-elevated)] group-hover:fill-white"
+          />
+        </Link>
+        <Link
+          href="https://github.com/brianlovin"
+          className="text-quaternary hover:text-primary p-2"
+          onClick={onClose}
+        >
+          <GitHubIcon size={24} />
+        </Link>
+      </div>
+    </nav>
   );
 }
 

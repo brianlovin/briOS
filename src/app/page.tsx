@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { connection } from "next/server";
+import { Suspense } from "react";
 
 import { HomeHero } from "@/components/home/HomeHero";
 import { ProjectsList } from "@/components/home/ProjectsList";
@@ -12,6 +14,7 @@ import {
   Section,
   SectionHeading,
 } from "@/components/shared/ListComponents";
+import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { createMetadata, createPersonJsonLd } from "@/lib/metadata";
 import { buildSlug } from "@/lib/short-id";
 import { getAllWritingPosts } from "@/lib/writing";
@@ -23,12 +26,8 @@ export const metadata: Metadata = createMetadata({
   path: "/",
 });
 
-export const dynamic = "force-dynamic";
-
 export default async function Home() {
   const personJsonLd = createPersonJsonLd();
-  const allPosts = await getAllWritingPosts();
-  const recentPosts = allPosts.slice(0, 5);
 
   return (
     <>
@@ -70,20 +69,9 @@ export default async function Home() {
                   className="text-quaternary group-hover:text-primary transition-all duration-150 group-hover:translate-x-0.5"
                 />
               </Link>
-              <List>
-                {recentPosts
-                  .filter((post) => post.shortId)
-                  .map((post) => {
-                    return (
-                      <ListItem
-                        key={post.id}
-                        href={`/writing/${buildSlug(post.title, post.shortId!)}`}
-                      >
-                        <ListItemLabel className="line-clamp-none">{post.title}</ListItemLabel>
-                      </ListItem>
-                    );
-                  })}
-              </List>
+              <Suspense fallback={<RecentWritingFallback />}>
+                <RecentWriting />
+              </Suspense>
             </Section>
 
             <Section>
@@ -94,5 +82,35 @@ export default async function Home() {
         </div>
       </div>
     </>
+  );
+}
+
+function RecentWritingFallback() {
+  return (
+    <List>
+      {Array.from({ length: 5 }, (_, index) => (
+        <ListItem key={index} className="py-1">
+          <LoadingSkeleton className="h-3.5 max-w-sm flex-1" />
+        </ListItem>
+      ))}
+    </List>
+  );
+}
+
+async function RecentWriting() {
+  await connection();
+  const allPosts = await getAllWritingPosts();
+
+  return (
+    <List>
+      {allPosts
+        .slice(0, 5)
+        .filter((post) => post.shortId)
+        .map((post) => (
+          <ListItem key={post.id} href={`/writing/${buildSlug(post.title, post.shortId!)}`}>
+            <ListItemLabel className="line-clamp-none">{post.title}</ListItemLabel>
+          </ListItem>
+        ))}
+    </List>
   );
 }

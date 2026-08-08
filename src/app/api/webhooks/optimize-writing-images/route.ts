@@ -1,3 +1,4 @@
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 import { errorResponse, safeCompare } from "@/lib/api-utils";
@@ -335,6 +336,10 @@ export async function POST(request: Request) {
 
     // Invalidate all cached writing content (covers pageId, slug, and shortId keys)
     await invalidateNotionCache("notion:writing:content:*");
+    revalidateTag("notion:writing", "max");
+    revalidatePath("/writing");
+    revalidatePath("/api/writing");
+    revalidatePath("/writing/[slug]", "page");
 
     const successCount = imageSuccessCount + videoSuccessCount;
     const errorCount = imageErrorCount + videoErrorCount;

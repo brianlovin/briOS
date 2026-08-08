@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import { GoodWebsitesPageClient } from "@/components/good-websites/GoodWebsitesPageClient";
-import { getGoodWebsites } from "@/lib/goodWebsites";
+import { getGoodWebsites, getGoodWebsitesSeed } from "@/lib/goodWebsites";
 import { getServerLikes } from "@/lib/likes-server";
 import { createMetadata, SITE_CONFIG } from "@/lib/metadata";
 
@@ -18,18 +19,42 @@ export const metadata: Metadata = {
   },
 };
 
-export const dynamic = "force-dynamic";
+export default function GoodWebsitesPage(props: { searchParams: Promise<{ tag?: string }> }) {
+  return (
+    <Suspense fallback={<GoodWebsitesFallback />}>
+      <GoodWebsitesContent searchParams={props.searchParams} />
+    </Suspense>
+  );
+}
 
-export default async function GoodWebsitesPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ tag?: string }>;
-}) {
+function GoodWebsitesFallback() {
+  return (
+    <div className="flex flex-1 flex-col overflow-hidden">
+      <div className="border-secondary flex items-center justify-between border-b p-4 md:hidden">
+        <div className="bg-tertiary h-9 w-20 animate-pulse rounded" />
+        <div className="bg-tertiary h-9 w-24 animate-pulse rounded" />
+      </div>
+      <div className="flex-1 overflow-hidden">
+        <div className="bg-secondary border-secondary hidden h-10 border-b md:block" />
+        <div className="divide-secondary divide-y">
+          {Array.from({ length: 12 }, (_, index) => (
+            <div key={index} className="flex h-[73px] items-center gap-4 px-4 md:h-[57px]">
+              <div className="bg-tertiary h-4 w-1/3 animate-pulse rounded" />
+              <div className="bg-tertiary h-4 w-1/4 animate-pulse rounded" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+async function GoodWebsitesContent({ searchParams }: { searchParams: Promise<{ tag?: string }> }) {
   const params = await searchParams;
   const tag = params.tag || "";
 
   // Fetch initial data on the server
-  const allWebsites = await getGoodWebsites();
+  const allWebsites = await getGoodWebsites(getGoodWebsitesSeed());
 
   // Apply filters server-side to match what the API would return
   const filteredWebsites = allWebsites.filter((item) => {

@@ -1,10 +1,17 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 import { LiveNumber } from "@/components/LiveNumber";
 
 export default function NumbersPage() {
-  const now = new Date();
-  const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const [startOfDay, setStartOfDay] = useState<Date | null>(null);
+
+  useEffect(() => {
+    const now = new Date();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setStartOfDay(new Date(now.getFullYear(), now.getMonth(), now.getDate()));
+  }, []);
 
   const birthsPerSecond = 4.3;
   const deathsPerSecond = 2.0;
@@ -12,6 +19,21 @@ export default function NumbersPage() {
 
   const populationBase = 8118000000;
   const populationBaseTime = new Date("2024-01-01T00:00:00Z");
+
+  if (!startOfDay) {
+    return (
+      <div className="flex flex-1 flex-col overflow-y-auto p-8">
+        <div className="grid gap-8 text-4xl sm:grid-cols-2 md:grid-cols-3">
+          {["World Population", "Births Today", "Deaths Today"].map((label) => (
+            <div key={label} className="flex flex-col gap-2">
+              <div className="text-secondary text-sm">{label}</div>
+              <div className="bg-tertiary h-10 w-32 animate-pulse rounded" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-1 flex-col overflow-y-auto p-8">

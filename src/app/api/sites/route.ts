@@ -1,5 +1,5 @@
 import { cachedResponse, errorResponse } from "@/lib/api-utils";
-import { getGoodWebsites } from "@/lib/goodWebsites";
+import { getGoodWebsites, getGoodWebsitesSeed } from "@/lib/goodWebsites";
 
 export async function GET(request: Request) {
   try {
@@ -7,7 +7,7 @@ export async function GET(request: Request) {
     const tag = searchParams.get("tag") || "";
 
     // Use the same function as the page to get randomized results
-    const items = await getGoodWebsites();
+    const items = await getGoodWebsites(getGoodWebsitesSeed());
 
     // Filter items based on query parameters
     const filteredItems = items.filter((item) => {

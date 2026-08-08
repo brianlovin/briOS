@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 
 import { ListDetailLayout } from "@/components/ListDetailLayout";
 import { ListDetailWrapper } from "@/components/ListDetailWrapper";
@@ -62,7 +62,9 @@ export default function AMALayout({ children }: { children: React.ReactNode }) {
                 </AnimatePresence>
               </div>
 
-              <AmaList />
+              <Suspense fallback={<div className="bg-tertiary min-h-48 animate-pulse rounded" />}>
+                <AmaList />
+              </Suspense>
             </div>
           }
         >
