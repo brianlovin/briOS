@@ -1,5 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "bun run build",
   "crons": [
     {
       "path": "/api/hn-digest/send",
