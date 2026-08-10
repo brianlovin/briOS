@@ -8,7 +8,7 @@
         "@aws-sdk/client-s3": "^3.1090.0",
         "@base-ui/react": "^1.1.0",
         "@notionhq/client": "^5.19.0",
-        "@paper-design/shaders-react": "^0.0.72",
+        "@paper-design/shaders-react": "^0.0.78",
         "@sparticuz/chromium": "^143.0.4",
         "@tanstack/react-virtual": "^3.13.18",
         "@upstash/ratelimit": "^2.0.8",
@@ -298,9 +298,9 @@
 
     "@notionhq/client": ["@notionhq/client@5.19.0", "", {}, "sha512-9R93Yt6/OB3MP5h29WhnvIBWYVq4mzxOYn9oh0Ut642NWxOTTouv7vkwKnMj5LGAYTlot0fhmL8OK5Su5zEzCw=="],
 
-    "@paper-design/shaders": ["@paper-design/shaders@0.0.72", "", {}, "sha512-rk2BFuV5ood2DaivbxJC2jQMzaB434isDUzdUQ85Cy0OWnUMuxl8kyGMR74TDPyjo3EvcHIyreNLkJdRG+GfSA=="],
+    "@paper-design/shaders": ["@paper-design/shaders@0.0.78", "", {}, "sha512-xOxV7koSzzh47G34I7uE3MASzli28k6+V35dlVrjMu270SFs0t8zeb4F/XTUU0BOXoHqIjKiGu6DnqkxPlsTcw=="],
 
-    "@paper-design/shaders-react": ["@paper-design/shaders-react@0.0.72", "", { "dependencies": { "@paper-design/shaders": "0.0.72" }, "peerDependencies": { "@types/react": "^18 || ^19", "react": "^18 || ^19" }, "optionalPeers": ["@types/react"] }, "sha512-q6KwquL93ZVNcuSM7pqzW0z/VLjnDVb/NSpYyGJBxf7MEHHCXx37E+zw/Px6RZLt3SGCUerIDDCGCMT385oW0w=="],
+    "@paper-design/shaders-react": ["@paper-design/shaders-react@0.0.78", "", { "dependencies": { "@paper-design/shaders": "0.0.78" }, "peerDependencies": { "@types/react": "^18 || ^19", "react": "^18 || ^19" }, "optionalPeers": ["@types/react"] }, "sha512-qA3LsErxiUDHTJNGCsoPqCiqUpWG024ean9GYP+fqk0ewxAgf8QfsZnajq/T2DMUvxCfVFfRm1Kzt6IGBUHOBw=="],
 
     "@pkgr/core": ["@pkgr/core@0.2.9", "", {}, "sha512-QNqXyfVS2wm9hweSYD2O7F0G06uurj9kZ96TRQE5Y9hU7+tgdZwIkbAKc5Ocy1HxEY2kuDQa6cQ1WRs/O5LFKA=="],
 
