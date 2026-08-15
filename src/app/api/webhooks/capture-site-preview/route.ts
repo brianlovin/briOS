@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import { errorResponse, safeCompare } from "@/lib/api-utils";
 import { optimizeSitePreview } from "@/lib/image-processing/optimize";
-import { notion } from "@/lib/notion";
+import { notion, purgeContentType } from "@/lib/notion";
 import { uploadBufferToR2 } from "@/lib/r2/storage";
 import { captureScreenshot } from "@/lib/screenshot";
 
@@ -111,6 +111,8 @@ export async function POST(request: Request) {
         },
       });
 
+      await purgeContentType("sites");
+
       return NextResponse.json(
         {
           success: true,
@@ -133,6 +135,8 @@ export async function POST(request: Request) {
           },
         },
       });
+
+      await purgeContentType("sites");
 
       throw captureError;
     }

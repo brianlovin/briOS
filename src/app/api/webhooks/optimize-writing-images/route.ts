@@ -1,9 +1,8 @@
-import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 import { errorResponse, safeCompare } from "@/lib/api-utils";
 import { optimizeWritingImage } from "@/lib/image-processing/optimize";
-import { invalidateNotionCache, notion } from "@/lib/notion";
+import { notion, purgeContentType } from "@/lib/notion";
 import { uploadBufferToR2 } from "@/lib/r2/storage";
 
 /**
@@ -334,12 +333,8 @@ export async function POST(request: Request) {
     const totalSavings =
       totalOriginalSize > 0 ? ((1 - totalOptimizedSize / totalOriginalSize) * 100).toFixed(1) : "0";
 
-    // Invalidate all cached writing content (covers pageId, slug, and shortId keys)
-    await invalidateNotionCache("notion:writing:content:*");
-    revalidateTag("notion:writing", "max");
-    revalidatePath("/writing");
-    revalidatePath("/api/writing");
-    revalidatePath("/writing/[slug]", "page");
+    // Same writing purge as /api/purge-cache (widens Redis from content:* to writing:*)
+    await purgeContentType("writing");
 
     const successCount = imageSuccessCount + videoSuccessCount;
     const errorCount = imageErrorCount + videoErrorCount;

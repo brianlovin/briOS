@@ -1,8 +1,7 @@
-import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 import { errorResponse, safeCompare } from "@/lib/api-utils";
-import { invalidateNotionCache } from "@/lib/notion";
+import { purgeContentType } from "@/lib/notion";
 import { updateWritingShortId } from "@/lib/notion/mutations";
 import { getWritingPostByShortId, getWritingPostContent } from "@/lib/notion/queries";
 import { generateShortId, isValidShortId } from "@/lib/short-id";
@@ -87,11 +86,7 @@ export async function POST(request: Request) {
     await updateWritingShortId(pageId, shortId);
 
     // Invalidate writing cache so the new short ID is picked up
-    await invalidateNotionCache("notion:writing:*");
-    revalidateTag("notion:writing", "max");
-    revalidatePath("/writing");
-    revalidatePath("/api/writing");
-    revalidatePath("/writing/[slug]", "page");
+    await purgeContentType("writing");
 
     console.log(`✅ Successfully generated Short ID: ${shortId} for "${content.metadata.title}"\n`);
 

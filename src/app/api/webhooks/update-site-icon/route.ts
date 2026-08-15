@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import { errorResponse, safeCompare } from "@/lib/api-utils";
 import { optimizeSiteIcon } from "@/lib/image-processing/optimize";
-import { notion } from "@/lib/notion";
+import { notion, purgeContentType } from "@/lib/notion";
 import { uploadBufferToR2 } from "@/lib/r2/storage";
 import { getBestFaviconUrl, isDataUrl, parseDataUrl } from "@/lib/utils/favicon";
 
@@ -110,6 +110,8 @@ export async function POST(request: Request) {
         external: { url: r2Url },
       },
     });
+
+    await purgeContentType("sites");
 
     return NextResponse.json(
       {

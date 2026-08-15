@@ -1,9 +1,8 @@
-import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 import { errorResponse, safeCompare } from "@/lib/api-utils";
 import { optimizeSiteIcon } from "@/lib/image-processing/optimize";
-import { invalidateNotionCache, notion } from "@/lib/notion";
+import { notion, purgeContentType } from "@/lib/notion";
 import { uploadBufferToR2 } from "@/lib/r2/storage";
 
 /**
@@ -90,10 +89,7 @@ export async function POST(request: Request) {
     });
 
     // Invalidate stack cache so the updated icon is picked up
-    await invalidateNotionCache("notion:stack:*");
-    revalidateTag("notion:stack", "max");
-    revalidatePath("/stack");
-    revalidatePath("/api/stacks");
+    await purgeContentType("stack");
 
     return NextResponse.json(
       {
