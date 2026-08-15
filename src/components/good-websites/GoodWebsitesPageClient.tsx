@@ -20,7 +20,7 @@ import { LoadingSpinner, PreviewCardProvider, PreviewCardTrigger } from "@/compo
 import { TableSortHeader } from "@/components/ui/TableSortHeader";
 import type { GoodWebsiteItem } from "@/lib/goodWebsites";
 import { useGoodWebsites } from "@/lib/hooks/useGoodWebsites";
-import type { LikeData } from "@/lib/hooks/useLikes";
+import type { LikeCount } from "@/lib/hooks/useLikes";
 
 import { Linked } from "../icons/Linked";
 import { XIcon } from "../icons/SocialIcons";
@@ -28,7 +28,7 @@ import { useTopBarActions } from "../TopBarActions";
 
 interface GoodWebsitesPageClientProps {
   initialData: GoodWebsiteItem[];
-  initialLikes?: Record<string, LikeData>;
+  initialLikes?: Record<string, LikeCount>;
 }
 
 // Hydration check using useSyncExternalStore to avoid layout flicker

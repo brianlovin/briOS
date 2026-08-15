@@ -23,9 +23,11 @@ function getLikesRedis(): Redis | null {
 
 // Key prefixes
 const TOTAL_PREFIX = "likes:total:";
-const USERS_PREFIX = "likes:users:";
 const USER_LIKES_PREFIX = "likes:user:";
 const RATE_LIMIT_PREFIX = "ratelimit:likes:";
+
+// Historical `likes:users:{pageId}` sets are abandoned (not scanned or deleted).
+// Viewer state is `likes:user:{userId}:{pageId}` (hash of IP + LIKES_HASH_SALT).
 
 // Constants
 const RATE_LIMIT_WINDOW = 60; // seconds
@@ -64,22 +66,6 @@ export async function getUserLikeCount(userId: string, pageId: string): Promise<
 }
 
 /**
- * Check if a user has liked a page
- */
-export async function hasUserLiked(userId: string, pageId: string): Promise<boolean> {
-  const client = getLikesRedis();
-  if (!client) return false;
-
-  try {
-    const isMember = await client.sismember(`${USERS_PREFIX}${pageId}`, userId);
-    return isMember === 1;
-  } catch (error) {
-    console.error("[Likes] Error checking user liked:", error);
-    return false;
-  }
-}
-
-/**
  * Add a like from a user to a page
  * Returns the new total count
  */
@@ -92,9 +78,6 @@ export async function addLike(userId: string, pageId: string): Promise<number> {
 
     // Increment total count
     pipeline.incr(`${TOTAL_PREFIX}${pageId}`);
-
-    // Add user to the set of users who liked this page
-    pipeline.sadd(`${USERS_PREFIX}${pageId}`, userId);
 
     // Increment user's like count for this page
     pipeline.incr(`${USER_LIKES_PREFIX}${userId}:${pageId}`);
@@ -140,11 +123,6 @@ export async function removeLike(
 
     const newCount = Math.max(0, (results[0] as number) ?? 0);
     const newUserLikes = Math.max(0, (results[1] as number) ?? 0);
-
-    // If user has no more likes, remove from the set
-    if (newUserLikes === 0) {
-      await client.srem(`${USERS_PREFIX}${pageId}`, userId);
-    }
 
     return { count: newCount, userLikes: newUserLikes };
   } catch (error) {
@@ -248,22 +226,19 @@ export async function getBatchLikeCounts(pageIds: string[]): Promise<Map<string,
 }
 
 /**
- * Batch get user like data for multiple pages
- * Returns a Map of pageId -> { count, userLikes, hasLiked, canLike }
+ * Batch get viewer like data for multiple pages (2N: totals + per-user counts).
+ * Returns a Map of pageId -> { count, userLikes }
  */
 export async function getBatchUserLikeData(
   userId: string,
   pageIds: string[],
-): Promise<Map<string, { count: number; userLikes: number; hasLiked: boolean; canLike: boolean }>> {
+): Promise<Map<string, LikeData>> {
   const client = getLikesRedis();
-  const result = new Map<
-    string,
-    { count: number; userLikes: number; hasLiked: boolean; canLike: boolean }
-  >();
+  const result = new Map<string, LikeData>();
 
   if (!client || pageIds.length === 0) {
     pageIds.forEach((id) => {
-      result.set(id, { count: 0, userLikes: 0, hasLiked: false, canLike: true });
+      result.set(id, { count: 0, userLikes: 0 });
     });
     return result;
   }
@@ -271,19 +246,12 @@ export async function getBatchUserLikeData(
   try {
     const pipeline = client.pipeline();
 
-    // Get total counts
     for (const pageId of pageIds) {
       pipeline.get(`${TOTAL_PREFIX}${pageId}`);
     }
 
-    // Get user like counts
     for (const pageId of pageIds) {
       pipeline.get(`${USER_LIKES_PREFIX}${userId}:${pageId}`);
-    }
-
-    // Check if user has liked each page
-    for (const pageId of pageIds) {
-      pipeline.sismember(`${USERS_PREFIX}${pageId}`, userId);
     }
 
     const results = await pipeline.exec();
@@ -292,21 +260,15 @@ export async function getBatchUserLikeData(
     pageIds.forEach((pageId, index) => {
       const count = (results[index] as number | null) ?? 0;
       const userLikes = (results[n + index] as number | null) ?? 0;
-      const hasLiked = results[2 * n + index] === 1;
 
-      result.set(pageId, {
-        count,
-        userLikes,
-        hasLiked,
-        canLike: userLikes < MAX_LIKES_PER_USER,
-      });
+      result.set(pageId, { count, userLikes });
     });
 
     return result;
   } catch (error) {
     console.error("[Likes] Error getting batch user like data:", error);
     pageIds.forEach((id) => {
-      result.set(id, { count: 0, userLikes: 0, hasLiked: false, canLike: true });
+      result.set(id, { count: 0, userLikes: 0 });
     });
     return result;
   }

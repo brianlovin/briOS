@@ -36,16 +36,7 @@ export async function GET(request: Request) {
 
     const likeData = await getBatchUserLikeData(userId, pageIds);
 
-    // Convert Map to object for JSON serialization
-    const result: Record<
-      string,
-      { count: number; userLikes: number; hasLiked: boolean; canLike: boolean }
-    > = {};
-    likeData.forEach((data, pageId) => {
-      result[pageId] = data;
-    });
-
-    return NextResponse.json(result);
+    return NextResponse.json(Object.fromEntries(likeData));
   } catch (error) {
     if (error instanceof z.ZodError) {
       return errorResponse("Invalid request parameters", 400);

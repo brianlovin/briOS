@@ -8,7 +8,6 @@ import {
   getLikeCount,
   getMaxLikesPerUser,
   getUserLikeCount,
-  hasUserLiked,
   removeLike,
 } from "@/lib/likes-redis";
 import { getClientIp, hashUserIp } from "@/lib/user-hash";
@@ -25,19 +24,11 @@ export async function GET(request: Request, props: { params: Promise<{ id: strin
     const ip = getClientIp(request);
     const userId = hashUserIp(ip);
 
-    const [count, userLikes, hasLiked] = await Promise.all([
-      getLikeCount(id),
-      getUserLikeCount(userId, id),
-      hasUserLiked(userId, id),
-    ]);
-
-    const maxLikes = getMaxLikesPerUser();
+    const [count, userLikes] = await Promise.all([getLikeCount(id), getUserLikeCount(userId, id)]);
 
     return NextResponse.json({
       count,
       userLikes,
-      hasLiked,
-      canLike: userLikes < maxLikes,
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -75,8 +66,6 @@ export async function POST(request: Request, props: { params: Promise<{ id: stri
     return NextResponse.json({
       count: newCount,
       userLikes: userLikes + 1,
-      hasLiked: true,
-      canLike: userLikes + 1 < maxLikes,
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -109,13 +98,10 @@ export async function DELETE(request: Request, props: { params: Promise<{ id: st
 
     // Remove the like
     const { count: newCount, userLikes: newUserLikes } = await removeLike(userId, id);
-    const maxLikes = getMaxLikesPerUser();
 
     return NextResponse.json({
       count: newCount,
       userLikes: newUserLikes,
-      hasLiked: newUserLikes > 0,
-      canLike: newUserLikes < maxLikes,
     });
   } catch (error) {
     if (error instanceof z.ZodError) {

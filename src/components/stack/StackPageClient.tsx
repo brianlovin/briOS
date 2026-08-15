@@ -17,7 +17,7 @@ import { StackFilters } from "@/components/stack/StackFilters";
 import { LoadingSpinner, PreviewCardProvider, PreviewCardTrigger } from "@/components/ui";
 import { PlatformBadge } from "@/components/ui/PlatformBadge";
 import { TableSortHeader } from "@/components/ui/TableSortHeader";
-import type { LikeData } from "@/lib/hooks/useLikes";
+import type { LikeCount } from "@/lib/hooks/useLikes";
 import { useStacks } from "@/lib/hooks/useStacks";
 import type { StackItem as StackItemType } from "@/lib/stack";
 
@@ -25,7 +25,7 @@ import { useTopBarActions } from "../TopBarActions";
 
 interface StackPageClientProps {
   initialData: StackItemType[];
-  initialLikes?: Record<string, LikeData>;
+  initialLikes?: Record<string, LikeCount>;
 }
 
 const subscribe = () => () => {};

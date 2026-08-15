@@ -27,7 +27,7 @@ export function GoodWebsiteGalleryItem({ item }: GoodWebsiteGalleryItemProps) {
     isCached ? "loaded" : "loading",
   );
   const [isHovered, setIsHovered] = useState(false);
-  const { hasLiked } = useLikes(item.id);
+  const { userLikes } = useLikes(item.id);
 
   // Preload image using Image API to avoid broken image flicker
   useEffect(() => {
@@ -107,7 +107,7 @@ export function GoodWebsiteGalleryItem({ item }: GoodWebsiteGalleryItemProps) {
           </div>
           {/* Desktop: permanently visible if liked, otherwise animated on hover */}
           <div className="hidden sm:block">
-            {hasLiked ? (
+            {userLikes > 0 ? (
               <LikeButton pageId={item.id} variant="ghost-light" />
             ) : (
               <AnimatePresence>
