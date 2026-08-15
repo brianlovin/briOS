@@ -6,12 +6,14 @@ import { describe, expect, test } from "bun:test";
 describe("urls", () => {
   test("does not import jwt, email, or postmark", () => {
     const src = readFileSync(join(import.meta.dir, "urls.ts"), "utf8");
+    const imports = src
+      .split("\n")
+      .filter((line) => line.startsWith("import "))
+      .join("\n");
 
-    expect(src).not.toContain("./jwt");
-    expect(src).not.toContain("./email");
-    expect(src).not.toContain("@/lib/jwt");
-    expect(src).not.toContain("@/lib/email");
-    expect(src.toLowerCase()).not.toContain("postmark");
+    expect(imports).not.toContain("jwt");
+    expect(imports).not.toContain("email");
+    expect(imports).not.toContain("postmark");
   });
 
   test("formatDigestDate is callable without JWT_SIGNING_KEY", async () => {

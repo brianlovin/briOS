@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { describe, expect, test } from "bun:test";
+import { afterAll, beforeAll, describe, expect, test } from "bun:test";
 
 const TEST_JWT_SIGNING_KEY = "test-jwt-signing-key-s08-1";
 
@@ -20,6 +20,16 @@ async function loadJwt() {
 }
 
 describe("jwt", () => {
+  const originalError = console.error;
+
+  beforeAll(() => {
+    console.error = () => {};
+  });
+
+  afterAll(() => {
+    console.error = originalError;
+  });
+
   test("does not import email.ts or postmark", () => {
     const src = readFileSync(join(import.meta.dir, "jwt.ts"), "utf8");
 

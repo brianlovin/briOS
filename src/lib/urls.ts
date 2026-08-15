@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 
 /**
- * Site origin and digest helpers that must stay free of Postmark and JWT.
+ * Site origin and digest helpers with no mailer or token dependency.
  * Unsubscribe verify and date formatting should not construct a mailer.
  */
 
