@@ -4,29 +4,35 @@ import { createContext, useContext } from "react";
 import useSWR, { mutate } from "swr";
 
 import { fetcher } from "@/lib/fetcher";
-import { type LikeData, MAX_LIKES_PER_USER } from "@/lib/likes-constants";
+import {
+  type LikeCount,
+  type LikeData,
+  MAX_LIKES_PER_USER,
+  resolveLikeState,
+} from "@/lib/likes-constants";
 
-export type { LikeData };
+export type { LikeCount, LikeData };
 
-// Context to provide initial likes data from server
 type BatchLikesContextType = {
-  initialData: Record<string, LikeData>;
+  counts: Record<string, LikeCount>;
+  /** null until the viewer batch returns. */
+  viewer: Record<string, LikeData> | null;
 };
 
 export const BatchLikesContext = createContext<BatchLikesContextType | null>(null);
 
 /**
- * Hook for individual like button
- * Uses initial data from context as fallback, then SWR for updates
+ * Hook for individual like button.
+ * SSR counts are display-only. Viewer state comes from the batch overlay
+ * (or an individual GET when there is no batch provider).
  */
 export function useLikes(pageId: string) {
   const batchContext = useContext(BatchLikesContext);
-  const initialData = batchContext?.initialData?.[pageId];
+  const inBatch = batchContext !== null;
 
-  const { data, error, isLoading } = useSWR<LikeData>(
+  const { data, error } = useSWR<LikeData>(
     pageId ? `/api/likes/${pageId}` : null,
-    // Don't fetch individually if batch context provides data
-    initialData ? null : fetcher,
+    inBatch ? null : fetcher,
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
@@ -34,16 +40,18 @@ export function useLikes(pageId: string) {
     },
   );
 
-  const addLike = async () => {
-    const currentData = data ?? initialData;
-    if (!currentData?.canLike) return;
+  const { count, userLikes, viewerKnown } = resolveLikeState(
+    batchContext?.counts?.[pageId],
+    batchContext?.viewer?.[pageId],
+    data,
+  );
 
-    // Optimistic update
+  const addLike = async () => {
+    if (!viewerKnown || userLikes >= MAX_LIKES_PER_USER) return;
+
     const optimisticData: LikeData = {
-      count: (currentData?.count ?? 0) + 1,
-      userLikes: (currentData?.userLikes ?? 0) + 1,
-      hasLiked: true,
-      canLike: (currentData?.userLikes ?? 0) + 1 < MAX_LIKES_PER_USER,
+      count: count + 1,
+      userLikes: userLikes + 1,
     };
 
     await mutate(
@@ -64,17 +72,11 @@ export function useLikes(pageId: string) {
   };
 
   const removeLike = async () => {
-    const currentData = data ?? initialData;
-    const currentUserLikes = currentData?.userLikes ?? 0;
-    if (currentUserLikes <= 0) return;
+    if (!viewerKnown || userLikes <= 0) return;
 
-    // Optimistic update
-    const newUserLikes = currentUserLikes - 1;
     const optimisticData: LikeData = {
-      count: Math.max(0, (currentData?.count ?? 0) - 1),
-      userLikes: newUserLikes,
-      hasLiked: newUserLikes > 0,
-      canLike: true,
+      count: Math.max(0, count - 1),
+      userLikes: userLikes - 1,
     };
 
     await mutate(
@@ -94,14 +96,10 @@ export function useLikes(pageId: string) {
     );
   };
 
-  const likeData = data ?? initialData;
-
   return {
-    count: likeData?.count ?? 0,
-    userLikes: likeData?.userLikes ?? 0,
-    hasLiked: likeData?.hasLiked ?? false,
-    canLike: likeData?.canLike ?? false,
-    isLoading: isLoading && !initialData,
+    count,
+    userLikes,
+    isLoading: !viewerKnown,
     isError: error,
     addLike,
     removeLike,

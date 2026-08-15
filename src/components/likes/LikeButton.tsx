@@ -84,7 +84,7 @@ function generateParticles(intensity: number) {
 }
 
 export function LikeButton({ pageId, className, variant = "default" }: LikeButtonProps) {
-  const { count, userLikes, canLike, isLoading, addLike, removeLike } = useLikes(pageId);
+  const { count, userLikes, isLoading, addLike, removeLike } = useLikes(pageId);
   const [isShaking, setIsShaking] = useState(false);
   const [particles, setParticles] = useState<ReturnType<typeof generateParticles>>([]);
   const [particleKey, setParticleKey] = useState(0);
@@ -100,7 +100,7 @@ export function LikeButton({ pageId, className, variant = "default" }: LikeButto
   const handleClick = async () => {
     if (isLoading) return;
 
-    if (!canLike) {
+    if (userLikes >= MAX_LIKES_PER_USER) {
       // At max likes - shake it!
       setIsShaking(true);
       heartScale.set(1.2);
@@ -201,7 +201,11 @@ export function LikeButton({ pageId, className, variant = "default" }: LikeButto
           ],
           className,
         )}
-        aria-label={`Like this. Current likes: ${count}. You've liked ${userLikes} times.`}
+        aria-label={
+          isLoading
+            ? `Like this. Current likes: ${count}.`
+            : `Like this. Current likes: ${count}. You've liked ${userLikes} times.`
+        }
         style={isFilled ? { color: heartColor } : undefined}
       >
         <div className="relative">

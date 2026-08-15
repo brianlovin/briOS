@@ -9,14 +9,14 @@ import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { LikeButton } from "@/components/likes/LikeButton";
 import { renderBlocks } from "@/components/renderBlocks";
 import { fetcher } from "@/lib/fetcher";
-import type { LikeData } from "@/lib/hooks/useLikes";
+import type { LikeCount } from "@/lib/hooks/useLikes";
 import type { NotionTilItem, NotionTilItemWithContent } from "@/lib/notion";
 import { buildSlug } from "@/lib/short-id";
 import { useTilEntries } from "@/lib/til";
 
 interface TilFeedProps {
   initialEntries: NotionTilItemWithContent[];
-  initialLikes?: Record<string, LikeData>;
+  initialLikes?: Record<string, LikeCount>;
 }
 
 function formatDate(dateString: string) {

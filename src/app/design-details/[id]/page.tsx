@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { LikeButton } from "@/components/likes/LikeButton";
 import { renderBlocks } from "@/components/renderBlocks";
-import { getServerLikes, type LikeData } from "@/lib/likes-server";
+import { getServerLikes, type LikeCount } from "@/lib/likes-server";
 import { getFullContent } from "@/lib/notion";
 
 export default function EpisodePage(props: { params: Promise<{ id: string }> }) {
@@ -32,13 +32,13 @@ async function EpisodeContent(props: { params: Promise<{ id: string }> }) {
   // Likes are non-essential — if the fetch fails, render zero counts instead
   // of crashing the whole page. The client-side BatchLikesProvider will
   // refresh the real count after hydration.
-  let initialLikes: Record<string, LikeData>;
+  let initialLikes: Record<string, LikeCount>;
   try {
     initialLikes = await getServerLikes([metadata.id]);
   } catch (err) {
     console.error(`[design-details] getServerLikes failed for ${metadata.id}:`, err);
     initialLikes = {
-      [metadata.id]: { count: 0, userLikes: 0, hasLiked: false, canLike: true },
+      [metadata.id]: { count: 0 },
     };
   }
 

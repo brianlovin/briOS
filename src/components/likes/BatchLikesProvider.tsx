@@ -2,18 +2,18 @@
 
 import { ReactNode, useEffect, useMemo, useState } from "react";
 
-import { BatchLikesContext, type LikeData } from "@/lib/hooks/useLikes";
+import { BatchLikesContext, type LikeCount, type LikeData } from "@/lib/hooks/useLikes";
 
 interface BatchLikesProviderProps {
   pageIds: string[];
-  initialData?: Record<string, LikeData>;
+  initialData?: Record<string, LikeCount>;
   children: ReactNode;
 }
 
 export function BatchLikesProvider({ pageIds, initialData, children }: BatchLikesProviderProps) {
-  const [fetchedData, setFetchedData] = useState<Record<string, LikeData>>({});
+  const [viewer, setViewer] = useState<Record<string, LikeData> | null>(null);
 
-  // Always fetch user-specific data client-side (SSR only provides counts)
+  // Always fetch viewer overlay client-side (SSR only provides counts)
   useEffect(() => {
     if (pageIds.length === 0) return;
 
@@ -26,7 +26,7 @@ export function BatchLikesProvider({ pageIds, initialData, children }: BatchLike
         });
         if (res.ok) {
           const data: Record<string, LikeData> = await res.json();
-          setFetchedData(data);
+          setViewer(data);
         }
       } catch (error) {
         if (error instanceof Error && error.name === "AbortError") return;
@@ -39,12 +39,12 @@ export function BatchLikesProvider({ pageIds, initialData, children }: BatchLike
     return () => controller.abort();
   }, [pageIds]);
 
-  // Use fetched data (has user-specific info) if available, fall back to SSR counts
   const contextValue = useMemo(
     () => ({
-      initialData: Object.keys(fetchedData).length > 0 ? fetchedData : (initialData ?? {}),
+      counts: initialData ?? {},
+      viewer,
     }),
-    [initialData, fetchedData],
+    [initialData, viewer],
   );
 
   return <BatchLikesContext.Provider value={contextValue}>{children}</BatchLikesContext.Provider>;
