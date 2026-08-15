@@ -14,6 +14,7 @@ export type {
   Heading2Block,
   Heading3Block,
   ImageBlock,
+  ListItemBlock,
   NotionAmaItem,
   NotionAmaItemWithContent,
   NotionAppDissectionItem,
@@ -47,11 +48,14 @@ export type {
 export { PREVIEW_STATUSES } from "./types";
 
 // Type guards and utilities
+export type { ListRun } from "./list-runs";
+export { groupListRuns } from "./list-runs";
 export {
   extractPlainText,
   hasProperties,
   isBlockObjectResponse,
   isFullPage,
+  isListItemBlock,
   isTableRowBlock,
   richTextPlainText,
 } from "./types";

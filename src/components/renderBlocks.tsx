@@ -2,6 +2,8 @@ import { ReactNode } from "react";
 
 import { CodeBlock } from "@/components/CodeBlock";
 import {
+  groupListRuns,
+  type ListRun,
   type ProcessedBlock,
   type RichTextContent,
   type RichTextItemResponse,
@@ -93,15 +95,28 @@ function renderRichText(richText: RichTextContent[]) {
   });
 }
 
-function renderChildList(children: ProcessedBlock[]): ReactNode {
-  const hasBulleted = children.some((c) => c.type === "bulleted_list_item");
-  const hasNumbered = children.some((c) => c.type === "numbered_list_item");
-  const Tag = hasNumbered && !hasBulleted ? "ol" : "ul";
-  const listClass = Tag === "ol" ? "space-y-2 mt-2" : "list-disc space-y-2 mt-2";
+function listClassName(type: "bulleted_list_item" | "numbered_list_item", nested: boolean): string {
+  if (type === "numbered_list_item") {
+    return nested ? "space-y-2 mt-2" : "space-y-2";
+  }
+  return nested ? "list-disc space-y-2 mt-2" : "list-disc space-y-2";
+}
 
+function renderListRun(run: ListRun, isPreview: boolean, nested: boolean): ReactNode {
+  if (run.kind === "block") {
+    return renderSingleBlock(run.block, isPreview);
+  }
+
+  const Tag = run.type === "numbered_list_item" ? "ol" : "ul";
   return (
-    <Tag className={listClass}>{children.map((child) => renderSingleBlock(child, false))}</Tag>
+    <Tag key={`${Tag}-${run.items[0].id}`} className={listClassName(run.type, nested)}>
+      {run.items.map((item) => renderSingleBlock(item, isPreview))}
+    </Tag>
   );
+}
+
+function renderChildList(children: ProcessedBlock[]): ReactNode {
+  return groupListRuns(children).map((run) => renderListRun(run, false, true));
 }
 
 function renderSingleBlock(block: ProcessedBlock, isPreview: boolean): ReactNode {
@@ -259,52 +274,9 @@ function renderSingleBlock(block: ProcessedBlock, isPreview: boolean): ReactNode
 }
 
 export function renderBlocks(blocks: ProcessedBlock[], isPreview: boolean = false): ReactNode[] {
-  const result: ReactNode[] = [];
-  let i = 0;
-
-  while (i < blocks.length) {
-    const block = blocks[i];
-
-    // Group consecutive bulleted list items
-    if (block.type === "bulleted_list_item" && !isPreview) {
-      const listItems: ReactNode[] = [];
-      const startIndex = i;
-
-      while (i < blocks.length && blocks[i].type === "bulleted_list_item") {
-        listItems.push(renderSingleBlock(blocks[i], isPreview));
-        i++;
-      }
-
-      result.push(
-        <ul key={`ul-${blocks[startIndex].id}`} className="list-disc space-y-2">
-          {listItems}
-        </ul>,
-      );
-      continue;
-    }
-
-    // Group consecutive numbered list items
-    if (block.type === "numbered_list_item" && !isPreview) {
-      const listItems: ReactNode[] = [];
-      const startIndex = i;
-
-      while (i < blocks.length && blocks[i].type === "numbered_list_item") {
-        listItems.push(renderSingleBlock(blocks[i], isPreview));
-        i++;
-      }
-
-      result.push(
-        <ol key={`ol-${blocks[startIndex].id}`} className="space-y-2">
-          {listItems}
-        </ol>,
-      );
-      continue;
-    }
-
-    // Render non-list blocks normally
-    result.push(renderSingleBlock(block, isPreview));
-    i++;
+  if (isPreview) {
+    return blocks.map((block) => renderSingleBlock(block, true));
   }
 
-  return result;
+  return groupListRuns(blocks).map((run) => renderListRun(run, false, false));
 }

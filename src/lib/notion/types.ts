@@ -73,6 +73,8 @@ export type NumberedListItemBlock = RichTextBlock<"numbered_list_item"> & {
   children?: ProcessedBlock[];
 };
 
+export type ListItemBlock = BulletedListItemBlock | NumberedListItemBlock;
+
 export type TodoBlock = RichTextBlock<"to_do"> & {
   checked: boolean;
 };
@@ -132,6 +134,10 @@ export type ProcessedBlock =
 
 export function isTableRowBlock(block: ProcessedBlock): block is TableRowBlock {
   return block.type === "table_row";
+}
+
+export function isListItemBlock(block: ProcessedBlock): block is ListItemBlock {
+  return block.type === "bulleted_list_item" || block.type === "numbered_list_item";
 }
 
 export function richTextPlainText(content: RichTextContent[]): string {

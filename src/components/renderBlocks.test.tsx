@@ -50,4 +50,43 @@ describe("renderBlocks", () => {
     expect(markup).toContain("<video");
     expect(markup).toContain('src="https://cdn.example/clip.mp4"');
   });
+
+  test("keeps nested mixed list runs as separate ul then ol", () => {
+    const markup = html([
+      {
+        id: "parent",
+        type: "bulleted_list_item",
+        content: [text("Parent")],
+        children: [
+          { id: "b1", type: "bulleted_list_item", content: [text("Nested bullet")] },
+          { id: "n1", type: "numbered_list_item", content: [text("Nested number")] },
+        ],
+      },
+    ]);
+
+    expect(markup).toContain("Nested bullet");
+    expect(markup).toContain("Nested number");
+    expect(markup).toMatch(/Nested bullet[\s\S]*?<\/ul><ol[\s\S]*?Nested number/);
+    expect((markup.match(/<ul/g) ?? []).length).toBe(2);
+    expect((markup.match(/<ol/g) ?? []).length).toBe(1);
+  });
+
+  test("preview mode skips list-run grouping", () => {
+    const markup = renderToStaticMarkup(
+      <div>
+        {renderBlocks(
+          [
+            { id: "b1", type: "bulleted_list_item", content: [text("A")] },
+            { id: "b2", type: "bulleted_list_item", content: [text("B")] },
+          ],
+          true,
+        )}
+      </div>,
+    );
+
+    expect(markup).not.toContain("<ul");
+    expect(markup).not.toContain("<ol");
+    expect(markup).toContain("A");
+    expect(markup).toContain("B");
+  });
 });
