@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 
 import { errorResponse, safeCompare } from "@/lib/api-utils";
 import { optimizeSitePreview } from "@/lib/image-processing/optimize";
-import { notion, purgeContentType } from "@/lib/notion";
+import { notion } from "@/lib/notion";
+import { purgeContentType } from "@/lib/notion/purge";
 import { uploadBufferToR2 } from "@/lib/r2/storage";
 import { captureScreenshot } from "@/lib/screenshot";
 

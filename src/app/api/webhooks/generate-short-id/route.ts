@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 
 import { errorResponse, safeCompare } from "@/lib/api-utils";
-import { purgeContentType } from "@/lib/notion";
 import { updateWritingShortId } from "@/lib/notion/mutations";
+import { purgeContentType } from "@/lib/notion/purge";
 import { getWritingPostByShortId, getWritingPostContent } from "@/lib/notion/queries";
 import { generateShortId, isValidShortId } from "@/lib/short-id";
 

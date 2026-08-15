@@ -71,13 +71,6 @@ export {
 
 // Cache
 export { invalidateNotionCache } from "./cache";
-export type { PurgeableContentType, PurgeCacheType } from "./purge";
-export {
-  PURGE_CACHE_TYPES,
-  PURGE_CONFIG,
-  PURGEABLE_CONTENT_TYPES,
-  purgeContentType,
-} from "./purge";
 
 // Mutations
 export {

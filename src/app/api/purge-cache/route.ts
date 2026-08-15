@@ -7,7 +7,7 @@ import {
   type PurgeableContentType,
   type PurgeCacheType,
   purgeContentType,
-} from "@/lib/notion";
+} from "@/lib/notion/purge";
 
 async function purgeCache(request: Request): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);

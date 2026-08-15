@@ -134,4 +134,9 @@ describe("webhook callers", () => {
     expect(source.includes("purgeContentType(")).toBe(true);
     expect(source.includes("PURGE_CONFIG")).toBe(false);
   });
+
+  test("does not re-export purge from the notion barrel (client-imported)", () => {
+    const source = readFileSync(join(import.meta.dir, "index.ts"), "utf8");
+    expect(source.includes("purge")).toBe(false);
+  });
 });
