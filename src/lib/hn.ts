@@ -66,21 +66,26 @@ function trimComments(comment: HackerNewsComment): HackerNewsComment | null {
   };
 }
 
-// Helper to process raw post data into final format
-function processPost(data: HackerNewsPost, includeComments: boolean): HackerNewsPost {
-  const shortComments = data.comments
-    .slice(0, 12)
-    .map(trimComments)
-    .filter(Boolean) as HackerNewsComment[];
-
+// Project raw post data. Comments are omitted unless includeComments is set so
+// `[]` only means "detail fetch, empty thread" — never "list row, stripped".
+export function processPost(data: HackerNewsPost, includeComments: boolean): HackerNewsPost {
   const cleanUrl = data.domain ? `${data.url}` : `${BASE_URL}/hn/${data.id}`;
-
-  return {
+  const projected: HackerNewsPost = {
     ...data,
     content: data.content ? sanitizeExternalHtml(data.content) : data.content,
     url: cleanUrl,
-    comments: includeComments ? shortComments : [],
   };
+
+  if (includeComments) {
+    projected.comments = (data.comments ?? [])
+      .slice(0, 12)
+      .map(trimComments)
+      .filter(Boolean) as HackerNewsComment[];
+  } else {
+    delete projected.comments;
+  }
+
+  return projected;
 }
 
 // Fetch post from external API (no caching)
@@ -175,17 +180,6 @@ export const getPostById = cache(
   async (id: string, includeComments = false): Promise<HackerNewsPost | null> => {
     return fetchPostById(id, includeComments);
   },
-);
-
-export const getHNPosts = unstable_cache(
-  async (): Promise<(HackerNewsPost | null)[]> => {
-    const topPostIds = await fetchPostIds();
-    const ids = topPostIds.slice(0, 24).map((id) => id.toString());
-    const posts = await getBatchPosts(ids, false);
-    return posts.filter(Boolean);
-  },
-  ["hn:list"],
-  { revalidate: HN_REVALIDATE, tags: ["hn:list"] },
 );
 
 export const getRankedHNPosts = unstable_cache(

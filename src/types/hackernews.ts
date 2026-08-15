@@ -29,6 +29,7 @@ export interface HackerNewsPost {
   content: string | null;
   url: string;
   domain: string | null;
-  comments: HackerNewsComment[];
+  /** `undefined` = not fetched (list projection); `[]` = detail fetch, empty thread. */
+  comments?: HackerNewsComment[];
   comments_count: number;
 }

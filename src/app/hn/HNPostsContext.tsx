@@ -5,7 +5,7 @@ import React, { createContext, useContext } from "react";
 import { HackerNewsPost } from "@/types/hackernews";
 
 interface HNPostsContextType {
-  posts: (HackerNewsPost | null)[] | undefined;
+  posts: HackerNewsPost[] | undefined;
   isLoading: boolean;
   isError: any;
 }
@@ -23,7 +23,7 @@ export function HNPostsProvider({
   isError,
 }: {
   children: React.ReactNode;
-  posts: (HackerNewsPost | null)[] | undefined;
+  posts: HackerNewsPost[] | undefined;
   isLoading: boolean;
   isError: any;
 }) {
