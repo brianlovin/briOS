@@ -1,20 +1,12 @@
-import { getGoodWebsitesDatabaseItems, getGoodWebsitesDatabaseItemsForRss } from "@/lib/notion";
+import {
+  getGoodWebsitesDatabaseItems,
+  getGoodWebsitesDatabaseItemsForRss,
+  type GoodWebsiteItem as NotionGoodWebsiteItem,
+  type GoodWebsiteItemWithDate as NotionGoodWebsiteItemWithDate,
+} from "@/lib/notion";
 
-export type GoodWebsiteItem = {
-  id: string;
-  name: string;
-  url?: string;
-  x?: string;
-  icon?: string;
-  tags?: string[];
-  previewImage?: string;
-  previewImageDark?: string;
-  previewStatus?: "Queued" | "Processing" | "Done" | "Error";
-};
-
-export type GoodWebsiteItemWithDate = GoodWebsiteItem & {
-  createdTime: string;
-};
+export type GoodWebsiteItem = NotionGoodWebsiteItem;
+export type GoodWebsiteItemWithDate = NotionGoodWebsiteItemWithDate;
 
 // Seeded random number generator for consistent randomization within time windows
 function seededRandom(seed: number): () => number {
@@ -44,7 +36,7 @@ export function getGoodWebsitesSeed(now: number = Date.now()): number {
 
 export async function getGoodWebsites(seed: number): Promise<GoodWebsiteItem[]> {
   const items = await getGoodWebsitesDatabaseItems();
-  return shuffleWithSeed(items as GoodWebsiteItem[], seed);
+  return shuffleWithSeed(items, seed);
 }
 
 export async function getGoodWebsitesForRss(): Promise<GoodWebsiteItemWithDate[]> {

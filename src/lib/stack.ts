@@ -1,24 +1,9 @@
-import { getStackDatabaseItems } from "@/lib/notion";
+import { getStackDatabaseItems, type NotionStackItem } from "@/lib/notion";
 
-export type StackItem = {
-  id: string;
-  slug: string;
-  name: string;
-  description?: string;
-  image?: string;
-  icon?: string;
-  url?: string;
-  platforms?: string[];
-  status?: string;
-  createdTime: string;
-  previewImage?: string;
-  previewImageDark?: string;
-  previewStatus?: "Queued" | "Processing" | "Done" | "Error";
-};
+export type StackItem = NotionStackItem;
 
 export async function getStacks(): Promise<StackItem[]> {
-  const items = await getStackDatabaseItems();
-  return items as StackItem[];
+  return getStackDatabaseItems();
 }
 
 export async function getStackBySlug(slug: string): Promise<StackItem | undefined> {

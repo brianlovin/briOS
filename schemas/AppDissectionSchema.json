@@ -1,0 +1,61 @@
+{
+  "props": {
+    "Slug": {
+      "id": "HGK%60",
+      "name": "Slug",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
+    "Status": {
+      "id": "XxgG",
+      "name": "Status",
+      "description": null,
+      "type": "select",
+      "select": {
+        "options": [
+          {
+            "id": "1c9ce588-8356-4e8d-a713-18eaa1fbc7fb",
+            "name": "Draft",
+            "color": "gray",
+            "description": null
+          },
+          {
+            "id": "89be07f8-8ecf-43cc-aea6-96d1d7135d4b",
+            "name": "Published",
+            "color": "green",
+            "description": null
+          }
+        ]
+      }
+    },
+    "Published": {
+      "id": "oDL%3B",
+      "name": "Published",
+      "description": null,
+      "type": "date",
+      "date": {}
+    },
+    "Tint": {
+      "id": "sigS",
+      "name": "Tint",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
+    "Icon": {
+      "id": "~%5CXH",
+      "name": "Icon",
+      "description": null,
+      "type": "url",
+      "url": {}
+    },
+    "Name": {
+      "id": "title",
+      "name": "Name",
+      "description": null,
+      "type": "title",
+      "title": {}
+    }
+  }
+}

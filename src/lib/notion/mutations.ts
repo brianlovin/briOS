@@ -1,4 +1,5 @@
 import { notion } from "./client";
+import { writeMultiSelect, writeRichText, writeSelect, writeTitle, writeUrl } from "./properties";
 
 // ===== Stack Mutations =====
 
@@ -16,45 +17,31 @@ export async function createStackItem(data: {
 
     // Build properties object based on the schema
     const properties: Record<string, unknown> = {
-      Name: {
-        title: [{ text: { content: data.name } }],
-      },
+      Name: writeTitle(data.name),
     };
 
     if (data.slug) {
-      properties.Slug = {
-        rich_text: [{ text: { content: data.slug } }],
-      };
+      properties.Slug = writeRichText(data.slug);
     }
 
     if (data.description) {
-      properties.Description = {
-        rich_text: [{ text: { content: data.description } }],
-      };
+      properties.Description = writeRichText(data.description);
     }
 
     if (data.image) {
-      properties.Image = {
-        url: data.image,
-      };
+      properties.Image = writeUrl(data.image);
     }
 
     if (data.url) {
-      properties.URL = {
-        url: data.url,
-      };
+      properties.URL = writeUrl(data.url);
     }
 
     if (data.platforms && data.platforms.length > 0) {
-      properties.Platforms = {
-        multi_select: data.platforms.map((platform) => ({ name: platform })),
-      };
+      properties.Platforms = writeMultiSelect(data.platforms);
     }
 
     if (data.status) {
-      properties.Status = {
-        select: { name: data.status },
-      };
+      properties.Status = writeSelect(data.status);
     }
 
     // Build the page creation object
@@ -97,59 +84,31 @@ export async function updateStackItem(
     const properties: Record<string, unknown> = {};
 
     if (data.name) {
-      properties.Name = {
-        title: [{ text: { content: data.name } }],
-      };
+      properties.Name = writeTitle(data.name);
     }
 
     if (data.slug) {
-      properties.Slug = {
-        rich_text: [{ text: { content: data.slug } }],
-      };
+      properties.Slug = writeRichText(data.slug);
     }
 
     if (data.description !== undefined) {
-      properties.Description = {
-        rich_text: data.description ? [{ text: { content: data.description } }] : [],
-      };
+      properties.Description = writeRichText(data.description);
     }
 
     if (data.image !== undefined) {
-      if (data.image) {
-        properties.Image = {
-          url: data.image,
-        };
-      } else {
-        properties.Image = null;
-      }
+      properties.Image = data.image ? writeUrl(data.image) : null;
     }
 
     if (data.url !== undefined) {
-      if (data.url) {
-        properties.URL = {
-          url: data.url,
-        };
-      } else {
-        properties.URL = null;
-      }
+      properties.URL = data.url ? writeUrl(data.url) : null;
     }
 
     if (data.platforms !== undefined) {
-      if (data.platforms.length > 0) {
-        properties.Platforms = {
-          multi_select: data.platforms.map((platform) => ({ name: platform })),
-        };
-      } else {
-        properties.Platforms = {
-          multi_select: [],
-        };
-      }
+      properties.Platforms = writeMultiSelect(data.platforms);
     }
 
     if (data.status) {
-      properties.Status = {
-        select: { name: data.status },
-      };
+      properties.Status = writeSelect(data.status);
     }
 
     // Set page icon if image is provided
@@ -181,14 +140,12 @@ export async function updateStackItem(
 export async function createAmaQuestion(title: string, description?: string) {
   const databaseId = process.env.NOTION_AMA_DATABASE_ID || "";
   const properties: Record<string, unknown> = {
-    Name: { title: [{ text: { content: title } }] },
-    Status: { select: { name: "Unanswered" } },
+    Name: writeTitle(title),
+    Status: writeSelect("Unanswered"),
   };
 
   if (description) {
-    properties.Description = {
-      rich_text: [{ text: { content: description } }],
-    };
+    properties.Description = writeRichText(description);
   }
 
   return notion.pages.create({
@@ -204,9 +161,7 @@ export async function updateWritingShortId(pageId: string, shortId: string) {
     const response = await notion.pages.update({
       page_id: pageId,
       properties: {
-        "Short ID": {
-          rich_text: [{ text: { content: shortId } }],
-        },
+        "Short ID": writeRichText(shortId),
       } as any,
     });
 

@@ -1,17 +1,10 @@
 "use client";
 
+import type { DesignDetailsEpisode } from "@/lib/design-details";
+
 import { InfiniteScrollPage, useInfiniteScroll } from "./useInfiniteScroll";
 
-export type DesignDetailsEpisode = {
-  id: string;
-  title: string;
-  slug: string;
-  description?: string;
-  episodeNumber?: number;
-  publishedDate?: string;
-  imageUrl?: string;
-  audioUrl?: string;
-};
+export type { DesignDetailsEpisode };
 
 export type DesignDetailsEpisodePage = InfiniteScrollPage<DesignDetailsEpisode>;
 

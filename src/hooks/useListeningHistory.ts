@@ -3,18 +3,11 @@
 import useSWR from "swr";
 
 import { fetcher } from "@/lib/fetcher";
+import type { MusicItem } from "@/lib/listening-history";
 
 import { InfiniteScrollPage, useInfiniteScroll } from "./useInfiniteScroll";
 
-export type MusicItem = {
-  id: string;
-  name: string;
-  artist: string;
-  album: string;
-  url?: string;
-  playedAt: string;
-  image?: string;
-};
+export type { MusicItem };
 
 export type ListeningHistoryPage = InfiniteScrollPage<MusicItem>;
 

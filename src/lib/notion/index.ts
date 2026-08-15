@@ -3,48 +3,36 @@ export { notion } from "./client";
 
 // Types
 export type {
-  AMA,
   // SDK types
   BlockObjectResponse,
-  // Zod schemas and types
   DatabaseObjectResponse,
-  DesignDetailsEpisodes,
   GoodWebsiteItem,
   GoodWebsiteItemWithDate,
-  Music,
   NotionAmaItem,
   NotionAmaItemWithContent,
+  NotionAppDissectionItem,
+  NotionAppDissectionItemWithContent,
   NotionDesignDetailsEpisodeItem,
   NotionItem,
   NotionListeningHistoryItem,
+  NotionSpeakingItem,
   NotionStackItem,
   NotionTilItem,
   NotionTilItemWithContent,
+  NotionWritingItem,
   PageObjectResponse,
   PageResponse,
   PartialDatabaseObjectResponse,
   PartialPageObjectResponse,
+  PreviewStatus,
   ProcessedBlock,
-  // Custom types
   RichTextContent,
   RichTextItemResponse,
-  Stack,
-  TIL,
-  Writing,
 } from "./types";
-
-// Zod schemas
-export {
-  AMASchema,
-  DesignDetailsEpisodesSchema,
-  MusicSchema,
-  StackSchema,
-  TILSchema,
-  WritingSchema,
-} from "./types";
+export { PREVIEW_STATUSES } from "./types";
 
 // Type guards and utilities
-export { extractPlainText, hasProperties, isBlockObjectResponse } from "./types";
+export { extractPlainText, hasProperties, isBlockObjectResponse, isFullPage } from "./types";
 
 // Block processing
 export { getAllBlocks, processBlockFromResponse } from "./blocks";
@@ -54,6 +42,9 @@ export {
   getAmaDatabaseItems,
   // AMA
   getAmaItemContent,
+  // App Dissection
+  getAppDissectionDatabaseItems,
+  getAppDissectionItemBySlug,
   // Design Details
   getDesignDetailsEpisodeDatabaseItems,
   // Generic

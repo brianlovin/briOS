@@ -1,16 +1,25 @@
-import type {
-  DatabaseObjectResponse,
-  PageObjectResponse,
-} from "@notionhq/client/build/src/api-endpoints";
+import type { DatabaseObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 
 import { getAllBlocks } from "./blocks";
 import { CACHE_TTLS, cachedNotionQuery } from "./cache";
 import { notion } from "./client";
 import {
+  createdTime,
+  dateStart,
+  iconUrl,
+  multiSelect,
+  number,
+  previewStatus,
+  richText,
+  select,
+  title,
+  url,
+} from "./properties";
+import {
   type AppDissectionDetail,
   type GoodWebsiteItem,
   type GoodWebsiteItemWithDate,
-  hasProperties,
+  isFullPage,
   isValidVideoMetadata,
   type NotionAmaItem,
   type NotionAmaItemWithContent,
@@ -23,6 +32,8 @@ import {
   type NotionStackItem,
   type NotionTilItem,
   type NotionTilItemWithContent,
+  type NotionWritingItem,
+  type PageResponse,
   type ProcessedBlock,
 } from "./types";
 
@@ -45,6 +56,230 @@ async function getDataSourceId(databaseId: string): Promise<string> {
   );
 }
 
+function mapGenericItem(page: PageResponse): NotionItem | null {
+  if (!isFullPage(page)) return null;
+  const properties = page.properties;
+
+  return {
+    id: page.id,
+    title: title(properties, "Name") ?? "Untitled",
+    category: select(properties, "Category") ?? "Uncategorized",
+    status: select(properties, "Status") ?? "Draft",
+    createdTime: page.created_time,
+    published: dateStart(properties, "Published") || page.created_time,
+    source: url(properties, "Source")?.replace("https://", ""),
+    slug: richText(properties, "Slug") ?? "",
+  };
+}
+
+function mapStackItem(page: PageResponse): NotionStackItem | null {
+  if (!isFullPage(page)) return null;
+  const properties = page.properties;
+
+  return {
+    id: page.id,
+    name: title(properties, "Name") ?? "Untitled",
+    slug: richText(properties, "Slug") ?? "",
+    description: richText(properties, "Description"),
+    image: url(properties, "Image"),
+    icon: iconUrl(page, { includeEmoji: true }),
+    url: url(properties, "URL"),
+    platforms: multiSelect(properties, "Platforms"),
+    status: select(properties, "Status"),
+    createdTime: createdTime(properties, "Created time") || page.created_time,
+    previewImage: url(properties, "Preview Image"),
+    previewImageDark: url(properties, "Preview Image Dark"),
+    previewStatus: previewStatus(properties),
+  };
+}
+
+function mapGoodWebsiteItem(page: PageResponse): GoodWebsiteItem | null {
+  if (!isFullPage(page)) return null;
+  const properties = page.properties;
+
+  return {
+    id: page.id,
+    name: title(properties, "Name") ?? "Untitled",
+    url: url(properties, "URL"),
+    x: url(properties, "X"),
+    icon: iconUrl(page),
+    tags: multiSelect(properties, "Tags"),
+    previewImage: url(properties, "Preview Image"),
+    previewImageDark: url(properties, "Preview Image Dark"),
+    previewStatus: previewStatus(properties),
+  };
+}
+
+function mapGoodWebsiteItemWithDate(page: PageResponse): GoodWebsiteItemWithDate | null {
+  const item = mapGoodWebsiteItem(page);
+  if (!item || !isFullPage(page)) return null;
+
+  return {
+    ...item,
+    createdTime: createdTime(page.properties, "Created time") || page.created_time,
+  };
+}
+
+function mapWritingItem(page: PageResponse): NotionWritingItem | null {
+  if (!isFullPage(page)) return null;
+  const properties = page.properties;
+
+  return {
+    id: page.id,
+    title: title(properties, "Name") ?? "Untitled",
+    slug: richText(properties, "Slug") ?? "",
+    published: dateStart(properties, "Published") || page.created_time,
+    createdTime: page.created_time,
+    shortId: richText(properties, "Short ID"),
+    excerpt: richText(properties, "Excerpt"),
+    featureImage: url(properties, "FeatureImage"),
+    source: url(properties, "URL")?.replace("https://", ""),
+  };
+}
+
+function mapAmaItem(page: PageResponse): NotionAmaItem | null {
+  if (!isFullPage(page)) return null;
+  const properties = page.properties;
+
+  return {
+    id: page.id,
+    title: title(properties, "Name") ?? "Untitled",
+    description: richText(properties, "Description") ?? "",
+    status: select(properties, "Status") ?? "Unanswered",
+    answeredAt: dateStart(properties, "Answered At") || page.created_time,
+    createdAt: dateStart(properties, "Created At") || page.created_time,
+  };
+}
+
+function mapListeningHistoryItem(page: PageResponse): NotionListeningHistoryItem | null {
+  if (!isFullPage(page)) return null;
+  const properties = page.properties;
+
+  return {
+    id: page.id,
+    name: title(properties, "Name") ?? "Untitled",
+    artist: richText(properties, "Artist") ?? "",
+    album: richText(properties, "Album") ?? "",
+    url: url(properties, "Spotify URL"),
+    playedAt: dateStart(properties, "Played At") || page.created_time,
+    image: iconUrl(page),
+  };
+}
+
+function mapDesignDetailsEpisode(page: PageResponse): NotionDesignDetailsEpisodeItem | null {
+  if (!isFullPage(page)) return null;
+  const properties = page.properties;
+
+  return {
+    id: page.id,
+    title: title(properties, "Name") ?? "Untitled",
+    slug: richText(properties, "Slug") ?? "",
+    description: richText(properties, "Description"),
+    episodeNumber: number(properties, "Episode Number"),
+    publishedDate: dateStart(properties, "Published Date"),
+    imageUrl: url(properties, "Image URL"),
+    audioUrl: url(properties, "Audio URL (S3)"),
+  };
+}
+
+function mapSpeakingItem(page: PageResponse): NotionSpeakingItem | null {
+  if (!isFullPage(page)) return null;
+  const properties = page.properties;
+
+  return {
+    id: page.id,
+    title: title(properties, "Name") ?? "Untitled",
+    date: dateStart(properties, "Date") || page.created_time,
+    href: url(properties, "URL"),
+  };
+}
+
+function mapTilItem(page: PageResponse): NotionTilItem | null {
+  if (!isFullPage(page)) return null;
+  const properties = page.properties;
+
+  return {
+    id: page.id,
+    title: title(properties, "Title") ?? "Untitled",
+    published: dateStart(properties, "Published") || page.created_time,
+    shortId: richText(properties, "Short ID"),
+  };
+}
+
+function mapAppDissectionItem(page: PageResponse): NotionAppDissectionItem | null {
+  if (!isFullPage(page)) return null;
+  const properties = page.properties;
+
+  return {
+    id: page.id,
+    name: title(properties, "Name") ?? "Untitled",
+    slug: richText(properties, "Slug") ?? "",
+    description: "",
+    published: dateStart(properties, "Published") || page.created_time,
+    icon: url(properties, "Icon") || iconUrl(page) || "",
+    status: select(properties, "Status") ?? "Draft",
+  };
+}
+
+function parseAppDissectionDetails(blocks: ProcessedBlock[]): {
+  introBlocks: ProcessedBlock[];
+  details: AppDissectionDetail[];
+} {
+  const introBlocks: ProcessedBlock[] = [];
+  const details: AppDissectionDetail[] = [];
+
+  let currentDetail: AppDissectionDetail | null = null;
+  let inIntro = true;
+
+  for (const block of blocks) {
+    if (block.type === "divider") {
+      inIntro = false;
+      continue;
+    }
+
+    if (inIntro) {
+      introBlocks.push(block);
+      continue;
+    }
+
+    if (block.type === "heading_2") {
+      if (currentDetail) {
+        details.push(currentDetail);
+      }
+      currentDetail = {
+        title: block.content.map((c) => c.text.content).join(""),
+        descriptionBlocks: [],
+      };
+      continue;
+    }
+
+    if (block.type === "code" && block.language === "json" && currentDetail) {
+      const jsonContent = block.content.map((c) => c.text.content).join("");
+      try {
+        const parsed = JSON.parse(jsonContent);
+        if (isValidVideoMetadata(parsed)) {
+          currentDetail.video = parsed;
+        } else {
+          currentDetail.descriptionBlocks.push(block);
+        }
+      } catch {
+        currentDetail.descriptionBlocks.push(block);
+      }
+      continue;
+    }
+
+    if (currentDetail) {
+      currentDetail.descriptionBlocks.push(block);
+    }
+  }
+
+  if (currentDetail) {
+    details.push(currentDetail);
+  }
+
+  return { introBlocks, details };
+}
+
 // ===== Generic Content Retrieval =====
 
 export async function getFullContent(
@@ -54,29 +289,8 @@ export async function getFullContent(
     `notion:content:${pageId}`,
     async () => {
       const page = await notion.pages.retrieve({ page_id: pageId });
-
-      if (!hasProperties(page)) return null;
-
-      const pageWithProps = page as PageObjectResponse;
-      const properties = pageWithProps.properties as {
-        Name?: { title: { plain_text: string }[] };
-        Category?: { select: { name: string } | null };
-        Status?: { select: { name: string } | null };
-        Published?: { date: { start: string } | null };
-        Source?: { url: string };
-        Slug?: { rich_text: { plain_text: string }[] };
-      };
-
-      const metadata: NotionItem = {
-        id: pageWithProps.id,
-        title: properties.Name?.title[0]?.plain_text || "Untitled",
-        category: properties.Category?.select?.name || "Uncategorized",
-        status: properties.Status?.select?.name || "Draft",
-        createdTime: pageWithProps.created_time,
-        published: properties.Published?.date?.start || pageWithProps.created_time,
-        source: properties.Source?.url?.replace("https://", ""),
-        slug: properties.Slug?.rich_text[0]?.plain_text || "",
-      };
+      const metadata = mapGenericItem(page);
+      if (!metadata) return null;
 
       const blocks = await getAllBlocks(pageId);
 
@@ -104,60 +318,9 @@ export async function getStackDatabaseItems(): Promise<NotionStackItem[]> {
         ],
       });
 
-      const items = response.results
-        .map((page) => {
-          if (!hasProperties(page)) return null;
-
-          const pageWithProps = page as PageObjectResponse;
-
-          // Extract icon from page object
-          const icon =
-            pageWithProps.icon?.type === "file"
-              ? pageWithProps.icon.file.url
-              : pageWithProps.icon?.type === "external"
-                ? pageWithProps.icon.external.url
-                : pageWithProps.icon?.type === "emoji"
-                  ? pageWithProps.icon.emoji
-                  : undefined;
-
-          const properties = pageWithProps.properties as {
-            Name?: { title: { plain_text: string }[] };
-            Slug?: { rich_text: { plain_text: string }[] };
-            Description?: { rich_text: { plain_text: string }[] };
-            Image?: { url: string };
-            URL?: { url: string };
-            Platforms?: { multi_select: { name: string }[] };
-            Status?: { select: { name: string } | null };
-            "Created time"?: { created_time: string };
-            "Preview Image"?: { url: string };
-            "Preview Image Dark"?: { url: string };
-            "Preview Status"?: { select: { name: string } | null };
-          };
-
-          return {
-            id: pageWithProps.id,
-            name: properties.Name?.title[0]?.plain_text || "Untitled",
-            slug: properties.Slug?.rich_text[0]?.plain_text || "",
-            description: properties.Description?.rich_text[0]?.plain_text || undefined,
-            image: properties.Image?.url || undefined,
-            icon,
-            url: properties.URL?.url || undefined,
-            platforms: properties.Platforms?.multi_select.map((p) => p.name) || [],
-            status: properties.Status?.select?.name || undefined,
-            createdTime: properties["Created time"]?.created_time || pageWithProps.created_time,
-            previewImage: properties["Preview Image"]?.url || undefined,
-            previewImageDark: properties["Preview Image Dark"]?.url || undefined,
-            previewStatus: properties["Preview Status"]?.select?.name as
-              | "Queued"
-              | "Processing"
-              | "Done"
-              | "Error"
-              | undefined,
-          } as NotionStackItem;
-        })
+      return response.results
+        .map(mapStackItem)
         .filter((item): item is NotionStackItem => item !== null);
-
-      return items;
     },
     { ttl: CACHE_TTLS.LIST },
   );
@@ -181,50 +344,9 @@ export async function getGoodWebsitesDatabaseItems(): Promise<GoodWebsiteItem[]>
         ],
       });
 
-      const items = response.results
-        .map((page) => {
-          if (!hasProperties(page)) return null;
-
-          const pageWithProps = page as PageObjectResponse;
-
-          // Extract icon from page object
-          const icon =
-            pageWithProps.icon?.type === "file"
-              ? pageWithProps.icon.file.url
-              : pageWithProps.icon?.type === "external"
-                ? pageWithProps.icon.external.url
-                : undefined;
-
-          const properties = pageWithProps.properties as {
-            Name?: { title: { plain_text: string }[] };
-            URL?: { url: string };
-            X?: { url: string };
-            Tags?: { multi_select: { name: string }[] };
-            "Preview Image"?: { url: string };
-            "Preview Image Dark"?: { url: string };
-            "Preview Status"?: { select: { name: string } | null };
-          };
-
-          return {
-            id: pageWithProps.id,
-            name: properties.Name?.title[0]?.plain_text || "Untitled",
-            url: properties.URL?.url || undefined,
-            x: properties.X?.url || undefined,
-            icon,
-            tags: properties.Tags?.multi_select.map((t) => t.name) || [],
-            previewImage: properties["Preview Image"]?.url || undefined,
-            previewImageDark: properties["Preview Image Dark"]?.url || undefined,
-            previewStatus: properties["Preview Status"]?.select?.name as
-              | "Queued"
-              | "Processing"
-              | "Done"
-              | "Error"
-              | undefined,
-          } as GoodWebsiteItem;
-        })
+      return response.results
+        .map(mapGoodWebsiteItem)
         .filter((item): item is GoodWebsiteItem => item !== null);
-
-      return items;
     },
     { ttl: CACHE_TTLS.LIST },
   );
@@ -246,51 +368,9 @@ export async function getGoodWebsitesDatabaseItemsForRss(): Promise<GoodWebsiteI
         ],
       });
 
-      const items = response.results
-        .map((page) => {
-          if (!hasProperties(page)) return null;
-
-          const pageWithProps = page as PageObjectResponse;
-
-          const icon =
-            pageWithProps.icon?.type === "file"
-              ? pageWithProps.icon.file.url
-              : pageWithProps.icon?.type === "external"
-                ? pageWithProps.icon.external.url
-                : undefined;
-
-          const properties = pageWithProps.properties as {
-            Name?: { title: { plain_text: string }[] };
-            URL?: { url: string };
-            X?: { url: string };
-            Tags?: { multi_select: { name: string }[] };
-            "Preview Image"?: { url: string };
-            "Preview Image Dark"?: { url: string };
-            "Preview Status"?: { select: { name: string } | null };
-            "Created time"?: { created_time: string };
-          };
-
-          return {
-            id: pageWithProps.id,
-            name: properties.Name?.title[0]?.plain_text || "Untitled",
-            url: properties.URL?.url || undefined,
-            x: properties.X?.url || undefined,
-            icon,
-            tags: properties.Tags?.multi_select.map((t) => t.name) || [],
-            previewImage: properties["Preview Image"]?.url || undefined,
-            previewImageDark: properties["Preview Image Dark"]?.url || undefined,
-            previewStatus: properties["Preview Status"]?.select?.name as
-              | "Queued"
-              | "Processing"
-              | "Done"
-              | "Error"
-              | undefined,
-            createdTime: properties["Created time"]?.created_time || pageWithProps.created_time,
-          } as GoodWebsiteItemWithDate;
-        })
+      return response.results
+        .map(mapGoodWebsiteItemWithDate)
         .filter((item): item is GoodWebsiteItemWithDate => item !== null);
-
-      return items;
     },
     { ttl: CACHE_TTLS.LIST },
   );
@@ -301,7 +381,7 @@ export async function getGoodWebsitesDatabaseItemsForRss(): Promise<GoodWebsiteI
 export async function getWritingDatabaseItems(
   cursor?: string,
   pageSize: number = 20,
-): Promise<{ items: NotionItem[]; nextCursor: string | null }> {
+): Promise<{ items: NotionWritingItem[]; nextCursor: string | null }> {
   return cachedNotionQuery(
     `notion:writing:list:${cursor || "start"}:${pageSize}`,
     async () => {
@@ -325,37 +405,10 @@ export async function getWritingDatabaseItems(
         ],
       });
 
-      const items = response.results.map((page) => {
-        if (!hasProperties(page)) return null;
-
-        const pageWithProps = page as PageObjectResponse;
-        const properties = pageWithProps.properties as {
-          Name?: { title: { plain_text: string }[] };
-          Published?: { date: { start: string } | null };
-          URL?: { url: string };
-          Slug?: { rich_text: { plain_text: string }[] };
-          "Short ID"?: { rich_text: { plain_text: string }[] };
-          Excerpt?: { rich_text: { plain_text: string }[] };
-          FeatureImage?: { url: string };
-        };
-
-        return {
-          id: pageWithProps.id,
-          title: properties.Name?.title[0]?.plain_text || "Untitled",
-          category: "Writing",
-          status: "Published",
-          createdTime: pageWithProps.created_time,
-          published: properties.Published?.date?.start || pageWithProps.created_time,
-          source: properties.URL?.url?.replace("https://", ""),
-          slug: properties.Slug?.rich_text[0]?.plain_text || "",
-          shortId: properties["Short ID"]?.rich_text[0]?.plain_text || undefined,
-          excerpt: properties.Excerpt?.rich_text[0]?.plain_text || "",
-          featureImage: properties.FeatureImage?.url || undefined,
-        } as NotionItem;
-      });
-
       return {
-        items: items.filter((item): item is NotionItem => item !== null),
+        items: response.results
+          .map(mapWritingItem)
+          .filter((item): item is NotionWritingItem => item !== null),
         nextCursor: response.has_more ? (response.next_cursor as string) : null,
       };
     },
@@ -365,38 +418,13 @@ export async function getWritingDatabaseItems(
 
 export async function getWritingPostContent(
   pageId: string,
-): Promise<{ blocks: ProcessedBlock[]; metadata: NotionItem } | null> {
+): Promise<{ blocks: ProcessedBlock[]; metadata: NotionWritingItem } | null> {
   return cachedNotionQuery(
     `notion:writing:content:${pageId}`,
     async () => {
       const page = await notion.pages.retrieve({ page_id: pageId });
-
-      if (!hasProperties(page)) return null;
-
-      const pageWithProps = page as PageObjectResponse;
-      const properties = pageWithProps.properties as {
-        Name?: { title: { plain_text: string }[] };
-        Published?: { date: { start: string } | null };
-        URL?: { url: string };
-        Slug?: { rich_text: { plain_text: string }[] };
-        "Short ID"?: { rich_text: { plain_text: string }[] };
-        Excerpt?: { rich_text: { plain_text: string }[] };
-        FeatureImage?: { url: string };
-      };
-
-      const metadata: NotionItem = {
-        id: pageWithProps.id,
-        title: properties.Name?.title[0]?.plain_text || "Untitled",
-        category: "Writing",
-        status: "Published",
-        createdTime: pageWithProps.created_time,
-        published: properties.Published?.date?.start || pageWithProps.created_time,
-        source: properties.URL?.url?.replace("https://", ""),
-        slug: properties.Slug?.rich_text[0]?.plain_text || "",
-        shortId: properties["Short ID"]?.rich_text[0]?.plain_text || undefined,
-        excerpt: properties.Excerpt?.rich_text[0]?.plain_text || "",
-        featureImage: properties.FeatureImage?.url || undefined,
-      };
+      const metadata = mapWritingItem(page);
+      if (!metadata) return null;
 
       const blocks = await getAllBlocks(pageId);
 
@@ -408,7 +436,7 @@ export async function getWritingPostContent(
 
 export async function getWritingPostContentBySlug(
   slug: string,
-): Promise<{ blocks: ProcessedBlock[]; metadata: NotionItem } | null> {
+): Promise<{ blocks: ProcessedBlock[]; metadata: NotionWritingItem } | null> {
   return cachedNotionQuery(
     `notion:writing:content:slug:${slug}`,
     async () => {
@@ -429,7 +457,7 @@ export async function getWritingPostContentBySlug(
       }
 
       const page = response.results[0];
-      if (!hasProperties(page)) return null;
+      if (!isFullPage(page)) return null;
 
       return getWritingPostContent(page.id);
     },
@@ -439,7 +467,7 @@ export async function getWritingPostContentBySlug(
 
 export async function getWritingPostByShortId(
   shortId: string,
-): Promise<{ blocks: ProcessedBlock[]; metadata: NotionItem } | null> {
+): Promise<{ blocks: ProcessedBlock[]; metadata: NotionWritingItem } | null> {
   return cachedNotionQuery(
     `notion:writing:content:shortid:${shortId}`,
     async () => {
@@ -460,7 +488,7 @@ export async function getWritingPostByShortId(
       }
 
       const page = response.results[0];
-      if (!hasProperties(page)) return null;
+      if (!isFullPage(page)) return null;
 
       return getWritingPostContent(page.id);
     },
@@ -475,31 +503,19 @@ export async function getAmaItemContent(pageId: string): Promise<NotionAmaItemWi
     `notion:ama:content:${pageId}`,
     async () => {
       const page = await notion.pages.retrieve({ page_id: pageId });
+      const item = mapAmaItem(page);
+      if (!item) return null;
 
-      if (!hasProperties(page)) return null;
-
-      const pageWithProps = page as PageObjectResponse;
-      const properties = pageWithProps.properties as {
-        Name?: { title: { plain_text: string }[] };
-        Description?: { rich_text: { plain_text: string }[] };
-        Status?: { select: { name: string } | null };
-        "Answered At"?: { date: { start: string } | null };
-        "Created At"?: { date: { start: string } | null };
-      };
-
-      const item: NotionAmaItem = {
-        id: pageWithProps.id,
-        title: properties.Name?.title[0]?.plain_text || "Untitled",
-        description: properties.Description?.rich_text[0]?.plain_text || null,
-        status: properties.Status?.select?.name || "Unanswered",
-        answeredAt: properties["Answered At"]?.date?.start || pageWithProps.created_time,
-        createdAt: properties["Created At"]?.date?.start || pageWithProps.created_time,
-      };
+      // List mapper uses "" for a missing description; content keeps null.
+      const description = isFullPage(page)
+        ? (richText(page.properties, "Description") ?? null)
+        : null;
 
       const blocks = await getAllBlocks(pageId);
 
       return {
         ...item,
+        description,
         blocks,
       };
     },
@@ -534,34 +550,10 @@ export async function getAmaDatabaseItems(
         ],
       });
 
-      const items = response.results
-        .map((page) => {
-          if (!hasProperties(page)) return null;
-
-          const pageWithProps = page as PageObjectResponse;
-          const properties = pageWithProps.properties as {
-            Name?: { title: { plain_text: string }[] };
-            Description?: { rich_text: { plain_text: string }[] };
-            Status?: { select: { name: string } | null };
-            "Answered At"?: { date: { start: string } | null };
-            "Created At"?: { date: { start: string } | null };
-          };
-
-          const basicItem: NotionAmaItem = {
-            id: pageWithProps.id,
-            title: properties.Name?.title[0]?.plain_text || "Untitled",
-            description: properties.Description?.rich_text[0]?.plain_text || "",
-            status: properties.Status?.select?.name || "Unanswered",
-            answeredAt: properties["Answered At"]?.date?.start || pageWithProps.created_time,
-            createdAt: properties["Created At"]?.date?.start || pageWithProps.created_time,
-          };
-
-          return basicItem;
-        })
-        .filter((item): item is NotionAmaItem => item !== null);
-
       return {
-        items,
+        items: response.results
+          .map(mapAmaItem)
+          .filter((item): item is NotionAmaItem => item !== null),
         nextCursor: response.has_more ? (response.next_cursor as string) : null,
       };
     },
@@ -592,40 +584,10 @@ export async function getListeningHistoryDatabaseItems(
         ],
       });
 
-      const items = response.results
-        .map((page) => {
-          if (!hasProperties(page)) return null;
-
-          const pageWithIcon = page as PageObjectResponse;
-          const icon =
-            pageWithIcon.icon?.type === "file"
-              ? pageWithIcon.icon.file.url
-              : pageWithIcon.icon?.type === "external"
-                ? pageWithIcon.icon.external.url
-                : undefined;
-
-          const properties = pageWithIcon.properties as {
-            Name?: { title: { plain_text: string }[] };
-            Artist?: { rich_text: { plain_text: string }[] };
-            Album?: { rich_text: { plain_text: string }[] };
-            "Spotify URL"?: { url: string };
-            "Played At"?: { date: { start: string } | null };
-          };
-
-          return {
-            id: pageWithIcon.id,
-            name: properties.Name?.title[0]?.plain_text || "Untitled",
-            artist: properties.Artist?.rich_text[0]?.plain_text || "",
-            album: properties.Album?.rich_text[0]?.plain_text || "",
-            url: properties["Spotify URL"]?.url || undefined,
-            playedAt: properties["Played At"]?.date?.start || pageWithIcon.created_time,
-            image: icon,
-          } as NotionListeningHistoryItem;
-        })
-        .filter((item): item is NotionListeningHistoryItem => item !== null);
-
       return {
-        items,
+        items: response.results
+          .map(mapListeningHistoryItem)
+          .filter((item): item is NotionListeningHistoryItem => item !== null),
         nextCursor: response.has_more ? (response.next_cursor as string) : null,
       };
     },
@@ -656,36 +618,10 @@ export async function getDesignDetailsEpisodeDatabaseItems(
         ],
       });
 
-      const items = response.results
-        .map((page) => {
-          if (!hasProperties(page)) return null;
-
-          const pageWithProps = page as PageObjectResponse;
-          const properties = pageWithProps.properties as {
-            Name?: { title: { plain_text: string }[] };
-            Slug?: { rich_text: { plain_text: string }[] };
-            Description?: { rich_text: { plain_text: string }[] };
-            "Episode Number"?: { number: number };
-            "Published Date"?: { date: { start: string } | null };
-            "Image URL"?: { url: string };
-            "Audio URL (S3)"?: { url: string };
-          };
-
-          return {
-            id: pageWithProps.id,
-            title: properties.Name?.title[0]?.plain_text || "Untitled",
-            slug: properties.Slug?.rich_text[0]?.plain_text || "",
-            description: properties.Description?.rich_text[0]?.plain_text || undefined,
-            episodeNumber: properties["Episode Number"]?.number || undefined,
-            publishedDate: properties["Published Date"]?.date?.start || undefined,
-            imageUrl: properties["Image URL"]?.url || undefined,
-            audioUrl: properties["Audio URL (S3)"]?.url || undefined,
-          } as NotionDesignDetailsEpisodeItem;
-        })
-        .filter((item): item is NotionDesignDetailsEpisodeItem => item !== null);
-
       return {
-        items,
+        items: response.results
+          .map(mapDesignDetailsEpisode)
+          .filter((item): item is NotionDesignDetailsEpisodeItem => item !== null),
         nextCursor: response.has_more ? (response.next_cursor as string) : null,
       };
     },
@@ -711,27 +647,9 @@ export async function getSpeakingItems(): Promise<NotionSpeakingItem[]> {
         ],
       });
 
-      const items = response.results
-        .map((page) => {
-          if (!hasProperties(page)) return null;
-
-          const pageWithProps = page as PageObjectResponse;
-          const properties = pageWithProps.properties as {
-            Name?: { title: { plain_text: string }[] };
-            Date?: { date: { start: string } | null };
-            URL?: { url: string };
-          };
-
-          return {
-            id: pageWithProps.id,
-            title: properties.Name?.title[0]?.plain_text || "Untitled",
-            date: properties.Date?.date?.start || pageWithProps.created_time,
-            href: properties.URL?.url || undefined,
-          } as NotionSpeakingItem;
-        })
+      return response.results
+        .map(mapSpeakingItem)
         .filter((item): item is NotionSpeakingItem => item !== null);
-
-      return items;
     },
     { ttl: CACHE_TTLS.LIST },
   );
@@ -766,28 +684,10 @@ export async function getTilDatabaseItems(
         ],
       });
 
-      const items = response.results
-        .map((page) => {
-          if (!hasProperties(page)) return null;
-
-          const pageWithProps = page as PageObjectResponse;
-          const properties = pageWithProps.properties as {
-            Title?: { title: { plain_text: string }[] };
-            Published?: { date: { start: string } | null };
-            "Short ID"?: { rich_text: { plain_text: string }[] };
-          };
-
-          return {
-            id: pageWithProps.id,
-            title: properties.Title?.title.map((t) => t.plain_text).join("") || "Untitled",
-            published: properties.Published?.date?.start || pageWithProps.created_time,
-            shortId: properties["Short ID"]?.rich_text[0]?.plain_text || undefined,
-          } as NotionTilItem;
-        })
-        .filter((item): item is NotionTilItem => item !== null);
-
       return {
-        items,
+        items: response.results
+          .map(mapTilItem)
+          .filter((item): item is NotionTilItem => item !== null),
         nextCursor: response.has_more ? (response.next_cursor as string) : null,
       };
     },
@@ -800,22 +700,8 @@ export async function getTilItemContent(pageId: string): Promise<NotionTilItemWi
     `notion:til:content:${pageId}`,
     async () => {
       const page = await notion.pages.retrieve({ page_id: pageId });
-
-      if (!hasProperties(page)) return null;
-
-      const pageWithProps = page as PageObjectResponse;
-      const properties = pageWithProps.properties as {
-        Title?: { title: { plain_text: string }[] };
-        Published?: { date: { start: string } | null };
-        "Short ID"?: { rich_text: { plain_text: string }[] };
-      };
-
-      const item: NotionTilItem = {
-        id: pageWithProps.id,
-        title: properties.Title?.title.map((t) => t.plain_text).join("") || "Untitled",
-        published: properties.Published?.date?.start || pageWithProps.created_time,
-        shortId: properties["Short ID"]?.rich_text[0]?.plain_text || undefined,
-      };
+      const item = mapTilItem(page);
+      if (!item) return null;
 
       const blocks = await getAllBlocks(pageId);
 
@@ -849,7 +735,7 @@ export async function getTilByShortId(shortId: string): Promise<NotionTilItemWit
       }
 
       const page = response.results[0];
-      if (!hasProperties(page)) return null;
+      if (!isFullPage(page)) return null;
 
       return getTilItemContent(page.id);
     },
@@ -881,40 +767,9 @@ export async function getAppDissectionDatabaseItems(): Promise<NotionAppDissecti
         ],
       });
 
-      const items = response.results
-        .map((page) => {
-          if (!hasProperties(page)) return null;
-
-          const pageWithProps = page as PageObjectResponse;
-
-          const icon =
-            pageWithProps.icon?.type === "file"
-              ? pageWithProps.icon.file.url
-              : pageWithProps.icon?.type === "external"
-                ? pageWithProps.icon.external.url
-                : "";
-
-          const properties = pageWithProps.properties as {
-            Name?: { title: { plain_text: string }[] };
-            Slug?: { rich_text: { plain_text: string }[] };
-            Published?: { date: { start: string } | null };
-            Icon?: { url: string };
-            Status?: { select: { name: string } | null };
-          };
-
-          return {
-            id: pageWithProps.id,
-            name: properties.Name?.title[0]?.plain_text || "Untitled",
-            slug: properties.Slug?.rich_text[0]?.plain_text || "",
-            description: "",
-            published: properties.Published?.date?.start || pageWithProps.created_time,
-            icon: properties.Icon?.url || icon,
-            status: properties.Status?.select?.name || "Draft",
-          } as NotionAppDissectionItem;
-        })
+      return response.results
+        .map(mapAppDissectionItem)
         .filter((item): item is NotionAppDissectionItem => item !== null);
-
-      return items;
     },
     { ttl: CACHE_TTLS.LIST },
   );
@@ -953,89 +808,14 @@ export async function getAppDissectionItemBySlug(
       }
 
       const page = response.results[0];
-      if (!hasProperties(page)) return null;
+      const item = mapAppDissectionItem(page);
+      if (!item) return null;
 
-      const pageWithProps = page as PageObjectResponse;
-
-      const icon =
-        pageWithProps.icon?.type === "file"
-          ? pageWithProps.icon.file.url
-          : pageWithProps.icon?.type === "external"
-            ? pageWithProps.icon.external.url
-            : "";
-
-      const properties = pageWithProps.properties as {
-        Name?: { title: { plain_text: string }[] };
-        Slug?: { rich_text: { plain_text: string }[] };
-        Published?: { date: { start: string } | null };
-        Icon?: { url: string };
-        Status?: { select: { name: string } | null };
-      };
-
-      // Get all blocks from the page
       const blocks = await getAllBlocks(page.id);
-
-      // Parse blocks into intro and detail sections
-      const introBlocks: ProcessedBlock[] = [];
-      const details: AppDissectionDetail[] = [];
-
-      let currentDetail: AppDissectionDetail | null = null;
-      let inIntro = true;
-
-      for (const block of blocks) {
-        if (block.type === "divider") {
-          inIntro = false;
-          continue;
-        }
-
-        if (inIntro) {
-          introBlocks.push(block);
-          continue;
-        }
-
-        if (block.type === "heading_2") {
-          if (currentDetail) {
-            details.push(currentDetail);
-          }
-          currentDetail = {
-            title: block.content.map((c) => c.text.content).join(""),
-            descriptionBlocks: [],
-          };
-          continue;
-        }
-
-        if (block.type === "code" && block.language === "json" && currentDetail) {
-          const jsonContent = block.content.map((c) => c.text.content).join("");
-          try {
-            const parsed = JSON.parse(jsonContent);
-            if (isValidVideoMetadata(parsed)) {
-              currentDetail.video = parsed;
-            } else {
-              currentDetail.descriptionBlocks.push(block);
-            }
-          } catch {
-            currentDetail.descriptionBlocks.push(block);
-          }
-          continue;
-        }
-
-        if (currentDetail) {
-          currentDetail.descriptionBlocks.push(block);
-        }
-      }
-
-      if (currentDetail) {
-        details.push(currentDetail);
-      }
+      const { introBlocks, details } = parseAppDissectionDetails(blocks);
 
       return {
-        id: pageWithProps.id,
-        name: properties.Name?.title[0]?.plain_text || "Untitled",
-        slug: properties.Slug?.rich_text[0]?.plain_text || "",
-        description: "",
-        published: properties.Published?.date?.start || pageWithProps.created_time,
-        icon: properties.Icon?.url || icon,
-        status: properties.Status?.select?.name || "Draft",
+        ...item,
         introBlocks,
         details,
       };
