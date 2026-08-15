@@ -50,7 +50,9 @@ describe("checkHnRateLimit", () => {
       await expect(
         checkHnRateLimit("1.1.1.1", {
           limit: async () => {
-            throw new Error("redis down");
+            throw new Error(
+              "ERR This database has been suspended for exceeding the defined budget limit. Please increase budget or switch to a Fixed plan on Upstash Console",
+            );
           },
         }),
       ).resolves.toEqual({ allowed: true });

@@ -74,6 +74,7 @@ export async function checkHnRateLimit(
       reset: result.reset,
     };
   } catch (error) {
+    // limit() throws when Redis is down or suspended (budget limit); fail open.
     console.error("[HN RateLimit] Error checking rate limit; failing open:", error);
     return { allowed: true };
   }
