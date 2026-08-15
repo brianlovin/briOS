@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 
 import { errorResponse, safeCompare } from "@/lib/api-utils";
-import { BASE_EMAIL, sendHNDigestEmailBatch } from "@/lib/email";
+import { BASE_EMAIL, generateUnsubscribeUrl, sendHNDigestEmailBatch } from "@/lib/email";
 import { getHNPostsForDigest } from "@/lib/hn";
-import { formatDigestDate, generateUnsubscribeUrl } from "@/lib/jwt";
 import { getHNSubscribers } from "@/lib/subscriptions";
+import { formatDigestDate } from "@/lib/urls";
 
 const IS_PROD = process.env.NODE_ENV === "production";
 

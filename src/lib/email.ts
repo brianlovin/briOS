@@ -2,6 +2,9 @@ import { ServerClient } from "postmark";
 
 import { HackerNewsPost } from "@/types/hackernews";
 
+import { generateUnsubscribeToken } from "./jwt";
+import { buildUnsubscribeUrl } from "./urls";
+
 /**
  * Email service for sending HN digest emails via Postmark
  */
@@ -9,10 +12,14 @@ import { HackerNewsPost } from "@/types/hackernews";
 // Email constants
 export const BASE_EMAIL = "hi@brianlovin.com";
 
-export const BASE_URL =
-  process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://brianlovin.com";
-
 const POSTMARK_TEMPLATE_ID = 18037634;
+
+/**
+ * Generate unsubscribe URL with JWT token
+ */
+export function generateUnsubscribeUrl(email: string): string {
+  return buildUnsubscribeUrl(generateUnsubscribeToken(email));
+}
 
 // Environment validation
 if (!process.env.POSTMARK_CLIENT_ID) {

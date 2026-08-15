@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 
-import { BASE_URL } from "@/lib/email";
 import { verifyUnsubscribeToken } from "@/lib/jwt";
 import { deleteSubscription } from "@/lib/subscriptions";
+import { BASE_URL } from "@/lib/urls";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);

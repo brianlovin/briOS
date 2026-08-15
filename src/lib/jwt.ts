@@ -1,11 +1,9 @@
-import { format } from "date-fns";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
 
-import { BASE_URL } from "./email";
-
 /**
- * JWT token utilities for unsubscribe links and digest helpers
+ * JWT token utilities for unsubscribe links.
+ * Signs and verifies `{ email }` only — no URL construction, dates, or mailer.
  */
 
 if (!process.env.JWT_SIGNING_KEY) {
@@ -47,19 +45,4 @@ export function verifyUnsubscribeToken(token: string): string | null {
     console.error("Error verifying JWT token:", error);
     return null;
   }
-}
-
-/**
- * Generate unsubscribe URL with JWT token
- */
-export function generateUnsubscribeUrl(email: string): string {
-  const token = generateUnsubscribeToken(email);
-  return `${BASE_URL}/api/hn-digest/unsubscribe?token=${token}`;
-}
-
-/**
- * Format date for digest emails
- */
-export function formatDigestDate(date: Date = new Date()): string {
-  return format(date, "LLLL do, yyyy");
 }
