@@ -14,9 +14,11 @@
 
 **Layout system**:
 
-- `PrimarySidebar` — Collapsible navigation sidebar
-- `CommandMenu` — Global command palette
-- `ListDetailLayout` — Consistent list-detail navigation pattern
+- `MobileNavMenu` — Full-screen nav overlay (`sidebarAtom` = overlay open)
+- `CommandMenu` — Global command palette (separate jump surface)
+- `ListDetailLayout` — List-detail panes; list vs detail is derived from the URL (`backHref` vs pathname), dual-pane at `@3xl`
+- `BodyLock` — Single owner of `document.body.style.overflow` (list-detail mounted or overlay open)
+- Visible pane registers `scrollTargetAtom` for top-bar click-to-top
 
 **State management**: Jotai for global state (sidebar toggle, etc.)
 
