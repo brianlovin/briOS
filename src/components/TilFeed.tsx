@@ -10,12 +10,12 @@ import { LikeButton } from "@/components/likes/LikeButton";
 import { renderBlocks } from "@/components/renderBlocks";
 import { fetcher } from "@/lib/fetcher";
 import type { LikeCount } from "@/lib/hooks/useLikes";
-import type { NotionTilItem, NotionTilItemWithContent } from "@/lib/notion";
+import type { NotionTilItemWithContent } from "@/lib/notion";
 import { buildSlug } from "@/lib/short-id";
-import { useTilEntries } from "@/lib/til";
+import { type TilEntry, type TilPage, useTilEntries } from "@/lib/til";
 
 interface TilFeedProps {
-  initialEntries: NotionTilItemWithContent[];
+  fallbackData: TilPage[];
   initialLikes?: Record<string, LikeCount>;
 }
 
@@ -47,15 +47,9 @@ function TilEntryContent({ entryId }: { entryId: string }) {
   return <div className="notion-blocks flex flex-col gap-3">{renderBlocks(data.blocks)}</div>;
 }
 
-function TilEntry({
-  entry,
-  initialContent,
-}: {
-  entry: NotionTilItem;
-  initialContent?: NotionTilItemWithContent;
-}) {
+function TilEntry({ entry }: { entry: TilEntry }) {
   const slug = entry.shortId ? buildSlug(entry.title, entry.shortId) : null;
-  const hasInitialContent = initialContent && initialContent.blocks.length > 0;
+  const blocks = entry.blocks;
 
   return (
     <article className="grid grid-cols-1 gap-2 sm:grid-cols-[140px_1fr] sm:items-baseline sm:gap-6 md:grid-cols-[180px_1fr]">
@@ -80,11 +74,10 @@ function TilEntry({
           <h2 className="text-primary text-xl font-medium">{entry.title}</h2>
         )}
 
-        {/* Inline expanded content */}
-        {hasInitialContent ? (
-          <div className="notion-blocks flex flex-col gap-3">
-            {renderBlocks(initialContent.blocks)}
-          </div>
+        {blocks ? (
+          blocks.length > 0 ? (
+            <div className="notion-blocks flex flex-col gap-3">{renderBlocks(blocks)}</div>
+          ) : null
         ) : (
           <TilEntryContent entryId={entry.id} />
         )}
@@ -98,19 +91,11 @@ function TilEntry({
   );
 }
 
-export function TilFeed({ initialEntries, initialLikes }: TilFeedProps) {
-  const { items, isLoading, isLoadingMore, isReachingEnd, setSize, size } = useTilEntries();
+export function TilFeed({ fallbackData, initialLikes }: TilFeedProps) {
+  const { items, isLoading, isLoadingMore, isReachingEnd, setSize, size } =
+    useTilEntries(fallbackData);
 
-  // Build a map of initial content for quick lookup
-  const initialContentMap = new Map<string, NotionTilItemWithContent>(
-    initialEntries.map((entry) => [entry.id, entry]),
-  );
-
-  // Use API-fetched items if available, otherwise fall back to initial entries
-  const entries = items.length > 0 ? items : initialEntries;
-
-  // Collect all page IDs for batch likes fetching
-  const pageIds = useMemo(() => entries.map((entry) => entry.id), [entries]);
+  const pageIds = useMemo(() => items.map((entry) => entry.id), [items]);
 
   const loadMore = useCallback(async () => {
     await setSize(size + 1);
@@ -120,10 +105,8 @@ export function TilFeed({ initialEntries, initialLikes }: TilFeedProps) {
     <BatchLikesProvider pageIds={pageIds} initialData={initialLikes}>
       <InfiniteScrollList
         as="div"
-        items={entries}
-        renderItem={(entry) => (
-          <TilEntry key={entry.id} entry={entry} initialContent={initialContentMap.get(entry.id)} />
-        )}
+        items={items}
+        renderItem={(entry) => <TilEntry key={entry.id} entry={entry} />}
         onLoadMore={loadMore}
         isLoading={isLoading ?? false}
         isLoadingMore={isLoadingMore ?? false}
