@@ -1,23 +1,6 @@
-import { Ratelimit } from "@upstash/ratelimit";
-import { Redis } from "@upstash/redis";
-import { NextRequest, NextResponse } from "next/server";
+import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 
-// Lazy-initialize to avoid build-time env var errors
-let hnRatelimit: Ratelimit | null = null;
-
-function getHnRatelimit(): Ratelimit | null {
-  if (hnRatelimit) return hnRatelimit;
-  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) return null;
-
-  hnRatelimit = new Ratelimit({
-    redis: Redis.fromEnv(),
-    // 100 requests per 60 seconds per IP for HN routes
-    limiter: Ratelimit.slidingWindow(100, "60 s"),
-    prefix: "rl:hn",
-    analytics: true,
-  });
-  return hnRatelimit;
-}
+import { checkHnRateLimit, getHnRatelimit, waitForRateLimitPending } from "@/lib/hn-ratelimit";
 
 function getIP(request: NextRequest): string {
   return (
@@ -27,7 +10,7 @@ function getIP(request: NextRequest): string {
   );
 }
 
-export async function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest, event: NextFetchEvent) {
   const { pathname } = request.nextUrl;
   const ip = getIP(request);
 
@@ -43,23 +26,22 @@ export async function middleware(request: NextRequest) {
       return NextResponse.json({ error: "Invalid HN post ID" }, { status: 400 });
     }
 
-    const limiter = getHnRatelimit();
-    if (limiter) {
-      const { success, limit, remaining, reset } = await limiter.limit(ip);
-      if (!success) {
-        return NextResponse.json(
-          { error: "Too many requests" },
-          {
-            status: 429,
-            headers: {
-              "X-RateLimit-Limit": limit.toString(),
-              "X-RateLimit-Remaining": remaining.toString(),
-              "X-RateLimit-Reset": reset.toString(),
-              "Retry-After": Math.ceil((reset - Date.now()) / 1000).toString(),
-            },
+    const decision = await checkHnRateLimit(ip, getHnRatelimit());
+    waitForRateLimitPending(event, decision.pending);
+
+    if (!decision.allowed) {
+      return NextResponse.json(
+        { error: "Too many requests" },
+        {
+          status: 429,
+          headers: {
+            "X-RateLimit-Limit": decision.limit.toString(),
+            "X-RateLimit-Remaining": decision.remaining.toString(),
+            "X-RateLimit-Reset": decision.reset.toString(),
+            "Retry-After": Math.ceil((decision.reset - Date.now()) / 1000).toString(),
           },
-        );
-      }
+        },
+      );
     }
 
     return NextResponse.next();
