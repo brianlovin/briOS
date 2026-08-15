@@ -33,6 +33,24 @@ export const CACHE_TTLS = {
   DATA_SOURCE: 86400,
 } as const;
 
+/**
+ * Bumped when the serialized ProcessedBlock shape changes so Next (24h) and
+ * Redis (7d) cannot serve the old grab-bag payload as the new union.
+ */
+export const CONTENT_CACHE_VERSION = "v2";
+
+/**
+ * Cache key for processed page content.
+ * `notionContentCacheKey("writing", pageId)` → `notion:writing:content:v2:<id>`
+ * `notionContentCacheKey(null, pageId)` → `notion:content:v2:<id>`
+ */
+export function notionContentCacheKey(collection: string | null, ...parts: string[]): string {
+  if (collection) {
+    return ["notion", collection, "content", CONTENT_CACHE_VERSION, ...parts].join(":");
+  }
+  return ["notion", "content", CONTENT_CACHE_VERSION, ...parts].join(":");
+}
+
 /** Redis key TTL: 7 days (emergency fallback window) */
 const REDIS_KEY_TTL = 7 * 24 * 3600;
 
@@ -42,7 +60,7 @@ interface CachedNotionQueryOptions {
 }
 
 /**
- * Derive a coarse cache tag from a key like `notion:writing:content:<id>`.
+ * Derive a coarse cache tag from a key like `notion:writing:content:v2:<id>`.
  * Returns the first two segments so a whole content type can be invalidated
  * at once via `revalidateTag("notion:writing", "max")`.
  */

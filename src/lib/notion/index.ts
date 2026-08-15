@@ -3,11 +3,17 @@ export { notion } from "./client";
 
 // Types
 export type {
-  // SDK types
   BlockObjectResponse,
+  BulletedListItemBlock,
+  CalloutBlock,
   DatabaseObjectResponse,
+  DividerBlock,
   GoodWebsiteItem,
   GoodWebsiteItemWithDate,
+  Heading1Block,
+  Heading2Block,
+  Heading3Block,
+  ImageBlock,
   NotionAmaItem,
   NotionAmaItemWithContent,
   NotionAppDissectionItem,
@@ -20,19 +26,35 @@ export type {
   NotionTilItem,
   NotionTilItemWithContent,
   NotionWritingItem,
+  NumberedListItemBlock,
   PageObjectResponse,
   PageResponse,
+  ParagraphBlock,
   PartialDatabaseObjectResponse,
   PartialPageObjectResponse,
   PreviewStatus,
   ProcessedBlock,
+  ProcessedCodeBlock,
+  QuoteBlock,
   RichTextContent,
   RichTextItemResponse,
+  TableBlock,
+  TableRowBlock,
+  TodoBlock,
+  ToggleBlock,
+  VideoBlock,
 } from "./types";
 export { PREVIEW_STATUSES } from "./types";
 
 // Type guards and utilities
-export { extractPlainText, hasProperties, isBlockObjectResponse, isFullPage } from "./types";
+export {
+  extractPlainText,
+  hasProperties,
+  isBlockObjectResponse,
+  isFullPage,
+  isTableRowBlock,
+  richTextPlainText,
+} from "./types";
 
 // Block processing
 export { getAllBlocks, processBlockFromResponse } from "./blocks";
@@ -70,7 +92,7 @@ export {
 } from "./queries";
 
 // Cache
-export { invalidateNotionCache } from "./cache";
+export { CONTENT_CACHE_VERSION, invalidateNotionCache, notionContentCacheKey } from "./cache";
 
 // Mutations
 export {

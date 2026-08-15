@@ -1,7 +1,12 @@
 import { ReactNode } from "react";
 
 import { CodeBlock } from "@/components/CodeBlock";
-import type { ProcessedBlock, RichTextContent, RichTextItemResponse } from "@/lib/notion";
+import {
+  type ProcessedBlock,
+  type RichTextContent,
+  type RichTextItemResponse,
+  richTextPlainText,
+} from "@/lib/notion";
 
 // URL regex pattern to match http/https URLs
 const URL_REGEX = /(https?:\/\/[^\s]+)/g;
@@ -101,63 +106,64 @@ function renderChildList(children: ProcessedBlock[]): ReactNode {
 
 function renderSingleBlock(block: ProcessedBlock, isPreview: boolean): ReactNode {
   if (isPreview) {
-    // For preview mode, render all blocks as paragraphs with rich text
-    if (block.type === "table" && block.tableRows) {
+    if (block.type === "table") {
       return (
         <p key={block.id} className="text-secondary leading-[1.6]">
-          [Table with {block.tableRows.length} rows]
+          [Table with {block.tableRows?.length ?? 0} rows]
         </p>
       );
     }
-    return (
-      <p key={block.id} className="text-secondary leading-[1.6]">
-        {renderRichText(block.content)}
-      </p>
-    );
-  }
-
-  // Full rendering mode - handle table blocks with their children rows
-  if (block.type === "table" && block.tableRows) {
-    return (
-      <div key={block.id} className="my-6 overflow-x-auto">
-        <table className="border-secondary w-full border-collapse rounded-md border text-sm">
-          <tbody>
-            {block.tableRows.map((row, rowIndex) => {
-              const cells = row.cells || [];
-              const isHeaderRow = rowIndex === 0 && block.hasColumnHeader;
-
-              return (
-                <tr key={row.id} className={isHeaderRow ? "bg-tertiary" : ""}>
-                  {cells.map((cell, cellIndex) => {
-                    const cellContent = cell.map(
-                      (richText: RichTextItemResponse, index: number) => (
-                        <span key={index}>{richText.plain_text}</span>
-                      ),
-                    );
-
-                    const CellComponent = isHeaderRow ? "th" : "td";
-
-                    return (
-                      <CellComponent
-                        key={cellIndex}
-                        className={`border-secondary border px-3 py-2 text-left ${
-                          isHeaderRow ? "text-primary font-semibold" : "text-secondary"
-                        }`}
-                      >
-                        {cellContent.length > 0 ? cellContent : ""}
-                      </CellComponent>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    );
+    if ("content" in block) {
+      return (
+        <p key={block.id} className="text-secondary leading-[1.6]">
+          {renderRichText(block.content)}
+        </p>
+      );
+    }
+    return null;
   }
 
   switch (block.type) {
+    case "table": {
+      if (!block.tableRows) return null;
+
+      return (
+        <div key={block.id} className="my-6 overflow-x-auto">
+          <table className="border-secondary w-full border-collapse rounded-md border text-sm">
+            <tbody>
+              {block.tableRows.map((row, rowIndex) => {
+                const isHeaderRow = rowIndex === 0 && block.hasColumnHeader;
+
+                return (
+                  <tr key={row.id} className={isHeaderRow ? "bg-tertiary" : ""}>
+                    {row.cells.map((cell, cellIndex) => {
+                      const cellContent = cell.map(
+                        (richText: RichTextItemResponse, index: number) => (
+                          <span key={index}>{richText.plain_text}</span>
+                        ),
+                      );
+
+                      const CellComponent = isHeaderRow ? "th" : "td";
+
+                      return (
+                        <CellComponent
+                          key={cellIndex}
+                          className={`border-secondary border px-3 py-2 text-left ${
+                            isHeaderRow ? "text-primary font-semibold" : "text-secondary"
+                          }`}
+                        >
+                          {cellContent.length > 0 ? cellContent : ""}
+                        </CellComponent>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      );
+    }
     case "quote":
       return (
         <blockquote
@@ -208,7 +214,7 @@ function renderSingleBlock(block: ProcessedBlock, isPreview: boolean): ReactNode
     case "to_do":
       return (
         <div key={block.id} className="text-secondary flex items-start gap-2 leading-[1.6]">
-          <input type="checkbox" disabled className="mt-1" />
+          <input type="checkbox" disabled checked={block.checked} className="mt-1" />
           <span>{renderRichText(block.content)}</span>
         </div>
       );
@@ -222,8 +228,8 @@ function renderSingleBlock(block: ProcessedBlock, isPreview: boolean): ReactNode
       return (
         <CodeBlock
           key={block.id}
-          code={block.content.map((text) => text.text.content).join("")}
-          language={block.language || "plaintext"}
+          code={richTextPlainText(block.content)}
+          language={block.language}
         />
       );
     case "divider":
@@ -232,12 +238,7 @@ function renderSingleBlock(block: ProcessedBlock, isPreview: boolean): ReactNode
       return (
         <div key={block.id}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={block.content[0].text.content}
-            alt=""
-            className="w-full rounded-lg"
-            loading="lazy"
-          />
+          <img src={block.url} alt="" className="w-full rounded-lg" loading="lazy" />
         </div>
       );
     case "video":
