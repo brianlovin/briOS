@@ -6,8 +6,18 @@ import { notion } from "@/lib/notion";
 import { purgeContentType } from "@/lib/notion/purge";
 import { uploadBufferToR2 } from "@/lib/r2/storage";
 
+import {
+  collectMedia,
+  failedMediaResult,
+  getMediaUrl,
+  mediaBlockUpdate,
+  type MediaResult,
+  type MediaView,
+  summarizeMediaResults,
+} from "./media";
+
 /**
- * Webhook endpoint to optimize all images in a blog post and upload to R2
+ * Webhook endpoint to optimize writing page media and upload to R2
  *
  * POST /api/webhooks/optimize-writing-images
  * Notion automation payload: { data: { id } }
@@ -15,35 +25,10 @@ import { uploadBufferToR2 } from "@/lib/r2/storage";
  * Flow:
  * 1. Extract page ID from Notion webhook
  * 2. Fetch all blocks from the page (recursively)
- * 3. Find all image blocks
- * 4. For each image:
- *    - Download the image
- *    - Optimize (compress at high quality, keep original dimensions)
- *    - Upload to R2
- *    - Update the block with R2 URL
+ * 3. Collect image and video blocks into one media list
+ * 4. For each item, download, optimize when the kind requires it, upload to R2,
+ *    and update the Notion block
  */
-
-interface ImageBlock {
-  id: string;
-  type: "image";
-  image: {
-    type: "external" | "file";
-    external?: { url: string };
-    file?: { url: string; expiry_time: string };
-    caption?: Array<any>;
-  };
-}
-
-interface VideoBlock {
-  id: string;
-  type: "video";
-  video: {
-    type: "external" | "file";
-    external?: { url: string };
-    file?: { url: string; expiry_time: string };
-    caption?: Array<any>;
-  };
-}
 
 interface BlockWithChildren {
   id: string;
@@ -87,151 +72,64 @@ async function getAllBlocks(blockId: string): Promise<BlockWithChildren[]> {
 }
 
 /**
- * Extract image URL from a block
+ * Download, optimize (images only), upload, and rewrite one media block.
+ * Kind is the only branch: images are compressed, videos are re-hosted as-is.
  */
-function getImageUrl(block: ImageBlock): string | null {
-  if (block.image.type === "external" && block.image.external) {
-    return block.image.external.url;
-  } else if (block.image.type === "file" && block.image.file) {
-    return block.image.file.url;
-  }
-  return null;
-}
-
-/**
- * Optimize a single image block
- */
-async function optimizeImageBlock(block: ImageBlock): Promise<{
-  success: boolean;
-  originalUrl?: string;
-  newUrl?: string;
-  originalSize?: number;
-  optimizedSize?: number;
-  savings?: number;
-  error?: string;
-}> {
+async function optimizeMediaBlock(media: MediaView): Promise<MediaResult> {
   try {
-    const imageUrl = getImageUrl(block);
-    if (!imageUrl) {
-      return { success: false, error: "No image URL found" };
+    const sourceUrl = getMediaUrl(media);
+    if (!sourceUrl) {
+      return failedMediaResult(media.kind, `No ${media.kind} URL found`);
     }
 
-    console.log(`  📥 Downloading image: ${imageUrl.substring(0, 80)}...`);
+    console.log(`  📥 Downloading ${media.kind}: ${sourceUrl.substring(0, 80)}...`);
 
-    // Download the image
-    const imageResponse = await fetch(imageUrl);
-    if (!imageResponse.ok) {
-      return { success: false, error: "Failed to download image" };
+    const response = await fetch(sourceUrl);
+    if (!response.ok) {
+      return failedMediaResult(media.kind, `Failed to download ${media.kind}`);
     }
 
-    const imageArrayBuffer = await imageResponse.arrayBuffer();
-    const imageBuffer = Buffer.from(imageArrayBuffer);
+    const buffer = Buffer.from(await response.arrayBuffer());
+    let r2Url: string;
+    let result: MediaResult;
 
-    console.log(`  🔧 Optimizing image (${(imageBuffer.length / 1024).toFixed(2)}KB)...`);
-
-    // Optimize the image (compress, keep original dimensions)
-    const optimized = await optimizeWritingImage(imageBuffer);
-
-    console.log(
-      `  ✨ Optimized: ${optimized.width}x${optimized.height}, ${(optimized.optimizedSize / 1024).toFixed(2)}KB (saved ${optimized.savings.toFixed(1)}%)`,
-    );
-
-    // Upload to R2
-    console.log(`  📤 Uploading to R2...`);
-    const r2Url = await uploadBufferToR2(optimized.buffer, optimized.contentType);
-
-    // Update the block with the new R2 URL
-    console.log(`  💾 Updating block...`);
-    await notion.blocks.update({
-      block_id: block.id,
-      image: {
-        external: { url: r2Url },
-        caption: block.image.caption || [],
-      },
-    } as any);
-
-    return {
-      success: true,
-      originalUrl: imageUrl,
-      newUrl: r2Url,
-      originalSize: optimized.originalSize,
-      optimizedSize: optimized.optimizedSize,
-      savings: optimized.savings,
-    };
-  } catch (error) {
-    console.error(`  ❌ Error optimizing image block:`, error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Unknown error",
-    };
-  }
-}
-
-/**
- * Extract video URL from a block
- */
-function getVideoUrl(block: VideoBlock): string | null {
-  if (block.video.type === "external" && block.video.external) {
-    return block.video.external.url;
-  } else if (block.video.type === "file" && block.video.file) {
-    return block.video.file.url;
-  }
-  return null;
-}
-
-/**
- * Upload a single video block to R2 (no transcoding, just re-host)
- */
-async function optimizeVideoBlock(block: VideoBlock): Promise<{
-  success: boolean;
-  originalUrl?: string;
-  newUrl?: string;
-  size?: number;
-  error?: string;
-}> {
-  try {
-    const videoUrl = getVideoUrl(block);
-    if (!videoUrl) {
-      return { success: false, error: "No video URL found" };
+    if (media.kind === "image") {
+      console.log(`  🔧 Optimizing image (${(buffer.length / 1024).toFixed(2)}KB)...`);
+      const optimized = await optimizeWritingImage(buffer);
+      console.log(
+        `  ✨ Optimized: ${optimized.width}x${optimized.height}, ${(optimized.optimizedSize / 1024).toFixed(2)}KB (saved ${optimized.savings.toFixed(1)}%)`,
+      );
+      console.log(`  📤 Uploading to R2...`);
+      r2Url = await uploadBufferToR2(optimized.buffer, optimized.contentType);
+      result = {
+        kind: "image",
+        success: true,
+        originalUrl: sourceUrl,
+        newUrl: r2Url,
+        originalSize: optimized.originalSize,
+        optimizedSize: optimized.optimizedSize,
+        savings: optimized.savings,
+      };
+    } else {
+      const contentType = response.headers.get("content-type") || "video/mp4";
+      console.log(`  📤 Uploading video to R2 (${(buffer.length / 1024 / 1024).toFixed(2)}MB)...`);
+      r2Url = await uploadBufferToR2(buffer, contentType);
+      result = {
+        kind: "video",
+        success: true,
+        originalUrl: sourceUrl,
+        newUrl: r2Url,
+        size: buffer.length,
+      };
     }
-
-    console.log(`  📥 Downloading video: ${videoUrl.substring(0, 80)}...`);
-
-    const videoResponse = await fetch(videoUrl);
-    if (!videoResponse.ok) {
-      return { success: false, error: "Failed to download video" };
-    }
-
-    const contentType = videoResponse.headers.get("content-type") || "video/mp4";
-    const videoBuffer = Buffer.from(await videoResponse.arrayBuffer());
-
-    console.log(
-      `  📤 Uploading video to R2 (${(videoBuffer.length / 1024 / 1024).toFixed(2)}MB)...`,
-    );
-
-    const r2Url = await uploadBufferToR2(videoBuffer, contentType);
 
     console.log(`  💾 Updating block...`);
-    await notion.blocks.update({
-      block_id: block.id,
-      video: {
-        external: { url: r2Url },
-        caption: block.video.caption || [],
-      },
-    } as any);
+    await notion.blocks.update(mediaBlockUpdate(media, r2Url) as any);
 
-    return {
-      success: true,
-      originalUrl: videoUrl,
-      newUrl: r2Url,
-      size: videoBuffer.length,
-    };
+    return result;
   } catch (error) {
-    console.error(`  ❌ Error processing video block:`, error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Unknown error",
-    };
+    console.error(`  ❌ Error optimizing ${media.kind} block:`, error);
+    return failedMediaResult(media.kind, error instanceof Error ? error.message : "Unknown error");
   }
 }
 
@@ -262,16 +160,13 @@ export async function POST(request: Request) {
     const allBlocks = await getAllBlocks(pageId);
     console.log(`Found ${allBlocks.length} total blocks\n`);
 
-    // Step 2: Filter for image and video blocks
-    const imageBlocks = allBlocks.filter(
-      (block) => block.type === "image",
-    ) as unknown as ImageBlock[];
-    const videoBlocks = allBlocks.filter(
-      (block) => block.type === "video",
-    ) as unknown as VideoBlock[];
-    console.log(`Found ${imageBlocks.length} image blocks, ${videoBlocks.length} video blocks\n`);
+    // Step 2: Collect image and video blocks into one media list
+    const media = collectMedia(allBlocks);
+    const imageCount = media.filter((item) => item.kind === "image").length;
+    const videoCount = media.length - imageCount;
+    console.log(`Found ${imageCount} image blocks, ${videoCount} video blocks\n`);
 
-    if (imageBlocks.length === 0 && videoBlocks.length === 0) {
+    if (media.length === 0) {
       return NextResponse.json(
         {
           success: true,
@@ -283,97 +178,52 @@ export async function POST(request: Request) {
       );
     }
 
-    // Step 3: Optimize each image
-    const imageResults = [];
-    let imageSuccessCount = 0;
-    let imageErrorCount = 0;
-    let totalOriginalSize = 0;
-    let totalOptimizedSize = 0;
+    // Step 3: Walk, optimize, and count through one list
+    const results: MediaResult[] = [];
 
-    for (let i = 0; i < imageBlocks.length; i++) {
-      const block = imageBlocks[i];
-      console.log(`Processing image ${i + 1}/${imageBlocks.length}:`);
+    for (let i = 0; i < media.length; i++) {
+      const item = media[i];
+      console.log(`Processing ${item.kind} ${i + 1}/${media.length}:`);
 
-      const result = await optimizeImageBlock(block);
-      imageResults.push(result);
+      const result = await optimizeMediaBlock(item);
+      results.push(result);
 
       if (result.success) {
-        imageSuccessCount++;
-        totalOriginalSize += result.originalSize || 0;
-        totalOptimizedSize += result.optimizedSize || 0;
         console.log(`  ✅ Success\n`);
       } else {
-        imageErrorCount++;
         console.log(`  ❌ Error: ${result.error}\n`);
       }
     }
 
-    // Step 4: Upload each video to R2
-    const videoResults = [];
-    let videoSuccessCount = 0;
-    let videoErrorCount = 0;
-    let totalVideoSize = 0;
-
-    for (let i = 0; i < videoBlocks.length; i++) {
-      const block = videoBlocks[i];
-      console.log(`Processing video ${i + 1}/${videoBlocks.length}:`);
-
-      const result = await optimizeVideoBlock(block);
-      videoResults.push(result);
-
-      if (result.success) {
-        videoSuccessCount++;
-        totalVideoSize += result.size || 0;
-        console.log(`  ✅ Success\n`);
-      } else {
-        videoErrorCount++;
-        console.log(`  ❌ Error: ${result.error}\n`);
-      }
-    }
-
-    const totalSavings =
-      totalOriginalSize > 0 ? ((1 - totalOptimizedSize / totalOriginalSize) * 100).toFixed(1) : "0";
+    const stats = summarizeMediaResults(results);
 
     // Same writing purge as /api/purge-cache (widens Redis from content:* to writing:*)
     await purgeContentType("writing");
 
-    const successCount = imageSuccessCount + videoSuccessCount;
-    const errorCount = imageErrorCount + videoErrorCount;
-
     console.log("=".repeat(50));
     console.log(`✅ Optimization complete!`);
-    console.log(`   - Images: ${imageSuccessCount} successful, ${imageErrorCount} failed`);
-    console.log(`   - Videos: ${videoSuccessCount} successful, ${videoErrorCount} failed`);
-    console.log(`   - Image original size: ${(totalOriginalSize / 1024 / 1024).toFixed(2)}MB`);
-    console.log(`   - Image optimized size: ${(totalOptimizedSize / 1024 / 1024).toFixed(2)}MB`);
-    console.log(`   - Image savings: ${totalSavings}%`);
-    console.log(`   - Video size uploaded: ${(totalVideoSize / 1024 / 1024).toFixed(2)}MB`);
+    console.log(
+      `   - Images: ${stats.images.successful} successful, ${stats.images.failed} failed`,
+    );
+    console.log(
+      `   - Videos: ${stats.videos.successful} successful, ${stats.videos.failed} failed`,
+    );
+    console.log(
+      `   - Image original size: ${(stats.images.originalSize / 1024 / 1024).toFixed(2)}MB`,
+    );
+    console.log(
+      `   - Image optimized size: ${(stats.images.optimizedSize / 1024 / 1024).toFixed(2)}MB`,
+    );
+    console.log(`   - Image savings: ${stats.images.savings}`);
+    console.log(`   - Video size uploaded: ${(stats.videos.totalSize / 1024 / 1024).toFixed(2)}MB`);
     console.log("=".repeat(50) + "\n");
 
     return NextResponse.json(
       {
         success: true,
         message: "Writing media optimized and uploaded to R2 successfully",
-        stats: {
-          images: {
-            total: imageBlocks.length,
-            successful: imageSuccessCount,
-            failed: imageErrorCount,
-            originalSize: totalOriginalSize,
-            optimizedSize: totalOptimizedSize,
-            savings: `${totalSavings}%`,
-          },
-          videos: {
-            total: videoBlocks.length,
-            successful: videoSuccessCount,
-            failed: videoErrorCount,
-            totalSize: totalVideoSize,
-          },
-          total: imageBlocks.length + videoBlocks.length,
-          successful: successCount,
-          failed: errorCount,
-        },
-        results: [...imageResults, ...videoResults],
+        stats,
+        results,
       },
       { status: 200 },
     );
