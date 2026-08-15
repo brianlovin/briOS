@@ -1,15 +1,9 @@
-import { getDesignDetailsEpisodeDatabaseItems } from "@/lib/notion";
+import {
+  getDesignDetailsEpisodeDatabaseItems,
+  type NotionDesignDetailsEpisodeItem,
+} from "@/lib/notion";
 
-export type DesignDetailsEpisode = {
-  id: string;
-  title: string;
-  slug: string;
-  description?: string;
-  episodeNumber?: number;
-  publishedDate?: string;
-  imageUrl?: string;
-  audioUrl?: string;
-};
+export type DesignDetailsEpisode = NotionDesignDetailsEpisodeItem;
 
 export async function getDesignDetailsEpisodes(): Promise<DesignDetailsEpisode[]> {
   const all: DesignDetailsEpisode[] = [];

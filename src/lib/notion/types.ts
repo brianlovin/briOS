@@ -9,26 +9,6 @@ import type {
   RichTextItemResponse,
 } from "@notionhq/client/build/src/api-endpoints";
 
-// Re-export generated Zod schemas and types
-export {
-  type AMA,
-  AMASchema,
-  type DesignDetailsEpisodes,
-  DesignDetailsEpisodesSchema,
-  type GoodWebsites,
-  GoodWebsitesSchema,
-  type Music,
-  MusicSchema,
-  type Speaking,
-  SpeakingSchema,
-  type Stack,
-  StackSchema,
-  type TIL,
-  TILSchema,
-  type Writing,
-  WritingSchema,
-} from "../../../schemas/notionSchemas";
-
 // Re-export commonly used Notion SDK types
 export type {
   BlockObjectResponse,
@@ -38,6 +18,9 @@ export type {
   PartialPageObjectResponse,
   RichTextItemResponse,
 };
+
+export const PREVIEW_STATUSES = ["Queued", "Processing", "Done", "Error", "Pending"] as const;
+export type PreviewStatus = (typeof PREVIEW_STATUSES)[number];
 
 // Type for any page response (full or partial) - includes data source types for v5 SDK
 export type PageResponse =
@@ -80,7 +63,8 @@ export type ProcessedBlock = {
   children?: ProcessedBlock[];
 };
 
-// Generic Notion item metadata
+// Generic page metadata for getFullContent / useNotion. Collection-specific
+// records (writing, stack, …) live in their own types below.
 export type NotionItem = {
   id: string;
   title: string;
@@ -88,12 +72,20 @@ export type NotionItem = {
   status: string;
   createdTime: string;
   published?: string;
-  previewBlocks?: ProcessedBlock[];
   source?: string;
   slug?: string;
+};
+
+export type NotionWritingItem = {
+  id: string;
+  title: string;
+  slug: string;
+  published: string;
+  createdTime: string;
   shortId?: string;
   excerpt?: string;
   featureImage?: string;
+  source?: string;
 };
 
 // Stack item type
@@ -110,7 +102,7 @@ export type NotionStackItem = {
   createdTime: string;
   previewImage?: string;
   previewImageDark?: string;
-  previewStatus?: "Queued" | "Processing" | "Done" | "Error";
+  previewStatus?: PreviewStatus;
 };
 
 // Good Website item type
@@ -122,7 +114,8 @@ export type GoodWebsiteItem = {
   icon?: string;
   tags?: string[];
   previewImage?: string;
-  previewStatus?: "Queued" | "Processing" | "Done" | "Error";
+  previewImageDark?: string;
+  previewStatus?: PreviewStatus;
 };
 
 // Good Website item type with date for RSS feed
@@ -220,6 +213,10 @@ export function hasProperties(
   page: PageResponse,
 ): page is PageObjectResponse | PartialPageObjectResponse {
   return "properties" in page;
+}
+
+export function isFullPage(page: PageResponse): page is PageObjectResponse {
+  return page.object === "page" && "properties" in page && "created_time" in page;
 }
 
 // Type guard for BlockObjectResponse

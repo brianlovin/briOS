@@ -134,3 +134,14 @@ export const TILSchema = z.object({
 });
 
 export type TIL = z.infer<typeof TILSchema>;
+
+export const AppDissectionSchema = z.object({
+  Slug: z.string().optional(),
+  Status: z.enum(["Draft", "Published"]).optional(),
+  Published: z.string().optional(),
+  Tint: z.string().optional(),
+  Icon: z.string().optional(),
+  Name: z.string().optional(),
+});
+
+export type AppDissection = z.infer<typeof AppDissectionSchema>;

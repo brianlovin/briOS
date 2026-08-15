@@ -1,20 +1,20 @@
 import { cache } from "react";
 
 import { InfiniteScrollPage, useInfiniteScroll } from "@/hooks/useInfiniteScroll";
-import { getWritingDatabaseItems, NotionItem } from "@/lib/notion";
+import { getWritingDatabaseItems, NotionWritingItem } from "@/lib/notion";
 
-export type WritingPage = InfiniteScrollPage<NotionItem>;
+export type WritingPage = InfiniteScrollPage<NotionWritingItem>;
 
 export function useWritingPosts() {
-  return useInfiniteScroll<NotionItem>((index: number, previousPage: WritingPage | null) => {
+  return useInfiniteScroll<NotionWritingItem>((index: number, previousPage: WritingPage | null) => {
     if (previousPage && !previousPage.nextCursor) return null;
     if (index === 0) return `/api/writing?limit=20`;
     return `/api/writing?cursor=${previousPage?.nextCursor}&limit=20`;
   });
 }
 
-async function fetchAllWritingPosts(): Promise<NotionItem[]> {
-  let allPosts: NotionItem[] = [];
+async function fetchAllWritingPosts(): Promise<NotionWritingItem[]> {
+  let allPosts: NotionWritingItem[] = [];
   let cursor: string | undefined;
   let hasMore = true;
 
