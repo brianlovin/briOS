@@ -14,7 +14,8 @@ export async function generateMetadata(props: {
   const id = params.id;
 
   try {
-    const post = await getPostById(id, false);
+    // Same args as HNPostContent so React cache() shares the detail fetch.
+    const post = await getPostById(id, true);
 
     if (!post) {
       return {

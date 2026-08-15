@@ -14,6 +14,8 @@ import { HackerNewsPost } from "@/types/hackernews";
 import { LoadingSpinner } from "../../components/ui/LoadingSpinner";
 import { HNPostsProvider, useHNPostsContext } from "./HNPostsContext";
 
+const EMPTY_HN_POSTS: HackerNewsPost[] = [];
+
 export default function HNLayout({ children }: { children: React.ReactNode }) {
   const { data: posts, isLoading, isError } = useHNPosts();
 
@@ -38,12 +40,7 @@ export default function HNLayout({ children }: { children: React.ReactNode }) {
 function HNStoriesList() {
   const pathname = usePathname();
   const { posts, isLoading, isError } = useHNPostsContext();
-
-  // Filter out null posts
-  const validPosts = useMemo(
-    () => posts?.filter((post): post is HackerNewsPost => post !== null) ?? [],
-    [posts],
-  );
+  const validPosts = posts ?? EMPTY_HN_POSTS;
 
   // Get current post ID from URL and find its index
   const currentPostId = pathname.split("/").pop();

@@ -3,7 +3,7 @@
 import { useAtomValue } from "jotai";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { memo, useEffect, useMemo, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
 import { hnSubscribedAtom } from "@/atoms/hnSubscription";
@@ -19,7 +19,6 @@ import { stripHtmlTags } from "@/lib/utils";
 import { HackerNewsComment, HackerNewsPost } from "@/types/hackernews";
 
 import { HNCLIUpsell, HNDigestCard } from "../HNDigestCard";
-import { useHNPostsContext } from "../HNPostsContext";
 
 // Sanitize HTML content from external sources (Hacker News). Uses an
 // isomorphic sanitizer so content is stripped on both the server (SSR) and the
@@ -34,16 +33,11 @@ interface HNPostPageClientProps {
 
 export default function HNPostPageClient({ initialPost }: HNPostPageClientProps) {
   const { id } = useParams();
-  const { posts } = useHNPostsContext();
   const isSubscribed = useAtomValue(hnSubscribedAtom);
 
-  // Use server-provided initialPost first, then fall back to context posts
-  const fallbackPost = useMemo(
-    () => initialPost ?? posts?.find((p) => p?.id.toString() === id) ?? null,
-    [initialPost, posts, id],
-  );
-
-  const { post, isLoading, isError } = useHNPost(id as string, fallbackPost);
+  // Only hydrate from a detail fetch. List rows omit `comments` and must not
+  // stand in for a loaded thread (`[]` means empty, not "not fetched").
+  const { post, isLoading, isError } = useHNPost(id as string, initialPost ?? null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef(null);
 
@@ -180,13 +174,13 @@ export default function HNPostPageClient({ initialPost }: HNPostPageClientProps)
 
           <FancySeparator />
 
-          {post?.comments && !!post.comments.length && (
+          {post.comments !== undefined && (
             <div className="relative flex flex-1 flex-col pt-8 md:pt-12">
               <PostComments comments={post.comments} />
             </div>
           )}
 
-          {!isSubscribed && post?.comments && !!post.comments.length && (
+          {!isSubscribed && post.comments !== undefined && post.comments.length > 0 && (
             <div className="pt-8 md:pt-12">
               <FancySeparator />
               <div className="mt-8 flex flex-col gap-4">
