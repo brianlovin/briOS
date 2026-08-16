@@ -1,6 +1,8 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 import { z } from "zod";
 
+import { likeMetaFromRequest, recordLike } from "@/lib/activity";
+import { getActivityStore } from "@/lib/activity-redis";
 import { errorResponse } from "@/lib/api-utils";
 import {
   addLike,
@@ -14,6 +16,12 @@ import { getClientIp, hashUserIp } from "@/lib/user-hash";
 
 const paramsSchema = z.object({
   id: z.string().min(1).max(50),
+});
+
+const likeActivitySchema = z.object({
+  title: z.string().max(200).optional(),
+  href: z.string().max(500).optional(),
+  content_type: z.string().max(50).optional(),
 });
 
 export async function GET(request: Request, props: { params: Promise<{ id: string }> }) {
@@ -62,6 +70,28 @@ export async function POST(request: Request, props: { params: Promise<{ id: stri
 
     // Add the like
     const newCount = await addLike(userId, id);
+
+    let body: { title?: string; href?: string; content_type?: string } = {};
+    try {
+      const raw = await request.text();
+      if (raw) {
+        body = likeActivitySchema.parse(JSON.parse(raw));
+      }
+    } catch {
+      body = {};
+    }
+
+    const meta = likeMetaFromRequest(request, body);
+    if (meta) {
+      const store = getActivityStore();
+      if (store) {
+        after(() => {
+          void recordLike({ ...meta, pageId: id }, store).catch((error) => {
+            console.error("[activity] like ingest failed", error);
+          });
+        });
+      }
+    }
 
     return NextResponse.json({
       count: newCount,
