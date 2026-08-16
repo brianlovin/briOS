@@ -361,7 +361,7 @@ describe("ActivityRow", () => {
     expect(markup).toContain("tabular-nums");
     expect(markup).not.toContain("+18 -3");
     expect(markup).toMatch(
-      /text-primary[^>]*>Merged some-fix[\s\S]*href="https:\/\/github.com\/brianlovin\/briOS\/pull\/12"[^>]*>brianlovin\/briOS#12[\s\S]*font-mono[^>]*>2<[\s\S]*\+18[\s\S]*-3/,
+      /text-primary[^>]*>Merged some-fix[\s\S]*href="https:\/\/github.com\/brianlovin\/briOS\/pull\/12"[^>]*>brianlovin\/briOS#12[\s\S]*data-count="2"[\s\S]*\+18[\s\S]*-3/,
     );
   });
 
@@ -555,10 +555,10 @@ describe("ActivityRow", () => {
     );
 
     expect(markup).toMatch(
-      /text-primary[^>]*>Someone liked[\s\S]*href="https:\/\/cursor.com"[^>]*>Cursor[\s\S]*font-mono[^>]*>2</,
+      /text-primary[^>]*>Someone liked[\s\S]*href="https:\/\/cursor.com"[^>]*>Cursor[\s\S]*data-count="2"/,
     );
     expect(markup).not.toContain("Someone liked Cursor");
-    expect(markup).not.toContain("> 2<");
+    expect(markup).not.toContain('data-count="1"');
   });
 
   test("uses the Shiori orb for any shiori-sourced event", () => {
@@ -742,18 +742,18 @@ describe("ActivityRow", () => {
     );
 
     expect(markup).toContain("Visit from Spring Lake, North Carolina, United States");
-    expect(markup).toContain(">6<");
-    expect(markup).not.toContain("> 6<");
+    expect(markup).toContain('data-count="6"');
     expect(markup).toContain("text-tertiary");
     expect(markup).toContain("font-mono");
     expect(markup).toContain("rounded-sm");
     expect(markup).toContain("border-secondary");
     expect(markup).toContain("tabular-nums");
+    expect(markup).toContain("inline-flex");
     expect(markup).toContain("an AMA question");
     expect(markup).toContain('href="/ama"');
     expect(markup).not.toContain("2f2c711c-0ceb-810d-899d-e5feb99e70f4");
     expect(markup).toMatch(
-      /text-primary[^>]*>🇺🇸 Visit from Spring Lake[\s\S]*href="\/ama"[^>]*>an AMA question[\s\S]*font-mono[^>]*>6</,
+      /text-primary[^>]*>🇺🇸 Visit from Spring Lake[\s\S]*href="\/ama"[^>]*>an AMA question[\s\S]*data-count="6"/,
     );
 
     const single = renderToStaticMarkup(
@@ -780,10 +780,12 @@ describe("ActivityRow", () => {
     );
 
     expect(pulsed).toContain("data-rollup-pulse");
+    expect(pulsed).toContain("activity-rollup-pulse");
     expect(pulsed).toContain("bg-secondary");
     expect(pulsed).not.toContain("transition-colors");
     expect(pulsed).not.toContain("duration-500");
     expect(quiet).not.toContain("data-rollup-pulse");
+    expect(quiet).not.toContain("activity-rollup-pulse");
     expect(quiet).not.toContain("border-b");
     expect(quiet).not.toContain("border-secondary");
     expect(quiet).not.toContain("transition-colors");

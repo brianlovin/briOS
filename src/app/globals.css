@@ -234,6 +234,23 @@
       opacity: 0;
     }
   }
+  @keyframes activity-rollup-pulse {
+    0%,
+    55% {
+      background-color: var(--background-color-secondary);
+    }
+    100% {
+      background-color: transparent;
+    }
+  }
+  .activity-rollup-pulse {
+    animation: activity-rollup-pulse 550ms ease-out forwards;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .activity-rollup-pulse {
+      animation: none;
+    }
+  }
   @keyframes zoom-in {
     from {
       transform: scale(0.95);

@@ -116,6 +116,7 @@ function stackHref(events: ActivityEvent[]): string | undefined {
   return `/${section}`;
 }
 
+/** Consecutive runs only — an interrupting event always starts a new stack. */
 export function rollupActivityEvents(events: ActivityEvent[]): ActivityRollup[] {
   const runs: Array<{
     key: string;

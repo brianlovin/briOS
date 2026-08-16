@@ -18,6 +18,7 @@ import { Heart } from "@/components/icons/Heart";
 import { Shiori } from "@/components/icons/Shiori";
 import { World } from "@/components/icons/World";
 import { ListDetailWrapper } from "@/components/ListDetailWrapper";
+import { RollingDigits } from "@/components/RollingDigits";
 import { useTopBarActions } from "@/components/TopBarActions";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip";
 import type { ActivityEvent, ActivityRollup } from "@/lib/activity";
@@ -195,15 +196,19 @@ export function ActivityRow({
   return (
     <div
       data-rollup-pulse={pulse ? "" : undefined}
-      className={cn(
-        "group hover:bg-secondary flex w-max min-w-full items-center gap-3 py-3 pl-4 md:grid md:w-auto md:min-w-0 md:grid-cols-[2rem_minmax(0,1fr)_auto] md:gap-4 md:px-4 md:py-2 md:dark:hover:bg-white/5",
-        pulse && "bg-secondary",
-      )}
+      className="group hover:bg-secondary relative isolate flex w-max min-w-full items-center gap-3 py-3 pl-4 md:grid md:w-auto md:min-w-0 md:grid-cols-[2rem_minmax(0,1fr)_auto] md:gap-4 md:px-4 md:py-2 md:dark:hover:bg-white/5"
     >
-      <div className="flex size-8 shrink-0 items-center justify-center">
+      {pulse ? (
+        <span
+          key={event.id}
+          aria-hidden
+          className="activity-rollup-pulse pointer-events-none absolute inset-0 z-0"
+        />
+      ) : null}
+      <div className="relative z-10 flex size-8 shrink-0 items-center justify-center">
         <ActivityRowIcon event={event} icon={row.icon} />
       </div>
-      <p className="flex items-baseline gap-1.5 whitespace-nowrap md:min-w-0">
+      <p className="relative z-10 flex items-baseline gap-1.5 whitespace-nowrap md:min-w-0">
         <span className="md:min-w-0 md:truncate">
           <span className="text-primary">{row.summary}</span>
           {href && context ? (
@@ -216,8 +221,11 @@ export function ActivityRow({
           ) : null}
         </span>
         {count > 1 ? (
-          <span className="text-tertiary border-secondary shrink-0 rounded-sm border px-1 font-mono text-[11px] leading-4 tabular-nums">
-            {count}
+          <span
+            data-count={count}
+            className="text-tertiary border-secondary shrink-0 rounded-sm border px-1 font-mono text-[11px] leading-4 tabular-nums"
+          >
+            <RollingDigits value={count} />
           </span>
         ) : null}
         {diff ? (
@@ -436,7 +444,7 @@ function ActivityStackList({
                 count={stack.count}
                 sectionLabel={stack.sectionLabel}
                 href={stack.href}
-                pulse={pulseKey === stack.key}
+                pulse={pulseKey === reactKey}
               />
             </motion.div>
           );
@@ -447,17 +455,20 @@ function ActivityStackList({
 }
 
 function useRollupPulse(stacks: ActivityRollup[]): string | null {
+  const prefersReducedMotion = useReducedMotion();
   const top = stacks[0];
+  const topReactKey = top ? activityStackReactKey(top) : null;
   const [seenTop, setSeenTop] = useState<{ key: string; count: number } | null>(null);
   const [pulseKey, setPulseKey] = useState<string | null>(null);
-  const shouldPulse = shouldPulseActivityRollup(seenTop, top);
-  const nextSeen = top ? { key: top.key, count: top.count } : null;
+  const nextSeen = topReactKey && top ? { key: topReactKey, count: top.count } : null;
+  const shouldPulse =
+    prefersReducedMotion !== true && shouldPulseActivityRollup(seenTop, nextSeen ?? undefined);
   const seenChanged = seenTop?.key !== nextSeen?.key || seenTop?.count !== nextSeen?.count;
 
   if (seenChanged) {
     setSeenTop(nextSeen);
-    if (shouldPulse) {
-      setPulseKey(top.key);
+    if (shouldPulse && topReactKey) {
+      setPulseKey(topReactKey);
     } else if (pulseKey && nextSeen?.key !== pulseKey) {
       setPulseKey(null);
     }
@@ -469,7 +480,7 @@ function useRollupPulse(stacks: ActivityRollup[]): string | null {
     return () => window.clearTimeout(timeout);
   }, [pulseKey, top?.count]);
 
-  return shouldPulse && top ? top.key : pulseKey;
+  return shouldPulse && topReactKey ? topReactKey : pulseKey;
 }
 
 export function ActivityFeed({

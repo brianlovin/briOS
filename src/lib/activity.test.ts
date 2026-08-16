@@ -1665,6 +1665,49 @@ describe("rollupActivityEvents", () => {
     expect(stacks[1]?.sectionLabel).toBe("Grok Bot First Impressions");
   });
 
+  test("starts a fresh Shiori stack after an interrupting visit", () => {
+    const shiori = (id: string): ActivityEvent =>
+      feedEvent({
+        id,
+        source: "shiori",
+        type: "link_saved",
+        summary: "Someone saved a link on Shiori",
+      });
+    const visit = springLakeVisit("visit-sf", "/");
+    const older = Array.from({ length: 15 }, (_, index) => shiori(`old-${index + 1}`));
+
+    expect(rollupActivityEvents(older).map((stack) => stack.count)).toEqual([15]);
+
+    const afterVisit = rollupActivityEvents([visit, ...older]);
+    expect(afterVisit.map((stack) => stack.count)).toEqual([1, 15]);
+    expect(afterVisit[0]?.key).toBe("visit:spring lake, north carolina, united states:home");
+    expect(afterVisit[1]?.key).toBe("shiori:link_saved");
+
+    const afterSave = rollupActivityEvents([shiori("new-1"), visit, ...older]);
+    expect(afterSave.map((stack) => stack.count)).toEqual([1, 1, 15]);
+    expect(afterSave[0]?.key).toBe("shiori:link_saved");
+    expect(afterSave[0]?.latest.id).toBe("new-1");
+    expect(afterSave[2]?.latest.id).toBe("old-1");
+    expect(activityStackReactKey(afterSave[0]!)).not.toBe(activityStackReactKey(afterSave[2]!));
+  });
+
+  test("16 / visit / 15 is only correct when those runs were actually consecutive", () => {
+    const shiori = (id: string): ActivityEvent =>
+      feedEvent({
+        id,
+        source: "shiori",
+        type: "link_saved",
+        summary: "Someone saved a link on Shiori",
+      });
+    const visit = springLakeVisit("visit-sf", "/");
+    const newest = Array.from({ length: 16 }, (_, index) => shiori(`new-${index + 1}`));
+    const older = Array.from({ length: 15 }, (_, index) => shiori(`old-${index + 1}`));
+
+    const stacks = rollupActivityEvents([...newest, visit, ...older]);
+    expect(stacks.map((stack) => stack.count)).toEqual([16, 1, 15]);
+    expect(activityStackReactKey(stacks[0]!)).not.toBe(activityStackReactKey(stacks[2]!));
+  });
+
   test("stacks consecutive Shiori link_saved events, then a like as its own row", () => {
     const shiori = (id: string): ActivityEvent =>
       feedEvent({
@@ -1755,12 +1798,27 @@ describe("rollupActivityEvents", () => {
     expect(capped.has("old-1")).toBe(false);
   });
 
-  test("only pulses when the top stack count increments", () => {
-    const top = { key: "visit:spring lake, north carolina, united states:ama", count: 3 };
+  test("only pulses when the same run's count increments", () => {
+    const top = { key: "visit:sf:ama:oldest", count: 3 };
     expect(shouldPulseActivityRollup(null, { ...top, count: 1 })).toBe(false);
     expect(shouldPulseActivityRollup(top, { ...top, count: 4 })).toBe(true);
     expect(shouldPulseActivityRollup(top, { ...top, count: 3 })).toBe(false);
-    expect(shouldPulseActivityRollup(top, { key: "like:/stack", count: 1 })).toBe(false);
+    expect(shouldPulseActivityRollup(top, { key: "like:/stack:other", count: 1 })).toBe(false);
+  });
+
+  test("does not pulse a new independent run that shares a rollup key", () => {
+    expect(
+      shouldPulseActivityRollup(
+        { key: "shiori:link_saved:old-anchor", count: 15 },
+        { key: "shiori:link_saved:new-anchor", count: 1 },
+      ),
+    ).toBe(false);
+    expect(
+      shouldPulseActivityRollup(
+        { key: "shiori:link_saved:old-anchor", count: 15 },
+        { key: "shiori:link_saved:old-anchor", count: 16 },
+      ),
+    ).toBe(true);
   });
 });
 
