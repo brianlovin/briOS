@@ -213,7 +213,7 @@ describe("ActivityRow", () => {
 
     expect(markup).toContain("Opened a pull request on briOS");
     expect(markup).toContain("Add activity feed");
-    expect(markup).toContain("16.0041 19.25 12 19.25");
+    expect(markup).toContain("M12 2C6.477 2 2 6.477 2 12c0 4.42");
     expect(markup).not.toContain("text-red-500");
   });
 
@@ -304,5 +304,45 @@ describe("ActivityRow", () => {
       expect(markup).toContain("🥤");
       expect(markup).not.toContain("☕");
     }
+  });
+
+  test("shows the official GitHub mark on star and PR rows", () => {
+    const officialMark = "M12 2C6.477 2 2 6.477 2 12c0 4.42";
+    const pulse = "M4.75 11.75H8.25L10.25 4.75";
+
+    const starred = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "github",
+          type: "repo_starred",
+          speed: "event",
+          summary: "Someone starred brios",
+        })}
+      />,
+    );
+    const prOpened = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          type: "pr_opened",
+          speed: "event",
+          summary: "Opened a pull request",
+        })}
+      />,
+    );
+    const visit = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          summary: "🇮🇳 Visit from India",
+          meta: { country: "IN" },
+        })}
+      />,
+    );
+
+    expect(starred).toContain(officialMark);
+    expect(starred).toContain("text-primary");
+    expect(starred).not.toContain(pulse);
+    expect(prOpened).toContain(officialMark);
+    expect(prOpened).not.toContain(pulse);
+    expect(visit).not.toContain(officialMark);
   });
 });
