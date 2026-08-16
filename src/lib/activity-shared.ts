@@ -11,6 +11,11 @@ export const ACTIVITY_META_MAX_BYTES = 2048;
 export const ACTIVITY_BODY_MAX_BYTES = 8192;
 export const ACTIVITY_SOURCE_BRIOS = "brios";
 
+/** CDN + browser cache for the public activity poll blob. */
+export const ACTIVITY_FEED_CACHE_CONTROL = "public, s-maxage=2, stale-while-revalidate=30";
+export const ACTIVITY_FEED_POLL_MS = 2000;
+export const ACTIVITY_FEED_DEDUPING_MS = 1000;
+
 export type ActivitySpeed = "event" | "signal";
 export type ActivityVisibility = "public" | "private";
 
@@ -42,6 +47,22 @@ export type ActivityTotal = {
   count: number;
   first_seen: string;
 };
+
+export type ActivityFeedPayload = {
+  events: ActivityEvent[];
+  totals: ActivityTotal[];
+};
+
+/** SWR refreshInterval: poll while the tab is visible, pause when hidden. */
+export function activityFeedRefreshInterval(visibilityState: string | null | undefined): number {
+  return visibilityState === "visible" ? ACTIVITY_FEED_POLL_MS : 0;
+}
+
+export function isActivityFeedPayload(value: unknown): value is ActivityFeedPayload {
+  if (!value || typeof value !== "object") return false;
+  const record = value as Record<string, unknown>;
+  return Array.isArray(record.events) && Array.isArray(record.totals);
+}
 
 export type ActivityIngestInput = {
   v?: number;

@@ -1,6 +1,12 @@
 import { Redis } from "@upstash/redis";
 
-import { type ActivityEvent, type ActivityStore, type ActivityTotal } from "./activity";
+import {
+  type ActivityEvent,
+  type ActivityFeedPayload,
+  type ActivityStore,
+  type ActivityTotal,
+  buildActivityFeed,
+} from "./activity";
 import { ACTIVITY_STREAM_MAXLEN } from "./activity-shared";
 
 const STREAM_KEY = "activity:stream";
@@ -220,16 +226,9 @@ export function getActivityStore(): ActivityStore | null {
   return redisStore;
 }
 
-export async function getActivityPageData(): Promise<{
-  events: ActivityEvent[];
-  totals: ActivityTotal[];
-}> {
-  const store = getActivityStore();
-  if (!store) return { events: [], totals: [] };
-
+export async function getActivityPageData(): Promise<ActivityFeedPayload> {
   try {
-    const [events, totals] = await Promise.all([store.getTail(100), store.getTotals()]);
-    return { events, totals };
+    return await buildActivityFeed(getActivityStore());
   } catch (error) {
     console.error("[activity] failed to read feed", error);
     return { events: [], totals: [] };

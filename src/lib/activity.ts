@@ -8,6 +8,7 @@ import {
   ACTIVITY_STREAM_MAXLEN,
   ACTIVITY_VISIT_STREAM_MAX_PER_SEC,
   type ActivityEvent,
+  type ActivityFeedPayload,
   type ActivityIngestInput,
   type ActivityRef,
   type ActivitySpeed,
@@ -22,6 +23,7 @@ import {
 
 export type {
   ActivityEvent,
+  ActivityFeedPayload,
   ActivityIngestInput,
   ActivityRef,
   ActivitySpeed,
@@ -30,15 +32,20 @@ export type {
 } from "./activity-shared";
 export {
   ACTIVITY_ENVELOPE_VERSION,
+  ACTIVITY_FEED_CACHE_CONTROL,
+  ACTIVITY_FEED_DEDUPING_MS,
+  ACTIVITY_FEED_POLL_MS,
   ACTIVITY_SOURCE_BRIOS,
   ACTIVITY_STREAM_MAXLEN,
   ACTIVITY_VISIT_STREAM_MAX_PER_SEC,
+  activityFeedRefreshInterval,
   findForbiddenPii,
   formatTotalLabel,
   getActivityRow,
   getRequestCountry,
   inferContentTypeFromPath,
   inferTitleFromPath,
+  isActivityFeedPayload,
   isActivityPath,
   shouldRecordVisit,
 } from "./activity-shared";
@@ -57,6 +64,12 @@ export type ActivityStore = {
   incrementVisitWindow(windowKey: string, ttlSeconds: number): Promise<number>;
   incrementCountryTotal(country: string): Promise<number>;
 };
+
+export async function buildActivityFeed(store: ActivityStore | null): Promise<ActivityFeedPayload> {
+  if (!store) return { events: [], totals: [] };
+  const [events, totals] = await Promise.all([store.getTail(100), store.getTotals()]);
+  return { events, totals };
+}
 
 export function createMemoryActivityStore(options: { maxLen?: number } = {}): ActivityStore {
   const maxLen = options.maxLen ?? ACTIVITY_STREAM_MAXLEN;
