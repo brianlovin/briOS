@@ -253,7 +253,8 @@ describe("recordVisit", () => {
     );
     expect("ok" in result && result.ok).toBe(true);
 
-    const event = (await store.getTail(10)).find((item) => item.type === "visit");
+    const [event] = await store.getTail(1);
+    expect(event?.type).toBe("visit");
     expect(event?.summary).toBe("🇮🇳 Visit from India");
     expect(event?.subject).toEqual({
       kind: "writing",
@@ -288,7 +289,8 @@ describe("recordVisit", () => {
       },
       store,
     );
-    const event = (await store.getTail(10)).find((item) => item.type === "visit");
+    const [event] = await store.getTail(1);
+    expect(event?.type).toBe("visit");
     expect(event?.summary).toBe("🇺🇸 Visit from San Francisco, California, United States");
     expect(event?.meta).toEqual({
       country: "US",
@@ -330,6 +332,41 @@ describe("recordVisit", () => {
     });
   });
 
+  test("still flags leftover first-country stream rows", () => {
+    const row = getActivityRow({
+      v: 1,
+      id: "old-first",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "visit_country_first",
+      speed: "event",
+      summary: "First visit from IN",
+      visibility: "public",
+      idempotency_key: "old-first",
+      meta: { country: "IN" },
+    });
+    expect(row).toEqual({
+      summary: "First visit from IN",
+      flag: "🇮🇳",
+    });
+  });
+
+  test("does not emit a first-country event", async () => {
+    const store = createMemoryActivityStore();
+    await recordVisit({ path: "/writing", country: "FR" }, store);
+    await recordVisit({ path: "/writing", country: "FR" }, store);
+    await recordVisit({ path: "/til", country: "JP" }, store);
+
+    const events = await store.getTail(20);
+    expect(events).toHaveLength(3);
+    expect(events.every((event) => event.type === "visit")).toBe(true);
+    expect(events.some((event) => event.type === "visit_country_first")).toBe(false);
+    expect(await store.getTotals()).toEqual([
+      expect.objectContaining({ source: "brios", type: "visit", count: 3 }),
+    ]);
+  });
+
   test("does not ingest a visit for /activity/nested", async () => {
     const store = createMemoryActivityStore();
     await recordVisit({ path: "/activity/nested" }, store);
@@ -351,7 +388,7 @@ describe("recordVisit", () => {
       expect.objectContaining({ source: "brios", type: "visit", count: burst }),
     );
     expect(totals.find((total) => total.type === "visit_country_first")).toBeUndefined();
-    expect(await store.getStreamLength()).toBe(ACTIVITY_VISIT_STREAM_MAX_PER_SEC + 1);
+    expect(await store.getStreamLength()).toBe(ACTIVITY_VISIT_STREAM_MAX_PER_SEC);
     expect(await store.getStreamLength()).toBeLessThan(ACTIVITY_STREAM_MAXLEN);
   });
 });
@@ -389,37 +426,6 @@ describe("recordDigestSubscribed", () => {
     expect(await store.getTotals()).toEqual([
       expect.objectContaining({ source: "brios", type: "digest_subscribed", count: 2 }),
     ]);
-  });
-});
-
-describe("visit_country_first", () => {
-  test("fires once per country when a visit increments 0→1", async () => {
-    const store = createMemoryActivityStore();
-
-    await recordVisit({ path: "/writing", country: "FR" }, store);
-    await recordVisit({ path: "/writing", country: "FR" }, store);
-    await recordVisit({ path: "/til", country: "JP" }, store);
-
-    const events = await store.getTail(20);
-    const firsts = events.filter((event) => event.type === "visit_country_first");
-    expect(firsts).toHaveLength(2);
-    expect(firsts.map((event) => event.meta?.country).sort()).toEqual(["FR", "JP"]);
-    expect(firsts.every((event) => event.source === "brios")).toBe(true);
-    expect(firsts.every((event) => event.visibility === "public")).toBe(true);
-    expect(JSON.stringify(firsts)).not.toMatch(/\d{1,3}(?:\.\d{1,3}){3}/);
-
-    expect(await store.incrementCountryTotal("FR")).toBe(3);
-    expect(await store.incrementCountryTotal("JP")).toBe(2);
-    expect(await store.getTotals().then((totals) => totals.map((total) => total.type))).toEqual([
-      "visit",
-    ]);
-  });
-
-  test("does not record a first-country event for /activity", async () => {
-    const store = createMemoryActivityStore();
-    await recordVisit({ path: "/activity", country: "BR" }, store);
-    expect(await store.getTotals()).toEqual([]);
-    expect(await store.incrementCountryTotal("BR")).toBe(1);
   });
 });
 
