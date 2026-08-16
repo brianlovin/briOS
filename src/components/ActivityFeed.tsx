@@ -51,7 +51,7 @@ function RelativeTime({ iso }: { iso: string }) {
   );
 }
 
-function ActivityRow({ event }: { event: ActivityEvent }) {
+export function ActivityRow({ event }: { event: ActivityEvent }) {
   const row = getActivityRow(event);
   const href = row.href;
 
