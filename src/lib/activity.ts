@@ -242,6 +242,18 @@ function applyIngestDefaults(input: ActivityIngestInput): ActivityIngestInput {
     };
   }
 
+  if (input.source === "shiori" && (input.type === "link_saved" || input.type === "link_clicked")) {
+    return {
+      ...input,
+      speed: input.speed ?? "event",
+      summary:
+        input.summary?.trim() ||
+        (input.type === "link_clicked"
+          ? "Someone clicked a link on Shiori"
+          : "Someone saved a link on Shiori"),
+    };
+  }
+
   return input;
 }
 

@@ -22,7 +22,7 @@ export const ACTIVITY_REGISTRY = {
     "repo_starred",
     "caffeinated",
   ],
-  shiori: ["link_saved", "signed_up", "subscription_started", "download"],
+  shiori: ["link_saved", "link_clicked", "signed_up", "subscription_started", "download"],
   "tax-ui": ["visit", "download"],
   "staff-design": ["visit"],
   "design-details": ["visit"],

@@ -628,6 +628,10 @@ export function getActivityRow(event: ActivityEvent): {
     };
   }
 
+  if (event.source === "shiori" && (event.type === "link_saved" || event.type === "link_clicked")) {
+    return { summary: event.summary };
+  }
+
   return {
     summary: event.summary,
     href: event.subject?.href,

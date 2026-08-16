@@ -764,6 +764,51 @@ describe("HMAC download ingest", () => {
       label: "Shiori",
     });
   });
+
+  test("accepts HMAC Shiori link_clicked without subject, url, or meta", async () => {
+    const store = createMemoryActivityStore();
+    const result = await ingestActivityEvent(
+      {
+        source: "shiori",
+        type: "link_clicked",
+        idempotency_key: "hmac:shiori:link_clicked:1",
+      },
+      store,
+    );
+
+    expect(result.ok && !result.duplicate).toBe(true);
+    const [event] = await store.getTail(1);
+    expect(event?.source).toBe("shiori");
+    expect(event?.type).toBe("link_clicked");
+    expect(event?.speed).toBe("event");
+    expect(event?.summary).toBe("Someone clicked a link on Shiori");
+    expect(event?.subject).toBeUndefined();
+    expect(event?.meta).toBeUndefined();
+    expect(event?.actor).toBeUndefined();
+    expect(JSON.stringify(event)).not.toMatch(/https?:\/\//);
+    expect(getActivityRow(event!)).toEqual({
+      summary: "Someone clicked a link on Shiori",
+    });
+  });
+
+  test("does not leak a subject URL from a Shiori link_clicked row", async () => {
+    const store = createMemoryActivityStore();
+    const result = await ingestActivityEvent(
+      {
+        source: "shiori",
+        type: "link_clicked",
+        summary: "Someone clicked a link on Shiori",
+        idempotency_key: "hmac:shiori:link_clicked:url",
+        subject: { kind: "link", label: "A saved page", href: "https://example.com/secret" },
+      },
+      store,
+    );
+
+    expect(result.ok && !result.duplicate).toBe(true);
+    expect(getActivityRow((await store.getTail(1))[0]!)).toEqual({
+      summary: "Someone clicked a link on Shiori",
+    });
+  });
 });
 
 describe("activity source helpers", () => {
@@ -1490,6 +1535,29 @@ describe("rollupActivityEvents", () => {
     expect(stacks[0]?.latest.id).toBe("s1");
     expect(stacks[1]?.count).toBe(1);
     expect(stacks[1]?.key).toBe("like:/stack");
+  });
+
+  test("stacks consecutive Shiori link_clicked events separately from saves", () => {
+    const click = (id: string): ActivityEvent =>
+      feedEvent({
+        id,
+        source: "shiori",
+        type: "link_clicked",
+        summary: "Someone clicked a link on Shiori",
+      });
+    const save = feedEvent({
+      id: "save-1",
+      source: "shiori",
+      type: "link_saved",
+      summary: "Someone saved a link on Shiori",
+    });
+
+    const stacks = rollupActivityEvents([click("c1"), click("c2"), save]);
+    expect(stacks).toHaveLength(2);
+    expect(stacks[0]?.count).toBe(2);
+    expect(stacks[0]?.key).toBe("shiori:link_clicked");
+    expect(stacks[1]?.count).toBe(1);
+    expect(stacks[1]?.key).toBe("shiori:link_saved");
   });
 
   test("does not stack likes for different apps", () => {
