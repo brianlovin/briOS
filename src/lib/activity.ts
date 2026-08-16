@@ -1,6 +1,13 @@
 import { createHash } from "crypto";
 
-import { type ActivityGeo, countryCodeToName, formatVisitSummary } from "./activity-geo";
+import {
+  type ActivityGeo,
+  countryCodeToName,
+  formatVisitSummary,
+  geoFromVisitMeta,
+} from "./activity-geo";
+import { githubActivityFromWebhook } from "./activity-github";
+import { isRegisteredActivityEvent } from "./activity-registry";
 import {
   ACTIVITY_ENVELOPE_VERSION,
   ACTIVITY_IDEMPOTENCY_TTL_SECONDS,
@@ -12,12 +19,16 @@ import {
   type ActivityFeedPayload,
   type ActivityIngestInput,
   type ActivityRef,
+  activitySourceLabel,
   type ActivitySpeed,
   type ActivityTotal,
   findForbiddenPii,
+  formatDownloadSummary,
   inferContentTypeFromPath,
   inferTitleFromPath,
   isActivityPath,
+  normalizeCaffeineDrink,
+  resolveVisitTitle,
   shouldCountLifetimeTotal,
   shouldRecordVisit,
   visibleLifetimeTotals,
@@ -25,6 +36,14 @@ import {
 
 export type { ActivityGeo } from "./activity-geo";
 export { countryCodeToName, formatVisitSummary, getRequestGeo } from "./activity-geo";
+export type { GithubActivityDecision } from "./activity-github";
+export {
+  githubActivityFromWebhook,
+  isDependabotActor,
+  isGithubBotActor,
+  verifyGithubWebhookSignature,
+} from "./activity-github";
+export { isRegisteredActivityEvent } from "./activity-registry";
 export type {
   ActivityEvent,
   ActivityFeedPayload,
@@ -40,18 +59,30 @@ export {
   ACTIVITY_FEED_DEDUPING_MS,
   ACTIVITY_FEED_POLL_MS,
   ACTIVITY_SOURCE_BRIOS,
+  ACTIVITY_SOURCE_GITHUB,
+  ACTIVITY_SOURCE_LABELS,
   ACTIVITY_STREAM_MAXLEN,
   ACTIVITY_VISIT_STREAM_MAX_PER_SEC,
   activityFeedRefreshInterval,
+  activitySourceFaviconSrc,
+  activitySourceLabel,
+  activitySourceUrl,
   countryCodeToFlag,
   findForbiddenPii,
+  formatDownloadSummary,
   formatTotalLabel,
   getActivityRow,
+  getCaffeineIcon,
+  getMergedPullRequestDiff,
   getRequestCountry,
   inferContentTypeFromPath,
   inferTitleFromPath,
   isActivityFeedPayload,
   isActivityPath,
+  isCoffeeFamilyDrink,
+  normalizeCaffeineDrink,
+  resolveActivitySourceHref,
+  resolveVisitTitle,
   shouldCountLifetimeTotal,
   shouldRecordVisit,
   visibleLifetimeTotals,
@@ -141,6 +172,58 @@ function validateRef(name: string, value: unknown): string | null {
   return null;
 }
 
+function applyIngestDefaults(input: ActivityIngestInput): ActivityIngestInput {
+  if (input.type === "visit") {
+    const meta = isPlainObject(input.meta) ? { ...input.meta } : {};
+    const path =
+      typeof meta.path === "string" && meta.path ? meta.path : input.subject?.href || "/";
+    const providedTitle = typeof meta.title === "string" ? meta.title : input.subject?.label;
+    const title = resolveVisitTitle(path, providedTitle);
+    const geo = geoFromVisitMeta(meta);
+    const country = geo.country?.trim() || undefined;
+    const countryName = geo.countryName || (country ? countryCodeToName(country) : undefined);
+    const region = geo.region;
+    const regionName = geo.regionName;
+    const city = geo.city;
+    const summary =
+      input.summary?.trim() ||
+      formatVisitSummary({ country, countryName, region, regionName, city });
+
+    return {
+      ...input,
+      speed: input.speed ?? "signal",
+      summary,
+      subject: input.subject ?? {
+        kind: inferContentTypeFromPath(path),
+        label: title,
+        href: path,
+      },
+      meta: {
+        ...meta,
+        ...(country ? { country } : {}),
+        ...(countryName && countryName !== country ? { country_name: countryName } : {}),
+        ...(region ? { region } : {}),
+        ...(regionName ? { region_name: regionName } : {}),
+        ...(city ? { city } : {}),
+        path,
+        title,
+      },
+    };
+  }
+
+  if (input.type === "download") {
+    const label = input.subject?.label?.trim() || activitySourceLabel(input.source);
+    return {
+      ...input,
+      speed: input.speed ?? "event",
+      summary: input.summary?.trim() || formatDownloadSummary(input.source, label),
+      subject: input.subject ?? { kind: "download", label },
+    };
+  }
+
+  return input;
+}
+
 export function validateIngestInput(input: ActivityIngestInput): string | null {
   if (!input.source || typeof input.source !== "string") return "source is required";
   if (!input.type || typeof input.type !== "string") return "type is required";
@@ -171,34 +254,39 @@ export async function ingestActivityEvent(
   store: ActivityStore,
   now: Date = new Date(),
 ): Promise<IngestResult> {
-  const fieldError = validateIngestInput(input);
+  if (!input.source || !input.type || !isRegisteredActivityEvent(input.source, input.type)) {
+    return { ok: false, error: "unregistered source/type", status: 400 };
+  }
+
+  const normalized = applyIngestDefaults(input);
+  const fieldError = validateIngestInput(normalized);
   if (fieldError) return { ok: false, error: fieldError, status: 400 };
 
-  const pii = findForbiddenPii(input);
+  const pii = findForbiddenPii(normalized);
   if (pii) {
     return { ok: false, error: `payload contains forbidden data (${pii})`, status: 400 };
   }
 
   const receivedAt = now.toISOString();
   const event: ActivityEvent = {
-    v: input.v ?? ACTIVITY_ENVELOPE_VERSION,
-    id: input.id ?? crypto.randomUUID(),
-    ts: input.ts ?? receivedAt,
+    v: normalized.v ?? ACTIVITY_ENVELOPE_VERSION,
+    id: normalized.id ?? crypto.randomUUID(),
+    ts: normalized.ts ?? receivedAt,
     received_at: receivedAt,
-    source: input.source,
-    type: input.type,
-    speed: input.speed,
-    summary: input.summary,
-    visibility: input.visibility ?? "public",
-    idempotency_key: input.idempotency_key,
-    ...(input.actor ? { actor: input.actor } : {}),
-    ...(input.subject ? { subject: input.subject } : {}),
-    ...(input.meta ? { meta: input.meta } : {}),
+    source: normalized.source,
+    type: normalized.type,
+    speed: normalized.speed ?? "event",
+    summary: normalized.summary ?? "",
+    visibility: normalized.visibility ?? "public",
+    idempotency_key: normalized.idempotency_key,
+    ...(normalized.actor ? { actor: normalized.actor } : {}),
+    ...(normalized.subject ? { subject: normalized.subject } : {}),
+    ...(normalized.meta ? { meta: normalized.meta } : {}),
   };
 
   const claimed = await store.claimIdempotency(
     event.idempotency_key,
-    input.idempotencyTtlSeconds ?? ACTIVITY_IDEMPOTENCY_TTL_SECONDS,
+    normalized.idempotencyTtlSeconds ?? ACTIVITY_IDEMPOTENCY_TTL_SECONDS,
   );
 
   if (!claimed) {
@@ -209,7 +297,7 @@ export async function ingestActivityEvent(
     await store.incrementTotal(event.source, event.type, event.received_at);
   }
 
-  const writeToStream = input.writeToStream !== false;
+  const writeToStream = normalized.writeToStream !== false;
   if (writeToStream) {
     await store.addToStream(event);
   }
@@ -247,7 +335,7 @@ export async function recordLike(
 }
 
 export async function recordVisit(
-  input: { path: string } & ActivityGeo,
+  input: { path: string; title?: string } & ActivityGeo,
   store: ActivityStore,
   now: Date = new Date(),
 ): Promise<IngestResult | { skipped: true; reason: string }> {
@@ -262,7 +350,7 @@ export async function recordVisit(
   const regionName = input.regionName?.trim() || undefined;
   const city = input.city?.trim() || undefined;
   const summary = formatVisitSummary({ country, countryName, region, regionName, city });
-  const title = inferTitleFromPath(input.path);
+  const title = resolveVisitTitle(input.path, input.title);
   const windowKey = `visit:${Math.floor(now.getTime() / 1000)}`;
   const windowCount = await store.incrementVisitWindow(windowKey, 2);
   const writeToStream = windowCount <= ACTIVITY_VISIT_STREAM_MAX_PER_SEC;
@@ -290,6 +378,48 @@ export async function recordVisit(
         title,
       },
       writeToStream,
+    },
+    store,
+    now,
+  );
+}
+
+export async function recordGithubActivity(
+  githubEvent: string,
+  payload: unknown,
+  store: ActivityStore,
+  now: Date = new Date(),
+): Promise<IngestResult | { skipped: true; reason: string }> {
+  const decision = githubActivityFromWebhook(githubEvent, payload);
+  if (decision.status === "ignore") {
+    return { skipped: true, reason: decision.reason };
+  }
+  return ingestActivityEvent(decision.input, store, now);
+}
+
+export async function recordCaffeine(
+  input: { drink: string },
+  store: ActivityStore,
+  now: Date = new Date(),
+): Promise<IngestResult> {
+  const drink = normalizeCaffeineDrink(input.drink);
+  if (!drink) {
+    return { ok: false, error: "drink is required", status: 400 };
+  }
+
+  const day = now.toISOString().slice(0, 10);
+  const slug = drink.toLowerCase().replace(/\s+/g, "-");
+
+  return ingestActivityEvent(
+    {
+      source: ACTIVITY_SOURCE_BRIOS,
+      type: "caffeinated",
+      speed: "event",
+      summary: `Caffeinated with ${drink}`,
+      visibility: "public",
+      idempotency_key: `brios:caffeinated:${day}:${slug}:${crypto.randomUUID()}`,
+      subject: { kind: "drink", label: drink },
+      meta: { drink },
     },
     store,
     now,

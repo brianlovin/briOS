@@ -1,23 +1,31 @@
 import { describe, expect, test } from "bun:test";
 
 import {
+  activitySourceFaviconSrc,
+  activitySourceUrl,
   countryCodeToFlag,
   countryCodeToName,
   createMemoryActivityStore,
   findForbiddenPii,
+  formatDownloadSummary,
+  formatTotalLabel,
   formatVisitSummary,
   getActivityRow,
+  getCaffeineIcon,
   getRequestCountry,
   getRequestGeo,
   hashDigestSubscriber,
   ingestActivityEvent,
   likeMetaFromRequest,
+  recordCaffeine,
   recordDigestSubscribed,
   recordLike,
   recordVisit,
+  resolveActivitySourceHref,
   shouldRecordVisit,
   visibleLifetimeTotals,
 } from "@/lib/activity";
+import { geoFromVisitMeta } from "@/lib/activity-geo";
 import { parseActivityStreamFields } from "@/lib/activity-redis";
 import { ACTIVITY_STREAM_MAXLEN, ACTIVITY_VISIT_STREAM_MAX_PER_SEC } from "@/lib/activity-shared";
 
@@ -105,7 +113,7 @@ describe("ingestActivityEvent", () => {
     ]);
   });
 
-  test("unknown type is valid when summary is present", async () => {
+  test("rejects an unregistered type even when summary is present", async () => {
     const store = createMemoryActivityStore();
     const result = await ingestActivityEvent(
       baseEvent({
@@ -116,31 +124,92 @@ describe("ingestActivityEvent", () => {
       store,
     );
 
-    expect(result.ok).toBe(true);
-    const [event] = await store.getTail(10);
-    expect(event?.type).toBe("weird_new_thing");
-    expect(getActivityRow(event!)).toEqual({
-      summary: "A brand new event happened",
-      href: "/hello",
-      label: "Hello",
-    });
+    expect(result).toEqual({ ok: false, error: "unregistered source/type", status: 400 });
+    expect(await store.getStreamLength()).toBe(0);
   });
 
-  test("does not increment lifetime totals for visit_country_first", async () => {
+  test("HMAC ingest of staff-design + visit succeeds and fills the visit shape", async () => {
     const store = createMemoryActivityStore();
     const result = await ingestActivityEvent(
-      baseEvent({
-        type: "visit_country_first",
-        speed: "signal",
-        summary: "First visit from Russia",
-      }),
+      {
+        source: "staff-design",
+        type: "visit",
+        idempotency_key: "hmac:staff-design:visit:1",
+        meta: { path: "/karla-mickens-cole", title: "Karla Mickens Cole", country: "DE" },
+      },
       store,
     );
 
-    expect(result.ok).toBe(true);
-    expect(await store.getStreamLength()).toBe(1);
-    expect(await store.getTotals()).toEqual([]);
-    expect(visibleLifetimeTotals(await store.getTotals())).toEqual([]);
+    expect(result.ok && !result.duplicate).toBe(true);
+    const [event] = await store.getTail(1);
+    expect(event?.source).toBe("staff-design");
+    expect(event?.type).toBe("visit");
+    expect(event?.speed).toBe("signal");
+    expect(event?.summary).toBe("🇩🇪 Visit from Germany");
+    expect(event?.subject).toEqual({
+      kind: "page",
+      label: "Karla Mickens Cole",
+      href: "/karla-mickens-cole",
+    });
+    expect(event?.meta).toEqual(
+      expect.objectContaining({
+        path: "/karla-mickens-cole",
+        title: "Karla Mickens Cole",
+        country: "DE",
+        country_name: "Germany",
+      }),
+    );
+  });
+
+  test("decodes percent-encoded HMAC visit city before storing", async () => {
+    const store = createMemoryActivityStore();
+    const result = await ingestActivityEvent(
+      {
+        source: "tax-ui",
+        type: "visit",
+        idempotency_key: "hmac:tax-ui:visit:encoded-city",
+        meta: { path: "/", city: "San%20Francisco", region: "CA", country: "US" },
+      },
+      store,
+    );
+
+    expect(result.ok && !result.duplicate).toBe(true);
+    const [event] = await store.getTail(1);
+    expect(event?.meta?.city).toBe("San Francisco");
+    expect(event?.summary).toContain("San Francisco");
+    expect(event?.summary).not.toContain("San%20Francisco");
+    expect(JSON.stringify(event?.meta)).not.toContain("San%20Francisco");
+  });
+
+  test("HMAC ingest of staff-design + like is rejected", async () => {
+    const store = createMemoryActivityStore();
+    const result = await ingestActivityEvent(
+      baseEvent({
+        source: "staff-design",
+        type: "like",
+        summary: "Someone liked a page",
+      }),
+      store,
+    );
+    expect(result).toEqual({ ok: false, error: "unregistered source/type", status: 400 });
+    expect(await store.getStreamLength()).toBe(0);
+  });
+
+  test("HMAC ingest of an unknown source is rejected", async () => {
+    const store = createMemoryActivityStore();
+    const result = await ingestActivityEvent(
+      baseEvent({
+        source: "evil",
+        type: "visit",
+        summary: "Visit from Germany",
+      }),
+      store,
+    );
+    expect(result).toEqual({ ok: false, error: "unregistered source/type", status: 400 });
+    expect(await store.getStreamLength()).toBe(0);
+  });
+
+  test("does not increment lifetime totals for visit_country_first", async () => {
     expect(
       visibleLifetimeTotals([
         { source: "brios", type: "visit", count: 10, first_seen: "2026-08-16T00:00:00.000Z" },
@@ -234,6 +303,18 @@ describe("formatVisitSummary", () => {
   test("keeps an unknown country code", () => {
     expect(formatVisitSummary({ country: "ZZ" })).toBe(`${countryCodeToFlag("ZZ")} Visit from ZZ`);
   });
+
+  test("decodes percent-encoded city from HMAC visit meta", () => {
+    const summary = formatVisitSummary(
+      geoFromVisitMeta({
+        city: "San%20Francisco",
+        region: "CA",
+        country: "US",
+      }),
+    );
+    expect(summary).toContain("San Francisco");
+    expect(summary).not.toContain("San%20Francisco");
+  });
 });
 
 describe("recordVisit", () => {
@@ -269,11 +350,38 @@ describe("recordVisit", () => {
       title: "grok bot first impressions",
     });
     expect(getActivityRow(event!)).toEqual({
-      summary: "Visit from India",
-      flag: "🇮🇳",
+      summary: "🇮🇳 Visit from India",
       href: "/writing/grok-bot-first-impressions",
       label: "grok bot first impressions",
     });
+    expect(event?.source).toBe("brios");
+  });
+
+  test("uses a provided title instead of inferring from the path", async () => {
+    const store = createMemoryActivityStore();
+    const result = await recordVisit(
+      {
+        path: "/writing/grok-bot-first-impressions",
+        title: "  Grok Bot first impressions  ",
+        country: "US",
+      },
+      store,
+    );
+    expect("ok" in result && result.ok).toBe(true);
+
+    const [event] = await store.getTail(1);
+    expect(event?.source).toBe("brios");
+    expect(event?.subject).toEqual({
+      kind: "writing",
+      label: "Grok Bot first impressions",
+      href: "/writing/grok-bot-first-impressions",
+    });
+    expect(event?.meta).toEqual(
+      expect.objectContaining({
+        path: "/writing/grok-bot-first-impressions",
+        title: "Grok Bot first impressions",
+      }),
+    );
   });
 
   test("prefers city and region in the visit summary", async () => {
@@ -327,8 +435,7 @@ describe("recordVisit", () => {
       meta: { country: "IN" },
     });
     expect(row).toEqual({
-      summary: "Visit from India",
-      flag: "🇮🇳",
+      summary: "🇮🇳 Visit from India",
     });
   });
 
@@ -347,8 +454,7 @@ describe("recordVisit", () => {
       meta: { country: "IN" },
     });
     expect(row).toEqual({
-      summary: "First visit from IN",
-      flag: "🇮🇳",
+      summary: "🇮🇳 First visit from IN",
     });
   });
 
@@ -426,6 +532,98 @@ describe("recordDigestSubscribed", () => {
     expect(await store.getTotals()).toEqual([
       expect.objectContaining({ source: "brios", type: "digest_subscribed", count: 2 }),
     ]);
+  });
+});
+
+describe("HMAC download ingest", () => {
+  test("fills a missing download summary from the source label", async () => {
+    const store = createMemoryActivityStore();
+    const result = await ingestActivityEvent(
+      {
+        source: "tax-ui",
+        type: "download",
+        idempotency_key: "hmac:tax-ui:download:1",
+        meta: { platform: "mac" },
+      },
+      store,
+    );
+    expect(result.ok && !result.duplicate).toBe(true);
+
+    const [event] = await store.getTail(1);
+    expect(event?.type).toBe("download");
+    expect(event?.speed).toBe("event");
+    expect(event?.visibility).toBe("public");
+    expect(event?.source).toBe("tax-ui");
+    expect(event?.summary).toBe("Someone downloaded Tax UI");
+    expect(event?.subject).toEqual({ kind: "download", label: "Tax UI" });
+    expect(event?.meta).toEqual({ platform: "mac" });
+    expect(JSON.stringify(event)).not.toMatch(/https?:\/\//);
+  });
+
+  test("counts HMAC-ingested download events toward lifetime totals", async () => {
+    const store = createMemoryActivityStore();
+    const result = await ingestActivityEvent(
+      {
+        source: "shiori",
+        type: "download",
+        speed: "event",
+        summary: "Someone downloaded Shiori",
+        visibility: "public",
+        idempotency_key: "hmac:download:1",
+        subject: { kind: "download", label: "Shiori" },
+      },
+      store,
+    );
+    expect(result.ok && !result.duplicate).toBe(true);
+    expect(await store.getTotals()).toEqual([
+      expect.objectContaining({ source: "shiori", type: "download", count: 1 }),
+    ]);
+    expect(visibleLifetimeTotals(await store.getTotals())).toHaveLength(1);
+    expect(formatTotalLabel("download")).toBe("Downloads");
+    expect(getActivityRow((await store.getTail(1))[0]!)).toEqual({
+      summary: "Someone downloaded Shiori",
+      href: undefined,
+      label: "Shiori",
+    });
+  });
+});
+
+describe("activity source helpers", () => {
+  test("maps sources to favicon paths", () => {
+    expect(activitySourceFaviconSrc("brios")).toBe("/activity/favicons/brios.png");
+    expect(activitySourceFaviconSrc("tax-ui")).toBe("/activity/favicons/tax-ui.png");
+    expect(activitySourceFaviconSrc("staff-design")).toBe("/activity/favicons/staff-design.png");
+    expect(activitySourceFaviconSrc("design-details")).toBe(
+      "/activity/favicons/design-details.png",
+    );
+    expect(activitySourceFaviconSrc("shiori")).toBe("/img/shiori-icon.png");
+    expect(activitySourceFaviconSrc("github")).toBeUndefined();
+  });
+
+  test("formats download summary copy from the source slug", () => {
+    expect(formatDownloadSummary("tax-ui")).toBe("Someone downloaded Tax UI");
+    expect(formatDownloadSummary("shiori")).toBe("Someone downloaded Shiori");
+    expect(formatDownloadSummary("staff-design")).toBe("Someone downloaded Staff Design");
+    expect(formatDownloadSummary("design-details")).toBe("Someone downloaded Design Details");
+  });
+
+  test("maps external sources to home URLs", () => {
+    expect(activitySourceUrl("tax-ui")).toBe("https://tax-ui.brianlovin.com/");
+    expect(activitySourceUrl("staff-design")).toBe("https://staff.design");
+    expect(activitySourceUrl("design-details")).toBe("https://designdetails.fm");
+    expect(activitySourceUrl("shiori")).toBe("https://www.shiori.sh");
+    expect(activitySourceUrl("github")).toBe("https://github.com/brianlovin");
+    expect(activitySourceUrl("brios")).toBeUndefined();
+  });
+
+  test("resolves relative subject hrefs against the source home", () => {
+    expect(resolveActivitySourceHref("design-details", "/episodes/1")).toBe(
+      "https://designdetails.fm/episodes/1",
+    );
+    expect(resolveActivitySourceHref("github", "https://github.com/brianlovin/briOS/pull/1")).toBe(
+      "https://github.com/brianlovin/briOS/pull/1",
+    );
+    expect(resolveActivitySourceHref("brios", "/writing/a-post")).toBe("/writing/a-post");
   });
 });
 
@@ -574,5 +772,104 @@ describe("shouldRecordVisit / likeMetaFromRequest", () => {
       }),
     );
     expect(activity).toBeNull();
+  });
+});
+
+describe("recordCaffeine", () => {
+  test("writes a public caffeinated event with title-cased summary and drink-only meta", async () => {
+    const store = createMemoryActivityStore();
+    const now = new Date("2026-08-16T15:04:05.000Z");
+    const result = await recordCaffeine({ drink: "cortado" }, store, now);
+
+    expect(result.ok && !result.duplicate).toBe(true);
+    const [event] = await store.getTail(1);
+    expect(event?.source).toBe("brios");
+    expect(event?.type).toBe("caffeinated");
+    expect(event?.speed).toBe("event");
+    expect(event?.visibility).toBe("public");
+    expect(event?.summary).toBe("Caffeinated with Cortado");
+    expect(event?.subject).toEqual({ kind: "drink", label: "Cortado" });
+    expect(event?.meta).toEqual({ drink: "Cortado" });
+    expect(event?.idempotency_key).toMatch(/^brios:caffeinated:2026-08-16:cortado:[0-9a-f-]{36}$/);
+    expect(getActivityRow(event!)).toEqual({
+      summary: "Caffeinated with Cortado",
+      icon: "☕",
+      label: "Cortado",
+    });
+    expect(findForbiddenPii(event)).toBeNull();
+    expect(JSON.stringify(event)).not.toContain("@");
+    expect(event?.meta).not.toHaveProperty("email");
+    expect(event?.meta).not.toHaveProperty("authorization");
+    expect(event?.actor).toBeUndefined();
+  });
+
+  test("counts two of the same drink on the same day as separate events", async () => {
+    const store = createMemoryActivityStore();
+    const now = new Date("2026-08-16T15:04:05.000Z");
+    const first = await recordCaffeine({ drink: "coffee" }, store, now);
+    const second = await recordCaffeine({ drink: "coffee" }, store, now);
+
+    expect(first.ok && !first.duplicate).toBe(true);
+    expect(second.ok && !second.duplicate).toBe(true);
+    expect(await store.getStreamLength()).toBe(2);
+    expect(await store.getTotals()).toEqual([
+      expect.objectContaining({ source: "brios", type: "caffeinated", count: 2 }),
+    ]);
+  });
+
+  test("rejects an empty drink and an email drink before writing", async () => {
+    const store = createMemoryActivityStore();
+    expect(await recordCaffeine({ drink: "   " }, store)).toEqual({
+      ok: false,
+      error: "drink is required",
+      status: 400,
+    });
+
+    const pii = await recordCaffeine({ drink: "hi@example.com" }, store);
+    expect(pii.ok).toBe(false);
+    if (!pii.ok) expect(pii.error).toContain("forbidden");
+    expect(await store.getStreamLength()).toBe(0);
+  });
+});
+
+describe("getCaffeineIcon", () => {
+  test("uses a coffee cup for coffee-family drinks", () => {
+    for (const drink of [
+      "coffee",
+      "Espresso",
+      "latte",
+      "cappuccino",
+      "cappucino",
+      "cortado",
+      "macchiato",
+      "mocha",
+      "americano",
+      "flat white",
+      "drip",
+      "pour over",
+      "cold brew",
+      "nitro",
+      "affogato",
+      "gibraltar",
+      "iced latte",
+    ]) {
+      expect(getCaffeineIcon(drink)).toBe("☕");
+    }
+  });
+
+  test("uses a cup for other caffeinated drinks and unknowns", () => {
+    for (const drink of [
+      "celsius",
+      "tea",
+      "matcha",
+      "energy",
+      "soda",
+      "coke",
+      "yerba",
+      "preworkout",
+      "unknown",
+    ]) {
+      expect(getCaffeineIcon(drink)).toBe("🥤");
+    }
   });
 });
