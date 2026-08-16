@@ -58,6 +58,8 @@ export type ActivityIngestInput = {
   meta?: Record<string, unknown>;
   /** When false, increment totals only (used for sampled visits). */
   writeToStream?: boolean;
+  /** Override idempotency TTL. `0` keeps the key forever (publish / first-seen events). */
+  idempotencyTtlSeconds?: number;
 };
 
 const ACTIVITY_PATH = /^\/activity(?:\/|$)/;
@@ -166,6 +168,28 @@ export function formatTotalLabel(type: string): string {
       return "Likes";
     case "visit":
       return "Visits";
+    case "visit_country_first":
+      return "New countries";
+    case "ama_asked":
+      return "AMA questions";
+    case "ama_answered":
+      return "AMA answers";
+    case "digest_subscribed":
+      return "Digest subscribers";
+    case "digest_sent":
+      return "Digests sent";
+    case "writing_published":
+      return "Writing";
+    case "til_published":
+      return "TILs";
+    case "stack_added":
+      return "Stack";
+    case "site_added":
+      return "Sites";
+    case "design_details_added":
+      return "Design Details";
+    case "app_dissection_published":
+      return "App dissections";
     default:
       return type.replace(/_/g, " ");
   }

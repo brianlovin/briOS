@@ -1,3 +1,5 @@
+import { createHash } from "crypto";
+
 import {
   ACTIVITY_ENVELOPE_VERSION,
   ACTIVITY_IDEMPOTENCY_TTL_SECONDS,
@@ -7,11 +9,14 @@ import {
   ACTIVITY_VISIT_STREAM_MAX_PER_SEC,
   type ActivityEvent,
   type ActivityIngestInput,
+  type ActivityRef,
+  type ActivitySpeed,
   type ActivityTotal,
   findForbiddenPii,
   inferContentTypeFromPath,
   inferTitleFromPath,
   isActivityPath,
+  normalizeCountryCode,
   shouldRecordVisit,
 } from "./activity-shared";
 
@@ -50,6 +55,7 @@ export type ActivityStore = {
   getTotals(): Promise<ActivityTotal[]>;
   getStreamLength(): Promise<number>;
   incrementVisitWindow(windowKey: string, ttlSeconds: number): Promise<number>;
+  incrementCountryTotal(country: string): Promise<number>;
 };
 
 export function createMemoryActivityStore(options: { maxLen?: number } = {}): ActivityStore {
@@ -58,6 +64,7 @@ export function createMemoryActivityStore(options: { maxLen?: number } = {}): Ac
   const totals = new Map<string, ActivityTotal>();
   const claimed = new Set<string>();
   const visitWindows = new Map<string, number>();
+  const countryTotals = new Map<string, number>();
 
   return {
     async claimIdempotency(key: string): Promise<boolean> {
@@ -92,6 +99,11 @@ export function createMemoryActivityStore(options: { maxLen?: number } = {}): Ac
     async incrementVisitWindow(windowKey: string): Promise<number> {
       const next = (visitWindows.get(windowKey) ?? 0) + 1;
       visitWindows.set(windowKey, next);
+      return next;
+    },
+    async incrementCountryTotal(country: string): Promise<number> {
+      const next = (countryTotals.get(country) ?? 0) + 1;
+      countryTotals.set(country, next);
       return next;
     },
   };
@@ -173,7 +185,7 @@ export async function ingestActivityEvent(
 
   const claimed = await store.claimIdempotency(
     event.idempotency_key,
-    ACTIVITY_IDEMPOTENCY_TTL_SECONDS,
+    input.idempotencyTtlSeconds ?? ACTIVITY_IDEMPOTENCY_TTL_SECONDS,
   );
 
   if (!claimed) {
@@ -233,7 +245,7 @@ export async function recordVisit(
   const windowCount = await store.incrementVisitWindow(windowKey, 2);
   const writeToStream = windowCount <= ACTIVITY_VISIT_STREAM_MAX_PER_SEC;
 
-  return ingestActivityEvent(
+  const visitResult = await ingestActivityEvent(
     {
       source: ACTIVITY_SOURCE_BRIOS,
       type: "visit",
@@ -243,6 +255,238 @@ export async function recordVisit(
       idempotency_key: `brios:visit:${crypto.randomUUID()}`,
       meta: country ? { country } : undefined,
       writeToStream,
+    },
+    store,
+    now,
+  );
+
+  if (country) {
+    await recordVisitCountryFirst(country, store, now);
+  }
+
+  return visitResult;
+}
+
+async function recordVisitCountryFirst(
+  country: string,
+  store: ActivityStore,
+  now: Date,
+): Promise<void> {
+  const code = normalizeCountryCode(country);
+  if (!code) return;
+
+  const countryCount = await store.incrementCountryTotal(code);
+  if (countryCount !== 1) return;
+
+  await ingestActivityEvent(
+    {
+      source: ACTIVITY_SOURCE_BRIOS,
+      type: "visit_country_first",
+      speed: "event",
+      summary: `First visit from ${code}`,
+      visibility: "public",
+      idempotency_key: `brios:visit_country_first:${code}`,
+      meta: { country: code },
+      idempotencyTtlSeconds: 0,
+    },
+    store,
+    now,
+  );
+}
+
+export async function recordBriosEvent(
+  input: {
+    type: string;
+    summary: string;
+    idempotency_key: string;
+    subject?: ActivityRef;
+    meta?: Record<string, unknown>;
+    speed?: ActivitySpeed;
+    permanent?: boolean;
+  },
+  store: ActivityStore,
+  now: Date = new Date(),
+): Promise<IngestResult> {
+  return ingestActivityEvent(
+    {
+      source: ACTIVITY_SOURCE_BRIOS,
+      type: input.type,
+      speed: input.speed ?? "event",
+      summary: input.summary,
+      visibility: "public",
+      idempotency_key: input.idempotency_key,
+      ...(input.subject ? { subject: input.subject } : {}),
+      ...(input.meta ? { meta: input.meta } : {}),
+      ...(input.permanent ? { idempotencyTtlSeconds: 0 } : {}),
+    },
+    store,
+    now,
+  );
+}
+
+export function hashDigestSubscriber(email: string): string {
+  return createHash("sha256")
+    .update(`brios:digest_subscribed:${email.trim().toLowerCase()}`)
+    .digest("hex")
+    .slice(0, 16);
+}
+
+export async function recordAmaAsked(
+  input: { id: string; title: string },
+  store: ActivityStore,
+  now: Date = new Date(),
+): Promise<IngestResult> {
+  const title = input.title.trim() || "a question";
+  const href = `/ama/${input.id}`;
+  return recordBriosEvent(
+    {
+      type: "ama_asked",
+      summary: "Someone asked a question",
+      idempotency_key: `brios:ama_asked:${input.id}`,
+      subject: { kind: "ama", label: title, href },
+      meta: { title, href },
+      permanent: true,
+    },
+    store,
+    now,
+  );
+}
+
+export async function recordAmaAnswered(
+  input: { id: string; title: string },
+  store: ActivityStore,
+  now: Date = new Date(),
+): Promise<IngestResult> {
+  const title = input.title.trim() || "a question";
+  const href = `/ama/${input.id}`;
+  return recordBriosEvent(
+    {
+      type: "ama_answered",
+      summary: "A question was answered",
+      idempotency_key: `brios:ama_answered:${input.id}`,
+      subject: { kind: "ama", label: title, href },
+      meta: { title, href },
+      permanent: true,
+    },
+    store,
+    now,
+  );
+}
+
+export async function recordDigestSubscribed(
+  input: { email: string },
+  store: ActivityStore,
+  now: Date = new Date(),
+): Promise<IngestResult> {
+  const subscriberHash = hashDigestSubscriber(input.email);
+  return recordBriosEvent(
+    {
+      type: "digest_subscribed",
+      summary: "Someone subscribed to the HN digest",
+      idempotency_key: `brios:digest_subscribed:${subscriberHash}`,
+      permanent: true,
+    },
+    store,
+    now,
+  );
+}
+
+export async function recordDigestSent(
+  input: { date: string; postCount?: number },
+  store: ActivityStore,
+  now: Date = new Date(),
+): Promise<IngestResult> {
+  return recordBriosEvent(
+    {
+      type: "digest_sent",
+      summary: "The HN digest was sent",
+      idempotency_key: `brios:digest_sent:${input.date}`,
+      meta: input.postCount === undefined ? undefined : { post_count: input.postCount },
+      permanent: true,
+    },
+    store,
+    now,
+  );
+}
+
+export async function recordWritingPublished(
+  input: { id: string; title: string; slug: string },
+  store: ActivityStore,
+  now: Date = new Date(),
+): Promise<IngestResult> {
+  const title = input.title.trim() || "a post";
+  const href = `/writing/${input.slug}`;
+  return recordBriosEvent(
+    {
+      type: "writing_published",
+      summary: "A writing post was published",
+      idempotency_key: `brios:writing_published:${input.id}`,
+      subject: { kind: "writing", label: title, href },
+      meta: { title, href },
+      permanent: true,
+    },
+    store,
+    now,
+  );
+}
+
+export async function recordTilPublished(
+  input: { id: string; title: string; href: string },
+  store: ActivityStore,
+  now: Date = new Date(),
+): Promise<IngestResult> {
+  const title = input.title.trim() || "a TIL";
+  const href = input.href;
+  return recordBriosEvent(
+    {
+      type: "til_published",
+      summary: "A TIL was published",
+      idempotency_key: `brios:til_published:${input.id}`,
+      subject: { kind: "til", label: title, href },
+      meta: { title, href },
+      permanent: true,
+    },
+    store,
+    now,
+  );
+}
+
+export async function recordStackAdded(
+  input: { id: string; title: string },
+  store: ActivityStore,
+  now: Date = new Date(),
+): Promise<IngestResult> {
+  const title = input.title.trim() || "a stack item";
+  const href = "/stack";
+  return recordBriosEvent(
+    {
+      type: "stack_added",
+      summary: "A stack item was added",
+      idempotency_key: `brios:stack_added:${input.id}`,
+      subject: { kind: "stack", label: title, href },
+      meta: { title, href },
+      permanent: true,
+    },
+    store,
+    now,
+  );
+}
+
+export async function recordSiteAdded(
+  input: { id: string; title: string },
+  store: ActivityStore,
+  now: Date = new Date(),
+): Promise<IngestResult> {
+  const title = input.title.trim() || "a site";
+  const href = "/sites";
+  return recordBriosEvent(
+    {
+      type: "site_added",
+      summary: "A good website was added",
+      idempotency_key: `brios:site_added:${input.id}`,
+      subject: { kind: "site", label: title, href },
+      meta: { title, href },
+      permanent: true,
     },
     store,
     now,

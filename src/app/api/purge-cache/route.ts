@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+import { ingestActivityFromContentPurge } from "@/lib/activity-from-notion";
+import { afterActivity } from "@/lib/activity-schedule";
 import { errorResponse, safeCompare } from "@/lib/api-utils";
 import {
   PURGE_CACHE_TYPES,
@@ -9,10 +11,21 @@ import {
   purgeContentType,
 } from "@/lib/notion/purge";
 
+async function readNotionPageId(request: Request): Promise<string | undefined> {
+  if (request.method !== "POST") return undefined;
+  try {
+    const body = (await request.json()) as { data?: { id?: unknown } };
+    return typeof body.data?.id === "string" && body.data.id.length > 0 ? body.data.id : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 async function purgeCache(request: Request): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);
   const secret = searchParams.get("secret");
   const type = searchParams.get("type") || "all";
+  const pageId = await readNotionPageId(request);
 
   if (!safeCompare(secret, process.env.CACHE_PURGE_SECRET)) {
     return errorResponse("Unauthorized", 401);
@@ -28,6 +41,12 @@ async function purgeCache(request: Request): Promise<NextResponse> {
 
   for (const t of types) {
     results[t] = await purgeContentType(t);
+  }
+
+  if (pageId && type !== "all") {
+    afterActivity((store) =>
+      ingestActivityFromContentPurge(type as PurgeableContentType, pageId, store),
+    );
   }
 
   console.log(`[Cache Purge] Purged type=${type}:`, results);

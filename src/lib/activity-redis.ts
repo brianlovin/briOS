@@ -7,6 +7,7 @@ const STREAM_KEY = "activity:stream";
 const TOTALS_PREFIX = "activity:totals:";
 const IDEMP_PREFIX = "activity:idemp:";
 const VISIT_WINDOW_PREFIX = "activity:visit:window:";
+const COUNTRY_TOTALS_KEY = "activity:country:totals";
 
 export type ActivityRedisSource = "activity" | "likes";
 
@@ -125,10 +126,13 @@ function parseXrevrange(result: unknown): ActivityEvent[] {
 export function createRedisActivityStore(client: Redis): ActivityStore {
   return {
     async claimIdempotency(key: string, ttlSeconds: number): Promise<boolean> {
-      const result = await client.set(`${IDEMP_PREFIX}${key}`, "1", {
-        nx: true,
-        ex: ttlSeconds,
-      });
+      const result =
+        ttlSeconds > 0
+          ? await client.set(`${IDEMP_PREFIX}${key}`, "1", {
+              nx: true,
+              ex: ttlSeconds,
+            })
+          : await client.set(`${IDEMP_PREFIX}${key}`, "1", { nx: true });
       return result === "OK";
     },
 
@@ -200,6 +204,10 @@ export function createRedisActivityStore(client: Redis): ActivityStore {
         await client.expire(key, ttlSeconds);
       }
       return count;
+    },
+
+    async incrementCountryTotal(country: string): Promise<number> {
+      return (await client.hincrby(COUNTRY_TOTALS_KEY, country, 1)) ?? 0;
     },
   };
 }

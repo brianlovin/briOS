@@ -5,8 +5,10 @@ import {
   findForbiddenPii,
   getActivityRow,
   getRequestCountry,
+  hashDigestSubscriber,
   ingestActivityEvent,
   likeMetaFromRequest,
+  recordDigestSubscribed,
   recordLike,
   recordVisit,
   shouldRecordVisit,
@@ -147,11 +149,81 @@ describe("recordVisit", () => {
     }
 
     const totals = await store.getTotals();
-    expect(totals).toEqual([
+    expect(totals).toContainEqual(
       expect.objectContaining({ source: "brios", type: "visit", count: burst }),
-    ]);
-    expect(await store.getStreamLength()).toBe(ACTIVITY_VISIT_STREAM_MAX_PER_SEC);
+    );
+    expect(totals).toContainEqual(
+      expect.objectContaining({ source: "brios", type: "visit_country_first", count: 1 }),
+    );
+    expect(await store.getStreamLength()).toBe(ACTIVITY_VISIT_STREAM_MAX_PER_SEC + 1);
     expect(await store.getStreamLength()).toBeLessThan(ACTIVITY_STREAM_MAXLEN);
+  });
+});
+
+describe("recordDigestSubscribed", () => {
+  test("does not leak the email in the event payload or meta", async () => {
+    const store = createMemoryActivityStore();
+    const email = "person@example.com";
+
+    const result = await recordDigestSubscribed({ email }, store);
+    expect(result.ok && !result.duplicate).toBe(true);
+
+    const [event] = await store.getTail(1);
+    const serialized = JSON.stringify(event);
+    expect(serialized).not.toContain(email);
+    expect(serialized).not.toContain("person");
+    expect(serialized.toLowerCase()).not.toContain("example.com");
+    expect(event?.type).toBe("digest_subscribed");
+    expect(event?.source).toBe("brios");
+    expect(event?.visibility).toBe("public");
+    expect(event?.meta).toBeUndefined();
+    expect(event?.idempotency_key).toBe(`brios:digest_subscribed:${hashDigestSubscriber(email)}`);
+  });
+
+  test("is idempotent per email hash, not the raw address", async () => {
+    const store = createMemoryActivityStore();
+    const first = await recordDigestSubscribed({ email: "Alex@Example.com" }, store);
+    const second = await recordDigestSubscribed({ email: "alex@example.com" }, store);
+    const other = await recordDigestSubscribed({ email: "other@example.org" }, store);
+
+    expect(first.ok && !first.duplicate).toBe(true);
+    expect(second.ok && second.duplicate).toBe(true);
+    expect(other.ok && !other.duplicate).toBe(true);
+    expect(await store.getStreamLength()).toBe(2);
+    expect(await store.getTotals()).toEqual([
+      expect.objectContaining({ source: "brios", type: "digest_subscribed", count: 2 }),
+    ]);
+  });
+});
+
+describe("visit_country_first", () => {
+  test("fires once per country when a visit increments 0→1", async () => {
+    const store = createMemoryActivityStore();
+
+    await recordVisit({ path: "/writing", country: "FR" }, store);
+    await recordVisit({ path: "/writing", country: "FR" }, store);
+    await recordVisit({ path: "/til", country: "JP" }, store);
+
+    const events = await store.getTail(20);
+    const firsts = events.filter((event) => event.type === "visit_country_first");
+    expect(firsts).toHaveLength(2);
+    expect(firsts.map((event) => event.meta?.country).sort()).toEqual(["FR", "JP"]);
+    expect(firsts.every((event) => event.source === "brios")).toBe(true);
+    expect(firsts.every((event) => event.visibility === "public")).toBe(true);
+    expect(JSON.stringify(firsts)).not.toMatch(/\d{1,3}(?:\.\d{1,3}){3}/);
+
+    expect(await store.incrementCountryTotal("FR")).toBe(3);
+    expect(await store.incrementCountryTotal("JP")).toBe(2);
+    expect(await store.getTotals()).toContainEqual(
+      expect.objectContaining({ source: "brios", type: "visit_country_first", count: 2 }),
+    );
+  });
+
+  test("does not record a first-country event for /activity", async () => {
+    const store = createMemoryActivityStore();
+    await recordVisit({ path: "/activity", country: "BR" }, store);
+    expect(await store.getTotals()).toEqual([]);
+    expect(await store.incrementCountryTotal("BR")).toBe(1);
   });
 });
 
