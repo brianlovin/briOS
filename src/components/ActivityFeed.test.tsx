@@ -150,6 +150,22 @@ describe("ActivityRow", () => {
     expect(markup).not.toContain(">secret for ios<");
   });
 
+  test("labels an HN index visit as Hacker News, not a story", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          summary: "🇺🇸 Visit from San Francisco, California, United States",
+          subject: { kind: "page", label: "a page", href: "/hn" },
+          meta: { country: "US", path: "/hn" },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("Hacker News");
+    expect(markup).toContain('href="/hn"');
+    expect(markup).not.toContain("a Hacker News story");
+  });
+
   test("shows a Hacker News story instead of a raw story id", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow
