@@ -21,7 +21,7 @@ function event(overrides: Partial<ActivityEvent>): ActivityEvent {
 }
 
 describe("ActivityRow", () => {
-  test("shows a flag in the icon column and the page link under the summary", () => {
+  test("shows the site favicon and keeps the flag in the title", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow
         event={event({
@@ -32,11 +32,52 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(markup).toContain("🇮🇳");
-    expect(markup).toContain("Visit from India");
+    expect(markup).toContain("🇮🇳 Visit from India");
+    expect(markup).toContain("/activity/favicons/brios.png");
     expect(markup).toContain('href="/"');
     expect(markup).toContain("home");
     expect(markup).not.toContain("text-red-500");
+  });
+
+  test("uses the event source favicon for visits and downloads", () => {
+    const visit = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "tax-ui",
+          summary: "🇺🇸 Visit from United States",
+          meta: { country: "US" },
+        })}
+      />,
+    );
+    const download = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "design-details",
+          type: "download",
+          speed: "event",
+          summary: "Someone downloaded Design Details",
+          subject: { kind: "download", label: "Design Details" },
+        })}
+      />,
+    );
+    const unknown = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "unknown",
+          summary: "🇺🇸 Visit from United States",
+          meta: { country: "US" },
+        })}
+      />,
+    );
+
+    expect(visit).toContain("/activity/favicons/tax-ui.png");
+    expect(visit).toContain("🇺🇸 Visit from United States");
+    expect(download).toContain("/activity/favicons/design-details.png");
+    expect(download).toContain("Someone downloaded ");
+    expect(download).toContain("Design Details");
+    expect(download).toContain('href="https://designdetails.fm"');
+    expect(unknown).not.toContain("/activity/favicons/");
+    expect(unknown).toContain("🇺🇸 Visit from United States");
   });
 
   test("rebuilds a country name and flag for older visits that only have a code", () => {
@@ -76,7 +117,81 @@ describe("ActivityRow", () => {
     expect(like).toContain("Someone liked Grok Bot first impressions");
     expect(like).toContain('href="/writing/grok-bot-first-impressions"');
     expect(visit).not.toContain("text-red-500");
-    expect(visit).toContain("🇮🇳");
+    expect(visit).toContain("🇮🇳 Visit from India");
+    expect(visit).toContain("/activity/favicons/brios.png");
+    expect(like).not.toContain("/activity/favicons/");
+  });
+
+  test("uses the Github icon for GitHub events instead of the Activity pulse", () => {
+    const pulsePath = "M4.75 11.75H8.25L10.25 4.75L13.75 19.25L15.75 11.75H19.25";
+    const pulse = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          type: "writing_published",
+          speed: "event",
+          summary: "Published a post",
+        })}
+      />,
+    );
+    const prOpened = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          type: "pr_opened",
+          speed: "event",
+          summary: "Opened a pull request",
+        })}
+      />,
+    );
+    const prMerged = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "github",
+          type: "pr_merged",
+          speed: "event",
+          summary: "Merged a pull request",
+        })}
+      />,
+    );
+    const starred = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          type: "repo_starred",
+          speed: "event",
+          summary: "Starred a repository",
+        })}
+      />,
+    );
+
+    expect(pulse).toContain(pulsePath);
+    for (const markup of [prOpened, prMerged, starred]) {
+      expect(markup).not.toContain(pulsePath);
+      expect(markup).toContain("text-primary");
+      expect(markup).toContain('width="16"');
+      expect(markup).toContain('height="16"');
+      expect(markup).not.toContain("#000");
+      expect(markup).not.toContain("#fff");
+      expect(markup).not.toContain('fill="black"');
+      expect(markup).not.toContain('fill="white"');
+    }
+  });
+
+  test("links Tax UI in a download summary even without subject.href", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "tax-ui",
+          type: "download",
+          speed: "event",
+          summary: "Someone downloaded Tax UI",
+        })}
+      />,
+    );
+
+    expect(markup).toContain("Someone downloaded ");
+    expect(markup).toContain("Tax UI");
+    expect(markup).toContain('href="https://tax-ui.brianlovin.com/"');
+    expect(markup).toContain('target="_blank"');
+    expect(markup).toContain("noopener noreferrer");
   });
 
   test("uses the GitHub icon for github-sourced events", () => {

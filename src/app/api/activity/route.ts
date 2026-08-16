@@ -7,8 +7,9 @@ import { ACTIVITY_BODY_MAX_BYTES } from "@/lib/activity-shared";
 import { errorResponse, safeCompare } from "@/lib/api-utils";
 
 /**
- * HMAC ingest for later external producers.
- * In-repo sources (likes, visits) call ingestActivityEvent directly.
+ * HMAC ingest for external producers.
+ * (source, type) must be in the activity registry. In-repo producers
+ * (likes, first-party visits) call ingestActivityEvent directly.
  */
 export async function POST(request: Request) {
   const secret = process.env.ACTIVITY_INGEST_HMAC_SECRET;

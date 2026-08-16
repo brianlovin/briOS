@@ -21,6 +21,73 @@ export const ACTIVITY_META_MAX_BYTES = 2048;
 export const ACTIVITY_BODY_MAX_BYTES = 8192;
 export const ACTIVITY_SOURCE_BRIOS = "brios";
 export const ACTIVITY_SOURCE_GITHUB = "github";
+export const ACTIVITY_VISIT_TITLE_MAX = 200;
+
+export const ACTIVITY_SOURCE_LABELS: Record<string, string> = {
+  [ACTIVITY_SOURCE_BRIOS]: "briOS",
+  "tax-ui": "Tax UI",
+  "staff-design": "Staff Design",
+  "design-details": "Design Details",
+  shiori: "Shiori",
+  [ACTIVITY_SOURCE_GITHUB]: "GitHub",
+};
+
+const ACTIVITY_SOURCE_FAVICONS: Record<string, string> = {
+  [ACTIVITY_SOURCE_BRIOS]: "/activity/favicons/brios.png",
+  "tax-ui": "/activity/favicons/tax-ui.png",
+  "staff-design": "/activity/favicons/staff-design.png",
+  "design-details": "/activity/favicons/design-details.png",
+  shiori: "/img/shiori-icon.png",
+};
+
+const ACTIVITY_SOURCE_URLS: Record<string, string> = {
+  "tax-ui": "https://tax-ui.brianlovin.com/",
+  "staff-design": "https://staff.design",
+  "design-details": "https://designdetails.fm",
+  shiori: "https://www.shiori.sh",
+  github: "https://github.com/brianlovin",
+};
+
+const ABSOLUTE_HTTP_URL_RE = /^https?:\/\//i;
+
+export function activitySourceLabel(source: string): string {
+  return ACTIVITY_SOURCE_LABELS[source] ?? source;
+}
+
+export function activitySourceUrl(source: string): string | undefined {
+  return ACTIVITY_SOURCE_URLS[source];
+}
+
+export function resolveActivitySourceHref(
+  source: string,
+  href?: string | null,
+): string | undefined {
+  const trimmed = href?.trim();
+  if (!trimmed) return undefined;
+  if (ABSOLUTE_HTTP_URL_RE.test(trimmed)) {
+    return trimmed;
+  }
+  const home = activitySourceUrl(source);
+  if (home && trimmed.startsWith("/")) {
+    const base = home.endsWith("/") ? home : `${home}/`;
+    return new URL(trimmed, base).href;
+  }
+  return trimmed;
+}
+
+export function formatDownloadSummary(source: string, label?: string): string {
+  return `Someone downloaded ${label?.trim() || activitySourceLabel(source)}`;
+}
+
+export function activitySourceFaviconSrc(source: string): string | undefined {
+  return ACTIVITY_SOURCE_FAVICONS[source];
+}
+
+export function resolveVisitTitle(path: string, title?: string): string {
+  const trimmed = title?.trim();
+  if (trimmed) return trimmed.slice(0, ACTIVITY_VISIT_TITLE_MAX);
+  return inferTitleFromPath(path);
+}
 
 /** CDN + browser cache for the public activity poll blob. */
 export const ACTIVITY_FEED_CACHE_CONTROL = "public, s-maxage=2, stale-while-revalidate=30";
@@ -81,8 +148,8 @@ export type ActivityIngestInput = {
   ts?: string;
   source: string;
   type: string;
-  speed: ActivitySpeed;
-  summary: string;
+  speed?: ActivitySpeed;
+  summary?: string;
   visibility?: ActivityVisibility;
   idempotency_key: string;
   actor?: ActivityRef;
@@ -192,6 +259,13 @@ export function visibleLifetimeTotals(totals: ActivityTotal[]): ActivityTotal[] 
   return totals.filter((total) => shouldCountLifetimeTotal(total.type));
 }
 
+function visitSummaryWithFlag(summary: string, meta: Record<string, unknown> | undefined): string {
+  const split = splitVisitSummaryFlag(summary);
+  if (split.flag) return summary;
+  const flag = countryCodeToFlag(geoFromVisitMeta(meta).country);
+  return flag ? `${flag} ${summary}` : summary;
+}
+
 export function getMergedPullRequestDiff(
   meta: Record<string, unknown> | undefined,
 ): { additions: number; deletions: number } | null {
@@ -274,25 +348,18 @@ export function getActivityRow(event: ActivityEvent): {
 
   if (event.type === "visit") {
     const geo = geoFromVisitMeta(event.meta);
-    const full =
+    const summary =
       geo.country || geo.city || geo.countryName ? formatVisitSummary(geo) : event.summary;
-    const split = splitVisitSummaryFlag(full);
-    const flag = split.flag || countryCodeToFlag(geo.country);
     return {
-      summary: split.text,
-      ...(flag ? { flag } : {}),
+      summary,
       href: event.subject?.href,
       label: event.subject?.label,
     };
   }
 
   if (event.type === "visit_country_first") {
-    const geo = geoFromVisitMeta(event.meta);
-    const split = splitVisitSummaryFlag(event.summary);
-    const flag = split.flag || countryCodeToFlag(geo.country);
     return {
-      summary: split.text,
-      ...(flag ? { flag } : {}),
+      summary: visitSummaryWithFlag(event.summary, event.meta),
       href: event.subject?.href,
       label: event.subject?.label,
     };
@@ -331,6 +398,8 @@ export function formatTotalLabel(type: string): string {
       return "Design Details";
     case "app_dissection_published":
       return "App dissections";
+    case "download":
+      return "Downloads";
     case "pr_opened":
       return "PRs opened";
     case "pr_merged":
