@@ -175,10 +175,10 @@ export function ActivityRow({
   const isLike = event.type === "like";
   const likeTitle = isLike ? row.label || "Home" : "";
   const label = isLike ? likeTitle : (sectionLabel ?? row.label);
+  const rawHref = hrefOverride ?? row.href;
   const href =
-    hrefOverride ??
-    resolveActivitySourceHref(event.source, row.href) ??
-    row.href ??
+    resolveActivitySourceHref(event.source, rawHref) ??
+    rawHref ??
     (isLike
       ? likeTitle === "Home"
         ? (homeUrl ?? "/")

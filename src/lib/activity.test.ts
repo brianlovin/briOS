@@ -759,8 +759,8 @@ describe("HMAC download ingest", () => {
     expect(result.ok && !result.duplicate).toBe(true);
     expect(await store.getCount()).toBe(1);
     expect(getActivityRow((await store.getTail(1))[0]!)).toEqual({
-      summary: "Someone downloaded Shiori",
-      href: undefined,
+      summary: "Someone downloaded",
+      href: "https://www.shiori.sh",
       label: "Shiori",
     });
   });
@@ -1278,6 +1278,181 @@ describe("getActivityRow page titles", () => {
       summary: "Someone liked",
       href: "/writing/grok-bot-first-impressions",
       label: "Grok Bot First Impressions",
+    });
+  });
+});
+
+describe("getActivityRow source metadata", () => {
+  function rowEvent(overrides: Partial<ActivityEvent>): ActivityEvent {
+    return {
+      v: 1,
+      id: "src-row",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "shiori",
+      type: "link_saved",
+      speed: "event",
+      summary: "Someone saved a link on Shiori",
+      visibility: "public",
+      idempotency_key: "src-row",
+      ...overrides,
+    };
+  }
+
+  test("lifts Shiori out of save/click/signup/subscribe/download summaries", () => {
+    expect(getActivityRow(rowEvent({ type: "link_saved" }))).toEqual({
+      summary: "Someone saved a link",
+      href: "https://www.shiori.sh",
+      label: "Shiori",
+    });
+    expect(
+      getActivityRow(
+        rowEvent({
+          type: "link_clicked",
+          summary: "Someone clicked a link on Shiori",
+        }),
+      ),
+    ).toEqual({
+      summary: "Someone clicked a link",
+      href: "https://www.shiori.sh",
+      label: "Shiori",
+    });
+    expect(
+      getActivityRow(
+        rowEvent({
+          type: "signed_up",
+          summary: "Someone signed up for Shiori",
+        }),
+      ),
+    ).toEqual({
+      summary: "Someone signed up",
+      href: "https://www.shiori.sh",
+      label: "Shiori",
+    });
+    expect(
+      getActivityRow(
+        rowEvent({
+          type: "subscription_started",
+          summary: "Someone subscribed on Shiori",
+        }),
+      ),
+    ).toEqual({
+      summary: "Someone subscribed",
+      href: "https://www.shiori.sh",
+      label: "Shiori",
+    });
+    expect(
+      getActivityRow(
+        rowEvent({
+          type: "download",
+          summary: "Someone downloaded Shiori",
+          subject: { kind: "download", label: "Shiori" },
+        }),
+      ),
+    ).toEqual({
+      summary: "Someone downloaded",
+      href: "https://www.shiori.sh",
+      label: "Shiori",
+    });
+  });
+
+  test("uses the product home for an external visit without a better page href", () => {
+    expect(
+      getActivityRow(
+        rowEvent({
+          source: "design-details",
+          type: "visit",
+          speed: "signal",
+          summary: "🇺🇸 Visit from United States",
+          subject: { kind: "home", label: "Home", href: "/" },
+          meta: { country: "US", path: "/", title: "Home" },
+        }),
+      ),
+    ).toEqual({
+      summary: "🇺🇸 Visit from United States",
+      href: "https://designdetails.fm",
+      label: "Design Details",
+    });
+  });
+
+  test("keeps a more specific staff.design page href instead of the product home", () => {
+    expect(
+      getActivityRow(
+        rowEvent({
+          source: "staff-design",
+          type: "visit",
+          speed: "signal",
+          summary: "🇩🇪 Visit from Germany",
+          subject: {
+            kind: "page",
+            label: "Karla Mickens Cole",
+            href: "/karla-mickens-cole",
+          },
+          meta: { country: "DE", path: "/karla-mickens-cole", title: "Karla Mickens Cole" },
+        }),
+      ),
+    ).toEqual({
+      summary: "🇩🇪 Visit from Germany",
+      href: "/karla-mickens-cole",
+      label: "Karla Mickens Cole",
+    });
+  });
+
+  test("keeps a public GitHub PR href instead of github.com/brianlovin", () => {
+    expect(
+      getActivityRow(
+        rowEvent({
+          source: "github",
+          type: "pr_opened",
+          summary: "Opened a pull request on briOS",
+          subject: {
+            kind: "pull_request",
+            label: "Add activity feed",
+            href: "https://github.com/brianlovin/briOS/pull/42",
+          },
+        }),
+      ),
+    ).toEqual({
+      summary: "Opened a pull request on briOS",
+      href: "https://github.com/brianlovin/briOS/pull/42",
+      label: "Add activity feed",
+    });
+  });
+
+  test("does not rewrite a first-party like or visit to briOS", () => {
+    expect(
+      getActivityRow(
+        rowEvent({
+          source: "brios",
+          type: "like",
+          summary: "Someone liked Cursor",
+          subject: { kind: "stack", label: "Cursor", href: "https://cursor.com" },
+        }),
+      ),
+    ).toEqual({
+      summary: "Someone liked",
+      href: "https://cursor.com",
+      label: "Cursor",
+    });
+    expect(
+      getActivityRow(
+        rowEvent({
+          source: "brios",
+          type: "visit",
+          speed: "signal",
+          summary: "🇮🇳 Visit from India",
+          subject: {
+            kind: "writing",
+            label: "Grok Bot first impressions",
+            href: "/writing/grok-bot-first-impressions",
+          },
+          meta: { country: "IN", path: "/writing/grok-bot-first-impressions" },
+        }),
+      ),
+    ).toEqual({
+      summary: "🇮🇳 Visit from India",
+      href: "/writing/grok-bot-first-impressions",
+      label: "Grok Bot first impressions",
     });
   });
 });

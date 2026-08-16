@@ -137,9 +137,12 @@ describe("ActivityRow", () => {
     expect(visit).toContain('height="16"');
     expect(visit).toContain("size-4");
     expect(download).toContain("/activity/favicons/design-details.png");
-    expect(download).toContain("Someone downloaded ");
-    expect(download).toContain("Design Details");
+    expect(download).toContain("Someone downloaded");
+    expect(download).not.toContain("Someone downloaded Design Details");
+    expect(download).toContain(">Design Details<");
     expect(download).toContain('href="https://designdetails.fm"');
+    expect(download).toContain('target="_blank"');
+    expect(download).toContain("noopener noreferrer");
     expect(unknown).not.toContain("/activity/favicons/");
     expect(unknown).toContain("🇺🇸 Visit from United States");
   });
@@ -288,8 +291,9 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(markup).toContain("Someone downloaded ");
-    expect(markup).toContain("Tax UI");
+    expect(markup).toContain("Someone downloaded");
+    expect(markup).not.toContain("Someone downloaded Tax UI");
+    expect(markup).toContain(">Tax UI<");
     expect(markup).toContain('href="https://tax-ui.brianlovin.com/"');
     expect(markup).toContain('target="_blank"');
     expect(markup).toContain("noopener noreferrer");
@@ -313,7 +317,10 @@ describe("ActivityRow", () => {
     );
 
     expect(markup).toContain("Opened a pull request on briOS");
-    expect(markup).toContain("Add activity feed");
+    expect(markup).toContain(">Add activity feed<");
+    expect(markup).toContain('href="https://github.com/brianlovin/briOS/pull/42"');
+    expect(markup).toContain('target="_blank"');
+    expect(markup).not.toContain(">GitHub<");
     expect(markup).toContain("M12 2C6.477 2 2 6.477 2 12c0 4.42");
     expect(markup).not.toContain("text-red-500");
   });
@@ -567,8 +574,146 @@ describe("ActivityRow", () => {
     );
 
     expect(markup).toContain("shiori-icon.png");
-    expect(markup).toContain("Someone saved a link on Shiori");
-    expect(markup).not.toContain("<a ");
+    expect(markup).toContain("Someone saved a link");
+    expect(markup).not.toContain("Someone saved a link on Shiori");
+    expect(markup).toContain(">Shiori<");
+    expect(markup).toContain('href="https://www.shiori.sh"');
+    expect(markup).toContain('target="_blank"');
+    expect(markup).toContain("noopener noreferrer");
+  });
+
+  test("lifts Shiori out of click, signup, subscribe, and download copy", () => {
+    const cases = [
+      {
+        type: "link_clicked" as const,
+        summary: "Someone clicked a link on Shiori",
+        stripped: "Someone clicked a link",
+      },
+      {
+        type: "signed_up" as const,
+        summary: "Someone signed up for Shiori",
+        stripped: "Someone signed up",
+      },
+      {
+        type: "subscription_started" as const,
+        summary: "Someone subscribed on Shiori",
+        stripped: "Someone subscribed",
+      },
+      {
+        type: "download" as const,
+        summary: "Someone downloaded Shiori",
+        stripped: "Someone downloaded",
+      },
+    ];
+
+    for (const { type, summary, stripped } of cases) {
+      const markup = renderToStaticMarkup(
+        <ActivityRow
+          event={event({
+            source: "shiori",
+            type,
+            speed: "event",
+            summary,
+          })}
+        />,
+      );
+
+      expect(markup).toContain(stripped);
+      expect(markup).not.toContain(summary);
+      expect(markup).toContain(">Shiori<");
+      expect(markup).toContain('href="https://www.shiori.sh"');
+      expect(markup).toContain('target="_blank"');
+    }
+  });
+
+  test("links staff.design and Design Details visits to the product home", () => {
+    const staff = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "staff-design",
+          summary: "🇺🇸 Visit from United States",
+          meta: { country: "US" },
+        })}
+      />,
+    );
+    const details = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "design-details",
+          summary: "🇺🇸 Visit from San Francisco, California, United States",
+          subject: { kind: "home", label: "Home", href: "/" },
+          meta: { country: "US", city: "San Francisco", path: "/" },
+        })}
+      />,
+    );
+
+    expect(staff).toContain("🇺🇸 Visit from United States");
+    expect(staff).toContain(">Staff Design<");
+    expect(staff).toContain('href="https://staff.design"');
+    expect(staff).toContain('target="_blank"');
+    expect(details).toContain("Visit from San Francisco");
+    expect(details).toContain(">Design Details<");
+    expect(details).toContain('href="https://designdetails.fm"');
+    expect(details).toContain('target="_blank"');
+    expect(details).not.toContain(">Home<");
+  });
+
+  test("keeps a specific staff.design page as the new-tab link", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "staff-design",
+          summary: "🇩🇪 Visit from Germany",
+          subject: {
+            kind: "page",
+            label: "Karla Mickens Cole",
+            href: "/karla-mickens-cole",
+          },
+          meta: { country: "DE", path: "/karla-mickens-cole", title: "Karla Mickens Cole" },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("🇩🇪 Visit from Germany");
+    expect(markup).toContain(">Karla Mickens Cole<");
+    expect(markup).toContain('href="https://staff.design/karla-mickens-cole"');
+    expect(markup).toContain('target="_blank"');
+    expect(markup).not.toContain(">Staff Design<");
+  });
+
+  test("keeps first-party likes and visits on the page, not briOS", () => {
+    const like = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          type: "like",
+          speed: "event",
+          summary: "Someone liked Grok Bot first impressions",
+          subject: {
+            kind: "writing",
+            label: "Grok Bot first impressions",
+            href: "/writing/grok-bot-first-impressions",
+          },
+        })}
+      />,
+    );
+    const visit = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          summary: "🇮🇳 Visit from India",
+          subject: { kind: "home", label: "a page", href: "/" },
+          meta: { country: "IN", path: "/", title: "a page" },
+        })}
+      />,
+    );
+
+    expect(like).toContain(">Grok Bot first impressions<");
+    expect(like).toContain('href="/writing/grok-bot-first-impressions"');
+    expect(like).not.toContain(">briOS<");
+    expect(like).not.toContain('target="_blank"');
+    expect(visit).toContain(">Home<");
+    expect(visit).toContain('href="/"');
+    expect(visit).not.toContain(">briOS<");
+    expect(visit).not.toContain('target="_blank"');
   });
 
   test("shows a quiet count chip after the metadata when a stack is larger than one", () => {

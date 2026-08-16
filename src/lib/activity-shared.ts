@@ -76,6 +76,70 @@ export function resolveActivitySourceHref(
   return trimmed;
 }
 
+function normalizeHrefForCompare(href: string): string {
+  return href.trim().replace(/\/+$/, "");
+}
+
+function isSourceHomeHref(source: string, href: string | undefined): boolean {
+  const trimmed = href?.trim();
+  if (!trimmed || trimmed === "/") return true;
+  const home = activitySourceUrl(source);
+  if (!home) return false;
+  return normalizeHrefForCompare(trimmed) === normalizeHrefForCompare(home);
+}
+
+function hasSpecificSubjectHref(source: string, href: string | undefined): boolean {
+  return Boolean(href?.trim()) && !isSourceHomeHref(source, href);
+}
+
+function stripSourceNameFromSummary(summary: string, sourceLabel: string): string {
+  const escaped = sourceLabel.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const trimmed = summary.trim();
+  const withoutSuffix = trimmed
+    .replace(new RegExp(`\\s+(?:on|for)\\s+${escaped}$`, "i"), "")
+    .trim();
+  if (withoutSuffix !== trimmed) return withoutSuffix;
+
+  const downloaded = trimmed.match(new RegExp(`^(Someone downloaded)\\s+${escaped}$`, "i"));
+  if (downloaded?.[1]) return downloaded[1];
+  return summary;
+}
+
+function attachSourceMetadata(
+  event: ActivityEvent,
+  row: {
+    summary: string;
+    flag?: string;
+    icon?: string;
+    href?: string;
+    label?: string;
+  },
+): {
+  summary: string;
+  flag?: string;
+  icon?: string;
+  href?: string;
+  label?: string;
+} {
+  if (event.type === "like" || event.source === ACTIVITY_SOURCE_BRIOS) {
+    return row;
+  }
+
+  const sourceLabel = activitySourceLabel(event.source);
+  const sourceUrl = activitySourceUrl(event.source);
+  if (hasSpecificSubjectHref(event.source, row.href)) {
+    return row;
+  }
+  if (!sourceUrl) return row;
+
+  return {
+    ...row,
+    summary: stripSourceNameFromSummary(row.summary, sourceLabel),
+    label: sourceLabel,
+    href: sourceUrl,
+  };
+}
+
 export function formatDownloadSummary(source: string, label?: string): string {
   return `Someone downloaded ${label?.trim() || activitySourceLabel(source)}`;
 }
@@ -593,12 +657,12 @@ export function getActivityRow(event: ActivityEvent): {
   label?: string;
 } {
   if (event.type === "caffeinated") {
-    return {
+    return attachSourceMetadata(event, {
       summary: event.summary,
       icon: getCaffeineIcon(caffeineDrinkFromEvent(event)),
       href: event.subject?.href,
       label: event.subject?.label,
-    };
+    });
   }
 
   if (event.type === "visit") {
@@ -610,19 +674,19 @@ export function getActivityRow(event: ActivityEvent): {
       : !storedText || storedText === "Visit"
         ? ANONYMOUS_VISIT_SUMMARY
         : visitSummaryWithFlag(event.summary, event.meta);
-    return {
+    return attachSourceMetadata(event, {
       summary,
       href: event.subject?.href,
       label: displaySubjectLabel(event.subject?.label, event.subject?.href),
-    };
+    });
   }
 
   if (event.type === "visit_country_first") {
-    return {
+    return attachSourceMetadata(event, {
       summary: visitSummaryWithFlag(event.summary, event.meta),
       href: event.subject?.href,
       label: displaySubjectLabel(event.subject?.label, event.subject?.href),
-    };
+    });
   }
 
   if (event.type === "like") {
@@ -631,18 +695,18 @@ export function getActivityRow(event: ActivityEvent): {
     });
     const fromSummary = likedTitleFromSummary(event.summary);
     const name = label || fromSummary || "Home";
-    return {
+    return attachSourceMetadata(event, {
       summary: "Someone liked",
       href: event.subject?.href || (name === "Home" ? "/" : undefined),
       label: name,
-    };
+    });
   }
 
-  return {
+  return attachSourceMetadata(event, {
     summary: event.summary,
     href: event.subject?.href,
     label: displaySubjectLabel(event.subject?.label, event.subject?.href),
-  };
+  });
 }
 
 export function getRequestCountry(headers: Headers): string | undefined {
