@@ -78,4 +78,40 @@ describe("ActivityRow", () => {
     expect(visit).not.toContain("text-red-500");
     expect(visit).toContain("🇮🇳");
   });
+
+  test("shows a coffee cup for coffee-family caffeine events", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          type: "caffeinated",
+          speed: "event",
+          summary: "Caffeinated with Cortado",
+          subject: { kind: "drink", label: "Cortado" },
+          meta: { drink: "Cortado" },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("☕");
+    expect(markup).toContain("Caffeinated with Cortado");
+    expect(markup).not.toContain("🥤");
+  });
+
+  test("shows a cup for celsius, tea, and unknown caffeine events", () => {
+    for (const drink of ["Celsius", "Tea", "Mystery Juice"]) {
+      const markup = renderToStaticMarkup(
+        <ActivityRow
+          event={event({
+            type: "caffeinated",
+            speed: "event",
+            summary: `Caffeinated with ${drink}`,
+            subject: { kind: "drink", label: drink },
+            meta: { drink },
+          })}
+        />,
+      );
+      expect(markup).toContain("🥤");
+      expect(markup).not.toContain("☕");
+    }
+  });
 });

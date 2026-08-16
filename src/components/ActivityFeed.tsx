@@ -63,7 +63,15 @@ function RelativeTime({ iso }: { iso: string }) {
   );
 }
 
-function ActivityRowIcon({ event, flag }: { event: ActivityEvent; flag?: string }) {
+function ActivityRowIcon({
+  event,
+  flag,
+  icon,
+}: {
+  event: ActivityEvent;
+  flag?: string;
+  icon?: string;
+}) {
   if (event.type === "like") {
     return <Heart size={16} className="fill-current text-red-500" aria-hidden />;
   }
@@ -79,6 +87,14 @@ function ActivityRowIcon({ event, flag }: { event: ActivityEvent; flag?: string 
     return <World size={16} className="text-tertiary" aria-hidden />;
   }
 
+  if (event.type === "caffeinated") {
+    return (
+      <span className="text-base leading-none" aria-hidden>
+        {icon ?? "🥤"}
+      </span>
+    );
+  }
+
   return <Activity size={16} className="text-tertiary" aria-hidden />;
 }
 
@@ -89,7 +105,7 @@ export function ActivityRow({ event }: { event: ActivityEvent }) {
   return (
     <div className="border-secondary hover:bg-secondary grid grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-3 border-b px-4 py-3 md:gap-4 md:py-2 md:dark:hover:bg-white/5">
       <div className="flex size-8 items-center justify-center">
-        <ActivityRowIcon event={event} flag={row.flag} />
+        <ActivityRowIcon event={event} flag={row.flag} icon={row.icon} />
       </div>
       <div className="min-w-0">
         <p className="text-primary truncate text-pretty">{row.summary}</p>
