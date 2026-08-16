@@ -1,6 +1,12 @@
 import { createHash } from "crypto";
 
-import { type ActivityGeo, countryCodeToName, formatVisitSummary } from "./activity-geo";
+import {
+  type ActivityGeo,
+  countryCodeToName,
+  formatVisitSummary,
+  geoFromVisitMeta,
+} from "./activity-geo";
+import { isRegisteredActivityEvent } from "./activity-registry";
 import {
   ACTIVITY_ENVELOPE_VERSION,
   ACTIVITY_IDEMPOTENCY_TTL_SECONDS,
@@ -8,7 +14,6 @@ import {
   ACTIVITY_SOURCE_BRIOS,
   ACTIVITY_STREAM_MAXLEN,
   ACTIVITY_VISIT_STREAM_MAX_PER_SEC,
-  type ActivityDownloadSource,
   type ActivityEvent,
   type ActivityFeedPayload,
   type ActivityIngestInput,
@@ -21,7 +26,6 @@ import {
   inferContentTypeFromPath,
   inferTitleFromPath,
   isActivityPath,
-  parseActivityVisitSource,
   resolveVisitTitle,
   shouldCountLifetimeTotal,
   shouldRecordVisit,
@@ -30,8 +34,8 @@ import {
 
 export type { ActivityGeo } from "./activity-geo";
 export { countryCodeToName, formatVisitSummary, getRequestGeo } from "./activity-geo";
+export { isRegisteredActivityEvent } from "./activity-registry";
 export type {
-  ActivityDownloadSource,
   ActivityEvent,
   ActivityFeedPayload,
   ActivityIngestInput,
@@ -39,10 +43,8 @@ export type {
   ActivitySpeed,
   ActivityTotal,
   ActivityVisibility,
-  ActivityVisitSource,
 } from "./activity-shared";
 export {
-  ACTIVITY_DOWNLOAD_SOURCES,
   ACTIVITY_ENVELOPE_VERSION,
   ACTIVITY_FEED_CACHE_CONTROL,
   ACTIVITY_FEED_DEDUPING_MS,
@@ -50,7 +52,6 @@ export {
   ACTIVITY_SOURCE_BRIOS,
   ACTIVITY_SOURCE_LABELS,
   ACTIVITY_STREAM_MAXLEN,
-  ACTIVITY_VISIT_SOURCES,
   ACTIVITY_VISIT_STREAM_MAX_PER_SEC,
   activityFeedRefreshInterval,
   activitySourceFaviconSrc,
@@ -63,11 +64,8 @@ export {
   getRequestCountry,
   inferContentTypeFromPath,
   inferTitleFromPath,
-  isActivityDownloadSource,
   isActivityFeedPayload,
   isActivityPath,
-  isActivityVisitSource,
-  parseActivityVisitSource,
   resolveVisitTitle,
   shouldCountLifetimeTotal,
   shouldRecordVisit,
@@ -158,6 +156,59 @@ function validateRef(name: string, value: unknown): string | null {
   return null;
 }
 
+function applyIngestDefaults(input: ActivityIngestInput): ActivityIngestInput {
+  if (input.type === "visit") {
+    const meta = isPlainObject(input.meta) ? { ...input.meta } : {};
+    const path =
+      typeof meta.path === "string" && meta.path ? meta.path : input.subject?.href || "/";
+    const providedTitle = typeof meta.title === "string" ? meta.title : input.subject?.label;
+    const title = resolveVisitTitle(path, providedTitle);
+    const geo = geoFromVisitMeta(meta);
+    const country = geo.country?.trim() || undefined;
+    const countryName =
+      geo.countryName?.trim() || (country ? countryCodeToName(country) : undefined);
+    const region = geo.region?.trim() || undefined;
+    const regionName = geo.regionName?.trim() || undefined;
+    const city = geo.city?.trim() || undefined;
+    const summary =
+      input.summary?.trim() ||
+      formatVisitSummary({ country, countryName, region, regionName, city });
+
+    return {
+      ...input,
+      speed: input.speed ?? "signal",
+      summary,
+      subject: input.subject ?? {
+        kind: inferContentTypeFromPath(path),
+        label: title,
+        href: path,
+      },
+      meta: {
+        ...meta,
+        ...(country ? { country } : {}),
+        ...(countryName && countryName !== country ? { country_name: countryName } : {}),
+        ...(region ? { region } : {}),
+        ...(regionName ? { region_name: regionName } : {}),
+        ...(city ? { city } : {}),
+        path,
+        title,
+      },
+    };
+  }
+
+  if (input.type === "download") {
+    const label = input.subject?.label?.trim() || activitySourceLabel(input.source);
+    return {
+      ...input,
+      speed: input.speed ?? "event",
+      summary: input.summary?.trim() || formatDownloadSummary(input.source, label),
+      subject: input.subject ?? { kind: "download", label },
+    };
+  }
+
+  return input;
+}
+
 export function validateIngestInput(input: ActivityIngestInput): string | null {
   if (!input.source || typeof input.source !== "string") return "source is required";
   if (!input.type || typeof input.type !== "string") return "type is required";
@@ -188,34 +239,39 @@ export async function ingestActivityEvent(
   store: ActivityStore,
   now: Date = new Date(),
 ): Promise<IngestResult> {
-  const fieldError = validateIngestInput(input);
+  if (!input.source || !input.type || !isRegisteredActivityEvent(input.source, input.type)) {
+    return { ok: false, error: "unregistered source/type", status: 400 };
+  }
+
+  const normalized = applyIngestDefaults(input);
+  const fieldError = validateIngestInput(normalized);
   if (fieldError) return { ok: false, error: fieldError, status: 400 };
 
-  const pii = findForbiddenPii(input);
+  const pii = findForbiddenPii(normalized);
   if (pii) {
     return { ok: false, error: `payload contains forbidden data (${pii})`, status: 400 };
   }
 
   const receivedAt = now.toISOString();
   const event: ActivityEvent = {
-    v: input.v ?? ACTIVITY_ENVELOPE_VERSION,
-    id: input.id ?? crypto.randomUUID(),
-    ts: input.ts ?? receivedAt,
+    v: normalized.v ?? ACTIVITY_ENVELOPE_VERSION,
+    id: normalized.id ?? crypto.randomUUID(),
+    ts: normalized.ts ?? receivedAt,
     received_at: receivedAt,
-    source: input.source,
-    type: input.type,
-    speed: input.speed,
-    summary: input.summary,
-    visibility: input.visibility ?? "public",
-    idempotency_key: input.idempotency_key,
-    ...(input.actor ? { actor: input.actor } : {}),
-    ...(input.subject ? { subject: input.subject } : {}),
-    ...(input.meta ? { meta: input.meta } : {}),
+    source: normalized.source,
+    type: normalized.type,
+    speed: normalized.speed ?? "event",
+    summary: normalized.summary ?? "",
+    visibility: normalized.visibility ?? "public",
+    idempotency_key: normalized.idempotency_key,
+    ...(normalized.actor ? { actor: normalized.actor } : {}),
+    ...(normalized.subject ? { subject: normalized.subject } : {}),
+    ...(normalized.meta ? { meta: normalized.meta } : {}),
   };
 
   const claimed = await store.claimIdempotency(
     event.idempotency_key,
-    input.idempotencyTtlSeconds ?? ACTIVITY_IDEMPOTENCY_TTL_SECONDS,
+    normalized.idempotencyTtlSeconds ?? ACTIVITY_IDEMPOTENCY_TTL_SECONDS,
   );
 
   if (!claimed) {
@@ -226,7 +282,7 @@ export async function ingestActivityEvent(
     await store.incrementTotal(event.source, event.type, event.received_at);
   }
 
-  const writeToStream = input.writeToStream !== false;
+  const writeToStream = normalized.writeToStream !== false;
   if (writeToStream) {
     await store.addToStream(event);
   }
@@ -264,16 +320,11 @@ export async function recordLike(
 }
 
 export async function recordVisit(
-  input: { path: string; source?: string; title?: string } & ActivityGeo,
+  input: { path: string; title?: string } & ActivityGeo,
   store: ActivityStore,
   now: Date = new Date(),
 ): Promise<IngestResult | { skipped: true; reason: string }> {
-  const source = parseActivityVisitSource(input.source);
-  if (!source) {
-    return { ok: false, error: "unknown source", status: 400 };
-  }
-
-  if (source === ACTIVITY_SOURCE_BRIOS && !shouldRecordVisit(input.path)) {
+  if (!shouldRecordVisit(input.path)) {
     return { skipped: true, reason: "activity_path" };
   }
 
@@ -291,12 +342,12 @@ export async function recordVisit(
 
   return ingestActivityEvent(
     {
-      source,
+      source: ACTIVITY_SOURCE_BRIOS,
       type: "visit",
       speed: "signal",
       summary,
       visibility: "public",
-      idempotency_key: `${source}:visit:${crypto.randomUUID()}`,
+      idempotency_key: `brios:visit:${crypto.randomUUID()}`,
       subject: {
         kind: inferContentTypeFromPath(input.path),
         label: title,
@@ -312,30 +363,6 @@ export async function recordVisit(
         title,
       },
       writeToStream,
-    },
-    store,
-    now,
-  );
-}
-
-export async function recordDownload(
-  input: { source: ActivityDownloadSource; platform?: string },
-  store: ActivityStore,
-  now: Date = new Date(),
-): Promise<IngestResult> {
-  const label = activitySourceLabel(input.source);
-  const platform = input.platform?.trim() || undefined;
-
-  return ingestActivityEvent(
-    {
-      source: input.source,
-      type: "download",
-      speed: "event",
-      summary: formatDownloadSummary(input.source),
-      visibility: "public",
-      idempotency_key: `${input.source}:download:${crypto.randomUUID()}`,
-      subject: { kind: "download", label },
-      meta: platform ? { platform } : undefined,
     },
     store,
     now,

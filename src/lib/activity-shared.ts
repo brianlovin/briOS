@@ -22,23 +22,6 @@ export const ACTIVITY_BODY_MAX_BYTES = 8192;
 export const ACTIVITY_SOURCE_BRIOS = "brios";
 export const ACTIVITY_VISIT_TITLE_MAX = 200;
 
-export const ACTIVITY_VISIT_SOURCES = [
-  ACTIVITY_SOURCE_BRIOS,
-  "tax-ui",
-  "staff-design",
-  "design-details",
-] as const;
-
-export const ACTIVITY_DOWNLOAD_SOURCES = [
-  "tax-ui",
-  "staff-design",
-  "design-details",
-  "shiori",
-] as const;
-
-export type ActivityVisitSource = (typeof ACTIVITY_VISIT_SOURCES)[number];
-export type ActivityDownloadSource = (typeof ACTIVITY_DOWNLOAD_SOURCES)[number];
-
 export const ACTIVITY_SOURCE_LABELS: Record<string, string> = {
   [ACTIVITY_SOURCE_BRIOS]: "briOS",
   "tax-ui": "Tax UI",
@@ -55,28 +38,12 @@ const ACTIVITY_SOURCE_FAVICONS: Record<string, string> = {
   shiori: "/img/shiori-icon.png",
 };
 
-export function isActivityVisitSource(value: string): value is ActivityVisitSource {
-  return (ACTIVITY_VISIT_SOURCES as readonly string[]).includes(value);
-}
-
-export function parseActivityVisitSource(
-  value: string | undefined | null,
-): ActivityVisitSource | null {
-  if (value == null || value === "") return ACTIVITY_SOURCE_BRIOS;
-  if (isActivityVisitSource(value)) return value;
-  return null;
-}
-
-export function isActivityDownloadSource(value: string): value is ActivityDownloadSource {
-  return (ACTIVITY_DOWNLOAD_SOURCES as readonly string[]).includes(value);
-}
-
 export function activitySourceLabel(source: string): string {
   return ACTIVITY_SOURCE_LABELS[source] ?? source;
 }
 
-export function formatDownloadSummary(source: ActivityDownloadSource): string {
-  return `Someone downloaded ${activitySourceLabel(source)}`;
+export function formatDownloadSummary(source: string, label?: string): string {
+  return `Someone downloaded ${label?.trim() || activitySourceLabel(source)}`;
 }
 
 export function activitySourceFaviconSrc(source: string): string | undefined {
@@ -148,8 +115,8 @@ export type ActivityIngestInput = {
   ts?: string;
   source: string;
   type: string;
-  speed: ActivitySpeed;
-  summary: string;
+  speed?: ActivitySpeed;
+  summary?: string;
   visibility?: ActivityVisibility;
   idempotency_key: string;
   actor?: ActivityRef;

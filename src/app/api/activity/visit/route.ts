@@ -1,57 +1,40 @@
+import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { getRequestGeo, recordVisit } from "@/lib/activity";
-import { activityPingJson, activityPingOptions, applyActivityPingCors } from "@/lib/activity-cors";
 import { getActivityStore } from "@/lib/activity-redis";
-import { ACTIVITY_VISIT_SOURCES } from "@/lib/activity-shared";
 import { errorResponse } from "@/lib/api-utils";
 
-const bodySchema = z.object({
-  path: z.string().min(1).max(500),
-  source: z.enum(ACTIVITY_VISIT_SOURCES).optional(),
-  title: z.string().max(500).optional(),
-});
-
-export function OPTIONS(request: Request) {
-  return activityPingOptions(request);
-}
+const bodySchema = z
+  .object({
+    path: z.string().min(1).max(500),
+    title: z.string().max(500).optional(),
+  })
+  .strict();
 
 export async function POST(request: Request) {
   try {
     const body = bodySchema.parse(await request.json());
     const store = getActivityStore();
     if (!store) {
-      return activityPingJson(request, { ok: true, skipped: true });
+      return NextResponse.json({ ok: true, skipped: true });
     }
 
     const result = await recordVisit(
-      {
-        path: body.path,
-        source: body.source,
-        title: body.title,
-        ...getRequestGeo(request.headers),
-      },
+      { path: body.path, title: body.title, ...getRequestGeo(request.headers) },
       store,
     );
 
     if ("skipped" in result) {
-      return activityPingJson(request, { ok: true, skipped: true });
+      return NextResponse.json({ ok: true, skipped: true });
     }
 
-    if (!result.ok) {
-      return applyActivityPingCors(request, errorResponse(result.error, result.status));
-    }
-
-    return activityPingJson(request, { ok: true, skipped: false });
+    return NextResponse.json({ ok: true, skipped: false });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const sourceIssue = error.issues.some((issue) => issue.path.includes("source"));
-      return applyActivityPingCors(
-        request,
-        errorResponse(sourceIssue ? "Unknown source" : "Invalid path", 400),
-      );
+      return errorResponse("Invalid body", 400);
     }
     console.error("[activity] visit failed", error);
-    return activityPingJson(request, { ok: true, skipped: true });
+    return NextResponse.json({ ok: true, skipped: true });
   }
 }

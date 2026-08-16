@@ -15,9 +15,7 @@ import {
   hashDigestSubscriber,
   ingestActivityEvent,
   likeMetaFromRequest,
-  parseActivityVisitSource,
   recordDigestSubscribed,
-  recordDownload,
   recordLike,
   recordVisit,
   shouldRecordVisit,
@@ -110,7 +108,7 @@ describe("ingestActivityEvent", () => {
     ]);
   });
 
-  test("unknown type is valid when summary is present", async () => {
+  test("rejects an unregistered type even when summary is present", async () => {
     const store = createMemoryActivityStore();
     const result = await ingestActivityEvent(
       baseEvent({
@@ -121,31 +119,72 @@ describe("ingestActivityEvent", () => {
       store,
     );
 
-    expect(result.ok).toBe(true);
-    const [event] = await store.getTail(10);
-    expect(event?.type).toBe("weird_new_thing");
-    expect(getActivityRow(event!)).toEqual({
-      summary: "A brand new event happened",
-      href: "/hello",
-      label: "Hello",
-    });
+    expect(result).toEqual({ ok: false, error: "unregistered source/type", status: 400 });
+    expect(await store.getStreamLength()).toBe(0);
   });
 
-  test("does not increment lifetime totals for visit_country_first", async () => {
+  test("HMAC ingest of staff-design + visit succeeds and fills the visit shape", async () => {
     const store = createMemoryActivityStore();
     const result = await ingestActivityEvent(
-      baseEvent({
-        type: "visit_country_first",
-        speed: "signal",
-        summary: "First visit from Russia",
-      }),
+      {
+        source: "staff-design",
+        type: "visit",
+        idempotency_key: "hmac:staff-design:visit:1",
+        meta: { path: "/karla-mickens-cole", title: "Karla Mickens Cole", country: "DE" },
+      },
       store,
     );
 
-    expect(result.ok).toBe(true);
-    expect(await store.getStreamLength()).toBe(1);
-    expect(await store.getTotals()).toEqual([]);
-    expect(visibleLifetimeTotals(await store.getTotals())).toEqual([]);
+    expect(result.ok && !result.duplicate).toBe(true);
+    const [event] = await store.getTail(1);
+    expect(event?.source).toBe("staff-design");
+    expect(event?.type).toBe("visit");
+    expect(event?.speed).toBe("signal");
+    expect(event?.summary).toBe("🇩🇪 Visit from Germany");
+    expect(event?.subject).toEqual({
+      kind: "page",
+      label: "Karla Mickens Cole",
+      href: "/karla-mickens-cole",
+    });
+    expect(event?.meta).toEqual(
+      expect.objectContaining({
+        path: "/karla-mickens-cole",
+        title: "Karla Mickens Cole",
+        country: "DE",
+        country_name: "Germany",
+      }),
+    );
+  });
+
+  test("HMAC ingest of staff-design + like is rejected", async () => {
+    const store = createMemoryActivityStore();
+    const result = await ingestActivityEvent(
+      baseEvent({
+        source: "staff-design",
+        type: "like",
+        summary: "Someone liked a page",
+      }),
+      store,
+    );
+    expect(result).toEqual({ ok: false, error: "unregistered source/type", status: 400 });
+    expect(await store.getStreamLength()).toBe(0);
+  });
+
+  test("HMAC ingest of an unknown source is rejected", async () => {
+    const store = createMemoryActivityStore();
+    const result = await ingestActivityEvent(
+      baseEvent({
+        source: "evil",
+        type: "visit",
+        summary: "Visit from Germany",
+      }),
+      store,
+    );
+    expect(result).toEqual({ ok: false, error: "unregistered source/type", status: 400 });
+    expect(await store.getStreamLength()).toBe(0);
+  });
+
+  test("does not increment lifetime totals for visit_country_first", async () => {
     expect(
       visibleLifetimeTotals([
         { source: "brios", type: "visit", count: 10, first_seen: "2026-08-16T00:00:00.000Z" },
@@ -281,13 +320,12 @@ describe("recordVisit", () => {
     expect(event?.source).toBe("brios");
   });
 
-  test("writes a non-brios source and a provided title", async () => {
+  test("uses a provided title instead of inferring from the path", async () => {
     const store = createMemoryActivityStore();
     const result = await recordVisit(
       {
-        path: "/returns/2024",
-        source: "tax-ui",
-        title: "  2024 federal return  ",
+        path: "/writing/grok-bot-first-impressions",
+        title: "  Grok Bot first impressions  ",
         country: "US",
       },
       store,
@@ -295,42 +333,18 @@ describe("recordVisit", () => {
     expect("ok" in result && result.ok).toBe(true);
 
     const [event] = await store.getTail(1);
-    expect(event?.source).toBe("tax-ui");
-    expect(event?.type).toBe("visit");
+    expect(event?.source).toBe("brios");
     expect(event?.subject).toEqual({
-      kind: "page",
-      label: "2024 federal return",
-      href: "/returns/2024",
+      kind: "writing",
+      label: "Grok Bot first impressions",
+      href: "/writing/grok-bot-first-impressions",
     });
     expect(event?.meta).toEqual(
       expect.objectContaining({
-        path: "/returns/2024",
-        title: "2024 federal return",
-        country: "US",
+        path: "/writing/grok-bot-first-impressions",
+        title: "Grok Bot first impressions",
       }),
     );
-    expect(getActivityRow(event!).summary).toBe("🇺🇸 Visit from United States");
-  });
-
-  test("rejects an unknown source without writing", async () => {
-    const store = createMemoryActivityStore();
-    const result = await recordVisit({ path: "/", source: "evil.com", country: "US" }, store);
-    expect(result).toEqual({ ok: false, error: "unknown source", status: 400 });
-    expect(await store.getStreamLength()).toBe(0);
-    expect(await store.getTotals()).toEqual([]);
-  });
-
-  test("lets an external source record /activity", async () => {
-    const store = createMemoryActivityStore();
-    const result = await recordVisit(
-      { path: "/activity", source: "staff-design", title: "Staff Design", country: "DE" },
-      store,
-    );
-    expect("ok" in result && result.ok).toBe(true);
-    const [event] = await store.getTail(1);
-    expect(event?.source).toBe("staff-design");
-    expect(event?.subject?.label).toBe("Staff Design");
-    expect(event?.subject?.href).toBe("/activity");
   });
 
   test("prefers city and region in the visit summary", async () => {
@@ -484,10 +498,18 @@ describe("recordDigestSubscribed", () => {
   });
 });
 
-describe("recordDownload", () => {
-  test("writes a public download with a human site name", async () => {
+describe("HMAC download ingest", () => {
+  test("fills a missing download summary from the source label", async () => {
     const store = createMemoryActivityStore();
-    const result = await recordDownload({ source: "tax-ui", platform: "mac" }, store);
+    const result = await ingestActivityEvent(
+      {
+        source: "tax-ui",
+        type: "download",
+        idempotency_key: "hmac:tax-ui:download:1",
+        meta: { platform: "mac" },
+      },
+      store,
+    );
     expect(result.ok && !result.duplicate).toBe(true);
 
     const [event] = await store.getTail(1);
@@ -498,26 +520,10 @@ describe("recordDownload", () => {
     expect(event?.summary).toBe("Someone downloaded Tax UI");
     expect(event?.subject).toEqual({ kind: "download", label: "Tax UI" });
     expect(event?.meta).toEqual({ platform: "mac" });
-    expect(event?.idempotency_key).toMatch(/^tax-ui:download:/);
     expect(JSON.stringify(event)).not.toMatch(/https?:\/\//);
   });
 
-  test("omits platform when it is missing and uses the site label", async () => {
-    const store = createMemoryActivityStore();
-    await recordDownload({ source: "shiori" }, store);
-    await recordDownload({ source: "design-details" }, store);
-    await recordDownload({ source: "staff-design" }, store);
-
-    const events = await store.getTail(10);
-    expect(events.map((event) => event.summary)).toEqual([
-      "Someone downloaded Staff Design",
-      "Someone downloaded Design Details",
-      "Someone downloaded Shiori",
-    ]);
-    expect(events[2]?.meta).toBeUndefined();
-  });
-
-  test("HMAC-ingested download events count toward lifetime totals", async () => {
+  test("counts HMAC-ingested download events toward lifetime totals", async () => {
     const store = createMemoryActivityStore();
     const result = await ingestActivityEvent(
       {
@@ -546,13 +552,6 @@ describe("recordDownload", () => {
 });
 
 describe("activity source helpers", () => {
-  test("defaults omitted visit sources to brios and rejects unknown ones", () => {
-    expect(parseActivityVisitSource(undefined)).toBe("brios");
-    expect(parseActivityVisitSource("")).toBe("brios");
-    expect(parseActivityVisitSource("tax-ui")).toBe("tax-ui");
-    expect(parseActivityVisitSource("not-a-site")).toBeNull();
-  });
-
   test("maps sources to favicon paths", () => {
     expect(activitySourceFaviconSrc("brios")).toBe("/activity/favicons/brios.png");
     expect(activitySourceFaviconSrc("tax-ui")).toBe("/activity/favicons/tax-ui.png");
