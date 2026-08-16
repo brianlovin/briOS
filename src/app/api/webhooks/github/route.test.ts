@@ -106,11 +106,22 @@ describe("POST /api/webhooks/github", () => {
     expect(event?.summary).toBe("Opened a pull request on briOS");
   });
 
-  test("returns 200 and skips private repos, bot PRs, unmerged closes, and deleted stars", async () => {
+  test("records private repos without the name, and skips bot PRs, unmerged closes, and deleted stars", async () => {
     const privateRes = await POST(
       webhookRequest("pull_request", {
         ...openedPr,
-        repository: { ...openedPr.repository, private: true, name: "secrets" },
+        repository: {
+          ...openedPr.repository,
+          private: true,
+          name: "secrets",
+          full_name: "brianlovin/secrets",
+          html_url: "https://github.com/brianlovin/secrets",
+        },
+        pull_request: {
+          ...openedPr.pull_request,
+          title: "private title must not leak",
+          html_url: "https://github.com/brianlovin/secrets/pull/7",
+        },
       }),
     );
     const botRes = await POST(
@@ -139,13 +150,20 @@ describe("POST /api/webhooks/github", () => {
     );
 
     expect(privateRes.status).toBe(200);
-    expect(await privateRes.json()).toEqual({ ok: true, ignored: "private_repo" });
+    const privateBody = await privateRes.json();
+    expect(privateBody.ok).toBe(true);
+    expect(privateBody.ignored).toBeUndefined();
+    const [privateEvent] = await store.getTail(1);
+    const privateSerialized = JSON.stringify(privateEvent);
+    expect(privateSerialized).not.toContain("secrets");
+    expect(privateSerialized).not.toContain("private title");
+    expect(privateEvent?.summary).toBe("Opened a pull request");
     expect(botRes.status).toBe(200);
     expect(await botRes.json()).toEqual({ ok: true, ignored: "bot_actor" });
     expect(closedRes.status).toBe(200);
     expect(await closedRes.json()).toEqual({ ok: true, ignored: "closed_unmerged" });
     expect(deletedStar.status).toBe(200);
     expect(await deletedStar.json()).toEqual({ ok: true, ignored: "ignored_star_action" });
-    expect(await store.getStreamLength()).toBe(0);
+    expect(await store.getStreamLength()).toBe(1);
   });
 });

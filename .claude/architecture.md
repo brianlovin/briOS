@@ -40,9 +40,20 @@
 
 `POST /api/webhooks/github` receives GitHub `pull_request` and `star` events and writes them to the public `/activity` feed via in-process `ingestActivityEvent`. It does not use the HMAC ingest URL.
 
-Verify `X-Hub-Signature-256` (`sha256=<hex>`) against `GITHUB_ACTIVITY_WEBHOOK_SECRET` with `safeCompare`. Missing secret → 503. Bad signature → 401. Ignored events (ping, private repos, bots, star deletions, closed-unmerged PRs) return 200 so GitHub does not retry.
+Verify `X-Hub-Signature-256` (`sha256=<hex>`) against `GITHUB_ACTIVITY_WEBHOOK_SECRET` with `safeCompare`. Missing secret → 503. Bad signature → 401. Ignored events (ping, bots, star deletions, closed-unmerged PRs) return 200 so GitHub does not retry.
 
-Recorded types: `pr_opened`, `pr_merged`, `repo_starred`. Private repositories and bot actors are skipped.
+Recorded types: `pr_opened`, `pr_merged`, `repo_starred`. Private repositories are recorded with generic copy — no repo name, title, or URL. Bot actors are skipped.
+
+**GitHub hook setup** (after `GITHUB_ACTIVITY_WEBHOOK_SECRET` is set in Vercel):
+
+1. Repo → **Settings → Webhooks → Add webhook**
+2. Payload URL: `https://brianlovin.com/api/webhooks/github`
+3. Content type: `application/json` (not form-encoded)
+4. Secret: the same value as `GITHUB_ACTIVITY_WEBHOOK_SECRET`
+5. Events: **Let me select individual events** → **Pull requests** and **Stars**
+6. Active → **Add webhook**. GitHub sends a `ping`; a 200 means the endpoint is up.
+
+Repeat per repo (including private). One hook does not cover a personal account. For every repo under one install, use a GitHub App webhook with the same URL, secret, and `pull_request` + `star` events.
 
 ## Notion Webhooks
 

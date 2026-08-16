@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { createHmac } from "crypto";
+import { createHash, createHmac } from "crypto";
 
 import {
   createMemoryActivityStore,
@@ -176,7 +176,7 @@ describe("githubActivityFromWebhook", () => {
     });
   });
 
-  test("ignores private repos before reading titles or urls", () => {
+  test("records private repos without passing through the name, title, or url", () => {
     const decision = githubActivityFromWebhook(
       "pull_request",
       pullRequestPayload({
@@ -195,9 +195,20 @@ describe("githubActivityFromWebhook", () => {
         },
       }),
     );
-    expect(decision).toEqual({ status: "ignore", reason: "private_repo" });
-    expect(JSON.stringify(decision)).not.toContain("private title");
-    expect(JSON.stringify(decision)).not.toContain("secrets");
+    const repoHash = createHash("sha256").update("brianlovin/secrets").digest("hex").slice(0, 16);
+
+    expect(decision.status).toBe("ingest");
+    if (decision.status === "ingest") {
+      expect(decision.input.summary).toBe("Opened a pull request");
+      expect(decision.input.subject).toEqual({ kind: "pull_request", label: "a pull request" });
+      expect(decision.input.meta).toEqual({ private: true, number: 1 });
+      expect(decision.input.idempotency_key).toBe(`github:pr_opened:private:${repoHash}:1`);
+    }
+
+    const serialized = JSON.stringify(decision);
+    expect(serialized).not.toContain("private title");
+    expect(serialized).not.toContain("secrets");
+    expect(serialized).not.toContain("brianlovin");
   });
 
   test("ignores bot pull requests", () => {
@@ -277,12 +288,19 @@ describe("recordGithubActivity", () => {
     });
   });
 
-  test("does not record a private repo or a bot PR", async () => {
+  test("records a private repo without leaking its name, and still skips bot PRs", async () => {
     const store = createMemoryActivityStore();
 
     const privateResult = await recordGithubActivity(
       "pull_request",
-      pullRequestPayload({ repository: publicRepo({ private: true, name: "secrets" }) }),
+      pullRequestPayload({
+        repository: publicRepo({
+          private: true,
+          name: "secrets",
+          full_name: "brianlovin/secrets",
+          html_url: "https://github.com/brianlovin/secrets",
+        }),
+      }),
       store,
     );
     const botResult = await recordGithubActivity(
@@ -300,10 +318,16 @@ describe("recordGithubActivity", () => {
       store,
     );
 
-    expect(privateResult).toEqual({ skipped: true, reason: "private_repo" });
+    expect(privateResult).toEqual(expect.objectContaining({ ok: true, duplicate: false }));
     expect(botResult).toEqual({ skipped: true, reason: "bot_actor" });
-    expect(await store.getStreamLength()).toBe(0);
-    expect(await store.getTotals()).toEqual([]);
+    expect(await store.getStreamLength()).toBe(1);
+
+    const [event] = await store.getTail(1);
+    const serialized = JSON.stringify(event);
+    expect(serialized).not.toContain("secrets");
+    expect(serialized).not.toContain("Add activity feed");
+    expect(event?.summary).toBe("Opened a pull request");
+    expect(event?.meta).toEqual({ private: true, number: 42 });
   });
 
   test("treats the same person starring twice as one event", async () => {

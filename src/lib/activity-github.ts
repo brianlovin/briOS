@@ -1,4 +1,4 @@
-import { createHmac } from "crypto";
+import { createHash, createHmac } from "crypto";
 
 import { ACTIVITY_SOURCE_GITHUB, type ActivityIngestInput } from "./activity-shared";
 import { safeCompare } from "./api-utils";
@@ -46,28 +46,70 @@ function repoShortName(repository: Record<string, unknown>): string | undefined 
   return short || undefined;
 }
 
-function publicRepo(
+function readRepository(
   payload: Record<string, unknown>,
-): { ok: true; repository: Record<string, unknown> } | { ok: false; reason: string } {
+):
+  | { ok: true; repository: Record<string, unknown>; isPrivate: boolean }
+  | { ok: false; reason: string } {
   if (!isPlainObject(payload.repository)) return { ok: false, reason: "missing_repo" };
-  if (payload.repository.private === true) return { ok: false, reason: "private_repo" };
-  return { ok: true, repository: payload.repository };
+  return {
+    ok: true,
+    repository: payload.repository,
+    isPrivate: payload.repository.private === true,
+  };
+}
+
+function repoIdempotencyToken(
+  repository: Record<string, unknown>,
+  isPrivate: boolean,
+): string | undefined {
+  const shortName = repoShortName(repository);
+  const raw = asString(repository.full_name) || shortName;
+  if (!raw) return undefined;
+  if (!isPrivate) return shortName ?? raw.split("/").pop();
+  return `private:${createHash("sha256").update(raw).digest("hex").slice(0, 16)}`;
 }
 
 function pullRequestInput(
   type: "pr_opened" | "pr_merged",
   payload: Record<string, unknown>,
   repository: Record<string, unknown>,
+  isPrivate: boolean,
 ): GithubActivityDecision {
   const pullRequest = isPlainObject(payload.pull_request) ? payload.pull_request : undefined;
   const number = asNumber(pullRequest?.number) ?? asNumber(payload.number);
-  const repo = repoShortName(repository);
-  if (number === undefined || !repo) return { status: "ignore", reason: "incomplete_pr" };
+  const repoToken = repoIdempotencyToken(repository, isPrivate);
+  if (number === undefined || !repoToken) return { status: "ignore", reason: "incomplete_pr" };
+
+  const summary =
+    type === "pr_opened"
+      ? isPrivate
+        ? "Opened a pull request"
+        : `Opened a pull request on ${repoShortName(repository)}`
+      : isPrivate
+        ? "Merged a pull request"
+        : `Merged a pull request on ${repoShortName(repository)}`;
+
+  if (isPrivate) {
+    return {
+      status: "ingest",
+      input: {
+        source: ACTIVITY_SOURCE_GITHUB,
+        type,
+        speed: "event",
+        summary,
+        visibility: "public",
+        idempotency_key: `github:${type}:${repoToken}:${number}`,
+        subject: { kind: "pull_request", label: "a pull request" },
+        meta: { private: true, number },
+        idempotencyTtlSeconds: 0,
+      },
+    };
+  }
 
   const title = asString(pullRequest?.title) || "a pull request";
   const href = asString(pullRequest?.html_url);
-  const summary =
-    type === "pr_opened" ? `Opened a pull request on ${repo}` : `Merged a pull request on ${repo}`;
+  const repo = repoShortName(repository);
 
   return {
     status: "ingest",
@@ -77,7 +119,7 @@ function pullRequestInput(
       speed: "event",
       summary,
       visibility: "public",
-      idempotency_key: `github:${type}:${repo}:${number}`,
+      idempotency_key: `github:${type}:${repoToken}:${number}`,
       subject: {
         kind: "pull_request",
         label: title,
@@ -97,15 +139,34 @@ function pullRequestInput(
 function starInput(
   payload: Record<string, unknown>,
   repository: Record<string, unknown>,
+  isPrivate: boolean,
 ): GithubActivityDecision {
   const sender = isPlainObject(payload.sender) ? payload.sender : undefined;
   const login = asString(sender?.login);
-  const repo = repoShortName(repository);
-  if (!login || !repo) return { status: "ignore", reason: "incomplete_star" };
+  const repoToken = repoIdempotencyToken(repository, isPrivate);
+  if (!login || !repoToken) return { status: "ignore", reason: "incomplete_star" };
 
+  if (isPrivate) {
+    return {
+      status: "ingest",
+      input: {
+        source: ACTIVITY_SOURCE_GITHUB,
+        type: "repo_starred",
+        speed: "event",
+        summary: "Someone starred a repository",
+        visibility: "public",
+        idempotency_key: `github:star:${repoToken}:${login}`,
+        subject: { kind: "repo", label: "a repository" },
+        meta: { private: true },
+        idempotencyTtlSeconds: 0,
+      },
+    };
+  }
+
+  const repo = repoShortName(repository);
   const fullName = asString(repository.full_name);
   const href = asString(repository.html_url);
-  const label = fullName || asString(repository.name) || repo;
+  const label = fullName || asString(repository.name) || repo || "a repository";
 
   return {
     status: "ingest",
@@ -115,7 +176,7 @@ function starInput(
       speed: "event",
       summary: `Someone starred ${repo}`,
       visibility: "public",
-      idempotency_key: `github:star:${repo}:${login}`,
+      idempotency_key: `github:star:${repoToken}:${login}`,
       subject: {
         kind: "repo",
         label,
@@ -137,9 +198,9 @@ export function githubActivityFromWebhook(
   if (githubEvent === "ping") return { status: "ignore", reason: "ping" };
   if (!isPlainObject(payload)) return { status: "ignore", reason: "invalid_payload" };
 
-  const repoResult = publicRepo(payload);
+  const repoResult = readRepository(payload);
   if (!repoResult.ok) return { status: "ignore", reason: repoResult.reason };
-  const repository = repoResult.repository;
+  const { repository, isPrivate } = repoResult;
 
   if (githubEvent === "pull_request") {
     const action = asString(payload.action);
@@ -151,7 +212,7 @@ export function githubActivityFromWebhook(
       if (isGithubBotActor(prUser) || isGithubBotActor(sender)) {
         return { status: "ignore", reason: "bot_actor" };
       }
-      return pullRequestInput("pr_opened", payload, repository);
+      return pullRequestInput("pr_opened", payload, repository, isPrivate);
     }
 
     if (action === "closed") {
@@ -161,7 +222,7 @@ export function githubActivityFromWebhook(
       if (isGithubBotActor(sender)) {
         return { status: "ignore", reason: "bot_actor" };
       }
-      return pullRequestInput("pr_merged", payload, repository);
+      return pullRequestInput("pr_merged", payload, repository, isPrivate);
     }
 
     return { status: "ignore", reason: "ignored_pr_action" };
@@ -171,7 +232,7 @@ export function githubActivityFromWebhook(
     const action = asString(payload.action);
     if (action !== "created") return { status: "ignore", reason: "ignored_star_action" };
     if (isGithubBotActor(payload.sender)) return { status: "ignore", reason: "bot_actor" };
-    return starInput(payload, repository);
+    return starInput(payload, repository, isPrivate);
   }
 
   return { status: "ignore", reason: "ignored_event" };
