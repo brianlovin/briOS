@@ -42,7 +42,7 @@
 
 Verify `X-Hub-Signature-256` (`sha256=<hex>`) against `GITHUB_ACTIVITY_WEBHOOK_SECRET` with `safeCompare`. Missing secret → 503. Bad signature → 401. Ignored events (ping, bots, star deletions, closed-unmerged PRs) return 200 so GitHub does not retry.
 
-Recorded types: `pr_opened`, `pr_merged`, `repo_starred`. Private repositories are recorded with generic copy — no repo name, title, or URL. Bot actors are skipped.
+Recorded types: `pr_opened`, `pr_merged`, `repo_starred`. Private repositories are recorded with generic copy — no repo name, title, or URL. Dependabot PRs are skipped; coding-agent PRs (e.g. `cursor[bot]`) are kept. Stars are humans only.
 
 **GitHub hook setup** (after `GITHUB_ACTIVITY_WEBHOOK_SECRET` is set in Vercel):
 

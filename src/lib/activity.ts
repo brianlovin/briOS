@@ -29,6 +29,7 @@ export { countryCodeToName, formatVisitSummary, getRequestGeo } from "./activity
 export type { GithubActivityDecision } from "./activity-github";
 export {
   githubActivityFromWebhook,
+  isDependabotActor,
   isGithubBotActor,
   verifyGithubWebhookSignature,
 } from "./activity-github";

@@ -48,6 +48,13 @@ export function isGithubBotActor(actor: unknown): boolean {
   return login !== undefined && GITHUB_BOT_LOGINS.has(login.toLowerCase());
 }
 
+/** Dependabot PRs only. Coding-agent bots (cursor[bot], etc.) are kept. */
+export function isDependabotActor(actor: unknown): boolean {
+  if (!isPlainObject(actor)) return false;
+  const login = asString(actor.login)?.toLowerCase();
+  return login !== undefined && (login === "dependabot[bot]" || login.startsWith("dependabot"));
+}
+
 export function verifyGithubWebhookSignature(
   rawBody: string,
   signatureHeader: string | null | undefined,
@@ -232,7 +239,7 @@ export function githubActivityFromWebhook(
     const prUser = pullRequest?.user;
 
     if (action === "opened") {
-      if (isGithubBotActor(prUser) || isGithubBotActor(sender)) {
+      if (isDependabotActor(prUser) || isDependabotActor(sender)) {
         return { status: "ignore", reason: "bot_actor" };
       }
       return pullRequestInput("pr_opened", payload, repository, isPrivate);
@@ -242,7 +249,7 @@ export function githubActivityFromWebhook(
       if (pullRequest?.merged !== true) {
         return { status: "ignore", reason: "closed_unmerged" };
       }
-      if (isGithubBotActor(sender)) {
+      if (isDependabotActor(sender) || isDependabotActor(prUser)) {
         return { status: "ignore", reason: "bot_actor" };
       }
       return pullRequestInput("pr_merged", payload, repository, isPrivate);

@@ -4,6 +4,7 @@ import { createHash, createHmac } from "crypto";
 import {
   createMemoryActivityStore,
   githubActivityFromWebhook,
+  isDependabotActor,
   isGithubBotActor,
   recordGithubActivity,
   verifyGithubWebhookSignature,
@@ -80,6 +81,16 @@ describe("isGithubBotActor", () => {
     expect(isGithubBotActor({ login: "dependabot[bot]", type: "User" })).toBe(true);
     expect(isGithubBotActor({ login: "github-actions[bot]", type: "User" })).toBe(true);
     expect(isGithubBotActor({ login: "some-app", type: "Bot" })).toBe(true);
+  });
+});
+
+describe("isDependabotActor", () => {
+  test("matches Dependabot only, not coding agents", () => {
+    expect(isDependabotActor({ login: "dependabot[bot]", type: "Bot" })).toBe(true);
+    expect(isDependabotActor({ login: "dependabot-preview[bot]", type: "Bot" })).toBe(true);
+    expect(isDependabotActor({ login: "cursor[bot]", type: "Bot" })).toBe(false);
+    expect(isDependabotActor({ login: "github-actions[bot]", type: "Bot" })).toBe(false);
+    expect(isDependabotActor({ login: "octocat", type: "User" })).toBe(false);
   });
 });
 
@@ -229,7 +240,7 @@ describe("githubActivityFromWebhook", () => {
     expect(serialized).not.toContain("brianlovin");
   });
 
-  test("ignores bot pull requests", () => {
+  test("ignores Dependabot pull requests but keeps coding-agent PRs", () => {
     expect(
       githubActivityFromWebhook(
         "pull_request",
@@ -246,21 +257,29 @@ describe("githubActivityFromWebhook", () => {
       ),
     ).toEqual({ status: "ignore", reason: "bot_actor" });
 
-    expect(
-      githubActivityFromWebhook(
-        "pull_request",
-        pullRequestPayload({
-          sender: { login: "cursor[bot]", type: "Bot" },
-          pull_request: {
-            number: 10,
-            title: "Agent PR",
-            html_url: "https://github.com/brianlovin/briOS/pull/10",
-            merged: false,
-            user: { login: "cursor[bot]", type: "Bot" },
-          },
-        }),
-      ),
-    ).toEqual({ status: "ignore", reason: "bot_actor" });
+    const agent = githubActivityFromWebhook(
+      "pull_request",
+      pullRequestPayload({
+        sender: { login: "cursor[bot]", type: "Bot" },
+        pull_request: {
+          number: 10,
+          title: "Agent PR",
+          html_url: "https://github.com/brianlovin/briOS/pull/10",
+          merged: false,
+          user: { login: "cursor[bot]", type: "Bot" },
+        },
+      }),
+    );
+    expect(agent.status).toBe("ingest");
+    if (agent.status === "ingest") {
+      expect(agent.input.type).toBe("pr_opened");
+      expect(agent.input.summary).toBe("Opened a pull request on briOS");
+      expect(agent.input.subject).toEqual({
+        kind: "pull_request",
+        label: "Agent PR",
+        href: "https://github.com/brianlovin/briOS/pull/10",
+      });
+    }
   });
 
   test("ignores stars from bots", () => {
