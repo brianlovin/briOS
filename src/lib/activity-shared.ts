@@ -330,7 +330,6 @@ export function activitySectionFromPath(pathname: string | undefined): string {
 export function activitySectionPhrase(section: string): string {
   if (!section || section === "home" || isProtocolSegment(section)) return "Home";
   if (section === "ama") return "an AMA question";
-  if (section === "hn") return "a Hacker News story";
   const known = KNOWN_PATH_TITLES[`/${section}`];
   if (known) return known;
   return inferTitleFromPath(`/${section}`);
