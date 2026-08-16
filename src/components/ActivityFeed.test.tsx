@@ -23,7 +23,7 @@ function event(overrides: Partial<ActivityEvent>): ActivityEvent {
 }
 
 describe("ActivityRow", () => {
-  test("shows the site favicon and keeps the flag in the title", () => {
+  test("shows the site favicon and omits the flag from the title", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow
         event={event({
@@ -34,7 +34,8 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(markup).toContain("🇮🇳 Visit from India");
+    expect(markup).toContain("Visit from India");
+    expect(markup).not.toContain("🇮🇳");
     expect(markup).toContain("/activity/favicons/brios.png");
     expect(markup).toContain('href="/"');
     expect(markup).toContain("Home");
@@ -132,7 +133,8 @@ describe("ActivityRow", () => {
     );
 
     expect(visit).toContain("/activity/favicons/tax-ui.png");
-    expect(visit).toContain("🇺🇸 Visit from United States");
+    expect(visit).toContain("Visit from United States");
+    expect(visit).not.toContain("🇺🇸");
     expect(visit).toContain('width="16"');
     expect(visit).toContain('height="16"');
     expect(visit).toContain("size-4");
@@ -144,7 +146,8 @@ describe("ActivityRow", () => {
     expect(download).toContain('target="_blank"');
     expect(download).toContain("noopener noreferrer");
     expect(unknown).not.toContain("/activity/favicons/");
-    expect(unknown).toContain("🇺🇸 Visit from United States");
+    expect(unknown).toContain("Visit from United States");
+    expect(unknown).not.toContain("🇺🇸");
   });
 
   test("renders the staff.design favicon at 20px so it matches the GitHub mark", () => {
@@ -165,11 +168,11 @@ describe("ActivityRow", () => {
     expect(markup).not.toContain("size-4");
   });
 
-  test("rebuilds a country name and flag for older visits that only have a code", () => {
+  test("rebuilds a country name without a flag emoji for older visits that only have a code", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow event={event({ summary: "Visit from TW", meta: { country: "TW" } })} />,
     );
-    expect(markup).toContain("🇹🇼");
+    expect(markup).not.toContain("🇹🇼");
     expect(markup).toContain("Visit from Taiwan");
   });
 
@@ -221,7 +224,8 @@ describe("ActivityRow", () => {
     expect(like).not.toContain("Someone liked Grok Bot first impressions");
     expect(like).toContain('href="/writing/grok-bot-first-impressions"');
     expect(visit).not.toContain("text-red-500");
-    expect(visit).toContain("🇮🇳 Visit from India");
+    expect(visit).toContain("Visit from India");
+    expect(visit).not.toContain("🇮🇳");
     expect(visit).toContain("/activity/favicons/brios.png");
     expect(like).not.toContain("/activity/favicons/");
   });
@@ -647,7 +651,8 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(staff).toContain("🇺🇸 Visit from United States");
+    expect(staff).toContain("Visit from United States");
+    expect(staff).not.toContain("🇺🇸");
     expect(staff).toContain(">Staff Design<");
     expect(staff).toContain('href="https://staff.design"');
     expect(staff).toContain('target="_blank"');
@@ -674,7 +679,8 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(markup).toContain("🇩🇪 Visit from Germany");
+    expect(markup).toContain("Visit from Germany");
+    expect(markup).not.toContain("🇩🇪");
     expect(markup).toContain(">Karla Mickens Cole<");
     expect(markup).toContain('href="https://staff.design/karla-mickens-cole"');
     expect(markup).toContain('target="_blank"');
@@ -753,7 +759,7 @@ describe("ActivityRow", () => {
     expect(markup).toContain('href="/ama"');
     expect(markup).not.toContain("2f2c711c-0ceb-810d-899d-e5feb99e70f4");
     expect(markup).toMatch(
-      /text-primary[^>]*>🇺🇸 Visit from Spring Lake[\s\S]*href="\/ama"[^>]*>an AMA question[\s\S]*data-count="6"/,
+      /text-primary[^>]*>Visit from Spring Lake[\s\S]*href="\/ama"[^>]*>an AMA question[\s\S]*data-count="6"/,
     );
     const title = markup.match(/<p class="relative z-10[\s\S]*?<\/p>/)?.[0] ?? "";
     expect(title).toContain("data-count");
@@ -847,7 +853,8 @@ describe("ActivityFeed", () => {
       />,
     );
 
-    expect(markup).toContain("🇮🇳 Visit from India");
+    expect(markup).toContain("Visit from India");
+    expect(markup).not.toContain("🇮🇳");
     expect(markup).toContain("divide-y");
     expect(markup).toContain("divide-secondary");
     expect(markup).toContain("overflow-hidden");

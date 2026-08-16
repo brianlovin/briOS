@@ -5,11 +5,10 @@
 
 import {
   ANONYMOUS_VISIT_SUMMARY,
-  countryCodeToFlag,
   formatVisitSummary,
   geoFromVisitMeta,
   normalizeCountryCode,
-  splitVisitSummaryFlag,
+  visitDisplaySummary,
 } from "./activity-geo";
 
 export { countryCodeToFlag, normalizeCountryCode } from "./activity-geo";
@@ -578,13 +577,6 @@ function scanPii(value: unknown, path: string): string | null {
   return null;
 }
 
-function visitSummaryWithFlag(summary: string, meta: Record<string, unknown> | undefined): string {
-  const split = splitVisitSummaryFlag(summary);
-  if (split.flag) return summary;
-  const flag = countryCodeToFlag(geoFromVisitMeta(meta).country);
-  return flag ? `${flag} ${summary}` : summary;
-}
-
 export function getMergedPullRequestDiff(
   meta: Record<string, unknown> | undefined,
 ): { additions: number; deletions: number } | null {
@@ -668,12 +660,12 @@ export function getActivityRow(event: ActivityEvent): {
   if (event.type === "visit") {
     const geo = geoFromVisitMeta(event.meta);
     const hasLocation = Boolean(geo.country || geo.city || geo.countryName);
-    const storedText = splitVisitSummaryFlag(event.summary).text.trim();
+    const storedText = visitDisplaySummary(event.summary);
     const summary = hasLocation
-      ? formatVisitSummary(geo)
+      ? visitDisplaySummary(formatVisitSummary(geo))
       : !storedText || storedText === "Visit"
         ? ANONYMOUS_VISIT_SUMMARY
-        : visitSummaryWithFlag(event.summary, event.meta);
+        : storedText;
     return attachSourceMetadata(event, {
       summary,
       href: event.subject?.href,
@@ -683,7 +675,7 @@ export function getActivityRow(event: ActivityEvent): {
 
   if (event.type === "visit_country_first") {
     return attachSourceMetadata(event, {
-      summary: visitSummaryWithFlag(event.summary, event.meta),
+      summary: visitDisplaySummary(event.summary),
       href: event.subject?.href,
       label: displaySubjectLabel(event.subject?.label, event.subject?.href),
     });

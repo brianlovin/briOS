@@ -37,7 +37,7 @@ import {
   stripSiteTitleSuffix,
   stripTrailingShortIdToken,
 } from "@/lib/activity";
-import { geoFromVisitMeta, normalizeRegionCode } from "@/lib/activity-geo";
+import { geoFromVisitMeta, normalizeRegionCode, visitDisplaySummary } from "@/lib/activity-geo";
 import { parseActivityStreamFields } from "@/lib/activity-redis";
 import { ACTIVITY_STREAM_MAXLEN, ACTIVITY_VISIT_STREAM_MAX_PER_SEC } from "@/lib/activity-shared";
 
@@ -342,6 +342,17 @@ describe("formatVisitSummary", () => {
   });
 });
 
+describe("visitDisplaySummary", () => {
+  test("drops a leading flag emoji and keeps the location text", () => {
+    expect(visitDisplaySummary("🇺🇸 Visit from San Francisco, California, United States")).toBe(
+      "Visit from San Francisco, California, United States",
+    );
+    expect(visitDisplaySummary("🇮🇳Visit from India")).toBe("Visit from India");
+    expect(visitDisplaySummary("Visit from India")).toBe("Visit from India");
+    expect(visitDisplaySummary(ANONYMOUS_VISIT_SUMMARY)).toBe(ANONYMOUS_VISIT_SUMMARY);
+  });
+});
+
 describe("normalizeRegionCode", () => {
   test("returns undefined for placeholder all-zero codes", () => {
     expect(normalizeRegionCode("00")).toBeUndefined();
@@ -391,7 +402,7 @@ describe("recordVisit", () => {
       title: "Grok Bot First Impressions",
     });
     expect(getActivityRow(event!)).toEqual({
-      summary: "🇮🇳 Visit from India",
+      summary: "Visit from India",
       href: "/writing/grok-bot-first-impressions",
       label: "Grok Bot First Impressions",
     });
@@ -597,7 +608,7 @@ describe("recordVisit", () => {
       idempotency_key: "old-located",
       subject: { kind: "writing", label: "Writing", href: "/writing" },
     });
-    expect(row.summary).toBe("🇫🇷 Visit from France");
+    expect(row.summary).toBe("Visit from France");
   });
 
   test("keeps the existing summary when the country has no flag", async () => {
@@ -610,7 +621,7 @@ describe("recordVisit", () => {
     expect(event?.meta).toEqual({ country: "XX", path: "/", title: "Home" });
   });
 
-  test("prefixes a flag in getActivityRow for older visits that lack the emoji", () => {
+  test("does not prefix a flag in getActivityRow for older visits that lack the emoji", () => {
     const row = getActivityRow({
       v: 1,
       id: "old-visit",
@@ -625,11 +636,12 @@ describe("recordVisit", () => {
       meta: { country: "IN" },
     });
     expect(row).toEqual({
-      summary: "🇮🇳 Visit from India",
+      summary: "Visit from India",
     });
+    expect(row.summary).not.toMatch(/\p{Regional_Indicator}/u);
   });
 
-  test("still flags leftover first-country stream rows", () => {
+  test("strips a stored flag from leftover first-country stream rows", () => {
     const row = getActivityRow({
       v: 1,
       id: "old-first",
@@ -638,13 +650,13 @@ describe("recordVisit", () => {
       source: "brios",
       type: "visit_country_first",
       speed: "event",
-      summary: "First visit from IN",
+      summary: "🇮🇳 First visit from IN",
       visibility: "public",
       idempotency_key: "old-first",
       meta: { country: "IN" },
     });
     expect(row).toEqual({
-      summary: "🇮🇳 First visit from IN",
+      summary: "First visit from IN",
     });
   });
 
@@ -1369,7 +1381,7 @@ describe("getActivityRow source metadata", () => {
         }),
       ),
     ).toEqual({
-      summary: "🇺🇸 Visit from United States",
+      summary: "Visit from United States",
       href: "https://designdetails.fm",
       label: "Design Details",
     });
@@ -1392,7 +1404,7 @@ describe("getActivityRow source metadata", () => {
         }),
       ),
     ).toEqual({
-      summary: "🇩🇪 Visit from Germany",
+      summary: "Visit from Germany",
       href: "/karla-mickens-cole",
       label: "Karla Mickens Cole",
     });
@@ -1450,7 +1462,7 @@ describe("getActivityRow source metadata", () => {
         }),
       ),
     ).toEqual({
-      summary: "🇮🇳 Visit from India",
+      summary: "Visit from India",
       href: "/writing/grok-bot-first-impressions",
       label: "Grok Bot first impressions",
     });
