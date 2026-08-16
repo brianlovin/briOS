@@ -5,6 +5,10 @@
     {
       "path": "/api/hn-digest/send",
       "schedule": "0 23 * * *"
+    },
+    {
+      "path": "/api/spotify/sync",
+      "schedule": "0 * * * *"
     }
   ]
 }
