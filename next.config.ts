@@ -9,6 +9,20 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ["@sparticuz/chromium"],
   async redirects() {
     return [
+      // Legacy brianlovin.ai (formerly the brios-api project) now redirects
+      // to the main site. Both apex and www hosts, preserving the path.
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "brianlovin.ai" }],
+        destination: "https://brianlovin.com/:path*",
+        permanent: true,
+      },
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.brianlovin.ai" }],
+        destination: "https://brianlovin.com/:path*",
+        permanent: true,
+      },
       {
         source: "/writing/:path(rss|RSS|Rss|feed|Feed)",
         destination: "/writing/rss.xml",
