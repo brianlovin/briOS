@@ -8,6 +8,7 @@ import {
   type ActivityEvent,
   type ActivityIngestInput,
   type ActivityTotal,
+  countryCodeToFlag,
   findForbiddenPii,
   inferContentTypeFromPath,
   inferTitleFromPath,
@@ -28,6 +29,7 @@ export {
   ACTIVITY_SOURCE_BRIOS,
   ACTIVITY_STREAM_MAXLEN,
   ACTIVITY_VISIT_STREAM_MAX_PER_SEC,
+  countryCodeToFlag,
   findForbiddenPii,
   formatTotalLabel,
   getActivityRow,
@@ -229,6 +231,13 @@ export async function recordVisit(
   }
 
   const country = input.country?.trim() || undefined;
+  const flag = countryCodeToFlag(country);
+  const summary = country
+    ? flag
+      ? `${flag} Visit from ${country}`
+      : `Visit from ${country}`
+    : "Visit";
+  const title = inferTitleFromPath(input.path);
   const windowKey = `visit:${Math.floor(now.getTime() / 1000)}`;
   const windowCount = await store.incrementVisitWindow(windowKey, 2);
   const writeToStream = windowCount <= ACTIVITY_VISIT_STREAM_MAX_PER_SEC;
@@ -238,10 +247,19 @@ export async function recordVisit(
       source: ACTIVITY_SOURCE_BRIOS,
       type: "visit",
       speed: "signal",
-      summary: country ? `Visit from ${country}` : "Visit",
+      summary,
       visibility: "public",
       idempotency_key: `brios:visit:${crypto.randomUUID()}`,
-      meta: country ? { country } : undefined,
+      subject: {
+        kind: inferContentTypeFromPath(input.path),
+        label: title,
+        href: input.path,
+      },
+      meta: {
+        ...(country ? { country } : {}),
+        path: input.path,
+        title,
+      },
       writeToStream,
     },
     store,

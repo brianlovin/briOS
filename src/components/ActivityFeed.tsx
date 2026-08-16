@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import { Heart } from "@/components/icons/Heart";
 import { PageTitle } from "@/components/Typography";
 import type { ActivityEvent, ActivityTotal } from "@/lib/activity";
 import { formatTotalLabel, getActivityRow } from "@/lib/activity-shared";
@@ -57,7 +58,16 @@ function ActivityRow({ event }: { event: ActivityEvent }) {
   return (
     <li className="border-secondary flex items-baseline justify-between gap-4 border-b py-3">
       <div className="min-w-0">
-        <p className="text-primary text-pretty">{row.summary}</p>
+        <p className="text-primary text-pretty">
+          {event.type === "like" ? (
+            <Heart
+              size={14}
+              className="mr-1.5 inline-block fill-current align-[-0.125em] text-red-500"
+              aria-hidden
+            />
+          ) : null}
+          {row.summary}
+        </p>
         {href ? (
           <Link
             href={href}

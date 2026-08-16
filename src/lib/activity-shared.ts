@@ -148,13 +148,35 @@ function scanPii(value: unknown, path: string): string | null {
   return null;
 }
 
+const REGIONAL_INDICATOR_A = 0x1f1e6;
+
+/** ISO 3166-1 alpha-2 → flag emoji via regional indicator symbols. */
+export function countryCodeToFlag(value: string | null | undefined): string {
+  const code = normalizeCountryCode(value);
+  if (!code) return "";
+  return String.fromCodePoint(
+    REGIONAL_INDICATOR_A + (code.charCodeAt(0) - 65),
+    REGIONAL_INDICATOR_A + (code.charCodeAt(1) - 65),
+  );
+}
+
+function visitSummaryWithFlag(summary: string, country: unknown): string {
+  if (typeof country !== "string") return summary;
+  const flag = countryCodeToFlag(country);
+  if (!flag || summary.includes(flag)) return summary;
+  return `${flag} ${summary}`;
+}
+
 export function getActivityRow(event: ActivityEvent): {
   summary: string;
   href?: string;
   label?: string;
 } {
   return {
-    summary: event.summary,
+    summary:
+      event.type === "visit"
+        ? visitSummaryWithFlag(event.summary, event.meta?.country)
+        : event.summary,
     href: event.subject?.href,
     label: event.subject?.label,
   };

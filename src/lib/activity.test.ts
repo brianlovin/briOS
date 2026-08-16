@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 
 import {
+  countryCodeToFlag,
   createMemoryActivityStore,
   findForbiddenPii,
   getActivityRow,
@@ -121,6 +122,23 @@ describe("ingestActivityEvent", () => {
   });
 });
 
+describe("countryCodeToFlag", () => {
+  test("maps ISO 3166-1 alpha-2 codes to regional indicator flags", () => {
+    expect(countryCodeToFlag("IN")).toBe("🇮🇳");
+    expect(countryCodeToFlag("us")).toBe("🇺🇸");
+    expect(countryCodeToFlag("DE")).toBe("🇩🇪");
+  });
+
+  test("returns no flag for invalid, unknown, XX, and T1", () => {
+    expect(countryCodeToFlag("XX")).toBe("");
+    expect(countryCodeToFlag("T1")).toBe("");
+    expect(countryCodeToFlag("USA")).toBe("");
+    expect(countryCodeToFlag("1A")).toBe("");
+    expect(countryCodeToFlag("")).toBe("");
+    expect(countryCodeToFlag(undefined)).toBe("");
+  });
+});
+
 describe("recordVisit", () => {
   test("does not ingest a visit for /activity", async () => {
     const store = createMemoryActivityStore();
@@ -128,6 +146,60 @@ describe("recordVisit", () => {
     expect(result).toEqual({ skipped: true, reason: "activity_path" });
     expect(await store.getStreamLength()).toBe(0);
     expect(await store.getTotals()).toEqual([]);
+  });
+
+  test("stores a page subject and prefixes a country flag on the summary", async () => {
+    const store = createMemoryActivityStore();
+    const result = await recordVisit(
+      { path: "/writing/grok-bot-first-impressions", country: "IN" },
+      store,
+    );
+    expect("ok" in result && result.ok).toBe(true);
+
+    const [event] = await store.getTail(1);
+    expect(event?.summary).toBe("🇮🇳 Visit from IN");
+    expect(event?.subject).toEqual({
+      kind: "writing",
+      label: "grok bot first impressions",
+      href: "/writing/grok-bot-first-impressions",
+    });
+    expect(event?.subject?.href).toBe("/writing/grok-bot-first-impressions");
+    expect(event?.meta).toEqual({
+      country: "IN",
+      path: "/writing/grok-bot-first-impressions",
+      title: "grok bot first impressions",
+    });
+    expect(getActivityRow(event!)).toEqual({
+      summary: "🇮🇳 Visit from IN",
+      href: "/writing/grok-bot-first-impressions",
+      label: "grok bot first impressions",
+    });
+  });
+
+  test("keeps the existing summary when the country has no flag", async () => {
+    const store = createMemoryActivityStore();
+    await recordVisit({ path: "/", country: "XX" }, store);
+    const [event] = await store.getTail(1);
+    expect(event?.summary).toBe("Visit from XX");
+    expect(event?.subject?.href).toBe("/");
+    expect(event?.meta).toEqual({ country: "XX", path: "/", title: "a page" });
+  });
+
+  test("prefixes a flag in getActivityRow for older visits that lack the emoji", () => {
+    const row = getActivityRow({
+      v: 1,
+      id: "old-visit",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "visit",
+      speed: "signal",
+      summary: "Visit from IN",
+      visibility: "public",
+      idempotency_key: "old",
+      meta: { country: "IN" },
+    });
+    expect(row.summary).toBe("🇮🇳 Visit from IN");
   });
 
   test("does not ingest a visit for /activity/nested", async () => {
