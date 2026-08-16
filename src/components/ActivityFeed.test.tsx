@@ -554,6 +554,35 @@ describe("ActivityRow", () => {
     expect(quiet).not.toContain("border-b");
     expect(quiet).not.toContain("border-secondary");
   });
+
+  test("keeps the title on one line and sticks time to the right on mobile", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "github",
+          type: "pr_merged",
+          speed: "event",
+          summary: "Merged some-fix",
+          subject: {
+            kind: "pull_request",
+            label: "brianlovin/briOS#12",
+            href: "https://github.com/brianlovin/briOS/pull/12",
+          },
+          meta: { additions: 18, deletions: 3 },
+        })}
+        showStickyEdge
+      />,
+    );
+
+    expect(markup).toContain("whitespace-nowrap");
+    expect(markup).toContain("md:truncate");
+    expect(markup).toContain("sticky");
+    expect(markup).toContain("right-0");
+    expect(markup).toContain("inset_1px_0_0");
+    expect(markup).toContain("md:static");
+    expect(markup).toContain("md:grid-cols-[2rem_minmax(0,1fr)_auto]");
+    expect(markup).toMatch(/Merged some-fix[\s\S]*brianlovin\/briOS#12[\s\S]*\+18[\s\S]*-3/);
+  });
 });
 
 describe("ActivityFeed", () => {
@@ -575,6 +604,11 @@ describe("ActivityFeed", () => {
     expect(markup).toContain("divide-y");
     expect(markup).toContain("divide-secondary");
     expect(markup).toContain("overflow-hidden");
+    expect(markup).toContain("min-w-max");
+    expect(markup).toContain("overscroll-contain");
+    expect(markup).toContain("whitespace-nowrap");
+    expect(markup).toContain("sticky");
+    expect(markup).toContain("right-0");
     expect(markup).not.toContain(">Event<");
     expect(markup).not.toContain(">Time<");
     expect(markup).not.toContain("sticky top-0");

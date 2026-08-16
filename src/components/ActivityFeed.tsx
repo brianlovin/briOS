@@ -2,7 +2,15 @@
 
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
-import { type ReactNode, useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import {
+  type ReactNode,
+  type RefObject,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 
 import { Activity } from "@/components/icons/Activity";
 import { Github } from "@/components/icons/Github";
@@ -46,7 +54,7 @@ function formatRelativeTime(iso: string): string {
   return `${days}d ago`;
 }
 
-function RelativeTime({ iso }: { iso: string }) {
+function RelativeTime({ iso, className }: { iso: string; className?: string }) {
   const [label, setLabel] = useState("");
 
   useEffect(() => {
@@ -58,7 +66,7 @@ function RelativeTime({ iso }: { iso: string }) {
 
   return (
     <time
-      className="text-quaternary shrink-0 text-right text-sm tabular-nums"
+      className={cn("text-quaternary shrink-0 text-right text-sm tabular-nums", className)}
       dateTime={iso}
       title={iso}
     >
@@ -156,12 +164,14 @@ export function ActivityRow({
   sectionLabel,
   href: hrefOverride,
   pulse = false,
+  showStickyEdge = false,
 }: {
   event: ActivityEvent;
   count?: number;
   sectionLabel?: string;
   href?: string;
   pulse?: boolean;
+  showStickyEdge?: boolean;
 }) {
   const row = getActivityRow(event);
   const homeUrl = activitySourceUrl(event.source);
@@ -188,14 +198,14 @@ export function ActivityRow({
     <div
       data-rollup-pulse={pulse ? "" : undefined}
       className={cn(
-        "hover:bg-secondary grid grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 transition-colors duration-500 md:gap-4 md:py-2 md:dark:hover:bg-white/5",
+        "group hover:bg-secondary flex items-center gap-3 py-3 pl-4 transition-colors duration-500 md:grid md:grid-cols-[2rem_minmax(0,1fr)_auto] md:gap-4 md:px-4 md:py-2 md:dark:hover:bg-white/5",
         pulse && "bg-secondary",
       )}
     >
-      <div className="flex size-8 items-center justify-center">
+      <div className="flex size-8 shrink-0 items-center justify-center">
         <ActivityRowIcon event={event} icon={row.icon} />
       </div>
-      <p className="min-w-0 truncate">
+      <p className="whitespace-nowrap md:min-w-0 md:truncate">
         <span className="text-primary">{row.summary}</span>
         {count > 1 ? <span className="text-tertiary"> {count}</span> : null}
         {href && context ? (
@@ -214,7 +224,16 @@ export function ActivityRow({
           </span>
         ) : null}
       </p>
-      <RelativeTime iso={event.received_at} />
+      <RelativeTime
+        iso={event.received_at}
+        className={cn(
+          "group-hover:bg-secondary sticky right-0 z-10 bg-white px-4 dark:bg-black",
+          pulse && "bg-secondary",
+          "md:static md:bg-transparent md:px-0 md:dark:bg-transparent md:dark:group-hover:bg-white/5",
+          showStickyEdge &&
+            "[box-shadow:inset_1px_0_0_var(--border-color-secondary)] md:shadow-none",
+        )}
+      />
     </div>
   );
 }
@@ -257,12 +276,99 @@ function useHydrated(): boolean {
   );
 }
 
+function useIsMobile(): boolean {
+  return useSyncExternalStore(
+    (onChange) => {
+      const media = window.matchMedia("(max-width: 767px)");
+      media.addEventListener("change", onChange);
+      return () => media.removeEventListener("change", onChange);
+    },
+    () => window.matchMedia("(max-width: 767px)").matches,
+    () => false,
+  );
+}
+
+function useHorizontalScrollEdge(ref: RefObject<HTMLElement | null>): boolean {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const container = ref.current;
+    if (!container) return;
+
+    const update = () => setIsScrolled(container.scrollLeft > 0);
+    update();
+    container.addEventListener("scroll", update, { passive: true });
+    return () => container.removeEventListener("scroll", update);
+  }, [ref]);
+
+  return isScrolled;
+}
+
+function useMobileAxisLock(ref: RefObject<HTMLElement | null>, enabled: boolean) {
+  useEffect(() => {
+    const container = ref.current;
+    if (!container || !enabled) return;
+
+    let touchStartPos: { x: number; y: number } | null = null;
+    let lockedAxis: "x" | "y" | null = null;
+    let lockedScrollValue: number | null = null;
+    const threshold = 5;
+
+    const handleTouchStart = (event: TouchEvent) => {
+      const touch = event.touches[0];
+      if (!touch) return;
+      touchStartPos = { x: touch.clientX, y: touch.clientY };
+      lockedAxis = null;
+      lockedScrollValue = null;
+    };
+
+    const handleTouchMove = (event: TouchEvent) => {
+      if (!touchStartPos) return;
+      const touch = event.touches[0];
+      if (!touch || lockedAxis !== null) return;
+
+      const deltaX = Math.abs(touch.clientX - touchStartPos.x);
+      const deltaY = Math.abs(touch.clientY - touchStartPos.y);
+      if (deltaX <= threshold && deltaY <= threshold) return;
+
+      lockedAxis = deltaX > deltaY ? "x" : "y";
+      lockedScrollValue = lockedAxis === "x" ? container.scrollTop : container.scrollLeft;
+    };
+
+    const handleScroll = () => {
+      if (lockedAxis === null || lockedScrollValue === null) return;
+      if (lockedAxis === "x" && container.scrollTop !== lockedScrollValue) {
+        container.scrollTop = lockedScrollValue;
+      } else if (lockedAxis === "y" && container.scrollLeft !== lockedScrollValue) {
+        container.scrollLeft = lockedScrollValue;
+      }
+    };
+
+    const handleTouchEnd = () => {
+      touchStartPos = null;
+    };
+
+    container.addEventListener("touchstart", handleTouchStart, { passive: true });
+    container.addEventListener("touchmove", handleTouchMove, { passive: true });
+    container.addEventListener("touchend", handleTouchEnd);
+    container.addEventListener("scroll", handleScroll);
+    return () => {
+      container.removeEventListener("touchstart", handleTouchStart);
+      container.removeEventListener("touchmove", handleTouchMove);
+      container.removeEventListener("touchend", handleTouchEnd);
+      container.removeEventListener("scroll", handleScroll);
+    };
+  }, [enabled, ref]);
+}
+
 function ActivityStackList({
   stacks,
   pulseKey,
+  showStickyEdge,
 }: {
   stacks: ActivityRollup[];
   pulseKey: string | null;
+  showStickyEdge: boolean;
 }) {
   const hydrated = useHydrated();
   const prefersReducedMotion = useReducedMotion();
@@ -270,7 +376,7 @@ function ActivityStackList({
 
   return (
     <LayoutGroup>
-      <div className="divide-secondary divide-y">
+      <div className="divide-secondary min-w-max divide-y md:min-w-0">
         <AnimatePresence initial={false}>
           {stacks.map((stack) => {
             const reactKey = activityStackReactKey(stack);
@@ -281,7 +387,7 @@ function ActivityStackList({
                 initial={shouldAnimate ? { height: 0, opacity: 0 } : false}
                 animate={{ height: "auto", opacity: 1 }}
                 exit={shouldAnimate ? { height: 0, opacity: 0 } : undefined}
-                className="overflow-hidden"
+                className="min-w-full [clip-path:inset(0)]"
                 transition={shouldAnimate ? LIST_MOTION : { duration: 0 }}
               >
                 <ActivityRow
@@ -290,6 +396,7 @@ function ActivityStackList({
                   sectionLabel={stack.sectionLabel}
                   href={stack.href}
                   pulse={pulseKey === stack.key}
+                  showStickyEdge={showStickyEdge}
                 />
               </motion.div>
             );
@@ -336,6 +443,10 @@ export function ActivityFeed({
   const { events, count } = useActivity(initialEvents, initialCount);
   const stacks = useMemo(() => rollupActivityEvents(events), [events]);
   const pulseKey = useRollupPulse(stacks);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
+  const isScrolled = useHorizontalScrollEdge(scrollRef);
+  useMobileAxisLock(scrollRef, isMobile);
 
   const topBarContent = useMemo(() => <ActivityTrackedCount count={count} />, [count]);
   useTopBarActions(topBarContent);
@@ -343,13 +454,22 @@ export function ActivityFeed({
   return (
     <ListDetailWrapper>
       <div className="relative flex min-h-0 flex-1 overflow-hidden">
-        <motion.div data-scrollable layoutScroll className="relative min-w-0 flex-1 overflow-auto">
+        <motion.div
+          ref={scrollRef}
+          data-scrollable
+          layoutScroll
+          className="relative min-w-0 flex-1 overflow-auto overscroll-contain [-webkit-overflow-scrolling:touch]"
+        >
           {events.length === 0 ? (
             <p className="text-tertiary px-4 py-10">
               Nothing yet. Likes and visits will show up here.
             </p>
           ) : (
-            <ActivityStackList stacks={stacks} pulseKey={pulseKey} />
+            <ActivityStackList
+              stacks={stacks}
+              pulseKey={pulseKey}
+              showStickyEdge={isScrolled || isMobile}
+            />
           )}
         </motion.div>
       </div>
