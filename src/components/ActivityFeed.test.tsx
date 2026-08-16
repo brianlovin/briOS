@@ -478,6 +478,27 @@ describe("ActivityRow", () => {
     expect(markup).not.toContain("<a ");
   });
 
+  test("renders a Shiori link_clicked row like a save, without leaking a URL", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "shiori",
+          type: "link_clicked",
+          speed: "event",
+          summary: "Someone clicked a link on Shiori",
+          subject: { kind: "link", label: "A saved page", href: "https://example.com/secret" },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("shiori-icon.png");
+    expect(markup).toContain("Someone clicked a link on Shiori");
+    expect(markup).not.toContain("A saved page");
+    expect(markup).not.toContain("example.com");
+    expect(markup).not.toContain("<a ");
+    expect(markup).not.toContain("https://");
+  });
+
   test("shows a tertiary count next to the title when a stack is larger than one", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow

@@ -7,6 +7,7 @@ describe("activity registry", () => {
     expect(isRegisteredActivityEvent("brios", "visit")).toBe(true);
     expect(isRegisteredActivityEvent("brios", "like")).toBe(true);
     expect(isRegisteredActivityEvent("shiori", "link_saved")).toBe(true);
+    expect(isRegisteredActivityEvent("shiori", "link_clicked")).toBe(true);
     expect(isRegisteredActivityEvent("shiori", "download")).toBe(true);
     expect(isRegisteredActivityEvent("tax-ui", "visit")).toBe(true);
     expect(isRegisteredActivityEvent("tax-ui", "download")).toBe(true);
