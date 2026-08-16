@@ -152,13 +152,14 @@ export function looksLikeShortId(token: string): boolean {
   if (!/^[A-Za-z0-9]+$/.test(token)) return false;
 
   const hasDigit = /\d/.test(token);
-  const hasLetter = /[A-Za-z]/.test(token);
-  const isLowerWord = /^[a-z]+$/.test(token);
+  const hasUpper = /[A-Z]/.test(token);
+  const hasLower = /[a-z]/.test(token);
   const isTitleCase = /^[A-Z][a-z]+$/.test(token);
   const isUpperWord = /^[A-Z]+$/.test(token);
 
-  if (isLowerWord || isTitleCase || (isUpperWord && !hasDigit)) return false;
-  return (hasLetter && hasDigit) || (/[A-Z]/.test(token) && /[a-z]/.test(token));
+  // Keep real words, Title Case words, and lowercase hex (AMA UUIDs).
+  if (isTitleCase || (isUpperWord && !hasDigit) || !hasUpper) return false;
+  return hasLower || hasDigit;
 }
 
 export function stripTrailingShortIdToken(value: string): string {

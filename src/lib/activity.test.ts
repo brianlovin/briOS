@@ -605,6 +605,16 @@ describe("inferTitleFromPath", () => {
     expect(inferTitleFromPath("/mystery")).toBe("mystery");
     expect(inferTitleFromPath("")).toBe("Home");
   });
+
+  test("does not strip lowercase AMA UUID segments", () => {
+    expect(inferTitleFromPath("/ama/2f2c711c-0ceb-810d-899d-e5feb99e70f4")).toBe(
+      "2f2c711c 0ceb 810d 899d e5feb99e70f4",
+    );
+    expect(looksLikeShortId("e5feb99e70f4")).toBe(false);
+    expect(stripTrailingShortIdToken("2f2c711c 0ceb 810d 899d e5feb99e70f4")).toBe(
+      "2f2c711c 0ceb 810d 899d e5feb99e70f4",
+    );
+  });
 });
 
 describe("getActivityRow page titles", () => {
@@ -647,6 +657,27 @@ describe("getActivityRow page titles", () => {
     });
     expect(row.label).toBe("grok bot first impressions");
     expect(row.href).toBe("/writing/grok-bot-first-impressions-kcJun01");
+  });
+
+  test("keeps a stored AMA UUID label intact", () => {
+    const row = getActivityRow({
+      v: 1,
+      id: "old-ama",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "visit",
+      speed: "signal",
+      summary: "Visit from United States",
+      visibility: "public",
+      idempotency_key: "old-ama",
+      subject: {
+        kind: "ama",
+        label: "2f2c711c 0ceb 810d 899d e5feb99e70f4",
+        href: "/ama/2f2c711c-0ceb-810d-899d-e5feb99e70f4",
+      },
+    });
+    expect(row.label).toBe("2f2c711c 0ceb 810d 899d e5feb99e70f4");
   });
 });
 
