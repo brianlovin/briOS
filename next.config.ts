@@ -1,3 +1,4 @@
+import { withSentryConfig } from "@sentry/nextjs";
 import { withBotId } from "botid/next/config";
 import type { NextConfig } from "next";
 import path from "path";
@@ -8,6 +9,20 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ["@sparticuz/chromium"],
   async redirects() {
     return [
+      // Legacy brianlovin.ai (formerly the brios-api project) now redirects
+      // to the main site. Both apex and www hosts, preserving the path.
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "brianlovin.ai" }],
+        destination: "https://brianlovin.com/:path*",
+        permanent: true,
+      },
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.brianlovin.ai" }],
+        destination: "https://brianlovin.com/:path*",
+        permanent: true,
+      },
       {
         source: "/writing/:path(rss|RSS|Rss|feed|Feed)",
         destination: "/writing/rss.xml",
@@ -78,4 +93,24 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withBotId(nextConfig);
+export default withSentryConfig(withBotId(nextConfig), {
+  // For all available options, see:
+  // https://www.npmjs.com/package/@sentry/webpack-plugin#options
+  org: "brianlovin",
+  project: "brios",
+
+  // Only print logs for uploading source maps in CI
+  silent: !process.env.CI,
+
+  // Upload a larger set of source maps for prettier stack traces (increases build time)
+  widenClientFileUpload: true,
+
+  // Route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.
+  tunnelRoute: "/monitoring",
+
+  // Automatically tree-shake Sentry logger statements to reduce bundle size
+  disableLogger: true,
+
+  // Enables automatic instrumentation of Vercel Cron Monitors. (Does not yet work with App Router route handlers.)
+  automaticVercelMonitors: true,
+});

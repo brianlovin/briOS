@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
+import { recordDigestSubscribed } from "@/lib/activity";
+import { afterActivity } from "@/lib/activity-schedule";
 import { errorResponse } from "@/lib/api-utils";
 import { createSubscription } from "@/lib/subscriptions";
 
@@ -29,7 +31,9 @@ export async function POST(request: Request) {
       return errorResponse("Failed to subscribe. Please try again.", 500);
     }
 
-    console.log(`✅ New HN digest subscription: ${email}`);
+    afterActivity((store) => recordDigestSubscribed({ email }, store));
+
+    console.log("✅ New HN digest subscription");
 
     return NextResponse.json({
       success: true,

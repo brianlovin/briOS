@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+import { recordDigestSent } from "@/lib/activity";
+import { afterActivity } from "@/lib/activity-schedule";
 import { errorResponse, safeCompare } from "@/lib/api-utils";
 import { toDigestPosts } from "@/lib/digest";
 import { BASE_EMAIL, generateUnsubscribeUrl, sendHNDigestEmailBatch } from "@/lib/email";
@@ -46,6 +48,10 @@ export async function GET(request: Request) {
     }));
 
     const { successCount, failureCount } = await sendHNDigestEmailBatch(emails);
+
+    if (successCount > 0) {
+      afterActivity((store) => recordDigestSent({ date, postCount: digestPosts.length }, store));
+    }
 
     return NextResponse.json({
       status: "done",

@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 
+import { recordSiteAdded } from "@/lib/activity";
+import { titleFromNotionPage } from "@/lib/activity-from-notion";
+import { afterActivity } from "@/lib/activity-schedule";
 import { errorResponse, safeCompare } from "@/lib/api-utils";
 import { optimizeSitePreview } from "@/lib/image-processing/optimize";
 import { notion } from "@/lib/notion";
@@ -113,6 +116,10 @@ export async function POST(request: Request) {
       });
 
       await purgeContentType("sites");
+
+      afterActivity((store) =>
+        recordSiteAdded({ id: pageId, title: titleFromNotionPage(currentPage) }, store),
+      );
 
       return NextResponse.json(
         {

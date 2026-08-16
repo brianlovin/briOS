@@ -21,6 +21,11 @@ export const ACTIVITY_META_MAX_BYTES = 2048;
 export const ACTIVITY_BODY_MAX_BYTES = 8192;
 export const ACTIVITY_SOURCE_BRIOS = "brios";
 
+/** CDN + browser cache for the public activity poll blob. */
+export const ACTIVITY_FEED_CACHE_CONTROL = "public, s-maxage=2, stale-while-revalidate=30";
+export const ACTIVITY_FEED_POLL_MS = 2000;
+export const ACTIVITY_FEED_DEDUPING_MS = 1000;
+
 export type ActivitySpeed = "event" | "signal";
 export type ActivityVisibility = "public" | "private";
 
@@ -53,6 +58,22 @@ export type ActivityTotal = {
   first_seen: string;
 };
 
+export type ActivityFeedPayload = {
+  events: ActivityEvent[];
+  totals: ActivityTotal[];
+};
+
+/** SWR refreshInterval: poll while the tab is visible, pause when hidden. */
+export function activityFeedRefreshInterval(visibilityState: string | null | undefined): number {
+  return visibilityState === "visible" ? ACTIVITY_FEED_POLL_MS : 0;
+}
+
+export function isActivityFeedPayload(value: unknown): value is ActivityFeedPayload {
+  if (!value || typeof value !== "object") return false;
+  const record = value as Record<string, unknown>;
+  return Array.isArray(record.events) && Array.isArray(record.totals);
+}
+
 export type ActivityIngestInput = {
   v?: number;
   id?: string;
@@ -68,6 +89,8 @@ export type ActivityIngestInput = {
   meta?: Record<string, unknown>;
   /** When false, increment totals only (used for sampled visits). */
   writeToStream?: boolean;
+  /** Override idempotency TTL. `0` keeps the key forever (publish / first-seen events). */
+  idempotencyTtlSeconds?: number;
 };
 
 const ACTIVITY_PATH = /^\/activity(?:\/|$)/;
@@ -213,6 +236,28 @@ export function formatTotalLabel(type: string): string {
       return "Likes";
     case "visit":
       return "Visits";
+    case "visit_country_first":
+      return "New countries";
+    case "ama_asked":
+      return "AMA questions";
+    case "ama_answered":
+      return "AMA answers";
+    case "digest_subscribed":
+      return "Digest subscribers";
+    case "digest_sent":
+      return "Digests sent";
+    case "writing_published":
+      return "Writing";
+    case "til_published":
+      return "TILs";
+    case "stack_added":
+      return "Stack";
+    case "site_added":
+      return "Sites";
+    case "design_details_added":
+      return "Design Details";
+    case "app_dissection_published":
+      return "App dissections";
     default:
       return type.replace(/_/g, " ");
   }

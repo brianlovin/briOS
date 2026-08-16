@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 
+import { recordStackAdded } from "@/lib/activity";
+import { titleFromNotionPage } from "@/lib/activity-from-notion";
+import { afterActivity } from "@/lib/activity-schedule";
 import { errorResponse, safeCompare } from "@/lib/api-utils";
 import { optimizeSiteIcon } from "@/lib/image-processing/optimize";
 import { notion } from "@/lib/notion";
@@ -91,6 +94,10 @@ export async function POST(request: Request) {
 
     // Invalidate stack cache so the updated icon is picked up
     await purgeContentType("stack");
+
+    afterActivity((store) =>
+      recordStackAdded({ id: pageId, title: titleFromNotionPage(page) }, store),
+    );
 
     return NextResponse.json(
       {

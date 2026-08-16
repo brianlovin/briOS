@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 
+import { recordWritingPublished } from "@/lib/activity";
+import { afterActivity } from "@/lib/activity-schedule";
 import { errorResponse, safeCompare } from "@/lib/api-utils";
 import { updateWritingShortId } from "@/lib/notion/mutations";
 import { purgeContentType } from "@/lib/notion/purge";
 import { getWritingPostByShortId, getWritingPostContent } from "@/lib/notion/queries";
-import { generateShortId, isValidShortId } from "@/lib/short-id";
+import { buildSlug, generateShortId, isValidShortId } from "@/lib/short-id";
 
 /**
  * Webhook endpoint to generate a Short ID for a writing post
@@ -87,6 +89,10 @@ export async function POST(request: Request) {
 
     // Invalidate writing cache so the new short ID is picked up
     await purgeContentType("writing");
+
+    const title = content.metadata.title;
+    const slug = content.metadata.slug || buildSlug(title, shortId);
+    afterActivity((store) => recordWritingPublished({ id: pageId, title, slug }, store));
 
     console.log(`✅ Successfully generated Short ID: ${shortId} for "${content.metadata.title}"\n`);
 

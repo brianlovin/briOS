@@ -1,6 +1,6 @@
-import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-import { checkHnRateLimit, getHnRatelimit, waitForRateLimitPending } from "@/lib/hn-ratelimit";
+import { checkHnRateLimit, shouldApplyHnRedisRateLimit } from "@/lib/hn-ratelimit";
 
 function getIP(request: NextRequest): string {
   return (
@@ -10,14 +10,15 @@ function getIP(request: NextRequest): string {
   );
 }
 
-export async function middleware(request: NextRequest, event: NextFetchEvent) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const ip = getIP(request);
 
   // Skip rate limiting for unknown IPs (shouldn't happen in production)
   if (ip === "unknown") return NextResponse.next();
 
-  // HN routes: validate ID parameter and apply strict rate limit
+  // HN routes: validate ID parameter. Redis rate limit is API-only so cached
+  // /hn HTML and Partial Prefetch do not bill the PAYG subscribers database.
   if (pathname.startsWith("/hn") || pathname.startsWith("/api/hn")) {
     // Validate /hn/[id] and /api/hn/[id] — reject non-numeric IDs early.
     // Reject anything like /hn/garbage or /hn/../etc.
@@ -26,8 +27,11 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
       return NextResponse.json({ error: "Invalid HN post ID" }, { status: 400 });
     }
 
-    const decision = await checkHnRateLimit(ip, getHnRatelimit());
-    waitForRateLimitPending(event, decision.pending);
+    if (!shouldApplyHnRedisRateLimit(pathname, request.headers)) {
+      return NextResponse.next();
+    }
+
+    const decision = await checkHnRateLimit(ip);
 
     if (!decision.allowed) {
       return NextResponse.json(
@@ -52,7 +56,7 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
 
 export const config = {
   matcher: [
-    // HN pages and API routes
+    // HN pages (ID validation) and API routes (rate limit)
     "/hn/:path*",
     "/api/hn/:path*",
   ],

@@ -1,13 +1,19 @@
 import { Redis } from "@upstash/redis";
 
-import { type ActivityEvent, type ActivityStore, type ActivityTotal } from "./activity";
-import { visibleLifetimeTotals } from "./activity-shared";
+import {
+  type ActivityEvent,
+  type ActivityFeedPayload,
+  type ActivityStore,
+  type ActivityTotal,
+  buildActivityFeed,
+} from "./activity";
 import { ACTIVITY_STREAM_MAXLEN } from "./activity-shared";
 
 const STREAM_KEY = "activity:stream";
 const TOTALS_PREFIX = "activity:totals:";
 const IDEMP_PREFIX = "activity:idemp:";
 const VISIT_WINDOW_PREFIX = "activity:visit:window:";
+const COUNTRY_TOTALS_KEY = "activity:country:totals";
 
 export type ActivityRedisSource = "activity" | "likes";
 
@@ -126,10 +132,13 @@ function parseXrevrange(result: unknown): ActivityEvent[] {
 export function createRedisActivityStore(client: Redis): ActivityStore {
   return {
     async claimIdempotency(key: string, ttlSeconds: number): Promise<boolean> {
-      const result = await client.set(`${IDEMP_PREFIX}${key}`, "1", {
-        nx: true,
-        ex: ttlSeconds,
-      });
+      const result =
+        ttlSeconds > 0
+          ? await client.set(`${IDEMP_PREFIX}${key}`, "1", {
+              nx: true,
+              ex: ttlSeconds,
+            })
+          : await client.set(`${IDEMP_PREFIX}${key}`, "1", { nx: true });
       return result === "OK";
     },
 
@@ -202,6 +211,10 @@ export function createRedisActivityStore(client: Redis): ActivityStore {
       }
       return count;
     },
+
+    async incrementCountryTotal(country: string): Promise<number> {
+      return (await client.hincrby(COUNTRY_TOTALS_KEY, country, 1)) ?? 0;
+    },
   };
 }
 
@@ -213,16 +226,9 @@ export function getActivityStore(): ActivityStore | null {
   return redisStore;
 }
 
-export async function getActivityPageData(): Promise<{
-  events: ActivityEvent[];
-  totals: ActivityTotal[];
-}> {
-  const store = getActivityStore();
-  if (!store) return { events: [], totals: [] };
-
+export async function getActivityPageData(): Promise<ActivityFeedPayload> {
   try {
-    const [events, totals] = await Promise.all([store.getTail(100), store.getTotals()]);
-    return { events, totals: visibleLifetimeTotals(totals) };
+    return await buildActivityFeed(getActivityStore());
   } catch (error) {
     console.error("[activity] failed to read feed", error);
     return { events: [], totals: [] };
