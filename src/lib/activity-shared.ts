@@ -20,6 +20,7 @@ export const ACTIVITY_IDEMPOTENCY_TTL_SECONDS = 6 * 60 * 60;
 export const ACTIVITY_META_MAX_BYTES = 2048;
 export const ACTIVITY_BODY_MAX_BYTES = 8192;
 export const ACTIVITY_SOURCE_BRIOS = "brios";
+export const ACTIVITY_SOURCE_GITHUB = "github";
 export const ACTIVITY_VISIT_TITLE_MAX = 200;
 
 export const ACTIVITY_SOURCE_LABELS: Record<string, string> = {
@@ -28,6 +29,7 @@ export const ACTIVITY_SOURCE_LABELS: Record<string, string> = {
   "staff-design": "Staff Design",
   "design-details": "Design Details",
   shiori: "Shiori",
+  [ACTIVITY_SOURCE_GITHUB]: "GitHub",
 };
 
 const ACTIVITY_SOURCE_FAVICONS: Record<string, string> = {
@@ -264,11 +266,86 @@ function visitSummaryWithFlag(summary: string, meta: Record<string, unknown> | u
   return flag ? `${flag} ${summary}` : summary;
 }
 
+export function getMergedPullRequestDiff(
+  meta: Record<string, unknown> | undefined,
+): { additions: number; deletions: number } | null {
+  if (!meta) return null;
+  if (typeof meta.additions !== "number" || typeof meta.deletions !== "number") return null;
+  if (!Number.isFinite(meta.additions) || !Number.isFinite(meta.deletions)) return null;
+  return { additions: meta.additions, deletions: meta.deletions };
+}
+
+export const CAFFEINE_DRINK_MAX_LENGTH = 40;
+export const CAFFEINE_COFFEE_ICON = "☕";
+export const CAFFEINE_OTHER_ICON = "🥤";
+
+/** Coffee-family drinks render ☕; everything else caffeinated is 🥤. */
+const COFFEE_FAMILY_TERMS = [
+  "pour over",
+  "cold brew",
+  "flat white",
+  "cappuccino",
+  "cappucino",
+  "americano",
+  "macchiato",
+  "gibraltar",
+  "affogato",
+  "espresso",
+  "cortado",
+  "coffee",
+  "mocha",
+  "latte",
+  "nitro",
+  "drip",
+];
+
+export function titleCaseWords(value: string): string {
+  return value
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+}
+
+export function normalizeCaffeineDrink(drink: string): string | null {
+  const collapsed = drink.trim().replace(/\s+/g, " ");
+  if (!collapsed || collapsed.length > CAFFEINE_DRINK_MAX_LENGTH) return null;
+  return titleCaseWords(collapsed);
+}
+
+export function isCoffeeFamilyDrink(drink: string): boolean {
+  const normalized = drink.toLowerCase().trim();
+  if (!normalized) return false;
+  return COFFEE_FAMILY_TERMS.some((term) => normalized === term || normalized.includes(term));
+}
+
+export function getCaffeineIcon(drink: string | null | undefined): string {
+  return drink && isCoffeeFamilyDrink(drink) ? CAFFEINE_COFFEE_ICON : CAFFEINE_OTHER_ICON;
+}
+
+export function caffeineDrinkFromEvent(event: ActivityEvent): string {
+  if (typeof event.meta?.drink === "string") return event.meta.drink;
+  if (event.subject?.kind === "drink") return event.subject.label;
+  return "";
+}
+
 export function getActivityRow(event: ActivityEvent): {
   summary: string;
+  flag?: string;
+  icon?: string;
   href?: string;
   label?: string;
 } {
+  if (event.type === "caffeinated") {
+    return {
+      summary: event.summary,
+      icon: getCaffeineIcon(caffeineDrinkFromEvent(event)),
+      href: event.subject?.href,
+      label: event.subject?.label,
+    };
+  }
+
   if (event.type === "visit") {
     const geo = geoFromVisitMeta(event.meta);
     const summary =
@@ -323,6 +400,14 @@ export function formatTotalLabel(type: string): string {
       return "App dissections";
     case "download":
       return "Downloads";
+    case "pr_opened":
+      return "PRs opened";
+    case "pr_merged":
+      return "PRs merged";
+    case "repo_starred":
+      return "Stars";
+    case "caffeinated":
+      return "Caffeinated";
     default:
       return type.replace(/_/g, " ");
   }

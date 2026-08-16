@@ -20,6 +20,7 @@ import {
   activitySourceUrl,
   formatTotalLabel,
   getActivityRow,
+  getMergedPullRequestDiff,
   resolveActivitySourceHref,
   visibleLifetimeTotals,
 } from "@/lib/activity-shared";
@@ -101,7 +102,7 @@ function isGithubActivity(event: ActivityEvent): boolean {
   );
 }
 
-function ActivityRowIcon({ event }: { event: ActivityEvent }) {
+function ActivityRowIcon({ event, icon }: { event: ActivityEvent; icon?: string }) {
   if (event.type === "like") {
     return <Heart size={16} className="fill-current text-red-500" aria-hidden />;
   }
@@ -118,11 +119,19 @@ function ActivityRowIcon({ event }: { event: ActivityEvent }) {
     return <World size={16} className="text-tertiary" aria-hidden />;
   }
 
+  if (event.type === "caffeinated") {
+    return (
+      <span className="text-base leading-none" aria-hidden>
+        {icon ?? "🥤"}
+      </span>
+    );
+  }
+
   return <Activity size={16} className="text-tertiary" aria-hidden />;
 }
 
 const SUBTITLE_LINK_CLASS =
-  "text-tertiary hover:text-primary block truncate text-sm underline-offset-2 hover:underline";
+  "text-tertiary hover:text-primary min-w-0 truncate text-sm underline-offset-2 hover:underline";
 
 function isAbsoluteHttpUrl(href: string): boolean {
   return /^https?:\/\//i.test(href);
@@ -184,6 +193,15 @@ function subjectPathFromEvent(event: ActivityEvent, href?: string): string | und
   return typeof path === "string" && path ? path : undefined;
 }
 
+function PullRequestDiff({ additions, deletions }: { additions: number; deletions: number }) {
+  return (
+    <span className="shrink-0 text-sm tabular-nums">
+      <span className="text-green-600">+{additions}</span>{" "}
+      <span className="text-red-500">-{deletions}</span>
+    </span>
+  );
+}
+
 export function ActivityRow({ event }: { event: ActivityEvent }) {
   const row = getActivityRow(event);
   const homeUrl = activitySourceUrl(event.source);
@@ -193,6 +211,7 @@ export function ActivityRow({ event }: { event: ActivityEvent }) {
     event.source,
     subjectPathFromEvent(event, row.href),
   );
+  const diff = event.type === "pr_merged" ? getMergedPullRequestDiff(event.meta) : null;
 
   let subtitleHref: string | undefined;
   let subtitleLabel: string | undefined;
@@ -207,12 +226,19 @@ export function ActivityRow({ event }: { event: ActivityEvent }) {
   return (
     <div className="border-secondary hover:bg-secondary grid grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-3 border-b px-4 py-3 md:gap-4 md:py-2 md:dark:hover:bg-white/5">
       <div className="flex size-8 items-center justify-center">
-        <ActivityRowIcon event={event} />
+        <ActivityRowIcon event={event} icon={row.icon} />
       </div>
       <div className="min-w-0">
         <ActivityRowSummary summary={row.summary} sourceLabel={sourceLabel} sourceUrl={homeUrl} />
-        {subtitleHref ? (
-          <ActivitySubtitleLink href={subtitleHref}>{subtitleLabel}</ActivitySubtitleLink>
+        {subtitleHref || diff ? (
+          <div className="flex min-w-0 items-baseline gap-2">
+            {subtitleHref ? (
+              <ActivitySubtitleLink href={subtitleHref}>{subtitleLabel}</ActivitySubtitleLink>
+            ) : null}
+            {diff ? (
+              <PullRequestDiff additions={diff.additions} deletions={diff.deletions} />
+            ) : null}
+          </div>
         ) : null}
       </div>
       <RelativeTime iso={event.received_at} />

@@ -26,6 +26,7 @@ export const ACTIVITY_REGISTRY = {
   "tax-ui": ["visit", "download"],
   "staff-design": ["visit"],
   "design-details": ["visit"],
+  github: ["pr_opened", "pr_merged", "repo_starred"],
 } as const;
 
 export type ActivityRegistrySource = keyof typeof ACTIVITY_REGISTRY;

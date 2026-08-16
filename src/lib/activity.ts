@@ -6,6 +6,7 @@ import {
   formatVisitSummary,
   geoFromVisitMeta,
 } from "./activity-geo";
+import { githubActivityFromWebhook } from "./activity-github";
 import { isRegisteredActivityEvent } from "./activity-registry";
 import {
   ACTIVITY_ENVELOPE_VERSION,
@@ -26,6 +27,7 @@ import {
   inferContentTypeFromPath,
   inferTitleFromPath,
   isActivityPath,
+  normalizeCaffeineDrink,
   resolveVisitTitle,
   shouldCountLifetimeTotal,
   shouldRecordVisit,
@@ -34,6 +36,13 @@ import {
 
 export type { ActivityGeo } from "./activity-geo";
 export { countryCodeToName, formatVisitSummary, getRequestGeo } from "./activity-geo";
+export type { GithubActivityDecision } from "./activity-github";
+export {
+  githubActivityFromWebhook,
+  isDependabotActor,
+  isGithubBotActor,
+  verifyGithubWebhookSignature,
+} from "./activity-github";
 export { isRegisteredActivityEvent } from "./activity-registry";
 export type {
   ActivityEvent,
@@ -50,6 +59,7 @@ export {
   ACTIVITY_FEED_DEDUPING_MS,
   ACTIVITY_FEED_POLL_MS,
   ACTIVITY_SOURCE_BRIOS,
+  ACTIVITY_SOURCE_GITHUB,
   ACTIVITY_SOURCE_LABELS,
   ACTIVITY_STREAM_MAXLEN,
   ACTIVITY_VISIT_STREAM_MAX_PER_SEC,
@@ -62,11 +72,15 @@ export {
   formatDownloadSummary,
   formatTotalLabel,
   getActivityRow,
+  getCaffeineIcon,
+  getMergedPullRequestDiff,
   getRequestCountry,
   inferContentTypeFromPath,
   inferTitleFromPath,
   isActivityFeedPayload,
   isActivityPath,
+  isCoffeeFamilyDrink,
+  normalizeCaffeineDrink,
   resolveActivitySourceHref,
   resolveVisitTitle,
   shouldCountLifetimeTotal,
@@ -364,6 +378,48 @@ export async function recordVisit(
         title,
       },
       writeToStream,
+    },
+    store,
+    now,
+  );
+}
+
+export async function recordGithubActivity(
+  githubEvent: string,
+  payload: unknown,
+  store: ActivityStore,
+  now: Date = new Date(),
+): Promise<IngestResult | { skipped: true; reason: string }> {
+  const decision = githubActivityFromWebhook(githubEvent, payload);
+  if (decision.status === "ignore") {
+    return { skipped: true, reason: decision.reason };
+  }
+  return ingestActivityEvent(decision.input, store, now);
+}
+
+export async function recordCaffeine(
+  input: { drink: string },
+  store: ActivityStore,
+  now: Date = new Date(),
+): Promise<IngestResult> {
+  const drink = normalizeCaffeineDrink(input.drink);
+  if (!drink) {
+    return { ok: false, error: "drink is required", status: 400 };
+  }
+
+  const day = now.toISOString().slice(0, 10);
+  const slug = drink.toLowerCase().replace(/\s+/g, "-");
+
+  return ingestActivityEvent(
+    {
+      source: ACTIVITY_SOURCE_BRIOS,
+      type: "caffeinated",
+      speed: "event",
+      summary: `Caffeinated with ${drink}`,
+      visibility: "public",
+      idempotency_key: `brios:caffeinated:${day}:${slug}:${crypto.randomUUID()}`,
+      subject: { kind: "drink", label: drink },
+      meta: { drink },
     },
     store,
     now,

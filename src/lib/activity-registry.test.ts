@@ -14,11 +14,15 @@ describe("activity registry", () => {
     expect(isRegisteredActivityEvent("design-details", "visit")).toBe(true);
   });
 
-  test("registers GitHub PR types on brios and not a github type", () => {
+  test("registers GitHub PR types on brios and github", () => {
     expect(isRegisteredActivityEvent("brios", "pr_opened")).toBe(true);
     expect(isRegisteredActivityEvent("brios", "pr_merged")).toBe(true);
     expect(isRegisteredActivityEvent("brios", "repo_starred")).toBe(true);
+    expect(isRegisteredActivityEvent("github", "pr_opened")).toBe(true);
+    expect(isRegisteredActivityEvent("github", "pr_merged")).toBe(true);
+    expect(isRegisteredActivityEvent("github", "repo_starred")).toBe(true);
     expect(isRegisteredActivityEvent("brios", "github")).toBe(false);
+    expect(isRegisteredActivityEvent("github", "visit")).toBe(false);
   });
 
   test("rejects impersonation and unknown types", () => {
