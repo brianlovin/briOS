@@ -356,7 +356,7 @@ function ActivityStackList({
 
   return (
     <LayoutGroup>
-      <div className="divide-secondary divide-y">
+      <div className="divide-secondary min-w-max divide-y md:min-w-0">
         <AnimatePresence initial={false}>
           {stacks.map((stack) => {
             const reactKey = activityStackReactKey(stack);

@@ -608,6 +608,7 @@ describe("ActivityFeed", () => {
     expect(markup).toContain("divide-y");
     expect(markup).toContain("divide-secondary");
     expect(markup).toContain("overflow-hidden");
+    expect(markup).toContain("min-w-max");
     expect(markup).toContain("min-w-full");
     expect(markup).toContain("w-max");
     expect(markup).toContain("overscroll-contain");
