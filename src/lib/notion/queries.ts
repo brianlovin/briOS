@@ -26,7 +26,7 @@ import {
   type ProcessedBlock,
 } from "./types";
 
-async function getDataSourceId(databaseId: string): Promise<string> {
+export async function getDataSourceId(databaseId: string): Promise<string> {
   return cachedNotionQuery(
     `notion:datasource:${databaseId}`,
     async () => {
