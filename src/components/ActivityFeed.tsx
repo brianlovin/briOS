@@ -21,7 +21,12 @@ import {
   rollupActivityEvents,
   shouldPulseActivityRollup,
 } from "@/lib/activity-rollup";
-import { formatTotalLabel, getActivityRow, visibleLifetimeTotals } from "@/lib/activity-shared";
+import {
+  formatTotalLabel,
+  getActivityRow,
+  isKnownActivityTitle,
+  visibleLifetimeTotals,
+} from "@/lib/activity-shared";
 import { useActivity } from "@/lib/hooks/useActivity";
 import { cn } from "@/lib/utils";
 
@@ -110,8 +115,17 @@ export function ActivityRow({
   const row = getActivityRow(event);
   const href = hrefOverride ?? row.href;
   const label = sectionLabel ?? row.label;
-
-  const context = label ?? (href || undefined);
+  const likedName =
+    event.type === "like" ? row.summary.replace(/^Someone liked\s+/i, "").trim() : "";
+  const rawContext = label ?? (href || undefined);
+  const context =
+    event.type === "like" &&
+    rawContext &&
+    likedName &&
+    rawContext !== likedName &&
+    isKnownActivityTitle(rawContext)
+      ? likedName
+      : rawContext;
 
   return (
     <div

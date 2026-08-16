@@ -18,6 +18,7 @@ import {
   inferContentTypeFromPath,
   inferTitleFromPath,
   isActivityPath,
+  likeActivityPayload,
   shouldCountLifetimeTotal,
   shouldRecordVisit,
   visibleLifetimeTotals,
@@ -49,6 +50,8 @@ export type {
   ActivitySpeed,
   ActivityTotal,
   ActivityVisibility,
+  LikeActivityPayload,
+  LikeActivityTarget,
 } from "./activity-shared";
 export {
   ACTIVITY_ENVELOPE_VERSION,
@@ -70,6 +73,8 @@ export {
   inferTitleFromPath,
   isActivityFeedPayload,
   isActivityPath,
+  isKnownActivityTitle,
+  likeActivityPayload,
   looksLikeIdentifier,
   looksLikeShortId,
   shouldCountLifetimeTotal,
@@ -535,9 +540,9 @@ export function likeMetaFromRequest(
   if (!href) href = "/";
   if (isActivityPath(href)) return null;
 
-  return {
+  return likeActivityPayload({
+    title: body.title,
     href,
-    title: body.title?.trim() || inferTitleFromPath(href),
-    content_type: body.content_type || inferContentTypeFromPath(href),
-  };
+    contentType: body.content_type,
+  });
 }

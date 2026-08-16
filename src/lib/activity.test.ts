@@ -16,6 +16,7 @@ import {
   hashDigestSubscriber,
   inferTitleFromPath,
   ingestActivityEvent,
+  likeActivityPayload,
   likeMetaFromRequest,
   looksLikeIdentifier,
   looksLikeShortId,
@@ -555,6 +556,32 @@ describe("recordLike", () => {
       href: "/writing/a-post",
     });
   });
+
+  test("keeps a stack item name instead of the list page title", async () => {
+    const store = createMemoryActivityStore();
+    const result = await recordLike(
+      {
+        title: "Cursor",
+        href: "https://cursor.com",
+        content_type: "stack",
+        pageId: "stack-cursor",
+      },
+      store,
+    );
+    expect("ok" in result && result.ok).toBe(true);
+    const [event] = await store.getTail(1);
+    expect(event?.summary).toBe("Someone liked Cursor");
+    expect(event?.subject).toEqual({
+      kind: "stack",
+      label: "Cursor",
+      href: "https://cursor.com",
+    });
+    expect(getActivityRow(event!)).toEqual({
+      summary: "Someone liked Cursor",
+      href: "https://cursor.com",
+      label: "Cursor",
+    });
+  });
 });
 
 describe("parseActivityStreamFields", () => {
@@ -795,6 +822,28 @@ describe("getActivityRow page titles", () => {
     expect(row.label).toBe("an AMA question");
     expect(row.href).toBe("/ama/2f2c711c-0ceb-810d-899d-e5feb99e70f4");
   });
+
+  test("keeps a liked stack item name instead of rewriting it to Stack", () => {
+    const row = getActivityRow({
+      v: 1,
+      id: "like-cursor",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "like",
+      speed: "event",
+      summary: "Someone liked Cursor",
+      visibility: "public",
+      idempotency_key: "like-cursor",
+      subject: { kind: "stack", label: "Cursor", href: "/stack" },
+      meta: { content_type: "stack", title: "Cursor", href: "/stack" },
+    });
+    expect(row).toEqual({
+      summary: "Someone liked Cursor",
+      href: "/stack",
+      label: "Cursor",
+    });
+  });
 });
 
 describe("shouldRecordVisit / likeMetaFromRequest", () => {
@@ -822,6 +871,72 @@ describe("shouldRecordVisit / likeMetaFromRequest", () => {
       }),
     );
     expect(activity).toBeNull();
+  });
+
+  test("uses a passed item title instead of falling back to Stack", () => {
+    const request = new Request("https://brianlovin.com/api/likes/1", {
+      headers: { referer: "https://brianlovin.com/stack" },
+    });
+
+    expect(
+      likeMetaFromRequest(request, {
+        title: "Cursor",
+        href: "https://cursor.com",
+        content_type: "stack",
+      }),
+    ).toEqual({
+      title: "Cursor",
+      href: "https://cursor.com",
+      content_type: "stack",
+    });
+
+    expect(
+      likeMetaFromRequest(request, {
+        title: "Cursor",
+        href: "/stack",
+        content_type: "stack",
+      }),
+    ).toEqual({
+      title: "Cursor",
+      href: "/stack",
+      content_type: "stack",
+    });
+  });
+});
+
+describe("likeActivityPayload", () => {
+  test("uses passed title and href instead of page fallbacks", () => {
+    expect(
+      likeActivityPayload(
+        { title: "Cursor", href: "https://cursor.com", contentType: "stack" },
+        { title: "Stack", href: "/stack" },
+      ),
+    ).toEqual({
+      title: "Cursor",
+      href: "https://cursor.com",
+      content_type: "stack",
+    });
+  });
+
+  test("does not fall back to Stack when a stack item name is provided", () => {
+    expect(
+      likeActivityPayload({ title: "Cursor", href: "/stack", contentType: "stack" }, {
+        title: "Stack",
+        href: "/stack",
+      }),
+    ).toEqual({
+      title: "Cursor",
+      href: "/stack",
+      content_type: "stack",
+    });
+  });
+
+  test("falls back to the page title and path when no target is passed", () => {
+    expect(likeActivityPayload({}, { title: "Stack", href: "/stack" })).toEqual({
+      title: "Stack",
+      href: "/stack",
+      content_type: "stack",
+    });
   });
 });
 
@@ -939,6 +1054,29 @@ describe("rollupActivityEvents", () => {
     expect(stacks[0]?.latest.id).toBe("s1");
     expect(stacks[1]?.count).toBe(1);
     expect(stacks[1]?.key).toBe("like:/stack");
+  });
+
+  test("does not stack likes for different apps", () => {
+    const stacks = rollupActivityEvents([
+      feedEvent({
+        id: "like-cursor",
+        type: "like",
+        summary: "Someone liked Cursor",
+        subject: { kind: "stack", label: "Cursor", href: "https://cursor.com" },
+      }),
+      feedEvent({
+        id: "like-raycast",
+        type: "like",
+        summary: "Someone liked Raycast",
+        subject: { kind: "stack", label: "Raycast", href: "https://www.raycast.com" },
+      }),
+    ]);
+
+    expect(stacks).toHaveLength(2);
+    expect(stacks[0]?.key).toBe("like:https://cursor.com");
+    expect(stacks[1]?.key).toBe("like:https://www.raycast.com");
+    expect(getActivityRow(stacks[0]!.latest).summary).toBe("Someone liked Cursor");
+    expect(getActivityRow(stacks[1]!.latest).summary).toBe("Someone liked Raycast");
   });
 
   test("does not merge the same type across a different intervening event", () => {

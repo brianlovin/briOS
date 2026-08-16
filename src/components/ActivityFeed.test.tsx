@@ -136,6 +136,43 @@ describe("ActivityRow", () => {
     expect(visit).toContain("🇮🇳");
   });
 
+  test("shows a liked stack app name without a Stack subtitle", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          type: "like",
+          speed: "event",
+          summary: "Someone liked Cursor",
+          subject: { kind: "stack", label: "Cursor", href: "https://cursor.com" },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("Someone liked Cursor");
+    expect(markup).toContain('href="https://cursor.com"');
+    expect(markup).toContain("text-red-500");
+    expect(markup).not.toContain(">Stack<");
+  });
+
+  test("does not use a Stack section label when the like title is the app", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          type: "like",
+          speed: "event",
+          summary: "Someone liked Cursor",
+          subject: { kind: "stack", label: "Cursor", href: "/stack" },
+        })}
+        sectionLabel="Stack"
+        href="/stack"
+      />,
+    );
+
+    expect(markup).toContain("Someone liked Cursor");
+    expect(markup).toContain(">Cursor<");
+    expect(markup).not.toContain(">Stack<");
+  });
+
   test("uses the Shiori orb for any shiori-sourced event", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow

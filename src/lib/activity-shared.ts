@@ -260,16 +260,45 @@ export function inferTitleFromPath(pathname: string): string {
   return titleFromLastSegment(last);
 }
 
+export type LikeActivityTarget = {
+  title?: string;
+  href?: string;
+  contentType?: string;
+};
+
+export type LikeActivityPayload = {
+  title: string;
+  href: string;
+  content_type: string;
+};
+
+/** Resolve the like/activity body. Passed title/href win over document/path fallbacks. */
+export function likeActivityPayload(
+  target: LikeActivityTarget = {},
+  fallback: { title?: string; href?: string } = {},
+): LikeActivityPayload {
+  const href = target.href?.trim() || fallback.href?.trim() || "/";
+  const title = target.title?.trim() || fallback.title?.trim() || inferTitleFromPath(href);
+  const content_type = target.contentType?.trim() || inferContentTypeFromPath(href);
+  return { title, href, content_type };
+}
+
+export function isKnownActivityTitle(label: string): boolean {
+  return Object.values(KNOWN_PATH_TITLES).includes(label);
+}
+
 function displaySubjectLabel(
   label: string | undefined,
   href: string | undefined,
+  options?: { preferStored?: boolean },
 ): string | undefined {
   if (href) {
     const inferred = inferTitleFromPath(href);
     if (!label || label === "a page" || looksLikeIdentifier(label)) return inferred;
 
     const path = normalizeActivityPath(href);
-    if (KNOWN_PATH_TITLES[path]) return KNOWN_PATH_TITLES[path];
+    // List-page hrefs like `/stack` must not replace a specific item name ("Cursor").
+    if (!options?.preferStored && KNOWN_PATH_TITLES[path]) return KNOWN_PATH_TITLES[path];
 
     const cleaned = stripTrailingShortIdToken(label);
     if (looksLikeIdentifier(cleaned)) return inferred;
@@ -377,6 +406,18 @@ export function getActivityRow(event: ActivityEvent): {
       ...(flag ? { flag } : {}),
       href: event.subject?.href,
       label: displaySubjectLabel(event.subject?.label, event.subject?.href),
+    };
+  }
+
+  if (event.type === "like") {
+    const label = displaySubjectLabel(event.subject?.label, event.subject?.href, {
+      preferStored: true,
+    });
+    const name = label || "a page";
+    return {
+      summary: `Someone liked ${name}`,
+      href: event.subject?.href,
+      label,
     };
   }
 
