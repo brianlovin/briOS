@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import { activityLifetimeSidebarAtom } from "@/atoms/activityLifetimeSidebar";
 import { Activity } from "@/components/icons/Activity";
+import { Github } from "@/components/icons/Github";
 import { Heart } from "@/components/icons/Heart";
 import { Sidebar } from "@/components/icons/Sidebar";
 import { World } from "@/components/icons/World";
@@ -66,6 +67,15 @@ function RelativeTime({ iso }: { iso: string }) {
 function ActivityRowIcon({ event, flag }: { event: ActivityEvent; flag?: string }) {
   if (event.type === "like") {
     return <Heart size={16} className="fill-current text-red-500" aria-hidden />;
+  }
+
+  if (
+    event.source === "github" ||
+    event.type === "pr_opened" ||
+    event.type === "pr_merged" ||
+    event.type === "repo_starred"
+  ) {
+    return <Github size={16} className="text-primary" aria-hidden />;
   }
 
   if (event.type === "visit" || event.type === "visit_country_first") {
