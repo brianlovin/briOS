@@ -576,6 +576,22 @@ export function caffeineDrinkFromEvent(event: ActivityEvent): string {
   return "";
 }
 
+const PRIVATE_PULL_REQUEST_DUMMY_LABEL = "a pull request";
+
+export function privatePullRequestSummary(type: "pr_opened" | "pr_merged"): string {
+  return type === "pr_opened"
+    ? "Opened a pull request in a private repo"
+    : "Merged a pull request in a private repo";
+}
+
+function isPrivatePullRequestEvent(
+  event: ActivityEvent,
+): event is ActivityEvent & { type: "pr_opened" | "pr_merged" } {
+  if (event.type !== "pr_opened" && event.type !== "pr_merged") return false;
+  if (event.meta?.private === true) return true;
+  return event.subject?.label === PRIVATE_PULL_REQUEST_DUMMY_LABEL && !event.subject.href;
+}
+
 export function getActivityRow(event: ActivityEvent): {
   summary: string;
   flag?: string;
@@ -583,6 +599,10 @@ export function getActivityRow(event: ActivityEvent): {
   href?: string;
   label?: string;
 } {
+  if (isPrivatePullRequestEvent(event)) {
+    return { summary: privatePullRequestSummary(event.type) };
+  }
+
   if (event.type === "caffeinated") {
     return {
       summary: event.summary,

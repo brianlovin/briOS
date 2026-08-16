@@ -272,6 +272,42 @@ describe("ActivityRow", () => {
     expect(markup).toContain("noopener noreferrer");
   });
 
+  test("renders a stored private opened PR as a single phrase", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "github",
+          type: "pr_opened",
+          speed: "event",
+          summary: "Opened a pull request",
+          subject: { kind: "pull_request", label: "a pull request" },
+          meta: { private: true, number: 1 },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("Opened a pull request in a private repo");
+    expect(markup).not.toContain("A Pull Request");
+  });
+
+  test("renders a stored private merged PR as a single phrase", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "github",
+          type: "pr_merged",
+          speed: "event",
+          summary: "Merged a pull request",
+          subject: { kind: "pull_request", label: "a pull request" },
+          meta: { private: true, number: 2 },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("Merged a pull request in a private repo");
+    expect(markup).not.toContain("A Pull Request");
+  });
+
   test("uses the GitHub icon for github-sourced events", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow

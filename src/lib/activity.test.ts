@@ -1305,6 +1305,91 @@ describe("getActivityRow page titles", () => {
   });
 });
 
+describe("getActivityRow private pull requests", () => {
+  function prEvent(overrides: Partial<ActivityEvent> = {}): ActivityEvent {
+    return {
+      v: 1,
+      id: "pr",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "github",
+      type: "pr_opened",
+      speed: "event",
+      summary: "Opened a pull request",
+      visibility: "public",
+      idempotency_key: "pr",
+      ...overrides,
+    };
+  }
+
+  test("rewrites a stored private opened PR to a single phrase", () => {
+    const row = getActivityRow(
+      prEvent({
+        subject: { kind: "pull_request", label: "a pull request" },
+        meta: { private: true, number: 1 },
+      }),
+    );
+    expect(row).toEqual({ summary: "Opened a pull request in a private repo" });
+    expect(JSON.stringify(row)).not.toContain("A Pull Request");
+  });
+
+  test("rewrites a stored private merged PR to a single phrase", () => {
+    const row = getActivityRow(
+      prEvent({
+        type: "pr_merged",
+        summary: "Merged a pull request",
+        subject: { kind: "pull_request", label: "a pull request" },
+        meta: { private: true, number: 2, additions: 12, deletions: 3 },
+      }),
+    );
+    expect(row).toEqual({ summary: "Merged a pull request in a private repo" });
+    expect(JSON.stringify(row)).not.toContain("A Pull Request");
+  });
+
+  test("rewrites a new private PR that has no subject", () => {
+    const row = getActivityRow(
+      prEvent({
+        summary: "Opened a pull request in a private repo",
+        meta: { private: true, number: 1 },
+      }),
+    );
+    expect(row).toEqual({ summary: "Opened a pull request in a private repo" });
+  });
+
+  test("rewrites a dummy subject even without meta.private", () => {
+    const row = getActivityRow(
+      prEvent({
+        subject: { kind: "pull_request", label: "a pull request" },
+      }),
+    );
+    expect(row).toEqual({ summary: "Opened a pull request in a private repo" });
+  });
+
+  test("keeps a public PR repo name and real title", () => {
+    const row = getActivityRow(
+      prEvent({
+        summary: "Opened a pull request on briOS",
+        subject: {
+          kind: "pull_request",
+          label: "Add activity feed",
+          href: "https://github.com/brianlovin/briOS/pull/42",
+        },
+        meta: {
+          repo: "briOS",
+          title: "Add activity feed",
+          number: 42,
+          href: "https://github.com/brianlovin/briOS/pull/42",
+        },
+      }),
+    );
+    expect(row).toEqual({
+      summary: "Opened a pull request on briOS",
+      href: "https://github.com/brianlovin/briOS/pull/42",
+      label: "Add activity feed",
+    });
+  });
+});
+
 describe("shouldRecordVisit / likeMetaFromRequest", () => {
   test("skips the activity page and API routes", () => {
     expect(shouldRecordVisit("/activity")).toBe(false);
