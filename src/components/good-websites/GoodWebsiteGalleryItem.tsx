@@ -103,17 +103,35 @@ export function GoodWebsiteGalleryItem({ item }: GoodWebsiteGalleryItemProps) {
         <div className="absolute right-4 bottom-4" onClick={(e) => e.stopPropagation()}>
           {/* Mobile: always visible */}
           <div className="sm:hidden">
-            <LikeButton pageId={item.id} variant="ghost-light" />
+            <LikeButton
+              pageId={item.id}
+              title={item.name}
+              href={item.url || "/sites"}
+              contentType="site"
+              variant="ghost-light"
+            />
           </div>
           {/* Desktop: permanently visible if liked, otherwise animated on hover */}
           <div className="hidden sm:block">
             {userLikes > 0 ? (
-              <LikeButton pageId={item.id} variant="ghost-light" />
+              <LikeButton
+                pageId={item.id}
+                title={item.name}
+                href={item.url || "/sites"}
+                contentType="site"
+                variant="ghost-light"
+              />
             ) : (
               <AnimatePresence>
                 {isHovered && (
                   <motion.div {...hoverAnimationProps}>
-                    <LikeButton pageId={item.id} variant="ghost-light" />
+                    <LikeButton
+                      pageId={item.id}
+                      title={item.name}
+                      href={item.url || "/sites"}
+                      contentType="site"
+                      variant="ghost-light"
+                    />
                   </motion.div>
                 )}
               </AnimatePresence>

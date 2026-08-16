@@ -54,7 +54,12 @@ async function EpisodeContent(props: { params: Promise<{ id: string }> }) {
         <h1 className="text-primary text-2xl font-semibold">{metadata.title}</h1>
         <span className="text-quaternary text-sm">{date}</span>
         <BatchLikesProvider pageIds={[metadata.id]} initialData={initialLikes}>
-          <LikeButton pageId={metadata.id} />
+          <LikeButton
+            pageId={metadata.id}
+            title={metadata.title}
+            href={`/design-details/${id}`}
+            contentType="design_details"
+          />
         </BatchLikesProvider>
       </div>
       <div className="notion-blocks flex flex-col gap-6">{renderBlocks(blocks)}</div>

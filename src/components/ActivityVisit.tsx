@@ -14,7 +14,7 @@ function TrackVisit() {
     void fetch("/api/activity/visit", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ path: pathname }),
+      body: JSON.stringify({ path: pathname, title: document.title }),
     }).catch(() => {});
   }, [pathname]);
 

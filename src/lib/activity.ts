@@ -25,17 +25,23 @@ import {
   findForbiddenPii,
   formatDownloadSummary,
   inferContentTypeFromPath,
-  inferTitleFromPath,
   isActivityPath,
+  likeActivityPayload,
   normalizeCaffeineDrink,
   resolveVisitTitle,
+  sanitizeVisitTitle,
   shouldCountLifetimeTotal,
   shouldRecordVisit,
   visibleLifetimeTotals,
 } from "./activity-shared";
 
 export type { ActivityGeo } from "./activity-geo";
-export { countryCodeToName, formatVisitSummary, getRequestGeo } from "./activity-geo";
+export {
+  ANONYMOUS_VISIT_SUMMARY,
+  countryCodeToName,
+  formatVisitSummary,
+  getRequestGeo,
+} from "./activity-geo";
 export type { GithubActivityDecision } from "./activity-github";
 export {
   githubActivityFromWebhook,
@@ -44,6 +50,17 @@ export {
   verifyGithubWebhookSignature,
 } from "./activity-github";
 export { isRegisteredActivityEvent } from "./activity-registry";
+export type { ActivityRollup } from "./activity-rollup";
+export {
+  ACTIVITY_ENTER_STAGGER_MAX,
+  ACTIVITY_ENTER_STAGGER_STEP,
+  activityEnterStaggerDelays,
+  activityEventHref,
+  activityRollupKey,
+  activityStackReactKey,
+  rollupActivityEvents,
+  shouldPulseActivityRollup,
+} from "./activity-rollup";
 export type {
   ActivityEvent,
   ActivityFeedPayload,
@@ -52,6 +69,8 @@ export type {
   ActivitySpeed,
   ActivityTotal,
   ActivityVisibility,
+  LikeActivityPayload,
+  LikeActivityTarget,
 } from "./activity-shared";
 export {
   ACTIVITY_ENVELOPE_VERSION,
@@ -64,11 +83,14 @@ export {
   ACTIVITY_STREAM_MAXLEN,
   ACTIVITY_VISIT_STREAM_MAX_PER_SEC,
   activityFeedRefreshInterval,
+  activitySectionFromPath,
+  activitySectionPhrase,
   activitySourceFaviconSrc,
   activitySourceLabel,
   activitySourceUrl,
   countryCodeToFlag,
   findForbiddenPii,
+  formatActivityTitle,
   formatDownloadSummary,
   formatTotalLabel,
   getActivityRow,
@@ -80,11 +102,20 @@ export {
   isActivityFeedPayload,
   isActivityPath,
   isCoffeeFamilyDrink,
+  isKnownActivityTitle,
+  likeActivityPayload,
+  looksLikeDehyphenatedSlug,
+  looksLikeIdentifier,
+  looksLikeShortId,
   normalizeCaffeineDrink,
   resolveActivitySourceHref,
   resolveVisitTitle,
+  sanitizeActivityTitle,
+  sanitizeVisitTitle,
   shouldCountLifetimeTotal,
   shouldRecordVisit,
+  stripSiteTitleSuffix,
+  stripTrailingShortIdToken,
   visibleLifetimeTotals,
 } from "./activity-shared";
 
@@ -314,8 +345,8 @@ export async function recordLike(
     return { skipped: true, reason: "activity_path" };
   }
 
-  const title = input.title.trim() || "a page";
   const href = input.href;
+  const title = sanitizeVisitTitle(input.title, href) || "a page";
   const contentType = input.content_type || inferContentTypeFromPath(href);
 
   return ingestActivityEvent(
@@ -644,9 +675,9 @@ export function likeMetaFromRequest(
   if (!href) href = "/";
   if (isActivityPath(href)) return null;
 
-  return {
+  return likeActivityPayload({
+    title: body.title,
     href,
-    title: body.title?.trim() || inferTitleFromPath(href),
-    content_type: body.content_type || inferContentTypeFromPath(href),
-  };
+    contentType: body.content_type,
+  });
 }

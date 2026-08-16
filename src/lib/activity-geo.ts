@@ -470,6 +470,9 @@ export function getRequestGeo(headers: Headers): ActivityGeo {
   };
 }
 
+/** Visit copy when country/geo is missing. Globe icon stays; no flag. */
+export const ANONYMOUS_VISIT_SUMMARY = "Someone visited from a mysterious place on earth";
+
 export function formatVisitSummary(geo: {
   country?: string | null;
   countryName?: string | null;
@@ -502,7 +505,7 @@ export function formatVisitSummary(geo: {
   }
 
   const flag = countryCodeToFlag(country ?? rawCountry);
-  if (!location) return "Visit";
+  if (!location) return ANONYMOUS_VISIT_SUMMARY;
   return flag ? `${flag} Visit from ${location}` : `Visit from ${location}`;
 }
 

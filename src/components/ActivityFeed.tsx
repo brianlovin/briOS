@@ -1,26 +1,34 @@
 "use client";
 
 import { useAtom } from "jotai";
+import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
-import { type ReactNode, useEffect, useMemo, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 
 import { activityLifetimeSidebarAtom } from "@/atoms/activityLifetimeSidebar";
 import { Activity } from "@/components/icons/Activity";
 import { Github } from "@/components/icons/Github";
 import { Heart } from "@/components/icons/Heart";
+import { Shiori } from "@/components/icons/Shiori";
 import { Sidebar } from "@/components/icons/Sidebar";
 import { World } from "@/components/icons/World";
 import { ListDetailWrapper } from "@/components/ListDetailWrapper";
 import { useTopBarActions } from "@/components/TopBarActions";
 import { IconButton } from "@/components/ui/IconButton";
-import type { ActivityEvent, ActivityTotal } from "@/lib/activity";
+import type { ActivityEvent, ActivityRollup, ActivityTotal } from "@/lib/activity";
+import {
+  activityEnterStaggerDelays,
+  activityStackReactKey,
+  rollupActivityEvents,
+  shouldPulseActivityRollup,
+} from "@/lib/activity-rollup";
 import {
   activitySourceFaviconSrc,
-  activitySourceLabel,
   activitySourceUrl,
   formatTotalLabel,
   getActivityRow,
   getMergedPullRequestDiff,
+  isKnownActivityTitle,
   resolveActivitySourceHref,
   visibleLifetimeTotals,
 } from "@/lib/activity-shared";
@@ -103,6 +111,10 @@ function isGithubActivity(event: ActivityEvent): boolean {
 }
 
 function ActivityRowIcon({ event, icon }: { event: ActivityEvent; icon?: string }) {
+  if (event.source === "shiori") {
+    return <Shiori size={16} />;
+  }
+
   if (event.type === "like") {
     return <Heart size={16} className="fill-current text-red-500" aria-hidden />;
   }
@@ -130,143 +142,224 @@ function ActivityRowIcon({ event, icon }: { event: ActivityEvent; icon?: string 
   return <Activity size={16} className="text-tertiary" aria-hidden />;
 }
 
-const SUBTITLE_LINK_CLASS =
-  "text-tertiary hover:text-primary min-w-0 truncate text-sm underline-offset-2 hover:underline";
-
 function isAbsoluteHttpUrl(href: string): boolean {
   return /^https?:\/\//i.test(href);
 }
 
-function ActivitySubtitleLink({ href, children }: { href: string; children: ReactNode }) {
+function ActivityContextLink({ href, children }: { href: string; children: ReactNode }) {
+  const className = "text-tertiary hover:text-primary underline-offset-2 hover:underline";
   if (isAbsoluteHttpUrl(href)) {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className={SUBTITLE_LINK_CLASS}>
+      <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
         {children}
       </a>
     );
   }
 
   return (
-    <Link href={href} className={SUBTITLE_LINK_CLASS}>
+    <Link href={href} className={className}>
       {children}
     </Link>
   );
 }
 
-function ActivityRowSummary({
-  summary,
-  sourceLabel,
-  sourceUrl,
+export function ActivityRow({
+  event,
+  count = 1,
+  sectionLabel,
+  href: hrefOverride,
+  pulse = false,
 }: {
-  summary: string;
-  sourceLabel?: string;
-  sourceUrl?: string;
+  event: ActivityEvent;
+  count?: number;
+  sectionLabel?: string;
+  href?: string;
+  pulse?: boolean;
 }) {
-  if (!sourceUrl || !sourceLabel) {
-    return <p className="text-primary truncate text-pretty">{summary}</p>;
-  }
-
-  const index = summary.indexOf(sourceLabel);
-  if (index === -1) {
-    return <p className="text-primary truncate text-pretty">{summary}</p>;
-  }
-
-  return (
-    <p className="text-primary truncate text-pretty">
-      {summary.slice(0, index)}
-      <a
-        href={sourceUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-primary underline-offset-2 hover:underline"
-      >
-        {sourceLabel}
-      </a>
-      {summary.slice(index + sourceLabel.length)}
-    </p>
-  );
-}
-
-function subjectPathFromEvent(event: ActivityEvent, href?: string): string | undefined {
-  if (href) return href;
-  const path = event.meta?.path;
-  return typeof path === "string" && path ? path : undefined;
-}
-
-function PullRequestDiff({ additions, deletions }: { additions: number; deletions: number }) {
-  return (
-    <span className="shrink-0 text-sm tabular-nums">
-      <span className="text-green-600">+{additions}</span>{" "}
-      <span className="text-red-500">-{deletions}</span>
-    </span>
-  );
-}
-
-export function ActivityRow({ event }: { event: ActivityEvent }) {
   const row = getActivityRow(event);
   const homeUrl = activitySourceUrl(event.source);
-  const sourceLabel = homeUrl ? activitySourceLabel(event.source) : undefined;
-  const labelInSummary = Boolean(sourceLabel && row.summary.includes(sourceLabel));
-  const resolvedHref = resolveActivitySourceHref(
-    event.source,
-    subjectPathFromEvent(event, row.href),
-  );
+  const label = sectionLabel ?? row.label;
+  const href =
+    hrefOverride ??
+    resolveActivitySourceHref(event.source, row.href) ??
+    row.href ??
+    (label || event.type === "download" ? homeUrl : undefined);
+  const likedName =
+    event.type === "like" ? row.summary.replace(/^Someone liked\s+/i, "").trim() : "";
+  const rawContext = label ?? (href || undefined);
+  const context =
+    event.type === "like" &&
+    rawContext &&
+    likedName &&
+    rawContext !== likedName &&
+    isKnownActivityTitle(rawContext)
+      ? likedName
+      : rawContext;
   const diff = event.type === "pr_merged" ? getMergedPullRequestDiff(event.meta) : null;
 
-  let subtitleHref: string | undefined;
-  let subtitleLabel: string | undefined;
-  if (resolvedHref) {
-    subtitleHref = resolvedHref;
-    subtitleLabel = row.label ?? resolvedHref;
-  } else if (homeUrl && sourceLabel && !labelInSummary) {
-    subtitleHref = homeUrl;
-    subtitleLabel = sourceLabel;
-  }
-
   return (
-    <div className="border-secondary hover:bg-secondary grid grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-3 border-b px-4 py-3 md:gap-4 md:py-2 md:dark:hover:bg-white/5">
+    <div
+      data-rollup-pulse={pulse ? "" : undefined}
+      className={cn(
+        "border-secondary hover:bg-secondary grid grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-3 border-b px-4 py-3 transition-colors duration-500 md:gap-4 md:py-2 md:dark:hover:bg-white/5",
+        pulse && "bg-secondary",
+      )}
+    >
       <div className="flex size-8 items-center justify-center">
         <ActivityRowIcon event={event} icon={row.icon} />
       </div>
-      <div className="min-w-0">
-        <ActivityRowSummary summary={row.summary} sourceLabel={sourceLabel} sourceUrl={homeUrl} />
-        {subtitleHref || diff ? (
-          <div className="flex min-w-0 items-baseline gap-2">
-            {subtitleHref ? (
-              <ActivitySubtitleLink href={subtitleHref}>{subtitleLabel}</ActivitySubtitleLink>
-            ) : null}
-            {diff ? (
-              <PullRequestDiff additions={diff.additions} deletions={diff.deletions} />
-            ) : null}
-          </div>
+      <p className="min-w-0 truncate">
+        <span className="text-primary">{row.summary}</span>
+        {count > 1 ? <span className="text-tertiary"> {count}</span> : null}
+        {diff ? (
+          <span className="shrink-0 text-sm tabular-nums">
+            {" "}
+            <span className="text-green-600">+{diff.additions}</span>{" "}
+            <span className="text-red-500">-{diff.deletions}</span>
+          </span>
         ) : null}
-      </div>
+        {href && context ? (
+          <>
+            {" "}
+            <ActivityContextLink href={href}>{context}</ActivityContextLink>
+          </>
+        ) : context ? (
+          <span className="text-tertiary"> {context}</span>
+        ) : null}
+      </p>
       <RelativeTime iso={event.received_at} />
     </div>
   );
 }
 
-function TotalsList({ totals }: { totals: ActivityTotal[] }) {
+export function TotalsList({ totals }: { totals: ActivityTotal[] }) {
   const visible = visibleLifetimeTotals(totals);
 
   if (visible.length === 0) {
-    return <p className="text-tertiary text-sm">No totals yet.</p>;
+    return <p className="text-quaternary font-mono text-xs">No totals yet.</p>;
   }
 
   return (
-    <ul className="flex flex-col gap-2">
+    <ul className="w-max max-w-full font-mono text-[11px] leading-4 tabular-nums">
       {visible.map((total) => (
         <li
           key={`${total.source}:${total.type}`}
-          className="flex items-baseline justify-between gap-3"
+          className="flex items-baseline justify-between gap-4"
           title={formatFirstTracked(total.first_seen)}
         >
-          <span className="text-secondary capitalize">{formatTotalLabel(total.type)}</span>
-          <span className="text-primary tabular-nums">{total.count.toLocaleString()}</span>
+          <span className="text-tertiary">{formatTotalLabel(total.type)}</span>
+          <span className="text-secondary">{total.count.toLocaleString()}</span>
         </li>
       ))}
     </ul>
   );
+}
+
+const ROLLUP_PULSE_MS = 550;
+const LIST_MOTION = { duration: 0.25, ease: "easeOut" } as const;
+
+function subscribeNoop(): () => void {
+  return () => {};
+}
+
+function useHydrated(): boolean {
+  return useSyncExternalStore(
+    subscribeNoop,
+    () => true,
+    () => false,
+  );
+}
+
+function usePreviousKeys(keys: string[]): string[] | null {
+  const previousRef = useRef<string[] | null>(null);
+  useEffect(() => {
+    previousRef.current = keys;
+  }, [keys]);
+  // Last committed key list — new rows must read this on the insert render to get stagger.
+  // eslint-disable-next-line react-hooks/refs -- usePrevious
+  return previousRef.current;
+}
+
+function ActivityStackList({
+  stacks,
+  pulseKey,
+}: {
+  stacks: ActivityRollup[];
+  pulseKey: string | null;
+}) {
+  const hydrated = useHydrated();
+  const prefersReducedMotion = useReducedMotion();
+  const shouldAnimate = hydrated && prefersReducedMotion !== true;
+  const keys = useMemo(() => stacks.map(activityStackReactKey), [stacks]);
+  const previousKeys = usePreviousKeys(keys);
+  const enterDelays =
+    shouldAnimate && previousKeys
+      ? activityEnterStaggerDelays(keys, new Set(previousKeys))
+      : new Map<string, number>();
+
+  return (
+    <LayoutGroup>
+      <div className="divide-secondary divide-y">
+        <AnimatePresence initial={false}>
+          {stacks.map((stack) => {
+            const reactKey = activityStackReactKey(stack);
+            const delay = enterDelays.get(reactKey) ?? 0;
+            return (
+              <motion.div
+                key={reactKey}
+                layout={shouldAnimate}
+                initial={shouldAnimate ? { opacity: 0, y: -8 } : false}
+                animate={{ opacity: 1, y: 0 }}
+                transition={
+                  shouldAnimate
+                    ? {
+                        opacity: { ...LIST_MOTION, delay },
+                        y: { ...LIST_MOTION, delay },
+                        layout: LIST_MOTION,
+                      }
+                    : { duration: 0 }
+                }
+              >
+                <ActivityRow
+                  event={stack.latest}
+                  count={stack.count}
+                  sectionLabel={stack.sectionLabel}
+                  href={stack.href}
+                  pulse={pulseKey === stack.key}
+                />
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
+      </div>
+    </LayoutGroup>
+  );
+}
+
+function useRollupPulse(stacks: ActivityRollup[]): string | null {
+  const top = stacks[0];
+  const [seenTop, setSeenTop] = useState<{ key: string; count: number } | null>(null);
+  const [pulseKey, setPulseKey] = useState<string | null>(null);
+  const shouldPulse = shouldPulseActivityRollup(seenTop, top);
+  const nextSeen = top ? { key: top.key, count: top.count } : null;
+  const seenChanged = seenTop?.key !== nextSeen?.key || seenTop?.count !== nextSeen?.count;
+
+  if (seenChanged) {
+    setSeenTop(nextSeen);
+    if (shouldPulse) {
+      setPulseKey(top.key);
+    } else if (pulseKey && nextSeen?.key !== pulseKey) {
+      setPulseKey(null);
+    }
+  }
+
+  useEffect(() => {
+    if (!pulseKey) return;
+    const timeout = window.setTimeout(() => setPulseKey(null), ROLLUP_PULSE_MS);
+    return () => window.clearTimeout(timeout);
+  }, [pulseKey, top?.count]);
+
+  return shouldPulse && top ? top.key : pulseKey;
 }
 
 export function ActivityFeed({
@@ -277,6 +370,8 @@ export function ActivityFeed({
   initialTotals: ActivityTotal[];
 }) {
   const { events, totals } = useActivity(initialEvents, initialTotals);
+  const stacks = useMemo(() => rollupActivityEvents(events), [events]);
+  const pulseKey = useRollupPulse(stacks);
   const [lifetimeOpen, setLifetimeOpen] = useAtom(activityLifetimeSidebarAtom);
 
   useEffect(() => {
@@ -305,7 +400,7 @@ export function ActivityFeed({
   return (
     <ListDetailWrapper>
       <div className="relative flex min-h-0 flex-1 overflow-hidden">
-        <div data-scrollable className="relative min-w-0 flex-1 overflow-auto">
+        <motion.div data-scrollable layoutScroll className="relative min-w-0 flex-1 overflow-auto">
           <div className="bg-secondary border-secondary sticky top-0 z-10 hidden border-b md:block dark:bg-neutral-950">
             <div className="grid grid-cols-[2rem_minmax(0,1fr)_auto] gap-3 px-4 py-2 text-sm font-medium md:gap-4">
               <div />
@@ -318,13 +413,9 @@ export function ActivityFeed({
               Nothing yet. Likes and visits will show up here.
             </p>
           ) : (
-            <div className="divide-secondary divide-y">
-              {events.map((event) => (
-                <ActivityRow key={event.id} event={event} />
-              ))}
-            </div>
+            <ActivityStackList stacks={stacks} pulseKey={pulseKey} />
           )}
-        </div>
+        </motion.div>
         <aside
           className={cn(
             "border-secondary w-(--secondary-sidebar-width) shrink-0 flex-col overflow-y-auto border-l bg-white dark:bg-black",
@@ -332,8 +423,8 @@ export function ActivityFeed({
             lifetimeOpen ? "flex" : "hidden",
           )}
         >
-          <div className="px-4 py-4">
-            <h2 className="text-secondary mb-3 text-sm font-medium">Lifetime</h2>
+          <div className="px-3 py-2 font-mono text-[11px] leading-4">
+            <h2 className="text-quaternary">Lifetime</h2>
             <TotalsList totals={totals} />
           </div>
         </aside>
