@@ -164,14 +164,12 @@ export function ActivityRow({
   sectionLabel,
   href: hrefOverride,
   pulse = false,
-  showStickyEdge = false,
 }: {
   event: ActivityEvent;
   count?: number;
   sectionLabel?: string;
   href?: string;
   pulse?: boolean;
-  showStickyEdge?: boolean;
 }) {
   const row = getActivityRow(event);
   const homeUrl = activitySourceUrl(event.source);
@@ -198,7 +196,7 @@ export function ActivityRow({
     <div
       data-rollup-pulse={pulse ? "" : undefined}
       className={cn(
-        "group hover:bg-secondary flex items-center gap-3 py-3 pl-4 transition-colors duration-500 md:grid md:grid-cols-[2rem_minmax(0,1fr)_auto] md:gap-4 md:px-4 md:py-2 md:dark:hover:bg-white/5",
+        "group hover:bg-secondary flex w-max min-w-full items-center gap-3 py-3 pl-4 transition-colors duration-500 md:grid md:w-auto md:min-w-0 md:grid-cols-[2rem_minmax(0,1fr)_auto] md:gap-4 md:px-4 md:py-2 md:dark:hover:bg-white/5",
         pulse && "bg-secondary",
       )}
     >
@@ -227,11 +225,11 @@ export function ActivityRow({
       <RelativeTime
         iso={event.received_at}
         className={cn(
-          "group-hover:bg-secondary sticky right-0 z-10 bg-white px-4 dark:bg-black",
-          pulse && "bg-secondary",
-          "md:static md:bg-transparent md:px-0 md:dark:bg-transparent md:dark:group-hover:bg-white/5",
-          showStickyEdge &&
-            "[box-shadow:inset_1px_0_0_var(--border-color-secondary)] md:shadow-none",
+          "sticky right-0 z-10 ml-auto bg-white px-4 dark:bg-black",
+          "group-hover:bg-inherit group-data-[rollup-pulse]:bg-inherit",
+          "max-md:[box-shadow:inset_1px_0_0_var(--border-color-secondary)]",
+          "md:static md:ml-0 md:bg-transparent md:px-0 md:shadow-none md:dark:bg-transparent",
+          "md:group-hover:bg-inherit md:group-data-[rollup-pulse]:bg-inherit md:dark:group-hover:bg-white/5",
         )}
       />
     </div>
@@ -286,22 +284,6 @@ function useIsMobile(): boolean {
     () => window.matchMedia("(max-width: 767px)").matches,
     () => false,
   );
-}
-
-function useHorizontalScrollEdge(ref: RefObject<HTMLElement | null>): boolean {
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    const container = ref.current;
-    if (!container) return;
-
-    const update = () => setIsScrolled(container.scrollLeft > 0);
-    update();
-    container.addEventListener("scroll", update, { passive: true });
-    return () => container.removeEventListener("scroll", update);
-  }, [ref]);
-
-  return isScrolled;
 }
 
 function useMobileAxisLock(ref: RefObject<HTMLElement | null>, enabled: boolean) {
@@ -364,11 +346,9 @@ function useMobileAxisLock(ref: RefObject<HTMLElement | null>, enabled: boolean)
 function ActivityStackList({
   stacks,
   pulseKey,
-  showStickyEdge,
 }: {
   stacks: ActivityRollup[];
   pulseKey: string | null;
-  showStickyEdge: boolean;
 }) {
   const hydrated = useHydrated();
   const prefersReducedMotion = useReducedMotion();
@@ -376,7 +356,7 @@ function ActivityStackList({
 
   return (
     <LayoutGroup>
-      <div className="divide-secondary min-w-max divide-y md:min-w-0">
+      <div className="divide-secondary divide-y">
         <AnimatePresence initial={false}>
           {stacks.map((stack) => {
             const reactKey = activityStackReactKey(stack);
@@ -387,7 +367,7 @@ function ActivityStackList({
                 initial={shouldAnimate ? { height: 0, opacity: 0 } : false}
                 animate={{ height: "auto", opacity: 1 }}
                 exit={shouldAnimate ? { height: 0, opacity: 0 } : undefined}
-                className="min-w-full [clip-path:inset(0)]"
+                className="w-max min-w-full [clip-path:inset(0)] md:w-auto md:min-w-0"
                 transition={shouldAnimate ? LIST_MOTION : { duration: 0 }}
               >
                 <ActivityRow
@@ -396,7 +376,6 @@ function ActivityStackList({
                   sectionLabel={stack.sectionLabel}
                   href={stack.href}
                   pulse={pulseKey === stack.key}
-                  showStickyEdge={showStickyEdge}
                 />
               </motion.div>
             );
@@ -445,7 +424,6 @@ export function ActivityFeed({
   const pulseKey = useRollupPulse(stacks);
   const scrollRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
-  const isScrolled = useHorizontalScrollEdge(scrollRef);
   useMobileAxisLock(scrollRef, isMobile);
 
   const topBarContent = useMemo(() => <ActivityTrackedCount count={count} />, [count]);
@@ -465,11 +443,7 @@ export function ActivityFeed({
               Nothing yet. Likes and visits will show up here.
             </p>
           ) : (
-            <ActivityStackList
-              stacks={stacks}
-              pulseKey={pulseKey}
-              showStickyEdge={isScrolled || isMobile}
-            />
+            <ActivityStackList stacks={stacks} pulseKey={pulseKey} />
           )}
         </motion.div>
       </div>

@@ -570,7 +570,6 @@ describe("ActivityRow", () => {
           },
           meta: { additions: 18, deletions: 3 },
         })}
-        showStickyEdge
       />,
     );
 
@@ -578,7 +577,12 @@ describe("ActivityRow", () => {
     expect(markup).toContain("md:truncate");
     expect(markup).toContain("sticky");
     expect(markup).toContain("right-0");
+    expect(markup).toContain("ml-auto");
+    expect(markup).toContain("w-max");
+    expect(markup).toContain("min-w-full");
     expect(markup).toContain("inset_1px_0_0");
+    expect(markup).toContain("group-hover:bg-inherit");
+    expect(markup).toContain("group-data-[rollup-pulse]:bg-inherit");
     expect(markup).toContain("md:static");
     expect(markup).toContain("md:grid-cols-[2rem_minmax(0,1fr)_auto]");
     expect(markup).toMatch(/Merged some-fix[\s\S]*brianlovin\/briOS#12[\s\S]*\+18[\s\S]*-3/);
@@ -604,7 +608,8 @@ describe("ActivityFeed", () => {
     expect(markup).toContain("divide-y");
     expect(markup).toContain("divide-secondary");
     expect(markup).toContain("overflow-hidden");
-    expect(markup).toContain("min-w-max");
+    expect(markup).toContain("min-w-full");
+    expect(markup).toContain("w-max");
     expect(markup).toContain("overscroll-contain");
     expect(markup).toContain("whitespace-nowrap");
     expect(markup).toContain("sticky");
