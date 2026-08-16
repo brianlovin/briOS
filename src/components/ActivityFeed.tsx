@@ -107,23 +107,23 @@ export function ActivityRow({ event }: { event: ActivityEvent }) {
   );
 }
 
-function TotalsList({ totals }: { totals: ActivityTotal[] }) {
+export function TotalsList({ totals }: { totals: ActivityTotal[] }) {
   const visible = visibleLifetimeTotals(totals);
 
   if (visible.length === 0) {
-    return <p className="text-tertiary text-sm">No totals yet.</p>;
+    return <p className="text-quaternary font-mono text-xs">No totals yet.</p>;
   }
 
   return (
-    <ul className="flex flex-col gap-2">
+    <ul className="font-mono text-xs leading-5 tabular-nums">
       {visible.map((total) => (
         <li
           key={`${total.source}:${total.type}`}
           className="flex items-baseline justify-between gap-3"
           title={formatFirstTracked(total.first_seen)}
         >
-          <span className="text-secondary capitalize">{formatTotalLabel(total.type)}</span>
-          <span className="text-primary tabular-nums">{total.count.toLocaleString()}</span>
+          <span className="text-tertiary">{formatTotalLabel(total.type)}</span>
+          <span className="text-secondary">{total.count.toLocaleString()}</span>
         </li>
       ))}
     </ul>
@@ -193,8 +193,8 @@ export function ActivityFeed({
             lifetimeOpen ? "flex" : "hidden",
           )}
         >
-          <div className="px-4 py-4">
-            <h2 className="text-secondary mb-3 text-sm font-medium">Lifetime</h2>
+          <div className="px-3 py-2">
+            <h2 className="text-quaternary font-mono text-[11px]">Lifetime</h2>
             <TotalsList totals={totals} />
           </div>
         </aside>

@@ -10,12 +10,15 @@ import {
   getRequestCountry,
   getRequestGeo,
   hashDigestSubscriber,
+  inferTitleFromPath,
   ingestActivityEvent,
   likeMetaFromRequest,
+  looksLikeShortId,
   recordDigestSubscribed,
   recordLike,
   recordVisit,
   shouldRecordVisit,
+  stripTrailingShortIdToken,
   visibleLifetimeTotals,
 } from "@/lib/activity";
 import { parseActivityStreamFields } from "@/lib/activity-redis";
@@ -276,6 +279,21 @@ describe("recordVisit", () => {
     });
   });
 
+  test("strips a trailing short id from the visit title at ingest", async () => {
+    const store = createMemoryActivityStore();
+    await recordVisit(
+      { path: "/writing/grok-bot-first-impressions-kcJun01", country: "IN" },
+      store,
+    );
+    const [event] = await store.getTail(1);
+    expect(event?.subject).toEqual({
+      kind: "writing",
+      label: "grok bot first impressions",
+      href: "/writing/grok-bot-first-impressions-kcJun01",
+    });
+    expect(event?.meta).toEqual(expect.objectContaining({ title: "grok bot first impressions" }));
+  });
+
   test("prefers city and region in the visit summary", async () => {
     const store = createMemoryActivityStore();
     await recordVisit(
@@ -299,7 +317,7 @@ describe("recordVisit", () => {
       region_name: "California",
       city: "San Francisco",
       path: "/",
-      title: "a page",
+      title: "Home",
     });
   });
 
@@ -309,7 +327,8 @@ describe("recordVisit", () => {
     const [event] = await store.getTail(1);
     expect(event?.summary).toBe("Visit from XX");
     expect(event?.subject?.href).toBe("/");
-    expect(event?.meta).toEqual({ country: "XX", path: "/", title: "a page" });
+    expect(event?.subject?.label).toBe("Home");
+    expect(event?.meta).toEqual({ country: "XX", path: "/", title: "Home" });
   });
 
   test("prefixes a flag in getActivityRow for older visits that lack the emoji", () => {
@@ -546,6 +565,88 @@ describe("getRequestCountry", () => {
   test("ignores Cloudflare unknown / tor codes", () => {
     expect(getRequestCountry(new Headers({ "cf-ipcountry": "XX" }))).toBeUndefined();
     expect(getRequestCountry(new Headers({ "cf-ipcountry": "T1" }))).toBeUndefined();
+  });
+});
+
+describe("inferTitleFromPath", () => {
+  test("maps known section routes to nav labels", () => {
+    expect(inferTitleFromPath("/")).toBe("Home");
+    expect(inferTitleFromPath("/writing")).toBe("Writing");
+    expect(inferTitleFromPath("/til")).toBe("TIL");
+    expect(inferTitleFromPath("/stack")).toBe("Stack");
+    expect(inferTitleFromPath("/hn")).toBe("Hacker News");
+    expect(inferTitleFromPath("/app-dissection")).toBe("App Dissection");
+    expect(inferTitleFromPath("/design-details")).toBe("Design Details");
+    expect(inferTitleFromPath("/bookmarks")).toBe("Bookmarks");
+  });
+
+  test("strips trailing Notion short ids from slugs", () => {
+    expect(inferTitleFromPath("/writing/grok-bot-first-impressions-kcJun01")).toBe(
+      "grok bot first impressions",
+    );
+    expect(inferTitleFromPath("/til/cache-headers-B57IXLJ")).toBe("cache headers");
+  });
+
+  test("leaves no-id slugs and real words unchanged", () => {
+    expect(inferTitleFromPath("/writing/hello-world")).toBe("hello world");
+    expect(inferTitleFromPath("/writing/grok-bot-first-impressions")).toBe(
+      "grok bot first impressions",
+    );
+    expect(looksLikeShortId("writing")).toBe(false);
+    expect(looksLikeShortId("stack")).toBe(false);
+    expect(looksLikeShortId("kcJun01")).toBe(true);
+    expect(looksLikeShortId("B57IXLJ")).toBe(true);
+    expect(stripTrailingShortIdToken("grok bot first impressions kcJun01")).toBe(
+      "grok bot first impressions",
+    );
+  });
+
+  test("never returns a page for an unknown or empty path", () => {
+    expect(inferTitleFromPath("/mystery")).toBe("mystery");
+    expect(inferTitleFromPath("")).toBe("Home");
+  });
+});
+
+describe("getActivityRow page titles", () => {
+  test("rewrites a stored a page label when href is home", () => {
+    const row = getActivityRow({
+      v: 1,
+      id: "old-home",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "visit",
+      speed: "signal",
+      summary: "Visit from France",
+      visibility: "public",
+      idempotency_key: "old-home",
+      subject: { kind: "home", label: "a page", href: "/" },
+      meta: { path: "/", title: "a page", country: "FR" },
+    });
+    expect(row.label).toBe("Home");
+    expect(row.href).toBe("/");
+  });
+
+  test("strips a stored short id from a writing visit without rewriting Redis", () => {
+    const row = getActivityRow({
+      v: 1,
+      id: "old-writing",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "visit",
+      speed: "signal",
+      summary: "Visit from India",
+      visibility: "public",
+      idempotency_key: "old-writing",
+      subject: {
+        kind: "writing",
+        label: "grok bot first impressions kcJun01",
+        href: "/writing/grok-bot-first-impressions-kcJun01",
+      },
+    });
+    expect(row.label).toBe("grok bot first impressions");
+    expect(row.href).toBe("/writing/grok-bot-first-impressions-kcJun01");
   });
 });
 

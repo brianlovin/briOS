@@ -120,15 +120,99 @@ export function inferContentTypeFromPath(pathname: string): string {
   return "page";
 }
 
-export function inferTitleFromPath(pathname: string): string {
-  const segments = pathname.split("/").filter(Boolean);
-  const last = segments[segments.length - 1];
-  if (!last) return "a page";
-  try {
-    return decodeURIComponent(last).replace(/-/g, " ");
-  } catch {
-    return last;
+/** Exact routes → site nav labels. Used at ingest and when rendering stored events. */
+const KNOWN_PATH_TITLES: Record<string, string> = {
+  "/": "Home",
+  "/about": "About",
+  "/activity": "Activity",
+  "/writing": "Writing",
+  "/til": "TIL",
+  "/stack": "Stack",
+  "/sites": "Sites",
+  "/ama": "AMA",
+  "/listening": "Listening",
+  "/hn": "Hacker News",
+  "/app-dissection": "App Dissection",
+  "/design-details": "Design Details",
+  "/bookmarks": "Bookmarks",
+};
+
+function normalizeActivityPath(pathname: string): string {
+  const path = pathname.split("?")[0] ?? pathname;
+  if (!path || path === "/") return "/";
+  return path.replace(/\/+$/, "") || "/";
+}
+
+/**
+ * Trailing slug tokens that look like Notion short ids (e.g. `kcJun01`, `B57IXLJ`).
+ * Keeps real words (`writing`, `stack`) and Title Case words (`World`).
+ */
+export function looksLikeShortId(token: string): boolean {
+  if (token.length < 5 || token.length > 12) return false;
+  if (!/^[A-Za-z0-9]+$/.test(token)) return false;
+
+  const hasDigit = /\d/.test(token);
+  const hasLetter = /[A-Za-z]/.test(token);
+  const isLowerWord = /^[a-z]+$/.test(token);
+  const isTitleCase = /^[A-Z][a-z]+$/.test(token);
+  const isUpperWord = /^[A-Z]+$/.test(token);
+
+  if (isLowerWord || isTitleCase || (isUpperWord && !hasDigit)) return false;
+  return (hasLetter && hasDigit) || (/[A-Z]/.test(token) && /[a-z]/.test(token));
+}
+
+export function stripTrailingShortIdToken(value: string): string {
+  const hyphenParts = value.split("-");
+  if (hyphenParts.length > 1 && looksLikeShortId(hyphenParts[hyphenParts.length - 1] ?? "")) {
+    return hyphenParts.slice(0, -1).join("-");
   }
+
+  const spaceParts = value.split(/\s+/);
+  if (spaceParts.length > 1 && looksLikeShortId(spaceParts[spaceParts.length - 1] ?? "")) {
+    return spaceParts.slice(0, -1).join(" ");
+  }
+
+  return value;
+}
+
+function titleFromLastSegment(segment: string): string {
+  let decoded = segment;
+  try {
+    decoded = decodeURIComponent(segment);
+  } catch {
+    decoded = segment;
+  }
+  return stripTrailingShortIdToken(decoded).replace(/-/g, " ");
+}
+
+export function inferTitleFromPath(pathname: string): string {
+  const path = normalizeActivityPath(pathname);
+  const known = KNOWN_PATH_TITLES[path];
+  if (known) return known;
+
+  const segments = path.split("/").filter(Boolean);
+  const last = segments[segments.length - 1];
+  if (!last) return "Home";
+  return titleFromLastSegment(last);
+}
+
+function displaySubjectLabel(
+  label: string | undefined,
+  href: string | undefined,
+): string | undefined {
+  if (href) {
+    const inferred = inferTitleFromPath(href);
+    if (!label || label === "a page") return inferred;
+
+    const path = normalizeActivityPath(href);
+    if (KNOWN_PATH_TITLES[path]) return KNOWN_PATH_TITLES[path];
+
+    return stripTrailingShortIdToken(label) || inferred;
+  }
+
+  if (!label) return undefined;
+  if (label === "a page") return "Home";
+  return stripTrailingShortIdToken(label);
 }
 
 const EMAIL_RE = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i;
@@ -207,7 +291,7 @@ export function getActivityRow(event: ActivityEvent): {
       summary: split.text,
       ...(flag ? { flag } : {}),
       href: event.subject?.href,
-      label: event.subject?.label,
+      label: displaySubjectLabel(event.subject?.label, event.subject?.href),
     };
   }
 
@@ -219,14 +303,14 @@ export function getActivityRow(event: ActivityEvent): {
       summary: split.text,
       ...(flag ? { flag } : {}),
       href: event.subject?.href,
-      label: event.subject?.label,
+      label: displaySubjectLabel(event.subject?.label, event.subject?.href),
     };
   }
 
   return {
     summary: event.summary,
     href: event.subject?.href,
-    label: event.subject?.label,
+    label: displaySubjectLabel(event.subject?.label, event.subject?.href),
   };
 }
 

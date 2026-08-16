@@ -52,8 +52,10 @@ export {
   inferTitleFromPath,
   isActivityFeedPayload,
   isActivityPath,
+  looksLikeShortId,
   shouldCountLifetimeTotal,
   shouldRecordVisit,
+  stripTrailingShortIdToken,
   visibleLifetimeTotals,
 } from "./activity-shared";
 

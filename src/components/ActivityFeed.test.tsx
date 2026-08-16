@@ -1,8 +1,9 @@
 import { describe, expect, test } from "bun:test";
 import { renderToStaticMarkup } from "react-dom/server";
 
-import { ActivityRow } from "@/components/ActivityFeed";
-import type { ActivityEvent } from "@/lib/activity";
+import { ActivityRow, TotalsList } from "@/components/ActivityFeed";
+import { ActivityLiveBadge, TopBarTrail } from "@/components/GlobalTopBar";
+import type { ActivityEvent, ActivityTotal } from "@/lib/activity";
 
 function event(overrides: Partial<ActivityEvent>): ActivityEvent {
   return {
@@ -26,8 +27,8 @@ describe("ActivityRow", () => {
       <ActivityRow
         event={event({
           summary: "🇮🇳 Visit from India",
-          subject: { kind: "home", label: "home", href: "/" },
-          meta: { country: "IN", country_name: "India", path: "/", title: "home" },
+          subject: { kind: "home", label: "a page", href: "/" },
+          meta: { country: "IN", country_name: "India", path: "/", title: "a page" },
         })}
       />,
     );
@@ -35,8 +36,28 @@ describe("ActivityRow", () => {
     expect(markup).toContain("🇮🇳");
     expect(markup).toContain("Visit from India");
     expect(markup).toContain('href="/"');
-    expect(markup).toContain("home");
+    expect(markup).toContain("Home");
+    expect(markup).not.toContain("a page");
     expect(markup).not.toContain("text-red-500");
+  });
+
+  test("strips a short id from a stored writing slug", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          summary: "🇮🇳 Visit from India",
+          subject: {
+            kind: "writing",
+            label: "grok bot first impressions kcJun01",
+            href: "/writing/grok-bot-first-impressions-kcJun01",
+          },
+          meta: { country: "IN", path: "/writing/grok-bot-first-impressions-kcJun01" },
+        })}
+      />,
+    );
+
+    expect(markup).toContain(">grok bot first impressions<");
+    expect(markup).toContain('href="/writing/grok-bot-first-impressions-kcJun01"');
   });
 
   test("rebuilds a country name and flag for older visits that only have a code", () => {
@@ -77,5 +98,48 @@ describe("ActivityRow", () => {
     expect(like).toContain('href="/writing/grok-bot-first-impressions"');
     expect(visit).not.toContain("text-red-500");
     expect(visit).toContain("🇮🇳");
+  });
+});
+
+describe("TotalsList", () => {
+  test("renders a compact mono log and hides visit_country_first", () => {
+    const totals: ActivityTotal[] = [
+      { source: "brios", type: "visit", count: 12, first_seen: "2026-08-16T00:00:00.000Z" },
+      {
+        source: "brios",
+        type: "visit_country_first",
+        count: 3,
+        first_seen: "2026-08-16T00:00:00.000Z",
+      },
+      { source: "brios", type: "like", count: 4, first_seen: "2026-08-16T00:00:00.000Z" },
+    ];
+    const markup = renderToStaticMarkup(<TotalsList totals={totals} />);
+    expect(markup).toContain("font-mono");
+    expect(markup).toContain("tabular-nums");
+    expect(markup).toContain("Visits");
+    expect(markup).toContain("Likes");
+    expect(markup).toContain("12");
+    expect(markup).not.toContain("New countries");
+    expect(markup).not.toContain("visit_country_first");
+  });
+});
+
+describe("ActivityLiveBadge", () => {
+  test("is a quiet green live pill with a pulsing dot", () => {
+    const markup = renderToStaticMarkup(<ActivityLiveBadge />);
+    expect(markup).toContain("Live");
+    expect(markup).toContain("animate-pulse");
+    expect(markup).toContain("bg-green-500");
+    expect(markup).toContain("text-green-700");
+  });
+
+  test("appears after the Activity crumb and not on other pages", () => {
+    const activity = renderToStaticMarkup(<TopBarTrail pathname="/activity" />);
+    const writing = renderToStaticMarkup(<TopBarTrail pathname="/writing" />);
+    expect(activity).toContain("Activity");
+    expect(activity).toContain("Live");
+    expect(activity).toContain("animate-pulse");
+    expect(writing).toContain("Writing");
+    expect(writing).not.toContain("Live");
   });
 });
