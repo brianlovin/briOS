@@ -23,10 +23,8 @@ import { useTopBarActions } from "@/components/TopBarActions";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip";
 import type { ActivityEvent, ActivityRollup } from "@/lib/activity";
 import {
-  ACTIVITY_ENTER_STAGGER_MAX,
-  ACTIVITY_ENTER_STAGGER_STEP,
-  activityEnterStaggerDelays,
   activityStackReactKey,
+  nextActivityEnterState,
   rollupActivityEvents,
   shouldPulseActivityRollup,
 } from "@/lib/activity-rollup";
@@ -375,35 +373,23 @@ function ActivityStackList({
 }) {
   const hydrated = useHydrated();
   const prefersReducedMotion = useReducedMotion();
-  const shouldAnimate = hydrated && prefersReducedMotion !== true;
+  const canAnimate = hydrated && prefersReducedMotion !== true;
   const keys = stacks.map(activityStackReactKey);
   const liveKeys = new Set(keys);
   const [seenKeys, setSeenKeys] = useState<Set<string> | null>(null);
   const [enterDelays, setEnterDelays] = useState<Map<string, number>>(() => new Map());
 
-  let nextSeen = seenKeys;
+  const { seen, delays: pending } = nextActivityEnterState(keys, seenKeys);
+  let nextSeen = seen;
   let nextDelays = enterDelays;
 
-  if (seenKeys === null) {
-    nextSeen = liveKeys;
-  } else {
-    const pending = activityEnterStaggerDelays(
-      keys,
-      seenKeys,
-      ACTIVITY_ENTER_STAGGER_STEP,
-      ACTIVITY_ENTER_STAGGER_MAX,
-    );
-    if (pending.size > 0) {
-      nextDelays = new Map(enterDelays);
-      for (const [key, delay] of pending) nextDelays.set(key, delay);
-      nextSeen = new Set([...seenKeys, ...keys]);
-    }
+  if (pending.size > 0) {
+    nextDelays = new Map(enterDelays);
+    for (const [key, delay] of pending) nextDelays.set(key, delay);
   }
 
-  if (nextSeen) {
-    const prunedSeen = new Set([...nextSeen].filter((key) => liveKeys.has(key)));
-    if (prunedSeen.size !== nextSeen.size) nextSeen = prunedSeen;
-  }
+  const prunedSeen = new Set([...nextSeen].filter((key) => liveKeys.has(key)));
+  if (prunedSeen.size !== nextSeen.size) nextSeen = prunedSeen;
   nextDelays = pruneEnterDelays(nextDelays, liveKeys);
 
   if (nextSeen !== seenKeys) setSeenKeys(nextSeen);
@@ -415,17 +401,15 @@ function ActivityStackList({
         {stacks.map((stack) => {
           const reactKey = activityStackReactKey(stack);
           const delay = nextDelays.get(reactKey);
-          const isEntering = shouldAnimate && delay !== undefined;
+          const isEntering = canAnimate && delay !== undefined;
 
           return (
             <motion.div
               key={reactKey}
               initial={isEntering ? { height: 0, opacity: 0 } : false}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={shouldAnimate ? { height: 0, opacity: 0 } : undefined}
-              transition={
-                shouldAnimate ? { ...LIST_MOTION, delay: isEntering ? delay : 0 } : { duration: 0 }
-              }
+              animate={isEntering ? { height: "auto", opacity: 1 } : false}
+              exit={canAnimate ? { height: 0, opacity: 0 } : undefined}
+              transition={isEntering ? { ...LIST_MOTION, delay } : { duration: 0 }}
               onAnimationComplete={() => {
                 setEnterDelays((current) => {
                   if (!current.has(reactKey)) return current;

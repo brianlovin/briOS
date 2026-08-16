@@ -869,6 +869,45 @@ describe("ActivityFeed", () => {
     expect(markup).not.toContain(">Event<");
     expect(markup).not.toContain(">Time<");
     expect(markup).not.toContain("sticky top-0");
+    expect(markup).not.toMatch(/opacity:\s*0/);
+    expect(markup).not.toContain("translateY(-8");
+    expect(markup).not.toContain("y: -8");
+  });
+
+  test("first paint of several stacks is static, not an enter cascade", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityFeed
+        initialEvents={[
+          event({
+            id: "visit-in",
+            summary: "Visit from India",
+            meta: { country: "IN", path: "/" },
+          }),
+          event({
+            id: "visit-us",
+            summary: "Visit from United States",
+            meta: { country: "US", city: "San Francisco", path: "/writing" },
+          }),
+          event({
+            id: "like-1",
+            type: "like",
+            speed: "event",
+            summary: "Someone liked Home",
+            subject: { kind: "home", label: "Home", href: "/" },
+          }),
+        ]}
+        initialCount={3}
+      />,
+    );
+
+    expect(markup).toContain("Visit from India");
+    expect(markup).toContain("Visit from San Francisco");
+    expect(markup).toContain("Someone liked");
+    expect(markup).not.toMatch(/opacity:\s*0/);
+    expect(markup).not.toContain("height: 0");
+    expect(markup).not.toContain("height:0px");
+    expect(markup).not.toContain("translateY(-8");
+    expect(markup).toContain("clip-path:inset(0)");
   });
 });
 

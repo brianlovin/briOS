@@ -25,6 +25,7 @@ import {
   likeMetaFromRequest,
   looksLikeIdentifier,
   looksLikeShortId,
+  nextActivityEnterState,
   recordCaffeine,
   recordDigestSubscribed,
   recordLike,
@@ -1808,6 +1809,23 @@ describe("rollupActivityEvents", () => {
     expect(capped.get("n-8")).toBe(0.4);
     expect(capped.get("n-15")).toBe(0.4);
     expect(capped.has("old-1")).toBe(false);
+  });
+
+  test("first committed paint of N stacks has no enter delays", () => {
+    const keys = ["a", "b", "c", "d", "e"];
+    const first = nextActivityEnterState(keys, null);
+    expect(first.delays.size).toBe(0);
+    expect(first.seen).toEqual(new Set(keys));
+    expect(nextActivityEnterState(keys, first.seen).delays.size).toBe(0);
+  });
+
+  test("only a newly prepended stack gets an enter delay", () => {
+    const previous = new Set(["old-1", "old-2"]);
+    const next = nextActivityEnterState(["new-1", "old-1", "old-2"], previous);
+    expect([...next.delays.entries()]).toEqual([["new-1", 0]]);
+    expect(next.delays.has("old-1")).toBe(false);
+    expect(next.delays.has("old-2")).toBe(false);
+    expect(next.seen).toEqual(new Set(["new-1", "old-1", "old-2"]));
   });
 
   test("only pulses when the same run's count increments", () => {
