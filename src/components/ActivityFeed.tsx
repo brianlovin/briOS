@@ -216,7 +216,7 @@ export function ActivityRow({
           ) : null}
         </span>
         {count > 1 ? (
-          <span className="text-tertiary shrink-0 rounded-sm px-1 font-mono text-[11px] leading-4 tabular-nums">
+          <span className="text-tertiary border-secondary shrink-0 rounded-sm border px-1 font-mono text-[11px] leading-4 tabular-nums">
             {count}
           </span>
         ) : null}

@@ -534,6 +534,7 @@ describe("ActivityRow", () => {
     expect(markup).toContain("text-tertiary");
     expect(markup).toContain("font-mono");
     expect(markup).toContain("rounded-sm");
+    expect(markup).toContain("border-secondary");
     expect(markup).toContain("tabular-nums");
     expect(markup).toContain("an AMA question");
     expect(markup).toContain('href="/ama"');
