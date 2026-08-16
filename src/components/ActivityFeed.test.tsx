@@ -115,6 +115,22 @@ describe("ActivityRow", () => {
     expect(visit).not.toContain("text-red-500");
     expect(visit).toContain("🇮🇳");
   });
+
+  test("uses the Shiori orb for any shiori-sourced event", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "shiori",
+          type: "link_saved",
+          speed: "event",
+          summary: "Someone saved a link on Shiori",
+        })}
+      />,
+    );
+
+    expect(markup).toContain("shiori-icon.png");
+    expect(markup).toContain("Someone saved a link on Shiori");
+  });
 });
 
 describe("TotalsList", () => {

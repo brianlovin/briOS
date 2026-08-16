@@ -7,6 +7,7 @@ import { useEffect, useMemo, useState } from "react";
 import { activityLifetimeSidebarAtom } from "@/atoms/activityLifetimeSidebar";
 import { Activity } from "@/components/icons/Activity";
 import { Heart } from "@/components/icons/Heart";
+import { Shiori } from "@/components/icons/Shiori";
 import { Sidebar } from "@/components/icons/Sidebar";
 import { World } from "@/components/icons/World";
 import { ListDetailWrapper } from "@/components/ListDetailWrapper";
@@ -64,6 +65,10 @@ function RelativeTime({ iso }: { iso: string }) {
 }
 
 function ActivityRowIcon({ event, flag }: { event: ActivityEvent; flag?: string }) {
+  if (event.source === "shiori") {
+    return <Shiori size={16} />;
+  }
+
   if (event.type === "like") {
     return <Heart size={16} className="fill-current text-red-500" aria-hidden />;
   }
