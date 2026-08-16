@@ -545,7 +545,7 @@ function displaySubjectLabel(
   if (href) {
     const inferred = inferTitleFromPath(href);
     const stored = label?.trim();
-    if (isUnusableActivityTitle(stored, href)) {
+    if (!stored || isUnusableActivityTitle(stored, href)) {
       return isProtocolSegment(inferred) ? undefined : formatSubjectLabel(inferred, href);
     }
 
