@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { recordAmaAsked } from "@/lib/activity";
+import { afterActivity } from "@/lib/activity-schedule";
 import { cachedResponse, errorResponse, parsePaginationParams } from "@/lib/api-utils";
 import { createAmaQuestion, getAmaDatabaseItems } from "@/lib/notion";
 
@@ -34,6 +36,7 @@ export async function POST(request: Request) {
     const validatedData = createQuestionSchema.parse(body);
 
     const page = await createAmaQuestion(validatedData.title, validatedData.description);
+    afterActivity((store) => recordAmaAsked({ id: page.id, title: validatedData.title }, store));
     return cachedResponse({ id: page.id }, 0); // No cache for POST responses
   } catch (error) {
     // Handle validation errors
