@@ -1,5 +1,6 @@
 import React from "react";
 
+import { Activity } from "@/components/icons/Activity";
 import { AppDissection } from "@/components/icons/AppDissection";
 import { Ballot } from "@/components/icons/Ballot";
 import { Bookmark } from "@/components/icons/Bookmark";
@@ -42,6 +43,15 @@ export const navigationItems: NavigationItem[] = [
     icon: Person,
     keywords: ["about", "bio", "me"],
     isActive: (pathname) => pathname === "/about",
+    section: "main",
+  },
+  {
+    id: "activity",
+    label: "Activity",
+    href: "/activity",
+    icon: Activity,
+    keywords: ["activity", "feed", "events", "live"],
+    isActive: (pathname) => pathname.startsWith("/activity"),
     section: "main",
   },
   {

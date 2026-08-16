@@ -57,7 +57,15 @@ export function useLikes(pageId: string) {
     await mutate(
       `/api/likes/${pageId}`,
       async () => {
-        const res = await fetch(`/api/likes/${pageId}`, { method: "POST" });
+        const res = await fetch(`/api/likes/${pageId}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            href: window.location.pathname,
+            title: document.title,
+            content_type: window.location.pathname.split("/").filter(Boolean)[0],
+          }),
+        });
         if (!res.ok) {
           throw new Error("Failed to like");
         }
