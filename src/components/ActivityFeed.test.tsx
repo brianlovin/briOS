@@ -22,7 +22,7 @@ function event(overrides: Partial<ActivityEvent>): ActivityEvent {
 }
 
 describe("ActivityRow", () => {
-  test("shows a flag in the icon column and the page link under the summary", () => {
+  test("shows a flag, then the summary and page link on one line", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow
         event={event({
@@ -39,6 +39,9 @@ describe("ActivityRow", () => {
     expect(markup).toContain("Home");
     expect(markup).not.toContain("a page");
     expect(markup).not.toContain("text-red-500");
+    expect(markup).toContain("truncate");
+    expect(markup).not.toContain("text-sm underline-offset-2");
+    expect(markup).not.toContain("block truncate");
   });
 
   test("strips a short id from a stored writing slug", () => {
@@ -147,6 +150,7 @@ describe("ActivityRow", () => {
 
     expect(markup).toContain("shiori-icon.png");
     expect(markup).toContain("Someone saved a link on Shiori");
+    expect(markup).not.toContain("<a ");
   });
 
   test("shows a tertiary count next to the title when a stack is larger than one", () => {
@@ -175,11 +179,14 @@ describe("ActivityRow", () => {
     );
 
     expect(markup).toContain("Visit from Spring Lake, North Carolina, United States");
-    expect(markup).toContain(">6<");
+    expect(markup).toContain("> 6<");
     expect(markup).toContain("text-tertiary");
     expect(markup).toContain("an AMA question");
     expect(markup).toContain('href="/ama"');
     expect(markup).not.toContain("2f2c711c-0ceb-810d-899d-e5feb99e70f4");
+    expect(markup).toMatch(
+      /text-primary[^>]*>Visit from Spring Lake[\s\S]*text-tertiary[^>]*> 6<[\s\S]*href="\/ama"[^>]*>an AMA question/,
+    );
   });
 
   test("pulses the row background only when asked", () => {

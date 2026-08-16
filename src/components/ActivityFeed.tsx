@@ -110,6 +110,8 @@ export function ActivityRow({
   const href = hrefOverride ?? row.href;
   const label = sectionLabel ?? row.label;
 
+  const context = label ?? (href || undefined);
+
   return (
     <div
       data-rollup-pulse={pulse ? "" : undefined}
@@ -121,22 +123,23 @@ export function ActivityRow({
       <div className="flex size-8 items-center justify-center">
         <ActivityRowIcon event={event} flag={row.flag} />
       </div>
-      <div className="min-w-0">
-        <p className="text-primary flex min-w-0 items-baseline gap-1.5">
-          <span className="truncate text-pretty">{row.summary}</span>
-          {count > 1 ? <span className="text-tertiary shrink-0">{count}</span> : null}
-        </p>
-        {href ? (
-          <Link
-            href={href}
-            className="text-tertiary hover:text-primary block truncate text-sm underline-offset-2 hover:underline"
-          >
-            {label ?? href}
-          </Link>
-        ) : label ? (
-          <p className="text-tertiary truncate text-sm">{label}</p>
+      <p className="min-w-0 truncate">
+        <span className="text-primary">{row.summary}</span>
+        {count > 1 ? <span className="text-tertiary"> {count}</span> : null}
+        {href && context ? (
+          <>
+            {" "}
+            <Link
+              href={href}
+              className="text-tertiary hover:text-primary underline-offset-2 hover:underline"
+            >
+              {context}
+            </Link>
+          </>
+        ) : context ? (
+          <span className="text-tertiary"> {context}</span>
         ) : null}
-      </div>
+      </p>
       <RelativeTime iso={event.received_at} />
     </div>
   );
