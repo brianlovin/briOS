@@ -13,7 +13,7 @@ function event(overrides: Partial<ActivityEvent>): ActivityEvent {
     source: "brios",
     type: "visit",
     speed: "signal",
-    summary: "Visit from IN",
+    summary: "🇮🇳 Visit from India",
     visibility: "public",
     idempotency_key: "k",
     ...overrides,
@@ -21,28 +21,30 @@ function event(overrides: Partial<ActivityEvent>): ActivityEvent {
 }
 
 describe("ActivityRow", () => {
-  test("prefixes a flag on older visit rows and renders the page link", () => {
+  test("shows a flag in the icon column and the page link under the summary", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow
         event={event({
-          summary: "🇮🇳 Visit from IN",
+          summary: "🇮🇳 Visit from India",
           subject: { kind: "home", label: "home", href: "/" },
-          meta: { country: "IN", path: "/", title: "home" },
+          meta: { country: "IN", country_name: "India", path: "/", title: "home" },
         })}
       />,
     );
 
-    expect(markup).toContain("🇮🇳 Visit from IN");
+    expect(markup).toContain("🇮🇳");
+    expect(markup).toContain("Visit from India");
     expect(markup).toContain('href="/"');
     expect(markup).toContain("home");
     expect(markup).not.toContain("text-red-500");
   });
 
-  test("falls back to a flag from meta.country when the stored summary has none", () => {
+  test("rebuilds a country name and flag for older visits that only have a code", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow event={event({ summary: "Visit from TW", meta: { country: "TW" } })} />,
     );
-    expect(markup).toContain("🇹🇼 Visit from TW");
+    expect(markup).toContain("🇹🇼");
+    expect(markup).toContain("Visit from Taiwan");
   });
 
   test("shows a red heart on like rows only", () => {
@@ -63,8 +65,9 @@ describe("ActivityRow", () => {
     const visit = renderToStaticMarkup(
       <ActivityRow
         event={event({
-          summary: "🇮🇳 Visit from IN",
+          summary: "🇮🇳 Visit from India",
           subject: { kind: "writing", label: "a post", href: "/writing/a-post" },
+          meta: { country: "IN" },
         })}
       />,
     );
@@ -73,5 +76,6 @@ describe("ActivityRow", () => {
     expect(like).toContain("Someone liked Grok Bot first impressions");
     expect(like).toContain('href="/writing/grok-bot-first-impressions"');
     expect(visit).not.toContain("text-red-500");
+    expect(visit).toContain("🇮🇳");
   });
 });

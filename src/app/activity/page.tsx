@@ -3,6 +3,7 @@ import { connection } from "next/server";
 import { Suspense } from "react";
 
 import { ActivityFeed } from "@/components/ActivityFeed";
+import { ListDetailWrapper } from "@/components/ListDetailWrapper";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { getActivityPageData } from "@/lib/activity-redis";
 import { createMetadata } from "@/lib/metadata";
@@ -23,26 +24,31 @@ export default function ActivityPage() {
 
 function ActivityFallback() {
   return (
-    <div data-scrollable className="flex-1 overflow-y-auto">
-      <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-12 px-4 py-16 lg:flex-row lg:gap-16">
-        <div className="min-w-0 flex-1">
-          <LoadingSkeleton className="h-10 w-40" />
-          <LoadingSkeleton className="mt-3 h-5 w-72" />
-          <div className="mt-10 flex flex-col gap-4">
-            {Array.from({ length: 6 }, (_, index) => (
-              <LoadingSkeleton key={index} className="h-12 w-full" />
+    <ListDetailWrapper>
+      <div className="flex min-h-0 flex-1 overflow-hidden">
+        <div data-scrollable className="relative min-w-0 flex-1 overflow-auto">
+          <div className="bg-secondary border-secondary sticky top-0 z-10 hidden border-b md:block dark:bg-neutral-950">
+            <div className="grid grid-cols-[2rem_minmax(0,1fr)_auto] gap-3 px-4 py-2 md:gap-4">
+              <LoadingSkeleton className="h-4 w-6" />
+              <LoadingSkeleton className="h-4 w-20" />
+              <LoadingSkeleton className="ml-auto h-4 w-12" />
+            </div>
+          </div>
+          <div className="divide-secondary divide-y">
+            {Array.from({ length: 8 }, (_, index) => (
+              <div
+                key={index}
+                className="grid grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 md:gap-4"
+              >
+                <LoadingSkeleton className="size-6" />
+                <LoadingSkeleton className="h-5 w-2/3" />
+                <LoadingSkeleton className="h-4 w-14" />
+              </div>
             ))}
           </div>
         </div>
-        <aside className="w-full shrink-0 lg:w-56">
-          <LoadingSkeleton className="mb-3 h-4 w-20" />
-          <div className="flex flex-col gap-2">
-            <LoadingSkeleton className="h-5 w-full" />
-            <LoadingSkeleton className="h-5 w-full" />
-          </div>
-        </aside>
       </div>
-    </div>
+    </ListDetailWrapper>
   );
 }
 

@@ -1,13 +1,21 @@
 "use client";
 
+import { useAtom } from "jotai";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
+import { activityLifetimeSidebarAtom } from "@/atoms/activityLifetimeSidebar";
+import { Activity } from "@/components/icons/Activity";
 import { Heart } from "@/components/icons/Heart";
-import { PageTitle } from "@/components/Typography";
+import { Sidebar } from "@/components/icons/Sidebar";
+import { World } from "@/components/icons/World";
+import { ListDetailWrapper } from "@/components/ListDetailWrapper";
+import { useTopBarActions } from "@/components/TopBarActions";
+import { IconButton } from "@/components/ui/IconButton";
 import type { ActivityEvent, ActivityTotal } from "@/lib/activity";
-import { formatTotalLabel, getActivityRow } from "@/lib/activity-shared";
+import { formatTotalLabel, getActivityRow, visibleLifetimeTotals } from "@/lib/activity-shared";
 import { useActivity } from "@/lib/hooks/useActivity";
+import { cn } from "@/lib/utils";
 
 function formatRelativeTime(iso: string): string {
   const then = new Date(iso).getTime();
@@ -45,10 +53,33 @@ function RelativeTime({ iso }: { iso: string }) {
   }, [iso]);
 
   return (
-    <time className="text-quaternary shrink-0 text-sm tabular-nums" dateTime={iso} title={iso}>
+    <time
+      className="text-quaternary shrink-0 text-right text-sm tabular-nums"
+      dateTime={iso}
+      title={iso}
+    >
       {label || "\u00a0"}
     </time>
   );
+}
+
+function ActivityRowIcon({ event, flag }: { event: ActivityEvent; flag?: string }) {
+  if (event.type === "like") {
+    return <Heart size={16} className="fill-current text-red-500" aria-hidden />;
+  }
+
+  if (event.type === "visit" || event.type === "visit_country_first") {
+    if (flag) {
+      return (
+        <span className="text-base leading-none" aria-hidden>
+          {flag}
+        </span>
+      );
+    }
+    return <World size={16} className="text-tertiary" aria-hidden />;
+  }
+
+  return <Activity size={16} className="text-tertiary" aria-hidden />;
 }
 
 export function ActivityRow({ event }: { event: ActivityEvent }) {
@@ -56,40 +87,36 @@ export function ActivityRow({ event }: { event: ActivityEvent }) {
   const href = row.href;
 
   return (
-    <li className="border-secondary flex items-baseline justify-between gap-4 border-b py-3">
+    <div className="border-secondary hover:bg-secondary grid grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-3 border-b px-4 py-3 md:gap-4 md:py-2 md:dark:hover:bg-white/5">
+      <div className="flex size-8 items-center justify-center">
+        <ActivityRowIcon event={event} flag={row.flag} />
+      </div>
       <div className="min-w-0">
-        <p className="text-primary text-pretty">
-          {event.type === "like" ? (
-            <Heart
-              size={14}
-              className="mr-1.5 inline-block fill-current align-[-0.125em] text-red-500"
-              aria-hidden
-            />
-          ) : null}
-          {row.summary}
-        </p>
+        <p className="text-primary truncate text-pretty">{row.summary}</p>
         {href ? (
           <Link
             href={href}
-            className="text-tertiary hover:text-primary text-sm underline-offset-2 hover:underline"
+            className="text-tertiary hover:text-primary block truncate text-sm underline-offset-2 hover:underline"
           >
             {row.label ?? href}
           </Link>
         ) : null}
       </div>
       <RelativeTime iso={event.received_at} />
-    </li>
+    </div>
   );
 }
 
 function TotalsList({ totals }: { totals: ActivityTotal[] }) {
-  if (totals.length === 0) {
+  const visible = visibleLifetimeTotals(totals);
+
+  if (visible.length === 0) {
     return <p className="text-tertiary text-sm">No totals yet.</p>;
   }
 
   return (
     <ul className="flex flex-col gap-2">
-      {totals.map((total) => (
+      {visible.map((total) => (
         <li
           key={`${total.source}:${total.type}`}
           className="flex items-baseline justify-between gap-3"
@@ -111,30 +138,67 @@ export function ActivityFeed({
   initialTotals: ActivityTotal[];
 }) {
   const { events, totals } = useActivity(initialEvents, initialTotals);
+  const [lifetimeOpen, setLifetimeOpen] = useAtom(activityLifetimeSidebarAtom);
+
+  useEffect(() => {
+    if (window.matchMedia("(max-width: 767px)").matches) {
+      setLifetimeOpen(false);
+    }
+  }, [setLifetimeOpen]);
+
+  const topBarContent = useMemo(
+    () => (
+      <IconButton
+        size="sm"
+        variant="ghost"
+        aria-pressed={lifetimeOpen}
+        aria-label="Lifetime"
+        title="Lifetime"
+        onClick={() => setLifetimeOpen((open) => !open)}
+      >
+        <Sidebar size={18} />
+      </IconButton>
+    ),
+    [lifetimeOpen, setLifetimeOpen],
+  );
+  useTopBarActions(topBarContent);
 
   return (
-    <div data-scrollable className="flex-1 overflow-y-auto">
-      <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-12 px-4 py-16 lg:flex-row lg:gap-16">
-        <div className="min-w-0 flex-1">
-          <PageTitle>Activity</PageTitle>
-          <p className="text-tertiary mt-3 text-pretty">
-            A live stream of things happening on this site.
-          </p>
+    <ListDetailWrapper>
+      <div className="relative flex min-h-0 flex-1 overflow-hidden">
+        <div data-scrollable className="relative min-w-0 flex-1 overflow-auto">
+          <div className="bg-secondary border-secondary sticky top-0 z-10 hidden border-b md:block dark:bg-neutral-950">
+            <div className="grid grid-cols-[2rem_minmax(0,1fr)_auto] gap-3 px-4 py-2 text-sm font-medium md:gap-4">
+              <div />
+              <div>Event</div>
+              <div className="text-right">Time</div>
+            </div>
+          </div>
           {events.length === 0 ? (
-            <p className="text-tertiary mt-10">Nothing yet. Likes and visits will show up here.</p>
+            <p className="text-tertiary px-4 py-10">
+              Nothing yet. Likes and visits will show up here.
+            </p>
           ) : (
-            <ul className="mt-10">
+            <div className="divide-secondary divide-y">
               {events.map((event) => (
                 <ActivityRow key={event.id} event={event} />
               ))}
-            </ul>
+            </div>
           )}
         </div>
-        <aside className="w-full shrink-0 lg:w-56">
-          <h2 className="text-secondary mb-3 text-sm font-medium">Lifetime</h2>
-          <TotalsList totals={totals} />
+        <aside
+          className={cn(
+            "border-secondary w-(--secondary-sidebar-width) shrink-0 flex-col overflow-y-auto border-l bg-white dark:bg-black",
+            "max-md:absolute max-md:inset-y-0 max-md:right-0 max-md:z-10",
+            lifetimeOpen ? "flex" : "hidden",
+          )}
+        >
+          <div className="px-4 py-4">
+            <h2 className="text-secondary mb-3 text-sm font-medium">Lifetime</h2>
+            <TotalsList totals={totals} />
+          </div>
         </aside>
       </div>
-    </div>
+    </ListDetailWrapper>
   );
 }
