@@ -463,9 +463,11 @@ export function formatVisitSummary(geo: {
   const rawCountry = geo.country?.trim() || undefined;
   const country = normalizeCountryCode(rawCountry);
   const countryLabel =
-    geo.countryName?.trim() || (country ? countryCodeToName(country) : undefined) || rawCountry;
-  const regionLabel = geo.regionName?.trim() || geo.region?.trim();
-  const city = geo.city?.trim();
+    decodeHeaderText(geo.countryName) ||
+    (country ? countryCodeToName(country) : undefined) ||
+    rawCountry;
+  const regionLabel = decodeHeaderText(geo.regionName) || decodeHeaderText(geo.region);
+  const city = decodeHeaderText(geo.city);
 
   let location: string | undefined;
   if (city && regionLabel && countryLabel) {
@@ -509,9 +511,11 @@ export function geoFromVisitMeta(meta: Record<string, unknown> | undefined): {
   if (!meta) return {};
   return {
     country: typeof meta.country === "string" ? meta.country : undefined,
-    countryName: typeof meta.country_name === "string" ? meta.country_name : undefined,
-    region: typeof meta.region === "string" ? meta.region : undefined,
-    regionName: typeof meta.region_name === "string" ? meta.region_name : undefined,
-    city: typeof meta.city === "string" ? meta.city : undefined,
+    countryName:
+      typeof meta.country_name === "string" ? decodeHeaderText(meta.country_name) : undefined,
+    region: typeof meta.region === "string" ? decodeHeaderText(meta.region) : undefined,
+    regionName:
+      typeof meta.region_name === "string" ? decodeHeaderText(meta.region_name) : undefined,
+    city: typeof meta.city === "string" ? decodeHeaderText(meta.city) : undefined,
   };
 }

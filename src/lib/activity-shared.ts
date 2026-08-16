@@ -21,6 +21,72 @@ export const ACTIVITY_IDEMPOTENCY_TTL_SECONDS = 6 * 60 * 60;
 export const ACTIVITY_META_MAX_BYTES = 2048;
 export const ACTIVITY_BODY_MAX_BYTES = 8192;
 export const ACTIVITY_SOURCE_BRIOS = "brios";
+export const ACTIVITY_SOURCE_GITHUB = "github";
+export const ACTIVITY_VISIT_TITLE_MAX = 200;
+
+export const ACTIVITY_SOURCE_LABELS: Record<string, string> = {
+  [ACTIVITY_SOURCE_BRIOS]: "briOS",
+  "tax-ui": "Tax UI",
+  "staff-design": "Staff Design",
+  "design-details": "Design Details",
+  shiori: "Shiori",
+  [ACTIVITY_SOURCE_GITHUB]: "GitHub",
+};
+
+const ACTIVITY_SOURCE_FAVICONS: Record<string, string> = {
+  [ACTIVITY_SOURCE_BRIOS]: "/activity/favicons/brios.png",
+  "tax-ui": "/activity/favicons/tax-ui.png",
+  "staff-design": "/activity/favicons/staff-design.png",
+  "design-details": "/activity/favicons/design-details.png",
+  shiori: "/img/shiori-icon.png",
+};
+
+const ACTIVITY_SOURCE_URLS: Record<string, string> = {
+  "tax-ui": "https://tax-ui.brianlovin.com/",
+  "staff-design": "https://staff.design",
+  "design-details": "https://designdetails.fm",
+  shiori: "https://www.shiori.sh",
+  github: "https://github.com/brianlovin",
+};
+
+const ABSOLUTE_HTTP_URL_RE = /^https?:\/\//i;
+
+export function activitySourceLabel(source: string): string {
+  return ACTIVITY_SOURCE_LABELS[source] ?? source;
+}
+
+export function activitySourceUrl(source: string): string | undefined {
+  return ACTIVITY_SOURCE_URLS[source];
+}
+
+export function resolveActivitySourceHref(
+  source: string,
+  href?: string | null,
+): string | undefined {
+  const trimmed = href?.trim();
+  if (!trimmed) return undefined;
+  if (ABSOLUTE_HTTP_URL_RE.test(trimmed)) {
+    return trimmed;
+  }
+  const home = activitySourceUrl(source);
+  if (home && trimmed.startsWith("/")) {
+    const base = home.endsWith("/") ? home : `${home}/`;
+    return new URL(trimmed, base).href;
+  }
+  return trimmed;
+}
+
+export function formatDownloadSummary(source: string, label?: string): string {
+  return `Someone downloaded ${label?.trim() || activitySourceLabel(source)}`;
+}
+
+export function activitySourceFaviconSrc(source: string): string | undefined {
+  return ACTIVITY_SOURCE_FAVICONS[source];
+}
+
+export function resolveVisitTitle(path: string, title?: string): string {
+  return sanitizeActivityTitle(title, path).slice(0, ACTIVITY_VISIT_TITLE_MAX);
+}
 
 /** CDN + browser cache for the public activity poll blob. */
 export const ACTIVITY_FEED_CACHE_CONTROL = "public, s-maxage=2, stale-while-revalidate=30";
@@ -81,8 +147,8 @@ export type ActivityIngestInput = {
   ts?: string;
   source: string;
   type: string;
-  speed: ActivitySpeed;
-  summary: string;
+  speed?: ActivitySpeed;
+  summary?: string;
   visibility?: ActivityVisibility;
   idempotency_key: string;
   actor?: ActivityRef;
@@ -445,38 +511,112 @@ export function visibleLifetimeTotals(totals: ActivityTotal[]): ActivityTotal[] 
   return totals.filter((total) => shouldCountLifetimeTotal(total.type));
 }
 
+function visitSummaryWithFlag(summary: string, meta: Record<string, unknown> | undefined): string {
+  const split = splitVisitSummaryFlag(summary);
+  if (split.flag) return summary;
+  const flag = countryCodeToFlag(geoFromVisitMeta(meta).country);
+  return flag ? `${flag} ${summary}` : summary;
+}
+
+export function getMergedPullRequestDiff(
+  meta: Record<string, unknown> | undefined,
+): { additions: number; deletions: number } | null {
+  if (!meta) return null;
+  if (typeof meta.additions !== "number" || typeof meta.deletions !== "number") return null;
+  if (!Number.isFinite(meta.additions) || !Number.isFinite(meta.deletions)) return null;
+  return { additions: meta.additions, deletions: meta.deletions };
+}
+
+export const CAFFEINE_DRINK_MAX_LENGTH = 40;
+export const CAFFEINE_COFFEE_ICON = "☕";
+export const CAFFEINE_OTHER_ICON = "🥤";
+
+/** Coffee-family drinks render ☕; everything else caffeinated is 🥤. */
+const COFFEE_FAMILY_TERMS = [
+  "pour over",
+  "cold brew",
+  "flat white",
+  "cappuccino",
+  "cappucino",
+  "americano",
+  "macchiato",
+  "gibraltar",
+  "affogato",
+  "espresso",
+  "cortado",
+  "coffee",
+  "mocha",
+  "latte",
+  "nitro",
+  "drip",
+];
+
+export function titleCaseWords(value: string): string {
+  return value
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+}
+
+export function normalizeCaffeineDrink(drink: string): string | null {
+  const collapsed = drink.trim().replace(/\s+/g, " ");
+  if (!collapsed || collapsed.length > CAFFEINE_DRINK_MAX_LENGTH) return null;
+  return titleCaseWords(collapsed);
+}
+
+export function isCoffeeFamilyDrink(drink: string): boolean {
+  const normalized = drink.toLowerCase().trim();
+  if (!normalized) return false;
+  return COFFEE_FAMILY_TERMS.some((term) => normalized === term || normalized.includes(term));
+}
+
+export function getCaffeineIcon(drink: string | null | undefined): string {
+  return drink && isCoffeeFamilyDrink(drink) ? CAFFEINE_COFFEE_ICON : CAFFEINE_OTHER_ICON;
+}
+
+export function caffeineDrinkFromEvent(event: ActivityEvent): string {
+  if (typeof event.meta?.drink === "string") return event.meta.drink;
+  if (event.subject?.kind === "drink") return event.subject.label;
+  return "";
+}
+
 export function getActivityRow(event: ActivityEvent): {
   summary: string;
   flag?: string;
+  icon?: string;
   href?: string;
   label?: string;
 } {
+  if (event.type === "caffeinated") {
+    return {
+      summary: event.summary,
+      icon: getCaffeineIcon(caffeineDrinkFromEvent(event)),
+      href: event.subject?.href,
+      label: event.subject?.label,
+    };
+  }
+
   if (event.type === "visit") {
     const geo = geoFromVisitMeta(event.meta);
     const hasLocation = Boolean(geo.country || geo.city || geo.countryName);
     const storedText = splitVisitSummaryFlag(event.summary).text.trim();
-    const full = hasLocation
+    const summary = hasLocation
       ? formatVisitSummary(geo)
       : !storedText || storedText === "Visit"
         ? ANONYMOUS_VISIT_SUMMARY
-        : event.summary;
-    const split = splitVisitSummaryFlag(full);
-    const flag = split.flag || countryCodeToFlag(geo.country);
+        : visitSummaryWithFlag(event.summary, event.meta);
     return {
-      summary: flag ? `${flag} ${split.text}` : split.text,
-      ...(flag ? { flag } : {}),
+      summary,
       href: event.subject?.href,
       label: displaySubjectLabel(event.subject?.label, event.subject?.href),
     };
   }
 
   if (event.type === "visit_country_first") {
-    const geo = geoFromVisitMeta(event.meta);
-    const split = splitVisitSummaryFlag(event.summary);
-    const flag = split.flag || countryCodeToFlag(geo.country);
     return {
-      summary: flag ? `${flag} ${split.text}` : split.text,
-      ...(flag ? { flag } : {}),
+      summary: visitSummaryWithFlag(event.summary, event.meta),
       href: event.subject?.href,
       label: displaySubjectLabel(event.subject?.label, event.subject?.href),
     };
@@ -527,6 +667,16 @@ export function formatTotalLabel(type: string): string {
       return "Design Details";
     case "app_dissection_published":
       return "App dissections";
+    case "download":
+      return "Downloads";
+    case "pr_opened":
+      return "PRs opened";
+    case "pr_merged":
+      return "PRs merged";
+    case "repo_starred":
+      return "Stars";
+    case "caffeinated":
+      return "Caffeinated";
     default:
       return type.replace(/_/g, " ");
   }

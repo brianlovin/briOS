@@ -3,10 +3,11 @@
 import { useAtom } from "jotai";
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { type ReactNode, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 
 import { activityLifetimeSidebarAtom } from "@/atoms/activityLifetimeSidebar";
 import { Activity } from "@/components/icons/Activity";
+import { Github } from "@/components/icons/Github";
 import { Heart } from "@/components/icons/Heart";
 import { Shiori } from "@/components/icons/Shiori";
 import { Sidebar } from "@/components/icons/Sidebar";
@@ -22,9 +23,13 @@ import {
   shouldPulseActivityRollup,
 } from "@/lib/activity-rollup";
 import {
+  activitySourceFaviconSrc,
+  activitySourceUrl,
   formatTotalLabel,
   getActivityRow,
+  getMergedPullRequestDiff,
   isKnownActivityTitle,
+  resolveActivitySourceHref,
   visibleLifetimeTotals,
 } from "@/lib/activity-shared";
 import { useActivity } from "@/lib/hooks/useActivity";
@@ -76,7 +81,36 @@ function RelativeTime({ iso }: { iso: string }) {
   );
 }
 
-function ActivityRowIcon({ event }: { event: ActivityEvent }) {
+function ActivitySourceFavicon({ src }: { src: string }) {
+  const [failed, setFailed] = useState(false);
+  if (failed) {
+    return <World size={16} className="text-tertiary" aria-hidden />;
+  }
+
+  return (
+    /* eslint-disable-next-line @next/next/no-img-element -- tiny static favicon */
+    <img
+      src={src}
+      alt=""
+      width={16}
+      height={16}
+      className="block size-4 rounded-[3px]"
+      aria-hidden
+      onError={() => setFailed(true)}
+    />
+  );
+}
+
+function isGithubActivity(event: ActivityEvent): boolean {
+  return (
+    event.source === "github" ||
+    event.type === "pr_opened" ||
+    event.type === "pr_merged" ||
+    event.type === "repo_starred"
+  );
+}
+
+function ActivityRowIcon({ event, icon }: { event: ActivityEvent; icon?: string }) {
   if (event.source === "shiori") {
     return <Shiori size={16} />;
   }
@@ -85,12 +119,48 @@ function ActivityRowIcon({ event }: { event: ActivityEvent }) {
     return <Heart size={16} className="fill-current text-red-500" aria-hidden />;
   }
 
-  // Visit icon slot is reserved for a source favicon (other PR). World is the fallback.
-  if (event.type === "visit" || event.type === "visit_country_first") {
+  if (isGithubActivity(event)) {
+    return <Github size={16} className="text-primary" aria-hidden />;
+  }
+
+  if (event.type === "visit" || event.type === "visit_country_first" || event.type === "download") {
+    const faviconSrc = activitySourceFaviconSrc(event.source);
+    if (faviconSrc) {
+      return <ActivitySourceFavicon src={faviconSrc} />;
+    }
     return <World size={16} className="text-tertiary" aria-hidden />;
   }
 
+  if (event.type === "caffeinated") {
+    return (
+      <span className="text-base leading-none" aria-hidden>
+        {icon ?? "🥤"}
+      </span>
+    );
+  }
+
   return <Activity size={16} className="text-tertiary" aria-hidden />;
+}
+
+function isAbsoluteHttpUrl(href: string): boolean {
+  return /^https?:\/\//i.test(href);
+}
+
+function ActivityContextLink({ href, children }: { href: string; children: ReactNode }) {
+  const className = "text-tertiary hover:text-primary underline-offset-2 hover:underline";
+  if (isAbsoluteHttpUrl(href)) {
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
+        {children}
+      </a>
+    );
+  }
+
+  return (
+    <Link href={href} className={className}>
+      {children}
+    </Link>
+  );
 }
 
 export function ActivityRow({
@@ -107,8 +177,13 @@ export function ActivityRow({
   pulse?: boolean;
 }) {
   const row = getActivityRow(event);
-  const href = hrefOverride ?? row.href;
+  const homeUrl = activitySourceUrl(event.source);
   const label = sectionLabel ?? row.label;
+  const href =
+    hrefOverride ??
+    resolveActivitySourceHref(event.source, row.href) ??
+    row.href ??
+    (label || event.type === "download" ? homeUrl : undefined);
   const likedName =
     event.type === "like" ? row.summary.replace(/^Someone liked\s+/i, "").trim() : "";
   const rawContext = label ?? (href || undefined);
@@ -120,6 +195,7 @@ export function ActivityRow({
     isKnownActivityTitle(rawContext)
       ? likedName
       : rawContext;
+  const diff = event.type === "pr_merged" ? getMergedPullRequestDiff(event.meta) : null;
 
   return (
     <div
@@ -130,20 +206,22 @@ export function ActivityRow({
       )}
     >
       <div className="flex size-8 items-center justify-center">
-        <ActivityRowIcon event={event} />
+        <ActivityRowIcon event={event} icon={row.icon} />
       </div>
       <p className="min-w-0 truncate">
         <span className="text-primary">{row.summary}</span>
         {count > 1 ? <span className="text-tertiary"> {count}</span> : null}
+        {diff ? (
+          <span className="shrink-0 text-sm tabular-nums">
+            {" "}
+            <span className="text-green-600">+{diff.additions}</span>{" "}
+            <span className="text-red-500">-{diff.deletions}</span>
+          </span>
+        ) : null}
         {href && context ? (
           <>
             {" "}
-            <Link
-              href={href}
-              className="text-tertiary hover:text-primary underline-offset-2 hover:underline"
-            >
-              {context}
-            </Link>
+            <ActivityContextLink href={href}>{context}</ActivityContextLink>
           </>
         ) : context ? (
           <span className="text-tertiary"> {context}</span>
