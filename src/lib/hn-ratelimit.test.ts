@@ -1,92 +1,121 @@
 import { describe, expect, test } from "bun:test";
 
-import { checkHnRateLimit, waitForRateLimitPending } from "@/lib/hn-ratelimit";
+import {
+  checkHnRateLimit,
+  HN_RATE_LIMIT,
+  hnRateLimitKey,
+  hnRateLimitReset,
+  isPrefetchRequest,
+  shouldApplyHnRedisRateLimit,
+} from "@/lib/hn-ratelimit";
+
+describe("isPrefetchRequest", () => {
+  test("detects Next.js and Purpose prefetch headers", () => {
+    expect(isPrefetchRequest(new Headers({ "next-router-prefetch": "1" }))).toBe(true);
+    expect(isPrefetchRequest(new Headers({ purpose: "prefetch" }))).toBe(true);
+    expect(isPrefetchRequest(new Headers({ "sec-purpose": "prefetch" }))).toBe(true);
+    expect(isPrefetchRequest(new Headers())).toBe(false);
+    expect(isPrefetchRequest(new Headers({ rsc: "1" }))).toBe(false);
+  });
+});
+
+describe("shouldApplyHnRedisRateLimit", () => {
+  const empty = new Headers();
+  const prefetch = new Headers({ "next-router-prefetch": "1" });
+
+  test("limits only real HN JSON API requests", () => {
+    expect(shouldApplyHnRedisRateLimit("/api/hn", empty)).toBe(true);
+    expect(shouldApplyHnRedisRateLimit("/api/hn/123", empty)).toBe(true);
+  });
+
+  test("skips cached pages, digest routes, and prefetch", () => {
+    expect(shouldApplyHnRedisRateLimit("/hn", empty)).toBe(false);
+    expect(shouldApplyHnRedisRateLimit("/hn/123", empty)).toBe(false);
+    expect(shouldApplyHnRedisRateLimit("/api/hn-digest/subscribe", empty)).toBe(false);
+    expect(shouldApplyHnRedisRateLimit("/api/hn", prefetch)).toBe(false);
+    expect(shouldApplyHnRedisRateLimit("/api/hn/123", prefetch)).toBe(false);
+  });
+});
 
 describe("checkHnRateLimit", () => {
-  test("allows the request when no limiter is configured", async () => {
-    await expect(checkHnRateLimit("1.1.1.1", null)).resolves.toEqual({ allowed: true });
+  const nowMs = 1_700_000_000_000;
+
+  test("allows the request when no Redis is configured", async () => {
+    await expect(checkHnRateLimit("1.1.1.1", null, nowMs)).resolves.toEqual({ allowed: true });
   });
 
-  test("allows the request when the limiter succeeds", async () => {
-    const pending = Promise.resolve();
-    const decision = await checkHnRateLimit("1.1.1.1", {
-      limit: async () => ({
-        success: true,
-        pending,
-        limit: 100,
-        remaining: 99,
-        reset: 1,
-      }),
-    });
+  test("increments a fixed-window key and expires it on first hit", async () => {
+    const calls: string[] = [];
+    const decision = await checkHnRateLimit(
+      "1.1.1.1",
+      {
+        incr: async (key) => {
+          calls.push(`incr:${key}`);
+          return 1;
+        },
+        expire: async (key, seconds) => {
+          calls.push(`expire:${key}:${seconds}`);
+        },
+      },
+      nowMs,
+    );
 
-    expect(decision).toEqual({ allowed: true, pending });
+    expect(decision).toEqual({ allowed: true });
+    expect(calls).toEqual([
+      `incr:${hnRateLimitKey("1.1.1.1", nowMs)}`,
+      `expire:${hnRateLimitKey("1.1.1.1", nowMs)}:120`,
+    ]);
   });
 
-  test("blocks the request when the limiter denies it", async () => {
-    const pending = Promise.resolve();
-    const decision = await checkHnRateLimit("1.1.1.1", {
-      limit: async () => ({
-        success: false,
-        pending,
-        limit: 100,
-        remaining: 0,
-        reset: 42,
-      }),
-    });
+  test("does not expire again after the first hit in the window", async () => {
+    let expired = false;
+    const decision = await checkHnRateLimit(
+      "1.1.1.1",
+      {
+        incr: async () => 2,
+        expire: async () => {
+          expired = true;
+        },
+      },
+      nowMs,
+    );
+
+    expect(decision).toEqual({ allowed: true });
+    expect(expired).toBe(false);
+  });
+
+  test("blocks the request when the window is exhausted", async () => {
+    const decision = await checkHnRateLimit(
+      "1.1.1.1",
+      {
+        incr: async () => HN_RATE_LIMIT + 1,
+        expire: async () => {},
+      },
+      nowMs,
+    );
 
     expect(decision).toEqual({
       allowed: false,
-      pending,
-      limit: 100,
+      limit: HN_RATE_LIMIT,
       remaining: 0,
-      reset: 42,
+      reset: hnRateLimitReset(nowMs),
     });
   });
 
-  test("fails open when the limiter throws", async () => {
+  test("fails open when Redis throws", async () => {
     const originalError = console.error;
     console.error = () => {};
     try {
       await expect(
         checkHnRateLimit("1.1.1.1", {
-          limit: async () => {
+          incr: async () => {
             throw new Error(
               "ERR This database has been suspended for exceeding the defined budget limit. Please increase budget or switch to a Fixed plan on Upstash Console",
             );
           },
+          expire: async () => {},
         }),
       ).resolves.toEqual({ allowed: true });
-    } finally {
-      console.error = originalError;
-    }
-  });
-});
-
-describe("waitForRateLimitPending", () => {
-  test("does nothing without a pending promise or waitUntil", () => {
-    expect(() => waitForRateLimitPending(undefined, Promise.resolve())).not.toThrow();
-    expect(() => waitForRateLimitPending({}, Promise.resolve())).not.toThrow();
-    expect(() => waitForRateLimitPending({ waitUntil: () => {} }, undefined)).not.toThrow();
-  });
-
-  test("passes a rejection-safe pending promise to waitUntil", async () => {
-    const originalError = console.error;
-    console.error = () => {};
-    try {
-      const pending = Promise.reject(new Error("analytics failed"));
-      const waited: Promise<unknown>[] = [];
-
-      waitForRateLimitPending(
-        {
-          waitUntil: (promise) => {
-            waited.push(promise);
-          },
-        },
-        pending,
-      );
-
-      expect(waited).toHaveLength(1);
-      await expect(waited[0]).resolves.toBeUndefined();
     } finally {
       console.error = originalError;
     }
