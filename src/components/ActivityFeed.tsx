@@ -234,6 +234,7 @@ export function ActivityTrackedCount({ count }: { count: number }) {
         align="end"
         collisionPadding={8}
         container={typeof document === "undefined" ? undefined : document.body}
+        className="overflow-visible whitespace-nowrap"
       >
         {ACTIVITY_TRACKED_SINCE_TOOLTIP}
       </TooltipContent>
