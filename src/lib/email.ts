@@ -1,6 +1,6 @@
 import { ServerClient } from "postmark";
 
-import { HackerNewsPost } from "@/types/hackernews";
+import { DigestPost } from "@/lib/digest";
 
 import { generateUnsubscribeToken } from "./jwt";
 import { buildUnsubscribeUrl } from "./urls";
@@ -32,7 +32,7 @@ const postmarkClient = new ServerClient(process.env.POSTMARK_CLIENT_ID);
 export interface DigestEmailData {
   to: string;
   date: string;
-  posts: HackerNewsPost[];
+  posts: DigestPost[];
   unsubscribeUrl: string;
 }
 

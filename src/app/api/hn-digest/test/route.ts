@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { errorResponse } from "@/lib/api-utils";
+import { toDigestPosts } from "@/lib/digest";
 import { BASE_EMAIL, generateUnsubscribeUrl, sendHNDigestEmail } from "@/lib/email";
 import { getHNPostsForDigest } from "@/lib/hn";
 import { formatDigestDate } from "@/lib/urls";
@@ -33,7 +34,7 @@ export async function GET(request: Request) {
     await sendHNDigestEmail({
       to: testEmail,
       date,
-      posts,
+      posts: toDigestPosts(posts),
       unsubscribeUrl,
     });
 

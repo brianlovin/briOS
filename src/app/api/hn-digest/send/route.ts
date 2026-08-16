@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { errorResponse, safeCompare } from "@/lib/api-utils";
+import { toDigestPosts } from "@/lib/digest";
 import { BASE_EMAIL, generateUnsubscribeUrl, sendHNDigestEmailBatch } from "@/lib/email";
 import { getHNPostsForDigest } from "@/lib/hn";
 import { getHNSubscribers } from "@/lib/subscriptions";
@@ -29,17 +30,19 @@ export async function GET(request: Request) {
 
     // In development, only send to the base email for testing
     if (!IS_PROD) {
-      subscribers = subscribers.filter((sub) => sub.email === BASE_EMAIL);
+      subscribers = subscribers.filter((email) => email === BASE_EMAIL);
       console.log(`[DEV] Filtered to ${subscribers.length} test subscriber(s)`);
     }
 
     console.log(`Sending digest to ${subscribers.length} subscribers`);
 
-    const emails = subscribers.map((subscriber) => ({
-      to: subscriber.email,
+    const digestPosts = toDigestPosts(posts);
+
+    const emails = subscribers.map((email) => ({
+      to: email,
       date,
-      posts,
-      unsubscribeUrl: generateUnsubscribeUrl(subscriber.email),
+      posts: digestPosts,
+      unsubscribeUrl: generateUnsubscribeUrl(email),
     }));
 
     const { successCount, failureCount } = await sendHNDigestEmailBatch(emails);
