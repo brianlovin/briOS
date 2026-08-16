@@ -118,7 +118,7 @@ export function GoodWebsitesPageClient({ initialData, initialLikes }: GoodWebsit
             </div>
 
             {/* Content */}
-            <div className="relative flex-1 overflow-auto">
+            <div data-scrollable className="relative flex-1 overflow-auto">
               {viewMode === "list" ? (
                 <>
                   {/* Table Header - Sticky (hidden on mobile) */}

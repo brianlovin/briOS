@@ -3,6 +3,7 @@
 import { PropsWithChildren } from "react";
 import { Toaster } from "sonner";
 
+import { BodyLock } from "@/components/BodyLock";
 import { CommandMenu } from "@/components/CommandMenu";
 import { MobileNavMenu } from "@/components/MobileNavMenu";
 
@@ -12,6 +13,7 @@ export function ClientShell({ children }: PropsWithChildren) {
   return (
     <>
       <Toaster position="bottom-center" />
+      <BodyLock />
       <CommandMenu />
       <MobileNavMenu />
       <GlobalTopBar />

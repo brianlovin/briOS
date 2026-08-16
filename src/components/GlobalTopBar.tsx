@@ -1,10 +1,11 @@
 "use client";
 
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Suspense, useCallback } from "react";
 
+import { scrollTargetAtom } from "@/atoms/scrollTarget";
 import { sidebarAtom } from "@/atoms/sidebar";
 import { navigationItems } from "@/config/navigation";
 import { cn } from "@/lib/utils";
@@ -13,52 +14,18 @@ import { MenuToggle } from "./icons/MenuToggle";
 import { TopBarActionsSlot } from "./TopBarActions";
 import { IconButton } from "./ui/IconButton";
 
-/**
- * Checks if an element is visible (not hidden via CSS)
- */
 function isElementVisible(element: HTMLElement): boolean {
   const style = getComputedStyle(element);
   return style.display !== "none" && style.visibility !== "hidden";
 }
 
-/**
- * Finds the appropriate scroll target based on the current page layout.
- * Prioritizes:
- * 1. Element with data-scroll-priority="true" (set by list-detail layouts based on current view)
- * 2. Any visible [data-scrollable] container
- * 3. Any visible scrollable element with overflow-y-auto
- * 4. Falls back to window scroll
- */
-function findScrollTarget(): HTMLElement | null {
-  const mainContent = document.querySelector("[data-main-content]") as HTMLElement;
-  if (!mainContent) return null;
+function findFallbackScrollTarget(): HTMLElement | null {
+  const mainContent = document.querySelector("[data-main-content]");
+  if (!(mainContent instanceof HTMLElement)) return null;
 
-  // First check for element with scroll priority (set by list-detail layouts)
-  const priorityContainer = mainContent.querySelector(
-    '[data-scroll-priority="true"]',
-  ) as HTMLElement;
-  if (priorityContainer && isElementVisible(priorityContainer)) {
-    return priorityContainer;
-  }
-
-  // Look for any visible scrollable container with data-scrollable
-  const scrollableContainers = mainContent.querySelectorAll(
-    "[data-scrollable]",
-  ) as NodeListOf<HTMLElement>;
-
+  const scrollableContainers = mainContent.querySelectorAll("[data-scrollable]");
   for (const container of scrollableContainers) {
-    if (isElementVisible(container) && container.scrollHeight > container.clientHeight) {
-      return container;
-    }
-  }
-
-  // Fallback: find any scrollable element with overflow-y-auto
-  const allScrollable = mainContent.querySelectorAll(
-    '[class*="overflow-y-auto"], [class*="overflow-auto"]',
-  ) as NodeListOf<HTMLElement>;
-
-  for (const container of allScrollable) {
-    if (isElementVisible(container) && container.scrollHeight > container.clientHeight) {
+    if (container instanceof HTMLElement && isElementVisible(container)) {
       return container;
     }
   }
@@ -91,21 +58,24 @@ export function BreadcrumbLabel({
 
 export function GlobalTopBar() {
   const [isOpen, setIsOpen] = useAtom(sidebarAtom);
+  const scrollTarget = useAtomValue(scrollTargetAtom);
 
-  const handleClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    // Check if click target is or is inside a button or link
-    const target = e.target as HTMLElement;
-    if (target.closest("button") || target.closest("a")) {
-      return;
-    }
+  const handleClick = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      const target = e.target as HTMLElement;
+      if (target.closest("button") || target.closest("a")) {
+        return;
+      }
 
-    const scrollTarget = findScrollTarget();
-    if (scrollTarget) {
-      scrollTarget.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  }, []);
+      const el = scrollTarget ?? findFallbackScrollTarget();
+      if (el) {
+        el.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    },
+    [scrollTarget],
+  );
 
   return (
     <>

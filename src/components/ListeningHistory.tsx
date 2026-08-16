@@ -188,7 +188,7 @@ export function ListeningHistory({ initialData }: ListeningHistoryProps = {}) {
     <ListDetailWrapper>
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Scrollable content area */}
-        <div ref={scrollContainerRef} className="relative flex-1 overflow-auto">
+        <div ref={scrollContainerRef} data-scrollable className="relative flex-1 overflow-auto">
           <div className="min-w-fit">
             {/* Table Header - Desktop only */}
             <div className="bg-secondary border-secondary sticky top-0 z-10 hidden border-b md:block dark:bg-neutral-950">

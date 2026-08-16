@@ -127,7 +127,7 @@ export function StackPageClient({ initialData, initialLikes }: StackPageClientPr
             </div>
 
             {/* Table */}
-            <div className="relative flex-1 overflow-auto">
+            <div data-scrollable className="relative flex-1 overflow-auto">
               {/* Table Header - Sticky (hidden on mobile) */}
               <div className="bg-secondary border-secondary sticky top-0 z-10 hidden border-b md:block dark:bg-neutral-950">
                 <div className="grid grid-cols-12 gap-4 px-4 py-2 text-sm font-medium">

@@ -2,7 +2,6 @@
 @plugin "@tailwindcss/typography";
 
 :root {
-  --primary-sidebar-width: 212px;
   --secondary-sidebar-width: 350px;
 
   --color-neutral-850: oklch(23% 0 0);
