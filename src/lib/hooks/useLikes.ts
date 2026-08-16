@@ -3,7 +3,7 @@
 import { createContext, useContext } from "react";
 import useSWR, { mutate } from "swr";
 
-import { type LikeActivityTarget, likeActivityPayload } from "@/lib/activity-shared";
+import { likeActivityPayload, type LikeActivityTarget } from "@/lib/activity-shared";
 import { fetcher } from "@/lib/fetcher";
 import {
   type LikeCount,

@@ -920,10 +920,13 @@ describe("likeActivityPayload", () => {
 
   test("does not fall back to Stack when a stack item name is provided", () => {
     expect(
-      likeActivityPayload({ title: "Cursor", href: "/stack", contentType: "stack" }, {
-        title: "Stack",
-        href: "/stack",
-      }),
+      likeActivityPayload(
+        { title: "Cursor", href: "/stack", contentType: "stack" },
+        {
+          title: "Stack",
+          href: "/stack",
+        },
+      ),
     ).toEqual({
       title: "Cursor",
       href: "/stack",
