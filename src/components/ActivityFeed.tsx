@@ -225,7 +225,7 @@ export function ActivityTrackedCount({ count }: { count: number }) {
       <TooltipTrigger
         delay={0}
         closeDelay={0}
-        className="text-tertiary cursor-default bg-transparent p-0 text-sm tabular-nums"
+        className="text-tertiary hidden cursor-default bg-transparent p-0 text-sm tabular-nums md:inline"
       >
         {formatTrackedEventsLabel(count)}
       </TooltipTrigger>

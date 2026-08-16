@@ -617,6 +617,8 @@ describe("ActivityTrackedCount", () => {
     expect(one).toContain("1 event tracked");
     expect(one).toContain("text-tertiary");
     expect(one).toContain("text-sm");
+    expect(one).toContain("hidden");
+    expect(one).toContain("md:inline");
     expect(many).toContain("12 events tracked");
     expect(many).not.toContain("Live");
   });
