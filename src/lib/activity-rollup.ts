@@ -25,6 +25,28 @@ export function activityStackReactKey(stack: Pick<ActivityRollup, "key" | "ancho
   return `${stack.key}:${stack.anchorId}`;
 }
 
+export const ACTIVITY_ENTER_STAGGER_STEP = 0.1;
+export const ACTIVITY_ENTER_STAGGER_MAX = 1;
+
+/** Enter delays for keys that were not on screen last paint. First paint (`previous` null) is empty. */
+export function activityEnterStaggerDelays(
+  keys: string[],
+  previous: Set<string> | null,
+  step = ACTIVITY_ENTER_STAGGER_STEP,
+  max = ACTIVITY_ENTER_STAGGER_MAX,
+): Map<string, number> {
+  const delays = new Map<string, number>();
+  if (!previous) return delays;
+
+  let index = 0;
+  for (const key of keys) {
+    if (previous.has(key)) continue;
+    delays.set(key, Math.min(Number((index * step).toFixed(2)), max));
+    index += 1;
+  }
+  return delays;
+}
+
 export function activityEventHref(event: ActivityEvent): string | undefined {
   if (event.subject?.href) return event.subject.href;
   const path = event.meta?.path;

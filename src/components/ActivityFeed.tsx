@@ -16,6 +16,7 @@ import { useTopBarActions } from "@/components/TopBarActions";
 import { IconButton } from "@/components/ui/IconButton";
 import type { ActivityEvent, ActivityRollup, ActivityTotal } from "@/lib/activity";
 import {
+  activityEnterStaggerDelays,
   activityStackReactKey,
   rollupActivityEvents,
   shouldPulseActivityRollup,
@@ -193,28 +194,49 @@ function ActivityStackList({
   const hydrated = useHydrated();
   const prefersReducedMotion = useReducedMotion();
   const shouldAnimate = hydrated && prefersReducedMotion !== true;
+  const keys = useMemo(() => stacks.map(activityStackReactKey), [stacks]);
+  const [prevKeys, setPrevKeys] = useState<string[]>(keys);
+  const [enterDelays, setEnterDelays] = useState<Map<string, number>>(() => new Map());
+  const keysChanged =
+    prevKeys.length !== keys.length || prevKeys.some((key, index) => key !== keys[index]);
+
+  if (keysChanged) {
+    setEnterDelays(shouldAnimate ? activityEnterStaggerDelays(keys, new Set(prevKeys)) : new Map());
+    setPrevKeys(keys);
+  }
 
   return (
     <LayoutGroup>
       <div className="divide-secondary divide-y">
         <AnimatePresence initial={false}>
-          {stacks.map((stack) => (
-            <motion.div
-              key={activityStackReactKey(stack)}
-              layout={shouldAnimate}
-              initial={shouldAnimate ? { opacity: 0, y: -8 } : false}
-              animate={{ opacity: 1, y: 0 }}
-              transition={shouldAnimate ? LIST_MOTION : { duration: 0 }}
-            >
-              <ActivityRow
-                event={stack.latest}
-                count={stack.count}
-                sectionLabel={stack.sectionLabel}
-                href={stack.href}
-                pulse={pulseKey === stack.key}
-              />
-            </motion.div>
-          ))}
+          {stacks.map((stack) => {
+            const reactKey = activityStackReactKey(stack);
+            const delay = enterDelays.get(reactKey) ?? 0;
+            return (
+              <motion.div
+                key={reactKey}
+                layout={shouldAnimate}
+                initial={shouldAnimate ? { opacity: 0, y: -8 } : false}
+                animate={{ opacity: 1, y: 0 }}
+                transition={
+                  shouldAnimate
+                    ? {
+                        default: { ...LIST_MOTION, delay },
+                        layout: LIST_MOTION,
+                      }
+                    : { duration: 0 }
+                }
+              >
+                <ActivityRow
+                  event={stack.latest}
+                  count={stack.count}
+                  sectionLabel={stack.sectionLabel}
+                  href={stack.href}
+                  pulse={pulseKey === stack.key}
+                />
+              </motion.div>
+            );
+          })}
         </AnimatePresence>
       </div>
     </LayoutGroup>

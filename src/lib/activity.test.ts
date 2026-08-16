@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 
 import {
+  activityEnterStaggerDelays,
   type ActivityEvent,
   activityStackReactKey,
   ANONYMOUS_VISIT_SUMMARY,
@@ -955,6 +956,30 @@ describe("rollupActivityEvents", () => {
     expect(stacks).toHaveLength(3);
     expect(stacks.map((stack) => stack.count)).toEqual([1, 1, 1]);
     expect(stacks[0]?.key).toBe(stacks[2]?.key);
+  });
+
+  test("staggers only newly inserted keys, newest first, and caps the delay", () => {
+    expect(activityEnterStaggerDelays(["a", "b"], null).size).toBe(0);
+
+    const previous = new Set(["old-1", "old-2"]);
+    const delays = activityEnterStaggerDelays(
+      ["new-1", "new-2", "new-3", "new-4", "new-5", "old-1", "old-2"],
+      previous,
+    );
+    expect([...delays.entries()]).toEqual([
+      ["new-1", 0],
+      ["new-2", 0.1],
+      ["new-3", 0.2],
+      ["new-4", 0.3],
+      ["new-5", 0.4],
+    ]);
+
+    const many = Array.from({ length: 16 }, (_, index) => `n-${index}`);
+    const capped = activityEnterStaggerDelays(many, new Set());
+    expect(capped.get("n-0")).toBe(0);
+    expect(capped.get("n-10")).toBe(1);
+    expect(capped.get("n-15")).toBe(1);
+    expect(capped.has("old-1")).toBe(false);
   });
 
   test("only pulses when the top stack count increments", () => {

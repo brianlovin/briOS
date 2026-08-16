@@ -32,6 +32,9 @@ export {
 } from "./activity-geo";
 export type { ActivityRollup } from "./activity-rollup";
 export {
+  ACTIVITY_ENTER_STAGGER_MAX,
+  ACTIVITY_ENTER_STAGGER_STEP,
+  activityEnterStaggerDelays,
   activityEventHref,
   activityRollupKey,
   activityStackReactKey,
