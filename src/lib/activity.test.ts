@@ -275,7 +275,7 @@ describe("recordVisit", () => {
     expect(event?.summary).toBe("🇮🇳 Visit from India");
     expect(event?.subject).toEqual({
       kind: "writing",
-      label: "grok bot first impressions",
+      label: "Grok Bot First Impressions",
       href: "/writing/grok-bot-first-impressions",
     });
     expect(event?.subject?.href).toBe("/writing/grok-bot-first-impressions");
@@ -283,7 +283,7 @@ describe("recordVisit", () => {
       country: "IN",
       country_name: "India",
       path: "/writing/grok-bot-first-impressions",
-      title: "grok bot first impressions",
+      title: "Grok Bot First Impressions",
     });
     expect(getActivityRow(event!)).toEqual({
       summary: "Visit from India",
@@ -320,6 +320,29 @@ describe("recordVisit", () => {
     expect(getActivityRow(event!).label).toBe("Secret for iOS");
   });
 
+  test("uses a client title for writing, home, HN, and TIL", async () => {
+    const store = createMemoryActivityStore();
+
+    await recordVisit(
+      { path: "/writing/grok-bot-first-impressions", title: "Grok Bot first impressions" },
+      store,
+    );
+    await recordVisit({ path: "/", title: "Brian Lovin" }, store);
+    await recordVisit({ path: "/hn/46993596", title: "A story about iOS | Brian Lovin" }, store);
+    await recordVisit(
+      { path: "/til/cache-headers-B57IXLJ", title: "Cache Headers | Brian Lovin" },
+      store,
+    );
+
+    const events = await store.getTail(4);
+    expect(events.map((event) => event.subject?.label)).toEqual([
+      "Cache Headers",
+      "A story about iOS",
+      "Home",
+      "Grok Bot first impressions",
+    ]);
+  });
+
   test("does not accept a visit title that looks like PII", async () => {
     const store = createMemoryActivityStore();
     await recordVisit(
@@ -331,8 +354,8 @@ describe("recordVisit", () => {
       store,
     );
     const [event] = await store.getTail(1);
-    expect(event?.subject?.label).toBe("secret for ios");
-    expect(event?.meta).toEqual(expect.objectContaining({ title: "secret for ios" }));
+    expect(event?.subject?.label).toBe("Secret for iOS");
+    expect(event?.meta).toEqual(expect.objectContaining({ title: "Secret for iOS" }));
     expect(getActivityRow(event!).label).toBe("Secret for iOS");
   });
 
@@ -358,10 +381,10 @@ describe("recordVisit", () => {
     const [event] = await store.getTail(1);
     expect(event?.subject).toEqual({
       kind: "writing",
-      label: "grok bot first impressions",
+      label: "Grok Bot First Impressions",
       href: "/writing/grok-bot-first-impressions-kcJun01",
     });
-    expect(event?.meta).toEqual(expect.objectContaining({ title: "grok bot first impressions" }));
+    expect(event?.meta).toEqual(expect.objectContaining({ title: "Grok Bot First Impressions" }));
   });
 
   test("prefers city and region in the visit summary", async () => {
@@ -631,6 +654,39 @@ describe("recordLike", () => {
       label: "Cursor",
     });
   });
+
+  test("formats a slug-like like title and strips a site suffix", async () => {
+    const store = createMemoryActivityStore();
+    const result = await recordLike(
+      {
+        title: "secret for ios | Brian Lovin",
+        href: "/app-dissection/secret-for-ios",
+        content_type: "app_dissection",
+      },
+      store,
+    );
+    expect("ok" in result && result.ok).toBe(true);
+    const [event] = await store.getTail(1);
+    expect(event?.summary).toBe("Someone liked Secret for iOS");
+    expect(event?.subject?.label).toBe("Secret for iOS");
+    expect(getActivityRow(event!).summary).toBe("Someone liked Secret for iOS");
+  });
+
+  test("does not store a like title that looks like PII", async () => {
+    const store = createMemoryActivityStore();
+    await recordLike(
+      {
+        title: "email me at test@example.com",
+        href: "/writing/hello-world",
+        content_type: "writing",
+      },
+      store,
+    );
+    const [event] = await store.getTail(1);
+    expect(event?.summary).toBe("Someone liked Hello World");
+    expect(event?.subject?.label).toBe("Hello World");
+    expect(event?.summary).not.toContain("@");
+  });
 });
 
 describe("parseActivityStreamFields", () => {
@@ -803,9 +859,11 @@ describe("sanitizeVisitTitle / formatActivityTitle", () => {
   });
 
   test("falls back to the path title when the client title is missing or PII", () => {
-    expect(sanitizeVisitTitle(undefined, "/app-dissection/secret-for-ios")).toBe("secret for ios");
-    expect(sanitizeVisitTitle("   ", "/app-dissection/secret-for-ios")).toBe("secret for ios");
-    expect(sanitizeVisitTitle("a@b.com", "/app-dissection/secret-for-ios")).toBe("secret for ios");
+    expect(sanitizeVisitTitle(undefined, "/app-dissection/secret-for-ios")).toBe("Secret for iOS");
+    expect(sanitizeVisitTitle("   ", "/app-dissection/secret-for-ios")).toBe("Secret for iOS");
+    expect(sanitizeVisitTitle("a@b.com", "/app-dissection/secret-for-ios")).toBe("Secret for iOS");
+    expect(sanitizeVisitTitle("Brian Lovin", "/")).toBe("Home");
+    expect(sanitizeVisitTitle("Home | Brian Lovin", "/")).toBe("Home");
     expect(shouldRecordVisit("/activity")).toBe(false);
   });
 
@@ -950,6 +1008,31 @@ describe("getActivityRow page titles", () => {
       label: "Cursor",
     });
   });
+
+  test("title-cases a stored like slug without rewriting Redis", () => {
+    const row = getActivityRow({
+      v: 1,
+      id: "like-slug",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "like",
+      speed: "event",
+      summary: "Someone liked grok bot first impressions",
+      visibility: "public",
+      idempotency_key: "like-slug",
+      subject: {
+        kind: "writing",
+        label: "grok bot first impressions",
+        href: "/writing/grok-bot-first-impressions",
+      },
+    });
+    expect(row).toEqual({
+      summary: "Someone liked Grok Bot First Impressions",
+      href: "/writing/grok-bot-first-impressions",
+      label: "Grok Bot First Impressions",
+    });
+  });
 });
 
 describe("shouldRecordVisit / likeMetaFromRequest", () => {
@@ -967,7 +1050,7 @@ describe("shouldRecordVisit / likeMetaFromRequest", () => {
     );
     expect(writing).toEqual({
       href: "/writing/hello-world",
-      title: "hello world",
+      title: "Hello World",
       content_type: "writing",
     });
 
@@ -1045,6 +1128,25 @@ describe("likeActivityPayload", () => {
       title: "Stack",
       href: "/stack",
       content_type: "stack",
+    });
+  });
+
+  test("strips a document title suffix and formats a slug fallback", () => {
+    expect(
+      likeActivityPayload(
+        {},
+        { title: "Grok Bot first impressions | Brian Lovin", href: "/writing/hello-world" },
+      ),
+    ).toEqual({
+      title: "Grok Bot first impressions",
+      href: "/writing/hello-world",
+      content_type: "writing",
+    });
+
+    expect(likeActivityPayload({}, { href: "/writing/hello-world" })).toEqual({
+      title: "Hello World",
+      href: "/writing/hello-world",
+      content_type: "writing",
     });
   });
 });

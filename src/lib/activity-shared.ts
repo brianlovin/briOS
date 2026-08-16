@@ -291,17 +291,22 @@ export function stripSiteTitleSuffix(title: string): string {
   return result;
 }
 
-/** Use a client document title when it is present, non-PII, and not only the site name. */
-export function sanitizeVisitTitle(title: string | undefined, path: string): string {
-  const fallback = inferTitleFromPath(path);
+/**
+ * Prefer a real page title. Strip the site suffix, reject PII, and format
+ * slug-like leftovers. Falls back to the smart route map — never invents a name.
+ */
+export function sanitizeActivityTitle(title: string | undefined, path: string): string {
+  const fallback = formatActivityTitle(inferTitleFromPath(path));
   const trimmed = title?.trim();
   if (!trimmed) return fallback;
 
   const stripped = stripSiteTitleSuffix(trimmed);
   if (!stripped || /^brian lovin$/i.test(stripped)) return fallback;
   if (findForbiddenPii(stripped)) return fallback;
-  return stripped;
+  return formatActivityTitle(stripped);
 }
+
+export const sanitizeVisitTitle = sanitizeActivityTitle;
 
 /** De-hyphenated slugs are all lowercase (no original caps). */
 export function looksLikeDehyphenatedSlug(label: string): boolean {
@@ -344,7 +349,7 @@ export function likeActivityPayload(
   fallback: { title?: string; href?: string } = {},
 ): LikeActivityPayload {
   const href = target.href?.trim() || fallback.href?.trim() || "/";
-  const title = target.title?.trim() || fallback.title?.trim() || inferTitleFromPath(href);
+  const title = sanitizeActivityTitle(target.title || fallback.title, href);
   const content_type = target.contentType?.trim() || inferContentTypeFromPath(href);
   return { title, href, content_type };
 }

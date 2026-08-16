@@ -79,6 +79,7 @@ export {
   looksLikeDehyphenatedSlug,
   looksLikeIdentifier,
   looksLikeShortId,
+  sanitizeActivityTitle,
   sanitizeVisitTitle,
   shouldCountLifetimeTotal,
   shouldRecordVisit,
@@ -256,8 +257,8 @@ export async function recordLike(
     return { skipped: true, reason: "activity_path" };
   }
 
-  const title = input.title.trim() || "a page";
   const href = input.href;
+  const title = sanitizeVisitTitle(input.title, href) || "a page";
   const contentType = input.content_type || inferContentTypeFromPath(href);
 
   return ingestActivityEvent(

@@ -52,7 +52,12 @@ export default function AMADetail() {
           <span className="text-secondary text-lg">{question.description}</span>
         )}
         <div className="w-fit">
-          <LikeButton pageId={question.id} />
+          <LikeButton
+            pageId={question.id}
+            title={question.title}
+            href={`/ama/${question.id}`}
+            contentType="ama"
+          />
         </div>
       </div>
 

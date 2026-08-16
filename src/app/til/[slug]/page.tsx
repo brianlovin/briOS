@@ -98,7 +98,12 @@ async function TilEntryContent(props: { params: Promise<{ slug: string }> }) {
           </div>
           <BatchLikesProvider pageIds={[content.id]} initialData={initialLikes}>
             <div className="w-fit">
-              <LikeButton pageId={content.id} />
+              <LikeButton
+                pageId={content.id}
+                title={content.title}
+                href={`/til/${canonicalSlug}`}
+                contentType="til"
+              />
             </div>
           </BatchLikesProvider>
         </div>
