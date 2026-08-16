@@ -463,7 +463,7 @@ export function getActivityRow(event: ActivityEvent): {
     const split = splitVisitSummaryFlag(full);
     const flag = split.flag || countryCodeToFlag(geo.country);
     return {
-      summary: split.text,
+      summary: flag ? `${flag} ${split.text}` : split.text,
       ...(flag ? { flag } : {}),
       href: event.subject?.href,
       label: displaySubjectLabel(event.subject?.label, event.subject?.href),
@@ -475,7 +475,7 @@ export function getActivityRow(event: ActivityEvent): {
     const split = splitVisitSummaryFlag(event.summary);
     const flag = split.flag || countryCodeToFlag(geo.country);
     return {
-      summary: split.text,
+      summary: flag ? `${flag} ${split.text}` : split.text,
       ...(flag ? { flag } : {}),
       href: event.subject?.href,
       label: displaySubjectLabel(event.subject?.label, event.subject?.href),

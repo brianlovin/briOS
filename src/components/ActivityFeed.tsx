@@ -76,7 +76,7 @@ function RelativeTime({ iso }: { iso: string }) {
   );
 }
 
-function ActivityRowIcon({ event, flag }: { event: ActivityEvent; flag?: string }) {
+function ActivityRowIcon({ event }: { event: ActivityEvent }) {
   if (event.source === "shiori") {
     return <Shiori size={16} />;
   }
@@ -85,14 +85,8 @@ function ActivityRowIcon({ event, flag }: { event: ActivityEvent; flag?: string 
     return <Heart size={16} className="fill-current text-red-500" aria-hidden />;
   }
 
+  // Visit icon slot is reserved for a source favicon (other PR). World is the fallback.
   if (event.type === "visit" || event.type === "visit_country_first") {
-    if (flag) {
-      return (
-        <span className="text-base leading-none" aria-hidden>
-          {flag}
-        </span>
-      );
-    }
     return <World size={16} className="text-tertiary" aria-hidden />;
   }
 
@@ -136,7 +130,7 @@ export function ActivityRow({
       )}
     >
       <div className="flex size-8 items-center justify-center">
-        <ActivityRowIcon event={event} flag={row.flag} />
+        <ActivityRowIcon event={event} />
       </div>
       <p className="min-w-0 truncate">
         <span className="text-primary">{row.summary}</span>

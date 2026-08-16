@@ -22,7 +22,7 @@ function event(overrides: Partial<ActivityEvent>): ActivityEvent {
 }
 
 describe("ActivityRow", () => {
-  test("shows a flag, then the summary and page link on one line", () => {
+  test("shows a flag in the title and a World icon, then the page link on one line", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow
         event={event({
@@ -33,8 +33,8 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(markup).toContain("🇮🇳");
-    expect(markup).toContain("Visit from India");
+    expect(markup).toContain("🇮🇳 Visit from India");
+    expect(markup).toContain("M19.25 12C19.25 16.0041");
     expect(markup).toContain('href="/"');
     expect(markup).toContain("Home");
     expect(markup).not.toContain("a page");
@@ -242,7 +242,7 @@ describe("ActivityRow", () => {
     expect(markup).toContain('href="/ama"');
     expect(markup).not.toContain("2f2c711c-0ceb-810d-899d-e5feb99e70f4");
     expect(markup).toMatch(
-      /text-primary[^>]*>Visit from Spring Lake[\s\S]*text-tertiary[^>]*> 6<[\s\S]*href="\/ama"[^>]*>an AMA question/,
+      /text-primary[^>]*>🇺🇸 Visit from Spring Lake[\s\S]*text-tertiary[^>]*> 6<[\s\S]*href="\/ama"[^>]*>an AMA question/,
     );
   });
 

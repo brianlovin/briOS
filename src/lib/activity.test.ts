@@ -286,7 +286,7 @@ describe("recordVisit", () => {
       title: "Grok Bot First Impressions",
     });
     expect(getActivityRow(event!)).toEqual({
-      summary: "Visit from India",
+      summary: "🇮🇳 Visit from India",
       flag: "🇮🇳",
       href: "/writing/grok-bot-first-impressions",
       label: "Grok Bot First Impressions",
@@ -466,7 +466,7 @@ describe("recordVisit", () => {
       idempotency_key: "old-located",
       subject: { kind: "writing", label: "Writing", href: "/writing" },
     });
-    expect(row.summary).toBe("Visit from France");
+    expect(row.summary).toBe("🇫🇷 Visit from France");
     expect(row.flag).toBe("🇫🇷");
   });
 
@@ -495,7 +495,7 @@ describe("recordVisit", () => {
       meta: { country: "IN" },
     });
     expect(row).toEqual({
-      summary: "Visit from India",
+      summary: "🇮🇳 Visit from India",
       flag: "🇮🇳",
     });
   });
@@ -515,7 +515,7 @@ describe("recordVisit", () => {
       meta: { country: "IN" },
     });
     expect(row).toEqual({
-      summary: "First visit from IN",
+      summary: "🇮🇳 First visit from IN",
       flag: "🇮🇳",
     });
   });
