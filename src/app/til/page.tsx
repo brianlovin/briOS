@@ -7,8 +7,8 @@ import { PageTitle } from "@/components/Typography";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { getServerLikes } from "@/lib/likes-server";
 import { createMetadata, SITE_CONFIG } from "@/lib/metadata";
-import { getTilDatabaseItems } from "@/lib/notion";
-import { getTilEntriesWithContent } from "@/lib/til";
+import { getTilDatabaseItems, getTilItemContent } from "@/lib/notion";
+import { hydrateTilEntries } from "@/lib/til";
 
 export const metadata: Metadata = {
   ...createMetadata({
@@ -63,15 +63,17 @@ function TilFeedFallback() {
 
 async function TilFeedContent() {
   await connection();
-  // Fetch the first 10 entries for SSR
-  const { items: initialEntries } = await getTilDatabaseItems(undefined, 10);
-
-  // Fetch content (blocks) and likes for the initial entries in parallel
-  const pageIds = initialEntries.map((entry) => entry.id);
-  const [initialEntriesWithContent, initialLikes] = await Promise.all([
-    getTilEntriesWithContent(initialEntries),
+  const { items, nextCursor } = await getTilDatabaseItems(undefined, 10);
+  const pageIds = items.map((entry) => entry.id);
+  const [contents, initialLikes] = await Promise.all([
+    Promise.all(items.map((entry) => getTilItemContent(entry.id))),
     getServerLikes(pageIds),
   ]);
 
-  return <TilFeed initialEntries={initialEntriesWithContent} initialLikes={initialLikes} />;
+  return (
+    <TilFeed
+      fallbackData={[{ items: hydrateTilEntries(items, contents), nextCursor }]}
+      initialLikes={initialLikes}
+    />
+  );
 }
