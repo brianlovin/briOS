@@ -1,6 +1,7 @@
 import { createHash } from "crypto";
 
 import { type ActivityGeo, countryCodeToName, formatVisitSummary } from "./activity-geo";
+import { githubActivityFromWebhook } from "./activity-github";
 import {
   ACTIVITY_ENVELOPE_VERSION,
   ACTIVITY_IDEMPOTENCY_TTL_SECONDS,
@@ -25,6 +26,12 @@ import {
 
 export type { ActivityGeo } from "./activity-geo";
 export { countryCodeToName, formatVisitSummary, getRequestGeo } from "./activity-geo";
+export type { GithubActivityDecision } from "./activity-github";
+export {
+  githubActivityFromWebhook,
+  isGithubBotActor,
+  verifyGithubWebhookSignature,
+} from "./activity-github";
 export type {
   ActivityEvent,
   ActivityFeedPayload,
@@ -40,6 +47,7 @@ export {
   ACTIVITY_FEED_DEDUPING_MS,
   ACTIVITY_FEED_POLL_MS,
   ACTIVITY_SOURCE_BRIOS,
+  ACTIVITY_SOURCE_GITHUB,
   ACTIVITY_STREAM_MAXLEN,
   ACTIVITY_VISIT_STREAM_MAX_PER_SEC,
   activityFeedRefreshInterval,
@@ -294,6 +302,19 @@ export async function recordVisit(
     store,
     now,
   );
+}
+
+export async function recordGithubActivity(
+  githubEvent: string,
+  payload: unknown,
+  store: ActivityStore,
+  now: Date = new Date(),
+): Promise<IngestResult | { skipped: true; reason: string }> {
+  const decision = githubActivityFromWebhook(githubEvent, payload);
+  if (decision.status === "ignore") {
+    return { skipped: true, reason: decision.reason };
+  }
+  return ingestActivityEvent(decision.input, store, now);
 }
 
 export async function recordBriosEvent(

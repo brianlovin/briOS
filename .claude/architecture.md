@@ -36,6 +36,14 @@
 
 **Content rendering**: Notion blocks → React components via `renderBlocks.tsx`
 
+## GitHub Activity Webhook
+
+`POST /api/webhooks/github` receives GitHub `pull_request` and `star` events and writes them to the public `/activity` feed via in-process `ingestActivityEvent`. It does not use the HMAC ingest URL.
+
+Verify `X-Hub-Signature-256` (`sha256=<hex>`) against `GITHUB_ACTIVITY_WEBHOOK_SECRET` with `safeCompare`. Missing secret → 503. Bad signature → 401. Ignored events (ping, private repos, bots, star deletions, closed-unmerged PRs) return 200 so GitHub does not retry.
+
+Recorded types: `pr_opened`, `pr_merged`, `repo_starred`. Private repositories and bot actors are skipped.
+
 ## Notion Webhooks
 
 Webhook endpoints called by Notion database automations (button properties). All webhooks verify the `x-webhook-secret` header against `NOTION_WEBHOOK_VERIFICATION_SECRET` if configured.

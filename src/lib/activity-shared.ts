@@ -20,6 +20,7 @@ export const ACTIVITY_IDEMPOTENCY_TTL_SECONDS = 6 * 60 * 60;
 export const ACTIVITY_META_MAX_BYTES = 2048;
 export const ACTIVITY_BODY_MAX_BYTES = 8192;
 export const ACTIVITY_SOURCE_BRIOS = "brios";
+export const ACTIVITY_SOURCE_GITHUB = "github";
 
 /** CDN + browser cache for the public activity poll blob. */
 export const ACTIVITY_FEED_CACHE_CONTROL = "public, s-maxage=2, stale-while-revalidate=30";
@@ -256,6 +257,12 @@ export function formatTotalLabel(type: string): string {
       return "Design Details";
     case "app_dissection_published":
       return "App dissections";
+    case "pr_opened":
+      return "PRs opened";
+    case "pr_merged":
+      return "PRs merged";
+    case "repo_starred":
+      return "Stars";
     default:
       return type.replace(/_/g, " ");
   }

@@ -78,4 +78,27 @@ describe("ActivityRow", () => {
     expect(visit).not.toContain("text-red-500");
     expect(visit).toContain("🇮🇳");
   });
+
+  test("uses the GitHub icon for github-sourced events", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "github",
+          type: "pr_opened",
+          speed: "event",
+          summary: "Opened a pull request on briOS",
+          subject: {
+            kind: "pull_request",
+            label: "Add activity feed",
+            href: "https://github.com/brianlovin/briOS/pull/42",
+          },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("Opened a pull request on briOS");
+    expect(markup).toContain("Add activity feed");
+    expect(markup).toContain("16.0041 19.25 12 19.25");
+    expect(markup).not.toContain("text-red-500");
+  });
 });
