@@ -13,7 +13,6 @@ import {
   findForbiddenPii,
   formatActivityTitle,
   formatDownloadSummary,
-  formatTotalLabel,
   formatVisitSummary,
   getActivityRow,
   getCaffeineIcon,
@@ -37,7 +36,6 @@ import {
   shouldRecordVisit,
   stripSiteTitleSuffix,
   stripTrailingShortIdToken,
-  visibleLifetimeTotals,
 } from "@/lib/activity";
 import { geoFromVisitMeta, normalizeRegionCode } from "@/lib/activity-geo";
 import { parseActivityStreamFields } from "@/lib/activity-redis";
@@ -109,10 +107,10 @@ describe("ingestActivityEvent", () => {
     expect(result.ok).toBe(false);
     if (!result.ok) expect(result.error).toContain("forbidden");
     expect(await store.getStreamLength()).toBe(0);
-    expect(await store.getTotals()).toEqual([]);
+    expect(await store.getCount()).toBe(0);
   });
 
-  test("idempotent retry does not double-count totals", async () => {
+  test("idempotent retry does not double-count", async () => {
     const store = createMemoryActivityStore();
     const input = baseEvent({ idempotency_key: "like:page:1" });
 
@@ -122,9 +120,7 @@ describe("ingestActivityEvent", () => {
     expect(first.ok && !first.duplicate).toBe(true);
     expect(second.ok && second.duplicate).toBe(true);
     expect(await store.getStreamLength()).toBe(1);
-    expect(await store.getTotals()).toEqual([
-      expect.objectContaining({ source: "brios", type: "like", count: 1 }),
-    ]);
+    expect(await store.getCount()).toBe(1);
   });
 
   test("rejects an unregistered type even when summary is present", async () => {
@@ -223,38 +219,19 @@ describe("ingestActivityEvent", () => {
     expect(await store.getStreamLength()).toBe(0);
   });
 
-  test("does not increment lifetime totals for visit_country_first", async () => {
-    expect(
-      visibleLifetimeTotals([
-        { source: "brios", type: "visit", count: 10, first_seen: "2026-08-16T00:00:00.000Z" },
-        {
-          source: "brios",
-          type: "visit_country_first",
-          count: 3,
-          first_seen: "2026-08-16T00:00:00.000Z",
-        },
-        { source: "brios", type: "like", count: 1, first_seen: "2026-08-16T00:00:00.000Z" },
-      ]),
-    ).toEqual([
-      expect.objectContaining({ type: "visit" }),
-      expect.objectContaining({ type: "like" }),
-    ]);
-  });
-
-  test("still increments lifetime totals for other types", async () => {
+  test("increments the lifetime count for ingested events", async () => {
     const store = createMemoryActivityStore();
     await ingestActivityEvent(baseEvent({ type: "ama_asked", summary: "Someone asked" }), store);
-    expect(await store.getTotals()).toEqual([
-      expect.objectContaining({ source: "brios", type: "ama_asked", count: 1 }),
-    ]);
+    expect(await store.getCount()).toBe(1);
   });
 
-  test("stream MAXLEN drops the oldest events", async () => {
+  test("stream MAXLEN drops the oldest events but the lifetime count keeps growing", async () => {
     const store = createMemoryActivityStore({ maxLen: 5 });
     for (let i = 0; i < 12; i++) {
       await ingestActivityEvent(baseEvent({ summary: `event ${i}` }), store);
     }
     expect(await store.getStreamLength()).toBe(5);
+    expect(await store.getCount()).toBe(12);
     const tail = await store.getTail(10);
     expect(tail[0]?.summary).toBe("event 11");
     expect(tail[4]?.summary).toBe("event 7");
@@ -387,7 +364,7 @@ describe("recordVisit", () => {
     );
     expect(result).toEqual({ skipped: true, reason: "activity_path" });
     expect(await store.getStreamLength()).toBe(0);
-    expect(await store.getTotals()).toEqual([]);
+    expect(await store.getCount()).toBe(0);
   });
 
   test("stores a page subject and prefixes a country flag on the summary", async () => {
@@ -681,18 +658,16 @@ describe("recordVisit", () => {
     expect(events).toHaveLength(3);
     expect(events.every((event) => event.type === "visit")).toBe(true);
     expect(events.some((event) => event.type === "visit_country_first")).toBe(false);
-    expect(await store.getTotals()).toEqual([
-      expect.objectContaining({ source: "brios", type: "visit", count: 3 }),
-    ]);
+    expect(await store.getCount()).toBe(3);
   });
 
   test("does not ingest a visit for /activity/nested", async () => {
     const store = createMemoryActivityStore();
     await recordVisit({ path: "/activity/nested" }, store);
-    expect(await store.getTotals()).toEqual([]);
+    expect(await store.getCount()).toBe(0);
   });
 
-  test("increments totals for every visit but samples stream inserts", async () => {
+  test("increments the count for every visit but samples stream inserts", async () => {
     const store = createMemoryActivityStore();
     const now = new Date("2026-08-16T12:00:00.000Z");
     const burst = ACTIVITY_VISIT_STREAM_MAX_PER_SEC + 25;
@@ -702,11 +677,7 @@ describe("recordVisit", () => {
       expect("ok" in result && result.ok).toBe(true);
     }
 
-    const totals = await store.getTotals();
-    expect(totals).toContainEqual(
-      expect.objectContaining({ source: "brios", type: "visit", count: burst }),
-    );
-    expect(totals.find((total) => total.type === "visit_country_first")).toBeUndefined();
+    expect(await store.getCount()).toBe(burst);
     expect(await store.getStreamLength()).toBe(ACTIVITY_VISIT_STREAM_MAX_PER_SEC);
     expect(await store.getStreamLength()).toBeLessThan(ACTIVITY_STREAM_MAXLEN);
   });
@@ -742,9 +713,7 @@ describe("recordDigestSubscribed", () => {
     expect(second.ok && second.duplicate).toBe(true);
     expect(other.ok && !other.duplicate).toBe(true);
     expect(await store.getStreamLength()).toBe(2);
-    expect(await store.getTotals()).toEqual([
-      expect.objectContaining({ source: "brios", type: "digest_subscribed", count: 2 }),
-    ]);
+    expect(await store.getCount()).toBe(2);
   });
 });
 
@@ -773,7 +742,7 @@ describe("HMAC download ingest", () => {
     expect(JSON.stringify(event)).not.toMatch(/https?:\/\//);
   });
 
-  test("counts HMAC-ingested download events toward lifetime totals", async () => {
+  test("counts HMAC-ingested download events toward the lifetime count", async () => {
     const store = createMemoryActivityStore();
     const result = await ingestActivityEvent(
       {
@@ -788,11 +757,7 @@ describe("HMAC download ingest", () => {
       store,
     );
     expect(result.ok && !result.duplicate).toBe(true);
-    expect(await store.getTotals()).toEqual([
-      expect.objectContaining({ source: "shiori", type: "download", count: 1 }),
-    ]);
-    expect(visibleLifetimeTotals(await store.getTotals())).toHaveLength(1);
-    expect(formatTotalLabel("download")).toBe("Downloads");
+    expect(await store.getCount()).toBe(1);
     expect(getActivityRow((await store.getTail(1))[0]!)).toEqual({
       summary: "Someone downloaded Shiori",
       href: undefined,
@@ -848,7 +813,7 @@ describe("recordLike", () => {
       store,
     );
     expect(result).toEqual({ skipped: true, reason: "activity_path" });
-    expect(await store.getTotals()).toEqual([]);
+    expect(await store.getCount()).toBe(0);
   });
 
   test("writes a public like with subject + meta and no actor", async () => {
@@ -1637,9 +1602,7 @@ describe("recordCaffeine", () => {
     expect(first.ok && !first.duplicate).toBe(true);
     expect(second.ok && !second.duplicate).toBe(true);
     expect(await store.getStreamLength()).toBe(2);
-    expect(await store.getTotals()).toEqual([
-      expect.objectContaining({ source: "brios", type: "caffeinated", count: 2 }),
-    ]);
+    expect(await store.getCount()).toBe(2);
   });
 
   test("rejects an empty drink and an email drink before writing", async () => {

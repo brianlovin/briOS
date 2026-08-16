@@ -1,21 +1,18 @@
 "use client";
 
-import { useAtom } from "jotai";
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import { type ReactNode, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 
-import { activityLifetimeSidebarAtom } from "@/atoms/activityLifetimeSidebar";
 import { Activity } from "@/components/icons/Activity";
 import { Github } from "@/components/icons/Github";
 import { Heart } from "@/components/icons/Heart";
 import { Shiori } from "@/components/icons/Shiori";
-import { Sidebar } from "@/components/icons/Sidebar";
 import { World } from "@/components/icons/World";
 import { ListDetailWrapper } from "@/components/ListDetailWrapper";
 import { useTopBarActions } from "@/components/TopBarActions";
-import { IconButton } from "@/components/ui/IconButton";
-import type { ActivityEvent, ActivityRollup, ActivityTotal } from "@/lib/activity";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip";
+import type { ActivityEvent, ActivityRollup } from "@/lib/activity";
 import {
   activityEnterStaggerDelays,
   activityStackReactKey,
@@ -23,14 +20,14 @@ import {
   shouldPulseActivityRollup,
 } from "@/lib/activity-rollup";
 import {
+  ACTIVITY_TRACKED_SINCE_TOOLTIP,
   activitySourceFaviconSrc,
   activitySourceUrl,
-  formatTotalLabel,
+  formatTrackedEventsLabel,
   getActivityRow,
   getMergedPullRequestDiff,
   isKnownActivityTitle,
   resolveActivitySourceHref,
-  visibleLifetimeTotals,
 } from "@/lib/activity-shared";
 import { useActivity } from "@/lib/hooks/useActivity";
 import { cn } from "@/lib/utils";
@@ -48,16 +45,6 @@ function formatRelativeTime(iso: string): string {
   if (hours < 24) return `${hours}h ago`;
   const days = Math.floor(hours / 24);
   return `${days}d ago`;
-}
-
-function formatFirstTracked(iso: string): string {
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return "First tracked date unknown";
-  return `First tracked ${date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  })}`;
 }
 
 function RelativeTime({ iso }: { iso: string }) {
@@ -232,26 +219,14 @@ export function ActivityRow({
   );
 }
 
-export function TotalsList({ totals }: { totals: ActivityTotal[] }) {
-  const visible = visibleLifetimeTotals(totals);
-
-  if (visible.length === 0) {
-    return <p className="text-quaternary font-mono text-xs">No totals yet.</p>;
-  }
-
+export function ActivityTrackedCount({ count }: { count: number }) {
   return (
-    <ul className="w-max max-w-full font-mono text-[11px] leading-4 tabular-nums">
-      {visible.map((total) => (
-        <li
-          key={`${total.source}:${total.type}`}
-          className="flex items-baseline justify-between gap-4"
-          title={formatFirstTracked(total.first_seen)}
-        >
-          <span className="text-tertiary">{formatTotalLabel(total.type)}</span>
-          <span className="text-secondary">{total.count.toLocaleString()}</span>
-        </li>
-      ))}
-    </ul>
+    <Tooltip>
+      <TooltipTrigger className="text-tertiary cursor-default bg-transparent p-0 text-sm tabular-nums">
+        {formatTrackedEventsLabel(count)}
+      </TooltipTrigger>
+      <TooltipContent>{ACTIVITY_TRACKED_SINCE_TOOLTIP}</TooltipContent>
+    </Tooltip>
   );
 }
 
@@ -364,37 +339,16 @@ function useRollupPulse(stacks: ActivityRollup[]): string | null {
 
 export function ActivityFeed({
   initialEvents,
-  initialTotals,
+  initialCount,
 }: {
   initialEvents: ActivityEvent[];
-  initialTotals: ActivityTotal[];
+  initialCount: number;
 }) {
-  const { events, totals } = useActivity(initialEvents, initialTotals);
+  const { events, count } = useActivity(initialEvents, initialCount);
   const stacks = useMemo(() => rollupActivityEvents(events), [events]);
   const pulseKey = useRollupPulse(stacks);
-  const [lifetimeOpen, setLifetimeOpen] = useAtom(activityLifetimeSidebarAtom);
 
-  useEffect(() => {
-    if (window.matchMedia("(max-width: 767px)").matches) {
-      setLifetimeOpen(false);
-    }
-  }, [setLifetimeOpen]);
-
-  const topBarContent = useMemo(
-    () => (
-      <IconButton
-        size="sm"
-        variant="ghost"
-        aria-pressed={lifetimeOpen}
-        aria-label="Lifetime"
-        title="Lifetime"
-        onClick={() => setLifetimeOpen((open) => !open)}
-      >
-        <Sidebar size={18} />
-      </IconButton>
-    ),
-    [lifetimeOpen, setLifetimeOpen],
-  );
+  const topBarContent = useMemo(() => <ActivityTrackedCount count={count} />, [count]);
   useTopBarActions(topBarContent);
 
   return (
@@ -416,18 +370,6 @@ export function ActivityFeed({
             <ActivityStackList stacks={stacks} pulseKey={pulseKey} />
           )}
         </motion.div>
-        <aside
-          className={cn(
-            "border-secondary w-(--secondary-sidebar-width) shrink-0 flex-col overflow-y-auto border-l bg-white dark:bg-black",
-            "max-md:absolute max-md:inset-y-0 max-md:right-0 max-md:z-10",
-            lifetimeOpen ? "flex" : "hidden",
-          )}
-        >
-          <div className="px-3 py-2 font-mono text-[11px] leading-4">
-            <h2 className="text-quaternary">Lifetime</h2>
-            <TotalsList totals={totals} />
-          </div>
-        </aside>
       </div>
     </ListDetailWrapper>
   );

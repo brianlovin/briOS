@@ -107,10 +107,10 @@ describe("POST /api/activity/caffeine", () => {
         claimIdempotency: async () => {
           throw new Error("redis down");
         },
-        incrementTotal: async () => {},
+        incrementCount: async () => {},
         addToStream: async () => {},
         getTail: async () => [],
-        getTotals: async () => [],
+        getCount: async () => 0,
         getStreamLength: async () => 0,
         incrementVisitWindow: async () => 0,
       });

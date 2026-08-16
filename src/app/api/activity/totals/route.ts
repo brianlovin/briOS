@@ -1,8 +1,8 @@
 import { activityCachedJson } from "@/lib/activity-feed";
 import { getActivityPageData } from "@/lib/activity-redis";
 
-/** Kept for mid-deploy clients. Prefer GET /api/activity/feed. */
+/** Mid-deploy shim. Prefer GET /api/activity/feed. */
 export async function GET() {
-  const { totals } = await getActivityPageData();
-  return activityCachedJson({ totals });
+  const { count } = await getActivityPageData();
+  return activityCachedJson({ count });
 }

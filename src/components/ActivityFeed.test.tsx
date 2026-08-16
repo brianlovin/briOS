@@ -1,9 +1,10 @@
 import { describe, expect, test } from "bun:test";
 import { renderToStaticMarkup } from "react-dom/server";
 
-import { ActivityRow, TotalsList } from "@/components/ActivityFeed";
+import { ActivityRow, ActivityTrackedCount } from "@/components/ActivityFeed";
 import { ActivityLiveBadge, TopBarTrail } from "@/components/GlobalTopBar";
-import type { ActivityEvent, ActivityTotal } from "@/lib/activity";
+import type { ActivityEvent } from "@/lib/activity";
+import { ACTIVITY_TRACKED_SINCE_TOOLTIP, formatTrackedEventsLabel } from "@/lib/activity-shared";
 
 function event(overrides: Partial<ActivityEvent>): ActivityEvent {
   return {
@@ -528,29 +529,6 @@ describe("ActivityRow", () => {
   });
 });
 
-describe("TotalsList", () => {
-  test("renders a compact mono log and hides visit_country_first", () => {
-    const totals: ActivityTotal[] = [
-      { source: "brios", type: "visit", count: 12, first_seen: "2026-08-16T00:00:00.000Z" },
-      {
-        source: "brios",
-        type: "visit_country_first",
-        count: 3,
-        first_seen: "2026-08-16T00:00:00.000Z",
-      },
-      { source: "brios", type: "like", count: 4, first_seen: "2026-08-16T00:00:00.000Z" },
-    ];
-    const markup = renderToStaticMarkup(<TotalsList totals={totals} />);
-    expect(markup).toContain("font-mono");
-    expect(markup).toContain("tabular-nums");
-    expect(markup).toContain("Visits");
-    expect(markup).toContain("Likes");
-    expect(markup).toContain("12");
-    expect(markup).not.toContain("New countries");
-    expect(markup).not.toContain("visit_country_first");
-  });
-});
-
 describe("ActivityLiveBadge", () => {
   test("is a quiet green live pill with a pulsing dot", () => {
     const markup = renderToStaticMarkup(<ActivityLiveBadge />);
@@ -568,5 +546,26 @@ describe("ActivityLiveBadge", () => {
     expect(activity).toContain("animate-pulse");
     expect(writing).toContain("Writing");
     expect(writing).not.toContain("Live");
+  });
+});
+
+describe("ActivityTrackedCount", () => {
+  test("pluralizes the lifetime label", () => {
+    expect(formatTrackedEventsLabel(0)).toBe("0 events tracked");
+    expect(formatTrackedEventsLabel(1)).toBe("1 event tracked");
+    expect(formatTrackedEventsLabel(2)).toBe("2 events tracked");
+    expect(formatTrackedEventsLabel(1500)).toBe("1,500 events tracked");
+    expect(ACTIVITY_TRACKED_SINCE_TOOLTIP).toBe("Tracked since August 16, 2026");
+  });
+
+  test("renders the count as tertiary top-bar metadata", () => {
+    const one = renderToStaticMarkup(<ActivityTrackedCount count={1} />);
+    const many = renderToStaticMarkup(<ActivityTrackedCount count={12} />);
+
+    expect(one).toContain("1 event tracked");
+    expect(one).toContain("text-tertiary");
+    expect(one).toContain("text-sm");
+    expect(many).toContain("12 events tracked");
+    expect(many).not.toContain("Live");
   });
 });

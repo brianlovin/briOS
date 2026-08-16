@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from "react";
 import useSWR from "swr";
 
-import type { ActivityEvent, ActivityFeedPayload, ActivityTotal } from "@/lib/activity";
+import type { ActivityEvent, ActivityFeedPayload } from "@/lib/activity";
 import { ACTIVITY_FEED_DEDUPING_MS, activityFeedRefreshInterval } from "@/lib/activity-shared";
 import { fetcher } from "@/lib/fetcher";
 
@@ -20,7 +20,7 @@ function getServerVisibilitySnapshot(): DocumentVisibilityState {
   return "visible";
 }
 
-export function useActivity(initialEvents: ActivityEvent[], initialTotals: ActivityTotal[]) {
+export function useActivity(initialEvents: ActivityEvent[], initialCount: number) {
   const visibilityState = useSyncExternalStore(
     subscribeVisibility,
     getVisibilitySnapshot,
@@ -28,7 +28,7 @@ export function useActivity(initialEvents: ActivityEvent[], initialTotals: Activ
   );
 
   const { data } = useSWR<ActivityFeedPayload>("/api/activity/feed", fetcher, {
-    fallbackData: { events: initialEvents, totals: initialTotals },
+    fallbackData: { events: initialEvents, count: initialCount },
     refreshInterval: activityFeedRefreshInterval(visibilityState),
     revalidateOnFocus: false,
     dedupingInterval: ACTIVITY_FEED_DEDUPING_MS,
@@ -36,6 +36,6 @@ export function useActivity(initialEvents: ActivityEvent[], initialTotals: Activ
 
   return {
     events: data?.events ?? initialEvents,
-    totals: data?.totals ?? initialTotals,
+    count: data?.count ?? initialCount,
   };
 }
