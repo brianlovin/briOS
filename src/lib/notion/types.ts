@@ -48,20 +48,101 @@ export type RichTextContent = {
   };
 };
 
-// Processed block type for rendering
-export type ProcessedBlock = {
+type BlockBase = {
   id: string;
-  type: string;
+};
+
+type RichTextBlock<T extends string> = BlockBase & {
+  type: T;
   content: RichTextContent[];
-  language?: string;
-  videoUrl?: string;
-  tableWidth?: number;
-  hasColumnHeader?: boolean;
-  hasRowHeader?: boolean;
-  cells?: RichTextItemResponse[][];
-  tableRows?: ProcessedBlock[];
+};
+
+export type ParagraphBlock = RichTextBlock<"paragraph">;
+export type Heading1Block = RichTextBlock<"heading_1">;
+export type Heading2Block = RichTextBlock<"heading_2">;
+export type Heading3Block = RichTextBlock<"heading_3">;
+export type QuoteBlock = RichTextBlock<"quote">;
+export type CalloutBlock = RichTextBlock<"callout">;
+export type ToggleBlock = RichTextBlock<"toggle">;
+
+export type BulletedListItemBlock = RichTextBlock<"bulleted_list_item"> & {
   children?: ProcessedBlock[];
 };
+
+export type NumberedListItemBlock = RichTextBlock<"numbered_list_item"> & {
+  children?: ProcessedBlock[];
+};
+
+export type ListItemBlock = BulletedListItemBlock | NumberedListItemBlock;
+
+export type TodoBlock = RichTextBlock<"to_do"> & {
+  checked: boolean;
+};
+
+export type ProcessedCodeBlock = RichTextBlock<"code"> & {
+  language: string;
+};
+
+export type DividerBlock = BlockBase & {
+  type: "divider";
+};
+
+export type ImageBlock = BlockBase & {
+  type: "image";
+  url: string;
+};
+
+export type VideoBlock = BlockBase & {
+  type: "video";
+  videoUrl: string;
+};
+
+export type TableRowBlock = BlockBase & {
+  type: "table_row";
+  cells: RichTextItemResponse[][];
+};
+
+export type TableBlock = BlockBase & {
+  type: "table";
+  tableWidth: number;
+  hasColumnHeader: boolean;
+  hasRowHeader: boolean;
+  tableRows?: TableRowBlock[];
+};
+
+/**
+ * Discriminated union of Notion blocks the mapper emits.
+ * Narrow on `type` — image has `url`, video has `videoUrl`, to_do has `checked`.
+ */
+export type ProcessedBlock =
+  | ParagraphBlock
+  | Heading1Block
+  | Heading2Block
+  | Heading3Block
+  | BulletedListItemBlock
+  | NumberedListItemBlock
+  | TodoBlock
+  | ToggleBlock
+  | ProcessedCodeBlock
+  | QuoteBlock
+  | CalloutBlock
+  | DividerBlock
+  | ImageBlock
+  | VideoBlock
+  | TableBlock
+  | TableRowBlock;
+
+export function isTableRowBlock(block: ProcessedBlock): block is TableRowBlock {
+  return block.type === "table_row";
+}
+
+export function isListItemBlock(block: ProcessedBlock): block is ListItemBlock {
+  return block.type === "bulleted_list_item" || block.type === "numbered_list_item";
+}
+
+export function richTextPlainText(content: RichTextContent[]): string {
+  return content.map((c) => c.text.content).join("");
+}
 
 // Generic page metadata for getFullContent / useNotion. Collection-specific
 // records (writing, stack, …) live in their own types below.
@@ -251,9 +332,9 @@ export function extractPreviewText(
   options: { maxBlocks?: number; separator?: string } = {},
 ): string {
   const { maxBlocks, separator = "\n\n" } = options;
-  const paragraphs = blocks.filter((block) => block.type === "paragraph");
+  const paragraphs = blocks.filter((block): block is ParagraphBlock => block.type === "paragraph");
   const limited = maxBlocks ? paragraphs.slice(0, maxBlocks) : paragraphs;
-  return limited.map((block) => block.content.map((c) => c.text.content).join("")).join(separator);
+  return limited.map((block) => richTextPlainText(block.content)).join(separator);
 }
 
 // Type guard for video metadata validation

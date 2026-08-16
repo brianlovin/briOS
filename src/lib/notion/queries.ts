@@ -1,7 +1,7 @@
 import type { DatabaseObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 
 import { getAllBlocks } from "./blocks";
-import { CACHE_TTLS, cachedNotionQuery } from "./cache";
+import { CACHE_TTLS, cachedNotionQuery, notionContentCacheKey } from "./cache";
 import { notion } from "./client";
 import {
   createdTime,
@@ -35,6 +35,7 @@ import {
   type NotionWritingItem,
   type PageResponse,
   type ProcessedBlock,
+  richTextPlainText,
 } from "./types";
 
 async function getDataSourceId(databaseId: string): Promise<string> {
@@ -247,14 +248,14 @@ function parseAppDissectionDetails(blocks: ProcessedBlock[]): {
         details.push(currentDetail);
       }
       currentDetail = {
-        title: block.content.map((c) => c.text.content).join(""),
+        title: richTextPlainText(block.content),
         descriptionBlocks: [],
       };
       continue;
     }
 
     if (block.type === "code" && block.language === "json" && currentDetail) {
-      const jsonContent = block.content.map((c) => c.text.content).join("");
+      const jsonContent = richTextPlainText(block.content);
       try {
         const parsed = JSON.parse(jsonContent);
         if (isValidVideoMetadata(parsed)) {
@@ -286,7 +287,7 @@ export async function getFullContent(
   pageId: string,
 ): Promise<{ blocks: ProcessedBlock[]; metadata: NotionItem } | null> {
   return cachedNotionQuery(
-    `notion:content:${pageId}`,
+    notionContentCacheKey(null, pageId),
     async () => {
       const page = await notion.pages.retrieve({ page_id: pageId });
       const metadata = mapGenericItem(page);
@@ -420,7 +421,7 @@ export async function getWritingPostContent(
   pageId: string,
 ): Promise<{ blocks: ProcessedBlock[]; metadata: NotionWritingItem } | null> {
   return cachedNotionQuery(
-    `notion:writing:content:${pageId}`,
+    notionContentCacheKey("writing", pageId),
     async () => {
       const page = await notion.pages.retrieve({ page_id: pageId });
       const metadata = mapWritingItem(page);
@@ -438,7 +439,7 @@ export async function getWritingPostContentBySlug(
   slug: string,
 ): Promise<{ blocks: ProcessedBlock[]; metadata: NotionWritingItem } | null> {
   return cachedNotionQuery(
-    `notion:writing:content:slug:${slug}`,
+    notionContentCacheKey("writing", "slug", slug),
     async () => {
       const databaseId = process.env.NOTION_WRITING_DATABASE_ID || "";
       const dataSourceId = await getDataSourceId(databaseId);
@@ -469,7 +470,7 @@ export async function getWritingPostByShortId(
   shortId: string,
 ): Promise<{ blocks: ProcessedBlock[]; metadata: NotionWritingItem } | null> {
   return cachedNotionQuery(
-    `notion:writing:content:shortid:${shortId}`,
+    notionContentCacheKey("writing", "shortid", shortId),
     async () => {
       const databaseId = process.env.NOTION_WRITING_DATABASE_ID || "";
       const dataSourceId = await getDataSourceId(databaseId);
@@ -500,7 +501,7 @@ export async function getWritingPostByShortId(
 
 export async function getAmaItemContent(pageId: string): Promise<NotionAmaItemWithContent | null> {
   return cachedNotionQuery(
-    `notion:ama:content:${pageId}`,
+    notionContentCacheKey("ama", pageId),
     async () => {
       const page = await notion.pages.retrieve({ page_id: pageId });
       const item = mapAmaItem(page);
@@ -697,7 +698,7 @@ export async function getTilDatabaseItems(
 
 export async function getTilItemContent(pageId: string): Promise<NotionTilItemWithContent | null> {
   return cachedNotionQuery(
-    `notion:til:content:${pageId}`,
+    notionContentCacheKey("til", pageId),
     async () => {
       const page = await notion.pages.retrieve({ page_id: pageId });
       const item = mapTilItem(page);
@@ -716,7 +717,7 @@ export async function getTilItemContent(pageId: string): Promise<NotionTilItemWi
 
 export async function getTilByShortId(shortId: string): Promise<NotionTilItemWithContent | null> {
   return cachedNotionQuery(
-    `notion:til:content:shortid:${shortId}`,
+    notionContentCacheKey("til", "shortid", shortId),
     async () => {
       const databaseId = process.env.NOTION_TIL_DATABASE_ID || "";
       const dataSourceId = await getDataSourceId(databaseId);
@@ -779,7 +780,7 @@ export async function getAppDissectionItemBySlug(
   slug: string,
 ): Promise<NotionAppDissectionItemWithContent | null> {
   return cachedNotionQuery(
-    `notion:app-dissection:content:${slug}`,
+    notionContentCacheKey("app-dissection", slug),
     async () => {
       const databaseId = process.env.NOTION_APP_DISSECTION_DATABASE_ID || "";
       const dataSourceId = await getDataSourceId(databaseId);

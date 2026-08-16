@@ -4,7 +4,12 @@ import type {
 } from "@notionhq/client/build/src/api-endpoints";
 
 import { notion } from "./client";
-import type { ProcessedBlock, RichTextContent } from "./types";
+import {
+  isTableRowBlock,
+  type ProcessedBlock,
+  type RichTextContent,
+  type TableRowBlock,
+} from "./types";
 
 // Helper to convert Notion rich text to our processed format
 function processRichText(richText: RichTextItemResponse[]): RichTextContent[] {
@@ -77,6 +82,7 @@ export function processBlockFromResponse(block: BlockObjectResponse): ProcessedB
           id: block.id,
           type: "to_do",
           content: processRichText(block.to_do.rich_text),
+          checked: block.to_do.checked,
         };
 
       case "toggle":
@@ -112,32 +118,15 @@ export function processBlockFromResponse(block: BlockObjectResponse): ProcessedB
         return {
           id: block.id,
           type: "divider",
-          content: [],
         };
 
       case "image": {
-        const imageUrl =
+        const url =
           block.image.type === "external" ? block.image.external.url : block.image.file.url;
         return {
           id: block.id,
           type: "image",
-          content: [
-            {
-              type: "text",
-              text: {
-                content: imageUrl,
-                link: undefined,
-              },
-              annotations: {
-                bold: false,
-                italic: false,
-                strikethrough: false,
-                underline: false,
-                code: false,
-                color: "default",
-              },
-            },
-          ],
+          url,
         };
       }
 
@@ -147,7 +136,6 @@ export function processBlockFromResponse(block: BlockObjectResponse): ProcessedB
         return {
           id: block.id,
           type: "video",
-          content: [],
           videoUrl,
         };
       }
@@ -156,7 +144,6 @@ export function processBlockFromResponse(block: BlockObjectResponse): ProcessedB
         return {
           id: block.id,
           type: "table",
-          content: [], // Table blocks don't have direct content, children are table_row blocks
           tableWidth: block.table.table_width,
           hasColumnHeader: block.table.has_column_header,
           hasRowHeader: block.table.has_row_header,
@@ -166,7 +153,6 @@ export function processBlockFromResponse(block: BlockObjectResponse): ProcessedB
         return {
           id: block.id,
           type: "table_row",
-          content: [],
           cells: block.table_row.cells,
         };
 
@@ -217,7 +203,7 @@ export async function getAllBlocks(pageId: string): Promise<ProcessedBlock[]> {
     for (const { block: blockObj, processed: processedBlock } of processed) {
       if (!processedBlock || !blockObj.has_children) continue;
 
-      if (blockObj.type === "table") {
+      if (processedBlock.type === "table") {
         try {
           const childrenResponse = await notion.blocks.children.list({
             block_id: blockObj.id,
@@ -225,13 +211,16 @@ export async function getAllBlocks(pageId: string): Promise<ProcessedBlock[]> {
           });
           processedBlock.tableRows = childrenResponse.results
             .map((childBlock) => processBlockFromResponse(childBlock as BlockObjectResponse))
-            .filter((row): row is ProcessedBlock => row !== null && row.type === "table_row");
+            .filter((row): row is TableRowBlock => row !== null && isTableRowBlock(row));
         } catch (error) {
           console.error(`Error fetching table children for ${blockObj.id}:`, error);
         }
       }
 
-      if (blockObj.type === "bulleted_list_item" || blockObj.type === "numbered_list_item") {
+      if (
+        processedBlock.type === "bulleted_list_item" ||
+        processedBlock.type === "numbered_list_item"
+      ) {
         try {
           const childrenResponse = await notion.blocks.children.list({
             block_id: blockObj.id,

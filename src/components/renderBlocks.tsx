@@ -1,7 +1,14 @@
 import { ReactNode } from "react";
 
 import { CodeBlock } from "@/components/CodeBlock";
-import type { ProcessedBlock, RichTextContent, RichTextItemResponse } from "@/lib/notion";
+import {
+  groupListRuns,
+  type ListRun,
+  type ProcessedBlock,
+  type RichTextContent,
+  type RichTextItemResponse,
+  richTextPlainText,
+} from "@/lib/notion";
 
 // URL regex pattern to match http/https URLs
 const URL_REGEX = /(https?:\/\/[^\s]+)/g;
@@ -88,76 +95,90 @@ function renderRichText(richText: RichTextContent[]) {
   });
 }
 
-function renderChildList(children: ProcessedBlock[]): ReactNode {
-  const hasBulleted = children.some((c) => c.type === "bulleted_list_item");
-  const hasNumbered = children.some((c) => c.type === "numbered_list_item");
-  const Tag = hasNumbered && !hasBulleted ? "ol" : "ul";
-  const listClass = Tag === "ol" ? "space-y-2 mt-2" : "list-disc space-y-2 mt-2";
+function listClassName(type: "bulleted_list_item" | "numbered_list_item", nested: boolean): string {
+  if (type === "numbered_list_item") {
+    return nested ? "space-y-2 mt-2" : "space-y-2";
+  }
+  return nested ? "list-disc space-y-2 mt-2" : "list-disc space-y-2";
+}
 
+function renderListRun(run: ListRun, isPreview: boolean, nested: boolean): ReactNode {
+  if (run.kind === "block") {
+    return renderSingleBlock(run.block, isPreview);
+  }
+
+  const Tag = run.type === "numbered_list_item" ? "ol" : "ul";
   return (
-    <Tag className={listClass}>{children.map((child) => renderSingleBlock(child, false))}</Tag>
+    <Tag key={`${Tag}-${run.items[0].id}`} className={listClassName(run.type, nested)}>
+      {run.items.map((item) => renderSingleBlock(item, isPreview))}
+    </Tag>
   );
+}
+
+function renderChildList(children: ProcessedBlock[]): ReactNode {
+  return groupListRuns(children).map((run) => renderListRun(run, false, true));
 }
 
 function renderSingleBlock(block: ProcessedBlock, isPreview: boolean): ReactNode {
   if (isPreview) {
-    // For preview mode, render all blocks as paragraphs with rich text
-    if (block.type === "table" && block.tableRows) {
+    if (block.type === "table") {
       return (
         <p key={block.id} className="text-secondary leading-[1.6]">
-          [Table with {block.tableRows.length} rows]
+          [Table with {block.tableRows?.length ?? 0} rows]
         </p>
       );
     }
-    return (
-      <p key={block.id} className="text-secondary leading-[1.6]">
-        {renderRichText(block.content)}
-      </p>
-    );
-  }
-
-  // Full rendering mode - handle table blocks with their children rows
-  if (block.type === "table" && block.tableRows) {
-    return (
-      <div key={block.id} className="my-6 overflow-x-auto">
-        <table className="border-secondary w-full border-collapse rounded-md border text-sm">
-          <tbody>
-            {block.tableRows.map((row, rowIndex) => {
-              const cells = row.cells || [];
-              const isHeaderRow = rowIndex === 0 && block.hasColumnHeader;
-
-              return (
-                <tr key={row.id} className={isHeaderRow ? "bg-tertiary" : ""}>
-                  {cells.map((cell, cellIndex) => {
-                    const cellContent = cell.map(
-                      (richText: RichTextItemResponse, index: number) => (
-                        <span key={index}>{richText.plain_text}</span>
-                      ),
-                    );
-
-                    const CellComponent = isHeaderRow ? "th" : "td";
-
-                    return (
-                      <CellComponent
-                        key={cellIndex}
-                        className={`border-secondary border px-3 py-2 text-left ${
-                          isHeaderRow ? "text-primary font-semibold" : "text-secondary"
-                        }`}
-                      >
-                        {cellContent.length > 0 ? cellContent : ""}
-                      </CellComponent>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    );
+    if ("content" in block) {
+      return (
+        <p key={block.id} className="text-secondary leading-[1.6]">
+          {renderRichText(block.content)}
+        </p>
+      );
+    }
+    return null;
   }
 
   switch (block.type) {
+    case "table": {
+      if (!block.tableRows) return null;
+
+      return (
+        <div key={block.id} className="my-6 overflow-x-auto">
+          <table className="border-secondary w-full border-collapse rounded-md border text-sm">
+            <tbody>
+              {block.tableRows.map((row, rowIndex) => {
+                const isHeaderRow = rowIndex === 0 && block.hasColumnHeader;
+
+                return (
+                  <tr key={row.id} className={isHeaderRow ? "bg-tertiary" : ""}>
+                    {row.cells.map((cell, cellIndex) => {
+                      const cellContent = cell.map(
+                        (richText: RichTextItemResponse, index: number) => (
+                          <span key={index}>{richText.plain_text}</span>
+                        ),
+                      );
+
+                      const CellComponent = isHeaderRow ? "th" : "td";
+
+                      return (
+                        <CellComponent
+                          key={cellIndex}
+                          className={`border-secondary border px-3 py-2 text-left ${
+                            isHeaderRow ? "text-primary font-semibold" : "text-secondary"
+                          }`}
+                        >
+                          {cellContent.length > 0 ? cellContent : ""}
+                        </CellComponent>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      );
+    }
     case "quote":
       return (
         <blockquote
@@ -208,7 +229,7 @@ function renderSingleBlock(block: ProcessedBlock, isPreview: boolean): ReactNode
     case "to_do":
       return (
         <div key={block.id} className="text-secondary flex items-start gap-2 leading-[1.6]">
-          <input type="checkbox" disabled className="mt-1" />
+          <input type="checkbox" disabled checked={block.checked} className="mt-1" />
           <span>{renderRichText(block.content)}</span>
         </div>
       );
@@ -222,8 +243,8 @@ function renderSingleBlock(block: ProcessedBlock, isPreview: boolean): ReactNode
       return (
         <CodeBlock
           key={block.id}
-          code={block.content.map((text) => text.text.content).join("")}
-          language={block.language || "plaintext"}
+          code={richTextPlainText(block.content)}
+          language={block.language}
         />
       );
     case "divider":
@@ -232,12 +253,7 @@ function renderSingleBlock(block: ProcessedBlock, isPreview: boolean): ReactNode
       return (
         <div key={block.id}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={block.content[0].text.content}
-            alt=""
-            className="w-full rounded-lg"
-            loading="lazy"
-          />
+          <img src={block.url} alt="" className="w-full rounded-lg" loading="lazy" />
         </div>
       );
     case "video":
@@ -258,52 +274,9 @@ function renderSingleBlock(block: ProcessedBlock, isPreview: boolean): ReactNode
 }
 
 export function renderBlocks(blocks: ProcessedBlock[], isPreview: boolean = false): ReactNode[] {
-  const result: ReactNode[] = [];
-  let i = 0;
-
-  while (i < blocks.length) {
-    const block = blocks[i];
-
-    // Group consecutive bulleted list items
-    if (block.type === "bulleted_list_item" && !isPreview) {
-      const listItems: ReactNode[] = [];
-      const startIndex = i;
-
-      while (i < blocks.length && blocks[i].type === "bulleted_list_item") {
-        listItems.push(renderSingleBlock(blocks[i], isPreview));
-        i++;
-      }
-
-      result.push(
-        <ul key={`ul-${blocks[startIndex].id}`} className="list-disc space-y-2">
-          {listItems}
-        </ul>,
-      );
-      continue;
-    }
-
-    // Group consecutive numbered list items
-    if (block.type === "numbered_list_item" && !isPreview) {
-      const listItems: ReactNode[] = [];
-      const startIndex = i;
-
-      while (i < blocks.length && blocks[i].type === "numbered_list_item") {
-        listItems.push(renderSingleBlock(blocks[i], isPreview));
-        i++;
-      }
-
-      result.push(
-        <ol key={`ol-${blocks[startIndex].id}`} className="space-y-2">
-          {listItems}
-        </ol>,
-      );
-      continue;
-    }
-
-    // Render non-list blocks normally
-    result.push(renderSingleBlock(block, isPreview));
-    i++;
+  if (isPreview) {
+    return blocks.map((block) => renderSingleBlock(block, true));
   }
 
-  return result;
+  return groupListRuns(blocks).map((run) => renderListRun(run, false, false));
 }
