@@ -381,6 +381,8 @@ const REGION_NAMES: Record<string, Record<string, string>> = {
 };
 
 const REGION_RE = /^[A-Z0-9]{1,3}$/;
+const PLACEHOLDER_REGION_RE = /^0+$/;
+const ALL_DIGITS_SHORT_RE = /^\d{1,3}$/;
 
 export function countryCodeToName(value: string | null | undefined): string {
   const code = value?.trim().toUpperCase() ?? "";
@@ -392,6 +394,7 @@ export function normalizeRegionCode(value: string | null | undefined): string | 
   if (!value) return undefined;
   const code = value.trim().toUpperCase();
   if (!REGION_RE.test(code)) return undefined;
+  if (PLACEHOLDER_REGION_RE.test(code)) return undefined;
   return code;
 }
 
@@ -406,7 +409,21 @@ export function regionCodeToName(
     const mapped = REGION_NAMES[countryCode]?.[regionCode];
     if (mapped) return mapped;
   }
-  return regionCode;
+  return "";
+}
+
+/** Skip empty, all-zero, all-digit short codes, and unmapped 2-char ISO codes. */
+function isUsableRegionLabel(
+  label: string | undefined,
+  country: string | undefined,
+): label is string {
+  if (!label) return false;
+  const code = label.trim().toUpperCase();
+  if (!code) return false;
+  if (PLACEHOLDER_REGION_RE.test(code)) return false;
+  if (ALL_DIGITS_SHORT_RE.test(code)) return false;
+  if (code.length === 2 && !regionCodeToName(country, code)) return false;
+  return true;
 }
 
 export function decodeHeaderText(value: string | null | undefined): string | undefined {
@@ -437,8 +454,11 @@ export function getRequestGeo(headers: Headers): ActivityGeo {
     firstHeader(headers, ["cf-region-code", "x-vercel-ip-country-region"]),
   );
   const regionFromNameHeader = decodeHeaderText(firstHeader(headers, ["cf-region"]));
-  const regionName =
-    regionFromNameHeader || (country && region ? regionCodeToName(country, region) : undefined);
+  const mappedRegionName = country && region ? regionCodeToName(country, region) : "";
+  const regionNameCandidate = regionFromNameHeader || mappedRegionName || undefined;
+  const regionName = isUsableRegionLabel(regionNameCandidate, country)
+    ? regionNameCandidate
+    : undefined;
   const city = decodeHeaderText(firstHeader(headers, ["cf-ipcity", "x-vercel-ip-city"]));
 
   return {
@@ -463,7 +483,13 @@ export function formatVisitSummary(geo: {
     decodeHeaderText(geo.countryName) ||
     (country ? countryCodeToName(country) : undefined) ||
     rawCountry;
-  const regionLabel = decodeHeaderText(geo.regionName) || decodeHeaderText(geo.region);
+  const rawRegionName = decodeHeaderText(geo.regionName);
+  const rawRegion = decodeHeaderText(geo.region);
+  const mappedRegion = regionCodeToName(country, rawRegion);
+  const regionLabel =
+    (isUsableRegionLabel(rawRegionName, country) ? rawRegionName : undefined) ||
+    mappedRegion ||
+    (isUsableRegionLabel(rawRegion, country) ? rawRegion : undefined);
   const city = decodeHeaderText(geo.city);
 
   let location: string | undefined;
@@ -506,13 +532,19 @@ export function geoFromVisitMeta(meta: Record<string, unknown> | undefined): {
   city?: string;
 } {
   if (!meta) return {};
+  const country = typeof meta.country === "string" ? meta.country : undefined;
+  const region = normalizeRegionCode(
+    typeof meta.region === "string" ? decodeHeaderText(meta.region) : undefined,
+  );
+  const regionNameRaw =
+    typeof meta.region_name === "string" ? decodeHeaderText(meta.region_name) : undefined;
+  const regionName = isUsableRegionLabel(regionNameRaw, country) ? regionNameRaw : undefined;
   return {
-    country: typeof meta.country === "string" ? meta.country : undefined,
+    country,
     countryName:
       typeof meta.country_name === "string" ? decodeHeaderText(meta.country_name) : undefined,
-    region: typeof meta.region === "string" ? decodeHeaderText(meta.region) : undefined,
-    regionName:
-      typeof meta.region_name === "string" ? decodeHeaderText(meta.region_name) : undefined,
+    ...(region ? { region } : {}),
+    ...(regionName ? { regionName } : {}),
     city: typeof meta.city === "string" ? decodeHeaderText(meta.city) : undefined,
   };
 }
