@@ -14,10 +14,13 @@ import {
   getRequestCountry,
   getRequestGeo,
   hashDigestSubscriber,
+  formatActivityTitle,
   inferTitleFromPath,
   ingestActivityEvent,
   likeActivityPayload,
   likeMetaFromRequest,
+  sanitizeVisitTitle,
+  stripSiteTitleSuffix,
   looksLikeIdentifier,
   looksLikeShortId,
   recordDigestSubscribed,
@@ -250,7 +253,10 @@ describe("formatVisitSummary", () => {
 describe("recordVisit", () => {
   test("does not ingest a visit for /activity", async () => {
     const store = createMemoryActivityStore();
-    const result = await recordVisit({ path: "/activity", country: "US" }, store);
+    const result = await recordVisit(
+      { path: "/activity", title: "Activity | Brian Lovin", country: "US" },
+      store,
+    );
     expect(result).toEqual({ skipped: true, reason: "activity_path" });
     expect(await store.getStreamLength()).toBe(0);
     expect(await store.getTotals()).toEqual([]);
@@ -283,8 +289,51 @@ describe("recordVisit", () => {
       summary: "Visit from India",
       flag: "🇮🇳",
       href: "/writing/grok-bot-first-impressions",
-      label: "grok bot first impressions",
+      label: "Grok Bot First Impressions",
     });
+  });
+
+  test("uses a client document title and strips the site suffix", async () => {
+    const store = createMemoryActivityStore();
+    const result = await recordVisit(
+      {
+        path: "/app-dissection/secret-for-ios",
+        title: "Secret for iOS | Brian Lovin",
+        country: "US",
+      },
+      store,
+    );
+    expect("ok" in result && result.ok).toBe(true);
+
+    const [event] = await store.getTail(1);
+    expect(event?.subject).toEqual({
+      kind: "app_dissection",
+      label: "Secret for iOS",
+      href: "/app-dissection/secret-for-ios",
+    });
+    expect(event?.meta).toEqual(
+      expect.objectContaining({
+        path: "/app-dissection/secret-for-ios",
+        title: "Secret for iOS",
+      }),
+    );
+    expect(getActivityRow(event!).label).toBe("Secret for iOS");
+  });
+
+  test("does not accept a visit title that looks like PII", async () => {
+    const store = createMemoryActivityStore();
+    await recordVisit(
+      {
+        path: "/app-dissection/secret-for-ios",
+        title: "email me at test@example.com | Brian Lovin",
+        country: "US",
+      },
+      store,
+    );
+    const [event] = await store.getTail(1);
+    expect(event?.subject?.label).toBe("secret for ios");
+    expect(event?.meta).toEqual(expect.objectContaining({ title: "secret for ios" }));
+    expect(getActivityRow(event!).label).toBe("Secret for iOS");
   });
 
   test("stores a contextual phrase for an HN story id at ingest", async () => {
@@ -737,6 +786,41 @@ describe("inferTitleFromPath", () => {
   });
 });
 
+describe("sanitizeVisitTitle / formatActivityTitle", () => {
+  test("client title wins over the slug and strips Brian Lovin suffixes", () => {
+    expect(sanitizeVisitTitle("Secret for iOS | Brian Lovin", "/app-dissection/secret-for-ios")).toBe(
+      "Secret for iOS",
+    );
+    expect(
+      sanitizeVisitTitle("Secret for iOS – Brian Lovin", "/app-dissection/secret-for-ios"),
+    ).toBe("Secret for iOS");
+    expect(
+      sanitizeVisitTitle("Secret for iOS — Brian Lovin", "/app-dissection/secret-for-ios"),
+    ).toBe("Secret for iOS");
+    expect(
+      sanitizeVisitTitle("Secret for iOS - App Dissection", "/app-dissection/secret-for-ios"),
+    ).toBe("Secret for iOS");
+  });
+
+  test("falls back to the path title when the client title is missing or PII", () => {
+    expect(sanitizeVisitTitle(undefined, "/app-dissection/secret-for-ios")).toBe("secret for ios");
+    expect(sanitizeVisitTitle("   ", "/app-dissection/secret-for-ios")).toBe("secret for ios");
+    expect(sanitizeVisitTitle("a@b.com", "/app-dissection/secret-for-ios")).toBe("secret for ios");
+    expect(shouldRecordVisit("/activity")).toBe(false);
+  });
+
+  test("strips a site suffix from a document title", () => {
+    expect(stripSiteTitleSuffix("Secret for iOS | Brian Lovin")).toBe("Secret for iOS");
+    expect(stripSiteTitleSuffix("Writing | Brian Lovin")).toBe("Writing");
+  });
+
+  test("title-cases a de-hyphenated slug and leaves a capped title alone", () => {
+    expect(formatActivityTitle("secret for ios")).toBe("Secret for iOS");
+    expect(formatActivityTitle("grok bot first impressions")).toBe("Grok Bot First Impressions");
+    expect(formatActivityTitle("Secret for iOS")).toBe("Secret for iOS");
+  });
+});
+
 describe("getActivityRow page titles", () => {
   test("rewrites a stored a page label when href is home", () => {
     const row = getActivityRow({
@@ -775,8 +859,30 @@ describe("getActivityRow page titles", () => {
         href: "/writing/grok-bot-first-impressions-kcJun01",
       },
     });
-    expect(row.label).toBe("grok bot first impressions");
+    expect(row.label).toBe("Grok Bot First Impressions");
     expect(row.href).toBe("/writing/grok-bot-first-impressions-kcJun01");
+  });
+
+  test("title-cases a stored de-hyphenated slug without rewriting Redis", () => {
+    const row = getActivityRow({
+      v: 1,
+      id: "old-dissection",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "visit",
+      speed: "signal",
+      summary: "Visit from France",
+      visibility: "public",
+      idempotency_key: "old-dissection",
+      subject: {
+        kind: "app_dissection",
+        label: "secret for ios",
+        href: "/app-dissection/secret-for-ios",
+      },
+    });
+    expect(row.label).toBe("Secret for iOS");
+    expect(row.href).toBe("/app-dissection/secret-for-ios");
   });
 
   test("rewrites a stored HN story id to a Hacker News story", () => {
@@ -1032,7 +1138,7 @@ describe("rollupActivityEvents", () => {
     expect(stacks[0]?.count).toBe(1);
     expect(stacks[0]?.sectionLabel).toBe("an AMA question");
     expect(stacks[1]?.count).toBe(1);
-    expect(stacks[1]?.sectionLabel).toBe("grok bot first impressions");
+    expect(stacks[1]?.sectionLabel).toBe("Grok Bot First Impressions");
   });
 
   test("stacks consecutive Shiori link_saved events, then a like as its own row", () => {

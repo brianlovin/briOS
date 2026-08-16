@@ -59,8 +59,28 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(markup).toContain(">grok bot first impressions<");
+    expect(markup).toContain(">Grok Bot First Impressions<");
     expect(markup).toContain('href="/writing/grok-bot-first-impressions-kcJun01"');
+  });
+
+  test("title-cases a stored App Dissection slug", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          summary: "🇫🇷 Visit from France",
+          subject: {
+            kind: "app_dissection",
+            label: "secret for ios",
+            href: "/app-dissection/secret-for-ios",
+          },
+          meta: { country: "FR", path: "/app-dissection/secret-for-ios" },
+        })}
+      />,
+    );
+
+    expect(markup).toContain(">Secret for iOS<");
+    expect(markup).toContain('href="/app-dissection/secret-for-ios"');
+    expect(markup).not.toContain(">secret for ios<");
   });
 
   test("shows a Hacker News story instead of a raw story id", () => {

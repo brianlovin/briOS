@@ -16,9 +16,9 @@ import {
   type ActivityTotal,
   findForbiddenPii,
   inferContentTypeFromPath,
-  inferTitleFromPath,
   isActivityPath,
   likeActivityPayload,
+  sanitizeVisitTitle,
   shouldCountLifetimeTotal,
   shouldRecordVisit,
   visibleLifetimeTotals,
@@ -74,11 +74,15 @@ export {
   isActivityFeedPayload,
   isActivityPath,
   isKnownActivityTitle,
+  formatActivityTitle,
   likeActivityPayload,
+  looksLikeDehyphenatedSlug,
   looksLikeIdentifier,
   looksLikeShortId,
+  sanitizeVisitTitle,
   shouldCountLifetimeTotal,
   shouldRecordVisit,
+  stripSiteTitleSuffix,
   stripTrailingShortIdToken,
   visibleLifetimeTotals,
 } from "./activity-shared";
@@ -273,7 +277,7 @@ export async function recordLike(
 }
 
 export async function recordVisit(
-  input: { path: string } & ActivityGeo,
+  input: { path: string; title?: string } & ActivityGeo,
   store: ActivityStore,
   now: Date = new Date(),
 ): Promise<IngestResult | { skipped: true; reason: string }> {
@@ -288,7 +292,7 @@ export async function recordVisit(
   const regionName = input.regionName?.trim() || undefined;
   const city = input.city?.trim() || undefined;
   const summary = formatVisitSummary({ country, countryName, region, regionName, city });
-  const title = inferTitleFromPath(input.path);
+  const title = sanitizeVisitTitle(input.title, input.path);
   const windowKey = `visit:${Math.floor(now.getTime() / 1000)}`;
   const windowCount = await store.incrementVisitWindow(windowKey, 2);
   const writeToStream = windowCount <= ACTIVITY_VISIT_STREAM_MAX_PER_SEC;

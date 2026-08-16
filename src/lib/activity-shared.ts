@@ -260,6 +260,72 @@ export function inferTitleFromPath(pathname: string): string {
   return titleFromLastSegment(last);
 }
 
+const TITLE_SMALL_WORDS = new Set(["for", "of", "the", "a", "an", "and", "or", "in", "on"]);
+const TITLE_ACRONYMS: Record<string, string> = {
+  ios: "iOS",
+  macos: "macOS",
+  api: "API",
+  ama: "AMA",
+  hn: "HN",
+  til: "TIL",
+  pdf: "PDF",
+  url: "URL",
+  id: "ID",
+};
+
+const SITE_TITLE_SUFFIX_RE = new RegExp(
+  `\\s+[\\u2013\\u2014|-]\\s+(?:${["Brian Lovin", ...Object.values(KNOWN_PATH_TITLES)]
+    .map((name) => name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    .join("|")})\\s*$`,
+  "i",
+);
+
+/** Drop ` | Brian Lovin`, ` - App Dissection`, and the same with en/em dashes. */
+export function stripSiteTitleSuffix(title: string): string {
+  let result = title.trim();
+  for (let i = 0; i < 3; i++) {
+    const next = result.replace(SITE_TITLE_SUFFIX_RE, "").trim();
+    if (next === result) break;
+    result = next;
+  }
+  return result;
+}
+
+/** Use a client document title when it is present, non-PII, and not only the site name. */
+export function sanitizeVisitTitle(title: string | undefined, path: string): string {
+  const fallback = inferTitleFromPath(path);
+  const trimmed = title?.trim();
+  if (!trimmed) return fallback;
+
+  const stripped = stripSiteTitleSuffix(trimmed);
+  if (!stripped || /^brian lovin$/i.test(stripped)) return fallback;
+  if (findForbiddenPii(stripped)) return fallback;
+  return stripped;
+}
+
+/** De-hyphenated slugs are all lowercase (no original caps). */
+export function looksLikeDehyphenatedSlug(label: string): boolean {
+  const trimmed = label.trim();
+  if (!trimmed || !/[a-z]/i.test(trimmed)) return false;
+  return !/[A-Z]/.test(trimmed);
+}
+
+/** Title-case a slug-like label. Leaves already-capped titles alone. */
+export function formatActivityTitle(label: string): string {
+  if (!looksLikeDehyphenatedSlug(label)) return label;
+
+  return label
+    .trim()
+    .split(/\s+/)
+    .map((word, index) => {
+      const lower = word.toLowerCase();
+      if (TITLE_ACRONYMS[lower]) return TITLE_ACRONYMS[lower];
+      if (index > 0 && TITLE_SMALL_WORDS.has(lower)) return lower;
+      return lower.charAt(0).toUpperCase() + lower.slice(1);
+    })
+    .join(" ");
+}
+
 export type LikeActivityTarget = {
   title?: string;
   href?: string;
@@ -294,22 +360,24 @@ function displaySubjectLabel(
 ): string | undefined {
   if (href) {
     const inferred = inferTitleFromPath(href);
-    if (!label || label === "a page" || looksLikeIdentifier(label)) return inferred;
+    if (!label || label === "a page" || looksLikeIdentifier(label)) {
+      return formatActivityTitle(inferred);
+    }
 
     const path = normalizeActivityPath(href);
     // List-page hrefs like `/stack` must not replace a specific item name ("Cursor").
     if (!options?.preferStored && KNOWN_PATH_TITLES[path]) return KNOWN_PATH_TITLES[path];
 
     const cleaned = stripTrailingShortIdToken(label);
-    if (looksLikeIdentifier(cleaned)) return inferred;
-    return cleaned || inferred;
+    if (looksLikeIdentifier(cleaned)) return formatActivityTitle(inferred);
+    return formatActivityTitle(cleaned || inferred);
   }
 
   if (!label) return undefined;
   if (label === "a page") return "Home";
   if (looksLikeIdentifier(label)) return undefined;
   const cleaned = stripTrailingShortIdToken(label);
-  return looksLikeIdentifier(cleaned) ? undefined : cleaned;
+  return looksLikeIdentifier(cleaned) ? undefined : formatActivityTitle(cleaned);
 }
 
 const EMAIL_RE = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i;
