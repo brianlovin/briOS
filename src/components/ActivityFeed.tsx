@@ -3,7 +3,7 @@
 import { useAtom } from "jotai";
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
-import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 
 import { activityLifetimeSidebarAtom } from "@/atoms/activityLifetimeSidebar";
 import { Activity } from "@/components/icons/Activity";
@@ -184,6 +184,16 @@ function useHydrated(): boolean {
   );
 }
 
+function usePreviousKeys(keys: string[]): string[] | null {
+  const previousRef = useRef<string[] | null>(null);
+  useEffect(() => {
+    previousRef.current = keys;
+  }, [keys]);
+  // Last committed key list — new rows must read this on the insert render to get stagger.
+  // eslint-disable-next-line react-hooks/refs -- usePrevious
+  return previousRef.current;
+}
+
 function ActivityStackList({
   stacks,
   pulseKey,
@@ -195,15 +205,11 @@ function ActivityStackList({
   const prefersReducedMotion = useReducedMotion();
   const shouldAnimate = hydrated && prefersReducedMotion !== true;
   const keys = useMemo(() => stacks.map(activityStackReactKey), [stacks]);
-  const [prevKeys, setPrevKeys] = useState<string[]>(keys);
-  const [enterDelays, setEnterDelays] = useState<Map<string, number>>(() => new Map());
-  const keysChanged =
-    prevKeys.length !== keys.length || prevKeys.some((key, index) => key !== keys[index]);
-
-  if (keysChanged) {
-    setEnterDelays(shouldAnimate ? activityEnterStaggerDelays(keys, new Set(prevKeys)) : new Map());
-    setPrevKeys(keys);
-  }
+  const previousKeys = usePreviousKeys(keys);
+  const enterDelays =
+    shouldAnimate && previousKeys
+      ? activityEnterStaggerDelays(keys, new Set(previousKeys))
+      : new Map<string, number>();
 
   return (
     <LayoutGroup>
@@ -221,7 +227,8 @@ function ActivityStackList({
                 transition={
                   shouldAnimate
                     ? {
-                        default: { ...LIST_MOTION, delay },
+                        opacity: { ...LIST_MOTION, delay },
+                        y: { ...LIST_MOTION, delay },
                         layout: LIST_MOTION,
                       }
                     : { duration: 0 }
