@@ -290,7 +290,12 @@ function StackItemComponent({ item, onPlatformClick }: StackItemComponentProps) 
 
       {/* Like button - mobile only, positioned at start */}
       <div className="flex-none self-center md:hidden" onClick={(e) => e.stopPropagation()}>
-        <LikeButton pageId={item.id} />
+        <LikeButton
+          pageId={item.id}
+          title={item.name}
+          href={item.url || "/stack"}
+          contentType="stack"
+        />
       </div>
 
       {/* Description column - desktop only */}
@@ -309,7 +314,12 @@ function StackItemComponent({ item, onPlatformClick }: StackItemComponentProps) 
 
       {/* Likes column - desktop only */}
       <div className="hidden md:col-span-1 md:block" onClick={(e) => e.stopPropagation()}>
-        <LikeButton pageId={item.id} />
+        <LikeButton
+          pageId={item.id}
+          title={item.name}
+          href={item.url || "/stack"}
+          contentType="stack"
+        />
       </div>
     </div>
   );

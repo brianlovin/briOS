@@ -13,6 +13,9 @@ interface LikeButtonProps {
   pageId: string;
   className?: string;
   variant?: "default" | "ghost-light";
+  title?: string;
+  href?: string;
+  contentType?: string;
 }
 
 function AnimatedDigit({ digit, direction }: { digit: string; direction: "up" | "down" }) {
@@ -83,8 +86,19 @@ function generateParticles(intensity: number) {
   }));
 }
 
-export function LikeButton({ pageId, className, variant = "default" }: LikeButtonProps) {
-  const { count, userLikes, isLoading, addLike, removeLike } = useLikes(pageId);
+export function LikeButton({
+  pageId,
+  className,
+  variant = "default",
+  title,
+  href,
+  contentType,
+}: LikeButtonProps) {
+  const { count, userLikes, isLoading, addLike, removeLike } = useLikes(pageId, {
+    title,
+    href,
+    contentType,
+  });
   const [isShaking, setIsShaking] = useState(false);
   const [particles, setParticles] = useState<ReturnType<typeof generateParticles>>([]);
   const [particleKey, setParticleKey] = useState(0);

@@ -155,7 +155,12 @@ async function WritingPostContent(props: { params: Promise<{ slug: string }> }) 
             <PageTitle>{metadata.title}</PageTitle>
             <BatchLikesProvider pageIds={[metadata.id]} initialData={initialLikes}>
               <div className="w-fit">
-                <LikeButton pageId={metadata.id} />
+                <LikeButton
+                  pageId={metadata.id}
+                  title={metadata.title}
+                  href={`/writing/${canonicalSlug}`}
+                  contentType="writing"
+                />
               </div>
             </BatchLikesProvider>
           </div>

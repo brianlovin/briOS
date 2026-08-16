@@ -278,7 +278,12 @@ function GoodWebsiteItemComponent({ item }: { item: GoodWebsiteItem }) {
 
       {/* Like button - mobile only, positioned at start */}
       <div className="flex-none self-center md:hidden" onClick={(e) => e.stopPropagation()}>
-        <LikeButton pageId={item.id} />
+        <LikeButton
+          pageId={item.id}
+          title={item.name}
+          href={item.url || "/sites"}
+          contentType="site"
+        />
       </div>
 
       {/* Good Website URL - desktop only */}
@@ -302,7 +307,12 @@ function GoodWebsiteItemComponent({ item }: { item: GoodWebsiteItem }) {
 
       {/* Likes column - desktop only */}
       <div className="hidden md:col-span-1 md:flex" onClick={(e) => e.stopPropagation()}>
-        <LikeButton pageId={item.id} />
+        <LikeButton
+          pageId={item.id}
+          title={item.name}
+          href={item.url || "/sites"}
+          contentType="site"
+        />
       </div>
     </div>
   );

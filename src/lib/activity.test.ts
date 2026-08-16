@@ -1,12 +1,17 @@
 import { describe, expect, test } from "bun:test";
 
 import {
+  activityEnterStaggerDelays,
+  type ActivityEvent,
   activitySourceFaviconSrc,
   activitySourceUrl,
+  activityStackReactKey,
+  ANONYMOUS_VISIT_SUMMARY,
   countryCodeToFlag,
   countryCodeToName,
   createMemoryActivityStore,
   findForbiddenPii,
+  formatActivityTitle,
   formatDownloadSummary,
   formatVisitSummary,
   getActivityRow,
@@ -14,16 +19,25 @@ import {
   getRequestCountry,
   getRequestGeo,
   hashDigestSubscriber,
+  inferTitleFromPath,
   ingestActivityEvent,
+  likeActivityPayload,
   likeMetaFromRequest,
+  looksLikeIdentifier,
+  looksLikeShortId,
   recordCaffeine,
   recordDigestSubscribed,
   recordLike,
   recordVisit,
   resolveActivitySourceHref,
+  rollupActivityEvents,
+  sanitizeVisitTitle,
+  shouldPulseActivityRollup,
   shouldRecordVisit,
+  stripSiteTitleSuffix,
+  stripTrailingShortIdToken,
 } from "@/lib/activity";
-import { geoFromVisitMeta } from "@/lib/activity-geo";
+import { geoFromVisitMeta, normalizeRegionCode } from "@/lib/activity-geo";
 import { parseActivityStreamFields } from "@/lib/activity-redis";
 import { ACTIVITY_STREAM_MAXLEN, ACTIVITY_VISIT_STREAM_MAX_PER_SEC } from "@/lib/activity-shared";
 
@@ -274,7 +288,7 @@ describe("formatVisitSummary", () => {
       }),
     ).toBe("🇮🇳 Visit from Bengaluru, India");
     expect(formatVisitSummary({ country: "RU" })).toBe("🇷🇺 Visit from Russia");
-    expect(formatVisitSummary({})).toBe("Visit");
+    expect(formatVisitSummary({})).toBe(ANONYMOUS_VISIT_SUMMARY);
   });
 
   test("keeps an unknown country code", () => {
@@ -292,12 +306,62 @@ describe("formatVisitSummary", () => {
     expect(summary).toContain("San Francisco");
     expect(summary).not.toContain("San%20Francisco");
   });
+
+  test("omits placeholder region 00 so Belgrade is city + country", () => {
+    const summary = formatVisitSummary({
+      city: "Belgrade",
+      region: "00",
+      country: "RS",
+    });
+    expect(summary).toContain("Belgrade");
+    expect(summary).toContain("Serbia");
+    expect(summary).not.toContain("00");
+
+    const fromStoredMeta = formatVisitSummary(
+      geoFromVisitMeta({
+        city: "Belgrade",
+        region: "00",
+        region_name: "00",
+        country: "RS",
+      }),
+    );
+    expect(fromStoredMeta).toContain("Belgrade");
+    expect(fromStoredMeta).toContain("Serbia");
+    expect(fromStoredMeta).not.toContain("00");
+  });
+
+  test("still includes a mapped US region for San Francisco", () => {
+    const summary = formatVisitSummary({
+      city: "San Francisco",
+      region: "CA",
+      country: "US",
+    });
+    expect(summary).toContain("San Francisco");
+    expect(summary).toMatch(/California|\bCA\b/);
+    expect(summary).not.toContain("00");
+  });
+});
+
+describe("normalizeRegionCode", () => {
+  test("returns undefined for placeholder all-zero codes", () => {
+    expect(normalizeRegionCode("00")).toBeUndefined();
+    expect(normalizeRegionCode("0")).toBeUndefined();
+    expect(normalizeRegionCode("000")).toBeUndefined();
+  });
+
+  test("keeps a real ISO-3166-2 region code", () => {
+    expect(normalizeRegionCode("CA")).toBe("CA");
+    expect(normalizeRegionCode("nsw")).toBe("NSW");
+  });
 });
 
 describe("recordVisit", () => {
   test("does not ingest a visit for /activity", async () => {
     const store = createMemoryActivityStore();
-    const result = await recordVisit({ path: "/activity", country: "US" }, store);
+    const result = await recordVisit(
+      { path: "/activity", title: "Activity | Brian Lovin", country: "US" },
+      store,
+    );
     expect(result).toEqual({ skipped: true, reason: "activity_path" });
     expect(await store.getStreamLength()).toBe(0);
     expect(await store.getCount()).toBe(0);
@@ -316,7 +380,7 @@ describe("recordVisit", () => {
     expect(event?.summary).toBe("🇮🇳 Visit from India");
     expect(event?.subject).toEqual({
       kind: "writing",
-      label: "grok bot first impressions",
+      label: "Grok Bot First Impressions",
       href: "/writing/grok-bot-first-impressions",
     });
     expect(event?.subject?.href).toBe("/writing/grok-bot-first-impressions");
@@ -324,12 +388,12 @@ describe("recordVisit", () => {
       country: "IN",
       country_name: "India",
       path: "/writing/grok-bot-first-impressions",
-      title: "grok bot first impressions",
+      title: "Grok Bot First Impressions",
     });
     expect(getActivityRow(event!)).toEqual({
       summary: "🇮🇳 Visit from India",
       href: "/writing/grok-bot-first-impressions",
-      label: "grok bot first impressions",
+      label: "Grok Bot First Impressions",
     });
     expect(event?.source).toBe("brios");
   });
@@ -361,6 +425,100 @@ describe("recordVisit", () => {
     );
   });
 
+  test("uses a client document title and strips the site suffix", async () => {
+    const store = createMemoryActivityStore();
+    const result = await recordVisit(
+      {
+        path: "/app-dissection/secret-for-ios",
+        title: "Secret for iOS | Brian Lovin",
+        country: "US",
+      },
+      store,
+    );
+    expect("ok" in result && result.ok).toBe(true);
+
+    const [event] = await store.getTail(1);
+    expect(event?.subject).toEqual({
+      kind: "app_dissection",
+      label: "Secret for iOS",
+      href: "/app-dissection/secret-for-ios",
+    });
+    expect(event?.meta).toEqual(
+      expect.objectContaining({
+        path: "/app-dissection/secret-for-ios",
+        title: "Secret for iOS",
+      }),
+    );
+    expect(getActivityRow(event!).label).toBe("Secret for iOS");
+  });
+
+  test("uses a client title for writing, home, HN, and TIL", async () => {
+    const store = createMemoryActivityStore();
+
+    await recordVisit(
+      { path: "/writing/grok-bot-first-impressions", title: "Grok Bot first impressions" },
+      store,
+    );
+    await recordVisit({ path: "/", title: "Brian Lovin" }, store);
+    await recordVisit({ path: "/hn/46993596", title: "A story about iOS | Brian Lovin" }, store);
+    await recordVisit(
+      { path: "/til/cache-headers-B57IXLJ", title: "Cache Headers | Brian Lovin" },
+      store,
+    );
+
+    const events = await store.getTail(4);
+    expect(events.map((event) => event.subject?.label)).toEqual([
+      "Cache Headers",
+      "A story about iOS",
+      "Home",
+      "Grok Bot first impressions",
+    ]);
+  });
+
+  test("does not accept a visit title that looks like PII", async () => {
+    const store = createMemoryActivityStore();
+    await recordVisit(
+      {
+        path: "/app-dissection/secret-for-ios",
+        title: "email me at test@example.com | Brian Lovin",
+        country: "US",
+      },
+      store,
+    );
+    const [event] = await store.getTail(1);
+    expect(event?.subject?.label).toBe("Secret for iOS");
+    expect(event?.meta).toEqual(expect.objectContaining({ title: "Secret for iOS" }));
+    expect(getActivityRow(event!).label).toBe("Secret for iOS");
+  });
+
+  test("stores a contextual phrase for an HN story id at ingest", async () => {
+    const store = createMemoryActivityStore();
+    await recordVisit({ path: "/hn/46993596", country: "CN" }, store);
+    const [event] = await store.getTail(1);
+    expect(event?.subject).toEqual({
+      kind: "page",
+      label: "a Hacker News story",
+      href: "/hn/46993596",
+    });
+    expect(event?.meta).toEqual(expect.objectContaining({ title: "a Hacker News story" }));
+    expect(getActivityRow(event!).label).toBe("a Hacker News story");
+  });
+
+  test("strips a trailing short id from the visit title at ingest", async () => {
+    const store = createMemoryActivityStore();
+    await recordVisit(
+      { path: "/writing/grok-bot-first-impressions-kcJun01", country: "IN" },
+      store,
+    );
+    const [event] = await store.getTail(1);
+    expect(event?.subject).toEqual({
+      kind: "writing",
+      label: "Grok Bot First Impressions",
+      href: "/writing/grok-bot-first-impressions-kcJun01",
+    });
+    expect(event?.meta).toEqual(expect.objectContaining({ title: "Grok Bot First Impressions" }));
+  });
+
   test("prefers city and region in the visit summary", async () => {
     const store = createMemoryActivityStore();
     await recordVisit(
@@ -384,8 +542,62 @@ describe("recordVisit", () => {
       region_name: "California",
       city: "San Francisco",
       path: "/",
-      title: "a page",
+      title: "Home",
     });
+  });
+
+  test("uses mysterious-place copy when geo is missing", async () => {
+    const store = createMemoryActivityStore();
+    const result = await recordVisit({ path: "/writing" }, store);
+    expect("ok" in result && result.ok).toBe(true);
+
+    const [event] = await store.getTail(1);
+    expect(event?.type).toBe("visit");
+    expect(event?.summary).toBe(ANONYMOUS_VISIT_SUMMARY);
+    expect(event?.meta).toEqual({ path: "/writing", title: "Writing" });
+    expect(getActivityRow(event!)).toEqual({
+      summary: ANONYMOUS_VISIT_SUMMARY,
+      href: "/writing",
+      label: "Writing",
+    });
+  });
+
+  test("rewrites a stored Visit row that has no country", () => {
+    const row = getActivityRow({
+      v: 1,
+      id: "old-anon",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "visit",
+      speed: "signal",
+      summary: "Visit",
+      visibility: "public",
+      idempotency_key: "old-anon",
+      subject: { kind: "home", label: "Home", href: "/" },
+    });
+    expect(row).toEqual({
+      summary: ANONYMOUS_VISIT_SUMMARY,
+      href: "/",
+      label: "Home",
+    });
+  });
+
+  test("keeps a located visit stored only in the summary", () => {
+    const row = getActivityRow({
+      v: 1,
+      id: "old-located",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "visit",
+      speed: "signal",
+      summary: "🇫🇷 Visit from France",
+      visibility: "public",
+      idempotency_key: "old-located",
+      subject: { kind: "writing", label: "Writing", href: "/writing" },
+    });
+    expect(row.summary).toBe("🇫🇷 Visit from France");
   });
 
   test("keeps the existing summary when the country has no flag", async () => {
@@ -394,7 +606,8 @@ describe("recordVisit", () => {
     const [event] = await store.getTail(1);
     expect(event?.summary).toBe("Visit from XX");
     expect(event?.subject?.href).toBe("/");
-    expect(event?.meta).toEqual({ country: "XX", path: "/", title: "a page" });
+    expect(event?.subject?.label).toBe("Home");
+    expect(event?.meta).toEqual({ country: "XX", path: "/", title: "Home" });
   });
 
   test("prefixes a flag in getActivityRow for older visits that lack the emoji", () => {
@@ -623,6 +836,65 @@ describe("recordLike", () => {
       href: "/writing/a-post",
     });
   });
+
+  test("keeps a stack item name instead of the list page title", async () => {
+    const store = createMemoryActivityStore();
+    const result = await recordLike(
+      {
+        title: "Cursor",
+        href: "https://cursor.com",
+        content_type: "stack",
+        pageId: "stack-cursor",
+      },
+      store,
+    );
+    expect("ok" in result && result.ok).toBe(true);
+    const [event] = await store.getTail(1);
+    expect(event?.summary).toBe("Someone liked Cursor");
+    expect(event?.subject).toEqual({
+      kind: "stack",
+      label: "Cursor",
+      href: "https://cursor.com",
+    });
+    expect(getActivityRow(event!)).toEqual({
+      summary: "Someone liked Cursor",
+      href: "https://cursor.com",
+      label: "Cursor",
+    });
+  });
+
+  test("formats a slug-like like title and strips a site suffix", async () => {
+    const store = createMemoryActivityStore();
+    const result = await recordLike(
+      {
+        title: "secret for ios | Brian Lovin",
+        href: "/app-dissection/secret-for-ios",
+        content_type: "app_dissection",
+      },
+      store,
+    );
+    expect("ok" in result && result.ok).toBe(true);
+    const [event] = await store.getTail(1);
+    expect(event?.summary).toBe("Someone liked Secret for iOS");
+    expect(event?.subject?.label).toBe("Secret for iOS");
+    expect(getActivityRow(event!).summary).toBe("Someone liked Secret for iOS");
+  });
+
+  test("does not store a like title that looks like PII", async () => {
+    const store = createMemoryActivityStore();
+    await recordLike(
+      {
+        title: "email me at test@example.com",
+        href: "/writing/hello-world",
+        content_type: "writing",
+      },
+      store,
+    );
+    const [event] = await store.getTail(1);
+    expect(event?.summary).toBe("Someone liked Hello World");
+    expect(event?.subject?.label).toBe("Hello World");
+    expect(event?.summary).not.toContain("@");
+  });
 });
 
 describe("parseActivityStreamFields", () => {
@@ -689,6 +961,23 @@ describe("getRequestGeo", () => {
     });
     expect(JSON.stringify(geo)).not.toContain("203.0.113");
   });
+
+  test("omits placeholder Vercel region 00", () => {
+    const geo = getRequestGeo(
+      new Headers({
+        "x-vercel-ip-country": "RS",
+        "x-vercel-ip-country-region": "00",
+        "x-vercel-ip-city": "Belgrade",
+      }),
+    );
+    expect(geo).toEqual({
+      country: "RS",
+      countryName: "Serbia",
+      city: "Belgrade",
+    });
+    expect(geo).not.toHaveProperty("region");
+    expect(geo).not.toHaveProperty("regionName");
+  });
 });
 
 describe("getRequestCountry", () => {
@@ -712,6 +1001,265 @@ describe("getRequestCountry", () => {
   });
 });
 
+describe("inferTitleFromPath", () => {
+  test("maps known section routes to nav labels", () => {
+    expect(inferTitleFromPath("/")).toBe("Home");
+    expect(inferTitleFromPath("/writing")).toBe("Writing");
+    expect(inferTitleFromPath("/til")).toBe("TIL");
+    expect(inferTitleFromPath("/stack")).toBe("Stack");
+    expect(inferTitleFromPath("/hn")).toBe("Hacker News");
+    expect(inferTitleFromPath("/app-dissection")).toBe("App Dissection");
+    expect(inferTitleFromPath("/design-details")).toBe("Design Details");
+    expect(inferTitleFromPath("/bookmarks")).toBe("Bookmarks");
+  });
+
+  test("strips trailing Notion short ids from slugs", () => {
+    expect(inferTitleFromPath("/writing/grok-bot-first-impressions-kcJun01")).toBe(
+      "grok bot first impressions",
+    );
+    expect(inferTitleFromPath("/til/cache-headers-B57IXLJ")).toBe("cache headers");
+  });
+
+  test("leaves no-id slugs and real words unchanged", () => {
+    expect(inferTitleFromPath("/writing/hello-world")).toBe("hello world");
+    expect(inferTitleFromPath("/writing/grok-bot-first-impressions")).toBe(
+      "grok bot first impressions",
+    );
+    expect(looksLikeShortId("writing")).toBe(false);
+    expect(looksLikeShortId("stack")).toBe(false);
+    expect(looksLikeShortId("kcJun01")).toBe(true);
+    expect(looksLikeShortId("B57IXLJ")).toBe(true);
+    expect(stripTrailingShortIdToken("grok bot first impressions kcJun01")).toBe(
+      "grok bot first impressions",
+    );
+  });
+
+  test("never returns a page for an unknown or empty path", () => {
+    expect(inferTitleFromPath("/mystery")).toBe("mystery");
+    expect(inferTitleFromPath("")).toBe("Home");
+  });
+
+  test("uses a contextual phrase for identifier routes instead of the raw id", () => {
+    expect(inferTitleFromPath("/hn/46993596")).toBe("a Hacker News story");
+    expect(inferTitleFromPath("/ama/2f2c711c-0ceb-810d-899d-e5feb99e70f4")).toBe("an AMA question");
+    expect(inferTitleFromPath("/bookmarks/2f2c711c-0ceb-810d-899d-e5feb99e70f4")).toBe("Bookmarks");
+    expect(inferTitleFromPath("/design-details/2f2c711c0ceb810d899de5feb99e70f4")).toBe(
+      "Design Details",
+    );
+    expect(looksLikeIdentifier("46993596")).toBe(true);
+    expect(looksLikeIdentifier("2f2c711c-0ceb-810d-899d-e5feb99e70f4")).toBe(true);
+    expect(looksLikeIdentifier("2f2c711c 0ceb 810d 899d e5feb99e70f4")).toBe(true);
+    expect(looksLikeIdentifier("grok bot first impressions")).toBe(false);
+  });
+
+  test("never returns a bare number or uuid as the page name", () => {
+    const titles = [
+      inferTitleFromPath("/hn/46993596"),
+      inferTitleFromPath("/hn/38084098"),
+      inferTitleFromPath("/ama/2f2c711c-0ceb-810d-899d-e5feb99e70f4"),
+      inferTitleFromPath("/mystery/12345"),
+    ];
+    for (const title of titles) {
+      expect(title).not.toMatch(/^\d+$/);
+      expect(looksLikeIdentifier(title)).toBe(false);
+    }
+    expect(inferTitleFromPath("/mystery/12345")).toBe("mystery");
+  });
+});
+
+describe("sanitizeVisitTitle / formatActivityTitle", () => {
+  test("client title wins over the slug and strips Brian Lovin suffixes", () => {
+    expect(
+      sanitizeVisitTitle("Secret for iOS | Brian Lovin", "/app-dissection/secret-for-ios"),
+    ).toBe("Secret for iOS");
+    expect(
+      sanitizeVisitTitle("Secret for iOS – Brian Lovin", "/app-dissection/secret-for-ios"),
+    ).toBe("Secret for iOS");
+    expect(
+      sanitizeVisitTitle("Secret for iOS — Brian Lovin", "/app-dissection/secret-for-ios"),
+    ).toBe("Secret for iOS");
+    expect(
+      sanitizeVisitTitle("Secret for iOS - App Dissection", "/app-dissection/secret-for-ios"),
+    ).toBe("Secret for iOS");
+  });
+
+  test("falls back to the path title when the client title is missing or PII", () => {
+    expect(sanitizeVisitTitle(undefined, "/app-dissection/secret-for-ios")).toBe("Secret for iOS");
+    expect(sanitizeVisitTitle("   ", "/app-dissection/secret-for-ios")).toBe("Secret for iOS");
+    expect(sanitizeVisitTitle("a@b.com", "/app-dissection/secret-for-ios")).toBe("Secret for iOS");
+    expect(sanitizeVisitTitle("Brian Lovin", "/")).toBe("Home");
+    expect(sanitizeVisitTitle("Home | Brian Lovin", "/")).toBe("Home");
+    expect(shouldRecordVisit("/activity")).toBe(false);
+  });
+
+  test("strips a site suffix from a document title", () => {
+    expect(stripSiteTitleSuffix("Secret for iOS | Brian Lovin")).toBe("Secret for iOS");
+    expect(stripSiteTitleSuffix("Writing | Brian Lovin")).toBe("Writing");
+  });
+
+  test("title-cases a de-hyphenated slug and leaves a capped title alone", () => {
+    expect(formatActivityTitle("secret for ios")).toBe("Secret for iOS");
+    expect(formatActivityTitle("grok bot first impressions")).toBe("Grok Bot First Impressions");
+    expect(formatActivityTitle("Secret for iOS")).toBe("Secret for iOS");
+  });
+});
+
+describe("getActivityRow page titles", () => {
+  test("rewrites a stored a page label when href is home", () => {
+    const row = getActivityRow({
+      v: 1,
+      id: "old-home",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "visit",
+      speed: "signal",
+      summary: "Visit from France",
+      visibility: "public",
+      idempotency_key: "old-home",
+      subject: { kind: "home", label: "a page", href: "/" },
+      meta: { path: "/", title: "a page", country: "FR" },
+    });
+    expect(row.label).toBe("Home");
+    expect(row.href).toBe("/");
+  });
+
+  test("strips a stored short id from a writing visit without rewriting Redis", () => {
+    const row = getActivityRow({
+      v: 1,
+      id: "old-writing",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "visit",
+      speed: "signal",
+      summary: "Visit from India",
+      visibility: "public",
+      idempotency_key: "old-writing",
+      subject: {
+        kind: "writing",
+        label: "grok bot first impressions kcJun01",
+        href: "/writing/grok-bot-first-impressions-kcJun01",
+      },
+    });
+    expect(row.label).toBe("Grok Bot First Impressions");
+    expect(row.href).toBe("/writing/grok-bot-first-impressions-kcJun01");
+  });
+
+  test("title-cases a stored de-hyphenated slug without rewriting Redis", () => {
+    const row = getActivityRow({
+      v: 1,
+      id: "old-dissection",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "visit",
+      speed: "signal",
+      summary: "Visit from France",
+      visibility: "public",
+      idempotency_key: "old-dissection",
+      subject: {
+        kind: "app_dissection",
+        label: "secret for ios",
+        href: "/app-dissection/secret-for-ios",
+      },
+    });
+    expect(row.label).toBe("Secret for iOS");
+    expect(row.href).toBe("/app-dissection/secret-for-ios");
+  });
+
+  test("rewrites a stored HN story id to a Hacker News story", () => {
+    const row = getActivityRow({
+      v: 1,
+      id: "old-hn",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "visit",
+      speed: "signal",
+      summary: "Visit from China",
+      visibility: "public",
+      idempotency_key: "old-hn",
+      subject: {
+        kind: "page",
+        label: "46993596",
+        href: "/hn/46993596",
+      },
+    });
+    expect(row.label).toBe("a Hacker News story");
+    expect(row.href).toBe("/hn/46993596");
+  });
+
+  test("rewrites a stored AMA UUID label to an AMA question", () => {
+    const row = getActivityRow({
+      v: 1,
+      id: "old-ama",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "visit",
+      speed: "signal",
+      summary: "Visit from United States",
+      visibility: "public",
+      idempotency_key: "old-ama",
+      subject: {
+        kind: "ama",
+        label: "2f2c711c 0ceb 810d 899d e5feb99e70f4",
+        href: "/ama/2f2c711c-0ceb-810d-899d-e5feb99e70f4",
+      },
+    });
+    expect(row.label).toBe("an AMA question");
+    expect(row.href).toBe("/ama/2f2c711c-0ceb-810d-899d-e5feb99e70f4");
+  });
+
+  test("keeps a liked stack item name instead of rewriting it to Stack", () => {
+    const row = getActivityRow({
+      v: 1,
+      id: "like-cursor",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "like",
+      speed: "event",
+      summary: "Someone liked Cursor",
+      visibility: "public",
+      idempotency_key: "like-cursor",
+      subject: { kind: "stack", label: "Cursor", href: "/stack" },
+      meta: { content_type: "stack", title: "Cursor", href: "/stack" },
+    });
+    expect(row).toEqual({
+      summary: "Someone liked Cursor",
+      href: "/stack",
+      label: "Cursor",
+    });
+  });
+
+  test("title-cases a stored like slug without rewriting Redis", () => {
+    const row = getActivityRow({
+      v: 1,
+      id: "like-slug",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "like",
+      speed: "event",
+      summary: "Someone liked grok bot first impressions",
+      visibility: "public",
+      idempotency_key: "like-slug",
+      subject: {
+        kind: "writing",
+        label: "grok bot first impressions",
+        href: "/writing/grok-bot-first-impressions",
+      },
+    });
+    expect(row).toEqual({
+      summary: "Someone liked Grok Bot First Impressions",
+      href: "/writing/grok-bot-first-impressions",
+      label: "Grok Bot First Impressions",
+    });
+  });
+});
+
 describe("shouldRecordVisit / likeMetaFromRequest", () => {
   test("skips the activity page and API routes", () => {
     expect(shouldRecordVisit("/activity")).toBe(false);
@@ -727,7 +1275,7 @@ describe("shouldRecordVisit / likeMetaFromRequest", () => {
     );
     expect(writing).toEqual({
       href: "/writing/hello-world",
-      title: "hello world",
+      title: "Hello World",
       content_type: "writing",
     });
 
@@ -737,6 +1285,283 @@ describe("shouldRecordVisit / likeMetaFromRequest", () => {
       }),
     );
     expect(activity).toBeNull();
+  });
+
+  test("uses a passed item title instead of falling back to Stack", () => {
+    const request = new Request("https://brianlovin.com/api/likes/1", {
+      headers: { referer: "https://brianlovin.com/stack" },
+    });
+
+    expect(
+      likeMetaFromRequest(request, {
+        title: "Cursor",
+        href: "https://cursor.com",
+        content_type: "stack",
+      }),
+    ).toEqual({
+      title: "Cursor",
+      href: "https://cursor.com",
+      content_type: "stack",
+    });
+
+    expect(
+      likeMetaFromRequest(request, {
+        title: "Cursor",
+        href: "/stack",
+        content_type: "stack",
+      }),
+    ).toEqual({
+      title: "Cursor",
+      href: "/stack",
+      content_type: "stack",
+    });
+  });
+});
+
+describe("likeActivityPayload", () => {
+  test("uses passed title and href instead of page fallbacks", () => {
+    expect(
+      likeActivityPayload(
+        { title: "Cursor", href: "https://cursor.com", contentType: "stack" },
+        { title: "Stack", href: "/stack" },
+      ),
+    ).toEqual({
+      title: "Cursor",
+      href: "https://cursor.com",
+      content_type: "stack",
+    });
+  });
+
+  test("does not fall back to Stack when a stack item name is provided", () => {
+    expect(
+      likeActivityPayload(
+        { title: "Cursor", href: "/stack", contentType: "stack" },
+        {
+          title: "Stack",
+          href: "/stack",
+        },
+      ),
+    ).toEqual({
+      title: "Cursor",
+      href: "/stack",
+      content_type: "stack",
+    });
+  });
+
+  test("falls back to the page title and path when no target is passed", () => {
+    expect(likeActivityPayload({}, { title: "Stack", href: "/stack" })).toEqual({
+      title: "Stack",
+      href: "/stack",
+      content_type: "stack",
+    });
+  });
+
+  test("strips a document title suffix and formats a slug fallback", () => {
+    expect(
+      likeActivityPayload(
+        {},
+        { title: "Grok Bot first impressions | Brian Lovin", href: "/writing/hello-world" },
+      ),
+    ).toEqual({
+      title: "Grok Bot first impressions",
+      href: "/writing/hello-world",
+      content_type: "writing",
+    });
+
+    expect(likeActivityPayload({}, { href: "/writing/hello-world" })).toEqual({
+      title: "Hello World",
+      href: "/writing/hello-world",
+      content_type: "writing",
+    });
+  });
+});
+
+function feedEvent(
+  overrides: Partial<ActivityEvent> & Pick<ActivityEvent, "id" | "type">,
+): ActivityEvent {
+  return {
+    v: 1,
+    ts: "2026-08-16T00:00:00.000Z",
+    received_at: "2026-08-16T00:00:00.000Z",
+    source: "brios",
+    speed: overrides.type === "visit" ? "signal" : "event",
+    summary: "Visit from Spring Lake, North Carolina, United States",
+    visibility: "public",
+    idempotency_key: overrides.id,
+    ...overrides,
+  };
+}
+
+function springLakeVisit(id: string, href: string, label?: string): ActivityEvent {
+  return feedEvent({
+    id,
+    type: "visit",
+    summary: "Visit from Spring Lake, North Carolina, United States",
+    subject: {
+      kind: "page",
+      label: label ?? href.split("/").pop() ?? "page",
+      href,
+    },
+    meta: {
+      country: "US",
+      country_name: "United States",
+      region: "NC",
+      region_name: "North Carolina",
+      city: "Spring Lake",
+      path: href,
+    },
+  });
+}
+
+describe("rollupActivityEvents", () => {
+  test("stacks six consecutive AMA visits from the same geo into one row", () => {
+    const events = [
+      springLakeVisit("ama-1", "/ama/2f2c711c-0ceb-810d-899d-e5feb99e70f4"),
+      springLakeVisit("ama-2", "/ama/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
+      springLakeVisit("ama-3", "/ama/11111111-2222-3333-4444-555555555555"),
+      springLakeVisit("ama-4", "/ama/abcdef12-3456-7890-abcd-ef1234567890"),
+      springLakeVisit("ama-5", "/ama/99999999-8888-7777-6666-555555555555"),
+      springLakeVisit("ama-6", "/ama/00000000-0000-0000-0000-000000000001"),
+    ];
+
+    const stacks = rollupActivityEvents(events);
+    expect(stacks).toHaveLength(1);
+    expect(stacks[0]?.count).toBe(6);
+    expect(stacks[0]?.latest.id).toBe("ama-1");
+    expect(stacks[0]?.anchorId).toBe("ama-6");
+    expect(stacks[0]?.sectionLabel).toBe("an AMA question");
+    expect(stacks[0]?.key).toBe("visit:spring lake, north carolina, united states:ama");
+    expect(stacks[0]?.href).toBe("/ama");
+  });
+
+  test("keeps a stable React key when a matching event is prepended", () => {
+    const events = [
+      springLakeVisit("ama-1", "/ama/2f2c711c-0ceb-810d-899d-e5feb99e70f4"),
+      springLakeVisit("ama-2", "/ama/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
+    ];
+    const first = rollupActivityEvents(events);
+    const next = rollupActivityEvents([
+      springLakeVisit("ama-0", "/ama/00000000-0000-0000-0000-000000000099"),
+      ...events,
+    ]);
+
+    expect(next[0]?.count).toBe(3);
+    expect(next[0]?.latest.id).toBe("ama-0");
+    expect(next[0]?.anchorId).toBe(first[0]?.anchorId);
+    expect(activityStackReactKey(next[0]!)).toBe(activityStackReactKey(first[0]!));
+  });
+
+  test("does not stack an AMA visit with a writing visit from the same geo", () => {
+    const stacks = rollupActivityEvents([
+      springLakeVisit("ama-1", "/ama/2f2c711c-0ceb-810d-899d-e5feb99e70f4"),
+      springLakeVisit(
+        "writing-1",
+        "/writing/grok-bot-first-impressions",
+        "grok bot first impressions",
+      ),
+    ]);
+
+    expect(stacks).toHaveLength(2);
+    expect(stacks[0]?.count).toBe(1);
+    expect(stacks[0]?.sectionLabel).toBe("an AMA question");
+    expect(stacks[1]?.count).toBe(1);
+    expect(stacks[1]?.sectionLabel).toBe("Grok Bot First Impressions");
+  });
+
+  test("stacks consecutive Shiori link_saved events, then a like as its own row", () => {
+    const shiori = (id: string): ActivityEvent =>
+      feedEvent({
+        id,
+        source: "shiori",
+        type: "link_saved",
+        summary: "Someone saved a link on Shiori",
+      });
+    const like = feedEvent({
+      id: "like-1",
+      type: "like",
+      summary: "Someone liked Stack",
+      subject: { kind: "stack", label: "Stack", href: "/stack" },
+    });
+
+    const stacks = rollupActivityEvents([shiori("s1"), shiori("s2"), shiori("s3"), like]);
+    expect(stacks).toHaveLength(2);
+    expect(stacks[0]?.count).toBe(3);
+    expect(stacks[0]?.key).toBe("shiori:link_saved");
+    expect(stacks[0]?.latest.id).toBe("s1");
+    expect(stacks[1]?.count).toBe(1);
+    expect(stacks[1]?.key).toBe("like:/stack");
+  });
+
+  test("does not stack likes for different apps", () => {
+    const stacks = rollupActivityEvents([
+      feedEvent({
+        id: "like-cursor",
+        type: "like",
+        summary: "Someone liked Cursor",
+        subject: { kind: "stack", label: "Cursor", href: "https://cursor.com" },
+      }),
+      feedEvent({
+        id: "like-raycast",
+        type: "like",
+        summary: "Someone liked Raycast",
+        subject: { kind: "stack", label: "Raycast", href: "https://www.raycast.com" },
+      }),
+    ]);
+
+    expect(stacks).toHaveLength(2);
+    expect(stacks[0]?.key).toBe("like:https://cursor.com");
+    expect(stacks[1]?.key).toBe("like:https://www.raycast.com");
+    expect(getActivityRow(stacks[0]!.latest).summary).toBe("Someone liked Cursor");
+    expect(getActivityRow(stacks[1]!.latest).summary).toBe("Someone liked Raycast");
+  });
+
+  test("does not merge the same type across a different intervening event", () => {
+    const stacks = rollupActivityEvents([
+      springLakeVisit("ama-1", "/ama/2f2c711c-0ceb-810d-899d-e5feb99e70f4"),
+      feedEvent({
+        id: "like-1",
+        type: "like",
+        summary: "Someone liked Stack",
+        subject: { kind: "stack", label: "Stack", href: "/stack" },
+      }),
+      springLakeVisit("ama-2", "/ama/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
+    ]);
+
+    expect(stacks).toHaveLength(3);
+    expect(stacks.map((stack) => stack.count)).toEqual([1, 1, 1]);
+    expect(stacks[0]?.key).toBe(stacks[2]?.key);
+  });
+
+  test("staggers only newly inserted keys, newest first, and caps the delay", () => {
+    expect(activityEnterStaggerDelays(["a", "b"], null).size).toBe(0);
+
+    const previous = new Set(["old-1", "old-2"]);
+    const delays = activityEnterStaggerDelays(
+      ["new-1", "new-2", "new-3", "new-4", "new-5", "old-1", "old-2"],
+      previous,
+    );
+    expect([...delays.entries()]).toEqual([
+      ["new-1", 0],
+      ["new-2", 0.1],
+      ["new-3", 0.2],
+      ["new-4", 0.3],
+      ["new-5", 0.4],
+    ]);
+
+    const many = Array.from({ length: 16 }, (_, index) => `n-${index}`);
+    const capped = activityEnterStaggerDelays(many, new Set());
+    expect(capped.get("n-0")).toBe(0);
+    expect(capped.get("n-10")).toBe(1);
+    expect(capped.get("n-15")).toBe(1);
+    expect(capped.has("old-1")).toBe(false);
+  });
+
+  test("only pulses when the top stack count increments", () => {
+    const top = { key: "visit:spring lake, north carolina, united states:ama", count: 3 };
+    expect(shouldPulseActivityRollup(null, { ...top, count: 1 })).toBe(false);
+    expect(shouldPulseActivityRollup(top, { ...top, count: 4 })).toBe(true);
+    expect(shouldPulseActivityRollup(top, { ...top, count: 3 })).toBe(false);
+    expect(shouldPulseActivityRollup(top, { key: "like:/stack", count: 1 })).toBe(false);
   });
 });
 

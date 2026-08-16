@@ -3,6 +3,7 @@
 import { createContext, useContext } from "react";
 import useSWR, { mutate } from "swr";
 
+import { likeActivityPayload, type LikeActivityTarget } from "@/lib/activity-shared";
 import { fetcher } from "@/lib/fetcher";
 import {
   type LikeCount,
@@ -12,6 +13,7 @@ import {
 } from "@/lib/likes-constants";
 
 export type { LikeCount, LikeData };
+export type { LikeActivityTarget };
 
 type BatchLikesContextType = {
   counts: Record<string, LikeCount>;
@@ -26,7 +28,7 @@ export const BatchLikesContext = createContext<BatchLikesContextType | null>(nul
  * SSR counts are display-only. Viewer state comes from the batch overlay
  * (or an individual GET when there is no batch provider).
  */
-export function useLikes(pageId: string) {
+export function useLikes(pageId: string, target: LikeActivityTarget = {}) {
   const batchContext = useContext(BatchLikesContext);
   const inBatch = batchContext !== null;
 
@@ -60,11 +62,12 @@ export function useLikes(pageId: string) {
         const res = await fetch(`/api/likes/${pageId}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            href: window.location.pathname,
-            title: document.title,
-            content_type: window.location.pathname.split("/").filter(Boolean)[0],
-          }),
+          body: JSON.stringify(
+            likeActivityPayload(target, {
+              title: document.title,
+              href: window.location.pathname,
+            }),
+          ),
         });
         if (!res.ok) {
           throw new Error("Failed to like");

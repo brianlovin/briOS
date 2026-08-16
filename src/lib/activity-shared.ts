@@ -4,6 +4,7 @@
  */
 
 import {
+  ANONYMOUS_VISIT_SUMMARY,
   countryCodeToFlag,
   formatVisitSummary,
   geoFromVisitMeta,
@@ -84,9 +85,7 @@ export function activitySourceFaviconSrc(source: string): string | undefined {
 }
 
 export function resolveVisitTitle(path: string, title?: string): string {
-  const trimmed = title?.trim();
-  if (trimmed) return trimmed.slice(0, ACTIVITY_VISIT_TITLE_MAX);
-  return inferTitleFromPath(path);
+  return sanitizeActivityTitle(title, path).slice(0, ACTIVITY_VISIT_TITLE_MAX);
 }
 
 /** CDN + browser cache for the public activity poll blob. */
@@ -192,15 +191,268 @@ export function inferContentTypeFromPath(pathname: string): string {
   return "page";
 }
 
-export function inferTitleFromPath(pathname: string): string {
-  const segments = pathname.split("/").filter(Boolean);
-  const last = segments[segments.length - 1];
-  if (!last) return "a page";
-  try {
-    return decodeURIComponent(last).replace(/-/g, " ");
-  } catch {
-    return last;
+/** Exact routes → site nav labels. Used at ingest and when rendering stored events. */
+const KNOWN_PATH_TITLES: Record<string, string> = {
+  "/": "Home",
+  "/about": "About",
+  "/activity": "Activity",
+  "/writing": "Writing",
+  "/til": "TIL",
+  "/stack": "Stack",
+  "/sites": "Sites",
+  "/ama": "AMA",
+  "/listening": "Listening",
+  "/hn": "Hacker News",
+  "/app-dissection": "App Dissection",
+  "/design-details": "Design Details",
+  "/bookmarks": "Bookmarks",
+};
+
+/** Identifier child routes → a phrase, never the raw id. */
+const ID_ROUTE_PHRASES: { prefix: string; label: string }[] = [
+  { prefix: "/hn/", label: "a Hacker News story" },
+  { prefix: "/ama/", label: "an AMA question" },
+];
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const UUID_COMPACT_RE = /^[0-9a-f]{32}$/i;
+const UUID_SPACED_RE = /^[0-9a-f]{8}\s+[0-9a-f]{4}\s+[0-9a-f]{4}\s+[0-9a-f]{4}\s+[0-9a-f]{12}$/i;
+const DIGITS_RE = /^\d+$/;
+
+function normalizeActivityPath(pathname: string): string {
+  const path = pathname.split("?")[0] ?? pathname;
+  if (!path || path === "/") return "/";
+  return path.replace(/\/+$/, "") || "/";
+}
+
+/**
+ * Trailing slug tokens that look like Notion short ids (e.g. `kcJun01`, `B57IXLJ`).
+ * Keeps real words (`writing`, `stack`) and Title Case words (`World`).
+ */
+export function looksLikeShortId(token: string): boolean {
+  if (token.length < 5 || token.length > 12) return false;
+  if (!/^[A-Za-z0-9]+$/.test(token)) return false;
+
+  const hasDigit = /\d/.test(token);
+  const hasUpper = /[A-Z]/.test(token);
+  const hasLower = /[a-z]/.test(token);
+  const isTitleCase = /^[A-Z][a-z]+$/.test(token);
+  const isUpperWord = /^[A-Z]+$/.test(token);
+
+  // Keep real words, Title Case words, and lowercase hex (AMA UUIDs).
+  if (isTitleCase || (isUpperWord && !hasDigit) || !hasUpper) return false;
+  return hasLower || hasDigit;
+}
+
+/** Digits, UUIDs (hyphenated, compact, or spaced), or a bare short id. */
+export function looksLikeIdentifier(value: string): boolean {
+  const token = value.trim();
+  if (!token) return false;
+  if (DIGITS_RE.test(token)) return true;
+  if (UUID_RE.test(token) || UUID_COMPACT_RE.test(token) || UUID_SPACED_RE.test(token)) {
+    return true;
   }
+  return !/[\s-]/.test(token) && looksLikeShortId(token);
+}
+
+function labelForIdentifierPath(path: string, segments: string[]): string {
+  const phrase = ID_ROUTE_PHRASES.find((entry) => path.startsWith(entry.prefix));
+  if (phrase) return phrase.label;
+
+  const parent = segments.length > 1 ? `/${segments.slice(0, -1).join("/")}` : "/";
+  if (KNOWN_PATH_TITLES[parent]) return KNOWN_PATH_TITLES[parent];
+
+  const parentSegment = segments[segments.length - 2];
+  if (parentSegment) return titleFromLastSegment(parentSegment);
+  return "Home";
+}
+
+export function stripTrailingShortIdToken(value: string): string {
+  const hyphenParts = value.split("-");
+  if (hyphenParts.length > 1 && looksLikeShortId(hyphenParts[hyphenParts.length - 1] ?? "")) {
+    return hyphenParts.slice(0, -1).join("-");
+  }
+
+  const spaceParts = value.split(/\s+/);
+  if (spaceParts.length > 1 && looksLikeShortId(spaceParts[spaceParts.length - 1] ?? "")) {
+    return spaceParts.slice(0, -1).join(" ");
+  }
+
+  return value;
+}
+
+function titleFromLastSegment(segment: string): string {
+  let decoded = segment;
+  try {
+    decoded = decodeURIComponent(segment);
+  } catch {
+    decoded = segment;
+  }
+  return stripTrailingShortIdToken(decoded).replace(/-/g, " ");
+}
+
+/** First path segment for visit rollups (`/` → `home`). */
+export function activitySectionFromPath(pathname: string | undefined): string {
+  if (!pathname) return "";
+  const path = normalizeActivityPath(pathname);
+  if (path === "/") return "home";
+  return path.split("/").filter(Boolean)[0] ?? "";
+}
+
+/** Smart section phrase for stacked visit subtitles — never a raw id. */
+export function activitySectionPhrase(section: string): string {
+  if (!section || section === "home") return "Home";
+  if (section === "ama") return "an AMA question";
+  if (section === "hn") return "a Hacker News story";
+  const known = KNOWN_PATH_TITLES[`/${section}`];
+  if (known) return known;
+  return inferTitleFromPath(`/${section}`);
+}
+
+export function inferTitleFromPath(pathname: string): string {
+  const path = normalizeActivityPath(pathname);
+  const known = KNOWN_PATH_TITLES[path];
+  if (known) return known;
+
+  const segments = path.split("/").filter(Boolean);
+  const last = segments[segments.length - 1];
+  if (!last) return "Home";
+
+  let decodedLast = last;
+  try {
+    decodedLast = decodeURIComponent(last);
+  } catch {
+    decodedLast = last;
+  }
+  if (looksLikeIdentifier(decodedLast)) {
+    return labelForIdentifierPath(path, segments);
+  }
+  return titleFromLastSegment(last);
+}
+
+const TITLE_SMALL_WORDS = new Set(["for", "of", "the", "a", "an", "and", "or", "in", "on"]);
+const TITLE_ACRONYMS: Record<string, string> = {
+  ios: "iOS",
+  macos: "macOS",
+  api: "API",
+  ama: "AMA",
+  hn: "HN",
+  til: "TIL",
+  pdf: "PDF",
+  url: "URL",
+  id: "ID",
+};
+
+const SITE_TITLE_SUFFIX_RE = new RegExp(
+  `\\s+[\\u2013\\u2014|-]\\s+(?:${["Brian Lovin", ...Object.values(KNOWN_PATH_TITLES)]
+    .map((name) => name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    .join("|")})\\s*$`,
+  "i",
+);
+
+/** Drop ` | Brian Lovin`, ` - App Dissection`, and the same with en/em dashes. */
+export function stripSiteTitleSuffix(title: string): string {
+  let result = title.trim();
+  for (let i = 0; i < 3; i++) {
+    const next = result.replace(SITE_TITLE_SUFFIX_RE, "").trim();
+    if (next === result) break;
+    result = next;
+  }
+  return result;
+}
+
+/**
+ * Prefer a real page title. Strip the site suffix, reject PII, and format
+ * slug-like leftovers. Falls back to the smart route map — never invents a name.
+ */
+export function sanitizeActivityTitle(title: string | undefined, path: string): string {
+  const fallback = formatActivityTitle(inferTitleFromPath(path));
+  const trimmed = title?.trim();
+  if (!trimmed) return fallback;
+
+  const stripped = stripSiteTitleSuffix(trimmed);
+  if (!stripped || /^brian lovin$/i.test(stripped)) return fallback;
+  if (findForbiddenPii(stripped)) return fallback;
+  return formatActivityTitle(stripped);
+}
+
+export const sanitizeVisitTitle = sanitizeActivityTitle;
+
+/** De-hyphenated slugs are all lowercase (no original caps). */
+export function looksLikeDehyphenatedSlug(label: string): boolean {
+  const trimmed = label.trim();
+  if (!trimmed || !/[a-z]/i.test(trimmed)) return false;
+  return !/[A-Z]/.test(trimmed);
+}
+
+/** Title-case a slug-like label. Leaves already-capped titles alone. */
+export function formatActivityTitle(label: string): string {
+  if (!looksLikeDehyphenatedSlug(label)) return label;
+
+  return label
+    .trim()
+    .split(/\s+/)
+    .map((word, index) => {
+      const lower = word.toLowerCase();
+      if (TITLE_ACRONYMS[lower]) return TITLE_ACRONYMS[lower];
+      if (index > 0 && TITLE_SMALL_WORDS.has(lower)) return lower;
+      return lower.charAt(0).toUpperCase() + lower.slice(1);
+    })
+    .join(" ");
+}
+
+export type LikeActivityTarget = {
+  title?: string;
+  href?: string;
+  contentType?: string;
+};
+
+export type LikeActivityPayload = {
+  title: string;
+  href: string;
+  content_type: string;
+};
+
+/** Resolve the like/activity body. Passed title/href win over document/path fallbacks. */
+export function likeActivityPayload(
+  target: LikeActivityTarget = {},
+  fallback: { title?: string; href?: string } = {},
+): LikeActivityPayload {
+  const href = target.href?.trim() || fallback.href?.trim() || "/";
+  const title = sanitizeActivityTitle(target.title || fallback.title, href);
+  const content_type = target.contentType?.trim() || inferContentTypeFromPath(href);
+  return { title, href, content_type };
+}
+
+export function isKnownActivityTitle(label: string): boolean {
+  return Object.values(KNOWN_PATH_TITLES).includes(label);
+}
+
+function displaySubjectLabel(
+  label: string | undefined,
+  href: string | undefined,
+  options?: { preferStored?: boolean },
+): string | undefined {
+  if (href) {
+    const inferred = inferTitleFromPath(href);
+    if (!label || label === "a page" || looksLikeIdentifier(label)) {
+      return formatActivityTitle(inferred);
+    }
+
+    const path = normalizeActivityPath(href);
+    // List-page hrefs like `/stack` must not replace a specific item name ("Cursor").
+    if (!options?.preferStored && KNOWN_PATH_TITLES[path]) return KNOWN_PATH_TITLES[path];
+
+    const cleaned = stripTrailingShortIdToken(label);
+    if (looksLikeIdentifier(cleaned)) return formatActivityTitle(inferred);
+    return formatActivityTitle(cleaned || inferred);
+  }
+
+  if (!label) return undefined;
+  if (label === "a page") return "Home";
+  if (looksLikeIdentifier(label)) return undefined;
+  const cleaned = stripTrailingShortIdToken(label);
+  return looksLikeIdentifier(cleaned) ? undefined : formatActivityTitle(cleaned);
 }
 
 const EMAIL_RE = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i;
@@ -342,12 +594,17 @@ export function getActivityRow(event: ActivityEvent): {
 
   if (event.type === "visit") {
     const geo = geoFromVisitMeta(event.meta);
-    const summary =
-      geo.country || geo.city || geo.countryName ? formatVisitSummary(geo) : event.summary;
+    const hasLocation = Boolean(geo.country || geo.city || geo.countryName);
+    const storedText = splitVisitSummaryFlag(event.summary).text.trim();
+    const summary = hasLocation
+      ? formatVisitSummary(geo)
+      : !storedText || storedText === "Visit"
+        ? ANONYMOUS_VISIT_SUMMARY
+        : visitSummaryWithFlag(event.summary, event.meta);
     return {
       summary,
       href: event.subject?.href,
-      label: event.subject?.label,
+      label: displaySubjectLabel(event.subject?.label, event.subject?.href),
     };
   }
 
@@ -355,14 +612,26 @@ export function getActivityRow(event: ActivityEvent): {
     return {
       summary: visitSummaryWithFlag(event.summary, event.meta),
       href: event.subject?.href,
-      label: event.subject?.label,
+      label: displaySubjectLabel(event.subject?.label, event.subject?.href),
+    };
+  }
+
+  if (event.type === "like") {
+    const label = displaySubjectLabel(event.subject?.label, event.subject?.href, {
+      preferStored: true,
+    });
+    const name = label || "a page";
+    return {
+      summary: `Someone liked ${name}`,
+      href: event.subject?.href,
+      label,
     };
   }
 
   return {
     summary: event.summary,
     href: event.subject?.href,
-    label: event.subject?.label,
+    label: displaySubjectLabel(event.subject?.label, event.subject?.href),
   };
 }
 

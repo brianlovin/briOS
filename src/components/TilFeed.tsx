@@ -50,6 +50,7 @@ function TilEntryContent({ entryId }: { entryId: string }) {
 function TilEntry({ entry }: { entry: TilEntry }) {
   const slug = entry.shortId ? buildSlug(entry.title, entry.shortId) : null;
   const blocks = entry.blocks;
+  const likeHref = slug ? `/til/${slug}` : "/til";
 
   return (
     <article className="grid grid-cols-1 gap-2 sm:grid-cols-[140px_1fr] sm:items-baseline sm:gap-6 md:grid-cols-[180px_1fr]">
@@ -58,7 +59,7 @@ function TilEntry({ entry }: { entry: TilEntry }) {
         <div className="text-tertiary text-base">{formatDate(entry.published)}</div>
         {/* Like button - visible on sm+ screens */}
         <div className="mt-3 hidden sm:block">
-          <LikeButton pageId={entry.id} />
+          <LikeButton pageId={entry.id} title={entry.title} href={likeHref} contentType="til" />
         </div>
       </div>
 
@@ -84,7 +85,7 @@ function TilEntry({ entry }: { entry: TilEntry }) {
 
         {/* Like button - visible only on mobile, below content */}
         <div className="mt-1 w-fit sm:hidden">
-          <LikeButton pageId={entry.id} />
+          <LikeButton pageId={entry.id} title={entry.title} href={likeHref} contentType="til" />
         </div>
       </div>
     </article>
