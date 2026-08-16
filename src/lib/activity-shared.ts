@@ -192,11 +192,23 @@ export function isActivityPath(pathname: string): boolean {
   return ACTIVITY_PATH.test(path);
 }
 
+const CRAWLER_PROBE_PATHS = new Set(["/robots.txt", "/sitemap.xml", "/favicon.ico"]);
+
+function isCrawlerProbePath(pathname: string): boolean {
+  if (CRAWLER_PROBE_PATHS.has(pathname)) return true;
+  if (pathname.startsWith("/apple-touch-icon")) return true;
+  return pathname === "/.well-known" || pathname.startsWith("/.well-known/");
+}
+
 export function shouldRecordVisit(pathname: string): boolean {
-  if (!pathname || pathname.startsWith("/api/") || pathname.startsWith("/_next/")) {
+  const path = pathname.split("?")[0] ?? pathname;
+  if (!path || path.startsWith("/api/") || path.startsWith("/_next/")) {
     return false;
   }
-  return !isActivityPath(pathname);
+  if (isCrawlerProbePath(path)) {
+    return false;
+  }
+  return !isActivityPath(path);
 }
 
 export function inferContentTypeFromPath(pathname: string): string {
