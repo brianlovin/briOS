@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 
 import { errorResponse } from "@/lib/api-utils";
-import { BASE_EMAIL, sendHNDigestEmail } from "@/lib/email";
+import { BASE_EMAIL, generateUnsubscribeUrl, sendHNDigestEmail } from "@/lib/email";
 import { getHNPostsForDigest } from "@/lib/hn";
-import { formatDigestDate, generateUnsubscribeUrl } from "@/lib/jwt";
+import { formatDigestDate } from "@/lib/urls";
 
 /**
  * Test endpoint for sending a sample HN digest email
