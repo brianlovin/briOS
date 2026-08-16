@@ -203,20 +203,25 @@ export function ActivityRow({
       <div className="flex size-8 shrink-0 items-center justify-center">
         <ActivityRowIcon event={event} icon={row.icon} />
       </div>
-      <p className="whitespace-nowrap md:min-w-0 md:truncate">
-        <span className="text-primary">{row.summary}</span>
-        {count > 1 ? <span className="text-tertiary"> {count}</span> : null}
-        {href && context ? (
-          <>
-            {" "}
-            <ActivityContextLink href={href}>{context}</ActivityContextLink>
-          </>
-        ) : context ? (
-          <span className="text-tertiary"> {context}</span>
+      <p className="flex items-baseline gap-1.5 whitespace-nowrap md:min-w-0">
+        <span className="md:min-w-0 md:truncate">
+          <span className="text-primary">{row.summary}</span>
+          {href && context ? (
+            <>
+              {" "}
+              <ActivityContextLink href={href}>{context}</ActivityContextLink>
+            </>
+          ) : context ? (
+            <span className="text-tertiary"> {context}</span>
+          ) : null}
+        </span>
+        {count > 1 ? (
+          <span className="text-tertiary shrink-0 rounded-sm px-1 font-mono text-[11px] leading-4 tabular-nums">
+            {count}
+          </span>
         ) : null}
         {diff ? (
           <span className="shrink-0 text-sm tabular-nums">
-            {" "}
             <span className="text-green-600">+{diff.additions}</span>{" "}
             <span className="text-red-500">-{diff.deletions}</span>
           </span>

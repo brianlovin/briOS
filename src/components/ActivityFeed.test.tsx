@@ -352,7 +352,7 @@ describe("ActivityRow", () => {
     expect(markup).toContain("tabular-nums");
     expect(markup).not.toContain("+18 -3");
     expect(markup).toMatch(
-      /text-primary[^>]*>Merged some-fix[\s\S]*text-tertiary[^>]*> 2<[\s\S]*href="https:\/\/github.com\/brianlovin\/briOS\/pull\/12"[^>]*>brianlovin\/briOS#12[\s\S]*\+18[\s\S]*-3/,
+      /text-primary[^>]*>Merged some-fix[\s\S]*href="https:\/\/github.com\/brianlovin\/briOS\/pull\/12"[^>]*>brianlovin\/briOS#12[\s\S]*font-mono[^>]*>2<[\s\S]*\+18[\s\S]*-3/,
     );
   });
 
@@ -503,7 +503,7 @@ describe("ActivityRow", () => {
     expect(markup).not.toContain("<a ");
   });
 
-  test("shows a tertiary count next to the title when a stack is larger than one", () => {
+  test("shows a quiet count chip after the metadata when a stack is larger than one", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow
         event={event({
@@ -529,14 +529,32 @@ describe("ActivityRow", () => {
     );
 
     expect(markup).toContain("Visit from Spring Lake, North Carolina, United States");
-    expect(markup).toContain("> 6<");
+    expect(markup).toContain(">6<");
+    expect(markup).not.toContain("> 6<");
     expect(markup).toContain("text-tertiary");
+    expect(markup).toContain("font-mono");
+    expect(markup).toContain("rounded-sm");
+    expect(markup).toContain("tabular-nums");
     expect(markup).toContain("an AMA question");
     expect(markup).toContain('href="/ama"');
     expect(markup).not.toContain("2f2c711c-0ceb-810d-899d-e5feb99e70f4");
     expect(markup).toMatch(
-      /text-primary[^>]*>🇺🇸 Visit from Spring Lake[\s\S]*text-tertiary[^>]*> 6<[\s\S]*href="\/ama"[^>]*>an AMA question/,
+      /text-primary[^>]*>🇺🇸 Visit from Spring Lake[\s\S]*href="\/ama"[^>]*>an AMA question[\s\S]*font-mono[^>]*>6</,
     );
+
+    const single = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          summary: "Visit from Spring Lake, North Carolina, United States",
+          meta: { country: "US", path: "/ama" },
+        })}
+        count={1}
+        sectionLabel="an AMA question"
+        href="/ama"
+      />,
+    );
+    expect(single).not.toContain("font-mono");
+    expect(single).not.toContain(">1<");
   });
 
   test("pulses the row background only when asked", () => {
