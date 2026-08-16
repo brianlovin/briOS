@@ -18,6 +18,7 @@ import {
   inferContentTypeFromPath,
   inferTitleFromPath,
   isActivityPath,
+  normalizeCaffeineDrink,
   shouldCountLifetimeTotal,
   shouldRecordVisit,
   visibleLifetimeTotals,
@@ -47,11 +48,14 @@ export {
   findForbiddenPii,
   formatTotalLabel,
   getActivityRow,
+  getCaffeineIcon,
   getRequestCountry,
   inferContentTypeFromPath,
   inferTitleFromPath,
   isActivityFeedPayload,
   isActivityPath,
+  isCoffeeFamilyDrink,
+  normalizeCaffeineDrink,
   shouldCountLifetimeTotal,
   shouldRecordVisit,
   visibleLifetimeTotals,
@@ -290,6 +294,35 @@ export async function recordVisit(
         title,
       },
       writeToStream,
+    },
+    store,
+    now,
+  );
+}
+
+export async function recordCaffeine(
+  input: { drink: string },
+  store: ActivityStore,
+  now: Date = new Date(),
+): Promise<IngestResult> {
+  const drink = normalizeCaffeineDrink(input.drink);
+  if (!drink) {
+    return { ok: false, error: "drink is required", status: 400 };
+  }
+
+  const day = now.toISOString().slice(0, 10);
+  const slug = drink.toLowerCase().replace(/\s+/g, "-");
+
+  return ingestActivityEvent(
+    {
+      source: ACTIVITY_SOURCE_BRIOS,
+      type: "caffeinated",
+      speed: "event",
+      summary: `Caffeinated with ${drink}`,
+      visibility: "public",
+      idempotency_key: `brios:caffeinated:${day}:${slug}:${crypto.randomUUID()}`,
+      subject: { kind: "drink", label: drink },
+      meta: { drink },
     },
     store,
     now,
