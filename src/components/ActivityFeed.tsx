@@ -115,11 +115,11 @@ export function TotalsList({ totals }: { totals: ActivityTotal[] }) {
   }
 
   return (
-    <ul className="font-mono text-xs leading-5 tabular-nums">
+    <ul className="w-max max-w-full font-mono text-[11px] leading-4 tabular-nums">
       {visible.map((total) => (
         <li
           key={`${total.source}:${total.type}`}
-          className="flex items-baseline justify-between gap-3"
+          className="flex items-baseline justify-between gap-4"
           title={formatFirstTracked(total.first_seen)}
         >
           <span className="text-tertiary">{formatTotalLabel(total.type)}</span>
@@ -193,8 +193,8 @@ export function ActivityFeed({
             lifetimeOpen ? "flex" : "hidden",
           )}
         >
-          <div className="px-3 py-2">
-            <h2 className="text-quaternary font-mono text-[11px]">Lifetime</h2>
+          <div className="px-3 py-2 font-mono text-[11px] leading-4">
+            <h2 className="text-quaternary">Lifetime</h2>
             <TotalsList totals={totals} />
           </div>
         </aside>
