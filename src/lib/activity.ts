@@ -165,11 +165,10 @@ function applyIngestDefaults(input: ActivityIngestInput): ActivityIngestInput {
     const title = resolveVisitTitle(path, providedTitle);
     const geo = geoFromVisitMeta(meta);
     const country = geo.country?.trim() || undefined;
-    const countryName =
-      geo.countryName?.trim() || (country ? countryCodeToName(country) : undefined);
-    const region = geo.region?.trim() || undefined;
-    const regionName = geo.regionName?.trim() || undefined;
-    const city = geo.city?.trim() || undefined;
+    const countryName = geo.countryName || (country ? countryCodeToName(country) : undefined);
+    const region = geo.region;
+    const regionName = geo.regionName;
+    const city = geo.city;
     const summary =
       input.summary?.trim() ||
       formatVisitSummary({ country, countryName, region, regionName, city });

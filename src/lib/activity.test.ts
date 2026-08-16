@@ -21,6 +21,7 @@ import {
   shouldRecordVisit,
   visibleLifetimeTotals,
 } from "@/lib/activity";
+import { geoFromVisitMeta } from "@/lib/activity-geo";
 import { parseActivityStreamFields } from "@/lib/activity-redis";
 import { ACTIVITY_STREAM_MAXLEN, ACTIVITY_VISIT_STREAM_MAX_PER_SEC } from "@/lib/activity-shared";
 
@@ -156,6 +157,26 @@ describe("ingestActivityEvent", () => {
     );
   });
 
+  test("decodes percent-encoded HMAC visit city before storing", async () => {
+    const store = createMemoryActivityStore();
+    const result = await ingestActivityEvent(
+      {
+        source: "tax-ui",
+        type: "visit",
+        idempotency_key: "hmac:tax-ui:visit:encoded-city",
+        meta: { path: "/", city: "San%20Francisco", region: "CA", country: "US" },
+      },
+      store,
+    );
+
+    expect(result.ok && !result.duplicate).toBe(true);
+    const [event] = await store.getTail(1);
+    expect(event?.meta?.city).toBe("San Francisco");
+    expect(event?.summary).toContain("San Francisco");
+    expect(event?.summary).not.toContain("San%20Francisco");
+    expect(JSON.stringify(event?.meta)).not.toContain("San%20Francisco");
+  });
+
   test("HMAC ingest of staff-design + like is rejected", async () => {
     const store = createMemoryActivityStore();
     const result = await ingestActivityEvent(
@@ -277,6 +298,18 @@ describe("formatVisitSummary", () => {
 
   test("keeps an unknown country code", () => {
     expect(formatVisitSummary({ country: "ZZ" })).toBe(`${countryCodeToFlag("ZZ")} Visit from ZZ`);
+  });
+
+  test("decodes percent-encoded city from HMAC visit meta", () => {
+    const summary = formatVisitSummary(
+      geoFromVisitMeta({
+        city: "San%20Francisco",
+        region: "CA",
+        country: "US",
+      }),
+    );
+    expect(summary).toContain("San Francisco");
+    expect(summary).not.toContain("San%20Francisco");
   });
 });
 
