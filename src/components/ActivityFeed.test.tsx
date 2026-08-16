@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { renderToStaticMarkup } from "react-dom/server";
 
-import { ActivityRow, ActivityTrackedCount } from "@/components/ActivityFeed";
+import { ActivityFeed, ActivityRow, ActivityTrackedCount } from "@/components/ActivityFeed";
 import { ActivityLiveBadge, TopBarTrail } from "@/components/GlobalTopBar";
 import type { ActivityEvent } from "@/lib/activity";
 import { rollupActivityEvents } from "@/lib/activity-rollup";
@@ -763,5 +763,23 @@ describe("ActivityTrackedCount", () => {
     expect(one).toContain("text-sm");
     expect(many).toContain("12 events tracked");
     expect(many).not.toContain("Live");
+  });
+});
+
+describe("ActivityFeed", () => {
+  test("shows the end-cap after a non-empty feed and not on the empty state", () => {
+    const empty = renderToStaticMarkup(<ActivityFeed initialEvents={[]} initialCount={0} />);
+    const filled = renderToStaticMarkup(
+      <ActivityFeed initialEvents={[event({ id: "evt-1" })]} initialCount={1} />,
+    );
+
+    expect(empty).toContain("Nothing yet. Likes and visits will show up here.");
+    expect(empty).not.toContain("Older activity is dust in the wind...");
+    expect(filled).toContain("Older activity is dust in the wind...");
+    expect(filled).toContain("p-32");
+    expect(filled).toContain("text-center");
+    expect(filled).toContain("text-sm");
+    expect(filled).toContain("text-tertiary");
+    expect(filled).not.toContain("Nothing yet. Likes and visits will show up here.");
   });
 });

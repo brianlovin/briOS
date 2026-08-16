@@ -14,6 +14,7 @@ import {
   ACTIVITY_FEED_CACHE_CONTROL,
   ACTIVITY_FEED_DEDUPING_MS,
   ACTIVITY_FEED_POLL_MS,
+  ACTIVITY_STREAM_MAXLEN,
   activityFeedRefreshInterval,
 } from "@/lib/activity-shared";
 
@@ -64,6 +65,35 @@ describe("activity feed payload", () => {
       expect.objectContaining({ type: "like", summary: "Someone liked a page" }),
     );
     expect(payload.count).toBe(1);
+  });
+
+  test("requests ACTIVITY_STREAM_MAXLEN events from the store", async () => {
+    const store = createMemoryActivityStore();
+    const requested: number[] = [];
+    const getTail = store.getTail.bind(store);
+    store.getTail = async (limit) => {
+      requested.push(limit);
+      return getTail(limit);
+    };
+
+    for (let i = 0; i < 101; i++) {
+      await ingestActivityEvent(
+        {
+          source: "brios",
+          type: "like",
+          speed: "event",
+          summary: `Someone liked page ${i}`,
+          visibility: "public",
+          idempotency_key: `feed:like:window:${i}`,
+        },
+        store,
+      );
+    }
+
+    const payload = await buildActivityFeed(store);
+    expect(requested).toEqual([ACTIVITY_STREAM_MAXLEN]);
+    expect(payload.events).toHaveLength(101);
+    expect(payload.count).toBe(101);
   });
 });
 
