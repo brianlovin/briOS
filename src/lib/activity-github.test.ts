@@ -422,8 +422,6 @@ describe("recordGithubActivity", () => {
     expect(second).toEqual(expect.objectContaining({ ok: true, duplicate: true }));
     expect(other).toEqual(expect.objectContaining({ ok: true, duplicate: false }));
     expect(await store.getStreamLength()).toBe(2);
-    expect(await store.getTotals()).toEqual([
-      expect.objectContaining({ source: "github", type: "repo_starred", count: 2 }),
-    ]);
+    expect(await store.getCount()).toBe(2);
   });
 });

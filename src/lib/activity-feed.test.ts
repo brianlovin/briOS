@@ -25,25 +25,25 @@ describe("activity feed cache headers", () => {
   });
 
   test("JSON responses set both cache headers and no Vary or Set-Cookie", async () => {
-    const res = activityCachedJson({ events: [], totals: [] });
+    const res = activityCachedJson({ events: [], count: 0 });
     expect(res.headers.get("Cache-Control")).toBe(ACTIVITY_FEED_CACHE_CONTROL);
     expect(res.headers.get("CDN-Cache-Control")).toBe(ACTIVITY_FEED_CACHE_CONTROL);
     expect(res.headers.get("Vary")).toBeNull();
     expect(res.headers.get("Set-Cookie")).toBeNull();
-    expect(await res.json()).toEqual({ events: [], totals: [] });
+    expect(await res.json()).toEqual({ events: [], count: 0 });
   });
 });
 
 describe("activity feed payload", () => {
-  test("is { events, totals } and empty when the store is missing", async () => {
+  test("is { events, count } and empty when the store is missing", async () => {
     const empty = await buildActivityFeed(null);
-    expect(empty).toEqual({ events: [], totals: [] });
+    expect(empty).toEqual({ events: [], count: 0 });
     expect(isActivityFeedPayload(empty)).toBe(true);
     expect(isActivityFeedPayload({ events: [] })).toBe(false);
-    expect(isActivityFeedPayload({ totals: [] })).toBe(false);
+    expect(isActivityFeedPayload({ count: 0 })).toBe(false);
   });
 
-  test("reads tail and lifetime totals from the store", async () => {
+  test("reads tail and lifetime count from the store", async () => {
     const store = createMemoryActivityStore();
     await ingestActivityEvent(
       {
@@ -63,9 +63,7 @@ describe("activity feed payload", () => {
     expect(payload.events[0]).toEqual(
       expect.objectContaining({ type: "like", summary: "Someone liked a page" }),
     );
-    expect(payload.totals).toEqual([
-      expect.objectContaining({ source: "brios", type: "like", count: 1 }),
-    ]);
+    expect(payload.count).toBe(1);
   });
 });
 
@@ -97,6 +95,6 @@ describe("activity poll routes", () => {
     expect(tail.headers.get("Cache-Control")).toBe(ACTIVITY_FEED_CACHE_CONTROL);
     expect(totals.headers.get("CDN-Cache-Control")).toBe(ACTIVITY_FEED_CACHE_CONTROL);
     expect(await tail.json()).toEqual({ events: expect.any(Array) });
-    expect(await totals.json()).toEqual({ totals: expect.any(Array) });
+    expect(await totals.json()).toEqual({ count: expect.any(Number) });
   });
 });

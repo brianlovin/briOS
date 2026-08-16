@@ -119,17 +119,16 @@ export type ActivityEvent = {
   meta?: Record<string, unknown>;
 };
 
-export type ActivityTotal = {
-  source: string;
-  type: string;
-  count: number;
-  first_seen: string;
-};
+export const ACTIVITY_TRACKED_SINCE = "August 16, 2026";
 
 export type ActivityFeedPayload = {
   events: ActivityEvent[];
-  totals: ActivityTotal[];
+  count: number;
 };
+
+export function formatTrackedEventsLabel(count: number): string {
+  return count === 1 ? "1 event tracked" : `${count.toLocaleString("en-US")} events tracked`;
+}
 
 /** SWR refreshInterval: poll while the tab is visible, pause when hidden. */
 export function activityFeedRefreshInterval(visibilityState: string | null | undefined): number {
@@ -139,7 +138,11 @@ export function activityFeedRefreshInterval(visibilityState: string | null | und
 export function isActivityFeedPayload(value: unknown): value is ActivityFeedPayload {
   if (!value || typeof value !== "object") return false;
   const record = value as Record<string, unknown>;
-  return Array.isArray(record.events) && Array.isArray(record.totals);
+  return (
+    Array.isArray(record.events) &&
+    typeof record.count === "number" &&
+    Number.isFinite(record.count)
+  );
 }
 
 export type ActivityIngestInput = {
@@ -155,7 +158,7 @@ export type ActivityIngestInput = {
   actor?: ActivityRef;
   subject?: ActivityRef;
   meta?: Record<string, unknown>;
-  /** When false, increment totals only (used for sampled visits). */
+  /** When false, increment the lifetime count only (used for sampled visits). */
   writeToStream?: boolean;
   /** Override idempotency TTL. `0` keeps the key forever (publish / first-seen events). */
   idempotencyTtlSeconds?: number;
@@ -247,16 +250,6 @@ function scanPii(value: unknown, path: string): string | null {
   }
 
   return null;
-}
-
-const HIDDEN_LIFETIME_TYPES = new Set(["visit_country_first"]);
-
-export function shouldCountLifetimeTotal(type: string): boolean {
-  return !HIDDEN_LIFETIME_TYPES.has(type);
-}
-
-export function visibleLifetimeTotals(totals: ActivityTotal[]): ActivityTotal[] {
-  return totals.filter((total) => shouldCountLifetimeTotal(total.type));
 }
 
 function visitSummaryWithFlag(summary: string, meta: Record<string, unknown> | undefined): string {
@@ -370,47 +363,6 @@ export function getActivityRow(event: ActivityEvent): {
     href: event.subject?.href,
     label: event.subject?.label,
   };
-}
-
-export function formatTotalLabel(type: string): string {
-  switch (type) {
-    case "like":
-      return "Likes";
-    case "visit":
-      return "Visits";
-    case "ama_asked":
-      return "AMA questions";
-    case "ama_answered":
-      return "AMA answers";
-    case "digest_subscribed":
-      return "Digest subscribers";
-    case "digest_sent":
-      return "Digests sent";
-    case "writing_published":
-      return "Writing";
-    case "til_published":
-      return "TILs";
-    case "stack_added":
-      return "Stack";
-    case "site_added":
-      return "Sites";
-    case "design_details_added":
-      return "Design Details";
-    case "app_dissection_published":
-      return "App dissections";
-    case "download":
-      return "Downloads";
-    case "pr_opened":
-      return "PRs opened";
-    case "pr_merged":
-      return "PRs merged";
-    case "repo_starred":
-      return "Stars";
-    case "caffeinated":
-      return "Caffeinated";
-    default:
-      return type.replace(/_/g, " ");
-  }
 }
 
 export function getRequestCountry(headers: Headers): string | undefined {

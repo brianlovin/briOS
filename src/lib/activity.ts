@@ -21,7 +21,6 @@ import {
   type ActivityRef,
   activitySourceLabel,
   type ActivitySpeed,
-  type ActivityTotal,
   findForbiddenPii,
   formatDownloadSummary,
   inferContentTypeFromPath,
@@ -29,9 +28,7 @@ import {
   isActivityPath,
   normalizeCaffeineDrink,
   resolveVisitTitle,
-  shouldCountLifetimeTotal,
   shouldRecordVisit,
-  visibleLifetimeTotals,
 } from "./activity-shared";
 
 export type { ActivityGeo } from "./activity-geo";
@@ -50,7 +47,6 @@ export type {
   ActivityIngestInput,
   ActivityRef,
   ActivitySpeed,
-  ActivityTotal,
   ActivityVisibility,
 } from "./activity-shared";
 export {
@@ -62,6 +58,7 @@ export {
   ACTIVITY_SOURCE_GITHUB,
   ACTIVITY_SOURCE_LABELS,
   ACTIVITY_STREAM_MAXLEN,
+  ACTIVITY_TRACKED_SINCE,
   ACTIVITY_VISIT_STREAM_MAX_PER_SEC,
   activityFeedRefreshInterval,
   activitySourceFaviconSrc,
@@ -70,7 +67,7 @@ export {
   countryCodeToFlag,
   findForbiddenPii,
   formatDownloadSummary,
-  formatTotalLabel,
+  formatTrackedEventsLabel,
   getActivityRow,
   getCaffeineIcon,
   getMergedPullRequestDiff,
@@ -83,9 +80,7 @@ export {
   normalizeCaffeineDrink,
   resolveActivitySourceHref,
   resolveVisitTitle,
-  shouldCountLifetimeTotal,
   shouldRecordVisit,
-  visibleLifetimeTotals,
 } from "./activity-shared";
 
 export type IngestResult =
@@ -94,26 +89,26 @@ export type IngestResult =
 
 export type ActivityStore = {
   claimIdempotency(key: string, ttlSeconds: number): Promise<boolean>;
-  incrementTotal(source: string, type: string, firstSeen: string): Promise<void>;
+  incrementCount(): Promise<void>;
   addToStream(event: ActivityEvent): Promise<void>;
   getTail(limit: number): Promise<ActivityEvent[]>;
-  getTotals(): Promise<ActivityTotal[]>;
+  getCount(): Promise<number>;
   getStreamLength(): Promise<number>;
   incrementVisitWindow(windowKey: string, ttlSeconds: number): Promise<number>;
 };
 
 export async function buildActivityFeed(store: ActivityStore | null): Promise<ActivityFeedPayload> {
-  if (!store) return { events: [], totals: [] };
-  const [events, totals] = await Promise.all([store.getTail(100), store.getTotals()]);
-  return { events, totals: visibleLifetimeTotals(totals) };
+  if (!store) return { events: [], count: 0 };
+  const [events, count] = await Promise.all([store.getTail(100), store.getCount()]);
+  return { events, count };
 }
 
 export function createMemoryActivityStore(options: { maxLen?: number } = {}): ActivityStore {
   const maxLen = options.maxLen ?? ACTIVITY_STREAM_MAXLEN;
   const events: ActivityEvent[] = [];
-  const totals = new Map<string, ActivityTotal>();
   const claimed = new Set<string>();
   const visitWindows = new Map<string, number>();
+  let count = 0;
 
   return {
     async claimIdempotency(key: string): Promise<boolean> {
@@ -121,14 +116,8 @@ export function createMemoryActivityStore(options: { maxLen?: number } = {}): Ac
       claimed.add(key);
       return true;
     },
-    async incrementTotal(source: string, type: string, firstSeen: string): Promise<void> {
-      const id = `${source}:${type}`;
-      const existing = totals.get(id);
-      if (existing) {
-        existing.count += 1;
-        return;
-      }
-      totals.set(id, { source, type, count: 1, first_seen: firstSeen });
+    async incrementCount(): Promise<void> {
+      count += 1;
     },
     async addToStream(event: ActivityEvent): Promise<void> {
       events.push(event);
@@ -139,8 +128,8 @@ export function createMemoryActivityStore(options: { maxLen?: number } = {}): Ac
     async getTail(limit: number): Promise<ActivityEvent[]> {
       return events.slice().reverse().slice(0, limit);
     },
-    async getTotals(): Promise<ActivityTotal[]> {
-      return Array.from(totals.values()).sort((a, b) => b.count - a.count);
+    async getCount(): Promise<number> {
+      return count;
     },
     async getStreamLength(): Promise<number> {
       return events.length;
@@ -293,9 +282,7 @@ export async function ingestActivityEvent(
     return { ok: true, id: event.id, duplicate: true, streamed: false };
   }
 
-  if (shouldCountLifetimeTotal(event.type)) {
-    await store.incrementTotal(event.source, event.type, event.received_at);
-  }
+  await store.incrementCount();
 
   const writeToStream = normalized.writeToStream !== false;
   if (writeToStream) {

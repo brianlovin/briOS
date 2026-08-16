@@ -4,15 +4,18 @@ import {
   type ActivityEvent,
   type ActivityFeedPayload,
   type ActivityStore,
-  type ActivityTotal,
   buildActivityFeed,
 } from "./activity";
 import { ACTIVITY_STREAM_MAXLEN } from "./activity-shared";
 
 const STREAM_KEY = "activity:stream";
-const TOTALS_PREFIX = "activity:totals:";
+export const ACTIVITY_COUNT_KEY = "activity:count";
+export const LEGACY_TOTALS_PREFIX = "activity:totals:";
 const IDEMP_PREFIX = "activity:idemp:";
 const VISIT_WINDOW_PREFIX = "activity:visit:window:";
+
+const SEED_SCAN_COUNT = 100;
+const SEED_DELETE_BATCH = 100;
 
 export type ActivityRedisSource = "activity" | "likes";
 
@@ -58,8 +61,82 @@ export function getActivityRedis(): Redis | null {
   return null;
 }
 
-function totalsKey(source: string, type: string): string {
-  return `${TOTALS_PREFIX}${source}:${type}`;
+export type ActivityCountClient = {
+  get: (key: string) => Promise<unknown>;
+  set: (key: string, value: number, opts: { nx: true }) => Promise<unknown>;
+  incr: (key: string) => Promise<number>;
+  scan: (
+    cursor: number,
+    opts: { match: string; count: number },
+  ) => Promise<[string | number, string[]]>;
+  hget: (key: string, field: string) => Promise<unknown>;
+  xlen: (key: string) => Promise<number | null>;
+  del: (...keys: string[]) => Promise<unknown>;
+};
+
+function parseCount(value: unknown): number | null {
+  if (value === null || value === undefined) return null;
+  const n = Number(value);
+  return Number.isFinite(n) ? n : null;
+}
+
+async function scanLegacyTotalsKeys(client: ActivityCountClient): Promise<string[]> {
+  const keys: string[] = [];
+  let cursor = 0;
+
+  do {
+    const [nextCursor, batch] = await client.scan(cursor, {
+      match: `${LEGACY_TOTALS_PREFIX}*`,
+      count: SEED_SCAN_COUNT,
+    });
+    cursor = Number(nextCursor);
+    for (const key of batch) {
+      if (key.startsWith(LEGACY_TOTALS_PREFIX)) keys.push(key);
+    }
+  } while (cursor !== 0);
+
+  return keys;
+}
+
+async function deleteLegacyTotalsKeys(client: ActivityCountClient, keys: string[]): Promise<void> {
+  for (let i = 0; i < keys.length; i += SEED_DELETE_BATCH) {
+    const batch = keys.slice(i, i + SEED_DELETE_BATCH);
+    if (batch.length > 0) await client.del(...batch);
+  }
+}
+
+export async function readLegacyCountSeed(
+  client: ActivityCountClient,
+): Promise<{ seed: number; keys: string[] }> {
+  const keys = await scanLegacyTotalsKeys(client);
+  if (keys.length === 0) {
+    return { seed: (await client.xlen(STREAM_KEY)) ?? 0, keys };
+  }
+
+  let seed = 0;
+  for (const key of keys) {
+    const n = parseCount(await client.hget(key, "count"));
+    if (n !== null) seed += n;
+  }
+  return { seed, keys };
+}
+
+export async function ensureActivityCount(client: ActivityCountClient): Promise<number> {
+  const existing = parseCount(await client.get(ACTIVITY_COUNT_KEY));
+  if (existing !== null) return existing;
+
+  const { seed, keys } = await readLegacyCountSeed(client);
+  const created = await client.set(ACTIVITY_COUNT_KEY, seed, { nx: true });
+  if (created === "OK" && keys.length > 0) {
+    await deleteLegacyTotalsKeys(client, keys);
+  }
+
+  return parseCount(await client.get(ACTIVITY_COUNT_KEY)) ?? seed;
+}
+
+export async function incrementActivityCount(client: ActivityCountClient): Promise<void> {
+  await ensureActivityCount(client);
+  await client.incr(ACTIVITY_COUNT_KEY);
 }
 
 export function parseActivityStreamFields(value: unknown): ActivityEvent | null {
@@ -141,12 +218,8 @@ export function createRedisActivityStore(client: Redis): ActivityStore {
       return result === "OK";
     },
 
-    async incrementTotal(source: string, type: string, firstSeen: string): Promise<void> {
-      const key = totalsKey(source, type);
-      const pipeline = client.pipeline();
-      pipeline.hincrby(key, "count", 1);
-      pipeline.hsetnx(key, "first_seen", firstSeen);
-      await pipeline.exec();
+    async incrementCount(): Promise<void> {
+      await incrementActivityCount(client);
     },
 
     async addToStream(event: ActivityEvent): Promise<void> {
@@ -169,33 +242,8 @@ export function createRedisActivityStore(client: Redis): ActivityStore {
       return parseXrevrange(result).filter((event) => event.visibility === "public");
     },
 
-    async getTotals(): Promise<ActivityTotal[]> {
-      const totals: ActivityTotal[] = [];
-      let cursor = 0;
-
-      do {
-        const [nextCursor, keys] = await client.scan(cursor, {
-          match: `${TOTALS_PREFIX}*`,
-          count: 100,
-        });
-        cursor = Number(nextCursor);
-
-        for (const key of keys) {
-          const hash = await client.hgetall<Record<string, string>>(key);
-          if (!hash) continue;
-          const suffix = key.slice(TOTALS_PREFIX.length);
-          const separator = suffix.indexOf(":");
-          if (separator === -1) continue;
-          const source = suffix.slice(0, separator);
-          const type = suffix.slice(separator + 1);
-          const count = Number(hash.count ?? 0);
-          const firstSeen = hash.first_seen;
-          if (!firstSeen || !Number.isFinite(count)) continue;
-          totals.push({ source, type, count, first_seen: firstSeen });
-        }
-      } while (cursor !== 0);
-
-      return totals.sort((a, b) => b.count - a.count || a.type.localeCompare(b.type));
+    async getCount(): Promise<number> {
+      return ensureActivityCount(client);
     },
 
     async getStreamLength(): Promise<number> {
@@ -226,6 +274,6 @@ export async function getActivityPageData(): Promise<ActivityFeedPayload> {
     return await buildActivityFeed(getActivityStore());
   } catch (error) {
     console.error("[activity] failed to read feed", error);
-    return { events: [], totals: [] };
+    return { events: [], count: 0 };
   }
 }

@@ -54,7 +54,7 @@ function ActivityFallback() {
 
 async function ActivityContent() {
   await connection();
-  const { events, totals } = await getActivityPageData();
+  const { events, count } = await getActivityPageData();
 
-  return <ActivityFeed initialEvents={events} initialTotals={totals} />;
+  return <ActivityFeed initialEvents={events} initialCount={count} />;
 }
