@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 
 import {
+  type ActivityEvent,
   countryCodeToFlag,
   countryCodeToName,
   createMemoryActivityStore,
@@ -18,6 +19,8 @@ import {
   recordDigestSubscribed,
   recordLike,
   recordVisit,
+  rollupActivityEvents,
+  shouldPulseActivityRollup,
   shouldRecordVisit,
   stripTrailingShortIdToken,
   visibleLifetimeTotals,
@@ -760,5 +763,129 @@ describe("shouldRecordVisit / likeMetaFromRequest", () => {
       }),
     );
     expect(activity).toBeNull();
+  });
+});
+
+function feedEvent(
+  overrides: Partial<ActivityEvent> & Pick<ActivityEvent, "id" | "type">,
+): ActivityEvent {
+  return {
+    v: 1,
+    ts: "2026-08-16T00:00:00.000Z",
+    received_at: "2026-08-16T00:00:00.000Z",
+    source: "brios",
+    speed: overrides.type === "visit" ? "signal" : "event",
+    summary: "Visit from Spring Lake, North Carolina, United States",
+    visibility: "public",
+    idempotency_key: overrides.id,
+    ...overrides,
+  };
+}
+
+function springLakeVisit(id: string, href: string, label?: string): ActivityEvent {
+  return feedEvent({
+    id,
+    type: "visit",
+    summary: "Visit from Spring Lake, North Carolina, United States",
+    subject: {
+      kind: "page",
+      label: label ?? href.split("/").pop() ?? "page",
+      href,
+    },
+    meta: {
+      country: "US",
+      country_name: "United States",
+      region: "NC",
+      region_name: "North Carolina",
+      city: "Spring Lake",
+      path: href,
+    },
+  });
+}
+
+describe("rollupActivityEvents", () => {
+  test("stacks six consecutive AMA visits from the same geo into one row", () => {
+    const events = [
+      springLakeVisit("ama-1", "/ama/2f2c711c-0ceb-810d-899d-e5feb99e70f4"),
+      springLakeVisit("ama-2", "/ama/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
+      springLakeVisit("ama-3", "/ama/11111111-2222-3333-4444-555555555555"),
+      springLakeVisit("ama-4", "/ama/abcdef12-3456-7890-abcd-ef1234567890"),
+      springLakeVisit("ama-5", "/ama/99999999-8888-7777-6666-555555555555"),
+      springLakeVisit("ama-6", "/ama/00000000-0000-0000-0000-000000000001"),
+    ];
+
+    const stacks = rollupActivityEvents(events);
+    expect(stacks).toHaveLength(1);
+    expect(stacks[0]?.count).toBe(6);
+    expect(stacks[0]?.latest.id).toBe("ama-1");
+    expect(stacks[0]?.sectionLabel).toBe("an AMA question");
+    expect(stacks[0]?.key).toBe("visit:spring lake, north carolina, united states:ama");
+    expect(stacks[0]?.href).toBe("/ama");
+  });
+
+  test("does not stack an AMA visit with a writing visit from the same geo", () => {
+    const stacks = rollupActivityEvents([
+      springLakeVisit("ama-1", "/ama/2f2c711c-0ceb-810d-899d-e5feb99e70f4"),
+      springLakeVisit(
+        "writing-1",
+        "/writing/grok-bot-first-impressions",
+        "grok bot first impressions",
+      ),
+    ]);
+
+    expect(stacks).toHaveLength(2);
+    expect(stacks[0]?.count).toBe(1);
+    expect(stacks[0]?.sectionLabel).toBe("an AMA question");
+    expect(stacks[1]?.count).toBe(1);
+    expect(stacks[1]?.sectionLabel).toBe("grok bot first impressions");
+  });
+
+  test("stacks consecutive Shiori link_saved events, then a like as its own row", () => {
+    const shiori = (id: string): ActivityEvent =>
+      feedEvent({
+        id,
+        source: "shiori",
+        type: "link_saved",
+        summary: "Someone saved a link on Shiori",
+      });
+    const like = feedEvent({
+      id: "like-1",
+      type: "like",
+      summary: "Someone liked Stack",
+      subject: { kind: "stack", label: "Stack", href: "/stack" },
+    });
+
+    const stacks = rollupActivityEvents([shiori("s1"), shiori("s2"), shiori("s3"), like]);
+    expect(stacks).toHaveLength(2);
+    expect(stacks[0]?.count).toBe(3);
+    expect(stacks[0]?.key).toBe("shiori:link_saved");
+    expect(stacks[0]?.latest.id).toBe("s1");
+    expect(stacks[1]?.count).toBe(1);
+    expect(stacks[1]?.key).toBe("like:/stack");
+  });
+
+  test("does not merge the same type across a different intervening event", () => {
+    const stacks = rollupActivityEvents([
+      springLakeVisit("ama-1", "/ama/2f2c711c-0ceb-810d-899d-e5feb99e70f4"),
+      feedEvent({
+        id: "like-1",
+        type: "like",
+        summary: "Someone liked Stack",
+        subject: { kind: "stack", label: "Stack", href: "/stack" },
+      }),
+      springLakeVisit("ama-2", "/ama/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
+    ]);
+
+    expect(stacks).toHaveLength(3);
+    expect(stacks.map((stack) => stack.count)).toEqual([1, 1, 1]);
+    expect(stacks[0]?.key).toBe(stacks[2]?.key);
+  });
+
+  test("only pulses when the top stack count increments", () => {
+    const top = { key: "visit:spring lake, north carolina, united states:ama", count: 3 };
+    expect(shouldPulseActivityRollup(null, { ...top, count: 1 })).toBe(false);
+    expect(shouldPulseActivityRollup(top, { ...top, count: 4 })).toBe(true);
+    expect(shouldPulseActivityRollup(top, { ...top, count: 3 })).toBe(false);
+    expect(shouldPulseActivityRollup(top, { key: "like:/stack", count: 1 })).toBe(false);
   });
 });

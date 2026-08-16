@@ -25,6 +25,13 @@ import {
 
 export type { ActivityGeo } from "./activity-geo";
 export { countryCodeToName, formatVisitSummary, getRequestGeo } from "./activity-geo";
+export type { ActivityRollup } from "./activity-rollup";
+export {
+  activityEventHref,
+  activityRollupKey,
+  rollupActivityEvents,
+  shouldPulseActivityRollup,
+} from "./activity-rollup";
 export type {
   ActivityEvent,
   ActivityFeedPayload,
@@ -43,6 +50,8 @@ export {
   ACTIVITY_STREAM_MAXLEN,
   ACTIVITY_VISIT_STREAM_MAX_PER_SEC,
   activityFeedRefreshInterval,
+  activitySectionFromPath,
+  activitySectionPhrase,
   countryCodeToFlag,
   findForbiddenPii,
   formatTotalLabel,

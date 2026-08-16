@@ -131,6 +131,53 @@ describe("ActivityRow", () => {
     expect(markup).toContain("shiori-icon.png");
     expect(markup).toContain("Someone saved a link on Shiori");
   });
+
+  test("shows a tertiary count next to the title when a stack is larger than one", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          summary: "Visit from Spring Lake, North Carolina, United States",
+          subject: {
+            kind: "ama",
+            label: "2f2c711c-0ceb-810d-899d-e5feb99e70f4",
+            href: "/ama/2f2c711c-0ceb-810d-899d-e5feb99e70f4",
+          },
+          meta: {
+            country: "US",
+            country_name: "United States",
+            region: "NC",
+            region_name: "North Carolina",
+            city: "Spring Lake",
+            path: "/ama/2f2c711c-0ceb-810d-899d-e5feb99e70f4",
+          },
+        })}
+        count={6}
+        sectionLabel="an AMA question"
+        href="/ama"
+      />,
+    );
+
+    expect(markup).toContain("Visit from Spring Lake, North Carolina, United States");
+    expect(markup).toContain(">6<");
+    expect(markup).toContain("text-tertiary");
+    expect(markup).toContain("an AMA question");
+    expect(markup).toContain('href="/ama"');
+    expect(markup).not.toContain("2f2c711c-0ceb-810d-899d-e5feb99e70f4");
+  });
+
+  test("pulses the row background only when asked", () => {
+    const pulsed = renderToStaticMarkup(
+      <ActivityRow event={event({ summary: "Visit from India" })} pulse />,
+    );
+    const quiet = renderToStaticMarkup(
+      <ActivityRow event={event({ summary: "Visit from India" })} />,
+    );
+
+    expect(pulsed).toContain("data-rollup-pulse");
+    expect(pulsed).toContain("bg-secondary");
+    expect(pulsed).toContain("duration-500");
+    expect(quiet).not.toContain("data-rollup-pulse");
+  });
 });
 
 describe("TotalsList", () => {

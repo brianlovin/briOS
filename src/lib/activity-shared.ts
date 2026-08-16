@@ -220,6 +220,24 @@ function titleFromLastSegment(segment: string): string {
   return stripTrailingShortIdToken(decoded).replace(/-/g, " ");
 }
 
+/** First path segment for visit rollups (`/` → `home`). */
+export function activitySectionFromPath(pathname: string | undefined): string {
+  if (!pathname) return "";
+  const path = normalizeActivityPath(pathname);
+  if (path === "/") return "home";
+  return path.split("/").filter(Boolean)[0] ?? "";
+}
+
+/** Smart section phrase for stacked visit subtitles — never a raw id. */
+export function activitySectionPhrase(section: string): string {
+  if (!section || section === "home") return "Home";
+  if (section === "ama") return "an AMA question";
+  if (section === "hn") return "a Hacker News story";
+  const known = KNOWN_PATH_TITLES[`/${section}`];
+  if (known) return known;
+  return inferTitleFromPath(`/${section}`);
+}
+
 export function inferTitleFromPath(pathname: string): string {
   const path = normalizeActivityPath(pathname);
   const known = KNOWN_PATH_TITLES[path];
