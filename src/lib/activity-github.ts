@@ -21,6 +21,26 @@ function asNumber(value: unknown): number | undefined {
   return typeof value === "number" && Number.isFinite(value) ? value : undefined;
 }
 
+function asCount(value: unknown): number | undefined {
+  const n = asNumber(value);
+  return n !== undefined && n >= 0 ? n : undefined;
+}
+
+function pullRequestDiffMeta(pullRequest: Record<string, unknown> | undefined): {
+  additions?: number;
+  deletions?: number;
+  changed_files?: number;
+} {
+  const additions = asCount(pullRequest?.additions);
+  const deletions = asCount(pullRequest?.deletions);
+  const changedFiles = asCount(pullRequest?.changed_files);
+  return {
+    ...(additions !== undefined ? { additions } : {}),
+    ...(deletions !== undefined ? { deletions } : {}),
+    ...(changedFiles !== undefined ? { changed_files: changedFiles } : {}),
+  };
+}
+
 export function isGithubBotActor(actor: unknown): boolean {
   if (!isPlainObject(actor)) return false;
   if (actor.type === "Bot") return true;
@@ -91,6 +111,7 @@ function pullRequestInput(
         : `Merged a pull request on ${repoShortName(repository)}`;
 
   if (isPrivate) {
+    const diff = type === "pr_merged" ? pullRequestDiffMeta(pullRequest) : {};
     return {
       status: "ingest",
       input: {
@@ -101,7 +122,7 @@ function pullRequestInput(
         visibility: "public",
         idempotency_key: `github:${type}:${repoToken}:${number}`,
         subject: { kind: "pull_request", label: "a pull request" },
-        meta: { private: true, number },
+        meta: { private: true, number, ...diff },
         idempotencyTtlSeconds: 0,
       },
     };
@@ -110,6 +131,7 @@ function pullRequestInput(
   const title = asString(pullRequest?.title) || "a pull request";
   const href = asString(pullRequest?.html_url);
   const repo = repoShortName(repository);
+  const diff = type === "pr_merged" ? pullRequestDiffMeta(pullRequest) : {};
 
   return {
     status: "ingest",
@@ -130,6 +152,7 @@ function pullRequestInput(
         title,
         number,
         ...(href ? { href } : {}),
+        ...diff,
       },
       idempotencyTtlSeconds: 0,
     },

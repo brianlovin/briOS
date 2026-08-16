@@ -120,6 +120,9 @@ describe("githubActivityFromWebhook", () => {
           title: "Add activity feed",
           html_url: "https://github.com/brianlovin/briOS/pull/42",
           merged: true,
+          additions: 311,
+          deletions: 211,
+          changed_files: 8,
           user: human(),
         },
       }),
@@ -129,6 +132,21 @@ describe("githubActivityFromWebhook", () => {
       expect(merged.input.type).toBe("pr_merged");
       expect(merged.input.summary).toBe("Merged a pull request on briOS");
       expect(merged.input.idempotency_key).toBe("github:pr_merged:briOS:42");
+      expect(merged.input.subject).toEqual({
+        kind: "pull_request",
+        label: "Add activity feed",
+        href: "https://github.com/brianlovin/briOS/pull/42",
+      });
+      expect(merged.input.meta).toEqual({
+        repo: "briOS",
+        title: "Add activity feed",
+        number: 42,
+        href: "https://github.com/brianlovin/briOS/pull/42",
+        additions: 311,
+        deletions: 211,
+        changed_files: 8,
+      });
+      expect(merged.input.summary).not.toContain("+311");
     }
 
     const closed = githubActivityFromWebhook(
@@ -267,6 +285,47 @@ describe("githubActivityFromWebhook", () => {
 });
 
 describe("recordGithubActivity", () => {
+  test("stores additions and deletions on a merged pull request", async () => {
+    const store = createMemoryActivityStore();
+    const result = await recordGithubActivity(
+      "pull_request",
+      pullRequestPayload({
+        action: "closed",
+        pull_request: {
+          number: 42,
+          title: "Add activity feed",
+          html_url: "https://github.com/brianlovin/briOS/pull/42",
+          merged: true,
+          additions: 311,
+          deletions: 211,
+          changed_files: 8,
+          user: human(),
+        },
+      }),
+      store,
+    );
+
+    expect(result).toEqual(expect.objectContaining({ ok: true, duplicate: false }));
+    const [event] = await store.getTail(1);
+    expect(event?.type).toBe("pr_merged");
+    expect(event?.summary).toBe("Merged a pull request on briOS");
+    expect(event?.subject).toEqual({
+      kind: "pull_request",
+      label: "Add activity feed",
+      href: "https://github.com/brianlovin/briOS/pull/42",
+    });
+    expect(event?.meta).toEqual({
+      repo: "briOS",
+      title: "Add activity feed",
+      number: 42,
+      href: "https://github.com/brianlovin/briOS/pull/42",
+      additions: 311,
+      deletions: 211,
+      changed_files: 8,
+    });
+    expect(event?.summary).not.toMatch(/\+311|-211/);
+  });
+
   test("writes a public event with no email", async () => {
     const store = createMemoryActivityStore();
     const result = await recordGithubActivity("pull_request", pullRequestPayload(), store);

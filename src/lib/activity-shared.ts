@@ -192,6 +192,15 @@ export function visibleLifetimeTotals(totals: ActivityTotal[]): ActivityTotal[] 
   return totals.filter((total) => shouldCountLifetimeTotal(total.type));
 }
 
+export function getMergedPullRequestDiff(
+  meta: Record<string, unknown> | undefined,
+): { additions: number; deletions: number } | null {
+  if (!meta) return null;
+  if (typeof meta.additions !== "number" || typeof meta.deletions !== "number") return null;
+  if (!Number.isFinite(meta.additions) || !Number.isFinite(meta.deletions)) return null;
+  return { additions: meta.additions, deletions: meta.deletions };
+}
+
 export function getActivityRow(event: ActivityEvent): {
   summary: string;
   flag?: string;

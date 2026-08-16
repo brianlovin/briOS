@@ -55,6 +55,7 @@ export {
   findForbiddenPii,
   formatTotalLabel,
   getActivityRow,
+  getMergedPullRequestDiff,
   getRequestCountry,
   inferContentTypeFromPath,
   inferTitleFromPath,
