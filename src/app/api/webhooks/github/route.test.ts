@@ -157,7 +157,8 @@ describe("POST /api/webhooks/github", () => {
     const privateSerialized = JSON.stringify(privateEvent);
     expect(privateSerialized).not.toContain("secrets");
     expect(privateSerialized).not.toContain("private title");
-    expect(privateEvent?.summary).toBe("Opened a pull request");
+    expect(privateEvent?.summary).toBe("Opened a pull request in a private repo");
+    expect(privateEvent?.subject).toBeUndefined();
     expect(botRes.status).toBe(200);
     expect(await botRes.json()).toEqual({ ok: true, ignored: "bot_actor" });
     expect(closedRes.status).toBe(200);
