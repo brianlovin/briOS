@@ -4,6 +4,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { ActivityRow, ActivityTrackedCount } from "@/components/ActivityFeed";
 import { ActivityLiveBadge, TopBarTrail } from "@/components/GlobalTopBar";
 import type { ActivityEvent } from "@/lib/activity";
+import { rollupActivityEvents } from "@/lib/activity-rollup";
 import { ACTIVITY_TRACKED_SINCE_TOOLTIP, formatTrackedEventsLabel } from "@/lib/activity-shared";
 
 function event(overrides: Partial<ActivityEvent>): ActivityEvent {
@@ -288,6 +289,8 @@ describe("ActivityRow", () => {
 
     expect(markup).toContain("Opened a pull request in a private repo");
     expect(markup).not.toContain("A Pull Request");
+    expect(markup).not.toContain("<a ");
+    expect(markup).not.toContain("href=");
   });
 
   test("renders a stored private merged PR as a single phrase", () => {
@@ -327,8 +330,63 @@ describe("ActivityRow", () => {
 
     expect(markup).toContain("Opened a pull request on briOS");
     expect(markup).toContain("Add activity feed");
+    expect(markup).toContain('href="https://github.com/brianlovin/briOS/pull/42"');
+    expect(markup).toContain('target="_blank"');
     expect(markup).toContain("M12 2C6.477 2 2 6.477 2 12c0 4.42");
     expect(markup).not.toContain("text-red-500");
+    expect(markup).not.toContain(">https:<");
+    expect(markup).not.toContain('href="/https:"');
+  });
+
+  test("renders two public merges on the same repo as separate titled rows", () => {
+    const merge = (id: string, number: number, title: string): ActivityEvent =>
+      event({
+        id,
+        source: "github",
+        type: "pr_merged",
+        speed: "event",
+        summary: "Merged a pull request on designdetails",
+        subject: {
+          kind: "pull_request",
+          label: title,
+          href: `https://github.com/designdetails/designdetails/pull/${number}`,
+        },
+        meta: {
+          repo: "designdetails",
+          title,
+          number,
+          href: `https://github.com/designdetails/designdetails/pull/${number}`,
+          additions: 13,
+          deletions: 2,
+        },
+      });
+
+    const stacks = rollupActivityEvents([
+      merge("pr-719", 719, "Fix player skip"),
+      merge("pr-720", 720, "Tweak chapter marks"),
+    ]);
+    expect(stacks).toHaveLength(2);
+
+    const markup = stacks
+      .map((stack) =>
+        renderToStaticMarkup(
+          <ActivityRow
+            event={stack.latest}
+            count={stack.count}
+            sectionLabel={stack.sectionLabel}
+            href={stack.href}
+          />,
+        ),
+      )
+      .join("\n");
+
+    expect(markup).toContain("Fix player skip");
+    expect(markup).toContain("Tweak chapter marks");
+    expect(markup).toContain('href="https://github.com/designdetails/designdetails/pull/719"');
+    expect(markup).toContain('href="https://github.com/designdetails/designdetails/pull/720"');
+    expect(markup).toContain('target="_blank"');
+    expect(markup).not.toContain('href="/https:"');
+    expect(markup).not.toContain(">https:<");
   });
 
   test("shows merge diff stats in the metadata slot", () => {

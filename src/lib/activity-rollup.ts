@@ -11,6 +11,8 @@ import {
   getActivityRow,
 } from "./activity-shared";
 
+const ABSOLUTE_HTTP_URL_RE = /^https?:\/\//i;
+
 export type ActivityRollup = {
   key: string;
   count: number;
@@ -70,6 +72,21 @@ function visitGeoKey(event: ActivityEvent): string {
     .toLowerCase();
 }
 
+function pullRequestIdentity(event: ActivityEvent): string {
+  const href = event.subject?.href?.trim();
+  if (href) return href;
+
+  const repo = typeof event.meta?.repo === "string" ? event.meta.repo.trim() : "";
+  const number = event.meta?.number;
+  if (repo && (typeof number === "number" || typeof number === "string")) {
+    return `${repo}#${number}`;
+  }
+  if (typeof number === "number" || typeof number === "string") {
+    return `#${number}`;
+  }
+  return event.summary;
+}
+
 export function activityRollupKey(event: ActivityEvent): string {
   if (event.source === "shiori") {
     return `shiori:${event.type}`;
@@ -82,6 +99,10 @@ export function activityRollupKey(event: ActivityEvent): string {
   if (event.type === "visit" || event.type === "visit_country_first") {
     const section = activitySectionFromPath(activityEventHref(event));
     return `visit:${visitGeoKey(event)}:${section}`;
+  }
+
+  if (event.type === "pr_opened" || event.type === "pr_merged") {
+    return `${event.source}:${event.type}:${pullRequestIdentity(event)}`;
   }
 
   return `${event.source}:${event.type}:${event.summary}`;
@@ -111,6 +132,9 @@ function stackHref(events: ActivityEvent[]): string | undefined {
   ];
   if (hrefs.length === 1) return hrefs[0];
   if (hrefs.length === 0) return undefined;
+  if (hrefs.every((href) => ABSOLUTE_HTTP_URL_RE.test(href))) {
+    return activityEventHref(events[0]!);
+  }
   const section = activitySectionFromPath(hrefs[0]);
   if (!section || section === "home") return "/";
   return `/${section}`;

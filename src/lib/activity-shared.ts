@@ -219,6 +219,17 @@ const UUID_COMPACT_RE = /^[0-9a-f]{32}$/i;
 const UUID_SPACED_RE = /^[0-9a-f]{8}\s+[0-9a-f]{4}\s+[0-9a-f]{4}\s+[0-9a-f]{4}\s+[0-9a-f]{12}$/i;
 const DIGITS_RE = /^\d+$/;
 
+function pathnameFromActivityHref(value: string): string {
+  if (ABSOLUTE_HTTP_URL_RE.test(value)) {
+    try {
+      return new URL(value).pathname;
+    } catch {
+      return value;
+    }
+  }
+  return value;
+}
+
 function normalizeActivityPath(pathname: string): string {
   const path = pathname.split("?")[0] ?? pathname;
   if (!path || path === "/") return "/";
@@ -294,7 +305,7 @@ function titleFromLastSegment(segment: string): string {
 /** First path segment for visit rollups (`/` → `home`). */
 export function activitySectionFromPath(pathname: string | undefined): string {
   if (!pathname) return "";
-  const path = normalizeActivityPath(pathname);
+  const path = normalizeActivityPath(pathnameFromActivityHref(pathname));
   if (path === "/") return "home";
   return path.split("/").filter(Boolean)[0] ?? "";
 }
@@ -310,7 +321,7 @@ export function activitySectionPhrase(section: string): string {
 }
 
 export function inferTitleFromPath(pathname: string): string {
-  const path = normalizeActivityPath(pathname);
+  const path = normalizeActivityPath(pathnameFromActivityHref(pathname));
   const known = KNOWN_PATH_TITLES[path];
   if (known) return known;
 
@@ -592,6 +603,25 @@ function isPrivatePullRequestEvent(
   return event.subject?.label === PRIVATE_PULL_REQUEST_DUMMY_LABEL && !event.subject.href;
 }
 
+function publicPullRequestHref(event: ActivityEvent): string | undefined {
+  if (event.subject?.href) return event.subject.href;
+  const metaHref = event.meta?.href;
+  return typeof metaHref === "string" && metaHref ? metaHref : undefined;
+}
+
+/** Real PR title, or `repo#number` / “a pull request”. Never a site path title. */
+function publicPullRequestLabel(event: ActivityEvent): string {
+  const stored =
+    event.subject?.label?.trim() ||
+    (typeof event.meta?.title === "string" ? event.meta.title.trim() : "");
+  if (stored && stored !== PRIVATE_PULL_REQUEST_DUMMY_LABEL) return stored;
+
+  const repo = typeof event.meta?.repo === "string" ? event.meta.repo.trim() : "";
+  const number = event.meta?.number;
+  if (repo && typeof number === "number") return `${repo}#${number}`;
+  return PRIVATE_PULL_REQUEST_DUMMY_LABEL;
+}
+
 export function getActivityRow(event: ActivityEvent): {
   summary: string;
   flag?: string;
@@ -601,6 +631,15 @@ export function getActivityRow(event: ActivityEvent): {
 } {
   if (isPrivatePullRequestEvent(event)) {
     return { summary: privatePullRequestSummary(event.type) };
+  }
+
+  if (event.type === "pr_opened" || event.type === "pr_merged") {
+    const href = publicPullRequestHref(event);
+    return {
+      summary: event.summary,
+      ...(href ? { href } : {}),
+      label: publicPullRequestLabel(event),
+    };
   }
 
   if (event.type === "caffeinated") {

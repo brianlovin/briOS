@@ -3,6 +3,8 @@ import { describe, expect, test } from "bun:test";
 import {
   activityEnterStaggerDelays,
   type ActivityEvent,
+  activityRollupKey,
+  activitySectionFromPath,
   activitySourceFaviconSrc,
   activitySourceUrl,
   activityStackReactKey,
@@ -1110,6 +1112,26 @@ describe("inferTitleFromPath", () => {
     }
     expect(inferTitleFromPath("/mystery/12345")).toBe("mystery");
   });
+
+  test("parses absolute http(s) URLs instead of treating the scheme as a path", () => {
+    const title = inferTitleFromPath("https://github.com/foo/bar/pull/1");
+    expect(title).not.toBe("https:");
+    expect(title).not.toMatch(/^https?:/i);
+  });
+});
+
+describe("activitySectionFromPath", () => {
+  test("maps site paths to the first segment", () => {
+    expect(activitySectionFromPath("/")).toBe("home");
+    expect(activitySectionFromPath("/ama/2f2c711c-0ceb-810d-899d-e5feb99e70f4")).toBe("ama");
+    expect(activitySectionFromPath(undefined)).toBe("");
+  });
+
+  test("uses the URL pathname for absolute GitHub hrefs, never https:", () => {
+    const section = activitySectionFromPath("https://github.com/foo/bar/pull/1");
+    expect(["foo", "bar", "pull"]).toContain(section);
+    expect(section).not.toBe("https:");
+  });
 });
 
 describe("sanitizeVisitTitle / formatActivityTitle", () => {
@@ -1387,6 +1409,63 @@ describe("getActivityRow private pull requests", () => {
       href: "https://github.com/brianlovin/briOS/pull/42",
       label: "Add activity feed",
     });
+  });
+
+  test("does not invent a site-path title from a GitHub html_url", () => {
+    const row = getActivityRow(
+      prEvent({
+        summary: "Merged a pull request on designdetails",
+        subject: {
+          kind: "pull_request",
+          label: "Fix player skip",
+          href: "https://github.com/designdetails/designdetails/pull/719",
+        },
+        meta: {
+          repo: "designdetails",
+          title: "Fix player skip",
+          number: 719,
+          href: "https://github.com/designdetails/designdetails/pull/719",
+        },
+      }),
+    );
+    expect(row.label).toBe("Fix player skip");
+    expect(row.href).toBe("https://github.com/designdetails/designdetails/pull/719");
+    expect(row.label).not.toBe("https:");
+    expect(JSON.stringify(row)).not.toContain("/https:");
+  });
+
+  test("falls back to repo#number when the public PR title is missing", () => {
+    const row = getActivityRow(
+      prEvent({
+        summary: "Opened a pull request on briOS",
+        subject: {
+          kind: "pull_request",
+          label: "a pull request",
+          href: "https://github.com/brianlovin/briOS/pull/42",
+        },
+        meta: { repo: "briOS", number: 42, href: "https://github.com/brianlovin/briOS/pull/42" },
+      }),
+    );
+    expect(row).toEqual({
+      summary: "Opened a pull request on briOS",
+      href: "https://github.com/brianlovin/briOS/pull/42",
+      label: "briOS#42",
+    });
+  });
+
+  test("falls back to a pull request when title and repo number are missing", () => {
+    const row = getActivityRow(
+      prEvent({
+        summary: "Opened a pull request on briOS",
+        subject: {
+          kind: "pull_request",
+          label: "",
+          href: "https://github.com/brianlovin/briOS/pull/42",
+        },
+      }),
+    );
+    expect(row.label).toBe("a pull request");
+    expect(row.href).toBe("https://github.com/brianlovin/briOS/pull/42");
   });
 });
 
@@ -1707,6 +1786,106 @@ describe("rollupActivityEvents", () => {
     expect(capped.get("n-10")).toBe(1);
     expect(capped.get("n-15")).toBe(1);
     expect(capped.has("old-1")).toBe(false);
+  });
+
+  test("keeps two public PR merges on the same repo as separate rows", () => {
+    const merge = (id: string, number: number, title: string): ActivityEvent =>
+      feedEvent({
+        id,
+        source: "github",
+        type: "pr_merged",
+        summary: "Merged a pull request on designdetails",
+        subject: {
+          kind: "pull_request",
+          label: title,
+          href: `https://github.com/designdetails/designdetails/pull/${number}`,
+        },
+        meta: {
+          repo: "designdetails",
+          title,
+          number,
+          href: `https://github.com/designdetails/designdetails/pull/${number}`,
+          additions: 13,
+          deletions: 2,
+        },
+      });
+
+    const first = merge("pr-719", 719, "Fix player skip");
+    const second = merge("pr-720", 720, "Tweak chapter marks");
+    const stacks = rollupActivityEvents([first, second]);
+
+    expect(stacks).toHaveLength(2);
+    expect(activityRollupKey(first)).not.toBe(activityRollupKey(second));
+    expect(stacks[0]?.count).toBe(1);
+    expect(stacks[1]?.count).toBe(1);
+    expect(stacks[0]?.href).toBe("https://github.com/designdetails/designdetails/pull/719");
+    expect(stacks[1]?.href).toBe("https://github.com/designdetails/designdetails/pull/720");
+    expect(stacks[0]?.sectionLabel).toBe("Fix player skip");
+    expect(stacks[1]?.sectionLabel).toBe("Tweak chapter marks");
+    expect(stacks[0]?.href).not.toBe("/https:");
+    expect(stacks[1]?.href).not.toBe("/https:");
+    expect(stacks[0]?.sectionLabel).not.toBe("https:");
+    expect(stacks[1]?.sectionLabel).not.toBe("https:");
+
+    const rows = stacks.map((stack) => getActivityRow(stack.latest));
+    expect(rows[0]).toEqual({
+      summary: "Merged a pull request on designdetails",
+      href: "https://github.com/designdetails/designdetails/pull/719",
+      label: "Fix player skip",
+    });
+    expect(rows[1]).toEqual({
+      summary: "Merged a pull request on designdetails",
+      href: "https://github.com/designdetails/designdetails/pull/720",
+      label: "Tweak chapter marks",
+    });
+  });
+
+  test("still stacks the same public PR when it appears twice", () => {
+    const event = (id: string): ActivityEvent =>
+      feedEvent({
+        id,
+        source: "github",
+        type: "pr_merged",
+        summary: "Merged a pull request on designdetails",
+        subject: {
+          kind: "pull_request",
+          label: "Fix player skip",
+          href: "https://github.com/designdetails/designdetails/pull/719",
+        },
+        meta: {
+          repo: "designdetails",
+          title: "Fix player skip",
+          number: 719,
+          href: "https://github.com/designdetails/designdetails/pull/719",
+        },
+      });
+
+    const stacks = rollupActivityEvents([event("pr-719-a"), event("pr-719-b")]);
+    expect(stacks).toHaveLength(1);
+    expect(stacks[0]?.count).toBe(2);
+    expect(stacks[0]?.href).toBe("https://github.com/designdetails/designdetails/pull/719");
+    expect(stacks[0]?.sectionLabel).toBe("Fix player skip");
+  });
+
+  test("uses the latest absolute href when a stacked run has mixed GitHub URLs", () => {
+    const stacked = (id: string, path: string, label: string): ActivityEvent =>
+      feedEvent({
+        id,
+        source: "github",
+        type: "pr_merged",
+        summary: "Merged a pull request on designdetails",
+        subject: { kind: "pull_request", label },
+        meta: { repo: "designdetails", number: 1, path },
+      });
+
+    const stacks = rollupActivityEvents([
+      stacked("pr-new", "https://github.com/designdetails/designdetails/pull/2", "Newer title"),
+      stacked("pr-old", "https://github.com/designdetails/designdetails/pull/1", "Older title"),
+    ]);
+    expect(stacks).toHaveLength(1);
+    expect(stacks[0]?.href).toBe("https://github.com/designdetails/designdetails/pull/2");
+    expect(stacks[0]?.href).not.toBe("/https:");
+    expect(stacks[0]?.sectionLabel).not.toBe("https:");
   });
 
   test("only pulses when the top stack count increments", () => {
