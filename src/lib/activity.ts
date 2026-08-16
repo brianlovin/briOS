@@ -134,7 +134,10 @@ export type ActivityStore = {
 
 export async function buildActivityFeed(store: ActivityStore | null): Promise<ActivityFeedPayload> {
   if (!store) return { events: [], count: 0 };
-  const [events, count] = await Promise.all([store.getTail(100), store.getCount()]);
+  const [events, count] = await Promise.all([
+    store.getTail(ACTIVITY_STREAM_MAXLEN),
+    store.getCount(),
+  ]);
   return { events, count };
 }
 
