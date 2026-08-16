@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { getActivityStore } from "@/lib/activity-redis";
+import { visibleLifetimeTotals } from "@/lib/activity-shared";
 import { errorResponse } from "@/lib/api-utils";
 
 export async function GET() {
@@ -13,7 +14,7 @@ export async function GET() {
   }
 
   try {
-    const totals = await store.getTotals();
+    const totals = visibleLifetimeTotals(await store.getTotals());
     return NextResponse.json({ totals }, { headers: { "Cache-Control": "public, s-maxage=1" } });
   } catch (error) {
     console.error("[activity] totals failed", error);

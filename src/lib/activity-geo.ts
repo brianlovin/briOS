@@ -1,0 +1,514 @@
+/**
+ * Country / region display names for activity visit summaries.
+ * Safe to import from client components (no Redis / Node crypto).
+ */
+
+const COUNTRY_RE = /^[A-Z]{2}$/;
+const REGIONAL_INDICATOR_A = 0x1f1e6;
+
+export function normalizeCountryCode(value: string | null | undefined): string | undefined {
+  if (!value) return undefined;
+  const code = value.trim().toUpperCase();
+  if (!COUNTRY_RE.test(code)) return undefined;
+  if (code === "XX" || code === "T1") return undefined;
+  return code;
+}
+
+/** ISO 3166-1 alpha-2 → flag emoji via regional indicator symbols. */
+export function countryCodeToFlag(value: string | null | undefined): string {
+  const code = normalizeCountryCode(value);
+  if (!code) return "";
+  return String.fromCodePoint(
+    REGIONAL_INDICATOR_A + (code.charCodeAt(0) - 65),
+    REGIONAL_INDICATOR_A + (code.charCodeAt(1) - 65),
+  );
+}
+
+export type ActivityGeo = {
+  country?: string;
+  countryName?: string;
+  region?: string;
+  regionName?: string;
+  city?: string;
+};
+
+/** ISO 3166-1 alpha-2 → English short name. */
+const COUNTRY_NAMES: Record<string, string> = {
+  AD: "Andorra",
+  AE: "United Arab Emirates",
+  AF: "Afghanistan",
+  AG: "Antigua and Barbuda",
+  AI: "Anguilla",
+  AL: "Albania",
+  AM: "Armenia",
+  AO: "Angola",
+  AQ: "Antarctica",
+  AR: "Argentina",
+  AS: "American Samoa",
+  AT: "Austria",
+  AU: "Australia",
+  AW: "Aruba",
+  AX: "Åland Islands",
+  AZ: "Azerbaijan",
+  BA: "Bosnia and Herzegovina",
+  BB: "Barbados",
+  BD: "Bangladesh",
+  BE: "Belgium",
+  BF: "Burkina Faso",
+  BG: "Bulgaria",
+  BH: "Bahrain",
+  BI: "Burundi",
+  BJ: "Benin",
+  BL: "Saint Barthélemy",
+  BM: "Bermuda",
+  BN: "Brunei",
+  BO: "Bolivia",
+  BQ: "Caribbean Netherlands",
+  BR: "Brazil",
+  BS: "Bahamas",
+  BT: "Bhutan",
+  BV: "Bouvet Island",
+  BW: "Botswana",
+  BY: "Belarus",
+  BZ: "Belize",
+  CA: "Canada",
+  CC: "Cocos Islands",
+  CD: "Democratic Republic of the Congo",
+  CF: "Central African Republic",
+  CG: "Republic of the Congo",
+  CH: "Switzerland",
+  CI: "Côte d'Ivoire",
+  CK: "Cook Islands",
+  CL: "Chile",
+  CM: "Cameroon",
+  CN: "China",
+  CO: "Colombia",
+  CR: "Costa Rica",
+  CU: "Cuba",
+  CV: "Cape Verde",
+  CW: "Curaçao",
+  CX: "Christmas Island",
+  CY: "Cyprus",
+  CZ: "Czechia",
+  DE: "Germany",
+  DJ: "Djibouti",
+  DK: "Denmark",
+  DM: "Dominica",
+  DO: "Dominican Republic",
+  DZ: "Algeria",
+  EC: "Ecuador",
+  EE: "Estonia",
+  EG: "Egypt",
+  EH: "Western Sahara",
+  ER: "Eritrea",
+  ES: "Spain",
+  ET: "Ethiopia",
+  FI: "Finland",
+  FJ: "Fiji",
+  FK: "Falkland Islands",
+  FM: "Micronesia",
+  FO: "Faroe Islands",
+  FR: "France",
+  GA: "Gabon",
+  GB: "United Kingdom",
+  GD: "Grenada",
+  GE: "Georgia",
+  GF: "French Guiana",
+  GG: "Guernsey",
+  GH: "Ghana",
+  GI: "Gibraltar",
+  GL: "Greenland",
+  GM: "Gambia",
+  GN: "Guinea",
+  GP: "Guadeloupe",
+  GQ: "Equatorial Guinea",
+  GR: "Greece",
+  GS: "South Georgia",
+  GT: "Guatemala",
+  GU: "Guam",
+  GW: "Guinea-Bissau",
+  GY: "Guyana",
+  HK: "Hong Kong",
+  HM: "Heard Island and McDonald Islands",
+  HN: "Honduras",
+  HR: "Croatia",
+  HT: "Haiti",
+  HU: "Hungary",
+  ID: "Indonesia",
+  IE: "Ireland",
+  IL: "Israel",
+  IM: "Isle of Man",
+  IN: "India",
+  IO: "British Indian Ocean Territory",
+  IQ: "Iraq",
+  IR: "Iran",
+  IS: "Iceland",
+  IT: "Italy",
+  JE: "Jersey",
+  JM: "Jamaica",
+  JO: "Jordan",
+  JP: "Japan",
+  KE: "Kenya",
+  KG: "Kyrgyzstan",
+  KH: "Cambodia",
+  KI: "Kiribati",
+  KM: "Comoros",
+  KN: "Saint Kitts and Nevis",
+  KP: "North Korea",
+  KR: "South Korea",
+  KW: "Kuwait",
+  KY: "Cayman Islands",
+  KZ: "Kazakhstan",
+  LA: "Laos",
+  LB: "Lebanon",
+  LC: "Saint Lucia",
+  LI: "Liechtenstein",
+  LK: "Sri Lanka",
+  LR: "Liberia",
+  LS: "Lesotho",
+  LT: "Lithuania",
+  LU: "Luxembourg",
+  LV: "Latvia",
+  LY: "Libya",
+  MA: "Morocco",
+  MC: "Monaco",
+  MD: "Moldova",
+  ME: "Montenegro",
+  MF: "Saint Martin",
+  MG: "Madagascar",
+  MH: "Marshall Islands",
+  MK: "North Macedonia",
+  ML: "Mali",
+  MM: "Myanmar",
+  MN: "Mongolia",
+  MO: "Macao",
+  MP: "Northern Mariana Islands",
+  MQ: "Martinique",
+  MR: "Mauritania",
+  MS: "Montserrat",
+  MT: "Malta",
+  MU: "Mauritius",
+  MV: "Maldives",
+  MW: "Malawi",
+  MX: "Mexico",
+  MY: "Malaysia",
+  MZ: "Mozambique",
+  NA: "Namibia",
+  NC: "New Caledonia",
+  NE: "Niger",
+  NF: "Norfolk Island",
+  NG: "Nigeria",
+  NI: "Nicaragua",
+  NL: "Netherlands",
+  NO: "Norway",
+  NP: "Nepal",
+  NR: "Nauru",
+  NU: "Niue",
+  NZ: "New Zealand",
+  OM: "Oman",
+  PA: "Panama",
+  PE: "Peru",
+  PF: "French Polynesia",
+  PG: "Papua New Guinea",
+  PH: "Philippines",
+  PK: "Pakistan",
+  PL: "Poland",
+  PM: "Saint Pierre and Miquelon",
+  PN: "Pitcairn Islands",
+  PR: "Puerto Rico",
+  PS: "Palestine",
+  PT: "Portugal",
+  PW: "Palau",
+  PY: "Paraguay",
+  QA: "Qatar",
+  RE: "Réunion",
+  RO: "Romania",
+  RS: "Serbia",
+  RU: "Russia",
+  RW: "Rwanda",
+  SA: "Saudi Arabia",
+  SB: "Solomon Islands",
+  SC: "Seychelles",
+  SD: "Sudan",
+  SE: "Sweden",
+  SG: "Singapore",
+  SH: "Saint Helena",
+  SI: "Slovenia",
+  SJ: "Svalbard and Jan Mayen",
+  SK: "Slovakia",
+  SL: "Sierra Leone",
+  SM: "San Marino",
+  SN: "Senegal",
+  SO: "Somalia",
+  SR: "Suriname",
+  SS: "South Sudan",
+  ST: "São Tomé and Príncipe",
+  SV: "El Salvador",
+  SX: "Sint Maarten",
+  SY: "Syria",
+  SZ: "Eswatini",
+  TC: "Turks and Caicos Islands",
+  TD: "Chad",
+  TF: "French Southern Territories",
+  TG: "Togo",
+  TH: "Thailand",
+  TJ: "Tajikistan",
+  TK: "Tokelau",
+  TL: "Timor-Leste",
+  TM: "Turkmenistan",
+  TN: "Tunisia",
+  TO: "Tonga",
+  TR: "Turkey",
+  TT: "Trinidad and Tobago",
+  TV: "Tuvalu",
+  TW: "Taiwan",
+  TZ: "Tanzania",
+  UA: "Ukraine",
+  UG: "Uganda",
+  UM: "U.S. Outlying Islands",
+  US: "United States",
+  UY: "Uruguay",
+  UZ: "Uzbekistan",
+  VA: "Vatican City",
+  VC: "Saint Vincent and the Grenadines",
+  VE: "Venezuela",
+  VG: "British Virgin Islands",
+  VI: "U.S. Virgin Islands",
+  VN: "Vietnam",
+  VU: "Vanuatu",
+  WF: "Wallis and Futuna",
+  WS: "Samoa",
+  YE: "Yemen",
+  YT: "Mayotte",
+  ZA: "South Africa",
+  ZM: "Zambia",
+  ZW: "Zimbabwe",
+};
+
+const US_REGIONS: Record<string, string> = {
+  AL: "Alabama",
+  AK: "Alaska",
+  AZ: "Arizona",
+  AR: "Arkansas",
+  CA: "California",
+  CO: "Colorado",
+  CT: "Connecticut",
+  DE: "Delaware",
+  DC: "District of Columbia",
+  FL: "Florida",
+  GA: "Georgia",
+  HI: "Hawaii",
+  ID: "Idaho",
+  IL: "Illinois",
+  IN: "Indiana",
+  IA: "Iowa",
+  KS: "Kansas",
+  KY: "Kentucky",
+  LA: "Louisiana",
+  ME: "Maine",
+  MD: "Maryland",
+  MA: "Massachusetts",
+  MI: "Michigan",
+  MN: "Minnesota",
+  MS: "Mississippi",
+  MO: "Missouri",
+  MT: "Montana",
+  NE: "Nebraska",
+  NV: "Nevada",
+  NH: "New Hampshire",
+  NJ: "New Jersey",
+  NM: "New Mexico",
+  NY: "New York",
+  NC: "North Carolina",
+  ND: "North Dakota",
+  OH: "Ohio",
+  OK: "Oklahoma",
+  OR: "Oregon",
+  PA: "Pennsylvania",
+  RI: "Rhode Island",
+  SC: "South Carolina",
+  SD: "South Dakota",
+  TN: "Tennessee",
+  TX: "Texas",
+  UT: "Utah",
+  VT: "Vermont",
+  VA: "Virginia",
+  WA: "Washington",
+  WV: "West Virginia",
+  WI: "Wisconsin",
+  WY: "Wyoming",
+};
+
+const CA_REGIONS: Record<string, string> = {
+  AB: "Alberta",
+  BC: "British Columbia",
+  MB: "Manitoba",
+  NB: "New Brunswick",
+  NL: "Newfoundland and Labrador",
+  NS: "Nova Scotia",
+  NT: "Northwest Territories",
+  NU: "Nunavut",
+  ON: "Ontario",
+  PE: "Prince Edward Island",
+  QC: "Quebec",
+  SK: "Saskatchewan",
+  YT: "Yukon",
+};
+
+const AU_REGIONS: Record<string, string> = {
+  ACT: "Australian Capital Territory",
+  NSW: "New South Wales",
+  NT: "Northern Territory",
+  QLD: "Queensland",
+  SA: "South Australia",
+  TAS: "Tasmania",
+  VIC: "Victoria",
+  WA: "Western Australia",
+};
+
+const GB_REGIONS: Record<string, string> = {
+  ENG: "England",
+  SCT: "Scotland",
+  WLS: "Wales",
+  NIR: "Northern Ireland",
+};
+
+const REGION_NAMES: Record<string, Record<string, string>> = {
+  US: US_REGIONS,
+  CA: CA_REGIONS,
+  AU: AU_REGIONS,
+  GB: GB_REGIONS,
+};
+
+const REGION_RE = /^[A-Z0-9]{1,3}$/;
+
+export function countryCodeToName(value: string | null | undefined): string {
+  const code = value?.trim().toUpperCase() ?? "";
+  if (!code) return "";
+  return COUNTRY_NAMES[code] ?? code;
+}
+
+export function normalizeRegionCode(value: string | null | undefined): string | undefined {
+  if (!value) return undefined;
+  const code = value.trim().toUpperCase();
+  if (!REGION_RE.test(code)) return undefined;
+  return code;
+}
+
+export function regionCodeToName(
+  country: string | null | undefined,
+  region: string | null | undefined,
+): string {
+  const countryCode = normalizeCountryCode(country);
+  const regionCode = normalizeRegionCode(region);
+  if (!regionCode) return "";
+  if (countryCode) {
+    const mapped = REGION_NAMES[countryCode]?.[regionCode];
+    if (mapped) return mapped;
+  }
+  return regionCode;
+}
+
+export function decodeHeaderText(value: string | null | undefined): string | undefined {
+  if (!value) return undefined;
+  const trimmed = value.trim();
+  if (!trimmed) return undefined;
+  try {
+    return decodeURIComponent(trimmed.replace(/\+/g, " ")).trim() || undefined;
+  } catch {
+    return trimmed;
+  }
+}
+
+function firstHeader(headers: Headers, names: string[]): string | undefined {
+  for (const name of names) {
+    const value = headers.get(name);
+    if (value) return value;
+  }
+  return undefined;
+}
+
+export function getRequestGeo(headers: Headers): ActivityGeo {
+  const country = normalizeCountryCode(
+    firstHeader(headers, ["cf-ipcountry", "CF-IPCountry", "x-vercel-ip-country", "x-country"]),
+  );
+  const countryName = country ? countryCodeToName(country) : undefined;
+  const region = normalizeRegionCode(
+    firstHeader(headers, ["cf-region-code", "x-vercel-ip-country-region"]),
+  );
+  const regionFromNameHeader = decodeHeaderText(firstHeader(headers, ["cf-region"]));
+  const regionName =
+    regionFromNameHeader || (country && region ? regionCodeToName(country, region) : undefined);
+  const city = decodeHeaderText(firstHeader(headers, ["cf-ipcity", "x-vercel-ip-city"]));
+
+  return {
+    ...(country ? { country } : {}),
+    ...(countryName && countryName !== country ? { countryName } : {}),
+    ...(region ? { region } : {}),
+    ...(regionName ? { regionName } : {}),
+    ...(city ? { city } : {}),
+  };
+}
+
+export function formatVisitSummary(geo: {
+  country?: string | null;
+  countryName?: string | null;
+  region?: string | null;
+  regionName?: string | null;
+  city?: string | null;
+}): string {
+  const rawCountry = geo.country?.trim() || undefined;
+  const country = normalizeCountryCode(rawCountry);
+  const countryLabel =
+    geo.countryName?.trim() || (country ? countryCodeToName(country) : undefined) || rawCountry;
+  const regionLabel = geo.regionName?.trim() || geo.region?.trim();
+  const city = geo.city?.trim();
+
+  let location: string | undefined;
+  if (city && regionLabel && countryLabel) {
+    location = `${city}, ${regionLabel}, ${countryLabel}`;
+  } else if (city && countryLabel) {
+    location = `${city}, ${countryLabel}`;
+  } else if (countryLabel) {
+    location = countryLabel;
+  }
+
+  const flag = countryCodeToFlag(country ?? rawCountry);
+  if (!location) return "Visit";
+  return flag ? `${flag} Visit from ${location}` : `Visit from ${location}`;
+}
+
+function isRegionalIndicator(char: string): boolean {
+  const code = char.codePointAt(0);
+  return code !== undefined && code >= 0x1f1e6 && code <= 0x1f1ff;
+}
+
+export function splitVisitSummaryFlag(summary: string): { flag?: string; text: string } {
+  const chars = [...summary];
+  if (
+    chars.length >= 3 &&
+    isRegionalIndicator(chars[0] ?? "") &&
+    isRegionalIndicator(chars[1] ?? "") &&
+    chars[2] === " "
+  ) {
+    return { flag: `${chars[0]}${chars[1]}`, text: chars.slice(3).join("") };
+  }
+  return { text: summary };
+}
+
+export function geoFromVisitMeta(meta: Record<string, unknown> | undefined): {
+  country?: string;
+  countryName?: string;
+  region?: string;
+  regionName?: string;
+  city?: string;
+} {
+  if (!meta) return {};
+  return {
+    country: typeof meta.country === "string" ? meta.country : undefined,
+    countryName: typeof meta.country_name === "string" ? meta.country_name : undefined,
+    region: typeof meta.region === "string" ? meta.region : undefined,
+    regionName: typeof meta.region_name === "string" ? meta.region_name : undefined,
+    city: typeof meta.city === "string" ? meta.city : undefined,
+  };
+}

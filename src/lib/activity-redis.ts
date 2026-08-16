@@ -1,6 +1,7 @@
 import { Redis } from "@upstash/redis";
 
 import { type ActivityEvent, type ActivityStore, type ActivityTotal } from "./activity";
+import { visibleLifetimeTotals } from "./activity-shared";
 import { ACTIVITY_STREAM_MAXLEN } from "./activity-shared";
 
 const STREAM_KEY = "activity:stream";
@@ -221,7 +222,7 @@ export async function getActivityPageData(): Promise<{
 
   try {
     const [events, totals] = await Promise.all([store.getTail(100), store.getTotals()]);
-    return { events, totals };
+    return { events, totals: visibleLifetimeTotals(totals) };
   } catch (error) {
     console.error("[activity] failed to read feed", error);
     return { events: [], totals: [] };

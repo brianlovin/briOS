@@ -1,3 +1,4 @@
+import { type ActivityGeo, countryCodeToName, formatVisitSummary } from "./activity-geo";
 import {
   ACTIVITY_ENVELOPE_VERSION,
   ACTIVITY_IDEMPOTENCY_TTL_SECONDS,
@@ -8,14 +9,16 @@ import {
   type ActivityEvent,
   type ActivityIngestInput,
   type ActivityTotal,
-  countryCodeToFlag,
   findForbiddenPii,
   inferContentTypeFromPath,
   inferTitleFromPath,
   isActivityPath,
+  shouldCountLifetimeTotal,
   shouldRecordVisit,
 } from "./activity-shared";
 
+export type { ActivityGeo } from "./activity-geo";
+export { countryCodeToName, formatVisitSummary, getRequestGeo } from "./activity-geo";
 export type {
   ActivityEvent,
   ActivityIngestInput,
@@ -37,7 +40,9 @@ export {
   inferContentTypeFromPath,
   inferTitleFromPath,
   isActivityPath,
+  shouldCountLifetimeTotal,
   shouldRecordVisit,
+  visibleLifetimeTotals,
 } from "./activity-shared";
 
 export type IngestResult =
@@ -182,7 +187,9 @@ export async function ingestActivityEvent(
     return { ok: true, id: event.id, duplicate: true, streamed: false };
   }
 
-  await store.incrementTotal(event.source, event.type, event.received_at);
+  if (shouldCountLifetimeTotal(event.type)) {
+    await store.incrementTotal(event.source, event.type, event.received_at);
+  }
 
   const writeToStream = input.writeToStream !== false;
   if (writeToStream) {
@@ -222,7 +229,7 @@ export async function recordLike(
 }
 
 export async function recordVisit(
-  input: { path: string; country?: string | null },
+  input: { path: string } & ActivityGeo,
   store: ActivityStore,
   now: Date = new Date(),
 ): Promise<IngestResult | { skipped: true; reason: string }> {
@@ -231,12 +238,12 @@ export async function recordVisit(
   }
 
   const country = input.country?.trim() || undefined;
-  const flag = countryCodeToFlag(country);
-  const summary = country
-    ? flag
-      ? `${flag} Visit from ${country}`
-      : `Visit from ${country}`
-    : "Visit";
+  const countryName =
+    input.countryName?.trim() || (country ? countryCodeToName(country) : undefined);
+  const region = input.region?.trim() || undefined;
+  const regionName = input.regionName?.trim() || undefined;
+  const city = input.city?.trim() || undefined;
+  const summary = formatVisitSummary({ country, countryName, region, regionName, city });
   const title = inferTitleFromPath(input.path);
   const windowKey = `visit:${Math.floor(now.getTime() / 1000)}`;
   const windowCount = await store.incrementVisitWindow(windowKey, 2);
@@ -257,6 +264,10 @@ export async function recordVisit(
       },
       meta: {
         ...(country ? { country } : {}),
+        ...(countryName && countryName !== country ? { country_name: countryName } : {}),
+        ...(region ? { region } : {}),
+        ...(regionName ? { region_name: regionName } : {}),
+        ...(city ? { city } : {}),
         path: input.path,
         title,
       },
