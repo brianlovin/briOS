@@ -12,7 +12,7 @@ import { useTopBarActions } from "@/components/TopBarActions";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip";
 import type { ActivityEvent } from "@/lib/activity";
 import {
-  ACTIVITY_TRACKED_SINCE,
+  ACTIVITY_TRACKED_SINCE_TOOLTIP,
   activitySourceFaviconSrc,
   activitySourceLabel,
   activitySourceUrl,
@@ -238,7 +238,7 @@ export function ActivityTrackedCount({ count }: { count: number }) {
       <TooltipTrigger className="text-tertiary cursor-default bg-transparent p-0 text-sm tabular-nums">
         {formatTrackedEventsLabel(count)}
       </TooltipTrigger>
-      <TooltipContent>Tracked since {ACTIVITY_TRACKED_SINCE}</TooltipContent>
+      <TooltipContent>{ACTIVITY_TRACKED_SINCE_TOOLTIP}</TooltipContent>
     </Tooltip>
   );
 }

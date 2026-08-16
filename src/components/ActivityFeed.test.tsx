@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 
 import { ActivityRow, ActivityTrackedCount } from "@/components/ActivityFeed";
 import type { ActivityEvent } from "@/lib/activity";
-import { ACTIVITY_TRACKED_SINCE, formatTrackedEventsLabel } from "@/lib/activity-shared";
+import { ACTIVITY_TRACKED_SINCE_TOOLTIP, formatTrackedEventsLabel } from "@/lib/activity-shared";
 
 function event(overrides: Partial<ActivityEvent>): ActivityEvent {
   return {
@@ -354,17 +354,17 @@ describe("ActivityTrackedCount", () => {
     expect(formatTrackedEventsLabel(1)).toBe("1 event tracked");
     expect(formatTrackedEventsLabel(2)).toBe("2 events tracked");
     expect(formatTrackedEventsLabel(1500)).toBe("1,500 events tracked");
+    expect(ACTIVITY_TRACKED_SINCE_TOOLTIP).toBe("Tracked since August 16, 2026");
   });
 
-  test("renders the count and hardcoded start date", () => {
+  test("renders the count as tertiary top-bar metadata", () => {
     const one = renderToStaticMarkup(<ActivityTrackedCount count={1} />);
     const many = renderToStaticMarkup(<ActivityTrackedCount count={12} />);
 
     expect(one).toContain("1 event tracked");
     expect(one).toContain("text-tertiary");
-    expect(one).toContain(`Tracked since ${ACTIVITY_TRACKED_SINCE}`);
+    expect(one).toContain("text-sm");
     expect(many).toContain("12 events tracked");
-    expect(many).toContain(`Tracked since ${ACTIVITY_TRACKED_SINCE}`);
     expect(many).not.toContain("Live");
   });
 });

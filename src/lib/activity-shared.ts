@@ -120,6 +120,7 @@ export type ActivityEvent = {
 };
 
 export const ACTIVITY_TRACKED_SINCE = "August 16, 2026";
+export const ACTIVITY_TRACKED_SINCE_TOOLTIP = `Tracked since ${ACTIVITY_TRACKED_SINCE}`;
 
 export type ActivityFeedPayload = {
   events: ActivityEvent[];
