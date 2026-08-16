@@ -2,7 +2,7 @@
 
 import { useAtom } from "jotai";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 
 import { activityLifetimeSidebarAtom } from "@/atoms/activityLifetimeSidebar";
 import { Activity } from "@/components/icons/Activity";
@@ -16,8 +16,11 @@ import { IconButton } from "@/components/ui/IconButton";
 import type { ActivityEvent, ActivityTotal } from "@/lib/activity";
 import {
   activitySourceFaviconSrc,
+  activitySourceLabel,
+  activitySourceUrl,
   formatTotalLabel,
   getActivityRow,
+  resolveActivitySourceHref,
   visibleLifetimeTotals,
 } from "@/lib/activity-shared";
 import { useActivity } from "@/lib/hooks/useActivity";
@@ -118,9 +121,88 @@ function ActivityRowIcon({ event }: { event: ActivityEvent }) {
   return <Activity size={16} className="text-tertiary" aria-hidden />;
 }
 
+const SUBTITLE_LINK_CLASS =
+  "text-tertiary hover:text-primary block truncate text-sm underline-offset-2 hover:underline";
+
+function isAbsoluteHttpUrl(href: string): boolean {
+  return /^https?:\/\//i.test(href);
+}
+
+function ActivitySubtitleLink({ href, children }: { href: string; children: ReactNode }) {
+  if (isAbsoluteHttpUrl(href)) {
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer" className={SUBTITLE_LINK_CLASS}>
+        {children}
+      </a>
+    );
+  }
+
+  return (
+    <Link href={href} className={SUBTITLE_LINK_CLASS}>
+      {children}
+    </Link>
+  );
+}
+
+function ActivityRowSummary({
+  summary,
+  sourceLabel,
+  sourceUrl,
+}: {
+  summary: string;
+  sourceLabel?: string;
+  sourceUrl?: string;
+}) {
+  if (!sourceUrl || !sourceLabel) {
+    return <p className="text-primary truncate text-pretty">{summary}</p>;
+  }
+
+  const index = summary.indexOf(sourceLabel);
+  if (index === -1) {
+    return <p className="text-primary truncate text-pretty">{summary}</p>;
+  }
+
+  return (
+    <p className="text-primary truncate text-pretty">
+      {summary.slice(0, index)}
+      <a
+        href={sourceUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-primary underline-offset-2 hover:underline"
+      >
+        {sourceLabel}
+      </a>
+      {summary.slice(index + sourceLabel.length)}
+    </p>
+  );
+}
+
+function subjectPathFromEvent(event: ActivityEvent, href?: string): string | undefined {
+  if (href) return href;
+  const path = event.meta?.path;
+  return typeof path === "string" && path ? path : undefined;
+}
+
 export function ActivityRow({ event }: { event: ActivityEvent }) {
   const row = getActivityRow(event);
-  const href = row.href;
+  const homeUrl = activitySourceUrl(event.source);
+  const sourceLabel = homeUrl ? activitySourceLabel(event.source) : undefined;
+  const labelInSummary = Boolean(sourceLabel && row.summary.includes(sourceLabel));
+  const resolvedHref = resolveActivitySourceHref(
+    event.source,
+    subjectPathFromEvent(event, row.href),
+  );
+
+  let subtitleHref: string | undefined;
+  let subtitleLabel: string | undefined;
+  if (resolvedHref) {
+    subtitleHref = resolvedHref;
+    subtitleLabel = row.label ?? resolvedHref;
+  } else if (homeUrl && sourceLabel && !labelInSummary) {
+    subtitleHref = homeUrl;
+    subtitleLabel = sourceLabel;
+  }
 
   return (
     <div className="border-secondary hover:bg-secondary grid grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-3 border-b px-4 py-3 md:gap-4 md:py-2 md:dark:hover:bg-white/5">
@@ -128,14 +210,9 @@ export function ActivityRow({ event }: { event: ActivityEvent }) {
         <ActivityRowIcon event={event} />
       </div>
       <div className="min-w-0">
-        <p className="text-primary truncate text-pretty">{row.summary}</p>
-        {href ? (
-          <Link
-            href={href}
-            className="text-tertiary hover:text-primary block truncate text-sm underline-offset-2 hover:underline"
-          >
-            {row.label ?? href}
-          </Link>
+        <ActivityRowSummary summary={row.summary} sourceLabel={sourceLabel} sourceUrl={homeUrl} />
+        {subtitleHref ? (
+          <ActivitySubtitleLink href={subtitleHref}>{subtitleLabel}</ActivitySubtitleLink>
         ) : null}
       </div>
       <RelativeTime iso={event.received_at} />

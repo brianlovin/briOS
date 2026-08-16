@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 
 import {
   activitySourceFaviconSrc,
+  activitySourceUrl,
   countryCodeToFlag,
   countryCodeToName,
   createMemoryActivityStore,
@@ -18,6 +19,7 @@ import {
   recordDigestSubscribed,
   recordLike,
   recordVisit,
+  resolveActivitySourceHref,
   shouldRecordVisit,
   visibleLifetimeTotals,
 } from "@/lib/activity";
@@ -601,6 +603,25 @@ describe("activity source helpers", () => {
     expect(formatDownloadSummary("shiori")).toBe("Someone downloaded Shiori");
     expect(formatDownloadSummary("staff-design")).toBe("Someone downloaded Staff Design");
     expect(formatDownloadSummary("design-details")).toBe("Someone downloaded Design Details");
+  });
+
+  test("maps external sources to home URLs", () => {
+    expect(activitySourceUrl("tax-ui")).toBe("https://tax-ui.brianlovin.com/");
+    expect(activitySourceUrl("staff-design")).toBe("https://staff.design");
+    expect(activitySourceUrl("design-details")).toBe("https://designdetails.fm");
+    expect(activitySourceUrl("shiori")).toBe("https://www.shiori.sh");
+    expect(activitySourceUrl("github")).toBe("https://github.com/brianlovin");
+    expect(activitySourceUrl("brios")).toBeUndefined();
+  });
+
+  test("resolves relative subject hrefs against the source home", () => {
+    expect(resolveActivitySourceHref("design-details", "/episodes/1")).toBe(
+      "https://designdetails.fm/episodes/1",
+    );
+    expect(resolveActivitySourceHref("github", "https://github.com/brianlovin/briOS/pull/1")).toBe(
+      "https://github.com/brianlovin/briOS/pull/1",
+    );
+    expect(resolveActivitySourceHref("brios", "/writing/a-post")).toBe("/writing/a-post");
   });
 });
 

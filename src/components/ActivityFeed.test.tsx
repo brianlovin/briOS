@@ -172,4 +172,23 @@ describe("ActivityRow", () => {
       expect(markup).not.toContain('fill="white"');
     }
   });
+
+  test("links Tax UI in a download summary even without subject.href", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "tax-ui",
+          type: "download",
+          speed: "event",
+          summary: "Someone downloaded Tax UI",
+        })}
+      />,
+    );
+
+    expect(markup).toContain("Someone downloaded ");
+    expect(markup).toContain("Tax UI");
+    expect(markup).toContain('href="https://tax-ui.brianlovin.com/"');
+    expect(markup).toContain('target="_blank"');
+    expect(markup).toContain("noopener noreferrer");
+  });
 });

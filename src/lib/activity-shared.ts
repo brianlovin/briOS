@@ -38,8 +38,39 @@ const ACTIVITY_SOURCE_FAVICONS: Record<string, string> = {
   shiori: "/img/shiori-icon.png",
 };
 
+const ACTIVITY_SOURCE_URLS: Record<string, string> = {
+  "tax-ui": "https://tax-ui.brianlovin.com/",
+  "staff-design": "https://staff.design",
+  "design-details": "https://designdetails.fm",
+  shiori: "https://www.shiori.sh",
+  github: "https://github.com/brianlovin",
+};
+
+const ABSOLUTE_HTTP_URL_RE = /^https?:\/\//i;
+
 export function activitySourceLabel(source: string): string {
   return ACTIVITY_SOURCE_LABELS[source] ?? source;
+}
+
+export function activitySourceUrl(source: string): string | undefined {
+  return ACTIVITY_SOURCE_URLS[source];
+}
+
+export function resolveActivitySourceHref(
+  source: string,
+  href?: string | null,
+): string | undefined {
+  const trimmed = href?.trim();
+  if (!trimmed) return undefined;
+  if (ABSOLUTE_HTTP_URL_RE.test(trimmed)) {
+    return trimmed;
+  }
+  const home = activitySourceUrl(source);
+  if (home && trimmed.startsWith("/")) {
+    const base = home.endsWith("/") ? home : `${home}/`;
+    return new URL(trimmed, base).href;
+  }
+  return trimmed;
 }
 
 export function formatDownloadSummary(source: string, label?: string): string {
