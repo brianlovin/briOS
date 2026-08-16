@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 
 import {
   type ActivityEvent,
+  activityStackReactKey,
   ANONYMOUS_VISIT_SUMMARY,
   countryCodeToFlag,
   countryCodeToName,
@@ -875,9 +876,27 @@ describe("rollupActivityEvents", () => {
     expect(stacks).toHaveLength(1);
     expect(stacks[0]?.count).toBe(6);
     expect(stacks[0]?.latest.id).toBe("ama-1");
+    expect(stacks[0]?.anchorId).toBe("ama-6");
     expect(stacks[0]?.sectionLabel).toBe("an AMA question");
     expect(stacks[0]?.key).toBe("visit:spring lake, north carolina, united states:ama");
     expect(stacks[0]?.href).toBe("/ama");
+  });
+
+  test("keeps a stable React key when a matching event is prepended", () => {
+    const events = [
+      springLakeVisit("ama-1", "/ama/2f2c711c-0ceb-810d-899d-e5feb99e70f4"),
+      springLakeVisit("ama-2", "/ama/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),
+    ];
+    const first = rollupActivityEvents(events);
+    const next = rollupActivityEvents([
+      springLakeVisit("ama-0", "/ama/00000000-0000-0000-0000-000000000099"),
+      ...events,
+    ]);
+
+    expect(next[0]?.count).toBe(3);
+    expect(next[0]?.latest.id).toBe("ama-0");
+    expect(next[0]?.anchorId).toBe(first[0]?.anchorId);
+    expect(activityStackReactKey(next[0]!)).toBe(activityStackReactKey(first[0]!));
   });
 
   test("does not stack an AMA visit with a writing visit from the same geo", () => {

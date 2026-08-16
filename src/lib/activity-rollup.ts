@@ -15,9 +15,15 @@ export type ActivityRollup = {
   key: string;
   count: number;
   latest: ActivityEvent;
+  /** Oldest event in the run — stable as newer siblings prepend. */
+  anchorId: string;
   sectionLabel: string;
   href?: string;
 };
+
+export function activityStackReactKey(stack: Pick<ActivityRollup, "key" | "anchorId">): string {
+  return `${stack.key}:${stack.anchorId}`;
+}
 
 export function activityEventHref(event: ActivityEvent): string | undefined {
   if (event.subject?.href) return event.subject.href;
@@ -114,6 +120,7 @@ export function rollupActivityEvents(events: ActivityEvent[]): ActivityRollup[] 
       key: run.key,
       count: run.count,
       latest: run.latest,
+      anchorId: run.events[run.events.length - 1]!.id,
       sectionLabel: stackSectionLabel(run.events, section),
       ...(href ? { href } : {}),
     };

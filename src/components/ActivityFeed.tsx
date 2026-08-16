@@ -1,8 +1,9 @@
 "use client";
 
 import { useAtom } from "jotai";
+import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 
 import { activityLifetimeSidebarAtom } from "@/atoms/activityLifetimeSidebar";
 import { Activity } from "@/components/icons/Activity";
@@ -14,7 +15,11 @@ import { ListDetailWrapper } from "@/components/ListDetailWrapper";
 import { useTopBarActions } from "@/components/TopBarActions";
 import { IconButton } from "@/components/ui/IconButton";
 import type { ActivityEvent, ActivityRollup, ActivityTotal } from "@/lib/activity";
-import { rollupActivityEvents, shouldPulseActivityRollup } from "@/lib/activity-rollup";
+import {
+  activityStackReactKey,
+  rollupActivityEvents,
+  shouldPulseActivityRollup,
+} from "@/lib/activity-rollup";
 import { formatTotalLabel, getActivityRow, visibleLifetimeTotals } from "@/lib/activity-shared";
 import { useActivity } from "@/lib/hooks/useActivity";
 import { cn } from "@/lib/utils";
@@ -161,6 +166,57 @@ export function TotalsList({ totals }: { totals: ActivityTotal[] }) {
 }
 
 const ROLLUP_PULSE_MS = 550;
+const LIST_MOTION = { duration: 0.25, ease: "easeOut" } as const;
+
+function subscribeNoop(): () => void {
+  return () => {};
+}
+
+function useHydrated(): boolean {
+  return useSyncExternalStore(
+    subscribeNoop,
+    () => true,
+    () => false,
+  );
+}
+
+function ActivityStackList({
+  stacks,
+  pulseKey,
+}: {
+  stacks: ActivityRollup[];
+  pulseKey: string | null;
+}) {
+  const hydrated = useHydrated();
+  const prefersReducedMotion = useReducedMotion();
+  const shouldAnimate = hydrated && prefersReducedMotion !== true;
+
+  return (
+    <LayoutGroup>
+      <div className="divide-secondary divide-y">
+        <AnimatePresence initial={false}>
+          {stacks.map((stack) => (
+            <motion.div
+              key={activityStackReactKey(stack)}
+              layout={shouldAnimate}
+              initial={shouldAnimate ? { opacity: 0, y: -8 } : false}
+              animate={{ opacity: 1, y: 0 }}
+              transition={shouldAnimate ? LIST_MOTION : { duration: 0 }}
+            >
+              <ActivityRow
+                event={stack.latest}
+                count={stack.count}
+                sectionLabel={stack.sectionLabel}
+                href={stack.href}
+                pulse={pulseKey === stack.key}
+              />
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
+    </LayoutGroup>
+  );
+}
 
 function useRollupPulse(stacks: ActivityRollup[]): string | null {
   const top = stacks[0];
@@ -226,7 +282,7 @@ export function ActivityFeed({
   return (
     <ListDetailWrapper>
       <div className="relative flex min-h-0 flex-1 overflow-hidden">
-        <div data-scrollable className="relative min-w-0 flex-1 overflow-auto">
+        <motion.div data-scrollable layoutScroll className="relative min-w-0 flex-1 overflow-auto">
           <div className="bg-secondary border-secondary sticky top-0 z-10 hidden border-b md:block dark:bg-neutral-950">
             <div className="grid grid-cols-[2rem_minmax(0,1fr)_auto] gap-3 px-4 py-2 text-sm font-medium md:gap-4">
               <div />
@@ -239,20 +295,9 @@ export function ActivityFeed({
               Nothing yet. Likes and visits will show up here.
             </p>
           ) : (
-            <div className="divide-secondary divide-y">
-              {stacks.map((stack) => (
-                <ActivityRow
-                  key={`${stack.key}:${stack.latest.id}`}
-                  event={stack.latest}
-                  count={stack.count}
-                  sectionLabel={stack.sectionLabel}
-                  href={stack.href}
-                  pulse={pulseKey === stack.key}
-                />
-              ))}
-            </div>
+            <ActivityStackList stacks={stacks} pulseKey={pulseKey} />
           )}
-        </div>
+        </motion.div>
         <aside
           className={cn(
             "border-secondary w-(--secondary-sidebar-width) shrink-0 flex-col overflow-y-auto border-l bg-white dark:bg-black",

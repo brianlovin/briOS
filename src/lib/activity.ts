@@ -34,6 +34,7 @@ export type { ActivityRollup } from "./activity-rollup";
 export {
   activityEventHref,
   activityRollupKey,
+  activityStackReactKey,
   rollupActivityEvents,
   shouldPulseActivityRollup,
 } from "./activity-rollup";
