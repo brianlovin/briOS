@@ -119,4 +119,57 @@ describe("ActivityRow", () => {
     expect(visit).toContain("/activity/favicons/brios.png");
     expect(like).not.toContain("/activity/favicons/");
   });
+
+  test("uses the Github icon for GitHub events instead of the Activity pulse", () => {
+    const pulsePath = "M4.75 11.75H8.25L10.25 4.75L13.75 19.25L15.75 11.75H19.25";
+    const pulse = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          type: "writing_published",
+          speed: "event",
+          summary: "Published a post",
+        })}
+      />,
+    );
+    const prOpened = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          type: "pr_opened",
+          speed: "event",
+          summary: "Opened a pull request",
+        })}
+      />,
+    );
+    const prMerged = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "github",
+          type: "pr_merged",
+          speed: "event",
+          summary: "Merged a pull request",
+        })}
+      />,
+    );
+    const starred = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          type: "repo_starred",
+          speed: "event",
+          summary: "Starred a repository",
+        })}
+      />,
+    );
+
+    expect(pulse).toContain(pulsePath);
+    for (const markup of [prOpened, prMerged, starred]) {
+      expect(markup).not.toContain(pulsePath);
+      expect(markup).toContain("text-primary");
+      expect(markup).toContain('width="16"');
+      expect(markup).toContain('height="16"');
+      expect(markup).not.toContain("#000");
+      expect(markup).not.toContain("#fff");
+      expect(markup).not.toContain('fill="black"');
+      expect(markup).not.toContain('fill="white"');
+    }
+  });
 });
