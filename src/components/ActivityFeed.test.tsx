@@ -60,6 +60,22 @@ describe("ActivityRow", () => {
     expect(markup).toContain('href="/writing/grok-bot-first-impressions-kcJun01"');
   });
 
+  test("shows a Hacker News story instead of a raw story id", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          summary: "🇨🇳 Visit from China",
+          subject: { kind: "page", label: "46993596", href: "/hn/46993596" },
+          meta: { country: "CN", path: "/hn/46993596", title: "46993596" },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("a Hacker News story");
+    expect(markup).toContain('href="/hn/46993596"');
+    expect(markup).not.toContain(">46993596<");
+  });
+
   test("rebuilds a country name and flag for older visits that only have a code", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow event={event({ summary: "Visit from TW", meta: { country: "TW" } })} />,

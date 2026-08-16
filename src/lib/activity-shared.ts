@@ -137,6 +137,17 @@ const KNOWN_PATH_TITLES: Record<string, string> = {
   "/bookmarks": "Bookmarks",
 };
 
+/** Identifier child routes → a phrase, never the raw id. */
+const ID_ROUTE_PHRASES: { prefix: string; label: string }[] = [
+  { prefix: "/hn/", label: "a Hacker News story" },
+  { prefix: "/ama/", label: "an AMA question" },
+];
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const UUID_COMPACT_RE = /^[0-9a-f]{32}$/i;
+const UUID_SPACED_RE = /^[0-9a-f]{8}\s+[0-9a-f]{4}\s+[0-9a-f]{4}\s+[0-9a-f]{4}\s+[0-9a-f]{12}$/i;
+const DIGITS_RE = /^\d+$/;
+
 function normalizeActivityPath(pathname: string): string {
   const path = pathname.split("?")[0] ?? pathname;
   if (!path || path === "/") return "/";
@@ -160,6 +171,29 @@ export function looksLikeShortId(token: string): boolean {
   // Keep real words, Title Case words, and lowercase hex (AMA UUIDs).
   if (isTitleCase || (isUpperWord && !hasDigit) || !hasUpper) return false;
   return hasLower || hasDigit;
+}
+
+/** Digits, UUIDs (hyphenated, compact, or spaced), or a bare short id. */
+export function looksLikeIdentifier(value: string): boolean {
+  const token = value.trim();
+  if (!token) return false;
+  if (DIGITS_RE.test(token)) return true;
+  if (UUID_RE.test(token) || UUID_COMPACT_RE.test(token) || UUID_SPACED_RE.test(token)) {
+    return true;
+  }
+  return !/[\s-]/.test(token) && looksLikeShortId(token);
+}
+
+function labelForIdentifierPath(path: string, segments: string[]): string {
+  const phrase = ID_ROUTE_PHRASES.find((entry) => path.startsWith(entry.prefix));
+  if (phrase) return phrase.label;
+
+  const parent = segments.length > 1 ? `/${segments.slice(0, -1).join("/")}` : "/";
+  if (KNOWN_PATH_TITLES[parent]) return KNOWN_PATH_TITLES[parent];
+
+  const parentSegment = segments[segments.length - 2];
+  if (parentSegment) return titleFromLastSegment(parentSegment);
+  return "Home";
 }
 
 export function stripTrailingShortIdToken(value: string): string {
@@ -194,6 +228,16 @@ export function inferTitleFromPath(pathname: string): string {
   const segments = path.split("/").filter(Boolean);
   const last = segments[segments.length - 1];
   if (!last) return "Home";
+
+  let decodedLast = last;
+  try {
+    decodedLast = decodeURIComponent(last);
+  } catch {
+    decodedLast = last;
+  }
+  if (looksLikeIdentifier(decodedLast)) {
+    return labelForIdentifierPath(path, segments);
+  }
   return titleFromLastSegment(last);
 }
 
@@ -203,17 +247,21 @@ function displaySubjectLabel(
 ): string | undefined {
   if (href) {
     const inferred = inferTitleFromPath(href);
-    if (!label || label === "a page") return inferred;
+    if (!label || label === "a page" || looksLikeIdentifier(label)) return inferred;
 
     const path = normalizeActivityPath(href);
     if (KNOWN_PATH_TITLES[path]) return KNOWN_PATH_TITLES[path];
 
-    return stripTrailingShortIdToken(label) || inferred;
+    const cleaned = stripTrailingShortIdToken(label);
+    if (looksLikeIdentifier(cleaned)) return inferred;
+    return cleaned || inferred;
   }
 
   if (!label) return undefined;
   if (label === "a page") return "Home";
-  return stripTrailingShortIdToken(label);
+  if (looksLikeIdentifier(label)) return undefined;
+  const cleaned = stripTrailingShortIdToken(label);
+  return looksLikeIdentifier(cleaned) ? undefined : cleaned;
 }
 
 const EMAIL_RE = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i;

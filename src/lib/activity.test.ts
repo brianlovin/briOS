@@ -13,6 +13,7 @@ import {
   inferTitleFromPath,
   ingestActivityEvent,
   likeMetaFromRequest,
+  looksLikeIdentifier,
   looksLikeShortId,
   recordDigestSubscribed,
   recordLike,
@@ -277,6 +278,19 @@ describe("recordVisit", () => {
       href: "/writing/grok-bot-first-impressions",
       label: "grok bot first impressions",
     });
+  });
+
+  test("stores a contextual phrase for an HN story id at ingest", async () => {
+    const store = createMemoryActivityStore();
+    await recordVisit({ path: "/hn/46993596", country: "CN" }, store);
+    const [event] = await store.getTail(1);
+    expect(event?.subject).toEqual({
+      kind: "page",
+      label: "a Hacker News story",
+      href: "/hn/46993596",
+    });
+    expect(event?.meta).toEqual(expect.objectContaining({ title: "a Hacker News story" }));
+    expect(getActivityRow(event!).label).toBe("a Hacker News story");
   });
 
   test("strips a trailing short id from the visit title at ingest", async () => {
@@ -606,14 +620,31 @@ describe("inferTitleFromPath", () => {
     expect(inferTitleFromPath("")).toBe("Home");
   });
 
-  test("does not strip lowercase AMA UUID segments", () => {
-    expect(inferTitleFromPath("/ama/2f2c711c-0ceb-810d-899d-e5feb99e70f4")).toBe(
-      "2f2c711c 0ceb 810d 899d e5feb99e70f4",
+  test("uses a contextual phrase for identifier routes instead of the raw id", () => {
+    expect(inferTitleFromPath("/hn/46993596")).toBe("a Hacker News story");
+    expect(inferTitleFromPath("/ama/2f2c711c-0ceb-810d-899d-e5feb99e70f4")).toBe("an AMA question");
+    expect(inferTitleFromPath("/bookmarks/2f2c711c-0ceb-810d-899d-e5feb99e70f4")).toBe("Bookmarks");
+    expect(inferTitleFromPath("/design-details/2f2c711c0ceb810d899de5feb99e70f4")).toBe(
+      "Design Details",
     );
-    expect(looksLikeShortId("e5feb99e70f4")).toBe(false);
-    expect(stripTrailingShortIdToken("2f2c711c 0ceb 810d 899d e5feb99e70f4")).toBe(
-      "2f2c711c 0ceb 810d 899d e5feb99e70f4",
-    );
+    expect(looksLikeIdentifier("46993596")).toBe(true);
+    expect(looksLikeIdentifier("2f2c711c-0ceb-810d-899d-e5feb99e70f4")).toBe(true);
+    expect(looksLikeIdentifier("2f2c711c 0ceb 810d 899d e5feb99e70f4")).toBe(true);
+    expect(looksLikeIdentifier("grok bot first impressions")).toBe(false);
+  });
+
+  test("never returns a bare number or uuid as the page name", () => {
+    const titles = [
+      inferTitleFromPath("/hn/46993596"),
+      inferTitleFromPath("/hn/38084098"),
+      inferTitleFromPath("/ama/2f2c711c-0ceb-810d-899d-e5feb99e70f4"),
+      inferTitleFromPath("/mystery/12345"),
+    ];
+    for (const title of titles) {
+      expect(title).not.toMatch(/^\d+$/);
+      expect(looksLikeIdentifier(title)).toBe(false);
+    }
+    expect(inferTitleFromPath("/mystery/12345")).toBe("mystery");
   });
 });
 
@@ -659,7 +690,29 @@ describe("getActivityRow page titles", () => {
     expect(row.href).toBe("/writing/grok-bot-first-impressions-kcJun01");
   });
 
-  test("keeps a stored AMA UUID label intact", () => {
+  test("rewrites a stored HN story id to a Hacker News story", () => {
+    const row = getActivityRow({
+      v: 1,
+      id: "old-hn",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "visit",
+      speed: "signal",
+      summary: "Visit from China",
+      visibility: "public",
+      idempotency_key: "old-hn",
+      subject: {
+        kind: "page",
+        label: "46993596",
+        href: "/hn/46993596",
+      },
+    });
+    expect(row.label).toBe("a Hacker News story");
+    expect(row.href).toBe("/hn/46993596");
+  });
+
+  test("rewrites a stored AMA UUID label to an AMA question", () => {
     const row = getActivityRow({
       v: 1,
       id: "old-ama",
@@ -677,7 +730,8 @@ describe("getActivityRow page titles", () => {
         href: "/ama/2f2c711c-0ceb-810d-899d-e5feb99e70f4",
       },
     });
-    expect(row.label).toBe("2f2c711c 0ceb 810d 899d e5feb99e70f4");
+    expect(row.label).toBe("an AMA question");
+    expect(row.href).toBe("/ama/2f2c711c-0ceb-810d-899d-e5feb99e70f4");
   });
 });
 

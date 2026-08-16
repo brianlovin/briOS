@@ -52,6 +52,7 @@ export {
   inferTitleFromPath,
   isActivityFeedPayload,
   isActivityPath,
+  looksLikeIdentifier,
   looksLikeShortId,
   shouldCountLifetimeTotal,
   shouldRecordVisit,
