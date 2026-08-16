@@ -20,6 +20,7 @@ export const ACTIVITY_IDEMPOTENCY_TTL_SECONDS = 6 * 60 * 60;
 export const ACTIVITY_META_MAX_BYTES = 2048;
 export const ACTIVITY_BODY_MAX_BYTES = 8192;
 export const ACTIVITY_SOURCE_BRIOS = "brios";
+export const ACTIVITY_SOURCE_GITHUB = "github";
 
 /** CDN + browser cache for the public activity poll blob. */
 export const ACTIVITY_FEED_CACHE_CONTROL = "public, s-maxage=2, stale-while-revalidate=30";
@@ -191,6 +192,15 @@ export function visibleLifetimeTotals(totals: ActivityTotal[]): ActivityTotal[] 
   return totals.filter((total) => shouldCountLifetimeTotal(total.type));
 }
 
+export function getMergedPullRequestDiff(
+  meta: Record<string, unknown> | undefined,
+): { additions: number; deletions: number } | null {
+  if (!meta) return null;
+  if (typeof meta.additions !== "number" || typeof meta.deletions !== "number") return null;
+  if (!Number.isFinite(meta.additions) || !Number.isFinite(meta.deletions)) return null;
+  return { additions: meta.additions, deletions: meta.deletions };
+}
+
 export const CAFFEINE_DRINK_MAX_LENGTH = 40;
 export const CAFFEINE_COFFEE_ICON = "☕";
 export const CAFFEINE_OTHER_ICON = "🥤";
@@ -321,6 +331,12 @@ export function formatTotalLabel(type: string): string {
       return "Design Details";
     case "app_dissection_published":
       return "App dissections";
+    case "pr_opened":
+      return "PRs opened";
+    case "pr_merged":
+      return "PRs merged";
+    case "repo_starred":
+      return "Stars";
     case "caffeinated":
       return "Caffeinated";
     default:

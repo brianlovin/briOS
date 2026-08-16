@@ -79,6 +79,82 @@ describe("ActivityRow", () => {
     expect(visit).toContain("🇮🇳");
   });
 
+  test("uses the GitHub icon for github-sourced events", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "github",
+          type: "pr_opened",
+          speed: "event",
+          summary: "Opened a pull request on briOS",
+          subject: {
+            kind: "pull_request",
+            label: "Add activity feed",
+            href: "https://github.com/brianlovin/briOS/pull/42",
+          },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("Opened a pull request on briOS");
+    expect(markup).toContain("Add activity feed");
+    expect(markup).toContain("16.0041 19.25 12 19.25");
+    expect(markup).not.toContain("text-red-500");
+  });
+
+  test("shows merge diff stats in the metadata slot", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "github",
+          type: "pr_merged",
+          speed: "event",
+          summary: "Merged a pull request on briOS",
+          subject: {
+            kind: "pull_request",
+            label: "Add activity feed",
+            href: "https://github.com/brianlovin/briOS/pull/42",
+          },
+          meta: {
+            repo: "briOS",
+            title: "Add activity feed",
+            number: 42,
+            href: "https://github.com/brianlovin/briOS/pull/42",
+            additions: 311,
+            deletions: 211,
+            changed_files: 8,
+          },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("Merged a pull request on briOS");
+    expect(markup).toContain("Add activity feed");
+    expect(markup).toContain("+311");
+    expect(markup).toContain("-211");
+    expect(markup).toContain("text-green-600");
+    expect(markup).toContain("text-red-500");
+    expect(markup).toContain("tabular-nums");
+    expect(markup).not.toContain("+311 -211");
+  });
+
+  test("still shows +0 and -0 when both diff fields are zero", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "github",
+          type: "pr_merged",
+          speed: "event",
+          summary: "Merged a pull request on briOS",
+          meta: { additions: 0, deletions: 0 },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("+0");
+    expect(markup).toContain("-0");
+  });
+
   test("shows a coffee cup for coffee-family caffeine events", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow
