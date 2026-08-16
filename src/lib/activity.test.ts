@@ -39,7 +39,7 @@ import {
   stripTrailingShortIdToken,
   visibleLifetimeTotals,
 } from "@/lib/activity";
-import { geoFromVisitMeta } from "@/lib/activity-geo";
+import { geoFromVisitMeta, normalizeRegionCode } from "@/lib/activity-geo";
 import { parseActivityStreamFields } from "@/lib/activity-redis";
 import { ACTIVITY_STREAM_MAXLEN, ACTIVITY_VISIT_STREAM_MAX_PER_SEC } from "@/lib/activity-shared";
 
@@ -328,6 +328,53 @@ describe("formatVisitSummary", () => {
     );
     expect(summary).toContain("San Francisco");
     expect(summary).not.toContain("San%20Francisco");
+  });
+
+  test("omits placeholder region 00 so Belgrade is city + country", () => {
+    const summary = formatVisitSummary({
+      city: "Belgrade",
+      region: "00",
+      country: "RS",
+    });
+    expect(summary).toContain("Belgrade");
+    expect(summary).toContain("Serbia");
+    expect(summary).not.toContain("00");
+
+    const fromStoredMeta = formatVisitSummary(
+      geoFromVisitMeta({
+        city: "Belgrade",
+        region: "00",
+        region_name: "00",
+        country: "RS",
+      }),
+    );
+    expect(fromStoredMeta).toContain("Belgrade");
+    expect(fromStoredMeta).toContain("Serbia");
+    expect(fromStoredMeta).not.toContain("00");
+  });
+
+  test("still includes a mapped US region for San Francisco", () => {
+    const summary = formatVisitSummary({
+      city: "San Francisco",
+      region: "CA",
+      country: "US",
+    });
+    expect(summary).toContain("San Francisco");
+    expect(summary).toMatch(/California|\bCA\b/);
+    expect(summary).not.toContain("00");
+  });
+});
+
+describe("normalizeRegionCode", () => {
+  test("returns undefined for placeholder all-zero codes", () => {
+    expect(normalizeRegionCode("00")).toBeUndefined();
+    expect(normalizeRegionCode("0")).toBeUndefined();
+    expect(normalizeRegionCode("000")).toBeUndefined();
+  });
+
+  test("keeps a real ISO-3166-2 region code", () => {
+    expect(normalizeRegionCode("CA")).toBe("CA");
+    expect(normalizeRegionCode("nsw")).toBe("NSW");
   });
 });
 
@@ -948,6 +995,23 @@ describe("getRequestGeo", () => {
       city: "Bengaluru",
     });
     expect(JSON.stringify(geo)).not.toContain("203.0.113");
+  });
+
+  test("omits placeholder Vercel region 00", () => {
+    const geo = getRequestGeo(
+      new Headers({
+        "x-vercel-ip-country": "RS",
+        "x-vercel-ip-country-region": "00",
+        "x-vercel-ip-city": "Belgrade",
+      }),
+    );
+    expect(geo).toEqual({
+      country: "RS",
+      countryName: "Serbia",
+      city: "Belgrade",
+    });
+    expect(geo).not.toHaveProperty("region");
+    expect(geo).not.toHaveProperty("regionName");
   });
 });
 
