@@ -1,10 +1,14 @@
 import { describe, expect, test } from "bun:test";
 
 import {
+  countryCodeToFlag,
+  countryCodeToName,
   createMemoryActivityStore,
   findForbiddenPii,
+  formatVisitSummary,
   getActivityRow,
   getRequestCountry,
+  getRequestGeo,
   hashDigestSubscriber,
   ingestActivityEvent,
   likeMetaFromRequest,
@@ -12,6 +16,7 @@ import {
   recordLike,
   recordVisit,
   shouldRecordVisit,
+  visibleLifetimeTotals,
 } from "@/lib/activity";
 import { parseActivityStreamFields } from "@/lib/activity-redis";
 import { ACTIVITY_STREAM_MAXLEN, ACTIVITY_VISIT_STREAM_MAX_PER_SEC } from "@/lib/activity-shared";
@@ -47,6 +52,16 @@ describe("findForbiddenPii", () => {
     expect(findForbiddenPii({ note: "header cf-connecting-ip leaked" })).toContain(
       "cf-connecting-ip",
     );
+  });
+
+  test("rejects a raw IP if someone puts one in visit meta", () => {
+    expect(
+      findForbiddenPii({
+        type: "visit",
+        summary: "Visit from Russia",
+        meta: { country: "RU", city: "203.0.113.10" },
+      }),
+    ).toBe("meta.city: ip");
   });
 
   test("allows a public like payload", () => {
@@ -111,6 +126,46 @@ describe("ingestActivityEvent", () => {
     });
   });
 
+  test("does not increment lifetime totals for visit_country_first", async () => {
+    const store = createMemoryActivityStore();
+    const result = await ingestActivityEvent(
+      baseEvent({
+        type: "visit_country_first",
+        speed: "signal",
+        summary: "First visit from Russia",
+      }),
+      store,
+    );
+
+    expect(result.ok).toBe(true);
+    expect(await store.getStreamLength()).toBe(1);
+    expect(await store.getTotals()).toEqual([]);
+    expect(visibleLifetimeTotals(await store.getTotals())).toEqual([]);
+    expect(
+      visibleLifetimeTotals([
+        { source: "brios", type: "visit", count: 10, first_seen: "2026-08-16T00:00:00.000Z" },
+        {
+          source: "brios",
+          type: "visit_country_first",
+          count: 3,
+          first_seen: "2026-08-16T00:00:00.000Z",
+        },
+        { source: "brios", type: "like", count: 1, first_seen: "2026-08-16T00:00:00.000Z" },
+      ]),
+    ).toEqual([
+      expect.objectContaining({ type: "visit" }),
+      expect.objectContaining({ type: "like" }),
+    ]);
+  });
+
+  test("still increments lifetime totals for other types", async () => {
+    const store = createMemoryActivityStore();
+    await ingestActivityEvent(baseEvent({ type: "ama_asked", summary: "Someone asked" }), store);
+    expect(await store.getTotals()).toEqual([
+      expect.objectContaining({ source: "brios", type: "ama_asked", count: 1 }),
+    ]);
+  });
+
   test("stream MAXLEN drops the oldest events", async () => {
     const store = createMemoryActivityStore({ maxLen: 5 });
     for (let i = 0; i < 12; i++) {
@@ -123,6 +178,64 @@ describe("ingestActivityEvent", () => {
   });
 });
 
+describe("countryCodeToFlag", () => {
+  test("maps ISO 3166-1 alpha-2 codes to regional indicator flags", () => {
+    expect(countryCodeToFlag("IN")).toBe("🇮🇳");
+    expect(countryCodeToFlag("us")).toBe("🇺🇸");
+    expect(countryCodeToFlag("DE")).toBe("🇩🇪");
+  });
+
+  test("returns no flag for invalid, unknown, XX, and T1", () => {
+    expect(countryCodeToFlag("XX")).toBe("");
+    expect(countryCodeToFlag("T1")).toBe("");
+    expect(countryCodeToFlag("USA")).toBe("");
+    expect(countryCodeToFlag("1A")).toBe("");
+    expect(countryCodeToFlag("")).toBe("");
+    expect(countryCodeToFlag(undefined)).toBe("");
+  });
+});
+
+describe("countryCodeToName", () => {
+  test("maps common ISO 3166-1 alpha-2 codes to English names", () => {
+    expect(countryCodeToName("US")).toBe("United States");
+    expect(countryCodeToName("RU")).toBe("Russia");
+    expect(countryCodeToName("IN")).toBe("India");
+    expect(countryCodeToName("GB")).toBe("United Kingdom");
+  });
+
+  test("keeps an unknown code", () => {
+    expect(countryCodeToName("ZZ")).toBe("ZZ");
+    expect(countryCodeToName("xx")).toBe("XX");
+  });
+});
+
+describe("formatVisitSummary", () => {
+  test("uses the most specific location available", () => {
+    expect(
+      formatVisitSummary({
+        country: "US",
+        countryName: "United States",
+        region: "CA",
+        regionName: "California",
+        city: "San Francisco",
+      }),
+    ).toBe("🇺🇸 Visit from San Francisco, California, United States");
+    expect(
+      formatVisitSummary({
+        country: "IN",
+        countryName: "India",
+        city: "Bengaluru",
+      }),
+    ).toBe("🇮🇳 Visit from Bengaluru, India");
+    expect(formatVisitSummary({ country: "RU" })).toBe("🇷🇺 Visit from Russia");
+    expect(formatVisitSummary({})).toBe("Visit");
+  });
+
+  test("keeps an unknown country code", () => {
+    expect(formatVisitSummary({ country: "ZZ" })).toBe(`${countryCodeToFlag("ZZ")} Visit from ZZ`);
+  });
+});
+
 describe("recordVisit", () => {
   test("does not ingest a visit for /activity", async () => {
     const store = createMemoryActivityStore();
@@ -130,6 +243,91 @@ describe("recordVisit", () => {
     expect(result).toEqual({ skipped: true, reason: "activity_path" });
     expect(await store.getStreamLength()).toBe(0);
     expect(await store.getTotals()).toEqual([]);
+  });
+
+  test("stores a page subject and prefixes a country flag on the summary", async () => {
+    const store = createMemoryActivityStore();
+    const result = await recordVisit(
+      { path: "/writing/grok-bot-first-impressions", country: "IN" },
+      store,
+    );
+    expect("ok" in result && result.ok).toBe(true);
+
+    const event = (await store.getTail(10)).find((item) => item.type === "visit");
+    expect(event?.summary).toBe("🇮🇳 Visit from India");
+    expect(event?.subject).toEqual({
+      kind: "writing",
+      label: "grok bot first impressions",
+      href: "/writing/grok-bot-first-impressions",
+    });
+    expect(event?.subject?.href).toBe("/writing/grok-bot-first-impressions");
+    expect(event?.meta).toEqual({
+      country: "IN",
+      country_name: "India",
+      path: "/writing/grok-bot-first-impressions",
+      title: "grok bot first impressions",
+    });
+    expect(getActivityRow(event!)).toEqual({
+      summary: "Visit from India",
+      flag: "🇮🇳",
+      href: "/writing/grok-bot-first-impressions",
+      label: "grok bot first impressions",
+    });
+  });
+
+  test("prefers city and region in the visit summary", async () => {
+    const store = createMemoryActivityStore();
+    await recordVisit(
+      {
+        path: "/",
+        country: "US",
+        countryName: "United States",
+        region: "CA",
+        regionName: "California",
+        city: "San Francisco",
+      },
+      store,
+    );
+    const event = (await store.getTail(10)).find((item) => item.type === "visit");
+    expect(event?.summary).toBe("🇺🇸 Visit from San Francisco, California, United States");
+    expect(event?.meta).toEqual({
+      country: "US",
+      country_name: "United States",
+      region: "CA",
+      region_name: "California",
+      city: "San Francisco",
+      path: "/",
+      title: "a page",
+    });
+  });
+
+  test("keeps the existing summary when the country has no flag", async () => {
+    const store = createMemoryActivityStore();
+    await recordVisit({ path: "/", country: "XX" }, store);
+    const [event] = await store.getTail(1);
+    expect(event?.summary).toBe("Visit from XX");
+    expect(event?.subject?.href).toBe("/");
+    expect(event?.meta).toEqual({ country: "XX", path: "/", title: "a page" });
+  });
+
+  test("prefixes a flag in getActivityRow for older visits that lack the emoji", () => {
+    const row = getActivityRow({
+      v: 1,
+      id: "old-visit",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "visit",
+      speed: "signal",
+      summary: "Visit from IN",
+      visibility: "public",
+      idempotency_key: "old",
+      meta: { country: "IN" },
+    });
+    expect(row).toEqual({
+      summary: "Visit from India",
+      flag: "🇮🇳",
+    });
   });
 
   test("does not ingest a visit for /activity/nested", async () => {
@@ -152,9 +350,7 @@ describe("recordVisit", () => {
     expect(totals).toContainEqual(
       expect.objectContaining({ source: "brios", type: "visit", count: burst }),
     );
-    expect(totals).toContainEqual(
-      expect.objectContaining({ source: "brios", type: "visit_country_first", count: 1 }),
-    );
+    expect(totals.find((total) => total.type === "visit_country_first")).toBeUndefined();
     expect(await store.getStreamLength()).toBe(ACTIVITY_VISIT_STREAM_MAX_PER_SEC + 1);
     expect(await store.getStreamLength()).toBeLessThan(ACTIVITY_STREAM_MAXLEN);
   });
@@ -214,9 +410,9 @@ describe("visit_country_first", () => {
 
     expect(await store.incrementCountryTotal("FR")).toBe(3);
     expect(await store.incrementCountryTotal("JP")).toBe(2);
-    expect(await store.getTotals()).toContainEqual(
-      expect.objectContaining({ source: "brios", type: "visit_country_first", count: 2 }),
-    );
+    expect(await store.getTotals().then((totals) => totals.map((total) => total.type))).toEqual([
+      "visit",
+    ]);
   });
 
   test("does not record a first-country event for /activity", async () => {
@@ -282,6 +478,47 @@ describe("parseActivityStreamFields", () => {
     expect(parseActivityStreamFields({ e: JSON.stringify(event) })?.summary).toBe(
       "Someone liked a page",
     );
+  });
+});
+
+describe("getRequestGeo", () => {
+  test("decodes a Vercel city and maps a US region", () => {
+    const geo = getRequestGeo(
+      new Headers({
+        "x-vercel-ip-country": "US",
+        "x-vercel-ip-country-region": "CA",
+        "x-vercel-ip-city": "San%20Francisco",
+      }),
+    );
+    expect(geo).toEqual({
+      country: "US",
+      countryName: "United States",
+      region: "CA",
+      regionName: "California",
+      city: "San Francisco",
+    });
+  });
+
+  test("prefers Cloudflare city/region headers and never reads IP headers", () => {
+    const geo = getRequestGeo(
+      new Headers({
+        "cf-ipcountry": "in",
+        "cf-ipcity": "Bengaluru",
+        "cf-region": "Karnataka",
+        "cf-region-code": "KA",
+        "cf-connecting-ip": "203.0.113.10",
+        "x-forwarded-for": "203.0.113.10",
+        "x-vercel-ip-country": "US",
+      }),
+    );
+    expect(geo).toEqual({
+      country: "IN",
+      countryName: "India",
+      region: "KA",
+      regionName: "Karnataka",
+      city: "Bengaluru",
+    });
+    expect(JSON.stringify(geo)).not.toContain("203.0.113");
   });
 });
 

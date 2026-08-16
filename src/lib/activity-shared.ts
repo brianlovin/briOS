@@ -3,6 +3,16 @@
  * Safe to import from client components (no Redis / Node crypto).
  */
 
+import {
+  countryCodeToFlag,
+  formatVisitSummary,
+  geoFromVisitMeta,
+  normalizeCountryCode,
+  splitVisitSummaryFlag,
+} from "./activity-geo";
+
+export { countryCodeToFlag, normalizeCountryCode } from "./activity-geo";
+
 export const ACTIVITY_ENVELOPE_VERSION = 1;
 export const ACTIVITY_STREAM_MAXLEN = 1500;
 export const ACTIVITY_VISIT_STREAM_MAX_PER_SEC = 10;
@@ -171,11 +181,48 @@ function scanPii(value: unknown, path: string): string | null {
   return null;
 }
 
+const HIDDEN_LIFETIME_TYPES = new Set(["visit_country_first"]);
+
+export function shouldCountLifetimeTotal(type: string): boolean {
+  return !HIDDEN_LIFETIME_TYPES.has(type);
+}
+
+export function visibleLifetimeTotals(totals: ActivityTotal[]): ActivityTotal[] {
+  return totals.filter((total) => shouldCountLifetimeTotal(total.type));
+}
+
 export function getActivityRow(event: ActivityEvent): {
   summary: string;
+  flag?: string;
   href?: string;
   label?: string;
 } {
+  if (event.type === "visit") {
+    const geo = geoFromVisitMeta(event.meta);
+    const full =
+      geo.country || geo.city || geo.countryName ? formatVisitSummary(geo) : event.summary;
+    const split = splitVisitSummaryFlag(full);
+    const flag = split.flag || countryCodeToFlag(geo.country);
+    return {
+      summary: split.text,
+      ...(flag ? { flag } : {}),
+      href: event.subject?.href,
+      label: event.subject?.label,
+    };
+  }
+
+  if (event.type === "visit_country_first") {
+    const geo = geoFromVisitMeta(event.meta);
+    const split = splitVisitSummaryFlag(event.summary);
+    const flag = split.flag || countryCodeToFlag(geo.country);
+    return {
+      summary: split.text,
+      ...(flag ? { flag } : {}),
+      href: event.subject?.href,
+      label: event.subject?.label,
+    };
+  }
+
   return {
     summary: event.summary,
     href: event.subject?.href,
@@ -214,16 +261,6 @@ export function formatTotalLabel(type: string): string {
     default:
       return type.replace(/_/g, " ");
   }
-}
-
-const COUNTRY_RE = /^[A-Z]{2}$/;
-
-export function normalizeCountryCode(value: string | null | undefined): string | undefined {
-  if (!value) return undefined;
-  const code = value.trim().toUpperCase();
-  if (!COUNTRY_RE.test(code)) return undefined;
-  if (code === "XX" || code === "T1") return undefined;
-  return code;
 }
 
 export function getRequestCountry(headers: Headers): string | undefined {
