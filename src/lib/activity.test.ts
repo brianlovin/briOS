@@ -7,11 +7,13 @@ import {
   findForbiddenPii,
   formatVisitSummary,
   getActivityRow,
+  getCaffeineIcon,
   getRequestCountry,
   getRequestGeo,
   hashDigestSubscriber,
   ingestActivityEvent,
   likeMetaFromRequest,
+  recordCaffeine,
   recordDigestSubscribed,
   recordLike,
   recordVisit,
@@ -574,5 +576,104 @@ describe("shouldRecordVisit / likeMetaFromRequest", () => {
       }),
     );
     expect(activity).toBeNull();
+  });
+});
+
+describe("recordCaffeine", () => {
+  test("writes a public caffeinated event with title-cased summary and drink-only meta", async () => {
+    const store = createMemoryActivityStore();
+    const now = new Date("2026-08-16T15:04:05.000Z");
+    const result = await recordCaffeine({ drink: "cortado" }, store, now);
+
+    expect(result.ok && !result.duplicate).toBe(true);
+    const [event] = await store.getTail(1);
+    expect(event?.source).toBe("brios");
+    expect(event?.type).toBe("caffeinated");
+    expect(event?.speed).toBe("event");
+    expect(event?.visibility).toBe("public");
+    expect(event?.summary).toBe("Caffeinated with Cortado");
+    expect(event?.subject).toEqual({ kind: "drink", label: "Cortado" });
+    expect(event?.meta).toEqual({ drink: "Cortado" });
+    expect(event?.idempotency_key).toMatch(/^brios:caffeinated:2026-08-16:cortado:[0-9a-f-]{36}$/);
+    expect(getActivityRow(event!)).toEqual({
+      summary: "Caffeinated with Cortado",
+      icon: "☕",
+      label: "Cortado",
+    });
+    expect(findForbiddenPii(event)).toBeNull();
+    expect(JSON.stringify(event)).not.toContain("@");
+    expect(event?.meta).not.toHaveProperty("email");
+    expect(event?.meta).not.toHaveProperty("authorization");
+    expect(event?.actor).toBeUndefined();
+  });
+
+  test("counts two of the same drink on the same day as separate events", async () => {
+    const store = createMemoryActivityStore();
+    const now = new Date("2026-08-16T15:04:05.000Z");
+    const first = await recordCaffeine({ drink: "coffee" }, store, now);
+    const second = await recordCaffeine({ drink: "coffee" }, store, now);
+
+    expect(first.ok && !first.duplicate).toBe(true);
+    expect(second.ok && !second.duplicate).toBe(true);
+    expect(await store.getStreamLength()).toBe(2);
+    expect(await store.getTotals()).toEqual([
+      expect.objectContaining({ source: "brios", type: "caffeinated", count: 2 }),
+    ]);
+  });
+
+  test("rejects an empty drink and an email drink before writing", async () => {
+    const store = createMemoryActivityStore();
+    expect(await recordCaffeine({ drink: "   " }, store)).toEqual({
+      ok: false,
+      error: "drink is required",
+      status: 400,
+    });
+
+    const pii = await recordCaffeine({ drink: "hi@example.com" }, store);
+    expect(pii.ok).toBe(false);
+    if (!pii.ok) expect(pii.error).toContain("forbidden");
+    expect(await store.getStreamLength()).toBe(0);
+  });
+});
+
+describe("getCaffeineIcon", () => {
+  test("uses a coffee cup for coffee-family drinks", () => {
+    for (const drink of [
+      "coffee",
+      "Espresso",
+      "latte",
+      "cappuccino",
+      "cappucino",
+      "cortado",
+      "macchiato",
+      "mocha",
+      "americano",
+      "flat white",
+      "drip",
+      "pour over",
+      "cold brew",
+      "nitro",
+      "affogato",
+      "gibraltar",
+      "iced latte",
+    ]) {
+      expect(getCaffeineIcon(drink)).toBe("☕");
+    }
+  });
+
+  test("uses a cup for other caffeinated drinks and unknowns", () => {
+    for (const drink of [
+      "celsius",
+      "tea",
+      "matcha",
+      "energy",
+      "soda",
+      "coke",
+      "yerba",
+      "preworkout",
+      "unknown",
+    ]) {
+      expect(getCaffeineIcon(drink)).toBe("🥤");
+    }
   });
 });
