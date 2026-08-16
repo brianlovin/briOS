@@ -27,6 +27,7 @@ import {
   likeMetaFromRequest,
   looksLikeIdentifier,
   looksLikeShortId,
+  pathnameFromHref,
   recordCaffeine,
   recordDigestSubscribed,
   recordLike,
@@ -1117,6 +1118,16 @@ describe("inferTitleFromPath", () => {
     const title = inferTitleFromPath("https://github.com/foo/bar/pull/1");
     expect(title).not.toBe("https:");
     expect(title).not.toMatch(/^https?:/i);
+    expect(inferTitleFromPath("https://brianlovin.com/writing/foo")).toBe("foo");
+    expect(inferTitleFromPath("https://brianlovin.com/writing")).toBe("Writing");
+  });
+});
+
+describe("pathnameFromHref", () => {
+  test("returns the URL pathname for absolute http(s) hrefs", () => {
+    expect(pathnameFromHref("https://brianlovin.com/writing/foo")).toBe("/writing/foo");
+    expect(pathnameFromHref("https://github.com/foo/bar/pull/1")).toBe("/foo/bar/pull/1");
+    expect(pathnameFromHref("/writing/foo")).toBe("/writing/foo");
   });
 });
 
@@ -1131,6 +1142,11 @@ describe("activitySectionFromPath", () => {
     const section = activitySectionFromPath("https://github.com/foo/bar/pull/1");
     expect(["foo", "bar", "pull"]).toContain(section);
     expect(section).not.toBe("https:");
+  });
+
+  test("uses the URL pathname for absolute briOS visit hrefs, never https:", () => {
+    expect(activitySectionFromPath("https://brianlovin.com/writing/foo")).toBe("writing");
+    expect(activitySectionFromPath("https://brianlovin.com/writing/foo")).not.toBe("https:");
   });
 });
 
@@ -1168,10 +1184,73 @@ describe("sanitizeVisitTitle / formatActivityTitle", () => {
     expect(formatActivityTitle("secret for ios")).toBe("Secret for iOS");
     expect(formatActivityTitle("grok bot first impressions")).toBe("Grok Bot First Impressions");
     expect(formatActivityTitle("Secret for iOS")).toBe("Secret for iOS");
+    expect(formatActivityTitle("https:")).toBe("https:");
+    expect(formatActivityTitle("https:")).not.toBe("Https:");
   });
 });
 
 describe("getActivityRow page titles", () => {
+  test("infers a writing visit title from an absolute briOS href", () => {
+    const stored = getActivityRow({
+      v: 1,
+      id: "abs-writing",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "visit",
+      speed: "signal",
+      summary: "Visit from San Francisco, California, United States",
+      visibility: "public",
+      idempotency_key: "abs-writing",
+      subject: {
+        kind: "writing",
+        label: "Grok Bot First Impressions",
+        href: "https://brianlovin.com/writing/foo",
+      },
+      meta: { path: "https://brianlovin.com/writing/foo", country: "US", city: "San Francisco" },
+    });
+    expect(activitySectionFromPath(stored.href)).toBe("writing");
+    expect(stored.label).toBe("Grok Bot First Impressions");
+    expect(stored.label).not.toBe("Https:");
+    expect(stored.label).not.toBe("https:");
+
+    const inferred = getActivityRow({
+      v: 1,
+      id: "abs-writing-page",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "visit",
+      speed: "signal",
+      summary: "Visit from San Francisco, California, United States",
+      visibility: "public",
+      idempotency_key: "abs-writing-page",
+      subject: {
+        kind: "writing",
+        label: "a page",
+        href: "https://brianlovin.com/writing/foo",
+      },
+    });
+    expect(inferred.label).toBe("Foo");
+    expect(inferred.label).not.toMatch(/^https?:/i);
+
+    const sectionRoot = getActivityRow({
+      v: 1,
+      id: "abs-writing-root",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "visit",
+      speed: "signal",
+      summary: "Visit from San Francisco, California, United States",
+      visibility: "public",
+      idempotency_key: "abs-writing-root",
+      subject: { kind: "writing", label: "https:", href: "https://brianlovin.com/writing" },
+    });
+    expect(sectionRoot.label).toBe("Writing");
+    expect(sectionRoot.label).not.toBe("Https:");
+  });
+
   test("rewrites a stored a page label when href is home", () => {
     const row = getActivityRow({
       v: 1,
@@ -1658,6 +1737,47 @@ describe("rollupActivityEvents", () => {
     expect(next[0]?.latest.id).toBe("ama-0");
     expect(next[0]?.anchorId).toBe(first[0]?.anchorId);
     expect(activityStackReactKey(next[0]!)).toBe(activityStackReactKey(first[0]!));
+  });
+
+  test("does not show Https: when stacking SF visits with different absolute URLs", () => {
+    const sfVisit = (id: string, href: string, label: string): ActivityEvent =>
+      feedEvent({
+        id,
+        type: "visit",
+        summary: "Visit from San Francisco, California, United States",
+        subject: { kind: "page", label, href },
+        meta: {
+          country: "US",
+          country_name: "United States",
+          region: "CA",
+          region_name: "California",
+          city: "San Francisco",
+          path: href,
+        },
+      });
+
+    const sameSection = rollupActivityEvents([
+      sfVisit("sf-1", "https://brianlovin.com/writing/foo", "Foo"),
+      sfVisit("sf-2", "https://brianlovin.com/writing/bar", "Bar"),
+    ]);
+    expect(sameSection).toHaveLength(1);
+    expect(sameSection[0]?.key).toBe("visit:san francisco, california, united states:writing");
+    expect(sameSection[0]?.sectionLabel).toBe("Writing");
+    expect(sameSection[0]?.sectionLabel).not.toBe("Https:");
+    expect(sameSection[0]?.sectionLabel).not.toBe("https:");
+    expect(sameSection[0]?.href).toBe("https://brianlovin.com/writing/foo");
+    expect(sameSection[0]?.href).not.toBe("/https:");
+
+    const mixedSection = rollupActivityEvents([
+      sfVisit("sf-w", "https://brianlovin.com/writing/foo", "Foo"),
+      sfVisit("sf-t", "https://brianlovin.com/til/cache-headers", "cache headers"),
+    ]);
+    expect(mixedSection).toHaveLength(2);
+    for (const stack of mixedSection) {
+      expect(stack.sectionLabel).not.toBe("Https:");
+      expect(stack.sectionLabel).not.toBe("https:");
+      expect(stack.href).not.toBe("/https:");
+    }
   });
 
   test("does not stack an AMA visit with a writing visit from the same geo", () => {

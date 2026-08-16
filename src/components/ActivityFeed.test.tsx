@@ -65,6 +65,71 @@ describe("ActivityRow", () => {
     expect(markup).toContain('href="/writing/grok-bot-first-impressions-kcJun01"');
   });
 
+  test("does not render Https: for a visit whose href is an absolute briOS URL", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          summary: "🇺🇸 Visit from San Francisco, California, United States",
+          subject: {
+            kind: "writing",
+            label: "a page",
+            href: "https://brianlovin.com/writing/foo",
+          },
+          meta: {
+            country: "US",
+            city: "San Francisco",
+            path: "https://brianlovin.com/writing/foo",
+          },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("Foo");
+    expect(markup).toContain('href="https://brianlovin.com/writing/foo"');
+    expect(markup).not.toContain(">Https:<");
+    expect(markup).not.toContain(">https:<");
+    expect(markup).not.toContain('href="/https:"');
+  });
+
+  test("does not render Https: when two SF visits to absolute URLs are stacked", () => {
+    const visit = (id: string, href: string, label: string): ActivityEvent =>
+      event({
+        id,
+        summary: "Visit from San Francisco, California, United States",
+        subject: { kind: "page", label, href },
+        meta: {
+          country: "US",
+          country_name: "United States",
+          region: "CA",
+          region_name: "California",
+          city: "San Francisco",
+          path: href,
+        },
+      });
+
+    const stacks = rollupActivityEvents([
+      visit("sf-1", "https://brianlovin.com/writing/foo", "Foo"),
+      visit("sf-2", "https://brianlovin.com/writing/bar", "Bar"),
+    ]);
+    const markup = stacks
+      .map((stack) =>
+        renderToStaticMarkup(
+          <ActivityRow
+            event={stack.latest}
+            count={stack.count}
+            sectionLabel={stack.sectionLabel}
+            href={stack.href}
+          />,
+        ),
+      )
+      .join("\n");
+
+    expect(markup).toContain("Writing");
+    expect(markup).not.toContain(">Https:<");
+    expect(markup).not.toContain(">https:<");
+    expect(markup).not.toContain('href="/https:"');
+  });
+
   test("title-cases a stored App Dissection slug", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow

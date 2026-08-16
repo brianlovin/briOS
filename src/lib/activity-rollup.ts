@@ -9,9 +9,9 @@ import {
   activitySectionFromPath,
   activitySectionPhrase,
   getActivityRow,
+  isAbsoluteHttpUrl,
+  isKnownActivitySection,
 } from "./activity-shared";
-
-const ABSOLUTE_HTTP_URL_RE = /^https?:\/\//i;
 
 export type ActivityRollup = {
   key: string;
@@ -132,12 +132,17 @@ function stackHref(events: ActivityEvent[]): string | undefined {
   ];
   if (hrefs.length === 1) return hrefs[0];
   if (hrefs.length === 0) return undefined;
-  if (hrefs.every((href) => ABSOLUTE_HTTP_URL_RE.test(href))) {
-    return activityEventHref(events[0]!);
+
+  const latest = activityEventHref(events[0]!);
+  if (hrefs.every((href) => isAbsoluteHttpUrl(href))) {
+    return latest;
   }
+
   const section = activitySectionFromPath(hrefs[0]);
   if (!section || section === "home") return "/";
-  return `/${section}`;
+  if (!isKnownActivitySection(section)) return latest;
+  const collapsed = `/${section}`;
+  return collapsed === "/https:" || collapsed === "/http:" ? latest : collapsed;
 }
 
 export function rollupActivityEvents(events: ActivityEvent[]): ActivityRollup[] {

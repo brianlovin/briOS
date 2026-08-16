@@ -50,6 +50,27 @@ const ACTIVITY_SOURCE_URLS: Record<string, string> = {
 };
 
 const ABSOLUTE_HTTP_URL_RE = /^https?:\/\//i;
+const PROTOCOL_SEGMENT_RE = /^https?:$/i;
+
+export function isAbsoluteHttpUrl(value: string): boolean {
+  return ABSOLUTE_HTTP_URL_RE.test(value);
+}
+
+/** Pathname for site helpers. Absolute http(s) → `new URL(value).pathname`; relative stays as-is. */
+export function pathnameFromHref(value: string): string {
+  if (isAbsoluteHttpUrl(value)) {
+    try {
+      return new URL(value).pathname;
+    } catch {
+      return value;
+    }
+  }
+  return value;
+}
+
+function isProtocolSegment(value: string): boolean {
+  return PROTOCOL_SEGMENT_RE.test(value.trim());
+}
 
 export function activitySourceLabel(source: string): string {
   return ACTIVITY_SOURCE_LABELS[source] ?? source;
@@ -208,6 +229,11 @@ const KNOWN_PATH_TITLES: Record<string, string> = {
   "/bookmarks": "Bookmarks",
 };
 
+export function isKnownActivitySection(section: string): boolean {
+  if (!section || section === "home") return true;
+  return Object.prototype.hasOwnProperty.call(KNOWN_PATH_TITLES, `/${section}`);
+}
+
 /** Identifier child routes → a phrase, never the raw id. */
 const ID_ROUTE_PHRASES: { prefix: string; label: string }[] = [
   { prefix: "/hn/", label: "a Hacker News story" },
@@ -218,17 +244,6 @@ const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 const UUID_COMPACT_RE = /^[0-9a-f]{32}$/i;
 const UUID_SPACED_RE = /^[0-9a-f]{8}\s+[0-9a-f]{4}\s+[0-9a-f]{4}\s+[0-9a-f]{4}\s+[0-9a-f]{12}$/i;
 const DIGITS_RE = /^\d+$/;
-
-function pathnameFromActivityHref(value: string): string {
-  if (ABSOLUTE_HTTP_URL_RE.test(value)) {
-    try {
-      return new URL(value).pathname;
-    } catch {
-      return value;
-    }
-  }
-  return value;
-}
 
 function normalizeActivityPath(pathname: string): string {
   const path = pathname.split("?")[0] ?? pathname;
@@ -305,14 +320,15 @@ function titleFromLastSegment(segment: string): string {
 /** First path segment for visit rollups (`/` → `home`). */
 export function activitySectionFromPath(pathname: string | undefined): string {
   if (!pathname) return "";
-  const path = normalizeActivityPath(pathnameFromActivityHref(pathname));
+  const path = normalizeActivityPath(pathnameFromHref(pathname));
   if (path === "/") return "home";
-  return path.split("/").filter(Boolean)[0] ?? "";
+  const section = path.split("/").filter(Boolean)[0] ?? "";
+  return isProtocolSegment(section) ? "" : section;
 }
 
 /** Smart section phrase for stacked visit subtitles — never a raw id. */
 export function activitySectionPhrase(section: string): string {
-  if (!section || section === "home") return "Home";
+  if (!section || section === "home" || isProtocolSegment(section)) return "Home";
   if (section === "ama") return "an AMA question";
   if (section === "hn") return "a Hacker News story";
   const known = KNOWN_PATH_TITLES[`/${section}`];
@@ -321,7 +337,7 @@ export function activitySectionPhrase(section: string): string {
 }
 
 export function inferTitleFromPath(pathname: string): string {
-  const path = normalizeActivityPath(pathnameFromActivityHref(pathname));
+  const path = normalizeActivityPath(pathnameFromHref(pathname));
   const known = KNOWN_PATH_TITLES[path];
   if (known) return known;
 
@@ -398,6 +414,7 @@ export function looksLikeDehyphenatedSlug(label: string): boolean {
 
 /** Title-case a slug-like label. Leaves already-capped titles alone. */
 export function formatActivityTitle(label: string): string {
+  if (isProtocolSegment(label)) return label;
   if (!looksLikeDehyphenatedSlug(label)) return label;
 
   return label
@@ -446,16 +463,28 @@ function displaySubjectLabel(
 ): string | undefined {
   if (href) {
     const inferred = inferTitleFromPath(href);
-    if (!label || label === "a page" || looksLikeIdentifier(label)) {
-      return formatActivityTitle(inferred);
+    const stored = label?.trim();
+    const storedUnusable =
+      !stored ||
+      stored === "a page" ||
+      looksLikeIdentifier(stored) ||
+      isProtocolSegment(stored) ||
+      isAbsoluteHttpUrl(stored);
+    if (storedUnusable) {
+      return isProtocolSegment(inferred) ? undefined : formatActivityTitle(inferred);
     }
 
-    const path = normalizeActivityPath(href);
+    const path = normalizeActivityPath(pathnameFromHref(href));
     // List-page hrefs like `/stack` must not replace a specific item name ("Cursor").
-    if (!options?.preferStored && KNOWN_PATH_TITLES[path]) return KNOWN_PATH_TITLES[path];
+    // Absolute URLs keep the stored title; infer from pathname only when stored is unusable.
+    if (!options?.preferStored && !isAbsoluteHttpUrl(href) && KNOWN_PATH_TITLES[path]) {
+      return KNOWN_PATH_TITLES[path];
+    }
 
-    const cleaned = stripTrailingShortIdToken(label);
-    if (looksLikeIdentifier(cleaned)) return formatActivityTitle(inferred);
+    const cleaned = stripTrailingShortIdToken(stored);
+    if (looksLikeIdentifier(cleaned) || isProtocolSegment(cleaned)) {
+      return isProtocolSegment(inferred) ? undefined : formatActivityTitle(inferred);
+    }
     return formatActivityTitle(cleaned || inferred);
   }
 
