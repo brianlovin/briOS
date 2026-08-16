@@ -68,8 +68,9 @@ function RelativeTime({ iso }: { iso: string }) {
   );
 }
 
-function ActivitySourceFavicon({ src }: { src: string }) {
+function ActivitySourceFavicon({ src, source }: { src: string; source: string }) {
   const [failed, setFailed] = useState(false);
+  const size = source === "staff-design" ? 20 : 16;
   if (failed) {
     return <World size={16} className="text-tertiary" aria-hidden />;
   }
@@ -79,9 +80,9 @@ function ActivitySourceFavicon({ src }: { src: string }) {
     <img
       src={src}
       alt=""
-      width={16}
-      height={16}
-      className="block size-4 rounded-[3px]"
+      width={size}
+      height={size}
+      className={cn("block rounded-[3px]", size === 20 ? "size-5" : "size-4")}
       aria-hidden
       onError={() => setFailed(true)}
     />
@@ -107,13 +108,13 @@ function ActivityRowIcon({ event, icon }: { event: ActivityEvent; icon?: string 
   }
 
   if (isGithubActivity(event)) {
-    return <Github size={16} className="text-primary" aria-hidden />;
+    return <Github size={20} className="text-primary" aria-hidden />;
   }
 
   if (event.type === "visit" || event.type === "visit_country_first" || event.type === "download") {
     const faviconSrc = activitySourceFaviconSrc(event.source);
     if (faviconSrc) {
-      return <ActivitySourceFavicon src={faviconSrc} />;
+      return <ActivitySourceFavicon src={faviconSrc} source={event.source} />;
     }
     return <World size={16} className="text-tertiary" aria-hidden />;
   }
@@ -188,7 +189,7 @@ export function ActivityRow({
     <div
       data-rollup-pulse={pulse ? "" : undefined}
       className={cn(
-        "border-secondary hover:bg-secondary grid grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-3 border-b px-4 py-3 transition-colors duration-500 md:gap-4 md:py-2 md:dark:hover:bg-white/5",
+        "hover:bg-secondary grid grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 transition-colors duration-500 md:gap-4 md:py-2 md:dark:hover:bg-white/5",
         pulse && "bg-secondary",
       )}
     >
@@ -198,13 +199,6 @@ export function ActivityRow({
       <p className="min-w-0 truncate">
         <span className="text-primary">{row.summary}</span>
         {count > 1 ? <span className="text-tertiary"> {count}</span> : null}
-        {diff ? (
-          <span className="shrink-0 text-sm tabular-nums">
-            {" "}
-            <span className="text-green-600">+{diff.additions}</span>{" "}
-            <span className="text-red-500">-{diff.deletions}</span>
-          </span>
-        ) : null}
         {href && context ? (
           <>
             {" "}
@@ -212,6 +206,13 @@ export function ActivityRow({
           </>
         ) : context ? (
           <span className="text-tertiary"> {context}</span>
+        ) : null}
+        {diff ? (
+          <span className="shrink-0 text-sm tabular-nums">
+            {" "}
+            <span className="text-green-600">+{diff.additions}</span>{" "}
+            <span className="text-red-500">-{diff.deletions}</span>
+          </span>
         ) : null}
       </p>
       <RelativeTime iso={event.received_at} />
@@ -355,13 +356,6 @@ export function ActivityFeed({
     <ListDetailWrapper>
       <div className="relative flex min-h-0 flex-1 overflow-hidden">
         <motion.div data-scrollable layoutScroll className="relative min-w-0 flex-1 overflow-auto">
-          <div className="bg-secondary border-secondary sticky top-0 z-10 hidden border-b md:block dark:bg-neutral-950">
-            <div className="grid grid-cols-[2rem_minmax(0,1fr)_auto] gap-3 px-4 py-2 text-sm font-medium md:gap-4">
-              <div />
-              <div>Event</div>
-              <div className="text-right">Time</div>
-            </div>
-          </div>
           {events.length === 0 ? (
             <p className="text-tertiary px-4 py-10">
               Nothing yet. Likes and visits will show up here.

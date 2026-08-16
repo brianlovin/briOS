@@ -27,13 +27,6 @@ function ActivityFallback() {
     <ListDetailWrapper>
       <div className="flex min-h-0 flex-1 overflow-hidden">
         <div data-scrollable className="relative min-w-0 flex-1 overflow-auto">
-          <div className="bg-secondary border-secondary sticky top-0 z-10 hidden border-b md:block dark:bg-neutral-950">
-            <div className="grid grid-cols-[2rem_minmax(0,1fr)_auto] gap-3 px-4 py-2 md:gap-4">
-              <LoadingSkeleton className="h-4 w-6" />
-              <LoadingSkeleton className="h-4 w-20" />
-              <LoadingSkeleton className="ml-auto h-4 w-12" />
-            </div>
-          </div>
           <div className="divide-secondary divide-y">
             {Array.from({ length: 8 }, (_, index) => (
               <div

@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { renderToStaticMarkup } from "react-dom/server";
 
-import { ActivityRow, ActivityTrackedCount } from "@/components/ActivityFeed";
+import { ActivityFeed, ActivityRow, ActivityTrackedCount } from "@/components/ActivityFeed";
 import { ActivityLiveBadge, TopBarTrail } from "@/components/GlobalTopBar";
 import type { ActivityEvent } from "@/lib/activity";
 import { ACTIVITY_TRACKED_SINCE_TOOLTIP, formatTrackedEventsLabel } from "@/lib/activity-shared";
@@ -133,12 +133,33 @@ describe("ActivityRow", () => {
 
     expect(visit).toContain("/activity/favicons/tax-ui.png");
     expect(visit).toContain("🇺🇸 Visit from United States");
+    expect(visit).toContain('width="16"');
+    expect(visit).toContain('height="16"');
+    expect(visit).toContain("size-4");
     expect(download).toContain("/activity/favicons/design-details.png");
     expect(download).toContain("Someone downloaded ");
     expect(download).toContain("Design Details");
     expect(download).toContain('href="https://designdetails.fm"');
     expect(unknown).not.toContain("/activity/favicons/");
     expect(unknown).toContain("🇺🇸 Visit from United States");
+  });
+
+  test("renders the staff.design favicon at 20px so it matches the GitHub mark", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "staff-design",
+          summary: "🇺🇸 Visit from United States",
+          meta: { country: "US" },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("/activity/favicons/staff-design.png");
+    expect(markup).toContain('width="20"');
+    expect(markup).toContain('height="20"');
+    expect(markup).toContain("size-5");
+    expect(markup).not.toContain("size-4");
   });
 
   test("rebuilds a country name and flag for older visits that only have a code", () => {
@@ -244,8 +265,8 @@ describe("ActivityRow", () => {
     for (const markup of [prOpened, prMerged, starred]) {
       expect(markup).not.toContain(pulsePath);
       expect(markup).toContain("text-primary");
-      expect(markup).toContain('width="16"');
-      expect(markup).toContain('height="16"');
+      expect(markup).toContain('width="20"');
+      expect(markup).toContain('height="20"');
       expect(markup).not.toContain("#000");
       expect(markup).not.toContain("#fff");
       expect(markup).not.toContain('fill="black"');
@@ -295,40 +316,44 @@ describe("ActivityRow", () => {
     expect(markup).not.toContain("text-red-500");
   });
 
-  test("shows merge diff stats in the metadata slot", () => {
+  test("puts merge diff stats after the repo/PR context", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow
         event={event({
           source: "github",
           type: "pr_merged",
           speed: "event",
-          summary: "Merged a pull request on briOS",
+          summary: "Merged some-fix",
           subject: {
             kind: "pull_request",
-            label: "Add activity feed",
-            href: "https://github.com/brianlovin/briOS/pull/42",
+            label: "brianlovin/briOS#12",
+            href: "https://github.com/brianlovin/briOS/pull/12",
           },
           meta: {
             repo: "briOS",
-            title: "Add activity feed",
-            number: 42,
-            href: "https://github.com/brianlovin/briOS/pull/42",
-            additions: 311,
-            deletions: 211,
-            changed_files: 8,
+            title: "some-fix",
+            number: 12,
+            href: "https://github.com/brianlovin/briOS/pull/12",
+            additions: 18,
+            deletions: 3,
+            changed_files: 2,
           },
         })}
+        count={2}
       />,
     );
 
-    expect(markup).toContain("Merged a pull request on briOS");
-    expect(markup).toContain("Add activity feed");
-    expect(markup).toContain("+311");
-    expect(markup).toContain("-211");
+    expect(markup).toContain("Merged some-fix");
+    expect(markup).toContain("brianlovin/briOS#12");
+    expect(markup).toContain("+18");
+    expect(markup).toContain("-3");
     expect(markup).toContain("text-green-600");
     expect(markup).toContain("text-red-500");
     expect(markup).toContain("tabular-nums");
-    expect(markup).not.toContain("+311 -211");
+    expect(markup).not.toContain("+18 -3");
+    expect(markup).toMatch(
+      /text-primary[^>]*>Merged some-fix[\s\S]*text-tertiary[^>]*> 2<[\s\S]*href="https:\/\/github.com\/brianlovin\/briOS\/pull\/12"[^>]*>brianlovin\/briOS#12[\s\S]*\+18[\s\S]*-3/,
+    );
   });
 
   test("still shows +0 and -0 when both diff fields are zero", () => {
@@ -526,6 +551,32 @@ describe("ActivityRow", () => {
     expect(pulsed).toContain("bg-secondary");
     expect(pulsed).toContain("duration-500");
     expect(quiet).not.toContain("data-rollup-pulse");
+    expect(quiet).not.toContain("border-b");
+    expect(quiet).not.toContain("border-secondary");
+  });
+});
+
+describe("ActivityFeed", () => {
+  test("is a raw stream without Event / Time column headers", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityFeed
+        initialEvents={[
+          event({
+            id: "visit-1",
+            summary: "🇮🇳 Visit from India",
+            meta: { country: "IN" },
+          }),
+        ]}
+        initialCount={1}
+      />,
+    );
+
+    expect(markup).toContain("🇮🇳 Visit from India");
+    expect(markup).toContain("divide-y");
+    expect(markup).toContain("divide-secondary");
+    expect(markup).not.toContain(">Event<");
+    expect(markup).not.toContain(">Time<");
+    expect(markup).not.toContain("sticky top-0");
   });
 });
 
