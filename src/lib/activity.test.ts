@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test";
+import { afterEach, beforeEach, describe, expect, spyOn, test } from "bun:test";
 
 import {
   activityEnterStaggerDelays,
@@ -33,6 +33,7 @@ import {
   recordLike,
   recordVisit,
   resolveActivitySourceHref,
+  resolveIngestVisitTitle,
   rollupActivityEvents,
   sanitizeVisitTitle,
   shouldPulseActivityRollup,
@@ -41,6 +42,7 @@ import {
   stripTrailingShortIdToken,
 } from "@/lib/activity";
 import { geoFromVisitMeta, normalizeRegionCode } from "@/lib/activity-geo";
+import * as activityHn from "@/lib/activity-hn";
 import { parseActivityStreamFields } from "@/lib/activity-redis";
 import { ACTIVITY_STREAM_MAXLEN, ACTIVITY_VISIT_STREAM_MAX_PER_SEC } from "@/lib/activity-shared";
 
@@ -52,6 +54,36 @@ function baseEvent(overrides: Record<string, unknown> = {}) {
     summary: "Someone liked a page",
     visibility: "public" as const,
     idempotency_key: `test:${crypto.randomUUID()}`,
+    ...overrides,
+  };
+}
+
+let lookupHnStoryTitleSpy: ReturnType<typeof spyOn>;
+
+beforeEach(() => {
+  lookupHnStoryTitleSpy = spyOn(activityHn, "lookupHnStoryTitle").mockResolvedValue(null);
+});
+
+afterEach(() => {
+  lookupHnStoryTitleSpy.mockRestore();
+});
+
+function visitRowEvent(
+  subject: { kind: string; label: string; href: string },
+  overrides: Record<string, unknown> = {},
+): ActivityEvent {
+  return {
+    v: 1,
+    id: "visit-row",
+    ts: "2026-08-16T00:00:00.000Z",
+    received_at: "2026-08-16T00:00:00.000Z",
+    source: "brios",
+    type: "visit",
+    speed: "signal",
+    summary: "Visit from United States",
+    visibility: "public",
+    idempotency_key: "visit-row",
+    subject,
     ...overrides,
   };
 }
@@ -443,16 +475,16 @@ describe("recordVisit", () => {
     const [event] = await store.getTail(1);
     expect(event?.subject).toEqual({
       kind: "app_dissection",
-      label: "Secret for iOS",
+      label: "Secret for iOS App Dissection",
       href: "/app-dissection/secret-for-ios",
     });
     expect(event?.meta).toEqual(
       expect.objectContaining({
         path: "/app-dissection/secret-for-ios",
-        title: "Secret for iOS",
+        title: "Secret for iOS App Dissection",
       }),
     );
-    expect(getActivityRow(event!).label).toBe("Secret for iOS");
+    expect(getActivityRow(event!).label).toBe("Secret for iOS App Dissection");
   });
 
   test("uses a client title for writing, home, HN, and TIL", async () => {
@@ -489,9 +521,11 @@ describe("recordVisit", () => {
       store,
     );
     const [event] = await store.getTail(1);
-    expect(event?.subject?.label).toBe("Secret for iOS");
-    expect(event?.meta).toEqual(expect.objectContaining({ title: "Secret for iOS" }));
-    expect(getActivityRow(event!).label).toBe("Secret for iOS");
+    expect(event?.subject?.label).toBe("Secret for iOS App Dissection");
+    expect(event?.meta).toEqual(
+      expect.objectContaining({ title: "Secret for iOS App Dissection" }),
+    );
+    expect(getActivityRow(event!).label).toBe("Secret for iOS App Dissection");
   });
 
   test("stores a contextual phrase for an HN story id at ingest", async () => {
@@ -505,6 +539,41 @@ describe("recordVisit", () => {
     });
     expect(event?.meta).toEqual(expect.objectContaining({ title: "a Hacker News story" }));
     expect(getActivityRow(event!).label).toBe("a Hacker News story");
+    expect(lookupHnStoryTitleSpy).toHaveBeenCalledWith("46993596");
+  });
+
+  test("looks up an HN story title at ingest when the client title is generic or empty", async () => {
+    lookupHnStoryTitleSpy.mockResolvedValue("Some HN Story");
+
+    const store = createMemoryActivityStore();
+    await recordVisit({ path: "/hn/42991019", title: "Hacker News" }, store);
+    await recordVisit({ path: "/hn/42991019" }, store);
+
+    const events = await store.getTail(2);
+    expect(events.map((event) => event.subject?.label)).toEqual(["Some HN Story", "Some HN Story"]);
+    expect(lookupHnStoryTitleSpy).toHaveBeenCalledWith("42991019");
+    expect(getActivityRow(events[0]!).label).toBe("Some HN Story");
+    expect(getActivityRow(events[0]!).label).not.toBe("a Hacker News story");
+  });
+
+  test("does not look up an HN story when the client already sent a real title", async () => {
+    lookupHnStoryTitleSpy.mockResolvedValue("Ignored lookup title");
+    const store = createMemoryActivityStore();
+    await recordVisit({ path: "/hn/42991019", title: "A story about iOS | Brian Lovin" }, store);
+    const [event] = await store.getTail(1);
+    expect(event?.subject?.label).toBe("A story about iOS");
+    expect(lookupHnStoryTitleSpy).not.toHaveBeenCalled();
+  });
+
+  test("resolveIngestVisitTitle uses the mocked HN helper for a generic title", async () => {
+    lookupHnStoryTitleSpy.mockResolvedValue("Some HN Story");
+    await expect(resolveIngestVisitTitle("/hn/42991019", "Hacker News")).resolves.toBe(
+      "Some HN Story",
+    );
+    await expect(resolveIngestVisitTitle("/hn/42991019", "")).resolves.toBe("Some HN Story");
+    await expect(resolveIngestVisitTitle("/hn/42991019", "42991019")).resolves.toBe(
+      "Some HN Story",
+    );
   });
 
   test("strips a trailing short id from the visit title at ingest", async () => {
@@ -923,9 +992,9 @@ describe("recordLike", () => {
     );
     expect("ok" in result && result.ok).toBe(true);
     const [event] = await store.getTail(1);
-    expect(event?.summary).toBe("Someone liked Secret for iOS");
-    expect(event?.subject?.label).toBe("Secret for iOS");
-    expect(getActivityRow(event!).summary).toBe("Someone liked Secret for iOS");
+    expect(event?.summary).toBe("Someone liked Secret for iOS App Dissection");
+    expect(event?.subject?.label).toBe("Secret for iOS App Dissection");
+    expect(getActivityRow(event!).summary).toBe("Someone liked Secret for iOS App Dissection");
   });
 
   test("does not store a like title that looks like PII", async () => {
@@ -1154,25 +1223,47 @@ describe("sanitizeVisitTitle / formatActivityTitle", () => {
   test("client title wins over the slug and strips Brian Lovin suffixes", () => {
     expect(
       sanitizeVisitTitle("Secret for iOS | Brian Lovin", "/app-dissection/secret-for-ios"),
-    ).toBe("Secret for iOS");
+    ).toBe("Secret for iOS App Dissection");
     expect(
       sanitizeVisitTitle("Secret for iOS – Brian Lovin", "/app-dissection/secret-for-ios"),
-    ).toBe("Secret for iOS");
+    ).toBe("Secret for iOS App Dissection");
     expect(
       sanitizeVisitTitle("Secret for iOS — Brian Lovin", "/app-dissection/secret-for-ios"),
-    ).toBe("Secret for iOS");
+    ).toBe("Secret for iOS App Dissection");
     expect(
       sanitizeVisitTitle("Secret for iOS - App Dissection", "/app-dissection/secret-for-ios"),
-    ).toBe("Secret for iOS");
+    ).toBe("Secret for iOS App Dissection");
   });
 
   test("falls back to the path title when the client title is missing or PII", () => {
-    expect(sanitizeVisitTitle(undefined, "/app-dissection/secret-for-ios")).toBe("Secret for iOS");
-    expect(sanitizeVisitTitle("   ", "/app-dissection/secret-for-ios")).toBe("Secret for iOS");
-    expect(sanitizeVisitTitle("a@b.com", "/app-dissection/secret-for-ios")).toBe("Secret for iOS");
+    expect(sanitizeVisitTitle(undefined, "/app-dissection/secret-for-ios")).toBe(
+      "Secret for iOS App Dissection",
+    );
+    expect(sanitizeVisitTitle("   ", "/app-dissection/secret-for-ios")).toBe(
+      "Secret for iOS App Dissection",
+    );
+    expect(sanitizeVisitTitle("a@b.com", "/app-dissection/secret-for-ios")).toBe(
+      "Secret for iOS App Dissection",
+    );
     expect(sanitizeVisitTitle("Brian Lovin", "/")).toBe("Home");
     expect(sanitizeVisitTitle("Home | Brian Lovin", "/")).toBe("Home");
     expect(shouldRecordVisit("/activity")).toBe(false);
+  });
+
+  test("puts App Dissection back on child routes after stripping the site suffix", () => {
+    expect(
+      sanitizeVisitTitle(
+        "Instagram – App Dissection | Brian Lovin",
+        "/app-dissection/instagram-ios",
+      ),
+    ).toBe("Instagram App Dissection");
+    expect(sanitizeVisitTitle(undefined, "/app-dissection/instagram-ios")).toBe(
+      "Instagram iOS App Dissection",
+    );
+    expect(sanitizeVisitTitle("App Dissection", "/app-dissection")).toBe("App Dissection");
+    expect(sanitizeVisitTitle("Hacker News", "/hn")).toBe("Hacker News");
+    expect(sanitizeVisitTitle("Hacker News", "/hn/42991019")).toBe("a Hacker News story");
+    expect(sanitizeVisitTitle("Some HN Story", "/hn/42991019")).toBe("Some HN Story");
   });
 
   test("strips a site suffix from a document title", () => {
@@ -1310,7 +1401,7 @@ describe("getActivityRow page titles", () => {
         href: "/app-dissection/secret-for-ios",
       },
     });
-    expect(row.label).toBe("Secret for iOS");
+    expect(row.label).toBe("Secret for iOS App Dissection");
     expect(row.href).toBe("/app-dissection/secret-for-ios");
   });
 
@@ -1333,6 +1424,74 @@ describe("getActivityRow page titles", () => {
       expect(row.label).toBe("Hacker News");
       expect(row.href).toBe(href);
       expect(row.label).not.toBe("a Hacker News story");
+    }
+  });
+
+  test("labels an app dissection post as the post name plus App Dissection", () => {
+    const fromSlug = getActivityRow(
+      visitRowEvent({
+        kind: "app_dissection",
+        label: "a page",
+        href: "/app-dissection/instagram-ios",
+      }),
+    );
+    expect(fromSlug.label).toBe("Instagram iOS App Dissection");
+    expect(fromSlug.href).toBe("/app-dissection/instagram-ios");
+    expect(fromSlug.label).not.toBe("Instagram");
+
+    const fromStored = getActivityRow(
+      visitRowEvent({
+        kind: "app_dissection",
+        label: "Instagram",
+        href: "/app-dissection/instagram-ios",
+      }),
+    );
+    expect(fromStored.label).toBe("Instagram App Dissection");
+    expect(fromStored.href).toBe("/app-dissection/instagram-ios");
+    expect(fromStored.label).not.toBe("Instagram");
+
+    const alreadySuffixed = getActivityRow(
+      visitRowEvent({
+        kind: "app_dissection",
+        label: "Instagram iOS App Dissection",
+        href: "/app-dissection/instagram-ios",
+      }),
+    );
+    expect(alreadySuffixed.label).toBe("Instagram iOS App Dissection");
+
+    const index = getActivityRow(
+      visitRowEvent({ kind: "app_dissection", label: "a page", href: "/app-dissection" }),
+    );
+    expect(index.label).toBe("App Dissection");
+    expect(index.href).toBe("/app-dissection");
+  });
+
+  test("uses a stored HN story title instead of the generic phrase", () => {
+    const row = getActivityRow(
+      visitRowEvent({
+        kind: "page",
+        label: "Some HN Story",
+        href: "/hn/42991019",
+      }),
+    );
+    expect(row.label).toBe("Some HN Story");
+    expect(row.href).toBe("/hn/42991019");
+    expect(row.label).not.toBe("a Hacker News story");
+    expect(row.label).not.toBe("42991019");
+  });
+
+  test("falls back to a Hacker News story when the stored title is generic", () => {
+    for (const label of ["Hacker News", "a Hacker News story", "a page", ""]) {
+      const row = getActivityRow(
+        visitRowEvent({
+          kind: "page",
+          label,
+          href: "/hn/42991019",
+        }),
+      );
+      expect(row.label).toBe("a Hacker News story");
+      expect(row.href).toBe("/hn/42991019");
+      expect(row.label).not.toBe("42991019");
     }
   });
 
