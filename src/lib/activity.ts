@@ -8,16 +8,21 @@ import {
   ACTIVITY_SOURCE_BRIOS,
   ACTIVITY_STREAM_MAXLEN,
   ACTIVITY_VISIT_STREAM_MAX_PER_SEC,
+  type ActivityDownloadSource,
   type ActivityEvent,
   type ActivityFeedPayload,
   type ActivityIngestInput,
   type ActivityRef,
+  activitySourceLabel,
   type ActivitySpeed,
   type ActivityTotal,
   findForbiddenPii,
+  formatDownloadSummary,
   inferContentTypeFromPath,
   inferTitleFromPath,
   isActivityPath,
+  parseActivityVisitSource,
+  resolveVisitTitle,
   shouldCountLifetimeTotal,
   shouldRecordVisit,
   visibleLifetimeTotals,
@@ -26,6 +31,7 @@ import {
 export type { ActivityGeo } from "./activity-geo";
 export { countryCodeToName, formatVisitSummary, getRequestGeo } from "./activity-geo";
 export type {
+  ActivityDownloadSource,
   ActivityEvent,
   ActivityFeedPayload,
   ActivityIngestInput,
@@ -33,25 +39,36 @@ export type {
   ActivitySpeed,
   ActivityTotal,
   ActivityVisibility,
+  ActivityVisitSource,
 } from "./activity-shared";
 export {
+  ACTIVITY_DOWNLOAD_SOURCES,
   ACTIVITY_ENVELOPE_VERSION,
   ACTIVITY_FEED_CACHE_CONTROL,
   ACTIVITY_FEED_DEDUPING_MS,
   ACTIVITY_FEED_POLL_MS,
   ACTIVITY_SOURCE_BRIOS,
+  ACTIVITY_SOURCE_LABELS,
   ACTIVITY_STREAM_MAXLEN,
+  ACTIVITY_VISIT_SOURCES,
   ACTIVITY_VISIT_STREAM_MAX_PER_SEC,
   activityFeedRefreshInterval,
+  activitySourceFaviconSrc,
+  activitySourceLabel,
   countryCodeToFlag,
   findForbiddenPii,
+  formatDownloadSummary,
   formatTotalLabel,
   getActivityRow,
   getRequestCountry,
   inferContentTypeFromPath,
   inferTitleFromPath,
+  isActivityDownloadSource,
   isActivityFeedPayload,
   isActivityPath,
+  isActivityVisitSource,
+  parseActivityVisitSource,
+  resolveVisitTitle,
   shouldCountLifetimeTotal,
   shouldRecordVisit,
   visibleLifetimeTotals,
@@ -247,11 +264,16 @@ export async function recordLike(
 }
 
 export async function recordVisit(
-  input: { path: string } & ActivityGeo,
+  input: { path: string; source?: string; title?: string } & ActivityGeo,
   store: ActivityStore,
   now: Date = new Date(),
 ): Promise<IngestResult | { skipped: true; reason: string }> {
-  if (!shouldRecordVisit(input.path)) {
+  const source = parseActivityVisitSource(input.source);
+  if (!source) {
+    return { ok: false, error: "unknown source", status: 400 };
+  }
+
+  if (source === ACTIVITY_SOURCE_BRIOS && !shouldRecordVisit(input.path)) {
     return { skipped: true, reason: "activity_path" };
   }
 
@@ -262,19 +284,19 @@ export async function recordVisit(
   const regionName = input.regionName?.trim() || undefined;
   const city = input.city?.trim() || undefined;
   const summary = formatVisitSummary({ country, countryName, region, regionName, city });
-  const title = inferTitleFromPath(input.path);
+  const title = resolveVisitTitle(input.path, input.title);
   const windowKey = `visit:${Math.floor(now.getTime() / 1000)}`;
   const windowCount = await store.incrementVisitWindow(windowKey, 2);
   const writeToStream = windowCount <= ACTIVITY_VISIT_STREAM_MAX_PER_SEC;
 
   return ingestActivityEvent(
     {
-      source: ACTIVITY_SOURCE_BRIOS,
+      source,
       type: "visit",
       speed: "signal",
       summary,
       visibility: "public",
-      idempotency_key: `brios:visit:${crypto.randomUUID()}`,
+      idempotency_key: `${source}:visit:${crypto.randomUUID()}`,
       subject: {
         kind: inferContentTypeFromPath(input.path),
         label: title,
@@ -290,6 +312,30 @@ export async function recordVisit(
         title,
       },
       writeToStream,
+    },
+    store,
+    now,
+  );
+}
+
+export async function recordDownload(
+  input: { source: ActivityDownloadSource; platform?: string },
+  store: ActivityStore,
+  now: Date = new Date(),
+): Promise<IngestResult> {
+  const label = activitySourceLabel(input.source);
+  const platform = input.platform?.trim() || undefined;
+
+  return ingestActivityEvent(
+    {
+      source: input.source,
+      type: "download",
+      speed: "event",
+      summary: formatDownloadSummary(input.source),
+      visibility: "public",
+      idempotency_key: `${input.source}:download:${crypto.randomUUID()}`,
+      subject: { kind: "download", label },
+      meta: platform ? { platform } : undefined,
     },
     store,
     now,

@@ -1,10 +1,13 @@
 import { describe, expect, test } from "bun:test";
 
 import {
+  activitySourceFaviconSrc,
   countryCodeToFlag,
   countryCodeToName,
   createMemoryActivityStore,
   findForbiddenPii,
+  formatDownloadSummary,
+  formatTotalLabel,
   formatVisitSummary,
   getActivityRow,
   getRequestCountry,
@@ -12,7 +15,9 @@ import {
   hashDigestSubscriber,
   ingestActivityEvent,
   likeMetaFromRequest,
+  parseActivityVisitSource,
   recordDigestSubscribed,
+  recordDownload,
   recordLike,
   recordVisit,
   shouldRecordVisit,
@@ -269,11 +274,63 @@ describe("recordVisit", () => {
       title: "grok bot first impressions",
     });
     expect(getActivityRow(event!)).toEqual({
-      summary: "Visit from India",
-      flag: "🇮🇳",
+      summary: "🇮🇳 Visit from India",
       href: "/writing/grok-bot-first-impressions",
       label: "grok bot first impressions",
     });
+    expect(event?.source).toBe("brios");
+  });
+
+  test("writes a non-brios source and a provided title", async () => {
+    const store = createMemoryActivityStore();
+    const result = await recordVisit(
+      {
+        path: "/returns/2024",
+        source: "tax-ui",
+        title: "  2024 federal return  ",
+        country: "US",
+      },
+      store,
+    );
+    expect("ok" in result && result.ok).toBe(true);
+
+    const [event] = await store.getTail(1);
+    expect(event?.source).toBe("tax-ui");
+    expect(event?.type).toBe("visit");
+    expect(event?.subject).toEqual({
+      kind: "page",
+      label: "2024 federal return",
+      href: "/returns/2024",
+    });
+    expect(event?.meta).toEqual(
+      expect.objectContaining({
+        path: "/returns/2024",
+        title: "2024 federal return",
+        country: "US",
+      }),
+    );
+    expect(getActivityRow(event!).summary).toBe("🇺🇸 Visit from United States");
+  });
+
+  test("rejects an unknown source without writing", async () => {
+    const store = createMemoryActivityStore();
+    const result = await recordVisit({ path: "/", source: "evil.com", country: "US" }, store);
+    expect(result).toEqual({ ok: false, error: "unknown source", status: 400 });
+    expect(await store.getStreamLength()).toBe(0);
+    expect(await store.getTotals()).toEqual([]);
+  });
+
+  test("lets an external source record /activity", async () => {
+    const store = createMemoryActivityStore();
+    const result = await recordVisit(
+      { path: "/activity", source: "staff-design", title: "Staff Design", country: "DE" },
+      store,
+    );
+    expect("ok" in result && result.ok).toBe(true);
+    const [event] = await store.getTail(1);
+    expect(event?.source).toBe("staff-design");
+    expect(event?.subject?.label).toBe("Staff Design");
+    expect(event?.subject?.href).toBe("/activity");
   });
 
   test("prefers city and region in the visit summary", async () => {
@@ -327,8 +384,7 @@ describe("recordVisit", () => {
       meta: { country: "IN" },
     });
     expect(row).toEqual({
-      summary: "Visit from India",
-      flag: "🇮🇳",
+      summary: "🇮🇳 Visit from India",
     });
   });
 
@@ -347,8 +403,7 @@ describe("recordVisit", () => {
       meta: { country: "IN" },
     });
     expect(row).toEqual({
-      summary: "First visit from IN",
-      flag: "🇮🇳",
+      summary: "🇮🇳 First visit from IN",
     });
   });
 
@@ -426,6 +481,94 @@ describe("recordDigestSubscribed", () => {
     expect(await store.getTotals()).toEqual([
       expect.objectContaining({ source: "brios", type: "digest_subscribed", count: 2 }),
     ]);
+  });
+});
+
+describe("recordDownload", () => {
+  test("writes a public download with a human site name", async () => {
+    const store = createMemoryActivityStore();
+    const result = await recordDownload({ source: "tax-ui", platform: "mac" }, store);
+    expect(result.ok && !result.duplicate).toBe(true);
+
+    const [event] = await store.getTail(1);
+    expect(event?.type).toBe("download");
+    expect(event?.speed).toBe("event");
+    expect(event?.visibility).toBe("public");
+    expect(event?.source).toBe("tax-ui");
+    expect(event?.summary).toBe("Someone downloaded Tax UI");
+    expect(event?.subject).toEqual({ kind: "download", label: "Tax UI" });
+    expect(event?.meta).toEqual({ platform: "mac" });
+    expect(event?.idempotency_key).toMatch(/^tax-ui:download:/);
+    expect(JSON.stringify(event)).not.toMatch(/https?:\/\//);
+  });
+
+  test("omits platform when it is missing and uses the site label", async () => {
+    const store = createMemoryActivityStore();
+    await recordDownload({ source: "shiori" }, store);
+    await recordDownload({ source: "design-details" }, store);
+    await recordDownload({ source: "staff-design" }, store);
+
+    const events = await store.getTail(10);
+    expect(events.map((event) => event.summary)).toEqual([
+      "Someone downloaded Staff Design",
+      "Someone downloaded Design Details",
+      "Someone downloaded Shiori",
+    ]);
+    expect(events[2]?.meta).toBeUndefined();
+  });
+
+  test("HMAC-ingested download events count toward lifetime totals", async () => {
+    const store = createMemoryActivityStore();
+    const result = await ingestActivityEvent(
+      {
+        source: "shiori",
+        type: "download",
+        speed: "event",
+        summary: "Someone downloaded Shiori",
+        visibility: "public",
+        idempotency_key: "hmac:download:1",
+        subject: { kind: "download", label: "Shiori" },
+      },
+      store,
+    );
+    expect(result.ok && !result.duplicate).toBe(true);
+    expect(await store.getTotals()).toEqual([
+      expect.objectContaining({ source: "shiori", type: "download", count: 1 }),
+    ]);
+    expect(visibleLifetimeTotals(await store.getTotals())).toHaveLength(1);
+    expect(formatTotalLabel("download")).toBe("Downloads");
+    expect(getActivityRow((await store.getTail(1))[0]!)).toEqual({
+      summary: "Someone downloaded Shiori",
+      href: undefined,
+      label: "Shiori",
+    });
+  });
+});
+
+describe("activity source helpers", () => {
+  test("defaults omitted visit sources to brios and rejects unknown ones", () => {
+    expect(parseActivityVisitSource(undefined)).toBe("brios");
+    expect(parseActivityVisitSource("")).toBe("brios");
+    expect(parseActivityVisitSource("tax-ui")).toBe("tax-ui");
+    expect(parseActivityVisitSource("not-a-site")).toBeNull();
+  });
+
+  test("maps sources to favicon paths", () => {
+    expect(activitySourceFaviconSrc("brios")).toBe("/activity/favicons/brios.png");
+    expect(activitySourceFaviconSrc("tax-ui")).toBe("/activity/favicons/tax-ui.png");
+    expect(activitySourceFaviconSrc("staff-design")).toBe("/activity/favicons/staff-design.png");
+    expect(activitySourceFaviconSrc("design-details")).toBe(
+      "/activity/favicons/design-details.png",
+    );
+    expect(activitySourceFaviconSrc("shiori")).toBe("/img/shiori-icon.png");
+    expect(activitySourceFaviconSrc("github")).toBeUndefined();
+  });
+
+  test("formats download summary copy from the source slug", () => {
+    expect(formatDownloadSummary("tax-ui")).toBe("Someone downloaded Tax UI");
+    expect(formatDownloadSummary("shiori")).toBe("Someone downloaded Shiori");
+    expect(formatDownloadSummary("staff-design")).toBe("Someone downloaded Staff Design");
+    expect(formatDownloadSummary("design-details")).toBe("Someone downloaded Design Details");
   });
 });
 

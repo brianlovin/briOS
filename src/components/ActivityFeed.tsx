@@ -13,7 +13,12 @@ import { ListDetailWrapper } from "@/components/ListDetailWrapper";
 import { useTopBarActions } from "@/components/TopBarActions";
 import { IconButton } from "@/components/ui/IconButton";
 import type { ActivityEvent, ActivityTotal } from "@/lib/activity";
-import { formatTotalLabel, getActivityRow, visibleLifetimeTotals } from "@/lib/activity-shared";
+import {
+  activitySourceFaviconSrc,
+  formatTotalLabel,
+  getActivityRow,
+  visibleLifetimeTotals,
+} from "@/lib/activity-shared";
 import { useActivity } from "@/lib/hooks/useActivity";
 import { cn } from "@/lib/utils";
 
@@ -63,18 +68,35 @@ function RelativeTime({ iso }: { iso: string }) {
   );
 }
 
-function ActivityRowIcon({ event, flag }: { event: ActivityEvent; flag?: string }) {
+function ActivitySourceFavicon({ src }: { src: string }) {
+  const [failed, setFailed] = useState(false);
+  if (failed) {
+    return <World size={16} className="text-tertiary" aria-hidden />;
+  }
+
+  return (
+    /* eslint-disable-next-line @next/next/no-img-element -- tiny static favicon */
+    <img
+      src={src}
+      alt=""
+      width={16}
+      height={16}
+      className="block size-4 rounded-[3px]"
+      aria-hidden
+      onError={() => setFailed(true)}
+    />
+  );
+}
+
+function ActivityRowIcon({ event }: { event: ActivityEvent }) {
   if (event.type === "like") {
     return <Heart size={16} className="fill-current text-red-500" aria-hidden />;
   }
 
-  if (event.type === "visit" || event.type === "visit_country_first") {
-    if (flag) {
-      return (
-        <span className="text-base leading-none" aria-hidden>
-          {flag}
-        </span>
-      );
+  if (event.type === "visit" || event.type === "visit_country_first" || event.type === "download") {
+    const faviconSrc = activitySourceFaviconSrc(event.source);
+    if (faviconSrc) {
+      return <ActivitySourceFavicon src={faviconSrc} />;
     }
     return <World size={16} className="text-tertiary" aria-hidden />;
   }
@@ -89,7 +111,7 @@ export function ActivityRow({ event }: { event: ActivityEvent }) {
   return (
     <div className="border-secondary hover:bg-secondary grid grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-3 border-b px-4 py-3 md:gap-4 md:py-2 md:dark:hover:bg-white/5">
       <div className="flex size-8 items-center justify-center">
-        <ActivityRowIcon event={event} flag={row.flag} />
+        <ActivityRowIcon event={event} />
       </div>
       <div className="min-w-0">
         <p className="text-primary truncate text-pretty">{row.summary}</p>

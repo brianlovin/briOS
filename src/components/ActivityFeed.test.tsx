@@ -21,7 +21,7 @@ function event(overrides: Partial<ActivityEvent>): ActivityEvent {
 }
 
 describe("ActivityRow", () => {
-  test("shows a flag in the icon column and the page link under the summary", () => {
+  test("shows the site favicon and keeps the flag in the title", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow
         event={event({
@@ -32,11 +32,50 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(markup).toContain("🇮🇳");
-    expect(markup).toContain("Visit from India");
+    expect(markup).toContain("🇮🇳 Visit from India");
+    expect(markup).toContain("/activity/favicons/brios.png");
     expect(markup).toContain('href="/"');
     expect(markup).toContain("home");
     expect(markup).not.toContain("text-red-500");
+  });
+
+  test("uses the event source favicon for visits and downloads", () => {
+    const visit = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "tax-ui",
+          summary: "🇺🇸 Visit from United States",
+          meta: { country: "US" },
+        })}
+      />,
+    );
+    const download = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "design-details",
+          type: "download",
+          speed: "event",
+          summary: "Someone downloaded Design Details",
+          subject: { kind: "download", label: "Design Details" },
+        })}
+      />,
+    );
+    const unknown = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "unknown",
+          summary: "🇺🇸 Visit from United States",
+          meta: { country: "US" },
+        })}
+      />,
+    );
+
+    expect(visit).toContain("/activity/favicons/tax-ui.png");
+    expect(visit).toContain("🇺🇸 Visit from United States");
+    expect(download).toContain("/activity/favicons/design-details.png");
+    expect(download).toContain("Someone downloaded Design Details");
+    expect(unknown).not.toContain("/activity/favicons/");
+    expect(unknown).toContain("🇺🇸 Visit from United States");
   });
 
   test("rebuilds a country name and flag for older visits that only have a code", () => {
@@ -76,6 +115,8 @@ describe("ActivityRow", () => {
     expect(like).toContain("Someone liked Grok Bot first impressions");
     expect(like).toContain('href="/writing/grok-bot-first-impressions"');
     expect(visit).not.toContain("text-red-500");
-    expect(visit).toContain("🇮🇳");
+    expect(visit).toContain("🇮🇳 Visit from India");
+    expect(visit).toContain("/activity/favicons/brios.png");
+    expect(like).not.toContain("/activity/favicons/");
   });
 });

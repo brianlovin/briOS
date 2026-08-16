@@ -20,6 +20,74 @@ export const ACTIVITY_IDEMPOTENCY_TTL_SECONDS = 6 * 60 * 60;
 export const ACTIVITY_META_MAX_BYTES = 2048;
 export const ACTIVITY_BODY_MAX_BYTES = 8192;
 export const ACTIVITY_SOURCE_BRIOS = "brios";
+export const ACTIVITY_VISIT_TITLE_MAX = 200;
+
+export const ACTIVITY_VISIT_SOURCES = [
+  ACTIVITY_SOURCE_BRIOS,
+  "tax-ui",
+  "staff-design",
+  "design-details",
+] as const;
+
+export const ACTIVITY_DOWNLOAD_SOURCES = [
+  "tax-ui",
+  "staff-design",
+  "design-details",
+  "shiori",
+] as const;
+
+export type ActivityVisitSource = (typeof ACTIVITY_VISIT_SOURCES)[number];
+export type ActivityDownloadSource = (typeof ACTIVITY_DOWNLOAD_SOURCES)[number];
+
+export const ACTIVITY_SOURCE_LABELS: Record<string, string> = {
+  [ACTIVITY_SOURCE_BRIOS]: "briOS",
+  "tax-ui": "Tax UI",
+  "staff-design": "Staff Design",
+  "design-details": "Design Details",
+  shiori: "Shiori",
+};
+
+const ACTIVITY_SOURCE_FAVICONS: Record<string, string> = {
+  [ACTIVITY_SOURCE_BRIOS]: "/activity/favicons/brios.png",
+  "tax-ui": "/activity/favicons/tax-ui.png",
+  "staff-design": "/activity/favicons/staff-design.png",
+  "design-details": "/activity/favicons/design-details.png",
+  shiori: "/img/shiori-icon.png",
+};
+
+export function isActivityVisitSource(value: string): value is ActivityVisitSource {
+  return (ACTIVITY_VISIT_SOURCES as readonly string[]).includes(value);
+}
+
+export function parseActivityVisitSource(
+  value: string | undefined | null,
+): ActivityVisitSource | null {
+  if (value == null || value === "") return ACTIVITY_SOURCE_BRIOS;
+  if (isActivityVisitSource(value)) return value;
+  return null;
+}
+
+export function isActivityDownloadSource(value: string): value is ActivityDownloadSource {
+  return (ACTIVITY_DOWNLOAD_SOURCES as readonly string[]).includes(value);
+}
+
+export function activitySourceLabel(source: string): string {
+  return ACTIVITY_SOURCE_LABELS[source] ?? source;
+}
+
+export function formatDownloadSummary(source: ActivityDownloadSource): string {
+  return `Someone downloaded ${activitySourceLabel(source)}`;
+}
+
+export function activitySourceFaviconSrc(source: string): string | undefined {
+  return ACTIVITY_SOURCE_FAVICONS[source];
+}
+
+export function resolveVisitTitle(path: string, title?: string): string {
+  const trimmed = title?.trim();
+  if (trimmed) return trimmed.slice(0, ACTIVITY_VISIT_TITLE_MAX);
+  return inferTitleFromPath(path);
+}
 
 /** CDN + browser cache for the public activity poll blob. */
 export const ACTIVITY_FEED_CACHE_CONTROL = "public, s-maxage=2, stale-while-revalidate=30";
@@ -191,33 +259,32 @@ export function visibleLifetimeTotals(totals: ActivityTotal[]): ActivityTotal[] 
   return totals.filter((total) => shouldCountLifetimeTotal(total.type));
 }
 
+function visitSummaryWithFlag(summary: string, meta: Record<string, unknown> | undefined): string {
+  const split = splitVisitSummaryFlag(summary);
+  if (split.flag) return summary;
+  const flag = countryCodeToFlag(geoFromVisitMeta(meta).country);
+  return flag ? `${flag} ${summary}` : summary;
+}
+
 export function getActivityRow(event: ActivityEvent): {
   summary: string;
-  flag?: string;
   href?: string;
   label?: string;
 } {
   if (event.type === "visit") {
     const geo = geoFromVisitMeta(event.meta);
-    const full =
+    const summary =
       geo.country || geo.city || geo.countryName ? formatVisitSummary(geo) : event.summary;
-    const split = splitVisitSummaryFlag(full);
-    const flag = split.flag || countryCodeToFlag(geo.country);
     return {
-      summary: split.text,
-      ...(flag ? { flag } : {}),
+      summary,
       href: event.subject?.href,
       label: event.subject?.label,
     };
   }
 
   if (event.type === "visit_country_first") {
-    const geo = geoFromVisitMeta(event.meta);
-    const split = splitVisitSummaryFlag(event.summary);
-    const flag = split.flag || countryCodeToFlag(geo.country);
     return {
-      summary: split.text,
-      ...(flag ? { flag } : {}),
+      summary: visitSummaryWithFlag(event.summary, event.meta),
       href: event.subject?.href,
       label: event.subject?.label,
     };
@@ -256,6 +323,8 @@ export function formatTotalLabel(type: string): string {
       return "Design Details";
     case "app_dissection_published":
       return "App dissections";
+    case "download":
+      return "Downloads";
     default:
       return type.replace(/_/g, " ");
   }
