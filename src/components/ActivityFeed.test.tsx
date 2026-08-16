@@ -84,6 +84,23 @@ describe("ActivityRow", () => {
     expect(markup).toContain("Visit from Taiwan");
   });
 
+  test("uses the globe and mysterious-place copy when a visit has no country", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          summary: "Visit",
+          subject: { kind: "home", label: "Home", href: "/" },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("Someone visited from a mysterious place on earth");
+    expect(markup).toContain("Home");
+    expect(markup).not.toContain(">Visit<");
+    expect(markup).not.toContain("🇮🇳");
+    expect(markup).not.toContain("text-red-500");
+  });
+
   test("shows a red heart on like rows only", () => {
     const like = renderToStaticMarkup(
       <ActivityRow

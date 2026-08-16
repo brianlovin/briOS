@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 
 import {
   type ActivityEvent,
+  ANONYMOUS_VISIT_SUMMARY,
   countryCodeToFlag,
   countryCodeToName,
   createMemoryActivityStore,
@@ -235,7 +236,7 @@ describe("formatVisitSummary", () => {
       }),
     ).toBe("🇮🇳 Visit from Bengaluru, India");
     expect(formatVisitSummary({ country: "RU" })).toBe("🇷🇺 Visit from Russia");
-    expect(formatVisitSummary({})).toBe("Visit");
+    expect(formatVisitSummary({})).toBe(ANONYMOUS_VISIT_SUMMARY);
   });
 
   test("keeps an unknown country code", () => {
@@ -336,6 +337,62 @@ describe("recordVisit", () => {
       path: "/",
       title: "Home",
     });
+  });
+
+  test("uses mysterious-place copy when geo is missing", async () => {
+    const store = createMemoryActivityStore();
+    const result = await recordVisit({ path: "/writing" }, store);
+    expect("ok" in result && result.ok).toBe(true);
+
+    const [event] = await store.getTail(1);
+    expect(event?.type).toBe("visit");
+    expect(event?.summary).toBe(ANONYMOUS_VISIT_SUMMARY);
+    expect(event?.meta).toEqual({ path: "/writing", title: "Writing" });
+    expect(getActivityRow(event!)).toEqual({
+      summary: ANONYMOUS_VISIT_SUMMARY,
+      href: "/writing",
+      label: "Writing",
+    });
+  });
+
+  test("rewrites a stored Visit row that has no country", () => {
+    const row = getActivityRow({
+      v: 1,
+      id: "old-anon",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "visit",
+      speed: "signal",
+      summary: "Visit",
+      visibility: "public",
+      idempotency_key: "old-anon",
+      subject: { kind: "home", label: "Home", href: "/" },
+    });
+    expect(row).toEqual({
+      summary: ANONYMOUS_VISIT_SUMMARY,
+      href: "/",
+      label: "Home",
+    });
+    expect(row.flag).toBeUndefined();
+  });
+
+  test("keeps a located visit stored only in the summary", () => {
+    const row = getActivityRow({
+      v: 1,
+      id: "old-located",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "visit",
+      speed: "signal",
+      summary: "🇫🇷 Visit from France",
+      visibility: "public",
+      idempotency_key: "old-located",
+      subject: { kind: "writing", label: "Writing", href: "/writing" },
+    });
+    expect(row.summary).toBe("Visit from France");
+    expect(row.flag).toBe("🇫🇷");
   });
 
   test("keeps the existing summary when the country has no flag", async () => {

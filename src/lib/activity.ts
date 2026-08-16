@@ -24,7 +24,12 @@ import {
 } from "./activity-shared";
 
 export type { ActivityGeo } from "./activity-geo";
-export { countryCodeToName, formatVisitSummary, getRequestGeo } from "./activity-geo";
+export {
+  ANONYMOUS_VISIT_SUMMARY,
+  countryCodeToName,
+  formatVisitSummary,
+  getRequestGeo,
+} from "./activity-geo";
 export type { ActivityRollup } from "./activity-rollup";
 export {
   activityEventHref,

@@ -4,6 +4,7 @@
  */
 
 import {
+  ANONYMOUS_VISIT_SUMMARY,
   countryCodeToFlag,
   formatVisitSummary,
   geoFromVisitMeta,
@@ -350,8 +351,13 @@ export function getActivityRow(event: ActivityEvent): {
 } {
   if (event.type === "visit") {
     const geo = geoFromVisitMeta(event.meta);
-    const full =
-      geo.country || geo.city || geo.countryName ? formatVisitSummary(geo) : event.summary;
+    const hasLocation = Boolean(geo.country || geo.city || geo.countryName);
+    const storedText = splitVisitSummaryFlag(event.summary).text.trim();
+    const full = hasLocation
+      ? formatVisitSummary(geo)
+      : !storedText || storedText === "Visit"
+        ? ANONYMOUS_VISIT_SUMMARY
+        : event.summary;
     const split = splitVisitSummaryFlag(full);
     const flag = split.flag || countryCodeToFlag(geo.country);
     return {
