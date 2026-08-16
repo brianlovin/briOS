@@ -236,8 +236,6 @@ export function formatTotalLabel(type: string): string {
       return "Likes";
     case "visit":
       return "Visits";
-    case "visit_country_first":
-      return "New countries";
     case "ama_asked":
       return "AMA questions";
     case "ama_answered":

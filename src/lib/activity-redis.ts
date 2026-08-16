@@ -13,7 +13,6 @@ const STREAM_KEY = "activity:stream";
 const TOTALS_PREFIX = "activity:totals:";
 const IDEMP_PREFIX = "activity:idemp:";
 const VISIT_WINDOW_PREFIX = "activity:visit:window:";
-const COUNTRY_TOTALS_KEY = "activity:country:totals";
 
 export type ActivityRedisSource = "activity" | "likes";
 
@@ -210,10 +209,6 @@ export function createRedisActivityStore(client: Redis): ActivityStore {
         await client.expire(key, ttlSeconds);
       }
       return count;
-    },
-
-    async incrementCountryTotal(country: string): Promise<number> {
-      return (await client.hincrby(COUNTRY_TOTALS_KEY, country, 1)) ?? 0;
     },
   };
 }

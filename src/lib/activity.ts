@@ -18,7 +18,6 @@ import {
   inferContentTypeFromPath,
   inferTitleFromPath,
   isActivityPath,
-  normalizeCountryCode,
   shouldCountLifetimeTotal,
   shouldRecordVisit,
   visibleLifetimeTotals,
@@ -70,7 +69,6 @@ export type ActivityStore = {
   getTotals(): Promise<ActivityTotal[]>;
   getStreamLength(): Promise<number>;
   incrementVisitWindow(windowKey: string, ttlSeconds: number): Promise<number>;
-  incrementCountryTotal(country: string): Promise<number>;
 };
 
 export async function buildActivityFeed(store: ActivityStore | null): Promise<ActivityFeedPayload> {
@@ -85,7 +83,6 @@ export function createMemoryActivityStore(options: { maxLen?: number } = {}): Ac
   const totals = new Map<string, ActivityTotal>();
   const claimed = new Set<string>();
   const visitWindows = new Map<string, number>();
-  const countryTotals = new Map<string, number>();
 
   return {
     async claimIdempotency(key: string): Promise<boolean> {
@@ -120,11 +117,6 @@ export function createMemoryActivityStore(options: { maxLen?: number } = {}): Ac
     async incrementVisitWindow(windowKey: string): Promise<number> {
       const next = (visitWindows.get(windowKey) ?? 0) + 1;
       visitWindows.set(windowKey, next);
-      return next;
-    },
-    async incrementCountryTotal(country: string): Promise<number> {
-      const next = (countryTotals.get(country) ?? 0) + 1;
-      countryTotals.set(country, next);
       return next;
     },
   };
@@ -275,7 +267,7 @@ export async function recordVisit(
   const windowCount = await store.incrementVisitWindow(windowKey, 2);
   const writeToStream = windowCount <= ACTIVITY_VISIT_STREAM_MAX_PER_SEC;
 
-  const visitResult = await ingestActivityEvent(
+  return ingestActivityEvent(
     {
       source: ACTIVITY_SOURCE_BRIOS,
       type: "visit",
@@ -298,39 +290,6 @@ export async function recordVisit(
         title,
       },
       writeToStream,
-    },
-    store,
-    now,
-  );
-
-  if (country) {
-    await recordVisitCountryFirst(country, store, now);
-  }
-
-  return visitResult;
-}
-
-async function recordVisitCountryFirst(
-  country: string,
-  store: ActivityStore,
-  now: Date,
-): Promise<void> {
-  const code = normalizeCountryCode(country);
-  if (!code) return;
-
-  const countryCount = await store.incrementCountryTotal(code);
-  if (countryCount !== 1) return;
-
-  await ingestActivityEvent(
-    {
-      source: ACTIVITY_SOURCE_BRIOS,
-      type: "visit_country_first",
-      speed: "event",
-      summary: `First visit from ${code}`,
-      visibility: "public",
-      idempotency_key: `brios:visit_country_first:${code}`,
-      meta: { country: code },
-      idempotencyTtlSeconds: 0,
     },
     store,
     now,
