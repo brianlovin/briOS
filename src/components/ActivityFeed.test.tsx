@@ -781,10 +781,13 @@ describe("ActivityRow", () => {
 
     expect(pulsed).toContain("data-rollup-pulse");
     expect(pulsed).toContain("bg-secondary");
-    expect(pulsed).toContain("duration-500");
+    expect(pulsed).not.toContain("transition-colors");
+    expect(pulsed).not.toContain("duration-500");
     expect(quiet).not.toContain("data-rollup-pulse");
     expect(quiet).not.toContain("border-b");
     expect(quiet).not.toContain("border-secondary");
+    expect(quiet).not.toContain("transition-colors");
+    expect(quiet).not.toContain("duration-500");
   });
 
   test("keeps the title on one line and sticks time to the right on mobile", () => {
@@ -817,6 +820,9 @@ describe("ActivityRow", () => {
     expect(markup).toContain("group-data-[rollup-pulse]:bg-inherit");
     expect(markup).toContain("md:static");
     expect(markup).toContain("md:grid-cols-[2rem_minmax(0,1fr)_auto]");
+    expect(markup).toContain("hover:bg-secondary");
+    expect(markup).not.toContain("transition-colors");
+    expect(markup).not.toContain("duration-500");
     expect(markup).toMatch(/Merged some-fix[\s\S]*brianlovin\/briOS#12[\s\S]*\+18[\s\S]*-3/);
   });
 });
@@ -840,6 +846,7 @@ describe("ActivityFeed", () => {
     expect(markup).toContain("divide-y");
     expect(markup).toContain("divide-secondary");
     expect(markup).toContain("overflow-hidden");
+    expect(markup).toContain("clip-path:inset(0)");
     expect(markup).toContain("min-w-max");
     expect(markup).toContain("min-w-full");
     expect(markup).toContain("w-max");

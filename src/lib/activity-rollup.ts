@@ -25,8 +25,8 @@ export function activityStackReactKey(stack: Pick<ActivityRollup, "key" | "ancho
   return `${stack.key}:${stack.anchorId}`;
 }
 
-export const ACTIVITY_ENTER_STAGGER_STEP = 0.1;
-export const ACTIVITY_ENTER_STAGGER_MAX = 1;
+export const ACTIVITY_ENTER_STAGGER_STEP = 0.05;
+export const ACTIVITY_ENTER_STAGGER_MAX = 0.4;
 
 /** Enter delays for keys that were not on screen last paint. First paint (`previous` null) is empty. */
 export function activityEnterStaggerDelays(

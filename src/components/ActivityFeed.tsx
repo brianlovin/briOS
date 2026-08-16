@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import {
   type ReactNode,
@@ -22,6 +22,9 @@ import { useTopBarActions } from "@/components/TopBarActions";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip";
 import type { ActivityEvent, ActivityRollup } from "@/lib/activity";
 import {
+  ACTIVITY_ENTER_STAGGER_MAX,
+  ACTIVITY_ENTER_STAGGER_STEP,
+  activityEnterStaggerDelays,
   activityStackReactKey,
   rollupActivityEvents,
   shouldPulseActivityRollup,
@@ -193,7 +196,7 @@ export function ActivityRow({
     <div
       data-rollup-pulse={pulse ? "" : undefined}
       className={cn(
-        "group hover:bg-secondary flex w-max min-w-full items-center gap-3 py-3 pl-4 transition-colors duration-500 md:grid md:w-auto md:min-w-0 md:grid-cols-[2rem_minmax(0,1fr)_auto] md:gap-4 md:px-4 md:py-2 md:dark:hover:bg-white/5",
+        "group hover:bg-secondary flex w-max min-w-full items-center gap-3 py-3 pl-4 md:grid md:w-auto md:min-w-0 md:grid-cols-[2rem_minmax(0,1fr)_auto] md:gap-4 md:px-4 md:py-2 md:dark:hover:bg-white/5",
         pulse && "bg-secondary",
       )}
     >
@@ -262,7 +265,7 @@ export function ActivityTrackedCount({ count }: { count: number }) {
 }
 
 const ROLLUP_PULSE_MS = 550;
-const LIST_MOTION = { duration: 0.16, ease: [0.2, 0, 0, 1] } as const;
+const LIST_MOTION = { duration: 0.14, ease: [0.2, 0, 0, 1] } as const;
 
 function subscribeNoop(): () => void {
   return () => {};
@@ -345,6 +348,16 @@ function useMobileAxisLock(ref: RefObject<HTMLElement | null>, enabled: boolean)
   }, [enabled, ref]);
 }
 
+function pruneEnterDelays(delays: Map<string, number>, liveKeys: Set<string>): Map<string, number> {
+  let changed = false;
+  const next = new Map<string, number>();
+  for (const [key, delay] of delays) {
+    if (liveKeys.has(key)) next.set(key, delay);
+    else changed = true;
+  }
+  return changed ? next : delays;
+}
+
 function ActivityStackList({
   stacks,
   pulseKey,
@@ -355,36 +368,81 @@ function ActivityStackList({
   const hydrated = useHydrated();
   const prefersReducedMotion = useReducedMotion();
   const shouldAnimate = hydrated && prefersReducedMotion !== true;
+  const keys = stacks.map(activityStackReactKey);
+  const liveKeys = new Set(keys);
+  const [seenKeys, setSeenKeys] = useState<Set<string> | null>(null);
+  const [enterDelays, setEnterDelays] = useState<Map<string, number>>(() => new Map());
+
+  let nextSeen = seenKeys;
+  let nextDelays = enterDelays;
+
+  if (seenKeys === null) {
+    nextSeen = liveKeys;
+  } else {
+    const pending = activityEnterStaggerDelays(
+      keys,
+      seenKeys,
+      ACTIVITY_ENTER_STAGGER_STEP,
+      ACTIVITY_ENTER_STAGGER_MAX,
+    );
+    if (pending.size > 0) {
+      nextDelays = new Map(enterDelays);
+      for (const [key, delay] of pending) nextDelays.set(key, delay);
+      nextSeen = new Set([...seenKeys, ...keys]);
+    }
+  }
+
+  if (nextSeen) {
+    const prunedSeen = new Set([...nextSeen].filter((key) => liveKeys.has(key)));
+    if (prunedSeen.size !== nextSeen.size) nextSeen = prunedSeen;
+  }
+  nextDelays = pruneEnterDelays(nextDelays, liveKeys);
+
+  if (nextSeen !== seenKeys) setSeenKeys(nextSeen);
+  if (nextDelays !== enterDelays) setEnterDelays(nextDelays);
 
   return (
-    <LayoutGroup>
-      <div className="divide-secondary min-w-max divide-y md:min-w-0">
-        <AnimatePresence initial={false}>
-          {stacks.map((stack) => {
-            const reactKey = activityStackReactKey(stack);
-            return (
-              <motion.div
-                key={reactKey}
-                layout={shouldAnimate ? "position" : false}
-                initial={shouldAnimate ? { height: 0, opacity: 0 } : false}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={shouldAnimate ? { height: 0, opacity: 0 } : undefined}
-                className="w-max min-w-full [clip-path:inset(0)] md:w-auto md:min-w-0"
-                transition={shouldAnimate ? LIST_MOTION : { duration: 0 }}
-              >
-                <ActivityRow
-                  event={stack.latest}
-                  count={stack.count}
-                  sectionLabel={stack.sectionLabel}
-                  href={stack.href}
-                  pulse={pulseKey === stack.key}
-                />
-              </motion.div>
-            );
-          })}
-        </AnimatePresence>
-      </div>
-    </LayoutGroup>
+    <div className="divide-secondary min-w-max divide-y md:min-w-0">
+      <AnimatePresence initial={false}>
+        {stacks.map((stack) => {
+          const reactKey = activityStackReactKey(stack);
+          const delay = nextDelays.get(reactKey);
+          const isEntering = shouldAnimate && delay !== undefined;
+
+          return (
+            <motion.div
+              key={reactKey}
+              initial={isEntering ? { height: 0, opacity: 0 } : false}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={shouldAnimate ? { height: 0, opacity: 0 } : undefined}
+              transition={
+                shouldAnimate ? { ...LIST_MOTION, delay: isEntering ? delay : 0 } : { duration: 0 }
+              }
+              onAnimationComplete={() => {
+                setEnterDelays((current) => {
+                  if (!current.has(reactKey)) return current;
+                  const remaining = new Map(current);
+                  remaining.delete(reactKey);
+                  return remaining;
+                });
+              }}
+              className={cn(
+                "w-max min-w-full md:w-auto md:min-w-0",
+                isEntering ? "overflow-hidden" : "[clip-path:inset(0)]",
+              )}
+            >
+              <ActivityRow
+                event={stack.latest}
+                count={stack.count}
+                sectionLabel={stack.sectionLabel}
+                href={stack.href}
+                pulse={pulseKey === stack.key}
+              />
+            </motion.div>
+          );
+        })}
+      </AnimatePresence>
+    </div>
   );
 }
 
@@ -434,10 +492,9 @@ export function ActivityFeed({
   return (
     <ListDetailWrapper>
       <div className="relative flex min-h-0 flex-1 overflow-hidden">
-        <motion.div
+        <div
           ref={scrollRef}
           data-scrollable
-          layoutScroll
           className="relative min-w-0 flex-1 overflow-auto overscroll-contain [-webkit-overflow-scrolling:touch]"
         >
           {events.length === 0 ? (
@@ -447,7 +504,7 @@ export function ActivityFeed({
           ) : (
             <ActivityStackList stacks={stacks} pulseKey={pulseKey} />
           )}
-        </motion.div>
+        </div>
       </div>
     </ListDetailWrapper>
   );

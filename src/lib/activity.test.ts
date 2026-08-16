@@ -1741,17 +1741,17 @@ describe("rollupActivityEvents", () => {
     );
     expect([...delays.entries()]).toEqual([
       ["new-1", 0],
-      ["new-2", 0.1],
-      ["new-3", 0.2],
-      ["new-4", 0.3],
-      ["new-5", 0.4],
+      ["new-2", 0.05],
+      ["new-3", 0.1],
+      ["new-4", 0.15],
+      ["new-5", 0.2],
     ]);
 
     const many = Array.from({ length: 16 }, (_, index) => `n-${index}`);
     const capped = activityEnterStaggerDelays(many, new Set());
     expect(capped.get("n-0")).toBe(0);
-    expect(capped.get("n-10")).toBe(1);
-    expect(capped.get("n-15")).toBe(1);
+    expect(capped.get("n-8")).toBe(0.4);
+    expect(capped.get("n-15")).toBe(0.4);
     expect(capped.has("old-1")).toBe(false);
   });
 
