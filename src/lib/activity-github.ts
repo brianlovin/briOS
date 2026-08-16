@@ -48,10 +48,10 @@ function repoShortName(repository: Record<string, unknown>): string | undefined 
 
 function publicRepo(
   payload: Record<string, unknown>,
-): Record<string, unknown> | { ignore: string } {
-  if (!isPlainObject(payload.repository)) return { ignore: "missing_repo" };
-  if (payload.repository.private === true) return { ignore: "private_repo" };
-  return payload.repository;
+): { ok: true; repository: Record<string, unknown> } | { ok: false; reason: string } {
+  if (!isPlainObject(payload.repository)) return { ok: false, reason: "missing_repo" };
+  if (payload.repository.private === true) return { ok: false, reason: "private_repo" };
+  return { ok: true, repository: payload.repository };
 }
 
 function pullRequestInput(
@@ -137,8 +137,9 @@ export function githubActivityFromWebhook(
   if (githubEvent === "ping") return { status: "ignore", reason: "ping" };
   if (!isPlainObject(payload)) return { status: "ignore", reason: "invalid_payload" };
 
-  const repository = publicRepo(payload);
-  if ("ignore" in repository) return { status: "ignore", reason: repository.ignore };
+  const repoResult = publicRepo(payload);
+  if (!repoResult.ok) return { status: "ignore", reason: repoResult.reason };
+  const repository = repoResult.repository;
 
   if (githubEvent === "pull_request") {
     const action = asString(payload.action);
