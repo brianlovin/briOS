@@ -64,7 +64,7 @@ export function DigitColumn({
       className="relative inline-block h-[1em] w-[0.75em] overflow-hidden"
       style={{ perspective: "200px" }}
     >
-      <motion.div
+      <motion.span
         className="absolute inset-0 flex items-center justify-center"
         style={{ transformStyle: "preserve-3d" }}
         animate={{
@@ -76,7 +76,7 @@ export function DigitColumn({
         }}
       >
         {Array.from({ length: 10 }, (_, i) => (
-          <div
+          <span
             key={i}
             className="absolute flex h-full w-full items-center justify-center text-center"
             style={{
@@ -85,9 +85,9 @@ export function DigitColumn({
             }}
           >
             {i}
-          </div>
+          </span>
         ))}
-      </motion.div>
+      </motion.span>
     </span>
   );
 }

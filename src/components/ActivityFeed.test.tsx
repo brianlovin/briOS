@@ -755,6 +755,9 @@ describe("ActivityRow", () => {
     expect(markup).toMatch(
       /text-primary[^>]*>🇺🇸 Visit from Spring Lake[\s\S]*href="\/ama"[^>]*>an AMA question[\s\S]*data-count="6"/,
     );
+    const title = markup.match(/<p class="relative z-10[\s\S]*?<\/p>/)?.[0] ?? "";
+    expect(title).toContain("data-count");
+    expect(title).not.toContain("<div");
 
     const single = renderToStaticMarkup(
       <ActivityRow
