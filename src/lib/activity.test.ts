@@ -1314,6 +1314,28 @@ describe("getActivityRow page titles", () => {
     expect(row.href).toBe("/app-dissection/secret-for-ios");
   });
 
+  test("labels an HN index visit as Hacker News, not a story", () => {
+    for (const href of ["/hn", "/hn/"]) {
+      const row = getActivityRow({
+        v: 1,
+        id: "hn-index",
+        ts: "2026-08-16T00:00:00.000Z",
+        received_at: "2026-08-16T00:00:00.000Z",
+        source: "brios",
+        type: "visit",
+        speed: "signal",
+        summary: "Visit from San Francisco, California, United States",
+        visibility: "public",
+        idempotency_key: "hn-index",
+        subject: { kind: "page", label: "a page", href },
+        meta: { path: href, country: "US", city: "San Francisco" },
+      });
+      expect(row.label).toBe("Hacker News");
+      expect(row.href).toBe(href);
+      expect(row.label).not.toBe("a Hacker News story");
+    }
+  });
+
   test("rewrites a stored HN story id to a Hacker News story", () => {
     const row = getActivityRow({
       v: 1,
@@ -1737,6 +1759,39 @@ describe("rollupActivityEvents", () => {
     expect(next[0]?.latest.id).toBe("ama-0");
     expect(next[0]?.anchorId).toBe(first[0]?.anchorId);
     expect(activityStackReactKey(next[0]!)).toBe(activityStackReactKey(first[0]!));
+  });
+
+  test("stacks two SF visits to the HN index as Hacker News", () => {
+    const sfHn = (id: string, href = "/hn"): ActivityEvent =>
+      feedEvent({
+        id,
+        type: "visit",
+        summary: "Visit from San Francisco, California, United States",
+        subject: { kind: "page", label: "a page", href },
+        meta: {
+          country: "US",
+          country_name: "United States",
+          region: "CA",
+          region_name: "California",
+          city: "San Francisco",
+          path: href,
+        },
+      });
+
+    const stacks = rollupActivityEvents([sfHn("hn-1"), sfHn("hn-2")]);
+    expect(stacks).toHaveLength(1);
+    expect(stacks[0]?.count).toBe(2);
+    expect(stacks[0]?.sectionLabel).toBe("Hacker News");
+    expect(stacks[0]?.sectionLabel).not.toBe("a Hacker News story");
+    expect(stacks[0]?.href).toBe("/hn");
+    expect(getActivityRow(stacks[0]!.latest).label).toBe("Hacker News");
+
+    const mixed = rollupActivityEvents([sfHn("hn-index", "/hn"), sfHn("hn-story", "/hn/123")]);
+    expect(mixed).toHaveLength(1);
+    expect(mixed[0]?.count).toBe(2);
+    expect(mixed[0]?.sectionLabel).toBe("Hacker News");
+    expect(mixed[0]?.href).toBe("/hn");
+    expect(getActivityRow(sfHn("hn-story", "/hn/123")).label).toBe("a Hacker News story");
   });
 
   test("does not show Https: when stacking SF visits with different absolute URLs", () => {
