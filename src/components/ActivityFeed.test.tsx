@@ -574,6 +574,7 @@ describe("ActivityFeed", () => {
     expect(markup).toContain("🇮🇳 Visit from India");
     expect(markup).toContain("divide-y");
     expect(markup).toContain("divide-secondary");
+    expect(markup).toContain("overflow-hidden");
     expect(markup).not.toContain(">Event<");
     expect(markup).not.toContain(">Time<");
     expect(markup).not.toContain("sticky top-0");

@@ -2,7 +2,7 @@
 
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
-import { type ReactNode, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { type ReactNode, useEffect, useMemo, useState, useSyncExternalStore } from "react";
 
 import { Activity } from "@/components/icons/Activity";
 import { Github } from "@/components/icons/Github";
@@ -14,7 +14,6 @@ import { useTopBarActions } from "@/components/TopBarActions";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip";
 import type { ActivityEvent, ActivityRollup } from "@/lib/activity";
 import {
-  activityEnterStaggerDelays,
   activityStackReactKey,
   rollupActivityEvents,
   shouldPulseActivityRollup,
@@ -222,17 +221,28 @@ export function ActivityRow({
 
 export function ActivityTrackedCount({ count }: { count: number }) {
   return (
-    <Tooltip>
-      <TooltipTrigger className="text-tertiary cursor-default bg-transparent p-0 text-sm tabular-nums">
+    <Tooltip delay={0} closeDelay={0}>
+      <TooltipTrigger
+        delay={0}
+        closeDelay={0}
+        className="text-tertiary cursor-default bg-transparent p-0 text-sm tabular-nums"
+      >
         {formatTrackedEventsLabel(count)}
       </TooltipTrigger>
-      <TooltipContent>{ACTIVITY_TRACKED_SINCE_TOOLTIP}</TooltipContent>
+      <TooltipContent
+        side="bottom"
+        align="end"
+        collisionPadding={8}
+        container={typeof document === "undefined" ? undefined : document.body}
+      >
+        {ACTIVITY_TRACKED_SINCE_TOOLTIP}
+      </TooltipContent>
     </Tooltip>
   );
 }
 
 const ROLLUP_PULSE_MS = 550;
-const LIST_MOTION = { duration: 0.25, ease: "easeOut" } as const;
+const LIST_MOTION = { duration: 0.16, ease: [0.2, 0, 0, 1] } as const;
 
 function subscribeNoop(): () => void {
   return () => {};
@@ -246,16 +256,6 @@ function useHydrated(): boolean {
   );
 }
 
-function usePreviousKeys(keys: string[]): string[] | null {
-  const previousRef = useRef<string[] | null>(null);
-  useEffect(() => {
-    previousRef.current = keys;
-  }, [keys]);
-  // Last committed key list — new rows must read this on the insert render to get stagger.
-  // eslint-disable-next-line react-hooks/refs -- usePrevious
-  return previousRef.current;
-}
-
 function ActivityStackList({
   stacks,
   pulseKey,
@@ -266,12 +266,6 @@ function ActivityStackList({
   const hydrated = useHydrated();
   const prefersReducedMotion = useReducedMotion();
   const shouldAnimate = hydrated && prefersReducedMotion !== true;
-  const keys = useMemo(() => stacks.map(activityStackReactKey), [stacks]);
-  const previousKeys = usePreviousKeys(keys);
-  const enterDelays =
-    shouldAnimate && previousKeys
-      ? activityEnterStaggerDelays(keys, new Set(previousKeys))
-      : new Map<string, number>();
 
   return (
     <LayoutGroup>
@@ -279,22 +273,15 @@ function ActivityStackList({
         <AnimatePresence initial={false}>
           {stacks.map((stack) => {
             const reactKey = activityStackReactKey(stack);
-            const delay = enterDelays.get(reactKey) ?? 0;
             return (
               <motion.div
                 key={reactKey}
-                layout={shouldAnimate}
-                initial={shouldAnimate ? { opacity: 0, y: -8 } : false}
-                animate={{ opacity: 1, y: 0 }}
-                transition={
-                  shouldAnimate
-                    ? {
-                        opacity: { ...LIST_MOTION, delay },
-                        y: { ...LIST_MOTION, delay },
-                        layout: LIST_MOTION,
-                      }
-                    : { duration: 0 }
-                }
+                layout={shouldAnimate ? "position" : false}
+                initial={shouldAnimate ? { height: 0, opacity: 0 } : false}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={shouldAnimate ? { height: 0, opacity: 0 } : undefined}
+                className="overflow-hidden"
+                transition={shouldAnimate ? LIST_MOTION : { duration: 0 }}
               >
                 <ActivityRow
                   event={stack.latest}
