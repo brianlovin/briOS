@@ -9,26 +9,26 @@ import {
   countryCodeToName,
   createMemoryActivityStore,
   findForbiddenPii,
+  formatActivityTitle,
   formatVisitSummary,
   getActivityRow,
   getRequestCountry,
   getRequestGeo,
   hashDigestSubscriber,
-  formatActivityTitle,
   inferTitleFromPath,
   ingestActivityEvent,
   likeActivityPayload,
   likeMetaFromRequest,
-  sanitizeVisitTitle,
-  stripSiteTitleSuffix,
   looksLikeIdentifier,
   looksLikeShortId,
   recordDigestSubscribed,
   recordLike,
   recordVisit,
   rollupActivityEvents,
+  sanitizeVisitTitle,
   shouldPulseActivityRollup,
   shouldRecordVisit,
+  stripSiteTitleSuffix,
   stripTrailingShortIdToken,
   visibleLifetimeTotals,
 } from "@/lib/activity";
@@ -788,9 +788,9 @@ describe("inferTitleFromPath", () => {
 
 describe("sanitizeVisitTitle / formatActivityTitle", () => {
   test("client title wins over the slug and strips Brian Lovin suffixes", () => {
-    expect(sanitizeVisitTitle("Secret for iOS | Brian Lovin", "/app-dissection/secret-for-ios")).toBe(
-      "Secret for iOS",
-    );
+    expect(
+      sanitizeVisitTitle("Secret for iOS | Brian Lovin", "/app-dissection/secret-for-ios"),
+    ).toBe("Secret for iOS");
     expect(
       sanitizeVisitTitle("Secret for iOS – Brian Lovin", "/app-dissection/secret-for-ios"),
     ).toBe("Secret for iOS");
