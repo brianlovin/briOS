@@ -73,7 +73,9 @@ describe("ActivityRow", () => {
     expect(visit).toContain("/activity/favicons/tax-ui.png");
     expect(visit).toContain("🇺🇸 Visit from United States");
     expect(download).toContain("/activity/favicons/design-details.png");
-    expect(download).toContain("Someone downloaded Design Details");
+    expect(download).toContain("Someone downloaded ");
+    expect(download).toContain("Design Details");
+    expect(download).toContain('href="https://designdetails.fm"');
     expect(unknown).not.toContain("/activity/favicons/");
     expect(unknown).toContain("🇺🇸 Visit from United States");
   });
