@@ -33,7 +33,6 @@ import {
   formatTrackedEventsLabel,
   getActivityRow,
   getMergedPullRequestDiff,
-  isKnownActivityTitle,
   resolveActivitySourceHref,
 } from "@/lib/activity-shared";
 import { useActivity } from "@/lib/hooks/useActivity";
@@ -173,23 +172,21 @@ export function ActivityRow({
 }) {
   const row = getActivityRow(event);
   const homeUrl = activitySourceUrl(event.source);
-  const label = sectionLabel ?? row.label;
+  const isLike = event.type === "like";
+  const likeTitle = isLike ? row.label || "Home" : "";
+  const label = isLike ? likeTitle : (sectionLabel ?? row.label);
   const href =
     hrefOverride ??
     resolveActivitySourceHref(event.source, row.href) ??
     row.href ??
-    (label || event.type === "download" ? homeUrl : undefined);
-  const likedName =
-    event.type === "like" ? row.summary.replace(/^Someone liked\s+/i, "").trim() : "";
-  const rawContext = label ?? (href || undefined);
-  const context =
-    event.type === "like" &&
-    rawContext &&
-    likedName &&
-    rawContext !== likedName &&
-    isKnownActivityTitle(rawContext)
-      ? likedName
-      : rawContext;
+    (isLike
+      ? likeTitle === "Home"
+        ? (homeUrl ?? "/")
+        : undefined
+      : label || event.type === "download"
+        ? homeUrl
+        : undefined);
+  const context = isLike ? likeTitle : (label ?? (href || undefined));
   const diff = event.type === "pr_merged" ? getMergedPullRequestDiff(event.meta) : null;
 
   return (

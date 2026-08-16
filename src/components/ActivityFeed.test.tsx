@@ -213,7 +213,9 @@ describe("ActivityRow", () => {
     );
 
     expect(like).toContain("text-red-500");
-    expect(like).toContain("Someone liked Grok Bot first impressions");
+    expect(like).toContain("Someone liked");
+    expect(like).toContain(">Grok Bot first impressions<");
+    expect(like).not.toContain("Someone liked Grok Bot first impressions");
     expect(like).toContain('href="/writing/grok-bot-first-impressions"');
     expect(visit).not.toContain("text-red-500");
     expect(visit).toContain("🇮🇳 Visit from India");
@@ -461,7 +463,9 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(markup).toContain("Someone liked Cursor");
+    expect(markup).toContain("Someone liked");
+    expect(markup).toContain(">Cursor<");
+    expect(markup).not.toContain("Someone liked Cursor");
     expect(markup).toContain('href="https://cursor.com"');
     expect(markup).toContain("text-red-500");
     expect(markup).not.toContain(">Stack<");
@@ -481,9 +485,73 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(markup).toContain("Someone liked Cursor");
+    expect(markup).toContain("Someone liked");
     expect(markup).toContain(">Cursor<");
+    expect(markup).not.toContain("Someone liked Cursor");
     expect(markup).not.toContain(">Stack<");
+  });
+
+  test("renders a stored Home like as Someone liked plus a Home link", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          type: "like",
+          speed: "event",
+          summary: "Someone liked a page",
+          subject: { kind: "home", label: "a page", href: "/" },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("Someone liked");
+    expect(markup).toContain(">Home<");
+    expect(markup).toContain('href="/"');
+    expect(markup).not.toContain("Someone liked a page");
+    expect(markup).not.toContain("Someone liked Home");
+    expect(markup).not.toContain("a page");
+  });
+
+  test("keeps a like title as tertiary text when there is no href", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          type: "like",
+          speed: "event",
+          summary: "Someone liked How to give a great product design portfolio presentation",
+          subject: {
+            kind: "writing",
+            label: "How to give a great product design portfolio presentation",
+          },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("Someone liked");
+    expect(markup).toContain("text-tertiary");
+    expect(markup).toContain("How to give a great product design portfolio presentation");
+    expect(markup).not.toContain("<a ");
+    expect(markup).not.toContain("Someone liked How to give");
+    expect(markup).not.toMatch(/Someone liked\s{2,}/);
+  });
+
+  test("keeps the like title once and the count chip after it", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          type: "like",
+          speed: "event",
+          summary: "Someone liked Cursor",
+          subject: { kind: "stack", label: "Cursor", href: "https://cursor.com" },
+        })}
+        count={2}
+      />,
+    );
+
+    expect(markup).toMatch(
+      /text-primary[^>]*>Someone liked[\s\S]*href="https:\/\/cursor.com"[^>]*>Cursor[\s\S]*font-mono[^>]*>2</,
+    );
+    expect(markup).not.toContain("Someone liked Cursor");
+    expect(markup).not.toContain("> 2<");
   });
 
   test("uses the Shiori orb for any shiori-sourced event", () => {

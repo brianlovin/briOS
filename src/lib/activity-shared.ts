@@ -455,6 +455,15 @@ function displaySubjectLabel(
   return looksLikeIdentifier(cleaned) ? undefined : formatActivityTitle(cleaned);
 }
 
+function likedTitleFromSummary(summary: string): string | undefined {
+  const trimmed = summary.trim();
+  if (/^someone liked$/i.test(trimmed)) return undefined;
+  const rest = trimmed.replace(/^Someone liked\s+/i, "").trim();
+  if (!rest) return undefined;
+  if (rest === "a page") return "Home";
+  return rest;
+}
+
 const EMAIL_RE = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i;
 const IPV4_RE = /\b(?:\d{1,3}\.){3}\d{1,3}\b/;
 const IPV6_RE = /\b(?:[0-9a-f]{1,4}:){2,7}[0-9a-f]{1,4}\b/i;
@@ -620,11 +629,12 @@ export function getActivityRow(event: ActivityEvent): {
     const label = displaySubjectLabel(event.subject?.label, event.subject?.href, {
       preferStored: true,
     });
-    const name = label || "a page";
+    const fromSummary = likedTitleFromSummary(event.summary);
+    const name = label || fromSummary || "Home";
     return {
-      summary: `Someone liked ${name}`,
-      href: event.subject?.href,
-      label,
+      summary: "Someone liked",
+      href: event.subject?.href || (name === "Home" ? "/" : undefined),
+      label: name,
     };
   }
 

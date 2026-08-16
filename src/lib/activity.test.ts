@@ -857,7 +857,7 @@ describe("recordLike", () => {
       href: "https://cursor.com",
     });
     expect(getActivityRow(event!)).toEqual({
-      summary: "Someone liked Cursor",
+      summary: "Someone liked",
       href: "https://cursor.com",
       label: "Cursor",
     });
@@ -877,7 +877,8 @@ describe("recordLike", () => {
     const [event] = await store.getTail(1);
     expect(event?.summary).toBe("Someone liked Secret for iOS");
     expect(event?.subject?.label).toBe("Secret for iOS");
-    expect(getActivityRow(event!).summary).toBe("Someone liked Secret for iOS");
+    expect(getActivityRow(event!).summary).toBe("Someone liked");
+    expect(getActivityRow(event!).label).toBe("Secret for iOS");
   });
 
   test("does not store a like title that looks like PII", async () => {
@@ -1212,6 +1213,27 @@ describe("getActivityRow page titles", () => {
     expect(row.href).toBe("/ama/2f2c711c-0ceb-810d-899d-e5feb99e70f4");
   });
 
+  test("splits a stored Home like into Someone liked plus a Home label", () => {
+    const row = getActivityRow({
+      v: 1,
+      id: "like-home",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "like",
+      speed: "event",
+      summary: "Someone liked a page",
+      visibility: "public",
+      idempotency_key: "like-home",
+      subject: { kind: "home", label: "a page", href: "/" },
+    });
+    expect(row).toEqual({
+      summary: "Someone liked",
+      href: "/",
+      label: "Home",
+    });
+  });
+
   test("keeps a liked stack item name instead of rewriting it to Stack", () => {
     const row = getActivityRow({
       v: 1,
@@ -1228,7 +1250,7 @@ describe("getActivityRow page titles", () => {
       meta: { content_type: "stack", title: "Cursor", href: "/stack" },
     });
     expect(row).toEqual({
-      summary: "Someone liked Cursor",
+      summary: "Someone liked",
       href: "/stack",
       label: "Cursor",
     });
@@ -1253,7 +1275,7 @@ describe("getActivityRow page titles", () => {
       },
     });
     expect(row).toEqual({
-      summary: "Someone liked Grok Bot First Impressions",
+      summary: "Someone liked",
       href: "/writing/grok-bot-first-impressions",
       label: "Grok Bot First Impressions",
     });
@@ -1511,8 +1533,10 @@ describe("rollupActivityEvents", () => {
     expect(stacks).toHaveLength(2);
     expect(stacks[0]?.key).toBe("like:https://cursor.com");
     expect(stacks[1]?.key).toBe("like:https://www.raycast.com");
-    expect(getActivityRow(stacks[0]!.latest).summary).toBe("Someone liked Cursor");
-    expect(getActivityRow(stacks[1]!.latest).summary).toBe("Someone liked Raycast");
+    expect(getActivityRow(stacks[0]!.latest).summary).toBe("Someone liked");
+    expect(getActivityRow(stacks[0]!.latest).label).toBe("Cursor");
+    expect(getActivityRow(stacks[1]!.latest).summary).toBe("Someone liked");
+    expect(getActivityRow(stacks[1]!.latest).label).toBe("Raycast");
   });
 
   test("does not merge the same type across a different intervening event", () => {
