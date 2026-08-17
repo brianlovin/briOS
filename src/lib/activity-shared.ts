@@ -145,10 +145,13 @@ function attachSourceMetadata(
   }
   if (!sourceUrl) return row;
 
+  const isVisit = event.type === "visit" || event.type === "visit_country_first";
+  const homeLabel = isVisit ? ACTIVITY_HOME_VISIT_LABELS[event.source] : undefined;
+
   return {
     ...row,
     summary: stripSourceNameFromSummary(row.summary, sourceLabel),
-    label: sourceLabel,
+    label: homeLabel ?? sourceLabel,
     href: sourceUrl,
   };
 }
@@ -539,8 +542,10 @@ export function activitySectionFromPath(pathname: string | undefined): string {
 }
 
 /** Smart section phrase for stacked visit subtitles — never a raw id. */
-export function activitySectionPhrase(section: string): string {
-  if (!section || section === "home" || isProtocolSegment(section)) return SITE_VISIT_LABEL;
+export function activitySectionPhrase(section: string, source?: string): string {
+  if (!section || section === "home" || isProtocolSegment(section)) {
+    return source ? activityHomeVisitLabel(source) : SITE_VISIT_LABEL;
+  }
   if (section === "ama") return "an AMA question";
   const known = KNOWN_PATH_TITLES[`/${section}`];
   if (known) return known;
@@ -901,6 +906,19 @@ function publicPullRequestHref(event: ActivityEvent): string | undefined {
 /** Linked fallback when a visit has no real page title. Never “Home”. */
 export const SITE_VISIT_LABEL = "the site";
 
+/** staff.design home visits use the product name, not “the site”. */
+export const STAFF_DESIGN_HOME_VISIT_LABEL = "Staff.design";
+
+const ACTIVITY_HOME_VISIT_LABELS: Record<string, string> = {
+  "staff-design": STAFF_DESIGN_HOME_VISIT_LABEL,
+  "staff.design": STAFF_DESIGN_HOME_VISIT_LABEL,
+};
+
+/** Per-source home label when a visit has no real page title. */
+export function activityHomeVisitLabel(source: string): string {
+  return ACTIVITY_HOME_VISIT_LABELS[source] ?? SITE_VISIT_LABEL;
+}
+
 /** Location words for visits with no usable geo. No flag. */
 export const MYSTERIOUS_PLACE_LOCATION = "a mysterious place on earth";
 
@@ -1021,9 +1039,10 @@ export function formatVisitRowSummary(
   location: string,
   verb: VisitActivityVerb,
   hasTitle: boolean,
-  options?: { omitLocation?: boolean },
+  options?: { omitLocation?: boolean; source?: string },
 ): string {
-  const action = hasTitle ? verb : `${siteFallbackVerb(verb)} the site`;
+  const fallbackLabel = activityHomeVisitLabel(options?.source ?? "");
+  const action = hasTitle ? verb : `${siteFallbackVerb(verb)} ${fallbackLabel}`;
   if (options?.omitLocation) return action;
   return `${formatVisitLocationHeader(location)} ${action}`;
 }
@@ -1052,7 +1071,10 @@ function visitActivityRow(
   });
   const location = visitLocationPhrase(event);
   const verb = visitVerbFromPath(row.href ?? path, event.source);
-  const summaryOptions = options?.omitVisitLocation ? { omitLocation: true } : undefined;
+  const summaryOptions = {
+    source: event.source,
+    ...(options?.omitVisitLocation ? { omitLocation: true } : {}),
+  };
   if (isUsableVisitTitle(row.label)) {
     return { ...row, summary: formatVisitRowSummary(location, verb, true, summaryOptions) };
   }
@@ -1068,7 +1090,7 @@ function visitActivityRow(
     return {
       ...row,
       summary: formatVisitRowSummary(location, fallbackVerb, true, summaryOptions),
-      label: SITE_VISIT_LABEL,
+      label: activityHomeVisitLabel(event.source),
     };
   }
   return {

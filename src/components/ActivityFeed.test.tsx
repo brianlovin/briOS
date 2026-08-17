@@ -919,7 +919,8 @@ describe("ActivityRow", () => {
     expect(staff).toContain("Someone from United States visited");
     expect(staff).not.toContain("Visit from");
     expect(staff).not.toContain("🇺🇸");
-    expect(staff).toContain(">Staff Design<");
+    expect(staff).toContain(">Staff.design<");
+    expect(staff).not.toContain("the site");
     expect(staff).toContain('href="https://staff.design"');
     expect(staff).toContain('target="_blank"');
     expect(details).toContain("Someone from San Francisco");
@@ -976,6 +977,7 @@ describe("ActivityRow", () => {
     expect(markup).toContain('href="https://staff.design/karla-mickens-cole"');
     expect(markup).toContain('target="_blank"');
     expect(markup).not.toContain(">Staff Design<");
+    expect(markup).not.toContain(">Staff.design<");
   });
 
   test("keeps first-party likes and visits on the page, not briOS", () => {
@@ -1241,6 +1243,52 @@ describe("ActivityFeed", () => {
     expect(markup).toContain("the site");
     expect(markup.indexOf("the site")).toBeLessThan(markup.indexOf("AMA"));
     expect(markup.indexOf("AMA")).toBeLessThan(markup.indexOf("Listening"));
+  });
+
+  test("staff.design home cluster actions say visited Staff.design", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityFeed
+        initialEvents={[
+          event({
+            id: "sg-interview",
+            source: "staff-design",
+            summary: "Visit from Singapore, Singapore",
+            subject: {
+              kind: "page",
+              label: "Karla Mickens Cole",
+              href: "/karla-mickens-cole",
+            },
+            meta: {
+              country: "SG",
+              country_name: "Singapore",
+              city: "Singapore",
+              path: "/karla-mickens-cole",
+              title: "Karla Mickens Cole",
+            },
+          }),
+          event({
+            id: "sg-home",
+            source: "staff-design",
+            summary: "Visit from Singapore, Singapore",
+            subject: { kind: "home", label: "Home", href: "/" },
+            meta: {
+              country: "SG",
+              country_name: "Singapore",
+              city: "Singapore",
+              path: "/",
+              title: "Home",
+            },
+          }),
+        ]}
+        initialCount={2}
+      />,
+    );
+
+    expect(markup).toContain("Someone from Singapore, Singapore");
+    expect(markup).toContain("visited");
+    expect(markup).toContain(">Staff.design<");
+    expect(markup).toContain("Karla Mickens Cole");
+    expect(markup).not.toContain("the site");
   });
 
   test("a different location in the middle labels two visit clusters", () => {
