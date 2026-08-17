@@ -47,6 +47,30 @@ describe("ActivityRow", () => {
     expect(markup).not.toContain("block truncate");
   });
 
+  test("renders an exact stored writing title, including I'm and AI", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          summary: "🇮🇳 Visit from India",
+          subject: {
+            kind: "writing",
+            label: "How I'm Feeling About AI in August 2026",
+            href: "/writing/how-im-feeling-about-ai-in-august-2026-O7e1TFS",
+          },
+          meta: {
+            country: "IN",
+            path: "/writing/how-im-feeling-about-ai-in-august-2026-O7e1TFS",
+            title: "How I'm Feeling About AI in August 2026",
+          },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("How I&#x27;m Feeling About AI in August 2026");
+    expect(markup).not.toContain("How Im Feeling About Ai in August 2026");
+    expect(markup).toContain('href="/writing/how-im-feeling-about-ai-in-august-2026-O7e1TFS"');
+  });
+
   test("strips a short id from a stored writing slug", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow

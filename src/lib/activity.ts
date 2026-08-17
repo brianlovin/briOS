@@ -1,5 +1,6 @@
 import { createHash } from "crypto";
 
+import { lookupCmsPostTitle } from "./activity-cms";
 import {
   type ActivityGeo,
   countryCodeToName,
@@ -16,12 +17,14 @@ import {
   ACTIVITY_SOURCE_BRIOS,
   ACTIVITY_STREAM_MAXLEN,
   ACTIVITY_VISIT_STREAM_MAX_PER_SEC,
+  ACTIVITY_VISIT_TITLE_MAX,
   type ActivityEvent,
   type ActivityFeedPayload,
   type ActivityIngestInput,
   type ActivityRef,
   activitySourceLabel,
   type ActivitySpeed,
+  cmsPostRefFromPath,
   findForbiddenPii,
   formatDownloadSummary,
   hnStoryIdFromPath,
@@ -32,7 +35,9 @@ import {
   normalizeCaffeineDrink,
   resolveVisitTitle,
   sanitizeVisitTitle,
+  shouldLookupCmsPostTitle,
   shouldRecordVisit,
+  stripSiteTitleSuffix,
 } from "./activity-shared";
 
 export type { ActivityGeo } from "./activity-geo";
@@ -91,6 +96,7 @@ export {
   activitySourceLabel,
   activitySourceUrl,
   appendKnownSectionSuffix,
+  cmsPostRefFromPath,
   countryCodeToFlag,
   findForbiddenPii,
   formatActivityTitle,
@@ -110,6 +116,7 @@ export {
   isGenericHnStoryTitle,
   isKnownActivitySection,
   isKnownActivityTitle,
+  isSlugLikeActivityTitle,
   isUnusableActivityTitle,
   likeActivityPayload,
   looksLikeDehyphenatedSlug,
@@ -121,6 +128,7 @@ export {
   resolveVisitTitle,
   sanitizeActivityTitle,
   sanitizeVisitTitle,
+  shouldLookupCmsPostTitle,
   shouldRecordVisit,
   stripSiteTitleSuffix,
   stripTrailingShortIdToken,
@@ -207,23 +215,49 @@ function validateRef(name: string, value: unknown): string | null {
   return null;
 }
 
+/** Store a CMS title exactly — no slug title-casing. */
+function exactCmsActivityTitle(title: string): string | null {
+  const stripped = stripSiteTitleSuffix(title.trim());
+  if (!stripped || /^brian lovin$/i.test(stripped)) return null;
+  if (findForbiddenPii(stripped)) return null;
+  if (stripped === "a page") return null;
+  return stripped.slice(0, ACTIVITY_VISIT_TITLE_MAX);
+}
+
 /**
- * Sanitize a visit title, then look up `/hn/{id}` when the client title is
- * missing or generic. Ingest-only — the activity feed render path stays sync.
+ * Sanitize a visit title, then look up HN / writing / TIL when the client
+ * title is missing, generic, or slug-like. Ingest-only — the activity feed
+ * render path stays sync.
  */
 export async function resolveIngestVisitTitle(path: string, title?: string): Promise<string> {
   const resolved = resolveVisitTitle(path, title);
-  const id = hnStoryIdFromPath(path);
-  if (!id || !isGenericHnStoryTitle(resolved, id)) return resolved;
 
-  try {
-    const lookedUp = await lookupHnStoryTitle(id);
-    if (!lookedUp) return resolved;
-    const fromHn = resolveVisitTitle(path, lookedUp);
-    return isGenericHnStoryTitle(fromHn, id) ? resolved : fromHn;
-  } catch {
+  const hnId = hnStoryIdFromPath(path);
+  if (hnId && isGenericHnStoryTitle(resolved, hnId)) {
+    try {
+      const lookedUp = await lookupHnStoryTitle(hnId);
+      if (lookedUp) {
+        const fromHn = resolveVisitTitle(path, lookedUp);
+        if (!isGenericHnStoryTitle(fromHn, hnId)) return fromHn;
+      }
+    } catch {
+      return resolved;
+    }
     return resolved;
   }
+
+  const cms = cmsPostRefFromPath(path);
+  if (cms && shouldLookupCmsPostTitle(title, path)) {
+    try {
+      const lookedUp = await lookupCmsPostTitle(cms.kind, cms.slug);
+      const exact = lookedUp ? exactCmsActivityTitle(lookedUp) : null;
+      if (exact) return exact;
+    } catch {
+      return resolved;
+    }
+  }
+
+  return resolved;
 }
 
 async function applyIngestDefaults(input: ActivityIngestInput): Promise<ActivityIngestInput> {
