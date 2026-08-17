@@ -138,6 +138,8 @@ export {
   isCoffeeFamilyDrink,
   isGenericHnStoryTitle,
   isHiddenLikeEvent,
+  isHnActivityEvent,
+  isHnActivityPath,
   isHomeLikeTitle,
   isKnownActivitySection,
   isKnownActivityTitle,

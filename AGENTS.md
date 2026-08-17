@@ -34,6 +34,27 @@ This repository is a Next.js 15 project built with TypeScript and Tailwind CSS. 
 - All data fetching hooks should be client-side hooks placed in `src/hooks/` with `"use client"` directive at the top.
 - Favor React hooks and functional components over class components.
 
+## Testing
+
+This site is iterated on visually. Tests lock **user-visible behavior and logic**, not presentation.
+
+Write tests for:
+
+- Copy, labels, hrefs, and visibility (what a person reads or can click)
+- Branching logic (ingest, rollup, title sanitization, path helpers, geo)
+- User flows (what happens when X, then Y)
+
+Do **not** write tests for styling or presentation internals unless the user explicitly asks. That includes:
+
+- Tailwind or CSS class names (`toContain("text-primary")`, `rounded-[3px]`, `dark:invert`)
+- SVG path data or icon geometry (`d="M12.7..."`, path fragments used to prove an icon rendered)
+- Favicon or image `src` strings used only to prove which mark is on screen
+- Spacing, color tokens, `className` combinations, or decorative `aria-hidden` markup
+
+Do not copy that pattern from existing tests. Older activity-feed tests assert on SVG path snippets and favicon URLs; do not add more of those.
+
+If a design change has no logic or copy to assert, skip the unit test and verify it in the browser.
+
 ## Programmatic Checks
 
 Before submitting changes run:

@@ -16,6 +16,10 @@ Personal website built with Next.js and Notion as CMS.
 - [Architecture](.claude/architecture.md) — Data flow, UI patterns, tech stack
 - [Commands](.claude/commands.md) — All available scripts and their usage
 
+## Testing
+
+Tests cover user flows and logic (copy, hrefs, ingest/rollup). Do not add tests that assert on CSS classes, Tailwind tokens, SVG path `d` values, or icon markup unless explicitly asked. See `AGENTS.md`.
+
 ## Verification
 
 After making changes:
