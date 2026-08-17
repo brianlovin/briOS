@@ -35,7 +35,7 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(markup).toContain("Someone from India viewed");
+    expect(markup).toContain("Someone from India visited");
     expect(markup).not.toContain("Visit from");
     expect(markup).not.toContain("🇮🇳");
     expect(markup).toContain("/activity/favicons/brios.png");
@@ -283,7 +283,7 @@ describe("ActivityRow", () => {
     );
 
     expect(visit).toContain("/activity/favicons/tax-ui.png");
-    expect(visit).toContain("Someone from United States viewed");
+    expect(visit).toContain("Someone from United States visited");
     expect(visit).not.toContain("Visit from");
     expect(visit).not.toContain("🇺🇸");
     expect(download).toContain("/activity/favicons/design-details.png");
@@ -294,7 +294,7 @@ describe("ActivityRow", () => {
     expect(download).toContain('target="_blank"');
     expect(download).toContain("noopener noreferrer");
     expect(unknown).not.toContain("/activity/favicons/");
-    expect(unknown).toContain("Someone from United States viewed the site");
+    expect(unknown).toContain("Someone from United States visited the site");
     expect(unknown).not.toContain("Visit from");
     expect(unknown).not.toContain("🇺🇸");
   });
@@ -304,7 +304,7 @@ describe("ActivityRow", () => {
       <ActivityRow event={event({ summary: "Visit from TW", meta: { country: "TW" } })} />,
     );
     expect(markup).not.toContain("🇹🇼");
-    expect(markup).toContain("Someone from Taiwan viewed the site");
+    expect(markup).toContain("Someone from Taiwan visited the site");
     expect(markup).not.toContain("Visit from");
   });
 
@@ -318,7 +318,7 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(markup).toContain("Someone from a mysterious place on earth viewed");
+    expect(markup).toContain("Someone from a mysterious place on earth visited");
     expect(markup).toContain("the site");
     expect(markup).not.toContain("Someone visited from a mysterious place on earth");
     expect(markup).not.toContain("Home");
@@ -860,18 +860,41 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(staff).toContain("Someone from United States viewed");
+    expect(staff).toContain("Someone from United States visited");
     expect(staff).not.toContain("Visit from");
     expect(staff).not.toContain("🇺🇸");
     expect(staff).toContain(">Staff Design<");
     expect(staff).toContain('href="https://staff.design"');
     expect(staff).toContain('target="_blank"');
     expect(details).toContain("Someone from San Francisco");
+    expect(details).toContain("visited");
+    expect(details).not.toContain("listened to");
     expect(details).not.toContain("Visit from");
     expect(details).toContain(">Design Details<");
     expect(details).toContain('href="https://designdetails.fm"');
     expect(details).toContain('target="_blank"');
     expect(details).not.toContain(">Home<");
+  });
+
+  test("listens to a Design Details episode instead of the show name", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "design-details",
+          summary: "🇨🇳 Visit from China",
+          subject: { kind: "page", label: "On Leaving", href: "/episodes/on-leaving" },
+          meta: { country: "CN", path: "/episodes/on-leaving", title: "On Leaving" },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("Someone from China listened to");
+    expect(markup).toContain(">On Leaving<");
+    expect(markup).not.toContain("Visit from");
+    expect(markup).not.toContain("listened to Design Details");
+    expect(markup).not.toContain(">Design Details<");
+    expect(markup).toContain('href="https://designdetails.fm/episodes/on-leaving"');
+    expect(markup).toContain('target="_blank"');
   });
 
   test("keeps a specific staff.design page as the new-tab link", () => {
@@ -890,7 +913,7 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(markup).toContain("Someone from Germany viewed");
+    expect(markup).toContain("Someone from Germany read");
     expect(markup).not.toContain("Visit from");
     expect(markup).not.toContain("🇩🇪");
     expect(markup).toContain(">Karla Mickens Cole<");
@@ -1022,7 +1045,7 @@ describe("ActivityFeed", () => {
       />,
     );
 
-    expect(markup).toContain("Someone from India viewed the site");
+    expect(markup).toContain("Someone from India visited the site");
     expect(markup).not.toContain("Visit from");
     expect(markup).not.toContain("🇮🇳");
     expect(markup).not.toContain(">Event<");
@@ -1055,7 +1078,7 @@ describe("ActivityFeed", () => {
       />,
     );
 
-    expect(markup).toContain("Someone from India viewed");
+    expect(markup).toContain("Someone from India visited");
     expect(markup).toContain("Someone from San Francisco");
     expect(markup).not.toContain("Visit from");
     expect(markup).toContain("Someone liked");

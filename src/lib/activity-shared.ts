@@ -843,14 +843,49 @@ export const SITE_VISIT_LABEL = "the site";
 /** Location words for visits with no usable geo. No flag. */
 export const MYSTERIOUS_PLACE_LOCATION = "a mysterious place on earth";
 
-export type VisitActivityVerb = "read" | "viewed";
+export type VisitActivityVerb = "read" | "viewed" | "visited" | "listened to";
 
-/** `read` for writing, TIL, and HN stories; `viewed` for everything else. */
-export function visitVerbFromPath(pathname: string | undefined): VisitActivityVerb {
-  if (!pathname) return "viewed";
-  if (cmsPostRefFromPath(pathname)) return "read";
-  if (hnStoryIdFromPath(pathname)) return "read";
+const VISIT_SENTENCE_VERB_RE = "(?:listened to|read|viewed|visited)";
+
+function isSiteHomePath(source: string, pathname: string | undefined): boolean {
+  if (!pathname?.trim()) return true;
+  const path = normalizeActivityPath(pathnameFromHref(pathname));
+  if (path === "/") return true;
+  return isSourceHomeHref(source, pathname);
+}
+
+/**
+ * Verb from the event source plus the path they opened.
+ * Site homes → visited; briOS listings → viewed; posts/stories/interviews → read;
+ * Design Details episodes → listened to.
+ */
+export function visitVerbFromPath(
+  pathname: string | undefined,
+  source: string = ACTIVITY_SOURCE_BRIOS,
+): VisitActivityVerb {
+  const path = pathname ? normalizeActivityPath(pathnameFromHref(pathname)) : "";
+  const atHome = isSiteHomePath(source, pathname);
+
+  if (source === "design-details") {
+    return atHome ? "visited" : "listened to";
+  }
+  if (source === "staff-design") {
+    return atHome ? "visited" : "read";
+  }
+  if (source === "tax-ui") {
+    return atHome ? "visited" : "viewed";
+  }
+
+  if (path === "/design-details") return "visited";
+  if (path.startsWith("/design-details/")) return "listened to";
+  if (cmsPostRefFromPath(pathname ?? path)) return "read";
+  if (hnStoryIdFromPath(pathname ?? path)) return "read";
+  if (atHome) return "visited";
   return "viewed";
+}
+
+function siteFallbackVerb(verb: VisitActivityVerb): "visited" | "viewed" {
+  return verb === "visited" ? "visited" : "viewed";
 }
 
 function isUsableVisitTitle(label: string | undefined): boolean {
@@ -872,7 +907,10 @@ function locationFromVisitText(text: string): string | undefined {
   const someoneVisited = /^Someone visited from\s+(.+)$/i.exec(trimmed);
   if (someoneVisited?.[1]) return someoneVisited[1].trim();
 
-  const someoneFromVerb = /^Someone from\s+(.+?)\s+(?:read|viewed)(?:\s+the site)?$/i.exec(trimmed);
+  const someoneFromVerb = new RegExp(
+    `^Someone from\\s+(.+?)\\s+${VISIT_SENTENCE_VERB_RE}(?:\\s+the site)?$`,
+    "i",
+  ).exec(trimmed);
   if (someoneFromVerb?.[1]) return someoneFromVerb[1].trim();
 
   const someoneFrom = /^Someone from\s+(.+)$/i.exec(trimmed);
@@ -902,7 +940,7 @@ export function formatVisitRowSummary(
   verb: VisitActivityVerb,
   hasTitle: boolean,
 ): string {
-  if (!hasTitle) return `Someone from ${location} viewed the site`;
+  if (!hasTitle) return `Someone from ${location} ${siteFallbackVerb(verb)} the site`;
   return `Someone from ${location} ${verb}`;
 }
 
@@ -926,20 +964,28 @@ function visitActivityRow(event: ActivityEvent): {
     label: displaySubjectLabel(event.subject?.label, path),
   });
   const location = visitLocationPhrase(event);
-  const verb = visitVerbFromPath(row.href ?? path);
+  const verb = visitVerbFromPath(row.href ?? path, event.source);
   if (isUsableVisitTitle(row.label)) {
     return { ...row, summary: formatVisitRowSummary(location, verb, true) };
   }
+  if (verb === "listened to") {
+    return {
+      ...row,
+      summary: formatVisitRowSummary(location, verb, true),
+      label: "a Design Details episode",
+    };
+  }
+  const fallbackVerb = siteFallbackVerb(verb);
   if (row.href) {
     return {
       ...row,
-      summary: formatVisitRowSummary(location, "viewed", true),
+      summary: formatVisitRowSummary(location, fallbackVerb, true),
       label: SITE_VISIT_LABEL,
     };
   }
   return {
     ...row,
-    summary: formatVisitRowSummary(location, "viewed", false),
+    summary: formatVisitRowSummary(location, fallbackVerb, false),
     label: undefined,
   };
 }
