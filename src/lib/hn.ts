@@ -233,41 +233,51 @@ export const getRankedHNPosts = unstable_cache(
   { revalidate: HN_REVALIDATE, tags: ["hn:ranked"] },
 );
 
-export const getHNPostsForDigest = unstable_cache(
-  async (): Promise<HackerNewsPost[]> => {
-    const topPostIds = await fetchPostIds();
-    log(`[HN Digest] Starting with ${topPostIds.length} total story IDs`);
+const DIGEST_WINDOW_SECONDS = 60 * 60 * 24;
+const DIGEST_POST_LIMIT = 16;
 
-    // topPostIds returns 500 by default. this can block the API route from
-    // responding for a long time while each one is fetched individually.
-    // it's much more likely that the most recent 200 (by decrementing id) are
-    // the top posts within the last 24 hours
-    const filtered = topPostIds.sort((a: number, b: number) => b - a).slice(0, 200);
-    log(`[HN Digest] Filtered to top 200 most recent IDs`);
+/**
+ * Pick digest stories from already-fetched posts: links only, last 24h,
+ * top 16 by points. Pure so the daily send cannot inherit a dateless
+ * `unstable_cache` snapshot (see getHNPostsForDigest).
+ */
+export function selectHNPostsForDigest(
+  posts: (HackerNewsPost | null)[],
+  nowSeconds: number = Date.now() / 1000,
+): HackerNewsPost[] {
+  const dayAgo = nowSeconds - DIGEST_WINDOW_SECONDS;
 
-    const ids = filtered.map((id) => id.toString());
-    const posts = await getBatchPosts(ids, false);
+  const links = posts.filter(
+    (post): post is HackerNewsPost => post !== null && post.type === "link",
+  );
+  const withinLastDay = links.filter((post) => post.time > dayAgo);
+  return withinLastDay
+    .sort((a, b) => (b.points || 0) - (a.points || 0))
+    .slice(0, DIGEST_POST_LIMIT);
+}
 
-    const now = new Date().getTime() / 1000;
-    const dayAgo = now - 60 * 60 * 24;
+/**
+ * Fresh fetch for the daily email. Do not wrap this in `unstable_cache` —
+ * a dateless key like `["hn:digest"]` can survive past the 1h revalidate
+ * on Vercel cron and send yesterday's identical snapshot.
+ */
+export async function getHNPostsForDigest(): Promise<HackerNewsPost[]> {
+  const topPostIds = await fetchPostIds();
+  log(`[HN Digest] Starting with ${topPostIds.length} total story IDs`);
 
-    // don't return jobs or polls
-    const validPosts = posts.filter((post): post is HackerNewsPost => post !== null);
-    log(`[HN Digest] ${validPosts.length} valid posts fetched`);
+  // topPostIds returns 500 by default. this can block the API route from
+  // responding for a long time while each one is fetched individually.
+  // it's much more likely that the most recent 200 (by decrementing id) are
+  // the top posts within the last 24 hours
+  const filtered = topPostIds.sort((a: number, b: number) => b - a).slice(0, 200);
+  log(`[HN Digest] Filtered to top 200 most recent IDs`);
 
-    const links = validPosts.filter((post) => post.type === "link");
-    log(`[HN Digest] ${links.length} posts are links (filtered out jobs/polls)`);
+  const ids = filtered.map((id) => id.toString());
+  const posts = await getBatchPosts(ids, false);
 
-    const withinLastDay = links.filter((post) => post.time > dayAgo);
-    log(`[HN Digest] ${withinLastDay.length} posts within last 24 hours`);
+  const top16 = selectHNPostsForDigest(posts);
 
-    const sorted = withinLastDay.sort((a, b) => (b.points || 0) - (a.points || 0));
-    const top16 = sorted.slice(0, 16);
+  log(`[HN Digest] Returning top ${top16.length} posts by points`);
 
-    log(`[HN Digest] Returning top ${top16.length} posts by points`);
-
-    return top16;
-  },
-  ["hn:digest"],
-  { revalidate: HN_REVALIDATE, tags: ["hn:digest"] },
-);
+  return top16;
+}

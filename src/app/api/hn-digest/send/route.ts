@@ -9,6 +9,9 @@ import { getHNPostsForDigest } from "@/lib/hn";
 import { getHNSubscribers } from "@/lib/subscriptions";
 import { formatDigestDate } from "@/lib/urls";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 const IS_PROD = process.env.NODE_ENV === "production";
 
 export async function GET(request: Request) {
@@ -19,12 +22,18 @@ export async function GET(request: Request) {
       return errorResponse("Unauthorized", 401);
     }
 
-    // Fetch top HN posts for the digest
+    // Fetch top HN posts for the digest (uncached — must be today's set)
     const posts = await getHNPostsForDigest();
 
     if (!posts || posts.length === 0) {
       return errorResponse("No posts found for digest", 500);
     }
+
+    console.log(
+      `[HN Digest] ${posts.length} posts: ${posts
+        .map((post) => `${post.id} "${post.title}"`)
+        .join(", ")}`,
+    );
 
     const date = formatDigestDate();
 
@@ -53,12 +62,15 @@ export async function GET(request: Request) {
       afterActivity((store) => recordDigestSent({ date, postCount: digestPosts.length }, store));
     }
 
-    return NextResponse.json({
-      status: "done",
-      emailsSent: successCount,
-      failures: failureCount,
-      totalSubscribers: subscribers.length,
-    });
+    return NextResponse.json(
+      {
+        status: "done",
+        emailsSent: successCount,
+        failures: failureCount,
+        totalSubscribers: subscribers.length,
+      },
+      { headers: { "Cache-Control": "no-store" } },
+    );
   } catch (error) {
     console.error("Error processing HN digest:", error);
     return errorResponse("Failed to process HN digest");
