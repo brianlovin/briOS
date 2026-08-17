@@ -42,9 +42,17 @@ export type ActivityLatLng = {
 };
 
 export type ActivityGlobeMarker = {
+  id: string;
   location: [number, number];
   size: number;
 };
+
+/** Stable CSS-safe id for COBE bindable markers (`--cobe-{id}`). */
+export function activityGlobeMarkerId(lat: number, lng: number): string {
+  const encode = (value: number): string =>
+    value.toFixed(1).replaceAll("-", "n").replaceAll(".", "d");
+  return `g${encode(lat)}x${encode(lng)}`;
+}
 
 /** Persist the same snake_case keys first-party visits store on event.meta. */
 export function activityGeoToMeta(geo: ActivityGeo): Record<string, string | number> {
@@ -649,7 +657,9 @@ export function activityGlobeMarkers(
     else buckets.set(key, { lat: loc.lat, lng: loc.lng, count: 1 });
   }
   return [...buckets.values()].map((bucket) => ({
-    location: [bucket.lat, bucket.lng],
-    size: Math.min(0.08, 0.028 + Math.log2(bucket.count) * 0.01),
+    id: activityGlobeMarkerId(bucket.lat, bucket.lng),
+    location: [bucket.lat, bucket.lng] as [number, number],
+    // Small WebGL discs: through-the-planet hint. DOM orbs carry facing depth.
+    size: Math.min(0.028, 0.01 + Math.log2(bucket.count) * 0.004),
   }));
 }

@@ -251,6 +251,30 @@
       animation: none;
     }
   }
+  .activity-globe-orb {
+    position: absolute;
+    left: anchor(center);
+    top: anchor(center);
+    translate: -50% -50%;
+    pointer-events: none;
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 9999px;
+    background: radial-gradient(circle at 32% 28%, #ffd0c0 0%, #fc532a 46%, #7a1a0c 100%);
+    box-shadow:
+      0 0 10px rgba(252, 83, 42, 0.5),
+      0 1px 2px rgba(0, 0, 0, 0.28),
+      inset 0 -1px 2px rgba(80, 10, 0, 0.45);
+    opacity: calc(0.16 + var(--orb-facing, 0) * 0.84);
+    transform: scale(calc(0.36 + var(--orb-facing, 0) * 0.74));
+    filter: blur(calc((1 - var(--orb-facing, 0)) * 1.25px));
+    will-change: opacity, transform, filter;
+  }
+  @supports not (anchor-name: --x) {
+    .activity-globe-orb {
+      display: none;
+    }
+  }
   @keyframes zoom-in {
     from {
       transform: scale(0.95);
