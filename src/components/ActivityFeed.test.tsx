@@ -1073,15 +1073,17 @@ describe("ActivityTrackedCount", () => {
     expect(formatTrackedEventsLabel(1)).toBe("1 event tracked");
     expect(formatTrackedEventsLabel(2)).toBe("2 events tracked");
     expect(formatTrackedEventsLabel(1500)).toBe("1,500 events tracked");
-    expect(ACTIVITY_TRACKED_SINCE_TOOLTIP).toBe("Tracked since August 16, 2026");
+    expect(ACTIVITY_TRACKED_SINCE_TOOLTIP).toBe("Events tracked since August 16, 2026");
   });
 
-  test("renders the lifetime count", () => {
+  test("shows the numeric count and a since-date tooltip", () => {
     const one = renderToStaticMarkup(<ActivityTrackedCount count={1} />);
     const many = renderToStaticMarkup(<ActivityTrackedCount count={12} />);
 
-    expect(one).toContain("1 event tracked");
-    expect(many).toContain("12 events tracked");
+    expect(one).toContain('aria-label="1. Events tracked since August 16, 2026"');
+    expect(one).not.toContain("1 event tracked");
+    expect(many).toContain('aria-label="12. Events tracked since August 16, 2026"');
+    expect(many).not.toContain("12 events tracked");
     expect(many).not.toContain("Live");
   });
 });
