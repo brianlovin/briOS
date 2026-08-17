@@ -29,13 +29,9 @@ function ActivityFallback() {
         <div data-scrollable className="relative min-w-0 flex-1 overflow-auto">
           <div className="divide-secondary divide-y">
             {Array.from({ length: 8 }, (_, index) => (
-              <div
-                key={index}
-                className="grid grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 md:gap-4"
-              >
+              <div key={index} className="flex items-center gap-3 px-4 py-3 md:gap-4">
                 <LoadingSkeleton className="size-6" />
                 <LoadingSkeleton className="h-5 w-2/3" />
-                <LoadingSkeleton className="h-4 w-14" />
               </div>
             ))}
           </div>
