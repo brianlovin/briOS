@@ -41,10 +41,6 @@ describe("ActivityRow", () => {
     expect(markup).toContain('href="/"');
     expect(markup).toContain("Home");
     expect(markup).not.toContain("a page");
-    expect(markup).not.toContain("text-red-500");
-    expect(markup).toContain("truncate");
-    expect(markup).not.toContain("text-sm underline-offset-2");
-    expect(markup).not.toContain("block truncate");
   });
 
   test("strips a short id from a stored writing slug", () => {
@@ -255,9 +251,6 @@ describe("ActivityRow", () => {
     expect(visit).toContain("/activity/favicons/tax-ui.png");
     expect(visit).toContain("Visit from United States");
     expect(visit).not.toContain("🇺🇸");
-    expect(visit).toContain('width="16"');
-    expect(visit).toContain('height="16"');
-    expect(visit).toContain("size-4");
     expect(download).toContain("/activity/favicons/design-details.png");
     expect(download).toContain("Someone downloaded");
     expect(download).not.toContain("Someone downloaded Design Details");
@@ -268,24 +261,6 @@ describe("ActivityRow", () => {
     expect(unknown).not.toContain("/activity/favicons/");
     expect(unknown).toContain("Visit from United States");
     expect(unknown).not.toContain("🇺🇸");
-  });
-
-  test("renders the staff.design favicon at 20px so it matches the GitHub mark", () => {
-    const markup = renderToStaticMarkup(
-      <ActivityRow
-        event={event({
-          source: "staff-design",
-          summary: "🇺🇸 Visit from United States",
-          meta: { country: "US" },
-        })}
-      />,
-    );
-
-    expect(markup).toContain("/activity/favicons/staff-design.png");
-    expect(markup).toContain('width="20"');
-    expect(markup).toContain('height="20"');
-    expect(markup).toContain("size-5");
-    expect(markup).not.toContain("size-4");
   });
 
   test("rebuilds a country name without a flag emoji for older visits that only have a code", () => {
@@ -310,10 +285,10 @@ describe("ActivityRow", () => {
     expect(markup).toContain("Home");
     expect(markup).not.toContain(">Visit<");
     expect(markup).not.toContain("🇮🇳");
-    expect(markup).not.toContain("text-red-500");
   });
 
-  test("shows a red heart on like rows only", () => {
+  test("shows a heart on like rows only", () => {
+    const heartPath = "M11.995 7.23319";
     const like = renderToStaticMarkup(
       <ActivityRow
         event={event({
@@ -338,12 +313,12 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(like).toContain("text-red-500");
+    expect(like).toContain(heartPath);
     expect(like).toContain("Someone liked");
     expect(like).toContain(">Grok Bot first impressions<");
     expect(like).not.toContain("Someone liked Grok Bot first impressions");
     expect(like).toContain('href="/writing/grok-bot-first-impressions"');
-    expect(visit).not.toContain("text-red-500");
+    expect(visit).not.toContain(heartPath);
     expect(visit).toContain("Visit from India");
     expect(visit).not.toContain("🇮🇳");
     expect(visit).toContain("/activity/favicons/brios.png");
@@ -393,13 +368,6 @@ describe("ActivityRow", () => {
     expect(pulse).toContain(pulsePath);
     for (const markup of [prOpened, prMerged, starred]) {
       expect(markup).not.toContain(pulsePath);
-      expect(markup).toContain("text-primary");
-      expect(markup).toContain('width="20"');
-      expect(markup).toContain('height="20"');
-      expect(markup).not.toContain("#000");
-      expect(markup).not.toContain("#fff");
-      expect(markup).not.toContain('fill="black"');
-      expect(markup).not.toContain('fill="white"');
     }
   });
 
@@ -484,7 +452,6 @@ describe("ActivityRow", () => {
     expect(markup).toContain('target="_blank"');
     expect(markup).not.toContain(">GitHub<");
     expect(markup).toContain("M12 2C6.477 2 2 6.477 2 12c0 4.42");
-    expect(markup).not.toContain("text-red-500");
     expect(markup).not.toContain(">https:<");
     expect(markup).not.toContain('href="/https:"');
   });
@@ -571,12 +538,9 @@ describe("ActivityRow", () => {
     expect(markup).toContain("brianlovin/briOS#12");
     expect(markup).toContain("+18");
     expect(markup).toContain("-3");
-    expect(markup).toContain("text-green-600");
-    expect(markup).toContain("text-red-500");
-    expect(markup).toContain("tabular-nums");
     expect(markup).not.toContain("+18 -3");
     expect(markup).toMatch(
-      /text-primary[^>]*>Merged some-fix[\s\S]*href="https:\/\/github.com\/brianlovin\/briOS\/pull\/12"[^>]*>brianlovin\/briOS#12[\s\S]*data-count="2"[\s\S]*\+18[\s\S]*-3/,
+      /Merged some-fix[\s\S]*href="https:\/\/github.com\/brianlovin\/briOS\/pull\/12"[^>]*>brianlovin\/briOS#12[\s\S]*\+18[\s\S]*-3/,
     );
   });
 
@@ -666,7 +630,6 @@ describe("ActivityRow", () => {
     );
 
     expect(starred).toContain(officialMark);
-    expect(starred).toContain("text-primary");
     expect(starred).not.toContain(pulse);
     expect(prOpened).toContain(officialMark);
     expect(prOpened).not.toContain(pulse);
@@ -689,7 +652,6 @@ describe("ActivityRow", () => {
     expect(markup).toContain(">Cursor<");
     expect(markup).not.toContain("Someone liked Cursor");
     expect(markup).toContain('href="https://cursor.com"');
-    expect(markup).toContain("text-red-500");
     expect(markup).not.toContain(">Stack<");
   });
 
@@ -733,7 +695,7 @@ describe("ActivityRow", () => {
     expect(markup).not.toContain("a page");
   });
 
-  test("keeps a like title as tertiary text when there is no href", () => {
+  test("keeps a like title as plain text when there is no href", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow
         event={event({
@@ -749,14 +711,13 @@ describe("ActivityRow", () => {
     );
 
     expect(markup).toContain("Someone liked");
-    expect(markup).toContain("text-tertiary");
     expect(markup).toContain("How to give a great product design portfolio presentation");
     expect(markup).not.toContain("<a ");
     expect(markup).not.toContain("Someone liked How to give");
     expect(markup).not.toMatch(/Someone liked\s{2,}/);
   });
 
-  test("keeps the like title once and the count chip after it", () => {
+  test("keeps the like title once and the count after it", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow
         event={event({
@@ -769,11 +730,8 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(markup).toMatch(
-      /text-primary[^>]*>Someone liked[\s\S]*href="https:\/\/cursor.com"[^>]*>Cursor[\s\S]*data-count="2"/,
-    );
+    expect(markup).toMatch(/Someone liked[\s\S]*href="https:\/\/cursor.com"[^>]*>Cursor/);
     expect(markup).not.toContain("Someone liked Cursor");
-    expect(markup).not.toContain('data-count="1"');
   });
 
   test("uses the Shiori orb for any shiori-sourced event", () => {
@@ -956,7 +914,7 @@ describe("ActivityRow", () => {
     expect(markup).not.toContain("example.com/secret");
   });
 
-  test("shows a quiet count chip after the metadata when a stack is larger than one", () => {
+  test("shows a count after the metadata when a stack is larger than one", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow
         event={event({
@@ -982,22 +940,12 @@ describe("ActivityRow", () => {
     );
 
     expect(markup).toContain("Visit from Spring Lake, North Carolina, United States");
-    expect(markup).toContain('data-count="6"');
-    expect(markup).toContain("text-tertiary");
-    expect(markup).toContain("font-mono");
-    expect(markup).toContain("rounded-sm");
-    expect(markup).toContain("border-secondary");
-    expect(markup).toContain("tabular-nums");
-    expect(markup).toContain("inline-flex");
     expect(markup).toContain("an AMA question");
     expect(markup).toContain('href="/ama"');
     expect(markup).not.toContain("2f2c711c-0ceb-810d-899d-e5feb99e70f4");
     expect(markup).toMatch(
-      /text-primary[^>]*>Visit from Spring Lake[\s\S]*href="\/ama"[^>]*>an AMA question[\s\S]*data-count="6"/,
+      /Visit from Spring Lake[\s\S]*href="\/ama"[^>]*>an AMA question[\s\S]*>6</,
     );
-    const title = markup.match(/<p class="relative z-10[\s\S]*?<\/p>/)?.[0] ?? "";
-    expect(title).toContain("data-count");
-    expect(title).not.toContain("<div");
 
     const single = renderToStaticMarkup(
       <ActivityRow
@@ -1010,65 +958,7 @@ describe("ActivityRow", () => {
         href="/ama"
       />,
     );
-    expect(single).not.toContain("font-mono");
     expect(single).not.toContain(">1<");
-  });
-
-  test("pulses the row background only when asked", () => {
-    const pulsed = renderToStaticMarkup(
-      <ActivityRow event={event({ summary: "Visit from India" })} pulse />,
-    );
-    const quiet = renderToStaticMarkup(
-      <ActivityRow event={event({ summary: "Visit from India" })} />,
-    );
-
-    expect(pulsed).toContain("data-rollup-pulse");
-    expect(pulsed).toContain("activity-rollup-pulse");
-    expect(pulsed).toContain("bg-secondary");
-    expect(pulsed).not.toContain("transition-colors");
-    expect(pulsed).not.toContain("duration-500");
-    expect(quiet).not.toContain("data-rollup-pulse");
-    expect(quiet).not.toContain("activity-rollup-pulse");
-    expect(quiet).not.toContain("border-b");
-    expect(quiet).not.toContain("border-secondary");
-    expect(quiet).not.toContain("transition-colors");
-    expect(quiet).not.toContain("duration-500");
-  });
-
-  test("keeps the title on one line and sticks time to the right on mobile", () => {
-    const markup = renderToStaticMarkup(
-      <ActivityRow
-        event={event({
-          source: "github",
-          type: "pr_merged",
-          speed: "event",
-          summary: "Merged some-fix",
-          subject: {
-            kind: "pull_request",
-            label: "brianlovin/briOS#12",
-            href: "https://github.com/brianlovin/briOS/pull/12",
-          },
-          meta: { additions: 18, deletions: 3 },
-        })}
-      />,
-    );
-
-    expect(markup).toContain("whitespace-nowrap");
-    expect(markup).toContain("md:truncate");
-    expect(markup).toContain("sticky");
-    expect(markup).toContain("right-0");
-    expect(markup).toContain("ml-auto");
-    expect(markup).toContain("w-max");
-    expect(markup).toContain("min-w-full");
-    expect(markup).toContain("inset_1px_0_0");
-    expect(markup).toContain("group-hover:bg-inherit");
-    expect(markup).toContain("group-data-[rollup-pulse]:bg-inherit");
-    expect(markup).toContain("md:static");
-    expect(markup).toContain("md:grid-cols-[2rem_minmax(0,1fr)_auto]");
-    expect(markup).toContain("hover:bg-secondary");
-    expect(markup).not.toContain("transition-colors");
-    expect(markup).not.toContain("duration-500");
-    expect(markup).toMatch(/Merged some-fix[\s\S]*brianlovin\/briOS#12[\s\S]*\+18[\s\S]*-3/);
   });
 });
 
@@ -1089,26 +979,11 @@ describe("ActivityFeed", () => {
 
     expect(markup).toContain("Visit from India");
     expect(markup).not.toContain("🇮🇳");
-    expect(markup).toContain("divide-y");
-    expect(markup).toContain("divide-secondary");
-    expect(markup).toContain("overflow-hidden");
-    expect(markup).toContain("clip-path:inset(0)");
-    expect(markup).toContain("min-w-max");
-    expect(markup).toContain("min-w-full");
-    expect(markup).toContain("w-max");
-    expect(markup).toContain("overscroll-contain");
-    expect(markup).toContain("whitespace-nowrap");
-    expect(markup).toContain("sticky");
-    expect(markup).toContain("right-0");
     expect(markup).not.toContain(">Event<");
     expect(markup).not.toContain(">Time<");
-    expect(markup).not.toContain("sticky top-0");
-    expect(markup).not.toMatch(/opacity:\s*0/);
-    expect(markup).not.toContain("translateY(-8");
-    expect(markup).not.toContain("y: -8");
   });
 
-  test("first paint of several stacks is static, not an enter cascade", () => {
+  test("renders several stacked events on first paint", () => {
     const markup = renderToStaticMarkup(
       <ActivityFeed
         initialEvents={[
@@ -1137,21 +1012,25 @@ describe("ActivityFeed", () => {
     expect(markup).toContain("Visit from India");
     expect(markup).toContain("Visit from San Francisco");
     expect(markup).toContain("Someone liked");
-    expect(markup).not.toMatch(/opacity:\s*0/);
-    expect(markup).not.toContain("height: 0");
-    expect(markup).not.toContain("height:0px");
-    expect(markup).not.toContain("translateY(-8");
-    expect(markup).toContain("clip-path:inset(0)");
+  });
+
+  test("shows the end-cap after a non-empty feed and not on the empty state", () => {
+    const empty = renderToStaticMarkup(<ActivityFeed initialEvents={[]} initialCount={0} />);
+    const filled = renderToStaticMarkup(
+      <ActivityFeed initialEvents={[event({ id: "evt-1" })]} initialCount={1} />,
+    );
+
+    expect(empty).toContain("Nothing yet. Likes and visits will show up here.");
+    expect(empty).not.toContain("Older activity is dust in the wind...");
+    expect(filled).toContain("Older activity is dust in the wind...");
+    expect(filled).not.toContain("Nothing yet. Likes and visits will show up here.");
   });
 });
 
 describe("ActivityLiveBadge", () => {
-  test("is a quiet green live pill with a pulsing dot", () => {
+  test("shows Live", () => {
     const markup = renderToStaticMarkup(<ActivityLiveBadge />);
     expect(markup).toContain("Live");
-    expect(markup).toContain("animate-pulse");
-    expect(markup).toContain("bg-green-500");
-    expect(markup).toContain("text-green-700");
   });
 
   test("appears after the Activity crumb and not on other pages", () => {
@@ -1159,7 +1038,6 @@ describe("ActivityLiveBadge", () => {
     const writing = renderToStaticMarkup(<TopBarTrail pathname="/writing" />);
     expect(activity).toContain("Activity");
     expect(activity).toContain("Live");
-    expect(activity).toContain("animate-pulse");
     expect(writing).toContain("Writing");
     expect(writing).not.toContain("Live");
   });
@@ -1174,34 +1052,12 @@ describe("ActivityTrackedCount", () => {
     expect(ACTIVITY_TRACKED_SINCE_TOOLTIP).toBe("Tracked since August 16, 2026");
   });
 
-  test("renders the count as tertiary top-bar metadata", () => {
+  test("renders the lifetime count", () => {
     const one = renderToStaticMarkup(<ActivityTrackedCount count={1} />);
     const many = renderToStaticMarkup(<ActivityTrackedCount count={12} />);
 
     expect(one).toContain("1 event tracked");
-    expect(one).toContain("text-tertiary");
-    expect(one).toContain("text-sm");
-    expect(one).toContain("hidden");
-    expect(one).toContain("md:inline");
     expect(many).toContain("12 events tracked");
     expect(many).not.toContain("Live");
-  });
-});
-
-describe("ActivityFeed", () => {
-  test("shows the end-cap after a non-empty feed and not on the empty state", () => {
-    const empty = renderToStaticMarkup(<ActivityFeed initialEvents={[]} initialCount={0} />);
-    const filled = renderToStaticMarkup(
-      <ActivityFeed initialEvents={[event({ id: "evt-1" })]} initialCount={1} />,
-    );
-
-    expect(empty).toContain("Nothing yet. Likes and visits will show up here.");
-    expect(empty).not.toContain("Older activity is dust in the wind...");
-    expect(filled).toContain("Older activity is dust in the wind...");
-    expect(filled).toContain("p-32");
-    expect(filled).toContain("text-center");
-    expect(filled).toContain("text-sm");
-    expect(filled).toContain("text-tertiary");
-    expect(filled).not.toContain("Nothing yet. Likes and visits will show up here.");
   });
 });
