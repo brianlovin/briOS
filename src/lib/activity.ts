@@ -6,6 +6,7 @@ import {
   countryCodeToName,
   formatVisitSummary,
   geoFromVisitMeta,
+  pairCoordinates,
 } from "./activity-geo";
 import { githubActivityFromWebhook } from "./activity-github";
 import { lookupHnStoryTitle } from "./activity-hn";
@@ -44,10 +45,14 @@ import {
 
 export type { ActivityGeo } from "./activity-geo";
 export {
+  activityEventLocation,
+  activityGlobeMarkers,
   ANONYMOUS_VISIT_SUMMARY,
+  countryCentroid,
   countryCodeToName,
   formatVisitSummary,
   getRequestGeo,
+  pairCoordinates,
 } from "./activity-geo";
 export type { GithubActivityDecision } from "./activity-github";
 export {
@@ -286,6 +291,10 @@ async function applyIngestDefaults(input: ActivityIngestInput): Promise<Activity
     const region = geo.region;
     const regionName = geo.regionName;
     const city = geo.city;
+    const coords = pairCoordinates(
+      input.latitude ?? geo.latitude,
+      input.longitude ?? geo.longitude,
+    );
     const summary =
       input.summary?.trim() ||
       formatVisitSummary({ country, countryName, region, regionName, city });
@@ -306,6 +315,7 @@ async function applyIngestDefaults(input: ActivityIngestInput): Promise<Activity
         ...(region ? { region } : {}),
         ...(regionName ? { region_name: regionName } : {}),
         ...(city ? { city } : {}),
+        ...(coords ? { latitude: coords.latitude, longitude: coords.longitude } : {}),
         path,
         title,
       },
@@ -466,6 +476,7 @@ export async function recordVisit(
   const region = input.region?.trim() || undefined;
   const regionName = input.regionName?.trim() || undefined;
   const city = input.city?.trim() || undefined;
+  const coords = pairCoordinates(input.latitude, input.longitude);
   const summary = formatVisitSummary({ country, countryName, region, regionName, city });
   const title = await resolveIngestVisitTitle(input.path, input.title);
   const windowKey = `visit:${Math.floor(now.getTime() / 1000)}`;
@@ -491,6 +502,7 @@ export async function recordVisit(
         ...(region ? { region } : {}),
         ...(regionName ? { region_name: regionName } : {}),
         ...(city ? { city } : {}),
+        ...(coords ? { latitude: coords.latitude, longitude: coords.longitude } : {}),
         path: input.path,
         title,
       },

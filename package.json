@@ -28,6 +28,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
+    "cobe": "^2.0.1",
     "date-fns": "^4.1.0",
     "fathom-client": "^3.7.2",
     "feed": "^5.1.0",
