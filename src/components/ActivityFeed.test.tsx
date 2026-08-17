@@ -339,6 +339,9 @@ describe("ActivityRow", () => {
     );
 
     expect(like).toContain("text-red-500");
+    expect(like).toContain("fill-current");
+    expect(like).toContain('width="20"');
+    expect(like).toContain('height="20"');
     expect(like).toContain("Someone liked");
     expect(like).toContain(">Grok Bot first impressions<");
     expect(like).not.toContain("Someone liked Grok Bot first impressions");

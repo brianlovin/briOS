@@ -112,7 +112,7 @@ function ActivityRowIcon({ event, icon }: { event: ActivityEvent; icon?: string 
   }
 
   if (event.type === "like") {
-    return <Heart size={16} className="fill-current text-red-500" aria-hidden />;
+    return <Heart size={20} className="fill-current text-red-500" aria-hidden />;
   }
 
   if (isGithubActivity(event)) {
