@@ -46,6 +46,25 @@ export type ActivityGlobeMarker = {
   size: number;
 };
 
+/** Persist the same snake_case keys first-party visits store on event.meta. */
+export function activityGeoToMeta(geo: ActivityGeo): Record<string, string | number> {
+  const country = geo.country?.trim() || undefined;
+  const countryName = geo.countryName?.trim() || (country ? countryCodeToName(country) : undefined);
+  const region = geo.region?.trim() || undefined;
+  const regionName = geo.regionName?.trim() || undefined;
+  const city = geo.city?.trim() || undefined;
+  const coords = pairCoordinates(geo.latitude, geo.longitude);
+
+  return {
+    ...(country ? { country } : {}),
+    ...(countryName && countryName !== country ? { country_name: countryName } : {}),
+    ...(region ? { region } : {}),
+    ...(regionName ? { region_name: regionName } : {}),
+    ...(city ? { city } : {}),
+    ...(coords ?? {}),
+  };
+}
+
 /** ISO 3166-1 alpha-2 → English short name. */
 const COUNTRY_NAMES: Record<string, string> = {
   AD: "Andorra",
