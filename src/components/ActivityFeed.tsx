@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import { type ReactNode, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 
+import { ActivityGlobe } from "@/components/ActivityGlobe";
 import { Activity } from "@/components/icons/Activity";
 import { Github } from "@/components/icons/Github";
 import { Heart } from "@/components/icons/Heart";
@@ -495,6 +496,7 @@ export function ActivityFeed({
             </>
           )}
         </div>
+        <ActivityGlobe events={events} />
       </div>
     </ListDetailWrapper>
   );
