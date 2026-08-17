@@ -228,8 +228,8 @@ describe("githubActivityFromWebhook", () => {
 
     expect(decision.status).toBe("ingest");
     if (decision.status === "ingest") {
-      expect(decision.input.summary).toBe("Opened a pull request");
-      expect(decision.input.subject).toEqual({ kind: "pull_request", label: "a pull request" });
+      expect(decision.input.summary).toBe("Opened a pull request in a private repo");
+      expect(decision.input.subject).toBeUndefined();
       expect(decision.input.meta).toEqual({ private: true, number: 1 });
       expect(decision.input.idempotency_key).toBe(`github:pr_opened:private:${repoHash}:1`);
     }
@@ -238,6 +238,39 @@ describe("githubActivityFromWebhook", () => {
     expect(serialized).not.toContain("private title");
     expect(serialized).not.toContain("secrets");
     expect(serialized).not.toContain("brianlovin");
+
+    const merged = githubActivityFromWebhook(
+      "pull_request",
+      pullRequestPayload({
+        action: "closed",
+        repository: {
+          name: "secrets",
+          full_name: "brianlovin/secrets",
+          private: true,
+          html_url: "https://github.com/brianlovin/secrets",
+        },
+        pull_request: {
+          number: 1,
+          title: "private title must not leak",
+          html_url: "https://github.com/brianlovin/secrets/pull/1",
+          merged: true,
+          additions: 4,
+          deletions: 1,
+          user: human(),
+        },
+      }),
+    );
+    expect(merged.status).toBe("ingest");
+    if (merged.status === "ingest") {
+      expect(merged.input.summary).toBe("Merged a pull request in a private repo");
+      expect(merged.input.subject).toBeUndefined();
+      expect(merged.input.meta).toEqual({
+        private: true,
+        number: 1,
+        additions: 4,
+        deletions: 1,
+      });
+    }
   });
 
   test("ignores Dependabot pull requests but keeps coding-agent PRs", () => {
@@ -404,8 +437,45 @@ describe("recordGithubActivity", () => {
     const serialized = JSON.stringify(event);
     expect(serialized).not.toContain("secrets");
     expect(serialized).not.toContain("Add activity feed");
-    expect(event?.summary).toBe("Opened a pull request");
+    expect(event?.summary).toBe("Opened a pull request in a private repo");
+    expect(event?.subject).toBeUndefined();
     expect(event?.meta).toEqual({ private: true, number: 42 });
+  });
+
+  test("records a private merge without a dummy subject", async () => {
+    const store = createMemoryActivityStore();
+    const result = await recordGithubActivity(
+      "pull_request",
+      pullRequestPayload({
+        action: "closed",
+        repository: publicRepo({
+          private: true,
+          name: "secrets",
+          full_name: "brianlovin/secrets",
+          html_url: "https://github.com/brianlovin/secrets",
+        }),
+        pull_request: {
+          number: 7,
+          title: "private title must not leak",
+          html_url: "https://github.com/brianlovin/secrets/pull/7",
+          merged: true,
+          additions: 12,
+          deletions: 3,
+          user: human(),
+        },
+      }),
+      store,
+    );
+
+    expect(result).toEqual(expect.objectContaining({ ok: true, duplicate: false }));
+    const [event] = await store.getTail(1);
+    const serialized = JSON.stringify(event);
+    expect(serialized).not.toContain("secrets");
+    expect(serialized).not.toContain("private title");
+    expect(event?.type).toBe("pr_merged");
+    expect(event?.summary).toBe("Merged a pull request in a private repo");
+    expect(event?.subject).toBeUndefined();
+    expect(event?.meta).toEqual({ private: true, number: 7, additions: 12, deletions: 3 });
   });
 
   test("treats the same person starring twice as one event", async () => {

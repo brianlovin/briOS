@@ -7,6 +7,7 @@ import {
   geoFromVisitMeta,
 } from "./activity-geo";
 import { githubActivityFromWebhook } from "./activity-github";
+import { lookupHnStoryTitle } from "./activity-hn";
 import { isRegisteredActivityEvent } from "./activity-registry";
 import {
   ACTIVITY_ENVELOPE_VERSION,
@@ -23,8 +24,10 @@ import {
   type ActivitySpeed,
   findForbiddenPii,
   formatDownloadSummary,
+  hnStoryIdFromPath,
   inferContentTypeFromPath,
   isActivityPath,
+  isGenericHnStoryTitle,
   likeActivityPayload,
   normalizeCaffeineDrink,
   resolveVisitTitle,
@@ -87,6 +90,7 @@ export {
   activitySourceFaviconSrc,
   activitySourceLabel,
   activitySourceUrl,
+  appendKnownSectionSuffix,
   countryCodeToFlag,
   findForbiddenPii,
   formatActivityTitle,
@@ -96,17 +100,23 @@ export {
   getCaffeineIcon,
   getMergedPullRequestDiff,
   getRequestCountry,
+  hnStoryIdFromPath,
   inferContentTypeFromPath,
   inferTitleFromPath,
+  isAbsoluteHttpUrl,
   isActivityFeedPayload,
   isActivityPath,
   isCoffeeFamilyDrink,
+  isGenericHnStoryTitle,
+  isKnownActivitySection,
   isKnownActivityTitle,
+  isUnusableActivityTitle,
   likeActivityPayload,
   looksLikeDehyphenatedSlug,
   looksLikeIdentifier,
   looksLikeShortId,
   normalizeCaffeineDrink,
+  pathnameFromHref,
   resolveActivitySourceHref,
   resolveVisitTitle,
   sanitizeActivityTitle,
@@ -132,7 +142,10 @@ export type ActivityStore = {
 
 export async function buildActivityFeed(store: ActivityStore | null): Promise<ActivityFeedPayload> {
   if (!store) return { events: [], count: 0 };
-  const [events, count] = await Promise.all([store.getTail(100), store.getCount()]);
+  const [events, count] = await Promise.all([
+    store.getTail(ACTIVITY_STREAM_MAXLEN),
+    store.getCount(),
+  ]);
   return { events, count };
 }
 
@@ -194,13 +207,32 @@ function validateRef(name: string, value: unknown): string | null {
   return null;
 }
 
-function applyIngestDefaults(input: ActivityIngestInput): ActivityIngestInput {
+/**
+ * Sanitize a visit title, then look up `/hn/{id}` when the client title is
+ * missing or generic. Ingest-only — the activity feed render path stays sync.
+ */
+export async function resolveIngestVisitTitle(path: string, title?: string): Promise<string> {
+  const resolved = resolveVisitTitle(path, title);
+  const id = hnStoryIdFromPath(path);
+  if (!id || !isGenericHnStoryTitle(resolved, id)) return resolved;
+
+  try {
+    const lookedUp = await lookupHnStoryTitle(id);
+    if (!lookedUp) return resolved;
+    const fromHn = resolveVisitTitle(path, lookedUp);
+    return isGenericHnStoryTitle(fromHn, id) ? resolved : fromHn;
+  } catch {
+    return resolved;
+  }
+}
+
+async function applyIngestDefaults(input: ActivityIngestInput): Promise<ActivityIngestInput> {
   if (input.type === "visit") {
     const meta = isPlainObject(input.meta) ? { ...input.meta } : {};
     const path =
       typeof meta.path === "string" && meta.path ? meta.path : input.subject?.href || "/";
     const providedTitle = typeof meta.title === "string" ? meta.title : input.subject?.label;
-    const title = resolveVisitTitle(path, providedTitle);
+    const title = await resolveIngestVisitTitle(path, providedTitle);
     const geo = geoFromVisitMeta(meta);
     const country = geo.country?.trim() || undefined;
     const countryName = geo.countryName || (country ? countryCodeToName(country) : undefined);
@@ -215,10 +247,10 @@ function applyIngestDefaults(input: ActivityIngestInput): ActivityIngestInput {
       ...input,
       speed: input.speed ?? "signal",
       summary,
-      subject: input.subject ?? {
-        kind: inferContentTypeFromPath(path),
+      subject: {
+        kind: input.subject?.kind ?? inferContentTypeFromPath(path),
         label: title,
-        href: path,
+        href: input.subject?.href ?? path,
       },
       meta: {
         ...meta,
@@ -240,6 +272,18 @@ function applyIngestDefaults(input: ActivityIngestInput): ActivityIngestInput {
       speed: input.speed ?? "event",
       summary: input.summary?.trim() || formatDownloadSummary(input.source, label),
       subject: input.subject ?? { kind: "download", label },
+    };
+  }
+
+  if (input.source === "shiori" && (input.type === "link_saved" || input.type === "link_clicked")) {
+    return {
+      ...input,
+      speed: input.speed ?? "event",
+      summary:
+        input.summary?.trim() ||
+        (input.type === "link_clicked"
+          ? "Someone clicked a link on Shiori"
+          : "Someone saved a link on Shiori"),
     };
   }
 
@@ -280,7 +324,7 @@ export async function ingestActivityEvent(
     return { ok: false, error: "unregistered source/type", status: 400 };
   }
 
-  const normalized = applyIngestDefaults(input);
+  const normalized = await applyIngestDefaults(input);
   const fieldError = validateIngestInput(normalized);
   if (fieldError) return { ok: false, error: fieldError, status: 400 };
 
@@ -370,7 +414,7 @@ export async function recordVisit(
   const regionName = input.regionName?.trim() || undefined;
   const city = input.city?.trim() || undefined;
   const summary = formatVisitSummary({ country, countryName, region, regionName, city });
-  const title = resolveVisitTitle(input.path, input.title);
+  const title = await resolveIngestVisitTitle(input.path, input.title);
   const windowKey = `visit:${Math.floor(now.getTime() / 1000)}`;
   const windowCount = await store.incrementVisitWindow(windowKey, 2);
   const writeToStream = windowCount <= ACTIVITY_VISIT_STREAM_MAX_PER_SEC;

@@ -4,6 +4,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { ActivityFeed, ActivityRow, ActivityTrackedCount } from "@/components/ActivityFeed";
 import { ActivityLiveBadge, TopBarTrail } from "@/components/GlobalTopBar";
 import type { ActivityEvent } from "@/lib/activity";
+import { rollupActivityEvents } from "@/lib/activity-rollup";
 import { ACTIVITY_TRACKED_SINCE_TOOLTIP, formatTrackedEventsLabel } from "@/lib/activity-shared";
 
 function event(overrides: Partial<ActivityEvent>): ActivityEvent {
@@ -65,6 +66,71 @@ describe("ActivityRow", () => {
     expect(markup).toContain('href="/writing/grok-bot-first-impressions-kcJun01"');
   });
 
+  test("does not render Https: for a visit whose href is an absolute briOS URL", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          summary: "🇺🇸 Visit from San Francisco, California, United States",
+          subject: {
+            kind: "writing",
+            label: "a page",
+            href: "https://brianlovin.com/writing/foo",
+          },
+          meta: {
+            country: "US",
+            city: "San Francisco",
+            path: "https://brianlovin.com/writing/foo",
+          },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("Foo");
+    expect(markup).toContain('href="https://brianlovin.com/writing/foo"');
+    expect(markup).not.toContain(">Https:<");
+    expect(markup).not.toContain(">https:<");
+    expect(markup).not.toContain('href="/https:"');
+  });
+
+  test("does not render Https: when two SF visits to absolute URLs are stacked", () => {
+    const visit = (id: string, href: string, label: string): ActivityEvent =>
+      event({
+        id,
+        summary: "Visit from San Francisco, California, United States",
+        subject: { kind: "page", label, href },
+        meta: {
+          country: "US",
+          country_name: "United States",
+          region: "CA",
+          region_name: "California",
+          city: "San Francisco",
+          path: href,
+        },
+      });
+
+    const stacks = rollupActivityEvents([
+      visit("sf-1", "https://brianlovin.com/writing/foo", "Foo"),
+      visit("sf-2", "https://brianlovin.com/writing/bar", "Bar"),
+    ]);
+    const markup = stacks
+      .map((stack) =>
+        renderToStaticMarkup(
+          <ActivityRow
+            event={stack.latest}
+            count={stack.count}
+            sectionLabel={stack.sectionLabel}
+            href={stack.href}
+          />,
+        ),
+      )
+      .join("\n");
+
+    expect(markup).toContain("Writing");
+    expect(markup).not.toContain(">Https:<");
+    expect(markup).not.toContain(">https:<");
+    expect(markup).not.toContain('href="/https:"');
+  });
+
   test("title-cases a stored App Dissection slug", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow
@@ -80,9 +146,63 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(markup).toContain(">Secret for iOS<");
+    expect(markup).toContain(">Secret for iOS App Dissection<");
     expect(markup).toContain('href="/app-dissection/secret-for-ios"');
     expect(markup).not.toContain(">secret for ios<");
+    expect(markup).not.toContain(">Secret for iOS<");
+  });
+
+  test("labels an HN index visit as Hacker News, not a story", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          summary: "🇺🇸 Visit from San Francisco, California, United States",
+          subject: { kind: "page", label: "a page", href: "/hn" },
+          meta: { country: "US", path: "/hn" },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("Hacker News");
+    expect(markup).toContain('href="/hn"');
+    expect(markup).not.toContain("a Hacker News story");
+  });
+
+  test("labels an Instagram iOS dissection visit with the section name", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          summary: "🇺🇸 Visit from United States",
+          subject: {
+            kind: "app_dissection",
+            label: "Instagram",
+            href: "/app-dissection/instagram-ios",
+          },
+          meta: { country: "US", path: "/app-dissection/instagram-ios" },
+        })}
+      />,
+    );
+
+    expect(markup).toContain(">Instagram App Dissection<");
+    expect(markup).toContain('href="/app-dissection/instagram-ios"');
+    expect(markup).not.toContain(">Instagram<");
+  });
+
+  test("shows a stored HN story title instead of the generic phrase", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          summary: "🇺🇸 Visit from United States",
+          subject: { kind: "page", label: "Some HN Story", href: "/hn/42991019" },
+          meta: { country: "US", path: "/hn/42991019", title: "Some HN Story" },
+        })}
+      />,
+    );
+
+    expect(markup).toContain(">Some HN Story<");
+    expect(markup).toContain('href="/hn/42991019"');
+    expect(markup).not.toContain("a Hacker News story");
+    expect(markup).not.toContain(">42991019<");
   });
 
   test("shows a Hacker News story instead of a raw story id", () => {
@@ -303,6 +423,44 @@ describe("ActivityRow", () => {
     expect(markup).toContain("noopener noreferrer");
   });
 
+  test("renders a stored private opened PR as a single phrase", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "github",
+          type: "pr_opened",
+          speed: "event",
+          summary: "Opened a pull request",
+          subject: { kind: "pull_request", label: "a pull request" },
+          meta: { private: true, number: 1 },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("Opened a pull request in a private repo");
+    expect(markup).not.toContain("A Pull Request");
+    expect(markup).not.toContain("<a ");
+    expect(markup).not.toContain("href=");
+  });
+
+  test("renders a stored private merged PR as a single phrase", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "github",
+          type: "pr_merged",
+          speed: "event",
+          summary: "Merged a pull request",
+          subject: { kind: "pull_request", label: "a pull request" },
+          meta: { private: true, number: 2 },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("Merged a pull request in a private repo");
+    expect(markup).not.toContain("A Pull Request");
+  });
+
   test("uses the GitHub icon for github-sourced events", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow
@@ -327,6 +485,59 @@ describe("ActivityRow", () => {
     expect(markup).not.toContain(">GitHub<");
     expect(markup).toContain("M12 2C6.477 2 2 6.477 2 12c0 4.42");
     expect(markup).not.toContain("text-red-500");
+    expect(markup).not.toContain(">https:<");
+    expect(markup).not.toContain('href="/https:"');
+  });
+
+  test("renders two public merges on the same repo as separate titled rows", () => {
+    const merge = (id: string, number: number, title: string): ActivityEvent =>
+      event({
+        id,
+        source: "github",
+        type: "pr_merged",
+        speed: "event",
+        summary: "Merged a pull request on designdetails",
+        subject: {
+          kind: "pull_request",
+          label: title,
+          href: `https://github.com/designdetails/designdetails/pull/${number}`,
+        },
+        meta: {
+          repo: "designdetails",
+          title,
+          number,
+          href: `https://github.com/designdetails/designdetails/pull/${number}`,
+          additions: 13,
+          deletions: 2,
+        },
+      });
+
+    const stacks = rollupActivityEvents([
+      merge("pr-719", 719, "Fix player skip"),
+      merge("pr-720", 720, "Tweak chapter marks"),
+    ]);
+    expect(stacks).toHaveLength(2);
+
+    const markup = stacks
+      .map((stack) =>
+        renderToStaticMarkup(
+          <ActivityRow
+            event={stack.latest}
+            count={stack.count}
+            sectionLabel={stack.sectionLabel}
+            href={stack.href}
+          />,
+        ),
+      )
+      .join("\n");
+
+    expect(markup).toContain("Fix player skip");
+    expect(markup).toContain("Tweak chapter marks");
+    expect(markup).toContain('href="https://github.com/designdetails/designdetails/pull/719"');
+    expect(markup).toContain('href="https://github.com/designdetails/designdetails/pull/720"');
+    expect(markup).toContain('target="_blank"');
+    expect(markup).not.toContain('href="/https:"');
+    expect(markup).not.toContain(">https:<");
   });
 
   test("puts merge diff stats after the repo/PR context", () => {
@@ -722,6 +933,29 @@ describe("ActivityRow", () => {
     expect(visit).not.toContain('target="_blank"');
   });
 
+  test("renders a Shiori link_clicked row without leaking the saved URL", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "shiori",
+          type: "link_clicked",
+          speed: "event",
+          summary: "Someone clicked a link on Shiori",
+          subject: { kind: "link", label: "A saved page", href: "https://example.com/secret" },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("shiori-icon.png");
+    expect(markup).toContain("Someone clicked a link");
+    expect(markup).not.toContain("Someone clicked a link on Shiori");
+    expect(markup).toContain(">Shiori<");
+    expect(markup).toContain('href="https://www.shiori.sh"');
+    expect(markup).not.toContain("A saved page");
+    expect(markup).not.toContain("example.com");
+    expect(markup).not.toContain("example.com/secret");
+  });
+
   test("shows a quiet count chip after the metadata when a stack is larger than one", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow
@@ -951,5 +1185,23 @@ describe("ActivityTrackedCount", () => {
     expect(one).toContain("md:inline");
     expect(many).toContain("12 events tracked");
     expect(many).not.toContain("Live");
+  });
+});
+
+describe("ActivityFeed", () => {
+  test("shows the end-cap after a non-empty feed and not on the empty state", () => {
+    const empty = renderToStaticMarkup(<ActivityFeed initialEvents={[]} initialCount={0} />);
+    const filled = renderToStaticMarkup(
+      <ActivityFeed initialEvents={[event({ id: "evt-1" })]} initialCount={1} />,
+    );
+
+    expect(empty).toContain("Nothing yet. Likes and visits will show up here.");
+    expect(empty).not.toContain("Older activity is dust in the wind...");
+    expect(filled).toContain("Older activity is dust in the wind...");
+    expect(filled).toContain("p-32");
+    expect(filled).toContain("text-center");
+    expect(filled).toContain("text-sm");
+    expect(filled).toContain("text-tertiary");
+    expect(filled).not.toContain("Nothing yet. Likes and visits will show up here.");
   });
 });

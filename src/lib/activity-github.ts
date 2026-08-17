@@ -1,6 +1,10 @@
 import { createHash, createHmac } from "crypto";
 
-import { ACTIVITY_SOURCE_GITHUB, type ActivityIngestInput } from "./activity-shared";
+import {
+  ACTIVITY_SOURCE_GITHUB,
+  type ActivityIngestInput,
+  privatePullRequestSummary,
+} from "./activity-shared";
 import { safeCompare } from "./api-utils";
 
 const GITHUB_BOT_LOGINS = new Set(["dependabot[bot]", "cursor[bot]", "github-actions[bot]"]);
@@ -108,15 +112,6 @@ function pullRequestInput(
   const repoToken = repoIdempotencyToken(repository, isPrivate);
   if (number === undefined || !repoToken) return { status: "ignore", reason: "incomplete_pr" };
 
-  const summary =
-    type === "pr_opened"
-      ? isPrivate
-        ? "Opened a pull request"
-        : `Opened a pull request on ${repoShortName(repository)}`
-      : isPrivate
-        ? "Merged a pull request"
-        : `Merged a pull request on ${repoShortName(repository)}`;
-
   if (isPrivate) {
     const diff = type === "pr_merged" ? pullRequestDiffMeta(pullRequest) : {};
     return {
@@ -125,15 +120,19 @@ function pullRequestInput(
         source: ACTIVITY_SOURCE_GITHUB,
         type,
         speed: "event",
-        summary,
+        summary: privatePullRequestSummary(type),
         visibility: "public",
         idempotency_key: `github:${type}:${repoToken}:${number}`,
-        subject: { kind: "pull_request", label: "a pull request" },
         meta: { private: true, number, ...diff },
         idempotencyTtlSeconds: 0,
       },
     };
   }
+
+  const summary =
+    type === "pr_opened"
+      ? `Opened a pull request on ${repoShortName(repository)}`
+      : `Merged a pull request on ${repoShortName(repository)}`;
 
   const title = asString(pullRequest?.title) || "a pull request";
   const href = asString(pullRequest?.html_url);

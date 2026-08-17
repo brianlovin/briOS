@@ -1,8 +1,10 @@
-import { describe, expect, test } from "bun:test";
+import { afterEach, beforeEach, describe, expect, spyOn, test } from "bun:test";
 
 import {
   activityEnterStaggerDelays,
   type ActivityEvent,
+  activityRollupKey,
+  activitySectionFromPath,
   activitySourceFaviconSrc,
   activitySourceUrl,
   activityStackReactKey,
@@ -26,11 +28,13 @@ import {
   looksLikeIdentifier,
   looksLikeShortId,
   nextActivityEnterState,
+  pathnameFromHref,
   recordCaffeine,
   recordDigestSubscribed,
   recordLike,
   recordVisit,
   resolveActivitySourceHref,
+  resolveIngestVisitTitle,
   rollupActivityEvents,
   sanitizeVisitTitle,
   shouldPulseActivityRollup,
@@ -39,6 +43,7 @@ import {
   stripTrailingShortIdToken,
 } from "@/lib/activity";
 import { geoFromVisitMeta, normalizeRegionCode, visitDisplaySummary } from "@/lib/activity-geo";
+import * as activityHn from "@/lib/activity-hn";
 import { parseActivityStreamFields } from "@/lib/activity-redis";
 import { ACTIVITY_STREAM_MAXLEN, ACTIVITY_VISIT_STREAM_MAX_PER_SEC } from "@/lib/activity-shared";
 
@@ -50,6 +55,36 @@ function baseEvent(overrides: Record<string, unknown> = {}) {
     summary: "Someone liked a page",
     visibility: "public" as const,
     idempotency_key: `test:${crypto.randomUUID()}`,
+    ...overrides,
+  };
+}
+
+let lookupHnStoryTitleSpy: ReturnType<typeof spyOn>;
+
+beforeEach(() => {
+  lookupHnStoryTitleSpy = spyOn(activityHn, "lookupHnStoryTitle").mockResolvedValue(null);
+});
+
+afterEach(() => {
+  lookupHnStoryTitleSpy.mockRestore();
+});
+
+function visitRowEvent(
+  subject: { kind: string; label: string; href: string },
+  overrides: Record<string, unknown> = {},
+): ActivityEvent {
+  return {
+    v: 1,
+    id: "visit-row",
+    ts: "2026-08-16T00:00:00.000Z",
+    received_at: "2026-08-16T00:00:00.000Z",
+    source: "brios",
+    type: "visit",
+    speed: "signal",
+    summary: "Visit from United States",
+    visibility: "public",
+    idempotency_key: "visit-row",
+    subject,
     ...overrides,
   };
 }
@@ -452,16 +487,16 @@ describe("recordVisit", () => {
     const [event] = await store.getTail(1);
     expect(event?.subject).toEqual({
       kind: "app_dissection",
-      label: "Secret for iOS",
+      label: "Secret for iOS App Dissection",
       href: "/app-dissection/secret-for-ios",
     });
     expect(event?.meta).toEqual(
       expect.objectContaining({
         path: "/app-dissection/secret-for-ios",
-        title: "Secret for iOS",
+        title: "Secret for iOS App Dissection",
       }),
     );
-    expect(getActivityRow(event!).label).toBe("Secret for iOS");
+    expect(getActivityRow(event!).label).toBe("Secret for iOS App Dissection");
   });
 
   test("uses a client title for writing, home, HN, and TIL", async () => {
@@ -498,9 +533,11 @@ describe("recordVisit", () => {
       store,
     );
     const [event] = await store.getTail(1);
-    expect(event?.subject?.label).toBe("Secret for iOS");
-    expect(event?.meta).toEqual(expect.objectContaining({ title: "Secret for iOS" }));
-    expect(getActivityRow(event!).label).toBe("Secret for iOS");
+    expect(event?.subject?.label).toBe("Secret for iOS App Dissection");
+    expect(event?.meta).toEqual(
+      expect.objectContaining({ title: "Secret for iOS App Dissection" }),
+    );
+    expect(getActivityRow(event!).label).toBe("Secret for iOS App Dissection");
   });
 
   test("stores a contextual phrase for an HN story id at ingest", async () => {
@@ -514,6 +551,41 @@ describe("recordVisit", () => {
     });
     expect(event?.meta).toEqual(expect.objectContaining({ title: "a Hacker News story" }));
     expect(getActivityRow(event!).label).toBe("a Hacker News story");
+    expect(lookupHnStoryTitleSpy).toHaveBeenCalledWith("46993596");
+  });
+
+  test("looks up an HN story title at ingest when the client title is generic or empty", async () => {
+    lookupHnStoryTitleSpy.mockResolvedValue("Some HN Story");
+
+    const store = createMemoryActivityStore();
+    await recordVisit({ path: "/hn/42991019", title: "Hacker News" }, store);
+    await recordVisit({ path: "/hn/42991019" }, store);
+
+    const events = await store.getTail(2);
+    expect(events.map((event) => event.subject?.label)).toEqual(["Some HN Story", "Some HN Story"]);
+    expect(lookupHnStoryTitleSpy).toHaveBeenCalledWith("42991019");
+    expect(getActivityRow(events[0]!).label).toBe("Some HN Story");
+    expect(getActivityRow(events[0]!).label).not.toBe("a Hacker News story");
+  });
+
+  test("does not look up an HN story when the client already sent a real title", async () => {
+    lookupHnStoryTitleSpy.mockResolvedValue("Ignored lookup title");
+    const store = createMemoryActivityStore();
+    await recordVisit({ path: "/hn/42991019", title: "A story about iOS | Brian Lovin" }, store);
+    const [event] = await store.getTail(1);
+    expect(event?.subject?.label).toBe("A story about iOS");
+    expect(lookupHnStoryTitleSpy).not.toHaveBeenCalled();
+  });
+
+  test("resolveIngestVisitTitle uses the mocked HN helper for a generic title", async () => {
+    lookupHnStoryTitleSpy.mockResolvedValue("Some HN Story");
+    await expect(resolveIngestVisitTitle("/hn/42991019", "Hacker News")).resolves.toBe(
+      "Some HN Story",
+    );
+    await expect(resolveIngestVisitTitle("/hn/42991019", "")).resolves.toBe("Some HN Story");
+    await expect(resolveIngestVisitTitle("/hn/42991019", "42991019")).resolves.toBe(
+      "Some HN Story",
+    );
   });
 
   test("strips a trailing short id from the visit title at ingest", async () => {
@@ -777,6 +849,57 @@ describe("HMAC download ingest", () => {
       label: "Shiori",
     });
   });
+
+  test("accepts HMAC Shiori link_clicked without subject, url, or meta", async () => {
+    const store = createMemoryActivityStore();
+    const result = await ingestActivityEvent(
+      {
+        source: "shiori",
+        type: "link_clicked",
+        idempotency_key: "hmac:shiori:link_clicked:1",
+      },
+      store,
+    );
+
+    expect(result.ok && !result.duplicate).toBe(true);
+    const [event] = await store.getTail(1);
+    expect(event?.source).toBe("shiori");
+    expect(event?.type).toBe("link_clicked");
+    expect(event?.speed).toBe("event");
+    expect(event?.summary).toBe("Someone clicked a link on Shiori");
+    expect(event?.subject).toBeUndefined();
+    expect(event?.meta).toBeUndefined();
+    expect(event?.actor).toBeUndefined();
+    expect(JSON.stringify(event)).not.toMatch(/https?:\/\//);
+    expect(getActivityRow(event!)).toEqual({
+      summary: "Someone clicked a link",
+      href: "https://www.shiori.sh",
+      label: "Shiori",
+    });
+  });
+
+  test("does not leak a subject URL from a Shiori link_clicked row", async () => {
+    const store = createMemoryActivityStore();
+    const result = await ingestActivityEvent(
+      {
+        source: "shiori",
+        type: "link_clicked",
+        summary: "Someone clicked a link on Shiori",
+        idempotency_key: "hmac:shiori:link_clicked:url",
+        subject: { kind: "link", label: "A saved page", href: "https://example.com/secret" },
+      },
+      store,
+    );
+
+    expect(result.ok && !result.duplicate).toBe(true);
+    const row = getActivityRow((await store.getTail(1))[0]!);
+    expect(row).toEqual({
+      summary: "Someone clicked a link",
+      href: "https://www.shiori.sh",
+      label: "Shiori",
+    });
+    expect(JSON.stringify(row)).not.toContain("example.com");
+  });
 });
 
 describe("activity source helpers", () => {
@@ -888,10 +1011,10 @@ describe("recordLike", () => {
     );
     expect("ok" in result && result.ok).toBe(true);
     const [event] = await store.getTail(1);
-    expect(event?.summary).toBe("Someone liked Secret for iOS");
-    expect(event?.subject?.label).toBe("Secret for iOS");
+    expect(event?.summary).toBe("Someone liked Secret for iOS App Dissection");
+    expect(event?.subject?.label).toBe("Secret for iOS App Dissection");
     expect(getActivityRow(event!).summary).toBe("Someone liked");
-    expect(getActivityRow(event!).label).toBe("Secret for iOS");
+    expect(getActivityRow(event!).label).toBe("Secret for iOS App Dissection");
   });
 
   test("does not store a like title that looks like PII", async () => {
@@ -1079,31 +1202,88 @@ describe("inferTitleFromPath", () => {
     }
     expect(inferTitleFromPath("/mystery/12345")).toBe("mystery");
   });
+
+  test("parses absolute http(s) URLs instead of treating the scheme as a path", () => {
+    const title = inferTitleFromPath("https://github.com/foo/bar/pull/1");
+    expect(title).not.toBe("https:");
+    expect(title).not.toMatch(/^https?:/i);
+    expect(inferTitleFromPath("https://brianlovin.com/writing/foo")).toBe("foo");
+    expect(inferTitleFromPath("https://brianlovin.com/writing")).toBe("Writing");
+  });
+});
+
+describe("pathnameFromHref", () => {
+  test("returns the URL pathname for absolute http(s) hrefs", () => {
+    expect(pathnameFromHref("https://brianlovin.com/writing/foo")).toBe("/writing/foo");
+    expect(pathnameFromHref("https://github.com/foo/bar/pull/1")).toBe("/foo/bar/pull/1");
+    expect(pathnameFromHref("/writing/foo")).toBe("/writing/foo");
+  });
+});
+
+describe("activitySectionFromPath", () => {
+  test("maps site paths to the first segment", () => {
+    expect(activitySectionFromPath("/")).toBe("home");
+    expect(activitySectionFromPath("/ama/2f2c711c-0ceb-810d-899d-e5feb99e70f4")).toBe("ama");
+    expect(activitySectionFromPath(undefined)).toBe("");
+  });
+
+  test("uses the URL pathname for absolute GitHub hrefs, never https:", () => {
+    const section = activitySectionFromPath("https://github.com/foo/bar/pull/1");
+    expect(["foo", "bar", "pull"]).toContain(section);
+    expect(section).not.toBe("https:");
+  });
+
+  test("uses the URL pathname for absolute briOS visit hrefs, never https:", () => {
+    expect(activitySectionFromPath("https://brianlovin.com/writing/foo")).toBe("writing");
+    expect(activitySectionFromPath("https://brianlovin.com/writing/foo")).not.toBe("https:");
+  });
 });
 
 describe("sanitizeVisitTitle / formatActivityTitle", () => {
   test("client title wins over the slug and strips Brian Lovin suffixes", () => {
     expect(
       sanitizeVisitTitle("Secret for iOS | Brian Lovin", "/app-dissection/secret-for-ios"),
-    ).toBe("Secret for iOS");
+    ).toBe("Secret for iOS App Dissection");
     expect(
       sanitizeVisitTitle("Secret for iOS – Brian Lovin", "/app-dissection/secret-for-ios"),
-    ).toBe("Secret for iOS");
+    ).toBe("Secret for iOS App Dissection");
     expect(
       sanitizeVisitTitle("Secret for iOS — Brian Lovin", "/app-dissection/secret-for-ios"),
-    ).toBe("Secret for iOS");
+    ).toBe("Secret for iOS App Dissection");
     expect(
       sanitizeVisitTitle("Secret for iOS - App Dissection", "/app-dissection/secret-for-ios"),
-    ).toBe("Secret for iOS");
+    ).toBe("Secret for iOS App Dissection");
   });
 
   test("falls back to the path title when the client title is missing or PII", () => {
-    expect(sanitizeVisitTitle(undefined, "/app-dissection/secret-for-ios")).toBe("Secret for iOS");
-    expect(sanitizeVisitTitle("   ", "/app-dissection/secret-for-ios")).toBe("Secret for iOS");
-    expect(sanitizeVisitTitle("a@b.com", "/app-dissection/secret-for-ios")).toBe("Secret for iOS");
+    expect(sanitizeVisitTitle(undefined, "/app-dissection/secret-for-ios")).toBe(
+      "Secret for iOS App Dissection",
+    );
+    expect(sanitizeVisitTitle("   ", "/app-dissection/secret-for-ios")).toBe(
+      "Secret for iOS App Dissection",
+    );
+    expect(sanitizeVisitTitle("a@b.com", "/app-dissection/secret-for-ios")).toBe(
+      "Secret for iOS App Dissection",
+    );
     expect(sanitizeVisitTitle("Brian Lovin", "/")).toBe("Home");
     expect(sanitizeVisitTitle("Home | Brian Lovin", "/")).toBe("Home");
     expect(shouldRecordVisit("/activity")).toBe(false);
+  });
+
+  test("puts App Dissection back on child routes after stripping the site suffix", () => {
+    expect(
+      sanitizeVisitTitle(
+        "Instagram – App Dissection | Brian Lovin",
+        "/app-dissection/instagram-ios",
+      ),
+    ).toBe("Instagram App Dissection");
+    expect(sanitizeVisitTitle(undefined, "/app-dissection/instagram-ios")).toBe(
+      "Instagram iOS App Dissection",
+    );
+    expect(sanitizeVisitTitle("App Dissection", "/app-dissection")).toBe("App Dissection");
+    expect(sanitizeVisitTitle("Hacker News", "/hn")).toBe("Hacker News");
+    expect(sanitizeVisitTitle("Hacker News", "/hn/42991019")).toBe("a Hacker News story");
+    expect(sanitizeVisitTitle("Some HN Story", "/hn/42991019")).toBe("Some HN Story");
   });
 
   test("strips a site suffix from a document title", () => {
@@ -1115,10 +1295,73 @@ describe("sanitizeVisitTitle / formatActivityTitle", () => {
     expect(formatActivityTitle("secret for ios")).toBe("Secret for iOS");
     expect(formatActivityTitle("grok bot first impressions")).toBe("Grok Bot First Impressions");
     expect(formatActivityTitle("Secret for iOS")).toBe("Secret for iOS");
+    expect(formatActivityTitle("https:")).toBe("https:");
+    expect(formatActivityTitle("https:")).not.toBe("Https:");
   });
 });
 
 describe("getActivityRow page titles", () => {
+  test("infers a writing visit title from an absolute briOS href", () => {
+    const stored = getActivityRow({
+      v: 1,
+      id: "abs-writing",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "visit",
+      speed: "signal",
+      summary: "Visit from San Francisco, California, United States",
+      visibility: "public",
+      idempotency_key: "abs-writing",
+      subject: {
+        kind: "writing",
+        label: "Grok Bot First Impressions",
+        href: "https://brianlovin.com/writing/foo",
+      },
+      meta: { path: "https://brianlovin.com/writing/foo", country: "US", city: "San Francisco" },
+    });
+    expect(activitySectionFromPath(stored.href)).toBe("writing");
+    expect(stored.label).toBe("Grok Bot First Impressions");
+    expect(stored.label).not.toBe("Https:");
+    expect(stored.label).not.toBe("https:");
+
+    const inferred = getActivityRow({
+      v: 1,
+      id: "abs-writing-page",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "visit",
+      speed: "signal",
+      summary: "Visit from San Francisco, California, United States",
+      visibility: "public",
+      idempotency_key: "abs-writing-page",
+      subject: {
+        kind: "writing",
+        label: "a page",
+        href: "https://brianlovin.com/writing/foo",
+      },
+    });
+    expect(inferred.label).toBe("Foo");
+    expect(inferred.label).not.toMatch(/^https?:/i);
+
+    const sectionRoot = getActivityRow({
+      v: 1,
+      id: "abs-writing-root",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "visit",
+      speed: "signal",
+      summary: "Visit from San Francisco, California, United States",
+      visibility: "public",
+      idempotency_key: "abs-writing-root",
+      subject: { kind: "writing", label: "https:", href: "https://brianlovin.com/writing" },
+    });
+    expect(sectionRoot.label).toBe("Writing");
+    expect(sectionRoot.label).not.toBe("Https:");
+  });
+
   test("rewrites a stored a page label when href is home", () => {
     const row = getActivityRow({
       v: 1,
@@ -1178,8 +1421,98 @@ describe("getActivityRow page titles", () => {
         href: "/app-dissection/secret-for-ios",
       },
     });
-    expect(row.label).toBe("Secret for iOS");
+    expect(row.label).toBe("Secret for iOS App Dissection");
     expect(row.href).toBe("/app-dissection/secret-for-ios");
+  });
+
+  test("labels an HN index visit as Hacker News, not a story", () => {
+    for (const href of ["/hn", "/hn/"]) {
+      const row = getActivityRow({
+        v: 1,
+        id: "hn-index",
+        ts: "2026-08-16T00:00:00.000Z",
+        received_at: "2026-08-16T00:00:00.000Z",
+        source: "brios",
+        type: "visit",
+        speed: "signal",
+        summary: "Visit from San Francisco, California, United States",
+        visibility: "public",
+        idempotency_key: "hn-index",
+        subject: { kind: "page", label: "a page", href },
+        meta: { path: href, country: "US", city: "San Francisco" },
+      });
+      expect(row.label).toBe("Hacker News");
+      expect(row.href).toBe(href);
+      expect(row.label).not.toBe("a Hacker News story");
+    }
+  });
+
+  test("labels an app dissection post as the post name plus App Dissection", () => {
+    const fromSlug = getActivityRow(
+      visitRowEvent({
+        kind: "app_dissection",
+        label: "a page",
+        href: "/app-dissection/instagram-ios",
+      }),
+    );
+    expect(fromSlug.label).toBe("Instagram iOS App Dissection");
+    expect(fromSlug.href).toBe("/app-dissection/instagram-ios");
+    expect(fromSlug.label).not.toBe("Instagram");
+
+    const fromStored = getActivityRow(
+      visitRowEvent({
+        kind: "app_dissection",
+        label: "Instagram",
+        href: "/app-dissection/instagram-ios",
+      }),
+    );
+    expect(fromStored.label).toBe("Instagram App Dissection");
+    expect(fromStored.href).toBe("/app-dissection/instagram-ios");
+    expect(fromStored.label).not.toBe("Instagram");
+
+    const alreadySuffixed = getActivityRow(
+      visitRowEvent({
+        kind: "app_dissection",
+        label: "Instagram iOS App Dissection",
+        href: "/app-dissection/instagram-ios",
+      }),
+    );
+    expect(alreadySuffixed.label).toBe("Instagram iOS App Dissection");
+
+    const index = getActivityRow(
+      visitRowEvent({ kind: "app_dissection", label: "a page", href: "/app-dissection" }),
+    );
+    expect(index.label).toBe("App Dissection");
+    expect(index.href).toBe("/app-dissection");
+  });
+
+  test("uses a stored HN story title instead of the generic phrase", () => {
+    const row = getActivityRow(
+      visitRowEvent({
+        kind: "page",
+        label: "Some HN Story",
+        href: "/hn/42991019",
+      }),
+    );
+    expect(row.label).toBe("Some HN Story");
+    expect(row.href).toBe("/hn/42991019");
+    expect(row.label).not.toBe("a Hacker News story");
+    expect(row.label).not.toBe("42991019");
+  });
+
+  test("falls back to a Hacker News story when the stored title is generic", () => {
+    for (const label of ["Hacker News", "a Hacker News story", "a page", ""]) {
+      const row = getActivityRow(
+        visitRowEvent({
+          kind: "page",
+          label,
+          href: "/hn/42991019",
+        }),
+      );
+      expect(row.label).toBe("a Hacker News story");
+      expect(row.href).toBe("/hn/42991019");
+      expect(row.label).not.toBe("42991019");
+    }
   });
 
   test("rewrites a stored HN story id to a Hacker News story", () => {
@@ -1323,6 +1656,7 @@ describe("getActivityRow source metadata", () => {
         rowEvent({
           type: "link_clicked",
           summary: "Someone clicked a link on Shiori",
+          subject: { kind: "link", label: "A saved page", href: "https://example.com/secret" },
         }),
       ),
     ).toEqual({
@@ -1467,6 +1801,148 @@ describe("getActivityRow source metadata", () => {
       href: "/writing/grok-bot-first-impressions",
       label: "Grok Bot first impressions",
     });
+  });
+});
+
+describe("getActivityRow private pull requests", () => {
+  function prEvent(overrides: Partial<ActivityEvent> = {}): ActivityEvent {
+    return {
+      v: 1,
+      id: "pr",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "github",
+      type: "pr_opened",
+      speed: "event",
+      summary: "Opened a pull request",
+      visibility: "public",
+      idempotency_key: "pr",
+      ...overrides,
+    };
+  }
+
+  test("rewrites a stored private opened PR to a single phrase", () => {
+    const row = getActivityRow(
+      prEvent({
+        subject: { kind: "pull_request", label: "a pull request" },
+        meta: { private: true, number: 1 },
+      }),
+    );
+    expect(row).toEqual({ summary: "Opened a pull request in a private repo" });
+    expect(JSON.stringify(row)).not.toContain("A Pull Request");
+  });
+
+  test("rewrites a stored private merged PR to a single phrase", () => {
+    const row = getActivityRow(
+      prEvent({
+        type: "pr_merged",
+        summary: "Merged a pull request",
+        subject: { kind: "pull_request", label: "a pull request" },
+        meta: { private: true, number: 2, additions: 12, deletions: 3 },
+      }),
+    );
+    expect(row).toEqual({ summary: "Merged a pull request in a private repo" });
+    expect(JSON.stringify(row)).not.toContain("A Pull Request");
+  });
+
+  test("rewrites a new private PR that has no subject", () => {
+    const row = getActivityRow(
+      prEvent({
+        summary: "Opened a pull request in a private repo",
+        meta: { private: true, number: 1 },
+      }),
+    );
+    expect(row).toEqual({ summary: "Opened a pull request in a private repo" });
+  });
+
+  test("rewrites a dummy subject even without meta.private", () => {
+    const row = getActivityRow(
+      prEvent({
+        subject: { kind: "pull_request", label: "a pull request" },
+      }),
+    );
+    expect(row).toEqual({ summary: "Opened a pull request in a private repo" });
+  });
+
+  test("keeps a public PR repo name and real title", () => {
+    const row = getActivityRow(
+      prEvent({
+        summary: "Opened a pull request on briOS",
+        subject: {
+          kind: "pull_request",
+          label: "Add activity feed",
+          href: "https://github.com/brianlovin/briOS/pull/42",
+        },
+        meta: {
+          repo: "briOS",
+          title: "Add activity feed",
+          number: 42,
+          href: "https://github.com/brianlovin/briOS/pull/42",
+        },
+      }),
+    );
+    expect(row).toEqual({
+      summary: "Opened a pull request on briOS",
+      href: "https://github.com/brianlovin/briOS/pull/42",
+      label: "Add activity feed",
+    });
+  });
+
+  test("does not invent a site-path title from a GitHub html_url", () => {
+    const row = getActivityRow(
+      prEvent({
+        summary: "Merged a pull request on designdetails",
+        subject: {
+          kind: "pull_request",
+          label: "Fix player skip",
+          href: "https://github.com/designdetails/designdetails/pull/719",
+        },
+        meta: {
+          repo: "designdetails",
+          title: "Fix player skip",
+          number: 719,
+          href: "https://github.com/designdetails/designdetails/pull/719",
+        },
+      }),
+    );
+    expect(row.label).toBe("Fix player skip");
+    expect(row.href).toBe("https://github.com/designdetails/designdetails/pull/719");
+    expect(row.label).not.toBe("https:");
+    expect(JSON.stringify(row)).not.toContain("/https:");
+  });
+
+  test("falls back to repo#number when the public PR title is missing", () => {
+    const row = getActivityRow(
+      prEvent({
+        summary: "Opened a pull request on briOS",
+        subject: {
+          kind: "pull_request",
+          label: "a pull request",
+          href: "https://github.com/brianlovin/briOS/pull/42",
+        },
+        meta: { repo: "briOS", number: 42, href: "https://github.com/brianlovin/briOS/pull/42" },
+      }),
+    );
+    expect(row).toEqual({
+      summary: "Opened a pull request on briOS",
+      href: "https://github.com/brianlovin/briOS/pull/42",
+      label: "briOS#42",
+    });
+  });
+
+  test("falls back to a pull request when title and repo number are missing", () => {
+    const row = getActivityRow(
+      prEvent({
+        summary: "Opened a pull request on briOS",
+        subject: {
+          kind: "pull_request",
+          label: "",
+          href: "https://github.com/brianlovin/briOS/pull/42",
+        },
+      }),
+    );
+    expect(row.label).toBe("a pull request");
+    expect(row.href).toBe("https://github.com/brianlovin/briOS/pull/42");
   });
 });
 
@@ -1661,6 +2137,80 @@ describe("rollupActivityEvents", () => {
     expect(activityStackReactKey(next[0]!)).toBe(activityStackReactKey(first[0]!));
   });
 
+  test("stacks two SF visits to the HN index as Hacker News", () => {
+    const sfHn = (id: string, href = "/hn"): ActivityEvent =>
+      feedEvent({
+        id,
+        type: "visit",
+        summary: "Visit from San Francisco, California, United States",
+        subject: { kind: "page", label: "a page", href },
+        meta: {
+          country: "US",
+          country_name: "United States",
+          region: "CA",
+          region_name: "California",
+          city: "San Francisco",
+          path: href,
+        },
+      });
+
+    const stacks = rollupActivityEvents([sfHn("hn-1"), sfHn("hn-2")]);
+    expect(stacks).toHaveLength(1);
+    expect(stacks[0]?.count).toBe(2);
+    expect(stacks[0]?.sectionLabel).toBe("Hacker News");
+    expect(stacks[0]?.sectionLabel).not.toBe("a Hacker News story");
+    expect(stacks[0]?.href).toBe("/hn");
+    expect(getActivityRow(stacks[0]!.latest).label).toBe("Hacker News");
+
+    const mixed = rollupActivityEvents([sfHn("hn-index", "/hn"), sfHn("hn-story", "/hn/123")]);
+    expect(mixed).toHaveLength(1);
+    expect(mixed[0]?.count).toBe(2);
+    expect(mixed[0]?.sectionLabel).toBe("Hacker News");
+    expect(mixed[0]?.href).toBe("/hn");
+    expect(getActivityRow(sfHn("hn-story", "/hn/123")).label).toBe("a Hacker News story");
+  });
+
+  test("does not show Https: when stacking SF visits with different absolute URLs", () => {
+    const sfVisit = (id: string, href: string, label: string): ActivityEvent =>
+      feedEvent({
+        id,
+        type: "visit",
+        summary: "Visit from San Francisco, California, United States",
+        subject: { kind: "page", label, href },
+        meta: {
+          country: "US",
+          country_name: "United States",
+          region: "CA",
+          region_name: "California",
+          city: "San Francisco",
+          path: href,
+        },
+      });
+
+    const sameSection = rollupActivityEvents([
+      sfVisit("sf-1", "https://brianlovin.com/writing/foo", "Foo"),
+      sfVisit("sf-2", "https://brianlovin.com/writing/bar", "Bar"),
+    ]);
+    expect(sameSection).toHaveLength(1);
+    expect(sameSection[0]?.key).toBe("visit:san francisco, california, united states:writing");
+    expect(sameSection[0]?.sectionLabel).toBe("Writing");
+    expect(sameSection[0]?.sectionLabel).not.toBe("Https:");
+    expect(sameSection[0]?.sectionLabel).not.toBe("https:");
+    expect(sameSection[0]?.href).toBe("https://brianlovin.com/writing/foo");
+    expect(sameSection[0]?.href).not.toBe("/https:");
+
+    const mixedSection = rollupActivityEvents([
+      sfVisit("sf-w", "https://brianlovin.com/writing/foo", "Foo"),
+      sfVisit("sf-t", "https://brianlovin.com/til/cache-headers", "cache headers"),
+    ]);
+    expect(mixedSection).toHaveLength(2);
+    for (const stack of mixedSection) {
+      expect(stack.sectionLabel).not.toBe("Https:");
+      expect(stack.sectionLabel).not.toBe("https:");
+      expect(stack.href).not.toBe("/https:");
+    }
+  });
+
   test("does not stack an AMA visit with a writing visit from the same geo", () => {
     const stacks = rollupActivityEvents([
       springLakeVisit("ama-1", "/ama/2f2c711c-0ceb-810d-899d-e5feb99e70f4"),
@@ -1745,6 +2295,29 @@ describe("rollupActivityEvents", () => {
     expect(stacks[1]?.key).toBe("like:/stack");
   });
 
+  test("stacks consecutive Shiori link_clicked events separately from saves", () => {
+    const click = (id: string): ActivityEvent =>
+      feedEvent({
+        id,
+        source: "shiori",
+        type: "link_clicked",
+        summary: "Someone clicked a link on Shiori",
+      });
+    const save = feedEvent({
+      id: "save-1",
+      source: "shiori",
+      type: "link_saved",
+      summary: "Someone saved a link on Shiori",
+    });
+
+    const stacks = rollupActivityEvents([click("c1"), click("c2"), save]);
+    expect(stacks).toHaveLength(2);
+    expect(stacks[0]?.count).toBe(2);
+    expect(stacks[0]?.key).toBe("shiori:link_clicked");
+    expect(stacks[1]?.count).toBe(1);
+    expect(stacks[1]?.key).toBe("shiori:link_saved");
+  });
+
   test("does not stack likes for different apps", () => {
     const stacks = rollupActivityEvents([
       feedEvent({
@@ -1826,6 +2399,106 @@ describe("rollupActivityEvents", () => {
     expect(next.delays.has("old-1")).toBe(false);
     expect(next.delays.has("old-2")).toBe(false);
     expect(next.seen).toEqual(new Set(["new-1", "old-1", "old-2"]));
+  });
+
+  test("keeps two public PR merges on the same repo as separate rows", () => {
+    const merge = (id: string, number: number, title: string): ActivityEvent =>
+      feedEvent({
+        id,
+        source: "github",
+        type: "pr_merged",
+        summary: "Merged a pull request on designdetails",
+        subject: {
+          kind: "pull_request",
+          label: title,
+          href: `https://github.com/designdetails/designdetails/pull/${number}`,
+        },
+        meta: {
+          repo: "designdetails",
+          title,
+          number,
+          href: `https://github.com/designdetails/designdetails/pull/${number}`,
+          additions: 13,
+          deletions: 2,
+        },
+      });
+
+    const first = merge("pr-719", 719, "Fix player skip");
+    const second = merge("pr-720", 720, "Tweak chapter marks");
+    const stacks = rollupActivityEvents([first, second]);
+
+    expect(stacks).toHaveLength(2);
+    expect(activityRollupKey(first)).not.toBe(activityRollupKey(second));
+    expect(stacks[0]?.count).toBe(1);
+    expect(stacks[1]?.count).toBe(1);
+    expect(stacks[0]?.href).toBe("https://github.com/designdetails/designdetails/pull/719");
+    expect(stacks[1]?.href).toBe("https://github.com/designdetails/designdetails/pull/720");
+    expect(stacks[0]?.sectionLabel).toBe("Fix player skip");
+    expect(stacks[1]?.sectionLabel).toBe("Tweak chapter marks");
+    expect(stacks[0]?.href).not.toBe("/https:");
+    expect(stacks[1]?.href).not.toBe("/https:");
+    expect(stacks[0]?.sectionLabel).not.toBe("https:");
+    expect(stacks[1]?.sectionLabel).not.toBe("https:");
+
+    const rows = stacks.map((stack) => getActivityRow(stack.latest));
+    expect(rows[0]).toEqual({
+      summary: "Merged a pull request on designdetails",
+      href: "https://github.com/designdetails/designdetails/pull/719",
+      label: "Fix player skip",
+    });
+    expect(rows[1]).toEqual({
+      summary: "Merged a pull request on designdetails",
+      href: "https://github.com/designdetails/designdetails/pull/720",
+      label: "Tweak chapter marks",
+    });
+  });
+
+  test("still stacks the same public PR when it appears twice", () => {
+    const event = (id: string): ActivityEvent =>
+      feedEvent({
+        id,
+        source: "github",
+        type: "pr_merged",
+        summary: "Merged a pull request on designdetails",
+        subject: {
+          kind: "pull_request",
+          label: "Fix player skip",
+          href: "https://github.com/designdetails/designdetails/pull/719",
+        },
+        meta: {
+          repo: "designdetails",
+          title: "Fix player skip",
+          number: 719,
+          href: "https://github.com/designdetails/designdetails/pull/719",
+        },
+      });
+
+    const stacks = rollupActivityEvents([event("pr-719-a"), event("pr-719-b")]);
+    expect(stacks).toHaveLength(1);
+    expect(stacks[0]?.count).toBe(2);
+    expect(stacks[0]?.href).toBe("https://github.com/designdetails/designdetails/pull/719");
+    expect(stacks[0]?.sectionLabel).toBe("Fix player skip");
+  });
+
+  test("uses the latest absolute href when a stacked run has mixed GitHub URLs", () => {
+    const stacked = (id: string, path: string, label: string): ActivityEvent =>
+      feedEvent({
+        id,
+        source: "github",
+        type: "pr_merged",
+        summary: "Merged a pull request on designdetails",
+        subject: { kind: "pull_request", label },
+        meta: { repo: "designdetails", number: 1, path },
+      });
+
+    const stacks = rollupActivityEvents([
+      stacked("pr-new", "https://github.com/designdetails/designdetails/pull/2", "Newer title"),
+      stacked("pr-old", "https://github.com/designdetails/designdetails/pull/1", "Older title"),
+    ]);
+    expect(stacks).toHaveLength(1);
+    expect(stacks[0]?.href).toBe("https://github.com/designdetails/designdetails/pull/2");
+    expect(stacks[0]?.href).not.toBe("/https:");
+    expect(stacks[0]?.sectionLabel).not.toBe("https:");
   });
 
   test("only pulses when the same run's count increments", () => {

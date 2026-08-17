@@ -49,6 +49,27 @@ const ACTIVITY_SOURCE_URLS: Record<string, string> = {
 };
 
 const ABSOLUTE_HTTP_URL_RE = /^https?:\/\//i;
+const PROTOCOL_SEGMENT_RE = /^https?:$/i;
+
+export function isAbsoluteHttpUrl(value: string): boolean {
+  return ABSOLUTE_HTTP_URL_RE.test(value);
+}
+
+/** Pathname for site helpers. Absolute http(s) → `new URL(value).pathname`; relative stays as-is. */
+export function pathnameFromHref(value: string): string {
+  if (isAbsoluteHttpUrl(value)) {
+    try {
+      return new URL(value).pathname;
+    } catch {
+      return value;
+    }
+  }
+  return value;
+}
+
+function isProtocolSegment(value: string): boolean {
+  return PROTOCOL_SEGMENT_RE.test(value.trim());
+}
 
 export function activitySourceLabel(source: string): string {
   return ACTIVITY_SOURCE_LABELS[source] ?? source;
@@ -271,11 +292,97 @@ const KNOWN_PATH_TITLES: Record<string, string> = {
   "/bookmarks": "Bookmarks",
 };
 
+export function isKnownActivitySection(section: string): boolean {
+  if (!section || section === "home") return true;
+  return Object.prototype.hasOwnProperty.call(KNOWN_PATH_TITLES, `/${section}`);
+}
+
 /** Identifier child routes → a phrase, never the raw id. */
 const ID_ROUTE_PHRASES: { prefix: string; label: string }[] = [
   { prefix: "/hn/", label: "a Hacker News story" },
   { prefix: "/ama/", label: "an AMA question" },
 ];
+
+/** Child routes that should keep their section name after `stripSiteTitleSuffix`. */
+const CHILD_ROUTE_SECTION_SUFFIXES: { prefix: string; suffix: string }[] = [
+  { prefix: "/app-dissection/", suffix: "App Dissection" },
+  { prefix: "/design-details/", suffix: "Design Details" },
+];
+
+const GENERIC_HN_STORY_TITLES = new Set([
+  "a page",
+  "hacker news",
+  "a hacker news story",
+  "hacker news post",
+  "hacker news post not found",
+]);
+
+const HN_STORY_PATH_RE = /^\/hn\/(\d+)$/;
+
+/** Story id from `/hn/{id}` (and absolute briOS URLs). Index `/hn` is undefined. */
+export function hnStoryIdFromPath(pathname: string): string | undefined {
+  const path = normalizeActivityPath(pathnameFromHref(pathname));
+  const match = HN_STORY_PATH_RE.exec(path);
+  return match?.[1];
+}
+
+/** Missing, generic, or identifier titles that should not win over a real HN story name. */
+export function isGenericHnStoryTitle(title: string | undefined, storyId?: string): boolean {
+  const trimmed = title?.trim();
+  if (!trimmed) return true;
+  if (storyId && trimmed === storyId) return true;
+  if (looksLikeIdentifier(trimmed)) return true;
+  return GENERIC_HN_STORY_TITLES.has(trimmed.toLowerCase());
+}
+
+function childRouteSectionTitle(pathname: string): string | undefined {
+  const path = normalizeActivityPath(pathnameFromHref(pathname));
+  const segments = path.split("/").filter(Boolean);
+  if (segments.length < 2) return undefined;
+  return KNOWN_PATH_TITLES[`/${segments[0]}`];
+}
+
+/** Section index title used on a child route (e.g. "App Dissection" on `/app-dissection/foo`). */
+function isGenericSectionTitle(title: string, pathname: string): boolean {
+  const section = childRouteSectionTitle(pathname);
+  if (!section) return false;
+  return title.trim().toLowerCase() === section.toLowerCase();
+}
+
+/**
+ * Stored/client titles that are not a real page name: empty, "a page", raw ids,
+ * a section index title on a child route, or a generic HN phrase.
+ */
+export function isUnusableActivityTitle(title: string | undefined, pathname: string): boolean {
+  const stored = title?.trim();
+  if (!stored) return true;
+  if (stored === "a page") return true;
+  if (looksLikeIdentifier(stored)) return true;
+  if (isProtocolSegment(stored)) return true;
+  if (isAbsoluteHttpUrl(stored)) return true;
+  if (isGenericHnStoryTitle(stored, hnStoryIdFromPath(pathname))) return true;
+  if (isGenericSectionTitle(stored, pathname)) return true;
+  return false;
+}
+
+/** `{Post name} App Dissection` — format the name first, then append so title-case still runs. */
+export function appendKnownSectionSuffix(label: string, pathname: string): string {
+  const path = normalizeActivityPath(pathnameFromHref(pathname));
+  const trimmed = label.trim();
+  if (!trimmed) return trimmed;
+
+  for (const { prefix, suffix } of CHILD_ROUTE_SECTION_SUFFIXES) {
+    if (!path.startsWith(prefix)) continue;
+    if (trimmed.toLowerCase() === suffix.toLowerCase()) return suffix;
+    if (trimmed.toLowerCase().endsWith(` ${suffix.toLowerCase()}`)) return trimmed;
+    return `${trimmed} ${suffix}`;
+  }
+  return trimmed;
+}
+
+function formatSubjectLabel(label: string, pathname: string): string {
+  return appendKnownSectionSuffix(formatActivityTitle(label), pathname);
+}
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const UUID_COMPACT_RE = /^[0-9a-f]{32}$/i;
@@ -357,23 +464,23 @@ function titleFromLastSegment(segment: string): string {
 /** First path segment for visit rollups (`/` → `home`). */
 export function activitySectionFromPath(pathname: string | undefined): string {
   if (!pathname) return "";
-  const path = normalizeActivityPath(pathname);
+  const path = normalizeActivityPath(pathnameFromHref(pathname));
   if (path === "/") return "home";
-  return path.split("/").filter(Boolean)[0] ?? "";
+  const section = path.split("/").filter(Boolean)[0] ?? "";
+  return isProtocolSegment(section) ? "" : section;
 }
 
 /** Smart section phrase for stacked visit subtitles — never a raw id. */
 export function activitySectionPhrase(section: string): string {
-  if (!section || section === "home") return "Home";
+  if (!section || section === "home" || isProtocolSegment(section)) return "Home";
   if (section === "ama") return "an AMA question";
-  if (section === "hn") return "a Hacker News story";
   const known = KNOWN_PATH_TITLES[`/${section}`];
   if (known) return known;
   return inferTitleFromPath(`/${section}`);
 }
 
 export function inferTitleFromPath(pathname: string): string {
-  const path = normalizeActivityPath(pathname);
+  const path = normalizeActivityPath(pathnameFromHref(pathname));
   const known = KNOWN_PATH_TITLES[path];
   if (known) return known;
 
@@ -429,14 +536,15 @@ export function stripSiteTitleSuffix(title: string): string {
  * slug-like leftovers. Falls back to the smart route map — never invents a name.
  */
 export function sanitizeActivityTitle(title: string | undefined, path: string): string {
-  const fallback = formatActivityTitle(inferTitleFromPath(path));
+  const fallback = formatSubjectLabel(inferTitleFromPath(path), path);
   const trimmed = title?.trim();
   if (!trimmed) return fallback;
 
   const stripped = stripSiteTitleSuffix(trimmed);
   if (!stripped || /^brian lovin$/i.test(stripped)) return fallback;
   if (findForbiddenPii(stripped)) return fallback;
-  return formatActivityTitle(stripped);
+  if (isUnusableActivityTitle(stripped, path)) return fallback;
+  return formatSubjectLabel(stripped, path);
 }
 
 export const sanitizeVisitTitle = sanitizeActivityTitle;
@@ -450,6 +558,7 @@ export function looksLikeDehyphenatedSlug(label: string): boolean {
 
 /** Title-case a slug-like label. Leaves already-capped titles alone. */
 export function formatActivityTitle(label: string): string {
+  if (isProtocolSegment(label)) return label;
   if (!looksLikeDehyphenatedSlug(label)) return label;
 
   return label
@@ -498,17 +607,23 @@ function displaySubjectLabel(
 ): string | undefined {
   if (href) {
     const inferred = inferTitleFromPath(href);
-    if (!label || label === "a page" || looksLikeIdentifier(label)) {
-      return formatActivityTitle(inferred);
+    const stored = label?.trim();
+    if (!stored || isUnusableActivityTitle(stored, href)) {
+      return isProtocolSegment(inferred) ? undefined : formatSubjectLabel(inferred, href);
     }
 
-    const path = normalizeActivityPath(href);
+    const path = normalizeActivityPath(pathnameFromHref(href));
     // List-page hrefs like `/stack` must not replace a specific item name ("Cursor").
-    if (!options?.preferStored && KNOWN_PATH_TITLES[path]) return KNOWN_PATH_TITLES[path];
+    // Absolute URLs keep the stored title; infer from pathname only when stored is unusable.
+    if (!options?.preferStored && !isAbsoluteHttpUrl(href) && KNOWN_PATH_TITLES[path]) {
+      return KNOWN_PATH_TITLES[path];
+    }
 
-    const cleaned = stripTrailingShortIdToken(label);
-    if (looksLikeIdentifier(cleaned)) return formatActivityTitle(inferred);
-    return formatActivityTitle(cleaned || inferred);
+    const cleaned = stripTrailingShortIdToken(stored);
+    if (isUnusableActivityTitle(cleaned, href)) {
+      return isProtocolSegment(inferred) ? undefined : formatSubjectLabel(inferred, href);
+    }
+    return formatSubjectLabel(cleaned || inferred, href);
   }
 
   if (!label) return undefined;
@@ -641,6 +756,41 @@ export function caffeineDrinkFromEvent(event: ActivityEvent): string {
   return "";
 }
 
+const PRIVATE_PULL_REQUEST_DUMMY_LABEL = "a pull request";
+
+export function privatePullRequestSummary(type: "pr_opened" | "pr_merged"): string {
+  return type === "pr_opened"
+    ? "Opened a pull request in a private repo"
+    : "Merged a pull request in a private repo";
+}
+
+function isPrivatePullRequestEvent(
+  event: ActivityEvent,
+): event is ActivityEvent & { type: "pr_opened" | "pr_merged" } {
+  if (event.type !== "pr_opened" && event.type !== "pr_merged") return false;
+  if (event.meta?.private === true) return true;
+  return event.subject?.label === PRIVATE_PULL_REQUEST_DUMMY_LABEL && !event.subject.href;
+}
+
+function publicPullRequestHref(event: ActivityEvent): string | undefined {
+  if (event.subject?.href) return event.subject.href;
+  const metaHref = event.meta?.href;
+  return typeof metaHref === "string" && metaHref ? metaHref : undefined;
+}
+
+/** Real PR title, or `repo#number` / “a pull request”. Never a site path title. */
+function publicPullRequestLabel(event: ActivityEvent): string {
+  const stored =
+    event.subject?.label?.trim() ||
+    (typeof event.meta?.title === "string" ? event.meta.title.trim() : "");
+  if (stored && stored !== PRIVATE_PULL_REQUEST_DUMMY_LABEL) return stored;
+
+  const repo = typeof event.meta?.repo === "string" ? event.meta.repo.trim() : "";
+  const number = event.meta?.number;
+  if (repo && typeof number === "number") return `${repo}#${number}`;
+  return PRIVATE_PULL_REQUEST_DUMMY_LABEL;
+}
+
 export function getActivityRow(event: ActivityEvent): {
   summary: string;
   flag?: string;
@@ -648,6 +798,19 @@ export function getActivityRow(event: ActivityEvent): {
   href?: string;
   label?: string;
 } {
+  if (isPrivatePullRequestEvent(event)) {
+    return { summary: privatePullRequestSummary(event.type) };
+  }
+
+  if (event.type === "pr_opened" || event.type === "pr_merged") {
+    const href = publicPullRequestHref(event);
+    return {
+      summary: event.summary,
+      ...(href ? { href } : {}),
+      label: publicPullRequestLabel(event),
+    };
+  }
+
   if (event.type === "caffeinated") {
     return attachSourceMetadata(event, {
       summary: event.summary,
@@ -692,6 +855,10 @@ export function getActivityRow(event: ActivityEvent): {
       href: event.subject?.href || (name === "Home" ? "/" : undefined),
       label: name,
     });
+  }
+
+  if (event.source === "shiori" && (event.type === "link_saved" || event.type === "link_clicked")) {
+    return attachSourceMetadata(event, { summary: event.summary });
   }
 
   return attachSourceMetadata(event, {

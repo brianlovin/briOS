@@ -497,7 +497,12 @@ export function ActivityFeed({
               Nothing yet. Likes and visits will show up here.
             </p>
           ) : (
-            <ActivityStackList stacks={stacks} pulseKey={pulseKey} />
+            <>
+              <ActivityStackList stacks={stacks} pulseKey={pulseKey} />
+              <p className="text-tertiary p-32 text-center text-sm">
+                Older activity is dust in the wind...
+              </p>
+            </>
           )}
         </div>
       </div>
