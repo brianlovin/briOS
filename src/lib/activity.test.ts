@@ -2834,7 +2834,7 @@ describe("rollupActivityEvents", () => {
     expect(stacks[0]?.key).toBe(stacks[2]?.key);
   });
 
-  test("staggers only newly inserted keys, newest first, and caps the delay", () => {
+  test("staggers only newly inserted keys, oldest first, and caps the delay", () => {
     expect(activityEnterStaggerDelays(["a", "b"], null).size).toBe(0);
 
     const previous = new Set(["old-1", "old-2"]);
@@ -2843,18 +2843,19 @@ describe("rollupActivityEvents", () => {
       previous,
     );
     expect([...delays.entries()]).toEqual([
-      ["new-1", 0],
-      ["new-2", 0.05],
+      ["new-1", 0.2],
+      ["new-2", 0.15],
       ["new-3", 0.1],
-      ["new-4", 0.15],
-      ["new-5", 0.2],
+      ["new-4", 0.05],
+      ["new-5", 0],
     ]);
 
     const many = Array.from({ length: 16 }, (_, index) => `n-${index}`);
     const capped = activityEnterStaggerDelays(many, new Set());
-    expect(capped.get("n-0")).toBe(0);
-    expect(capped.get("n-8")).toBe(0.4);
-    expect(capped.get("n-15")).toBe(0.4);
+    expect(capped.get("n-15")).toBe(0);
+    expect(capped.get("n-8")).toBe(0.35);
+    expect(capped.get("n-7")).toBe(0.4);
+    expect(capped.get("n-0")).toBe(0.4);
     expect(capped.has("old-1")).toBe(false);
   });
 
@@ -2873,6 +2874,15 @@ describe("rollupActivityEvents", () => {
     expect(next.delays.has("old-1")).toBe(false);
     expect(next.delays.has("old-2")).toBe(false);
     expect(next.seen).toEqual(new Set(["new-1", "old-1", "old-2"]));
+  });
+
+  test("a batch of new stacks staggers oldest incoming first", () => {
+    const previous = new Set(["old-1"]);
+    const next = nextActivityEnterState(["newest", "middle", "oldest-new", "old-1"], previous);
+    expect(next.delays.get("oldest-new")).toBe(0);
+    expect(next.delays.get("middle")).toBe(0.05);
+    expect(next.delays.get("newest")).toBe(0.1);
+    expect(next.delays.has("old-1")).toBe(false);
   });
 
   test("keeps two public PR merges on the same repo as separate rows", () => {
