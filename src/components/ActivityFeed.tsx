@@ -8,6 +8,7 @@ import { Activity } from "@/components/icons/Activity";
 import { Github } from "@/components/icons/Github";
 import { Heart } from "@/components/icons/Heart";
 import { Shiori } from "@/components/icons/Shiori";
+import { StaffDesign } from "@/components/icons/StaffDesign";
 import { World } from "@/components/icons/World";
 import { ListDetailWrapper } from "@/components/ListDetailWrapper";
 import { SlotDigits } from "@/components/SlotDigits";
@@ -31,11 +32,9 @@ import {
   resolveActivitySourceHref,
 } from "@/lib/activity-shared";
 import { useActivity } from "@/lib/hooks/useActivity";
-import { cn } from "@/lib/utils";
 
-function ActivitySourceFavicon({ src, source }: { src: string; source: string }) {
+function ActivitySourceFavicon({ src }: { src: string }) {
   const [failed, setFailed] = useState(false);
-  const size = source === "staff-design" ? 20 : 16;
   if (failed) {
     return <World size={16} className="text-tertiary" aria-hidden />;
   }
@@ -45,9 +44,9 @@ function ActivitySourceFavicon({ src, source }: { src: string; source: string })
     <img
       src={src}
       alt=""
-      width={size}
-      height={size}
-      className={cn("block rounded-[3px]", size === 20 ? "size-5" : "size-4")}
+      width={16}
+      height={16}
+      className="block size-4 rounded-[3px]"
       aria-hidden
       onError={() => setFailed(true)}
     />
@@ -68,6 +67,10 @@ function ActivityRowIcon({ event, icon }: { event: ActivityEvent; icon?: string 
     return <Shiori size={16} />;
   }
 
+  if (event.source === "staff-design") {
+    return <StaffDesign size={20} className="text-primary" aria-hidden />;
+  }
+
   if (event.type === "like") {
     return <Heart size={24} className="fill-current text-red-500" aria-hidden />;
   }
@@ -79,7 +82,7 @@ function ActivityRowIcon({ event, icon }: { event: ActivityEvent; icon?: string 
   if (event.type === "visit" || event.type === "visit_country_first" || event.type === "download") {
     const faviconSrc = activitySourceFaviconSrc(event.source);
     if (faviconSrc) {
-      return <ActivitySourceFavicon src={faviconSrc} source={event.source} />;
+      return <ActivitySourceFavicon src={faviconSrc} />;
     }
     return <World size={16} className="text-tertiary" aria-hidden />;
   }
