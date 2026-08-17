@@ -33,7 +33,7 @@ describe("SlotDigits", () => {
   test("renders one column per digit", () => {
     const markup = renderToStaticMarkup(<SlotDigits value={16} />);
 
-    expect(markup.match(/data-slot-digit/g)?.length).toBe(2);
+    expect(markup.match(/data-slot-digit="/g)?.length).toBe(2);
     expect(markup).toContain("translateY(-1em)");
     expect(markup).toContain("translateY(-6em)");
   });
