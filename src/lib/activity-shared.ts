@@ -250,6 +250,8 @@ export function isActivityPath(pathname: string): boolean {
 }
 
 const CRAWLER_PROBE_PATHS = new Set(["/robots.txt", "/sitemap.xml", "/favicon.ico"]);
+const VISIT_ASSET_EXTENSION_RE =
+  /\.(?:png|svg|ico|jpg|jpeg|webp|gif|txt|xml|json|map|css|js|woff2?)$/i;
 
 function isCrawlerProbePath(pathname: string): boolean {
   if (CRAWLER_PROBE_PATHS.has(pathname)) return true;
@@ -257,12 +259,20 @@ function isCrawlerProbePath(pathname: string): boolean {
   return pathname === "/.well-known" || pathname.startsWith("/.well-known/");
 }
 
+function isDevPath(pathname: string): boolean {
+  return pathname === "/dev" || pathname.startsWith("/dev/");
+}
+
+function isAssetLikePath(pathname: string): boolean {
+  return VISIT_ASSET_EXTENSION_RE.test(pathname);
+}
+
 export function shouldRecordVisit(pathname: string): boolean {
   const path = pathname.split("?")[0] ?? pathname;
   if (!path || path.startsWith("/api/") || path.startsWith("/_next/")) {
     return false;
   }
-  if (isCrawlerProbePath(path)) {
+  if (isDevPath(path) || isAssetLikePath(path) || isCrawlerProbePath(path)) {
     return false;
   }
   return !isActivityPath(path);

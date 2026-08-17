@@ -2358,6 +2358,13 @@ describe("shouldRecordVisit / likeMetaFromRequest", () => {
     expect(shouldRecordVisit("/.well-known/security.txt")).toBe(false);
   });
 
+  test("skips /dev routes and still records real pages", () => {
+    expect(shouldRecordVisit("/dev/staff-icon")).toBe(false);
+    expect(shouldRecordVisit("/dev")).toBe(false);
+    expect(shouldRecordVisit("/favicon.ico")).toBe(false);
+    expect(shouldRecordVisit("/writing/something")).toBe(true);
+  });
+
   test("builds like meta from the referer and skips /activity", () => {
     const writing = likeMetaFromRequest(
       new Request("https://brianlovin.com/api/likes/1", {
