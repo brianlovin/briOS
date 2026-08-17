@@ -2,13 +2,22 @@
 
 import createGlobe from "cobe";
 import { useReducedMotion } from "motion/react";
-import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 
 import type { ActivityEvent } from "@/lib/activity";
 import { activityGlobeMarkers, type ActivityLatLng } from "@/lib/activity-geo";
 import {
   GLOBE_HANG,
   GLOBE_MARKER_ELEVATION,
+  GLOBE_MESH_MIN,
   globeDiameterFromHeight,
   latLngToGlobePose,
   projectGlobeMarker,
@@ -113,7 +122,7 @@ export function ActivityGlobe({
   const orbElsRef = useRef(new Map<string, HTMLDivElement>());
   const isDark = useIsDark();
   const prefersReducedMotion = useReducedMotion() === true;
-  const [layout, setLayout] = useState(() => readPaneSize(null));
+  const [layout, setLayout] = useState({ hasRoom: true, size: GLOBE_MESH_MIN });
   const [grabbing, setGrabbing] = useState(false);
 
   const markers = useMemo(() => activityGlobeMarkers(events), [events]);
@@ -126,21 +135,21 @@ export function ActivityGlobe({
   }, [markers]);
 
   useEffect(() => {
-    themeRef.current = { isDark, prefersReducedMotion };
-  }, [isDark, prefersReducedMotion]);
-
-  useEffect(() => {
     sizeRef.current = layout.size;
   }, [layout.size]);
 
   useEffect(() => {
-    const host = overlayRef.current?.parentElement;
+    themeRef.current = { isDark, prefersReducedMotion };
+  }, [isDark, prefersReducedMotion]);
+
+  useLayoutEffect(() => {
     const update = () => {
-      setLayout(readPaneSize(host ?? overlayRef.current?.parentElement ?? null));
+      setLayout(readPaneSize(overlayRef.current?.parentElement ?? null));
     };
     update();
 
     const observer = new ResizeObserver(update);
+    const host = overlayRef.current?.parentElement;
     if (host) observer.observe(host);
     window.addEventListener("resize", update);
     return () => {
