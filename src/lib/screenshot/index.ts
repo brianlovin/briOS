@@ -8,7 +8,9 @@ const VIEWPORT = {
 };
 
 const TIMEOUT = 30000; // 30 seconds
-const SETTLE_DELAY = 1500; // Wait for animations/transitions to settle
+// Intro/loading animations often run 1–2s after first paint; wait a bit longer so
+// the screenshot is of the settled page rather than a splash or fade-in.
+const SETTLE_DELAY = 2500;
 
 // Check if running in serverless environment
 const IS_SERVERLESS = !!process.env.AWS_LAMBDA_FUNCTION_NAME || !!process.env.VERCEL;
@@ -73,11 +75,8 @@ export async function captureScreenshot(url: string): Promise<Buffer> {
       timeout: TIMEOUT,
     });
 
-    // Wait for any animations/transitions to settle
-    await page.evaluate(
-      (delay) => new Promise((resolve) => setTimeout(resolve, delay)),
-      SETTLE_DELAY,
-    );
+    // Wait in Node (not page JS) so a site that overrides timers still settles
+    await new Promise((resolve) => setTimeout(resolve, SETTLE_DELAY));
 
     // Take screenshot of the viewport (not full page)
     const screenshot = await page.screenshot({
