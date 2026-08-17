@@ -444,7 +444,7 @@ describe("recordVisit", () => {
       title: "Grok Bot First Impressions",
     });
     expect(getActivityRow(event!)).toEqual({
-      summary: "Visit from India",
+      summary: "Someone from India read",
       href: "/writing/grok-bot-first-impressions",
       label: "Grok Bot First Impressions",
     });
@@ -715,7 +715,7 @@ describe("recordVisit", () => {
     expect(event?.summary).toBe(ANONYMOUS_VISIT_SUMMARY);
     expect(event?.meta).toEqual({ path: "/writing", title: "Writing" });
     expect(getActivityRow(event!)).toEqual({
-      summary: ANONYMOUS_VISIT_SUMMARY,
+      summary: "Someone from a mysterious place on earth viewed",
       href: "/writing",
       label: "Writing",
     });
@@ -736,9 +736,9 @@ describe("recordVisit", () => {
       subject: { kind: "home", label: "Home", href: "/" },
     });
     expect(row).toEqual({
-      summary: ANONYMOUS_VISIT_SUMMARY,
+      summary: "Someone from a mysterious place on earth visited",
       href: "/",
-      label: "Home",
+      label: "the site",
     });
   });
 
@@ -756,7 +756,7 @@ describe("recordVisit", () => {
       idempotency_key: "old-located",
       subject: { kind: "writing", label: "Writing", href: "/writing" },
     });
-    expect(row.summary).toBe("Visit from France");
+    expect(row.summary).toBe("Someone from France viewed");
   });
 
   test("keeps the existing summary when the country has no flag", async () => {
@@ -784,7 +784,7 @@ describe("recordVisit", () => {
       meta: { country: "IN" },
     });
     expect(row).toEqual({
-      summary: "Visit from India",
+      summary: "Someone from India visited the site",
     });
     expect(row.summary).not.toMatch(/\p{Regional_Indicator}/u);
   });
@@ -804,7 +804,7 @@ describe("recordVisit", () => {
       meta: { country: "IN" },
     });
     expect(row).toEqual({
-      summary: "First visit from IN",
+      summary: "Someone from India visited the site",
     });
   });
 
@@ -1491,8 +1491,10 @@ describe("getActivityRow page titles", () => {
       subject: { kind: "home", label: "a page", href: "/" },
       meta: { path: "/", title: "a page", country: "FR" },
     });
-    expect(row.label).toBe("Home");
+    expect(row.label).toBe("the site");
     expect(row.href).toBe("/");
+    expect(row.summary).toBe("Someone from France visited");
+    expect(row.summary).not.toContain("Visit from");
   });
 
   test("strips a stored short id from a writing visit without rewriting Redis", () => {
@@ -1742,6 +1744,234 @@ describe("getActivityRow page titles", () => {
   });
 });
 
+describe("getActivityRow visit sentences", () => {
+  test("uses Someone from and read for a San Francisco writing visit", () => {
+    const row = getActivityRow({
+      v: 1,
+      id: "sf-writing",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "visit",
+      speed: "signal",
+      summary: "🇺🇸 Visit from San Francisco, California, United States",
+      visibility: "public",
+      idempotency_key: "sf-writing",
+      subject: {
+        kind: "writing",
+        label: "How I'm Feeling About AI in August 2026",
+        href: "/writing/how-im-feeling-about-ai-in-august-2026-O7e1TFS",
+      },
+      meta: {
+        country: "US",
+        country_name: "United States",
+        region: "CA",
+        region_name: "California",
+        city: "San Francisco",
+        path: "/writing/how-im-feeling-about-ai-in-august-2026-O7e1TFS",
+      },
+    });
+
+    expect(row.summary.startsWith("Someone from")).toBe(true);
+    expect(row.summary).toBe("Someone from San Francisco, California, United States read");
+    expect(row.summary).toContain("read");
+    expect(row.summary).not.toContain("viewed");
+    expect(row.summary).not.toContain("Visit from");
+    expect(row.label).toBe("How I'm Feeling About AI in August 2026");
+  });
+
+  test("views stack and visits home", () => {
+    const stack = getActivityRow(
+      visitRowEvent(
+        { kind: "stack", label: "Stack", href: "/stack" },
+        { meta: { country: "US", path: "/stack" } },
+      ),
+    );
+    expect(stack.summary).toBe("Someone from United States viewed");
+    expect(stack.summary).toContain("viewed");
+    expect(stack.summary).not.toContain("read");
+    expect(stack.summary).not.toContain("Visit from");
+    expect(stack.label).toBe("Stack");
+
+    const home = getActivityRow(
+      visitRowEvent(
+        { kind: "home", label: "Home", href: "/" },
+        { meta: { country: "CN", path: "/", title: "Home" } },
+      ),
+    );
+    expect(home.summary).toBe("Someone from China visited");
+    expect(home.summary).toContain("visited");
+    expect(home.summary).not.toContain("read Home");
+    expect(home.summary).not.toContain("Visit from");
+    expect(home.label).toBe("the site");
+    expect(home.label).not.toBe("Home");
+  });
+
+  test("views the HN index and reads an HN story", () => {
+    const index = getActivityRow(
+      visitRowEvent(
+        { kind: "page", label: "Hacker News", href: "/hn" },
+        { meta: { country: "US", path: "/hn" } },
+      ),
+    );
+    expect(index.summary).toBe("Someone from United States viewed");
+    expect(index.summary).toContain("viewed");
+    expect(index.summary).not.toContain("read");
+    expect(index.summary).not.toContain("Visit from");
+    expect(index.label).toBe("Hacker News");
+
+    const story = getActivityRow(
+      visitRowEvent(
+        { kind: "page", label: "Some HN Story", href: "/hn/42991019" },
+        { meta: { country: "CN", path: "/hn/42991019" } },
+      ),
+    );
+    expect(story.summary).toBe("Someone from China read");
+    expect(story.summary).toContain("read");
+    expect(story.summary).not.toContain("viewed");
+    expect(story.summary).not.toContain("Visit from");
+    expect(story.label).toBe("Some HN Story");
+  });
+
+  test("does not leave Visit from on a recovered Redis visit row", () => {
+    const row = getActivityRow({
+      v: 1,
+      id: "old-visit-copy",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "visit",
+      speed: "signal",
+      summary: "Visit from China",
+      visibility: "public",
+      idempotency_key: "old-visit-copy",
+      subject: {
+        kind: "writing",
+        label: "How I'm Feeling About AI in August 2026",
+        href: "/writing/how-im-feeling-about-ai-in-august-2026-O7e1TFS",
+      },
+    });
+    expect(row.summary).toBe("Someone from China read");
+    expect(row.summary).not.toContain("Visit from");
+    expect(row.label).toBe("How I'm Feeling About AI in August 2026");
+  });
+
+  test("listens to a Design Details episode and visits the show home", () => {
+    const episode = getActivityRow(
+      visitRowEvent(
+        { kind: "page", label: "On Leaving", href: "/episodes/on-leaving" },
+        {
+          source: "design-details",
+          summary: "🇨🇳 Visit from China",
+          meta: { country: "CN", path: "/episodes/on-leaving", title: "On Leaving" },
+        },
+      ),
+    );
+    expect(episode.summary).toBe("Someone from China listened to");
+    expect(episode.summary).not.toContain("visited");
+    expect(episode.summary).not.toContain("listened to Design Details");
+    expect(episode.summary).not.toContain("Visit from");
+    expect(episode.label).toBe("On Leaving");
+    expect(episode.href).toBe("/episodes/on-leaving");
+
+    const home = getActivityRow(
+      visitRowEvent(
+        { kind: "home", label: "Home", href: "/" },
+        {
+          source: "design-details",
+          summary: "🇨🇳 Visit from China",
+          meta: { country: "CN", path: "/", title: "Home" },
+        },
+      ),
+    );
+    expect(home.summary).toBe("Someone from China visited");
+    expect(home.summary).not.toContain("listened to");
+    expect(home.summary).not.toContain("Visit from");
+    expect(home.label).toBe("Design Details");
+    expect(home.href).toBe("https://designdetails.fm");
+  });
+
+  test("listens to a briOS Design Details episode and visits the index", () => {
+    const episode = getActivityRow(
+      visitRowEvent(
+        { kind: "design_details", label: "On Leaving", href: "/design-details/on-leaving" },
+        { meta: { country: "CN", path: "/design-details/on-leaving" } },
+      ),
+    );
+    expect(episode.summary).toBe("Someone from China listened to");
+    expect(episode.label).toBe("On Leaving Design Details");
+    expect(episode.summary).not.toContain("listened to Design Details");
+
+    const index = getActivityRow(
+      visitRowEvent(
+        { kind: "design_details", label: "Design Details", href: "/design-details" },
+        { meta: { country: "CN", path: "/design-details" } },
+      ),
+    );
+    expect(index.summary).toBe("Someone from China visited");
+    expect(index.summary).not.toContain("listened to");
+    expect(index.label).toBe("Design Details");
+  });
+
+  test("reads a staff.design interview and visits the staff.design home", () => {
+    const interview = getActivityRow(
+      visitRowEvent(
+        { kind: "page", label: "Karla Mickens Cole", href: "/karla-mickens-cole" },
+        {
+          source: "staff-design",
+          summary: "🇩🇪 Visit from Germany",
+          meta: { country: "DE", path: "/karla-mickens-cole", title: "Karla Mickens Cole" },
+        },
+      ),
+    );
+    expect(interview.summary).toBe("Someone from Germany read");
+    expect(interview.summary).not.toContain("visited");
+    expect(interview.summary).not.toContain("Visit from");
+    expect(interview.label).toBe("Karla Mickens Cole");
+
+    const home = getActivityRow(
+      visitRowEvent(
+        { kind: "home", label: "Home", href: "/" },
+        {
+          source: "staff-design",
+          summary: "🇺🇸 Visit from United States",
+          meta: { country: "US", path: "/", title: "Home" },
+        },
+      ),
+    );
+    expect(home.summary).toBe("Someone from United States visited");
+    expect(home.summary).not.toContain("read");
+    expect(home.label).toBe("Staff Design");
+    expect(home.href).toBe("https://staff.design");
+  });
+
+  test("views an app dissection post and visits tax-ui home", () => {
+    const teardown = getActivityRow(
+      visitRowEvent(
+        { kind: "app_dissection", label: "Secret for iOS", href: "/app-dissection/secret-for-ios" },
+        { meta: { country: "FR", path: "/app-dissection/secret-for-ios" } },
+      ),
+    );
+    expect(teardown.summary).toBe("Someone from France viewed");
+    expect(teardown.summary).not.toContain("read");
+    expect(teardown.label).toBe("Secret for iOS App Dissection");
+
+    const taxUi = getActivityRow(
+      visitRowEvent(
+        { kind: "home", label: "Home", href: "/" },
+        {
+          source: "tax-ui",
+          summary: "🇺🇸 Visit from United States",
+          meta: { country: "US", path: "/" },
+        },
+      ),
+    );
+    expect(taxUi.summary).toBe("Someone from United States visited");
+    expect(taxUi.label).toBe("Tax UI");
+    expect(taxUi.href).toBe("https://tax-ui.brianlovin.com/");
+  });
+});
+
 describe("getActivityRow source metadata", () => {
   function rowEvent(overrides: Partial<ActivityEvent>): ActivityEvent {
     return {
@@ -1830,7 +2060,7 @@ describe("getActivityRow source metadata", () => {
         }),
       ),
     ).toEqual({
-      summary: "Visit from United States",
+      summary: "Someone from United States visited",
       href: "https://designdetails.fm",
       label: "Design Details",
     });
@@ -1853,7 +2083,7 @@ describe("getActivityRow source metadata", () => {
         }),
       ),
     ).toEqual({
-      summary: "Visit from Germany",
+      summary: "Someone from Germany read",
       href: "/karla-mickens-cole",
       label: "Karla Mickens Cole",
     });
@@ -1911,7 +2141,7 @@ describe("getActivityRow source metadata", () => {
         }),
       ),
     ).toEqual({
-      summary: "Visit from India",
+      summary: "Someone from India read",
       href: "/writing/grok-bot-first-impressions",
       label: "Grok Bot first impressions",
     });

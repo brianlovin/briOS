@@ -4,7 +4,6 @@
  */
 
 import {
-  ANONYMOUS_VISIT_SUMMARY,
   formatVisitSummary,
   geoFromVisitMeta,
   normalizeCountryCode,
@@ -498,7 +497,7 @@ export function activitySectionFromPath(pathname: string | undefined): string {
 
 /** Smart section phrase for stacked visit subtitles — never a raw id. */
 export function activitySectionPhrase(section: string): string {
-  if (!section || section === "home" || isProtocolSegment(section)) return "Home";
+  if (!section || section === "home" || isProtocolSegment(section)) return SITE_VISIT_LABEL;
   if (section === "ama") return "an AMA question";
   const known = KNOWN_PATH_TITLES[`/${section}`];
   if (known) return known;
@@ -833,6 +832,159 @@ function publicPullRequestHref(event: ActivityEvent): string | undefined {
   return typeof metaHref === "string" && metaHref ? metaHref : undefined;
 }
 
+/** Linked fallback when a visit has no real page title. Never “Home”. */
+export const SITE_VISIT_LABEL = "the site";
+
+/** Location words for visits with no usable geo. No flag. */
+export const MYSTERIOUS_PLACE_LOCATION = "a mysterious place on earth";
+
+export type VisitActivityVerb = "read" | "viewed" | "visited" | "listened to";
+
+const VISIT_SENTENCE_VERB_RE = "(?:listened to|read|viewed|visited)";
+
+function isSiteHomePath(source: string, pathname: string | undefined): boolean {
+  if (!pathname?.trim()) return true;
+  const path = normalizeActivityPath(pathnameFromHref(pathname));
+  if (path === "/") return true;
+  return isSourceHomeHref(source, pathname);
+}
+
+/**
+ * Verb from the event source plus the path they opened.
+ * Site homes → visited; briOS listings → viewed; posts/stories/interviews → read;
+ * Design Details episodes → listened to.
+ */
+export function visitVerbFromPath(
+  pathname: string | undefined,
+  source: string = ACTIVITY_SOURCE_BRIOS,
+): VisitActivityVerb {
+  const path = pathname ? normalizeActivityPath(pathnameFromHref(pathname)) : "";
+  const atHome = isSiteHomePath(source, pathname);
+
+  if (source === "design-details") {
+    return atHome ? "visited" : "listened to";
+  }
+  if (source === "staff-design") {
+    return atHome ? "visited" : "read";
+  }
+  if (source === "tax-ui") {
+    return atHome ? "visited" : "viewed";
+  }
+
+  if (path === "/design-details") return "visited";
+  if (path.startsWith("/design-details/")) return "listened to";
+  if (cmsPostRefFromPath(pathname ?? path)) return "read";
+  if (hnStoryIdFromPath(pathname ?? path)) return "read";
+  if (atHome) return "visited";
+  return "viewed";
+}
+
+function siteFallbackVerb(verb: VisitActivityVerb): "visited" | "viewed" {
+  return verb === "visited" ? "visited" : "viewed";
+}
+
+function isUsableVisitTitle(label: string | undefined): boolean {
+  const trimmed = label?.trim();
+  if (!trimmed) return false;
+  if (trimmed === "Home" || trimmed === "a page") return false;
+  if (looksLikeIdentifier(trimmed)) return false;
+  return true;
+}
+
+function locationFromVisitText(text: string): string | undefined {
+  const trimmed = text.trim();
+  if (!trimmed) return undefined;
+  if (/mysterious place on earth/i.test(trimmed)) return MYSTERIOUS_PLACE_LOCATION;
+
+  const visitFrom = /^(?:First\s+)?Visit from\s+(.+)$/i.exec(trimmed);
+  if (visitFrom?.[1]) return visitFrom[1].trim();
+
+  const someoneVisited = /^Someone visited from\s+(.+)$/i.exec(trimmed);
+  if (someoneVisited?.[1]) return someoneVisited[1].trim();
+
+  const someoneFromVerb = new RegExp(
+    `^Someone from\\s+(.+?)\\s+${VISIT_SENTENCE_VERB_RE}(?:\\s+the site)?$`,
+    "i",
+  ).exec(trimmed);
+  if (someoneFromVerb?.[1]) return someoneFromVerb[1].trim();
+
+  const someoneFrom = /^Someone from\s+(.+)$/i.exec(trimmed);
+  if (someoneFrom?.[1]) return someoneFrom[1].trim();
+
+  return undefined;
+}
+
+/** City / region / country, or the mysterious-place words. Display only. */
+export function visitLocationPhrase(event: ActivityEvent): string {
+  const geo = geoFromVisitMeta(event.meta);
+  const hasLocation = Boolean(geo.country || geo.city || geo.countryName);
+  if (hasLocation) {
+    return (
+      locationFromVisitText(visitDisplaySummary(formatVisitSummary(geo))) ??
+      MYSTERIOUS_PLACE_LOCATION
+    );
+  }
+
+  const storedText = visitDisplaySummary(event.summary);
+  if (!storedText || storedText === "Visit") return MYSTERIOUS_PLACE_LOCATION;
+  return locationFromVisitText(storedText) ?? MYSTERIOUS_PLACE_LOCATION;
+}
+
+export function formatVisitRowSummary(
+  location: string,
+  verb: VisitActivityVerb,
+  hasTitle: boolean,
+): string {
+  if (!hasTitle) return `Someone from ${location} ${siteFallbackVerb(verb)} the site`;
+  return `Someone from ${location} ${verb}`;
+}
+
+function visitSubjectPath(event: ActivityEvent): string | undefined {
+  if (event.subject?.href) return event.subject.href;
+  const path = event.meta?.path;
+  return typeof path === "string" && path ? path : undefined;
+}
+
+function visitActivityRow(event: ActivityEvent): {
+  summary: string;
+  flag?: string;
+  icon?: string;
+  href?: string;
+  label?: string;
+} {
+  const path = visitSubjectPath(event);
+  const row = attachSourceMetadata(event, {
+    summary: event.summary,
+    href: path,
+    label: displaySubjectLabel(event.subject?.label, path),
+  });
+  const location = visitLocationPhrase(event);
+  const verb = visitVerbFromPath(row.href ?? path, event.source);
+  if (isUsableVisitTitle(row.label)) {
+    return { ...row, summary: formatVisitRowSummary(location, verb, true) };
+  }
+  if (verb === "listened to") {
+    return {
+      ...row,
+      summary: formatVisitRowSummary(location, verb, true),
+      label: "a Design Details episode",
+    };
+  }
+  const fallbackVerb = siteFallbackVerb(verb);
+  if (row.href) {
+    return {
+      ...row,
+      summary: formatVisitRowSummary(location, fallbackVerb, true),
+      label: SITE_VISIT_LABEL,
+    };
+  }
+  return {
+    ...row,
+    summary: formatVisitRowSummary(location, fallbackVerb, false),
+    label: undefined,
+  };
+}
+
 /** Real PR title, or `repo#number` / “a pull request”. Never a site path title. */
 function publicPullRequestLabel(event: ActivityEvent): string {
   const stored =
@@ -875,28 +1027,8 @@ export function getActivityRow(event: ActivityEvent): {
     });
   }
 
-  if (event.type === "visit") {
-    const geo = geoFromVisitMeta(event.meta);
-    const hasLocation = Boolean(geo.country || geo.city || geo.countryName);
-    const storedText = visitDisplaySummary(event.summary);
-    const summary = hasLocation
-      ? visitDisplaySummary(formatVisitSummary(geo))
-      : !storedText || storedText === "Visit"
-        ? ANONYMOUS_VISIT_SUMMARY
-        : storedText;
-    return attachSourceMetadata(event, {
-      summary,
-      href: event.subject?.href,
-      label: displaySubjectLabel(event.subject?.label, event.subject?.href),
-    });
-  }
-
-  if (event.type === "visit_country_first") {
-    return attachSourceMetadata(event, {
-      summary: visitDisplaySummary(event.summary),
-      href: event.subject?.href,
-      label: displaySubjectLabel(event.subject?.label, event.subject?.href),
-    });
+  if (event.type === "visit" || event.type === "visit_country_first") {
+    return visitActivityRow(event);
   }
 
   if (event.type === "like") {
@@ -912,8 +1044,12 @@ export function getActivityRow(event: ActivityEvent): {
     });
   }
 
-  if (event.source === "shiori" && (event.type === "link_saved" || event.type === "link_clicked")) {
-    return attachSourceMetadata(event, { summary: event.summary });
+  if (event.source === "shiori" && event.type === "link_saved") {
+    return attachSourceMetadata(event, { summary: "Someone saved a link on" });
+  }
+
+  if (event.source === "shiori" && event.type === "link_clicked") {
+    return attachSourceMetadata(event, { summary: "Someone clicked a link on" });
   }
 
   return attachSourceMetadata(event, {

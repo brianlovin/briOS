@@ -76,6 +76,7 @@ export type {
   ActivityVisibility,
   LikeActivityPayload,
   LikeActivityTarget,
+  VisitActivityVerb,
 } from "./activity-shared";
 export {
   ACTIVITY_ENVELOPE_VERSION,
@@ -102,6 +103,7 @@ export {
   formatActivityTitle,
   formatDownloadSummary,
   formatTrackedEventsLabel,
+  formatVisitRowSummary,
   getActivityRow,
   getCaffeineIcon,
   getMergedPullRequestDiff,
@@ -122,6 +124,7 @@ export {
   looksLikeDehyphenatedSlug,
   looksLikeIdentifier,
   looksLikeShortId,
+  MYSTERIOUS_PLACE_LOCATION,
   normalizeCaffeineDrink,
   pathnameFromHref,
   resolveActivitySourceHref,
@@ -130,8 +133,11 @@ export {
   sanitizeVisitTitle,
   shouldLookupCmsPostTitle,
   shouldRecordVisit,
+  SITE_VISIT_LABEL,
   stripSiteTitleSuffix,
   stripTrailingShortIdToken,
+  visitLocationPhrase,
+  visitVerbFromPath,
 } from "./activity-shared";
 
 export type IngestResult =
