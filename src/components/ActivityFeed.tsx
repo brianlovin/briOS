@@ -206,7 +206,7 @@ export function ActivityRow({
   return (
     <div
       data-rollup-pulse={pulse ? "" : undefined}
-      className="group hover:bg-secondary relative isolate flex items-center gap-3 px-4 py-3 md:gap-4 md:py-2 md:dark:hover:bg-white/5"
+      className="group hover:bg-secondary relative isolate flex items-center gap-3 px-4 py-3 md:py-2 md:dark:hover:bg-white/5"
     >
       {pulse ? (
         <span
@@ -215,42 +215,44 @@ export function ActivityRow({
           className="activity-rollup-pulse pointer-events-none absolute inset-0 z-0"
         />
       ) : null}
-      <div className="relative z-10 flex size-8 shrink-0 items-center justify-center">
-        <ActivityRowIcon event={event} icon={row.icon} />
+      <div className="relative z-10 flex min-w-0 flex-1 items-center gap-3">
+        <div className="flex size-8 flex-none items-center justify-center">
+          <ActivityRowIcon event={event} icon={row.icon} />
+        </div>
+        <p className="flex min-w-0 items-baseline gap-1.5">
+          <span className="min-w-0">
+            <span className="text-primary">{row.summary}</span>
+            {href && context ? (
+              <>
+                {" "}
+                <ActivityContextLink href={href}>{context}</ActivityContextLink>
+              </>
+            ) : context ? (
+              <span className="text-tertiary"> {context}</span>
+            ) : null}
+            {isLike && othersCount > 0 ? (
+              <>
+                {" "}
+                <LikeOthersTooltip targets={likeTargets} otherCount={othersCount} />
+              </>
+            ) : null}
+          </span>
+          {showCountChip ? (
+            <span
+              data-count={count}
+              className="text-tertiary border-secondary shrink-0 -translate-y-[2px] rounded-sm border px-1.5 py-px font-mono text-xs leading-4 tabular-nums"
+            >
+              ×<SlotDigits value={count} />
+            </span>
+          ) : null}
+          {diff ? (
+            <span className="shrink-0 text-sm tabular-nums">
+              <span className="text-green-600">+{diff.additions}</span>{" "}
+              <span className="text-red-500">-{diff.deletions}</span>
+            </span>
+          ) : null}
+        </p>
       </div>
-      <p className="relative z-10 flex min-w-0 items-baseline gap-1.5">
-        <span className="min-w-0">
-          <span className="text-primary">{row.summary}</span>
-          {href && context ? (
-            <>
-              {" "}
-              <ActivityContextLink href={href}>{context}</ActivityContextLink>
-            </>
-          ) : context ? (
-            <span className="text-tertiary"> {context}</span>
-          ) : null}
-          {isLike && othersCount > 0 ? (
-            <>
-              {" "}
-              <LikeOthersTooltip targets={likeTargets} otherCount={othersCount} />
-            </>
-          ) : null}
-        </span>
-        {showCountChip ? (
-          <span
-            data-count={count}
-            className="text-tertiary border-secondary shrink-0 -translate-y-[2px] rounded-sm border px-1.5 py-px font-mono text-xs leading-4 tabular-nums"
-          >
-            ×<SlotDigits value={count} />
-          </span>
-        ) : null}
-        {diff ? (
-          <span className="shrink-0 text-sm tabular-nums">
-            <span className="text-green-600">+{diff.additions}</span>{" "}
-            <span className="text-red-500">-{diff.deletions}</span>
-          </span>
-        ) : null}
-      </p>
     </div>
   );
 }
