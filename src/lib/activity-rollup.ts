@@ -174,6 +174,12 @@ export function activityRollupKey(event: ActivityEvent): string {
   return `${event.source}:${event.type}:${event.summary}`;
 }
 
+function sharedActivitySource(events: ActivityEvent[]): string | undefined {
+  const source = events[0]?.source;
+  if (!source || events.some((event) => event.source !== source)) return undefined;
+  return source;
+}
+
 function stackSectionLabel(events: ActivityEvent[], section: string): string {
   const labels = events
     .map((event) => getActivityRow(event).label)
@@ -181,14 +187,15 @@ function stackSectionLabel(events: ActivityEvent[], section: string): string {
   const unique = new Set(labels);
   const latestLabel = getActivityRow(events[0]!).label;
   const isVisit = events[0]?.type === "visit" || events[0]?.type === "visit_country_first";
+  const source = sharedActivitySource(events);
 
   if (events[0]?.type === "like") {
     return latestLabel ?? "";
   }
 
   if (isVisit) {
-    if (unique.size !== 1) return activitySectionPhrase(section);
-    return labels[0] ?? activitySectionPhrase(section);
+    if (unique.size !== 1) return activitySectionPhrase(section, source);
+    return labels[0] ?? activitySectionPhrase(section, source);
   }
 
   if (unique.size === 1) return labels[0]!;

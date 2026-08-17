@@ -2170,8 +2170,91 @@ describe("getActivityRow visit sentences", () => {
     );
     expect(home.summary).toBe("Someone from United States visited");
     expect(home.summary).not.toContain("read");
-    expect(home.label).toBe("Staff Design");
+    expect(home.summary).not.toContain("the site");
+    expect(home.label).toBe("Staff.design");
+    expect(home.label).not.toBe("the site");
     expect(home.href).toBe("https://staff.design");
+  });
+
+  test("uses Staff.design — not the site — for an untitled staff.design home visit", () => {
+    const singapore = {
+      country: "SG",
+      country_name: "Singapore",
+      city: "Singapore",
+    };
+    const home = getActivityRow(
+      visitRowEvent(
+        { kind: "home", label: "Home", href: "/" },
+        {
+          source: "staff-design",
+          summary: "Visit from Singapore, Singapore",
+          meta: { ...singapore, path: "/", title: "Home" },
+        },
+      ),
+    );
+    expect(`${home.summary} ${home.label}`).toContain("visited Staff.design");
+    expect(home.summary).not.toContain("the site");
+    expect(home.label).toBe("Staff.design");
+    expect(home.label).not.toBe("the site");
+
+    const untitled = getActivityRow({
+      v: 1,
+      id: "staff-home-untitled",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "staff-design",
+      type: "visit",
+      speed: "signal",
+      summary: "Visit from Singapore, Singapore",
+      visibility: "public",
+      idempotency_key: "staff-home-untitled",
+      meta: singapore,
+    });
+    expect(`${untitled.summary} ${untitled.label}`).toContain("visited Staff.design");
+    expect(untitled.summary).not.toContain("the site");
+    expect(untitled.label).toBe("Staff.design");
+
+    const interview = getActivityRow(
+      visitRowEvent(
+        { kind: "page", label: "Karla Mickens Cole", href: "/karla-mickens-cole" },
+        {
+          source: "staff-design",
+          summary: "Visit from Singapore, Singapore",
+          meta: { ...singapore, path: "/karla-mickens-cole", title: "Karla Mickens Cole" },
+        },
+      ),
+    );
+    expect(interview.label).toBe("Karla Mickens Cole");
+    expect(interview.label).not.toBe("Staff.design");
+    expect(interview.summary).toContain("read");
+    expect(interview.summary).not.toContain("Staff.design");
+
+    const briosHome = getActivityRow(
+      visitRowEvent(
+        { kind: "home", label: "Home", href: "/" },
+        { meta: { country: "SG", country_name: "Singapore", city: "Singapore", path: "/" } },
+      ),
+    );
+    expect(briosHome.label).toBe("the site");
+    expect(briosHome.label).not.toBe("Staff.design");
+    expect(`${briosHome.summary} ${briosHome.label}`).toContain("visited the site");
+
+    const shioriHome = getActivityRow({
+      v: 1,
+      id: "shiori-home",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "shiori",
+      type: "visit",
+      speed: "signal",
+      summary: "Visit from Singapore, Singapore",
+      visibility: "public",
+      idempotency_key: "shiori-home",
+      subject: { kind: "home", label: "Home", href: "/" },
+      meta: { ...singapore, path: "/", title: "Home" },
+    });
+    expect(shioriHome.label).not.toBe("Staff.design");
+    expect(shioriHome.summary).not.toContain("Staff.design");
   });
 
   test("views an app dissection post and visits tax-ui home", () => {
@@ -2276,6 +2359,23 @@ describe("formatVisitRowSummary location prefix", () => {
     ).toBe("viewed");
     expect(
       formatVisitRowSummary("San Francisco, California", "visited", false, { omitLocation: true }),
+    ).toBe("visited the site");
+    expect(
+      formatVisitRowSummary("Singapore, Singapore", "visited", false, {
+        source: "staff-design",
+      }),
+    ).toBe("Someone from Singapore, Singapore visited Staff.design");
+    expect(
+      formatVisitRowSummary("Singapore, Singapore", "visited", false, {
+        omitLocation: true,
+        source: "staff-design",
+      }),
+    ).toBe("visited Staff.design");
+    expect(
+      formatVisitRowSummary("Singapore, Singapore", "visited", false, {
+        omitLocation: true,
+        source: "brios",
+      }),
     ).toBe("visited the site");
   });
 });
@@ -3298,6 +3398,48 @@ describe("rollupActivityEvents", () => {
     expect(actions[2]?.summary).toBe("viewed");
     expect(actions[2]?.label).toBe("Listening");
     expect(actions.every((row) => !row.summary.includes("Someone from"))).toBe(true);
+  });
+
+  test("staff.design home cluster actions say visited Staff.design", () => {
+    const sg = (id: string, href: string, label: string): ActivityEvent =>
+      feedEvent({
+        id,
+        source: "staff-design",
+        type: "visit",
+        summary: "Visit from Singapore, Singapore",
+        subject: { kind: href === "/" ? "home" : "page", label, href },
+        meta: {
+          country: "SG",
+          country_name: "Singapore",
+          city: "Singapore",
+          path: href,
+          title: label,
+        },
+      });
+
+    const items = clusterVisitLocationRuns(
+      rollupActivityEvents([
+        sg("sg-interview", "/karla-mickens-cole", "Karla Mickens Cole"),
+        sg("sg-home", "/", "Home"),
+      ]),
+    );
+
+    expect(items).toHaveLength(1);
+    expect(items[0]?.type).toBe("visit-cluster");
+    if (items[0]?.type !== "visit-cluster") return;
+    expect(items[0].locationHeader).toBe("Someone from Singapore, Singapore");
+    expect(items[0].actions).toHaveLength(2);
+
+    const home = items[0].actions.find((action) => action.latest.id === "sg-home");
+    expect(home?.sectionLabel).toBe("Staff.design");
+    const homeRow = getActivityRow(home!.latest, { omitVisitLocation: true });
+    expect(`${homeRow.summary} ${homeRow.label}`).toBe("visited Staff.design");
+    expect(homeRow.summary).not.toContain("the site");
+    expect(homeRow.label).not.toBe("the site");
+
+    const interview = items[0].actions.find((action) => action.latest.id === "sg-interview");
+    expect(interview?.sectionLabel).toBe("Karla Mickens Cole");
+    expect(interview?.sectionLabel).not.toBe("Staff.design");
   });
 
   test("appends a new same-location visit at the bottom and keeps the cluster key", () => {
