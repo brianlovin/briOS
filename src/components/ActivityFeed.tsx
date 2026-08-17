@@ -18,7 +18,7 @@ import { Heart } from "@/components/icons/Heart";
 import { Shiori } from "@/components/icons/Shiori";
 import { World } from "@/components/icons/World";
 import { ListDetailWrapper } from "@/components/ListDetailWrapper";
-import { RollingDigits } from "@/components/RollingDigits";
+import { SlotDigits } from "@/components/SlotDigits";
 import { useTopBarActions } from "@/components/TopBarActions";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip";
 import type { ActivityEvent, ActivityRollup } from "@/lib/activity";
@@ -223,7 +223,7 @@ export function ActivityRow({
             data-count={count}
             className="text-tertiary border-secondary shrink-0 rounded-sm border px-1 font-mono text-[11px] leading-4 tabular-nums"
           >
-            <RollingDigits value={count} />
+            <SlotDigits value={count} />
           </span>
         ) : null}
         {diff ? (

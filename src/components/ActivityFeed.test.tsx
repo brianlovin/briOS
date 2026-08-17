@@ -989,6 +989,12 @@ describe("ActivityRow", () => {
     expect(markup).toContain("border-secondary");
     expect(markup).toContain("tabular-nums");
     expect(markup).toContain("inline-flex");
+    expect(markup).toContain("overflow-hidden");
+    expect(markup).toContain("h-[1em]");
+    expect(markup).toContain("data-slot-digits");
+    expect(markup).toContain("translateY(-6em)");
+    expect(markup).not.toContain("preserve-3d");
+    expect(markup).not.toContain("translateZ");
     expect(markup).toContain("an AMA question");
     expect(markup).toContain('href="/ama"');
     expect(markup).not.toContain("2f2c711c-0ceb-810d-899d-e5feb99e70f4");
@@ -998,6 +1004,10 @@ describe("ActivityRow", () => {
     const title = markup.match(/<p class="relative z-10[\s\S]*?<\/p>/)?.[0] ?? "";
     expect(title).toContain("data-count");
     expect(title).not.toContain("<div");
+    const chip = title.match(/data-count="6"[\s\S]*?<\/span><\/span>/)?.[0] ?? "";
+    expect(chip).toContain("overflow-hidden");
+    expect(chip).not.toContain("preserve-3d");
+    expect(chip).not.toContain("translateZ");
 
     const single = renderToStaticMarkup(
       <ActivityRow
