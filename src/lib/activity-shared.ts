@@ -240,6 +240,87 @@ const ID_ROUTE_PHRASES: { prefix: string; label: string }[] = [
   { prefix: "/ama/", label: "an AMA question" },
 ];
 
+/** Child routes that should keep their section name after `stripSiteTitleSuffix`. */
+const CHILD_ROUTE_SECTION_SUFFIXES: { prefix: string; suffix: string }[] = [
+  { prefix: "/app-dissection/", suffix: "App Dissection" },
+  { prefix: "/design-details/", suffix: "Design Details" },
+];
+
+const GENERIC_HN_STORY_TITLES = new Set([
+  "a page",
+  "hacker news",
+  "a hacker news story",
+  "hacker news post",
+  "hacker news post not found",
+]);
+
+const HN_STORY_PATH_RE = /^\/hn\/(\d+)$/;
+
+/** Story id from `/hn/{id}` (and absolute briOS URLs). Index `/hn` is undefined. */
+export function hnStoryIdFromPath(pathname: string): string | undefined {
+  const path = normalizeActivityPath(pathnameFromHref(pathname));
+  const match = HN_STORY_PATH_RE.exec(path);
+  return match?.[1];
+}
+
+/** Missing, generic, or identifier titles that should not win over a real HN story name. */
+export function isGenericHnStoryTitle(title: string | undefined, storyId?: string): boolean {
+  const trimmed = title?.trim();
+  if (!trimmed) return true;
+  if (storyId && trimmed === storyId) return true;
+  if (looksLikeIdentifier(trimmed)) return true;
+  return GENERIC_HN_STORY_TITLES.has(trimmed.toLowerCase());
+}
+
+function childRouteSectionTitle(pathname: string): string | undefined {
+  const path = normalizeActivityPath(pathnameFromHref(pathname));
+  const segments = path.split("/").filter(Boolean);
+  if (segments.length < 2) return undefined;
+  return KNOWN_PATH_TITLES[`/${segments[0]}`];
+}
+
+/** Section index title used on a child route (e.g. "App Dissection" on `/app-dissection/foo`). */
+function isGenericSectionTitle(title: string, pathname: string): boolean {
+  const section = childRouteSectionTitle(pathname);
+  if (!section) return false;
+  return title.trim().toLowerCase() === section.toLowerCase();
+}
+
+/**
+ * Stored/client titles that are not a real page name: empty, "a page", raw ids,
+ * a section index title on a child route, or a generic HN phrase.
+ */
+export function isUnusableActivityTitle(title: string | undefined, pathname: string): boolean {
+  const stored = title?.trim();
+  if (!stored) return true;
+  if (stored === "a page") return true;
+  if (looksLikeIdentifier(stored)) return true;
+  if (isProtocolSegment(stored)) return true;
+  if (isAbsoluteHttpUrl(stored)) return true;
+  if (isGenericHnStoryTitle(stored, hnStoryIdFromPath(pathname))) return true;
+  if (isGenericSectionTitle(stored, pathname)) return true;
+  return false;
+}
+
+/** `{Post name} App Dissection` — format the name first, then append so title-case still runs. */
+export function appendKnownSectionSuffix(label: string, pathname: string): string {
+  const path = normalizeActivityPath(pathnameFromHref(pathname));
+  const trimmed = label.trim();
+  if (!trimmed) return trimmed;
+
+  for (const { prefix, suffix } of CHILD_ROUTE_SECTION_SUFFIXES) {
+    if (!path.startsWith(prefix)) continue;
+    if (trimmed.toLowerCase() === suffix.toLowerCase()) return suffix;
+    if (trimmed.toLowerCase().endsWith(` ${suffix.toLowerCase()}`)) return trimmed;
+    return `${trimmed} ${suffix}`;
+  }
+  return trimmed;
+}
+
+function formatSubjectLabel(label: string, pathname: string): string {
+  return appendKnownSectionSuffix(formatActivityTitle(label), pathname);
+}
+
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const UUID_COMPACT_RE = /^[0-9a-f]{32}$/i;
 const UUID_SPACED_RE = /^[0-9a-f]{8}\s+[0-9a-f]{4}\s+[0-9a-f]{4}\s+[0-9a-f]{4}\s+[0-9a-f]{12}$/i;
@@ -392,14 +473,15 @@ export function stripSiteTitleSuffix(title: string): string {
  * slug-like leftovers. Falls back to the smart route map — never invents a name.
  */
 export function sanitizeActivityTitle(title: string | undefined, path: string): string {
-  const fallback = formatActivityTitle(inferTitleFromPath(path));
+  const fallback = formatSubjectLabel(inferTitleFromPath(path), path);
   const trimmed = title?.trim();
   if (!trimmed) return fallback;
 
   const stripped = stripSiteTitleSuffix(trimmed);
   if (!stripped || /^brian lovin$/i.test(stripped)) return fallback;
   if (findForbiddenPii(stripped)) return fallback;
-  return formatActivityTitle(stripped);
+  if (isUnusableActivityTitle(stripped, path)) return fallback;
+  return formatSubjectLabel(stripped, path);
 }
 
 export const sanitizeVisitTitle = sanitizeActivityTitle;
@@ -463,14 +545,8 @@ function displaySubjectLabel(
   if (href) {
     const inferred = inferTitleFromPath(href);
     const stored = label?.trim();
-    const storedUnusable =
-      !stored ||
-      stored === "a page" ||
-      looksLikeIdentifier(stored) ||
-      isProtocolSegment(stored) ||
-      isAbsoluteHttpUrl(stored);
-    if (storedUnusable) {
-      return isProtocolSegment(inferred) ? undefined : formatActivityTitle(inferred);
+    if (!stored || isUnusableActivityTitle(stored, href)) {
+      return isProtocolSegment(inferred) ? undefined : formatSubjectLabel(inferred, href);
     }
 
     const path = normalizeActivityPath(pathnameFromHref(href));
@@ -481,10 +557,10 @@ function displaySubjectLabel(
     }
 
     const cleaned = stripTrailingShortIdToken(stored);
-    if (looksLikeIdentifier(cleaned) || isProtocolSegment(cleaned)) {
-      return isProtocolSegment(inferred) ? undefined : formatActivityTitle(inferred);
+    if (isUnusableActivityTitle(cleaned, href)) {
+      return isProtocolSegment(inferred) ? undefined : formatSubjectLabel(inferred, href);
     }
-    return formatActivityTitle(cleaned || inferred);
+    return formatSubjectLabel(cleaned || inferred, href);
   }
 
   if (!label) return undefined;

@@ -145,9 +145,10 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(markup).toContain(">Secret for iOS<");
+    expect(markup).toContain(">Secret for iOS App Dissection<");
     expect(markup).toContain('href="/app-dissection/secret-for-ios"');
     expect(markup).not.toContain(">secret for ios<");
+    expect(markup).not.toContain(">Secret for iOS<");
   });
 
   test("labels an HN index visit as Hacker News, not a story", () => {
@@ -164,6 +165,43 @@ describe("ActivityRow", () => {
     expect(markup).toContain("Hacker News");
     expect(markup).toContain('href="/hn"');
     expect(markup).not.toContain("a Hacker News story");
+  });
+
+  test("labels an Instagram iOS dissection visit with the section name", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          summary: "🇺🇸 Visit from United States",
+          subject: {
+            kind: "app_dissection",
+            label: "Instagram",
+            href: "/app-dissection/instagram-ios",
+          },
+          meta: { country: "US", path: "/app-dissection/instagram-ios" },
+        })}
+      />,
+    );
+
+    expect(markup).toContain(">Instagram App Dissection<");
+    expect(markup).toContain('href="/app-dissection/instagram-ios"');
+    expect(markup).not.toContain(">Instagram<");
+  });
+
+  test("shows a stored HN story title instead of the generic phrase", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          summary: "🇺🇸 Visit from United States",
+          subject: { kind: "page", label: "Some HN Story", href: "/hn/42991019" },
+          meta: { country: "US", path: "/hn/42991019", title: "Some HN Story" },
+        })}
+      />,
+    );
+
+    expect(markup).toContain(">Some HN Story<");
+    expect(markup).toContain('href="/hn/42991019"');
+    expect(markup).not.toContain("a Hacker News story");
+    expect(markup).not.toContain(">42991019<");
   });
 
   test("shows a Hacker News story instead of a raw story id", () => {
