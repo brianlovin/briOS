@@ -38,7 +38,10 @@ export function activityStackReactKey(stack: Pick<ActivityRollup, "key" | "ancho
 export const ACTIVITY_ENTER_STAGGER_STEP = 0.05;
 export const ACTIVITY_ENTER_STAGGER_MAX = 0.4;
 
-/** Enter delays for keys that were not on screen last paint. First paint (`previous` null) is empty. */
+/**
+ * Enter delays for keys that were not on screen last paint. First paint (`previous` null) is empty.
+ * `keys` is newest-first; the oldest incoming key gets delay 0 so the batch streams in chronologically.
+ */
 export function activityEnterStaggerDelays(
   keys: string[],
   previous: Set<string> | null,
@@ -48,18 +51,18 @@ export function activityEnterStaggerDelays(
   const delays = new Map<string, number>();
   if (!previous) return delays;
 
-  let index = 0;
-  for (const key of keys) {
-    if (previous.has(key)) continue;
-    delays.set(key, Math.min(Number((index * step).toFixed(2)), max));
-    index += 1;
-  }
+  const incoming = keys.filter((key) => !previous.has(key));
+  const last = incoming.length - 1;
+  incoming.forEach((key, index) => {
+    const fromOldest = last - index;
+    delays.set(key, Math.min(Number((fromOldest * step).toFixed(2)), max));
+  });
   return delays;
 }
 
 /**
  * First committed key set is already on screen — no enter delays.
- * Later keys not in `previous` get stagger delays; existing keys do not.
+ * Later keys not in `previous` get oldest-first stagger delays; existing keys do not.
  */
 export function nextActivityEnterState(
   keys: string[],
