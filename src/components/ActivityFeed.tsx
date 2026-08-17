@@ -18,7 +18,7 @@ import { Heart } from "@/components/icons/Heart";
 import { Shiori } from "@/components/icons/Shiori";
 import { World } from "@/components/icons/World";
 import { ListDetailWrapper } from "@/components/ListDetailWrapper";
-import { RollingDigits } from "@/components/RollingDigits";
+import { SlotDigits } from "@/components/SlotDigits";
 import { useTopBarActions } from "@/components/TopBarActions";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip";
 import type { ActivityEvent, ActivityRollup } from "@/lib/activity";
@@ -32,7 +32,6 @@ import {
   ACTIVITY_TRACKED_SINCE_TOOLTIP,
   activitySourceFaviconSrc,
   activitySourceUrl,
-  formatTrackedEventsLabel,
   getActivityRow,
   getMergedPullRequestDiff,
   resolveActivitySourceHref,
@@ -112,7 +111,7 @@ function ActivityRowIcon({ event, icon }: { event: ActivityEvent; icon?: string 
   }
 
   if (event.type === "like") {
-    return <Heart size={16} className="fill-current text-red-500" aria-hidden />;
+    return <Heart size={24} className="fill-current text-red-500" aria-hidden />;
   }
 
   if (isGithubActivity(event)) {
@@ -223,7 +222,7 @@ export function ActivityRow({
             data-count={count}
             className="text-tertiary border-secondary shrink-0 rounded-sm border px-1 font-mono text-[11px] leading-4 tabular-nums"
           >
-            <RollingDigits value={count} />
+            <SlotDigits value={count} />
           </span>
         ) : null}
         {diff ? (
@@ -248,20 +247,24 @@ export function ActivityRow({
 }
 
 export function ActivityTrackedCount({ count }: { count: number }) {
+  const formatted = count.toLocaleString("en-US");
+
   return (
     <Tooltip delay={0} closeDelay={0}>
       <TooltipTrigger
         delay={0}
         closeDelay={0}
-        className="text-tertiary hidden cursor-default bg-transparent p-0 text-sm tabular-nums md:inline"
+        aria-label={`${formatted}. ${ACTIVITY_TRACKED_SINCE_TOOLTIP}`}
+        className="text-quaternary hidden cursor-default bg-transparent p-0 font-mono text-sm tabular-nums md:inline"
       >
-        {formatTrackedEventsLabel(count)}
+        <SlotDigits value={count} />
       </TooltipTrigger>
       <TooltipContent
         side="bottom"
         align="end"
         collisionPadding={8}
         container={typeof document === "undefined" ? undefined : document.body}
+        collisionBoundary={typeof document === "undefined" ? undefined : document.documentElement}
         className="overflow-visible whitespace-nowrap"
       >
         {ACTIVITY_TRACKED_SINCE_TOOLTIP}

@@ -2016,7 +2016,7 @@ describe("getActivityRow source metadata", () => {
         }),
       ),
     ).toEqual({
-      summary: "Someone signed up",
+      summary: "Someone signed up for",
       href: "https://www.shiori.sh",
       label: "Shiori",
     });
@@ -2028,7 +2028,7 @@ describe("getActivityRow source metadata", () => {
         }),
       ),
     ).toEqual({
-      summary: "Someone subscribed",
+      summary: "Someone subscribed on",
       href: "https://www.shiori.sh",
       label: "Shiori",
     });
