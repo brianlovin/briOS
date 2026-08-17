@@ -231,8 +231,8 @@ describe("ActivityRow", () => {
     expect(markup).toContain('href="/hn/42991019"');
     expect(markup).not.toContain("a Hacker News story");
     expect(markup).not.toContain(">42991019<");
-    expect(markup).toContain("M12.7 18.5h-1.4v-6.2");
-    expect(markup).toContain("dark:invert");
+    expect(markup).toContain("zm12.7 18.5h-1.4v-6.2");
+    expect(markup).toContain("text-primary rounded-[3px]");
     expect(markup).not.toContain("/activity/favicons/brios.png");
   });
 
@@ -252,7 +252,7 @@ describe("ActivityRow", () => {
     expect(markup).toContain("a Hacker News story");
     expect(markup).toContain('href="/hn/46993596"');
     expect(markup).not.toContain(">46993596<");
-    expect(markup).toContain("M12.7 18.5h-1.4v-6.2");
+    expect(markup).toContain("zm12.7 18.5h-1.4v-6.2");
     expect(markup).not.toContain("/activity/favicons/brios.png");
   });
 
@@ -267,8 +267,8 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(markup).toContain("M12.7 18.5h-1.4v-6.2");
-    expect(markup).toContain("dark:invert");
+    expect(markup).toContain("zm12.7 18.5h-1.4v-6.2");
+    expect(markup).toContain("text-primary rounded-[3px]");
     expect(markup).not.toContain("/activity/favicons/brios.png");
   });
 
