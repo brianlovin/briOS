@@ -231,6 +231,9 @@ describe("ActivityRow", () => {
     expect(markup).toContain('href="/hn/42991019"');
     expect(markup).not.toContain("a Hacker News story");
     expect(markup).not.toContain(">42991019<");
+    expect(markup).toContain("M12.7 18.5h-1.4v-6.2");
+    expect(markup).toContain("dark:invert");
+    expect(markup).not.toContain("/activity/favicons/brios.png");
   });
 
   test("shows a Hacker News story instead of a raw story id", () => {
@@ -249,6 +252,24 @@ describe("ActivityRow", () => {
     expect(markup).toContain("a Hacker News story");
     expect(markup).toContain('href="/hn/46993596"');
     expect(markup).not.toContain(">46993596<");
+    expect(markup).toContain("M12.7 18.5h-1.4v-6.2");
+    expect(markup).not.toContain("/activity/favicons/brios.png");
+  });
+
+  test("uses the Y Combinator mark for Hacker News index visits", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          summary: "🇺🇸 Visit from United States",
+          subject: { kind: "page", label: "Hacker News", href: "/hn" },
+          meta: { country: "US", path: "/hn", title: "Hacker News" },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("M12.7 18.5h-1.4v-6.2");
+    expect(markup).toContain("dark:invert");
+    expect(markup).not.toContain("/activity/favicons/brios.png");
   });
 
   test("uses the event source favicon for visits and downloads", () => {

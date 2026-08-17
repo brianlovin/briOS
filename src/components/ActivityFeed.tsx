@@ -19,6 +19,7 @@ import { Heart } from "@/components/icons/Heart";
 import { Shiori } from "@/components/icons/Shiori";
 import { StaffDesign } from "@/components/icons/StaffDesign";
 import { World } from "@/components/icons/World";
+import { YCombinator } from "@/components/icons/YCombinator";
 import { ListDetailWrapper } from "@/components/ListDetailWrapper";
 import { SlotDigits } from "@/components/SlotDigits";
 import { useTopBarActions } from "@/components/TopBarActions";
@@ -47,6 +48,7 @@ import {
   formatLikeOthersLabel,
   getActivityRow,
   getMergedPullRequestDiff,
+  isHnActivityEvent,
   isHomeLikeTitle,
   resolveActivitySourceHref,
 } from "@/lib/activity-shared";
@@ -100,6 +102,9 @@ function ActivityRowIcon({ event, icon }: { event: ActivityEvent; icon?: string 
   }
 
   if (event.type === "visit" || event.type === "visit_country_first" || event.type === "download") {
+    if (isHnActivityEvent(event)) {
+      return <YCombinator size={16} />;
+    }
     const faviconSrc = activitySourceFaviconSrc(event.source);
     if (faviconSrc) {
       return <ActivitySourceFavicon src={faviconSrc} />;

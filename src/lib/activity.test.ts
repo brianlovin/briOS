@@ -30,6 +30,8 @@ import {
   inferTitleFromPath,
   ingestActivityEvent,
   isHiddenLikeEvent,
+  isHnActivityEvent,
+  isHnActivityPath,
   isSlugLikeActivityTitle,
   likeActivityPayload,
   likeMetaFromRequest,
@@ -1475,6 +1477,32 @@ describe("inferTitleFromPath", () => {
   test("never returns a page for an unknown or empty path", () => {
     expect(inferTitleFromPath("/mystery")).toBe("mystery");
     expect(inferTitleFromPath("")).toBe("Home");
+  });
+
+  test("recognizes Hacker News activity paths and events", () => {
+    expect(isHnActivityPath("/hn")).toBe(true);
+    expect(isHnActivityPath("/hn/")).toBe(true);
+    expect(isHnActivityPath("/hn/42991019")).toBe(true);
+    expect(isHnActivityPath("https://brianlovin.com/hn/42991019")).toBe(true);
+    expect(isHnActivityPath("/writing/a-post")).toBe(false);
+    expect(isHnActivityPath("/")).toBe(false);
+    expect(isHnActivityPath(undefined)).toBe(false);
+
+    expect(
+      isHnActivityEvent({
+        subject: { kind: "page", label: "Some HN Story", href: "/hn/42991019" },
+      }),
+    ).toBe(true);
+    expect(
+      isHnActivityEvent({
+        meta: { path: "/hn/42991019" },
+      }),
+    ).toBe(true);
+    expect(
+      isHnActivityEvent({
+        subject: { kind: "writing", label: "A post", href: "/writing/a-post" },
+      }),
+    ).toBe(false);
   });
 
   test("uses a contextual phrase for identifier routes instead of the raw id", () => {

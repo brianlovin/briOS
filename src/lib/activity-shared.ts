@@ -377,6 +377,19 @@ export function hnStoryIdFromPath(pathname: string): string | undefined {
   return match?.[1];
 }
 
+/** `/hn` index or `/hn/*` story routes (and absolute briOS URLs). */
+export function isHnActivityPath(value: string | undefined): boolean {
+  if (!value?.trim()) return false;
+  const path = normalizeActivityPath(pathnameFromHref(value));
+  return path === "/hn" || path.startsWith("/hn/");
+}
+
+export function isHnActivityEvent(event: Pick<ActivityEvent, "subject" | "meta">): boolean {
+  if (isHnActivityPath(event.subject?.href)) return true;
+  const path = event.meta?.path;
+  return typeof path === "string" && isHnActivityPath(path);
+}
+
 /** Writing/TIL child slug from `/writing/{slug}` or `/til/{slug}` (and absolute URLs). */
 export function cmsPostRefFromPath(
   pathname: string,
