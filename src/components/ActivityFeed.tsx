@@ -2,9 +2,17 @@
 
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
-import { type ReactNode, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 
-import { ActivityGlobe } from "@/components/ActivityGlobe";
+import { ActivityGlobe, type ActivityGlobeAimRequest } from "@/components/ActivityGlobe";
 import { Activity } from "@/components/icons/Activity";
 import { Github } from "@/components/icons/Github";
 import { Heart } from "@/components/icons/Heart";
@@ -15,12 +23,13 @@ import { ListDetailWrapper } from "@/components/ListDetailWrapper";
 import { SlotDigits } from "@/components/SlotDigits";
 import { useTopBarActions } from "@/components/TopBarActions";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip";
-import type {
-  ActivityEvent,
-  ActivityFeedItem,
-  ActivityLikeTarget,
-  ActivityRollup,
-  ActivityVisitCluster,
+import {
+  type ActivityEvent,
+  activityEventLocation,
+  type ActivityFeedItem,
+  type ActivityLikeTarget,
+  type ActivityRollup,
+  type ActivityVisitCluster,
 } from "@/lib/activity";
 import {
   activityFeedItemCount,
@@ -42,6 +51,7 @@ import {
   resolveActivitySourceHref,
 } from "@/lib/activity-shared";
 import { useActivity } from "@/lib/hooks/useActivity";
+import { cn } from "@/lib/utils";
 
 function ActivitySourceFavicon({ src }: { src: string }) {
   const [failed, setFailed] = useState(false);
@@ -198,6 +208,7 @@ export function ActivityRow({
   href: hrefOverride,
   pulse = false,
   likeTargets: likeTargetsProp,
+  onAimGlobe,
 }: {
   event: ActivityEvent;
   count?: number;
@@ -205,6 +216,7 @@ export function ActivityRow({
   href?: string;
   pulse?: boolean;
   likeTargets?: ActivityLikeTarget[];
+  onAimGlobe?: (event: ActivityEvent) => void;
 }) {
   const row = getActivityRow(event);
   const homeUrl = activitySourceUrl(event.source);
@@ -222,6 +234,7 @@ export function ActivityRow({
   const context = isLike ? likeTitle : (label ?? (href || undefined));
   const diff = event.type === "pr_merged" ? getMergedPullRequestDiff(event.meta) : null;
   const showCountChip = count > 1 && !(isLike && othersCount > 0);
+  const canAimGlobe = Boolean(onAimGlobe && activityEventLocation(event));
 
   if (isLike && likeTargets.length === 0) {
     return null;
@@ -230,7 +243,18 @@ export function ActivityRow({
   return (
     <div
       data-rollup-pulse={pulse ? "" : undefined}
-      className="group hover:bg-secondary relative isolate flex items-center gap-3 px-4 py-3 md:py-2 md:dark:hover:bg-white/5"
+      className={cn(
+        "group hover:bg-secondary relative isolate flex items-center gap-3 px-4 py-3 md:py-2 md:dark:hover:bg-white/5",
+        canAimGlobe && "cursor-pointer",
+      )}
+      onClick={
+        canAimGlobe
+          ? (click) => {
+              if (click.target instanceof Element && click.target.closest("a")) return;
+              onAimGlobe?.(event);
+            }
+          : undefined
+      }
     >
       {pulse ? (
         <span
@@ -337,13 +361,16 @@ function ActivityVisitClusterBlock({
   cluster,
   pulse = false,
   pulseActionKey = null,
+  onAimGlobe,
 }: {
   cluster: ActivityVisitCluster;
   pulse?: boolean;
   pulseActionKey?: string | null;
+  onAimGlobe?: (event: ActivityEvent) => void;
 }) {
   const iconEvent = cluster.actions[0]?.latest ?? cluster.latest;
   const showRail = cluster.actions.length > 1;
+  const canAimGlobe = Boolean(onAimGlobe && activityEventLocation(cluster.latest));
 
   if (cluster.actions.length === 1) {
     const stack = cluster.actions[0]!;
@@ -355,6 +382,7 @@ function ActivityVisitClusterBlock({
         href={stack.href}
         likeTargets={stack.likeTargets}
         pulse={pulse}
+        onAimGlobe={onAimGlobe}
       />
     );
   }
@@ -362,7 +390,18 @@ function ActivityVisitClusterBlock({
   return (
     <div
       data-rollup-pulse={pulse ? "" : undefined}
-      className="group hover:bg-secondary relative isolate px-4 py-3 md:py-2 md:dark:hover:bg-white/5"
+      className={cn(
+        "group hover:bg-secondary relative isolate px-4 py-3 md:py-2 md:dark:hover:bg-white/5",
+        canAimGlobe && "cursor-pointer",
+      )}
+      onClick={
+        canAimGlobe
+          ? (click) => {
+              if (click.target instanceof Element && click.target.closest("a")) return;
+              onAimGlobe?.(cluster.latest);
+            }
+          : undefined
+      }
     >
       {pulse ? (
         <span
@@ -511,10 +550,12 @@ function ActivityStackList({
   items,
   pulseKey,
   pulseActionKey,
+  onAimGlobe,
 }: {
   items: ActivityFeedItem[];
   pulseKey: string | null;
   pulseActionKey: string | null;
+  onAimGlobe?: (event: ActivityEvent) => void;
 }) {
   const hydrated = useHydrated();
   const prefersReducedMotion = useReducedMotion();
@@ -565,6 +606,7 @@ function ActivityStackList({
                   cluster={item}
                   pulse={pulse}
                   pulseActionKey={pulseKey === reactKey ? pulseActionKey : null}
+                  onAimGlobe={onAimGlobe}
                 />
               ) : (
                 <ActivityRow
@@ -574,6 +616,7 @@ function ActivityStackList({
                   href={item.stack.href}
                   likeTargets={item.stack.likeTargets}
                   pulse={pulse}
+                  onAimGlobe={onAimGlobe}
                 />
               )}
             </motion.div>
@@ -643,6 +686,12 @@ export function ActivityFeed({
   const { events, count } = useActivity(initialEvents, initialCount);
   const items = useMemo(() => clusterVisitLocationRuns(rollupActivityEvents(events)), [events]);
   const { pulseKey, pulseActionKey } = useRollupPulse(items);
+  const [globeAim, setGlobeAim] = useState<ActivityGlobeAimRequest | null>(null);
+  const handleAimGlobe = useCallback((event: ActivityEvent) => {
+    const location = activityEventLocation(event);
+    if (!location) return;
+    setGlobeAim((current) => ({ location, nonce: (current?.nonce ?? 0) + 1 }));
+  }, []);
 
   const topBarContent = useMemo(() => <ActivityTrackedCount count={count} />, [count]);
   useTopBarActions(topBarContent);
@@ -661,6 +710,7 @@ export function ActivityFeed({
                 items={items}
                 pulseKey={pulseKey}
                 pulseActionKey={pulseActionKey}
+                onAimGlobe={handleAimGlobe}
               />
               <p className="text-tertiary p-32 text-center text-sm">
                 Older activity is dust in the wind...
@@ -668,7 +718,7 @@ export function ActivityFeed({
             </>
           )}
         </div>
-        <ActivityGlobe events={events} />
+        <ActivityGlobe events={events} aim={globeAim} />
       </div>
     </ListDetailWrapper>
   );
