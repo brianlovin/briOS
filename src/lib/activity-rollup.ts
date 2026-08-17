@@ -13,6 +13,7 @@ import {
   isHiddenLikeEvent,
   isHomeLikeTitle,
   isKnownActivitySection,
+  visitLocationClusterKey,
 } from "./activity-shared";
 
 export type ActivityLikeTarget = {
@@ -29,6 +30,8 @@ export type ActivityRollup = {
   sectionLabel: string;
   href?: string;
   likeTargets?: ActivityLikeTarget[];
+  /** Older same-location visit in a consecutive run — omit the someone/location prefix. */
+  omitVisitLocation?: boolean;
 };
 
 export function activityStackReactKey(stack: Pick<ActivityRollup, "key" | "anchorId">): string {
@@ -198,6 +201,24 @@ function stackHref(events: ActivityEvent[]): string | undefined {
   if (!isKnownActivitySection(section)) return latest;
   const collapsed = `/${section}`;
   return collapsed === "/https:" || collapsed === "/http:" ? latest : collapsed;
+}
+
+/**
+ * Display pass over already-rolled-up stacks (newest first).
+ * Consecutive visit-like rows that share a location key keep the full sentence
+ * on the newest row and drop the someone/location prefix on older siblings.
+ * Does not merge rows or change ×N rollup counts.
+ */
+export function markVisitLocationContinuations(stacks: ActivityRollup[]): ActivityRollup[] {
+  let previousKey: string | undefined;
+  return stacks.map((stack) => {
+    const key = visitLocationClusterKey(stack.latest);
+    const omitVisitLocation = Boolean(key && key === previousKey);
+    previousKey = key;
+    if (stack.omitVisitLocation === omitVisitLocation) return stack;
+    if (!omitVisitLocation && stack.omitVisitLocation === undefined) return stack;
+    return { ...stack, omitVisitLocation };
+  });
 }
 
 /** Consecutive runs only — an interrupting event always starts a new stack. */

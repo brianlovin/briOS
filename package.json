@@ -22,7 +22,7 @@
     "@sparticuz/chromium": "^143.0.4",
     "@tanstack/react-virtual": "^3.13.18",
     "@upstash/qstash": "^2.11.3",
-    "@upstash/redis": "^1.36.3",
+    "@upstash/redis": "^1.38.2",
     "@vercel/og": "^0.11.1",
     "botid": "^1.5.11",
     "class-variance-authority": "^0.7.1",
@@ -43,13 +43,13 @@
     "react-device-detect": "^2.2.3",
     "react-dom": "19.2.8",
     "react-hotkeys-hook": "^5.3.3",
-    "sanitize-html": "2.17.5",
+    "sanitize-html": "2.17.7",
     "sharp": "^0.34.5",
     "shiki": "^3.15.0",
     "sonner": "^2.0.3",
     "swr": "^2.3.8",
     "tailwind-merge": "^3.2.0",
-    "zod": "^4.3.6"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -62,7 +62,7 @@
     "@types/sanitize-html": "^2.16.1",
     "decode-ico": "^0.4.1",
     "eslint": "^9",
-    "eslint-config-next": "16.3.0",
+    "eslint-config-next": "16.3.1",
     "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-react-compiler": "^19.1.0-rc.2",
     "eslint-plugin-simple-import-sort": "^12.1.1",

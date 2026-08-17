@@ -980,29 +980,48 @@ function locationFromVisitText(text: string): string | undefined {
   return undefined;
 }
 
+/**
+ * Display-only: drop a trailing “United States” when city and/or state remain.
+ * Country-only US copy stays. Stored ingest summaries are unchanged.
+ */
+export function trimUsCountryFromVisitLocation(location: string): string {
+  const trimmed = location.replace(/,\s*United States$/i, "").trim();
+  return trimmed || location;
+}
+
 /** City / region / country, or the mysterious-place words. Display only. */
 export function visitLocationPhrase(event: ActivityEvent): string {
   const geo = geoFromVisitMeta(event.meta);
   const hasLocation = Boolean(geo.country || geo.city || geo.countryName);
   if (hasLocation) {
-    return (
+    return trimUsCountryFromVisitLocation(
       locationFromVisitText(visitDisplaySummary(formatVisitSummary(geo))) ??
-      MYSTERIOUS_PLACE_LOCATION
+        MYSTERIOUS_PLACE_LOCATION,
     );
   }
 
   const storedText = visitDisplaySummary(event.summary);
   if (!storedText || storedText === "Visit") return MYSTERIOUS_PLACE_LOCATION;
-  return locationFromVisitText(storedText) ?? MYSTERIOUS_PLACE_LOCATION;
+  return trimUsCountryFromVisitLocation(
+    locationFromVisitText(storedText) ?? MYSTERIOUS_PLACE_LOCATION,
+  );
+}
+
+/** Normalized location for consecutive visit-run clustering. Undefined for non-visits. */
+export function visitLocationClusterKey(event: ActivityEvent): string | undefined {
+  if (event.type !== "visit" && event.type !== "visit_country_first") return undefined;
+  return visitLocationPhrase(event).toLowerCase();
 }
 
 export function formatVisitRowSummary(
   location: string,
   verb: VisitActivityVerb,
   hasTitle: boolean,
+  options?: { omitLocation?: boolean },
 ): string {
-  if (!hasTitle) return `Someone from ${location} ${siteFallbackVerb(verb)} the site`;
-  return `Someone from ${location} ${verb}`;
+  const action = hasTitle ? verb : `${siteFallbackVerb(verb)} the site`;
+  if (options?.omitLocation) return action;
+  return `Someone from ${location} ${action}`;
 }
 
 function visitSubjectPath(event: ActivityEvent): string | undefined {
@@ -1011,7 +1030,10 @@ function visitSubjectPath(event: ActivityEvent): string | undefined {
   return typeof path === "string" && path ? path : undefined;
 }
 
-function visitActivityRow(event: ActivityEvent): {
+function visitActivityRow(
+  event: ActivityEvent,
+  options?: { omitVisitLocation?: boolean },
+): {
   summary: string;
   flag?: string;
   icon?: string;
@@ -1026,13 +1048,14 @@ function visitActivityRow(event: ActivityEvent): {
   });
   const location = visitLocationPhrase(event);
   const verb = visitVerbFromPath(row.href ?? path, event.source);
+  const summaryOptions = options?.omitVisitLocation ? { omitLocation: true } : undefined;
   if (isUsableVisitTitle(row.label)) {
-    return { ...row, summary: formatVisitRowSummary(location, verb, true) };
+    return { ...row, summary: formatVisitRowSummary(location, verb, true, summaryOptions) };
   }
   if (verb === "listened to") {
     return {
       ...row,
-      summary: formatVisitRowSummary(location, verb, true),
+      summary: formatVisitRowSummary(location, verb, true, summaryOptions),
       label: "a Design Details episode",
     };
   }
@@ -1040,13 +1063,13 @@ function visitActivityRow(event: ActivityEvent): {
   if (row.href) {
     return {
       ...row,
-      summary: formatVisitRowSummary(location, fallbackVerb, true),
+      summary: formatVisitRowSummary(location, fallbackVerb, true, summaryOptions),
       label: SITE_VISIT_LABEL,
     };
   }
   return {
     ...row,
-    summary: formatVisitRowSummary(location, fallbackVerb, false),
+    summary: formatVisitRowSummary(location, fallbackVerb, false, summaryOptions),
     label: undefined,
   };
 }
@@ -1064,7 +1087,10 @@ function publicPullRequestLabel(event: ActivityEvent): string {
   return PRIVATE_PULL_REQUEST_DUMMY_LABEL;
 }
 
-export function getActivityRow(event: ActivityEvent): {
+export function getActivityRow(
+  event: ActivityEvent,
+  options?: { omitVisitLocation?: boolean },
+): {
   summary: string;
   flag?: string;
   icon?: string;
@@ -1094,7 +1120,7 @@ export function getActivityRow(event: ActivityEvent): {
   }
 
   if (event.type === "visit" || event.type === "visit_country_first") {
-    return visitActivityRow(event);
+    return visitActivityRow(event, options);
   }
 
   if (event.type === "like") {

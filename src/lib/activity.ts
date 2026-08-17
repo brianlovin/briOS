@@ -71,6 +71,7 @@ export {
   activityEventHref,
   activityRollupKey,
   activityStackReactKey,
+  markVisitLocationContinuations,
   nextActivityEnterState,
   rollupActivityEvents,
   shouldPulseActivityRollup,
@@ -149,6 +150,8 @@ export {
   SITE_VISIT_LABEL,
   stripSiteTitleSuffix,
   stripTrailingShortIdToken,
+  trimUsCountryFromVisitLocation,
+  visitLocationClusterKey,
   visitLocationPhrase,
   visitVerbFromPath,
 } from "./activity-shared";

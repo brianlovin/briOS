@@ -31,6 +31,7 @@ import {
 } from "@/lib/activity";
 import {
   activityStackReactKey,
+  markVisitLocationContinuations,
   nextActivityEnterState,
   rollupActivityEvents,
   shouldPulseActivityRollup,
@@ -192,6 +193,7 @@ export function ActivityRow({
   href: hrefOverride,
   pulse = false,
   likeTargets: likeTargetsProp,
+  omitVisitLocation = false,
   onAimGlobe,
 }: {
   event: ActivityEvent;
@@ -200,9 +202,10 @@ export function ActivityRow({
   href?: string;
   pulse?: boolean;
   likeTargets?: ActivityLikeTarget[];
+  omitVisitLocation?: boolean;
   onAimGlobe?: (event: ActivityEvent) => void;
 }) {
-  const row = getActivityRow(event);
+  const row = getActivityRow(event, { omitVisitLocation });
   const homeUrl = activitySourceUrl(event.source);
   const isLike = event.type === "like";
   const likeTargets = likeTargetsFromRow(event, row, likeTargetsProp);
@@ -253,7 +256,9 @@ export function ActivityRow({
         </div>
         <p className="flex min-w-0 items-baseline gap-1.5">
           <span className="min-w-0">
-            <span className="text-primary">{row.summary}</span>
+            <span className={omitVisitLocation ? "text-tertiary" : "text-primary"}>
+              {row.summary}
+            </span>
             {href && context ? (
               <>
                 {" "}
@@ -456,6 +461,7 @@ function ActivityStackList({
                 sectionLabel={stack.sectionLabel}
                 href={stack.href}
                 likeTargets={stack.likeTargets}
+                omitVisitLocation={stack.omitVisitLocation}
                 pulse={pulseKey === reactKey || enterPulseKeys.has(reactKey)}
                 onAimGlobe={onAimGlobe}
               />
@@ -504,7 +510,10 @@ export function ActivityFeed({
   initialCount: number;
 }) {
   const { events, count } = useActivity(initialEvents, initialCount);
-  const stacks = useMemo(() => rollupActivityEvents(events), [events]);
+  const stacks = useMemo(
+    () => markVisitLocationContinuations(rollupActivityEvents(events)),
+    [events],
+  );
   const pulseKey = useRollupPulse(stacks);
   const [globeAim, setGlobeAim] = useState<ActivityGlobeAimRequest | null>(null);
   const handleAimGlobe = useCallback((event: ActivityEvent) => {
