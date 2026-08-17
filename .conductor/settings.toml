@@ -1,0 +1,10 @@
+"$schema" = "https://conductor.build/schemas/settings.repo.schema.json"
+
+[scripts]
+setup = "./scripts/conductor-setup.sh"
+
+[scripts.run.run]
+available_in = "local"
+command = "bun run generate-schemas && bun run dev -p ${CONDUCTOR_PORT:-3000}"
+default = true
+icon = "play"
