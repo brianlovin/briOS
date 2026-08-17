@@ -31,7 +31,7 @@ export function createRssFeed({
     id: `${SITE_CONFIG.url}${path}`,
     link: `${SITE_CONFIG.url}${path}`,
     language: "en",
-    image: `${SITE_CONFIG.url}/api/og`,
+    image: `${SITE_CONFIG.url}/img/og.png`,
     favicon: `${SITE_CONFIG.url}/favicon.ico`,
     copyright: `All rights reserved ${new Date().getFullYear()}, ${SITE_CONFIG.author.name}`,
     updated: new Date(),
