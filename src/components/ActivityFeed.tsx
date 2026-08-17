@@ -253,11 +253,9 @@ export function ActivityTrackedCount({ count }: { count: number }) {
       <TooltipTrigger
         delay={0}
         closeDelay={0}
-        aria-label={formatTrackedEventsLabel(count)}
-        className="text-tertiary hidden cursor-default bg-transparent p-0 font-mono text-sm tabular-nums md:inline"
+        className="text-tertiary hidden cursor-default bg-transparent p-0 text-sm tabular-nums md:inline"
       >
-        <SlotDigits value={count} />
-        {` ${count === 1 ? "event tracked" : "events tracked"}`}
+        {formatTrackedEventsLabel(count)}
       </TooltipTrigger>
       <TooltipContent
         side="bottom"

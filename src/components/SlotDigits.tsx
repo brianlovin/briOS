@@ -57,7 +57,7 @@ function SlotDigit({ digit }: { digit: number }) {
 
 export function SlotDigits({ value, className }: { value: number; className?: string }) {
   const prefersReducedMotion = useReducedMotion();
-  const formatted = value.toLocaleString("en-US");
+  const formatted = String(value);
 
   if (prefersReducedMotion) {
     return <span className={className}>{formatted}</span>;
