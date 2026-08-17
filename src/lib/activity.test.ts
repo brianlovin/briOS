@@ -1733,7 +1733,17 @@ describe("shouldRecordVisit / likeMetaFromRequest", () => {
   test("skips the activity page and API routes", () => {
     expect(shouldRecordVisit("/activity")).toBe(false);
     expect(shouldRecordVisit("/writing")).toBe(true);
+    expect(shouldRecordVisit("/writing/foo")).toBe(true);
     expect(shouldRecordVisit("/api/activity/tail")).toBe(false);
+  });
+
+  test("skips crawler-probe paths", () => {
+    expect(shouldRecordVisit("/robots.txt")).toBe(false);
+    expect(shouldRecordVisit("/sitemap.xml")).toBe(false);
+    expect(shouldRecordVisit("/favicon.ico")).toBe(false);
+    expect(shouldRecordVisit("/apple-touch-icon.png")).toBe(false);
+    expect(shouldRecordVisit("/apple-touch-icon-precomposed.png")).toBe(false);
+    expect(shouldRecordVisit("/.well-known/security.txt")).toBe(false);
   });
 
   test("builds like meta from the referer and skips /activity", () => {
