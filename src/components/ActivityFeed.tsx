@@ -351,6 +351,19 @@ function pruneEnterDelays(delays: Map<string, number>, liveKeys: Set<string>): M
   return changed ? next : delays;
 }
 
+function mergeEnterDelays(
+  current: Map<string, number>,
+  pending: Map<string, number>,
+  liveKeys: Set<string>,
+): Map<string, number> {
+  let next = current;
+  if (pending.size > 0) {
+    next = new Map(current);
+    for (const [key, delay] of pending) next.set(key, delay);
+  }
+  return pruneEnterDelays(next, liveKeys);
+}
+
 function ActivityStackList({
   stacks,
   pulseKey,
@@ -366,19 +379,12 @@ function ActivityStackList({
   const [seenKeys, setSeenKeys] = useState<Set<string> | null>(null);
   const [enterDelays, setEnterDelays] = useState<Map<string, number>>(() => new Map());
   const { seen, delays: pending } = nextActivityEnterState(keys, seenKeys);
-  const enterPulseKeys = useEnterPulseKeys(canAnimate ? [...pending.keys()] : [], canAnimate);
+  const nextDelays = mergeEnterDelays(enterDelays, pending, liveKeys);
+  const enterPulseKeys = useEnterPulseKeys(canAnimate ? [...nextDelays.keys()] : [], canAnimate);
 
   let nextSeen = seen;
-  let nextDelays = enterDelays;
-
-  if (pending.size > 0) {
-    nextDelays = new Map(enterDelays);
-    for (const [key, delay] of pending) nextDelays.set(key, delay);
-  }
-
   const prunedSeen = new Set([...nextSeen].filter((key) => liveKeys.has(key)));
   if (prunedSeen.size !== nextSeen.size) nextSeen = prunedSeen;
-  nextDelays = pruneEnterDelays(nextDelays, liveKeys);
 
   if (nextSeen !== seenKeys) setSeenKeys(nextSeen);
   if (nextDelays !== enterDelays) setEnterDelays(nextDelays);
