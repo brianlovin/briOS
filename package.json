@@ -23,7 +23,7 @@
     "@tanstack/react-virtual": "^3.13.18",
     "@upstash/qstash": "^2.11.3",
     "@upstash/redis": "^1.38.2",
-    "@vercel/og": "^0.11.1",
+    "@vercel/og": "^1.0.1",
     "botid": "^1.5.11",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
