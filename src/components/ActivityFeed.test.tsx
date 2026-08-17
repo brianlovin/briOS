@@ -715,7 +715,7 @@ describe("ActivityRow", () => {
     expect(markup).not.toContain(">Stack<");
   });
 
-  test("renders a stored Home like as Someone liked plus a Home link", () => {
+  test("hides a stored Home like instead of showing Home", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow
         event={event({
@@ -727,12 +727,68 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(markup).toContain("Someone liked");
-    expect(markup).toContain(">Home<");
-    expect(markup).toContain('href="/"');
-    expect(markup).not.toContain("Someone liked a page");
-    expect(markup).not.toContain("Someone liked Home");
+    expect(markup).toBe("");
+    expect(markup).not.toContain("Home");
+    expect(markup).not.toContain("Someone liked");
     expect(markup).not.toContain("a page");
+  });
+
+  test("renders one 1Password like without Home", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          type: "like",
+          speed: "event",
+          summary: "Someone liked 1Password",
+          subject: { kind: "stack", label: "1Password", href: "https://1password.com" },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("Someone liked");
+    expect(markup).toContain(">1Password<");
+    expect(markup).toContain('href="https://1password.com"');
+    expect(markup).not.toContain("Home");
+    expect(markup).not.toContain("Someone liked 1Password");
+  });
+
+  test("renders mixed consecutive likes as a title plus others", () => {
+    const stacks = rollupActivityEvents([
+      event({
+        id: "like-1password",
+        type: "like",
+        speed: "event",
+        summary: "Someone liked 1Password",
+        subject: { kind: "stack", label: "1Password", href: "https://1password.com" },
+      }),
+      event({
+        id: "like-cursor",
+        type: "like",
+        speed: "event",
+        summary: "Someone liked Cursor",
+        subject: { kind: "stack", label: "Cursor", href: "https://cursor.com" },
+      }),
+    ]);
+
+    expect(stacks).toHaveLength(1);
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={stacks[0]!.latest}
+        count={stacks[0]!.count}
+        href={stacks[0]!.href}
+        likeTargets={stacks[0]!.likeTargets}
+      />,
+    );
+
+    expect(markup).toContain("Someone liked");
+    expect(markup).toContain(">1Password<");
+    expect(markup).toContain("+ 1 other");
+    expect(markup).toContain("Cursor");
+    expect(stacks[0]?.likeTargets).toEqual([
+      { title: "1Password", href: "https://1password.com" },
+      { title: "Cursor", href: "https://cursor.com" },
+    ]);
+    expect(markup).not.toContain("Home");
   });
 
   test("keeps a like title as plain text when there is no href", () => {
@@ -1070,8 +1126,8 @@ describe("ActivityFeed", () => {
             id: "like-1",
             type: "like",
             speed: "event",
-            summary: "Someone liked Home",
-            subject: { kind: "home", label: "Home", href: "/" },
+            summary: "Someone liked 1Password",
+            subject: { kind: "stack", label: "1Password", href: "https://1password.com" },
           }),
         ]}
         initialCount={3}

@@ -51,6 +51,12 @@ export function useLikes(pageId: string, target: LikeActivityTarget = {}) {
   const addLike = async () => {
     if (!viewerKnown || userLikes >= MAX_LIKES_PER_USER) return;
 
+    const payload = likeActivityPayload(target, {
+      title: document.title,
+      href: window.location.pathname,
+    });
+    if (!payload) return;
+
     const optimisticData: LikeData = {
       count: count + 1,
       userLikes: userLikes + 1,
@@ -62,12 +68,7 @@ export function useLikes(pageId: string, target: LikeActivityTarget = {}) {
         const res = await fetch(`/api/likes/${pageId}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(
-            likeActivityPayload(target, {
-              title: document.title,
-              href: window.location.pathname,
-            }),
-          ),
+          body: JSON.stringify(payload),
         });
         if (!res.ok) {
           throw new Error("Failed to like");

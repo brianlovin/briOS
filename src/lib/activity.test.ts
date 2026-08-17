@@ -15,6 +15,7 @@ import {
   findForbiddenPii,
   formatActivityTitle,
   formatDownloadSummary,
+  formatLikeOthersLabel,
   formatVisitSummary,
   getActivityRow,
   getCaffeineIcon,
@@ -23,6 +24,7 @@ import {
   hashDigestSubscriber,
   inferTitleFromPath,
   ingestActivityEvent,
+  isHiddenLikeEvent,
   isSlugLikeActivityTitle,
   likeActivityPayload,
   likeMetaFromRequest,
@@ -40,6 +42,7 @@ import {
   sanitizeVisitTitle,
   shouldLookupCmsPostTitle,
   shouldPulseActivityRollup,
+  shouldRecordLike,
   shouldRecordVisit,
   stripSiteTitleSuffix,
   stripTrailingShortIdToken,
@@ -1027,6 +1030,50 @@ describe("recordLike", () => {
     expect(await store.getCount()).toBe(0);
   });
 
+  test("does not ingest a like for / or a Home title", async () => {
+    const store = createMemoryActivityStore();
+    expect(await recordLike({ title: "Home", href: "/", content_type: "home" }, store)).toEqual({
+      skipped: true,
+      reason: "home",
+    });
+    expect(await recordLike({ title: "a page", href: "/", content_type: "home" }, store)).toEqual({
+      skipped: true,
+      reason: "home",
+    });
+    expect(
+      await recordLike({ title: "1Password", href: "", content_type: "stack" }, store),
+    ).toEqual({ skipped: true, reason: "home" });
+    expect(await store.getCount()).toBe(0);
+    expect(await store.getTail(10)).toEqual([]);
+  });
+
+  test("keeps a 1Password like title instead of rewriting it to Home", async () => {
+    const store = createMemoryActivityStore();
+    const result = await recordLike(
+      {
+        title: "1Password",
+        href: "https://1password.com",
+        content_type: "stack",
+        pageId: "stack-1password",
+      },
+      store,
+    );
+    expect("ok" in result && result.ok).toBe(true);
+    const [event] = await store.getTail(1);
+    expect(event?.summary).toBe("Someone liked 1Password");
+    expect(event?.subject).toEqual({
+      kind: "stack",
+      label: "1Password",
+      href: "https://1password.com",
+    });
+    expect(getActivityRow(event!)).toEqual({
+      summary: "Someone liked",
+      href: "https://1password.com",
+      label: "1Password",
+    });
+    expect(getActivityRow(event!).label).not.toBe("Home");
+  });
+
   test("writes a public like with subject + meta and no actor", async () => {
     const store = createMemoryActivityStore();
     const result = await recordLike(
@@ -1239,6 +1286,8 @@ describe("inferTitleFromPath", () => {
     );
     expect(looksLikeShortId("writing")).toBe(false);
     expect(looksLikeShortId("stack")).toBe(false);
+    expect(looksLikeShortId("1Password")).toBe(false);
+    expect(looksLikeIdentifier("1Password")).toBe(false);
     expect(looksLikeShortId("kcJun01")).toBe(true);
     expect(looksLikeShortId("B57IXLJ")).toBe(true);
     expect(stripTrailingShortIdToken("grok bot first impressions kcJun01")).toBe(
@@ -1284,6 +1333,8 @@ describe("inferTitleFromPath", () => {
     expect(title).not.toMatch(/^https?:/i);
     expect(inferTitleFromPath("https://brianlovin.com/writing/foo")).toBe("foo");
     expect(inferTitleFromPath("https://brianlovin.com/writing")).toBe("Writing");
+    expect(inferTitleFromPath("https://1password.com")).not.toBe("Home");
+    expect(inferTitleFromPath("https://1password.com")).toBe("");
   });
 });
 
@@ -1675,25 +1726,25 @@ describe("getActivityRow page titles", () => {
     expect(row.href).toBe("/ama/2f2c711c-0ceb-810d-899d-e5feb99e70f4");
   });
 
-  test("splits a stored Home like into Someone liked plus a Home label", () => {
-    const row = getActivityRow({
+  test("does not display a stored Home like as a liked thing", () => {
+    const event = {
       v: 1,
       id: "like-home",
       ts: "2026-08-16T00:00:00.000Z",
       received_at: "2026-08-16T00:00:00.000Z",
       source: "brios",
       type: "like",
-      speed: "event",
+      speed: "event" as const,
       summary: "Someone liked a page",
-      visibility: "public",
+      visibility: "public" as const,
       idempotency_key: "like-home",
       subject: { kind: "home", label: "a page", href: "/" },
-    });
-    expect(row).toEqual({
-      summary: "Someone liked",
-      href: "/",
-      label: "Home",
-    });
+    };
+    expect(isHiddenLikeEvent(event)).toBe(true);
+    const row = getActivityRow(event);
+    expect(row.label).not.toBe("Home");
+    expect(row.href).toBeUndefined();
+    expect(rollupActivityEvents([event])).toEqual([]);
   });
 
   test("keeps a liked stack item name instead of rewriting it to Stack", () => {
@@ -2327,6 +2378,29 @@ describe("shouldRecordVisit / likeMetaFromRequest", () => {
     expect(activity).toBeNull();
   });
 
+  test("does not default a missing like href to /", () => {
+    expect(shouldRecordLike("/")).toBe(false);
+    expect(shouldRecordLike("")).toBe(false);
+    expect(shouldRecordLike(undefined)).toBe(false);
+    expect(shouldRecordLike("/stack/1password", "1Password")).toBe(true);
+    expect(shouldRecordLike("https://1password.com", "1Password")).toBe(true);
+    expect(shouldRecordLike("https://1password.com", "Home")).toBe(false);
+
+    expect(likeMetaFromRequest(new Request("https://brianlovin.com/api/likes/1"))).toBeNull();
+    expect(
+      likeMetaFromRequest(new Request("https://brianlovin.com/api/likes/1"), { href: "/" }),
+    ).toBeNull();
+    expect(
+      likeMetaFromRequest(
+        new Request("https://brianlovin.com/api/likes/1", {
+          headers: { referer: "https://brianlovin.com/" },
+        }),
+      ),
+    ).toBeNull();
+    expect(likeActivityPayload({ title: "Home", href: "/", contentType: "home" })).toBeNull();
+    expect(likeActivityPayload({}, { title: "Brian Lovin", href: "/" })).toBeNull();
+  });
+
   test("uses a passed item title instead of falling back to Stack", () => {
     const request = new Request("https://brianlovin.com/api/likes/1", {
       headers: { referer: "https://brianlovin.com/stack" },
@@ -2413,6 +2487,20 @@ describe("likeActivityPayload", () => {
       href: "/writing/hello-world",
       content_type: "writing",
     });
+  });
+
+  test("keeps a 1Password title and does not default href to /", () => {
+    expect(
+      likeActivityPayload(
+        { title: "1Password", href: "https://1password.com", contentType: "stack" },
+        { title: "Home", href: "/" },
+      ),
+    ).toEqual({
+      title: "1Password",
+      href: "https://1password.com",
+      content_type: "stack",
+    });
+    expect(likeActivityPayload({}, { title: "Home | Brian Lovin", href: "/" })).toBeNull();
   });
 });
 
@@ -2646,7 +2734,7 @@ describe("rollupActivityEvents", () => {
     expect(stacks[0]?.key).toBe("shiori:link_saved");
     expect(stacks[0]?.latest.id).toBe("s1");
     expect(stacks[1]?.count).toBe(1);
-    expect(stacks[1]?.key).toBe("like:/stack");
+    expect(stacks[1]?.key).toBe("like");
   });
 
   test("stacks consecutive Shiori link_clicked events separately from saves", () => {
@@ -2672,7 +2760,7 @@ describe("rollupActivityEvents", () => {
     expect(stacks[1]?.key).toBe("shiori:link_saved");
   });
 
-  test("does not stack likes for different apps", () => {
+  test("stacks consecutive likes of different pages as one run", () => {
     const stacks = rollupActivityEvents([
       feedEvent({
         id: "like-cursor",
@@ -2688,13 +2776,45 @@ describe("rollupActivityEvents", () => {
       }),
     ]);
 
-    expect(stacks).toHaveLength(2);
-    expect(stacks[0]?.key).toBe("like:https://cursor.com");
-    expect(stacks[1]?.key).toBe("like:https://www.raycast.com");
+    expect(stacks).toHaveLength(1);
+    expect(stacks[0]?.key).toBe("like");
+    expect(stacks[0]?.count).toBe(2);
+    expect(stacks[0]?.likeTargets).toEqual([
+      { title: "Cursor", href: "https://cursor.com" },
+      { title: "Raycast", href: "https://www.raycast.com" },
+    ]);
+    expect(formatLikeOthersLabel((stacks[0]?.likeTargets?.length ?? 1) - 1)).toBe("+ 1 other");
     expect(getActivityRow(stacks[0]!.latest).summary).toBe("Someone liked");
     expect(getActivityRow(stacks[0]!.latest).label).toBe("Cursor");
-    expect(getActivityRow(stacks[1]!.latest).summary).toBe("Someone liked");
-    expect(getActivityRow(stacks[1]!.latest).label).toBe("Raycast");
+    expect(stacks[0]?.likeTargets?.map((target) => target.title)).toEqual(["Cursor", "Raycast"]);
+  });
+
+  test("drops a stored Home like from a mixed like run", () => {
+    const stacks = rollupActivityEvents([
+      feedEvent({
+        id: "like-1password",
+        type: "like",
+        summary: "Someone liked 1Password",
+        subject: { kind: "stack", label: "1Password", href: "https://1password.com" },
+      }),
+      feedEvent({
+        id: "like-home",
+        type: "like",
+        summary: "Someone liked a page",
+        subject: { kind: "home", label: "a page", href: "/" },
+      }),
+      feedEvent({
+        id: "like-cursor",
+        type: "like",
+        summary: "Someone liked Cursor",
+        subject: { kind: "stack", label: "Cursor", href: "https://cursor.com" },
+      }),
+    ]);
+
+    expect(stacks).toHaveLength(1);
+    expect(stacks[0]?.count).toBe(2);
+    expect(stacks[0]?.likeTargets?.map((target) => target.title)).toEqual(["1Password", "Cursor"]);
+    expect(stacks[0]?.likeTargets?.some((target) => target.title === "Home")).toBe(false);
   });
 
   test("does not merge the same type across a different intervening event", () => {
