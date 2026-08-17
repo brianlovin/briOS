@@ -284,7 +284,7 @@ export function ActivityRow({
         {showCountChip ? (
           <span
             data-count={count}
-            className="text-tertiary border-secondary shrink-0 rounded-sm border px-1 font-mono text-[11px] leading-4 tabular-nums"
+            className="text-tertiary border-secondary shrink-0 -translate-y-[2px] rounded-sm border px-1.5 py-px font-mono text-xs leading-4 tabular-nums"
           >
             <RollingDigits value={count} />
           </span>
