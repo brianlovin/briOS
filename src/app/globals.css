@@ -251,6 +251,7 @@
       animation: none;
     }
   }
+  /* Flat disc: solid fill, not a lit marble. */
   .activity-globe-orb {
     position: absolute;
     left: 0;
