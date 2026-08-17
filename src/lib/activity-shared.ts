@@ -882,11 +882,51 @@ export function caffeineDrinkFromEvent(event: ActivityEvent): string {
 }
 
 const PRIVATE_PULL_REQUEST_DUMMY_LABEL = "a pull request";
+const GITHUB_PULL_URL_RE = /github\.com\/[^/]+\/([^/]+)\/pull\/(\d+)/i;
+const PULL_PATH_NUMBER_RE = /\/pull\/(\d+)(?:\/|$|\?|#)/i;
+const SUBJECT_PR_NUMBER_RE = /#(\d+)\s*$/;
+const SUMMARY_ON_REPO_RE = /\son\s+(\S+)\s*$/i;
 
 export function privatePullRequestSummary(type: "pr_opened" | "pr_merged"): string {
   return type === "pr_opened"
     ? "Opened a pull request in a private repo"
     : "Merged a pull request in a private repo";
+}
+
+function asPositiveInt(value: unknown): number | undefined {
+  if (typeof value === "number" && Number.isInteger(value) && value > 0) {
+    return value;
+  }
+  if (typeof value === "string" && /^\d+$/.test(value)) {
+    const n = Number(value);
+    if (Number.isInteger(n) && n > 0) return n;
+  }
+  return undefined;
+}
+
+function pullRequestNumberFromHref(href: string | undefined): number | undefined {
+  if (!href) return undefined;
+  const github = GITHUB_PULL_URL_RE.exec(href);
+  if (github?.[2]) return asPositiveInt(github[2]);
+  const path = PULL_PATH_NUMBER_RE.exec(href);
+  return path?.[1] ? asPositiveInt(path[1]) : undefined;
+}
+
+function formatPullRequestTarget(number: number | undefined): string {
+  const n = asPositiveInt(number);
+  return n !== undefined ? `#${n}` : "a pull request";
+}
+
+/** `Opened #2324 on briOS`, or `Opened a pull request on briOS` when the number is missing. */
+export function publicPullRequestSummary(
+  type: "pr_opened" | "pr_merged",
+  repo: string | undefined,
+  number: number | undefined,
+): string {
+  const verb = type === "pr_opened" ? "Opened" : "Merged";
+  const target = formatPullRequestTarget(number);
+  const name = repo?.trim();
+  return name ? `${verb} ${target} on ${name}` : `${verb} ${target}`;
 }
 
 function isPrivatePullRequestEvent(
@@ -901,6 +941,30 @@ function publicPullRequestHref(event: ActivityEvent): string | undefined {
   if (event.subject?.href) return event.subject.href;
   const metaHref = event.meta?.href;
   return typeof metaHref === "string" && metaHref ? metaHref : undefined;
+}
+
+function publicPullRequestNumber(event: ActivityEvent): number | undefined {
+  const fromMeta = asPositiveInt(event.meta?.number);
+  if (fromMeta !== undefined) return fromMeta;
+
+  const fromHref = pullRequestNumberFromHref(publicPullRequestHref(event));
+  if (fromHref !== undefined) return fromHref;
+
+  const label = event.subject?.label?.trim();
+  if (!label) return undefined;
+  const fromLabel = SUBJECT_PR_NUMBER_RE.exec(label);
+  return fromLabel?.[1] ? asPositiveInt(fromLabel[1]) : undefined;
+}
+
+function publicPullRequestRepo(event: ActivityEvent): string | undefined {
+  const fromMeta = typeof event.meta?.repo === "string" ? event.meta.repo.trim() : "";
+  if (fromMeta) return fromMeta;
+
+  const href = publicPullRequestHref(event);
+  const github = href ? GITHUB_PULL_URL_RE.exec(href) : null;
+  if (github?.[1]) return github[1];
+
+  return SUMMARY_ON_REPO_RE.exec(event.summary.trim())?.[1];
 }
 
 /** Linked fallback when a visit has no real page title. Never “Home”. */
@@ -1130,7 +1194,11 @@ export function getActivityRow(
   if (event.type === "pr_opened" || event.type === "pr_merged") {
     const href = publicPullRequestHref(event);
     return {
-      summary: event.summary,
+      summary: publicPullRequestSummary(
+        event.type,
+        publicPullRequestRepo(event),
+        publicPullRequestNumber(event),
+      ),
       ...(href ? { href } : {}),
       label: publicPullRequestLabel(event),
     };

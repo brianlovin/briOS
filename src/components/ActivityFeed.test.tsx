@@ -486,7 +486,7 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(markup).toContain("Opened a pull request on briOS");
+    expect(markup).toContain("Opened #42 on briOS");
     expect(markup).toContain(">Add activity feed<");
     expect(markup).toContain('href="https://github.com/brianlovin/briOS/pull/42"');
     expect(markup).toContain('target="_blank"');
@@ -574,13 +574,13 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(markup).toContain("Merged some-fix");
+    expect(markup).toContain("Merged #12 on briOS");
     expect(markup).toContain("brianlovin/briOS#12");
     expect(markup).toContain("+18");
     expect(markup).toContain("-3");
     expect(markup).not.toContain("+18 -3");
     expect(markup).toMatch(
-      /Merged some-fix[\s\S]*href="https:\/\/github.com\/brianlovin\/briOS\/pull\/12"[^>]*>brianlovin\/briOS#12[\s\S]*\+18[\s\S]*-3/,
+      /Merged #12 on briOS[\s\S]*href="https:\/\/github.com\/brianlovin\/briOS\/pull\/12"[^>]*>brianlovin\/briOS#12[\s\S]*\+18[\s\S]*-3/,
     );
   });
 

@@ -103,7 +103,7 @@ describe("POST /api/webhooks/github", () => {
     expect(serialized).not.toContain("octocat@example.com");
     expect(event?.type).toBe("pr_opened");
     expect(event?.source).toBe("github");
-    expect(event?.summary).toBe("Opened a pull request on briOS");
+    expect(event?.summary).toBe("Opened #7 on briOS");
   });
 
   test("records private repos without the name, and skips bot PRs, unmerged closes, and deleted stars", async () => {
