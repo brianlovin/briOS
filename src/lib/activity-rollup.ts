@@ -27,8 +27,8 @@ export function activityStackReactKey(stack: Pick<ActivityRollup, "key" | "ancho
   return `${stack.key}:${stack.anchorId}`;
 }
 
-export const ACTIVITY_ENTER_STAGGER_STEP = 0.1;
-export const ACTIVITY_ENTER_STAGGER_MAX = 1;
+export const ACTIVITY_ENTER_STAGGER_STEP = 0.05;
+export const ACTIVITY_ENTER_STAGGER_MAX = 0.4;
 
 /** Enter delays for keys that were not on screen last paint. First paint (`previous` null) is empty. */
 export function activityEnterStaggerDelays(
@@ -47,6 +47,28 @@ export function activityEnterStaggerDelays(
     index += 1;
   }
   return delays;
+}
+
+/**
+ * First committed key set is already on screen — no enter delays.
+ * Later keys not in `previous` get stagger delays; existing keys do not.
+ */
+export function nextActivityEnterState(
+  keys: string[],
+  previous: Set<string> | null,
+  step = ACTIVITY_ENTER_STAGGER_STEP,
+  max = ACTIVITY_ENTER_STAGGER_MAX,
+): { seen: Set<string>; delays: Map<string, number> } {
+  if (previous === null) {
+    return { seen: new Set(keys), delays: new Map() };
+  }
+
+  const delays = activityEnterStaggerDelays(keys, previous, step, max);
+  if (delays.size === 0) return { seen: previous, delays };
+
+  const seen = new Set(previous);
+  for (const key of keys) seen.add(key);
+  return { seen, delays };
 }
 
 export function activityEventHref(event: ActivityEvent): string | undefined {
@@ -145,6 +167,7 @@ function stackHref(events: ActivityEvent[]): string | undefined {
   return collapsed === "/https:" || collapsed === "/http:" ? latest : collapsed;
 }
 
+/** Consecutive runs only — an interrupting event always starts a new stack. */
 export function rollupActivityEvents(events: ActivityEvent[]): ActivityRollup[] {
   const runs: Array<{
     key: string;

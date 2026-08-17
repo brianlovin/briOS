@@ -24,7 +24,7 @@ function event(overrides: Partial<ActivityEvent>): ActivityEvent {
 }
 
 describe("ActivityRow", () => {
-  test("shows the site favicon and keeps the flag in the title", () => {
+  test("shows the site favicon and omits the flag from the title", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow
         event={event({
@@ -35,7 +35,8 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(markup).toContain("🇮🇳 Visit from India");
+    expect(markup).toContain("Visit from India");
+    expect(markup).not.toContain("🇮🇳");
     expect(markup).toContain("/activity/favicons/brios.png");
     expect(markup).toContain('href="/"');
     expect(markup).toContain("Home");
@@ -252,20 +253,46 @@ describe("ActivityRow", () => {
     );
 
     expect(visit).toContain("/activity/favicons/tax-ui.png");
-    expect(visit).toContain("🇺🇸 Visit from United States");
+    expect(visit).toContain("Visit from United States");
+    expect(visit).not.toContain("🇺🇸");
+    expect(visit).toContain('width="16"');
+    expect(visit).toContain('height="16"');
+    expect(visit).toContain("size-4");
     expect(download).toContain("/activity/favicons/design-details.png");
-    expect(download).toContain("Someone downloaded ");
-    expect(download).toContain("Design Details");
+    expect(download).toContain("Someone downloaded");
+    expect(download).not.toContain("Someone downloaded Design Details");
+    expect(download).toContain(">Design Details<");
     expect(download).toContain('href="https://designdetails.fm"');
+    expect(download).toContain('target="_blank"');
+    expect(download).toContain("noopener noreferrer");
     expect(unknown).not.toContain("/activity/favicons/");
-    expect(unknown).toContain("🇺🇸 Visit from United States");
+    expect(unknown).toContain("Visit from United States");
+    expect(unknown).not.toContain("🇺🇸");
   });
 
-  test("rebuilds a country name and flag for older visits that only have a code", () => {
+  test("renders the staff.design favicon at 20px so it matches the GitHub mark", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "staff-design",
+          summary: "🇺🇸 Visit from United States",
+          meta: { country: "US" },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("/activity/favicons/staff-design.png");
+    expect(markup).toContain('width="20"');
+    expect(markup).toContain('height="20"');
+    expect(markup).toContain("size-5");
+    expect(markup).not.toContain("size-4");
+  });
+
+  test("rebuilds a country name without a flag emoji for older visits that only have a code", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow event={event({ summary: "Visit from TW", meta: { country: "TW" } })} />,
     );
-    expect(markup).toContain("🇹🇼");
+    expect(markup).not.toContain("🇹🇼");
     expect(markup).toContain("Visit from Taiwan");
   });
 
@@ -312,10 +339,13 @@ describe("ActivityRow", () => {
     );
 
     expect(like).toContain("text-red-500");
-    expect(like).toContain("Someone liked Grok Bot first impressions");
+    expect(like).toContain("Someone liked");
+    expect(like).toContain(">Grok Bot first impressions<");
+    expect(like).not.toContain("Someone liked Grok Bot first impressions");
     expect(like).toContain('href="/writing/grok-bot-first-impressions"');
     expect(visit).not.toContain("text-red-500");
-    expect(visit).toContain("🇮🇳 Visit from India");
+    expect(visit).toContain("Visit from India");
+    expect(visit).not.toContain("🇮🇳");
     expect(visit).toContain("/activity/favicons/brios.png");
     expect(like).not.toContain("/activity/favicons/");
   });
@@ -364,8 +394,8 @@ describe("ActivityRow", () => {
     for (const markup of [prOpened, prMerged, starred]) {
       expect(markup).not.toContain(pulsePath);
       expect(markup).toContain("text-primary");
-      expect(markup).toContain('width="16"');
-      expect(markup).toContain('height="16"');
+      expect(markup).toContain('width="20"');
+      expect(markup).toContain('height="20"');
       expect(markup).not.toContain("#000");
       expect(markup).not.toContain("#fff");
       expect(markup).not.toContain('fill="black"');
@@ -385,8 +415,9 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(markup).toContain("Someone downloaded ");
-    expect(markup).toContain("Tax UI");
+    expect(markup).toContain("Someone downloaded");
+    expect(markup).not.toContain("Someone downloaded Tax UI");
+    expect(markup).toContain(">Tax UI<");
     expect(markup).toContain('href="https://tax-ui.brianlovin.com/"');
     expect(markup).toContain('target="_blank"');
     expect(markup).toContain("noopener noreferrer");
@@ -448,9 +479,10 @@ describe("ActivityRow", () => {
     );
 
     expect(markup).toContain("Opened a pull request on briOS");
-    expect(markup).toContain("Add activity feed");
+    expect(markup).toContain(">Add activity feed<");
     expect(markup).toContain('href="https://github.com/brianlovin/briOS/pull/42"');
     expect(markup).toContain('target="_blank"');
+    expect(markup).not.toContain(">GitHub<");
     expect(markup).toContain("M12 2C6.477 2 2 6.477 2 12c0 4.42");
     expect(markup).not.toContain("text-red-500");
     expect(markup).not.toContain(">https:<");
@@ -508,40 +540,44 @@ describe("ActivityRow", () => {
     expect(markup).not.toContain(">https:<");
   });
 
-  test("shows merge diff stats in the metadata slot", () => {
+  test("puts merge diff stats after the repo/PR context", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow
         event={event({
           source: "github",
           type: "pr_merged",
           speed: "event",
-          summary: "Merged a pull request on briOS",
+          summary: "Merged some-fix",
           subject: {
             kind: "pull_request",
-            label: "Add activity feed",
-            href: "https://github.com/brianlovin/briOS/pull/42",
+            label: "brianlovin/briOS#12",
+            href: "https://github.com/brianlovin/briOS/pull/12",
           },
           meta: {
             repo: "briOS",
-            title: "Add activity feed",
-            number: 42,
-            href: "https://github.com/brianlovin/briOS/pull/42",
-            additions: 311,
-            deletions: 211,
-            changed_files: 8,
+            title: "some-fix",
+            number: 12,
+            href: "https://github.com/brianlovin/briOS/pull/12",
+            additions: 18,
+            deletions: 3,
+            changed_files: 2,
           },
         })}
+        count={2}
       />,
     );
 
-    expect(markup).toContain("Merged a pull request on briOS");
-    expect(markup).toContain("Add activity feed");
-    expect(markup).toContain("+311");
-    expect(markup).toContain("-211");
+    expect(markup).toContain("Merged some-fix");
+    expect(markup).toContain("brianlovin/briOS#12");
+    expect(markup).toContain("+18");
+    expect(markup).toContain("-3");
     expect(markup).toContain("text-green-600");
     expect(markup).toContain("text-red-500");
     expect(markup).toContain("tabular-nums");
-    expect(markup).not.toContain("+311 -211");
+    expect(markup).not.toContain("+18 -3");
+    expect(markup).toMatch(
+      /text-primary[^>]*>Merged some-fix[\s\S]*href="https:\/\/github.com\/brianlovin\/briOS\/pull\/12"[^>]*>brianlovin\/briOS#12[\s\S]*data-count="2"[\s\S]*\+18[\s\S]*-3/,
+    );
   });
 
   test("still shows +0 and -0 when both diff fields are zero", () => {
@@ -649,7 +685,9 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(markup).toContain("Someone liked Cursor");
+    expect(markup).toContain("Someone liked");
+    expect(markup).toContain(">Cursor<");
+    expect(markup).not.toContain("Someone liked Cursor");
     expect(markup).toContain('href="https://cursor.com"');
     expect(markup).toContain("text-red-500");
     expect(markup).not.toContain(">Stack<");
@@ -669,9 +707,73 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(markup).toContain("Someone liked Cursor");
+    expect(markup).toContain("Someone liked");
     expect(markup).toContain(">Cursor<");
+    expect(markup).not.toContain("Someone liked Cursor");
     expect(markup).not.toContain(">Stack<");
+  });
+
+  test("renders a stored Home like as Someone liked plus a Home link", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          type: "like",
+          speed: "event",
+          summary: "Someone liked a page",
+          subject: { kind: "home", label: "a page", href: "/" },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("Someone liked");
+    expect(markup).toContain(">Home<");
+    expect(markup).toContain('href="/"');
+    expect(markup).not.toContain("Someone liked a page");
+    expect(markup).not.toContain("Someone liked Home");
+    expect(markup).not.toContain("a page");
+  });
+
+  test("keeps a like title as tertiary text when there is no href", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          type: "like",
+          speed: "event",
+          summary: "Someone liked How to give a great product design portfolio presentation",
+          subject: {
+            kind: "writing",
+            label: "How to give a great product design portfolio presentation",
+          },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("Someone liked");
+    expect(markup).toContain("text-tertiary");
+    expect(markup).toContain("How to give a great product design portfolio presentation");
+    expect(markup).not.toContain("<a ");
+    expect(markup).not.toContain("Someone liked How to give");
+    expect(markup).not.toMatch(/Someone liked\s{2,}/);
+  });
+
+  test("keeps the like title once and the count chip after it", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          type: "like",
+          speed: "event",
+          summary: "Someone liked Cursor",
+          subject: { kind: "stack", label: "Cursor", href: "https://cursor.com" },
+        })}
+        count={2}
+      />,
+    );
+
+    expect(markup).toMatch(
+      /text-primary[^>]*>Someone liked[\s\S]*href="https:\/\/cursor.com"[^>]*>Cursor[\s\S]*data-count="2"/,
+    );
+    expect(markup).not.toContain("Someone liked Cursor");
+    expect(markup).not.toContain('data-count="1"');
   });
 
   test("uses the Shiori orb for any shiori-sourced event", () => {
@@ -687,11 +789,151 @@ describe("ActivityRow", () => {
     );
 
     expect(markup).toContain("shiori-icon.png");
-    expect(markup).toContain("Someone saved a link on Shiori");
-    expect(markup).not.toContain("<a ");
+    expect(markup).toContain("Someone saved a link");
+    expect(markup).not.toContain("Someone saved a link on Shiori");
+    expect(markup).toContain(">Shiori<");
+    expect(markup).toContain('href="https://www.shiori.sh"');
+    expect(markup).toContain('target="_blank"');
+    expect(markup).toContain("noopener noreferrer");
   });
 
-  test("renders a Shiori link_clicked row like a save, without leaking a URL", () => {
+  test("lifts Shiori out of click, signup, subscribe, and download copy", () => {
+    const cases = [
+      {
+        type: "link_clicked" as const,
+        summary: "Someone clicked a link on Shiori",
+        stripped: "Someone clicked a link",
+      },
+      {
+        type: "signed_up" as const,
+        summary: "Someone signed up for Shiori",
+        stripped: "Someone signed up",
+      },
+      {
+        type: "subscription_started" as const,
+        summary: "Someone subscribed on Shiori",
+        stripped: "Someone subscribed",
+      },
+      {
+        type: "download" as const,
+        summary: "Someone downloaded Shiori",
+        stripped: "Someone downloaded",
+      },
+    ];
+
+    for (const { type, summary, stripped } of cases) {
+      const markup = renderToStaticMarkup(
+        <ActivityRow
+          event={event({
+            source: "shiori",
+            type,
+            speed: "event",
+            summary,
+          })}
+        />,
+      );
+
+      expect(markup).toContain(stripped);
+      expect(markup).not.toContain(summary);
+      expect(markup).toContain(">Shiori<");
+      expect(markup).toContain('href="https://www.shiori.sh"');
+      expect(markup).toContain('target="_blank"');
+    }
+  });
+
+  test("links staff.design and Design Details visits to the product home", () => {
+    const staff = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "staff-design",
+          summary: "🇺🇸 Visit from United States",
+          meta: { country: "US" },
+        })}
+      />,
+    );
+    const details = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "design-details",
+          summary: "🇺🇸 Visit from San Francisco, California, United States",
+          subject: { kind: "home", label: "Home", href: "/" },
+          meta: { country: "US", city: "San Francisco", path: "/" },
+        })}
+      />,
+    );
+
+    expect(staff).toContain("Visit from United States");
+    expect(staff).not.toContain("🇺🇸");
+    expect(staff).toContain(">Staff Design<");
+    expect(staff).toContain('href="https://staff.design"');
+    expect(staff).toContain('target="_blank"');
+    expect(details).toContain("Visit from San Francisco");
+    expect(details).toContain(">Design Details<");
+    expect(details).toContain('href="https://designdetails.fm"');
+    expect(details).toContain('target="_blank"');
+    expect(details).not.toContain(">Home<");
+  });
+
+  test("keeps a specific staff.design page as the new-tab link", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "staff-design",
+          summary: "🇩🇪 Visit from Germany",
+          subject: {
+            kind: "page",
+            label: "Karla Mickens Cole",
+            href: "/karla-mickens-cole",
+          },
+          meta: { country: "DE", path: "/karla-mickens-cole", title: "Karla Mickens Cole" },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("Visit from Germany");
+    expect(markup).not.toContain("🇩🇪");
+    expect(markup).toContain(">Karla Mickens Cole<");
+    expect(markup).toContain('href="https://staff.design/karla-mickens-cole"');
+    expect(markup).toContain('target="_blank"');
+    expect(markup).not.toContain(">Staff Design<");
+  });
+
+  test("keeps first-party likes and visits on the page, not briOS", () => {
+    const like = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          type: "like",
+          speed: "event",
+          summary: "Someone liked Grok Bot first impressions",
+          subject: {
+            kind: "writing",
+            label: "Grok Bot first impressions",
+            href: "/writing/grok-bot-first-impressions",
+          },
+        })}
+      />,
+    );
+    const visit = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          summary: "🇮🇳 Visit from India",
+          subject: { kind: "home", label: "a page", href: "/" },
+          meta: { country: "IN", path: "/", title: "a page" },
+        })}
+      />,
+    );
+
+    expect(like).toContain(">Grok Bot first impressions<");
+    expect(like).toContain('href="/writing/grok-bot-first-impressions"');
+    expect(like).not.toContain(">briOS<");
+    expect(like).not.toContain('target="_blank"');
+    expect(visit).toContain(">Home<");
+    expect(visit).toContain('href="/"');
+    expect(visit).not.toContain(">briOS<");
+    expect(visit).not.toContain('target="_blank"');
+  });
+
+  test("renders a Shiori link_clicked row without leaking the saved URL", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow
         event={event({
@@ -705,14 +947,16 @@ describe("ActivityRow", () => {
     );
 
     expect(markup).toContain("shiori-icon.png");
-    expect(markup).toContain("Someone clicked a link on Shiori");
+    expect(markup).toContain("Someone clicked a link");
+    expect(markup).not.toContain("Someone clicked a link on Shiori");
+    expect(markup).toContain(">Shiori<");
+    expect(markup).toContain('href="https://www.shiori.sh"');
     expect(markup).not.toContain("A saved page");
     expect(markup).not.toContain("example.com");
-    expect(markup).not.toContain("<a ");
-    expect(markup).not.toContain("https://");
+    expect(markup).not.toContain("example.com/secret");
   });
 
-  test("shows a tertiary count next to the title when a stack is larger than one", () => {
+  test("shows a quiet count chip after the metadata when a stack is larger than one", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow
         event={event({
@@ -738,14 +982,36 @@ describe("ActivityRow", () => {
     );
 
     expect(markup).toContain("Visit from Spring Lake, North Carolina, United States");
-    expect(markup).toContain("> 6<");
+    expect(markup).toContain('data-count="6"');
     expect(markup).toContain("text-tertiary");
+    expect(markup).toContain("font-mono");
+    expect(markup).toContain("rounded-sm");
+    expect(markup).toContain("border-secondary");
+    expect(markup).toContain("tabular-nums");
+    expect(markup).toContain("inline-flex");
     expect(markup).toContain("an AMA question");
     expect(markup).toContain('href="/ama"');
     expect(markup).not.toContain("2f2c711c-0ceb-810d-899d-e5feb99e70f4");
     expect(markup).toMatch(
-      /text-primary[^>]*>🇺🇸 Visit from Spring Lake[\s\S]*text-tertiary[^>]*> 6<[\s\S]*href="\/ama"[^>]*>an AMA question/,
+      /text-primary[^>]*>Visit from Spring Lake[\s\S]*href="\/ama"[^>]*>an AMA question[\s\S]*data-count="6"/,
     );
+    const title = markup.match(/<p class="relative z-10[\s\S]*?<\/p>/)?.[0] ?? "";
+    expect(title).toContain("data-count");
+    expect(title).not.toContain("<div");
+
+    const single = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          summary: "Visit from Spring Lake, North Carolina, United States",
+          meta: { country: "US", path: "/ama" },
+        })}
+        count={1}
+        sectionLabel="an AMA question"
+        href="/ama"
+      />,
+    );
+    expect(single).not.toContain("font-mono");
+    expect(single).not.toContain(">1<");
   });
 
   test("pulses the row background only when asked", () => {
@@ -757,9 +1023,125 @@ describe("ActivityRow", () => {
     );
 
     expect(pulsed).toContain("data-rollup-pulse");
+    expect(pulsed).toContain("activity-rollup-pulse");
     expect(pulsed).toContain("bg-secondary");
-    expect(pulsed).toContain("duration-500");
+    expect(pulsed).not.toContain("transition-colors");
+    expect(pulsed).not.toContain("duration-500");
     expect(quiet).not.toContain("data-rollup-pulse");
+    expect(quiet).not.toContain("activity-rollup-pulse");
+    expect(quiet).not.toContain("border-b");
+    expect(quiet).not.toContain("border-secondary");
+    expect(quiet).not.toContain("transition-colors");
+    expect(quiet).not.toContain("duration-500");
+  });
+
+  test("keeps the title on one line and sticks time to the right on mobile", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          source: "github",
+          type: "pr_merged",
+          speed: "event",
+          summary: "Merged some-fix",
+          subject: {
+            kind: "pull_request",
+            label: "brianlovin/briOS#12",
+            href: "https://github.com/brianlovin/briOS/pull/12",
+          },
+          meta: { additions: 18, deletions: 3 },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("whitespace-nowrap");
+    expect(markup).toContain("md:truncate");
+    expect(markup).toContain("sticky");
+    expect(markup).toContain("right-0");
+    expect(markup).toContain("ml-auto");
+    expect(markup).toContain("w-max");
+    expect(markup).toContain("min-w-full");
+    expect(markup).toContain("inset_1px_0_0");
+    expect(markup).toContain("group-hover:bg-inherit");
+    expect(markup).toContain("group-data-[rollup-pulse]:bg-inherit");
+    expect(markup).toContain("md:static");
+    expect(markup).toContain("md:grid-cols-[2rem_minmax(0,1fr)_auto]");
+    expect(markup).toContain("hover:bg-secondary");
+    expect(markup).not.toContain("transition-colors");
+    expect(markup).not.toContain("duration-500");
+    expect(markup).toMatch(/Merged some-fix[\s\S]*brianlovin\/briOS#12[\s\S]*\+18[\s\S]*-3/);
+  });
+});
+
+describe("ActivityFeed", () => {
+  test("is a raw stream without Event / Time column headers", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityFeed
+        initialEvents={[
+          event({
+            id: "visit-1",
+            summary: "🇮🇳 Visit from India",
+            meta: { country: "IN" },
+          }),
+        ]}
+        initialCount={1}
+      />,
+    );
+
+    expect(markup).toContain("Visit from India");
+    expect(markup).not.toContain("🇮🇳");
+    expect(markup).toContain("divide-y");
+    expect(markup).toContain("divide-secondary");
+    expect(markup).toContain("overflow-hidden");
+    expect(markup).toContain("clip-path:inset(0)");
+    expect(markup).toContain("min-w-max");
+    expect(markup).toContain("min-w-full");
+    expect(markup).toContain("w-max");
+    expect(markup).toContain("overscroll-contain");
+    expect(markup).toContain("whitespace-nowrap");
+    expect(markup).toContain("sticky");
+    expect(markup).toContain("right-0");
+    expect(markup).not.toContain(">Event<");
+    expect(markup).not.toContain(">Time<");
+    expect(markup).not.toContain("sticky top-0");
+    expect(markup).not.toMatch(/opacity:\s*0/);
+    expect(markup).not.toContain("translateY(-8");
+    expect(markup).not.toContain("y: -8");
+  });
+
+  test("first paint of several stacks is static, not an enter cascade", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityFeed
+        initialEvents={[
+          event({
+            id: "visit-in",
+            summary: "Visit from India",
+            meta: { country: "IN", path: "/" },
+          }),
+          event({
+            id: "visit-us",
+            summary: "Visit from United States",
+            meta: { country: "US", city: "San Francisco", path: "/writing" },
+          }),
+          event({
+            id: "like-1",
+            type: "like",
+            speed: "event",
+            summary: "Someone liked Home",
+            subject: { kind: "home", label: "Home", href: "/" },
+          }),
+        ]}
+        initialCount={3}
+      />,
+    );
+
+    expect(markup).toContain("Visit from India");
+    expect(markup).toContain("Visit from San Francisco");
+    expect(markup).toContain("Someone liked");
+    expect(markup).not.toMatch(/opacity:\s*0/);
+    expect(markup).not.toContain("height: 0");
+    expect(markup).not.toContain("height:0px");
+    expect(markup).not.toContain("translateY(-8");
+    expect(markup).toContain("clip-path:inset(0)");
   });
 });
 
@@ -799,6 +1181,8 @@ describe("ActivityTrackedCount", () => {
     expect(one).toContain("1 event tracked");
     expect(one).toContain("text-tertiary");
     expect(one).toContain("text-sm");
+    expect(one).toContain("hidden");
+    expect(one).toContain("md:inline");
     expect(many).toContain("12 events tracked");
     expect(many).not.toContain("Live");
   });

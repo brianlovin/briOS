@@ -58,6 +58,7 @@ export {
   activityEventHref,
   activityRollupKey,
   activityStackReactKey,
+  nextActivityEnterState,
   rollupActivityEvents,
   shouldPulseActivityRollup,
 } from "./activity-rollup";

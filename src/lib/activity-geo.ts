@@ -517,14 +517,19 @@ function isRegionalIndicator(char: string): boolean {
 export function splitVisitSummaryFlag(summary: string): { flag?: string; text: string } {
   const chars = [...summary];
   if (
-    chars.length >= 3 &&
+    chars.length >= 2 &&
     isRegionalIndicator(chars[0] ?? "") &&
-    isRegionalIndicator(chars[1] ?? "") &&
-    chars[2] === " "
+    isRegionalIndicator(chars[1] ?? "")
   ) {
-    return { flag: `${chars[0]}${chars[1]}`, text: chars.slice(3).join("") };
+    const rest = chars.slice(2).join("").replace(/^\s+/, "");
+    return { flag: `${chars[0]}${chars[1]}`, text: rest };
   }
   return { text: summary };
+}
+
+/** Display-only: drop a leading flag emoji. Ingest may still store one. */
+export function visitDisplaySummary(summary: string): string {
+  return splitVisitSummaryFlag(summary).text.trim();
 }
 
 export function geoFromVisitMeta(meta: Record<string, unknown> | undefined): {

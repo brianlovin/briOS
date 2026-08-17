@@ -5,11 +5,10 @@
 
 import {
   ANONYMOUS_VISIT_SUMMARY,
-  countryCodeToFlag,
   formatVisitSummary,
   geoFromVisitMeta,
   normalizeCountryCode,
-  splitVisitSummaryFlag,
+  visitDisplaySummary,
 } from "./activity-geo";
 
 export { countryCodeToFlag, normalizeCountryCode } from "./activity-geo";
@@ -95,6 +94,70 @@ export function resolveActivitySourceHref(
     return new URL(trimmed, base).href;
   }
   return trimmed;
+}
+
+function normalizeHrefForCompare(href: string): string {
+  return href.trim().replace(/\/+$/, "");
+}
+
+function isSourceHomeHref(source: string, href: string | undefined): boolean {
+  const trimmed = href?.trim();
+  if (!trimmed || trimmed === "/") return true;
+  const home = activitySourceUrl(source);
+  if (!home) return false;
+  return normalizeHrefForCompare(trimmed) === normalizeHrefForCompare(home);
+}
+
+function hasSpecificSubjectHref(source: string, href: string | undefined): boolean {
+  return Boolean(href?.trim()) && !isSourceHomeHref(source, href);
+}
+
+function stripSourceNameFromSummary(summary: string, sourceLabel: string): string {
+  const escaped = sourceLabel.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const trimmed = summary.trim();
+  const withoutSuffix = trimmed
+    .replace(new RegExp(`\\s+(?:on|for)\\s+${escaped}$`, "i"), "")
+    .trim();
+  if (withoutSuffix !== trimmed) return withoutSuffix;
+
+  const downloaded = trimmed.match(new RegExp(`^(Someone downloaded)\\s+${escaped}$`, "i"));
+  if (downloaded?.[1]) return downloaded[1];
+  return summary;
+}
+
+function attachSourceMetadata(
+  event: ActivityEvent,
+  row: {
+    summary: string;
+    flag?: string;
+    icon?: string;
+    href?: string;
+    label?: string;
+  },
+): {
+  summary: string;
+  flag?: string;
+  icon?: string;
+  href?: string;
+  label?: string;
+} {
+  if (event.type === "like" || event.source === ACTIVITY_SOURCE_BRIOS) {
+    return row;
+  }
+
+  const sourceLabel = activitySourceLabel(event.source);
+  const sourceUrl = activitySourceUrl(event.source);
+  if (hasSpecificSubjectHref(event.source, row.href)) {
+    return row;
+  }
+  if (!sourceUrl) return row;
+
+  return {
+    ...row,
+    summary: stripSourceNameFromSummary(row.summary, sourceLabel),
+    label: sourceLabel,
+    href: sourceUrl,
+  };
 }
 
 export function formatDownloadSummary(source: string, label?: string): string {
@@ -582,6 +645,15 @@ function displaySubjectLabel(
   return looksLikeIdentifier(cleaned) ? undefined : formatActivityTitle(cleaned);
 }
 
+function likedTitleFromSummary(summary: string): string | undefined {
+  const trimmed = summary.trim();
+  if (/^someone liked$/i.test(trimmed)) return undefined;
+  const rest = trimmed.replace(/^Someone liked\s+/i, "").trim();
+  if (!rest) return undefined;
+  if (rest === "a page") return "Home";
+  return rest;
+}
+
 const EMAIL_RE = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i;
 const IPV4_RE = /\b(?:\d{1,3}\.){3}\d{1,3}\b/;
 const IPV6_RE = /\b(?:[0-9a-f]{1,4}:){2,7}[0-9a-f]{1,4}\b/i;
@@ -630,13 +702,6 @@ function scanPii(value: unknown, path: string): string | null {
   }
 
   return null;
-}
-
-function visitSummaryWithFlag(summary: string, meta: Record<string, unknown> | undefined): string {
-  const split = splitVisitSummaryFlag(summary);
-  if (split.flag) return summary;
-  const flag = countryCodeToFlag(geoFromVisitMeta(meta).country);
-  return flag ? `${flag} ${summary}` : summary;
 }
 
 export function getMergedPullRequestDiff(
@@ -759,59 +824,60 @@ export function getActivityRow(event: ActivityEvent): {
   }
 
   if (event.type === "caffeinated") {
-    return {
+    return attachSourceMetadata(event, {
       summary: event.summary,
       icon: getCaffeineIcon(caffeineDrinkFromEvent(event)),
       href: event.subject?.href,
       label: event.subject?.label,
-    };
+    });
   }
 
   if (event.type === "visit") {
     const geo = geoFromVisitMeta(event.meta);
     const hasLocation = Boolean(geo.country || geo.city || geo.countryName);
-    const storedText = splitVisitSummaryFlag(event.summary).text.trim();
+    const storedText = visitDisplaySummary(event.summary);
     const summary = hasLocation
-      ? formatVisitSummary(geo)
+      ? visitDisplaySummary(formatVisitSummary(geo))
       : !storedText || storedText === "Visit"
         ? ANONYMOUS_VISIT_SUMMARY
-        : visitSummaryWithFlag(event.summary, event.meta);
-    return {
+        : storedText;
+    return attachSourceMetadata(event, {
       summary,
       href: event.subject?.href,
       label: displaySubjectLabel(event.subject?.label, event.subject?.href),
-    };
+    });
   }
 
   if (event.type === "visit_country_first") {
-    return {
-      summary: visitSummaryWithFlag(event.summary, event.meta),
+    return attachSourceMetadata(event, {
+      summary: visitDisplaySummary(event.summary),
       href: event.subject?.href,
       label: displaySubjectLabel(event.subject?.label, event.subject?.href),
-    };
+    });
   }
 
   if (event.type === "like") {
     const label = displaySubjectLabel(event.subject?.label, event.subject?.href, {
       preferStored: true,
     });
-    const name = label || "a page";
-    return {
-      summary: `Someone liked ${name}`,
-      href: event.subject?.href,
-      label,
-    };
+    const fromSummary = likedTitleFromSummary(event.summary);
+    const name = label || fromSummary || "Home";
+    return attachSourceMetadata(event, {
+      summary: "Someone liked",
+      href: event.subject?.href || (name === "Home" ? "/" : undefined),
+      label: name,
+    });
   }
 
   if (event.source === "shiori" && (event.type === "link_saved" || event.type === "link_clicked")) {
-    return { summary: event.summary };
+    return attachSourceMetadata(event, { summary: event.summary });
   }
 
-  return {
+  return attachSourceMetadata(event, {
     summary: event.summary,
     href: event.subject?.href,
     label: displaySubjectLabel(event.subject?.label, event.subject?.href),
-  };
+  });
 }
 
 export function getRequestCountry(headers: Headers): string | undefined {
