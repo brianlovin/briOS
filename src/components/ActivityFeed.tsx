@@ -300,18 +300,19 @@ export function ActivityRow({
 
 function VisitClusterRail() {
   return (
-    <span
-      aria-hidden
-      className="text-tertiary pointer-events-none absolute inset-x-0 top-8 bottom-1 flex flex-col"
-    >
-      <span className="mx-auto w-px flex-1 bg-current opacity-50" />
-      <svg width="32" height="10" viewBox="0 0 32 10" className="overflow-visible">
+    <span aria-hidden className="pointer-events-none absolute inset-x-0 top-8 bottom-1">
+      <svg
+        viewBox="0 0 32 200"
+        preserveAspectRatio="xMidYMax slice"
+        className="text-tertiary block h-full w-full overflow-hidden"
+      >
         <path
-          d="M16 0 V3 Q16 9 30 9"
+          d="M16 0 L16 188 Q16 198 30 198"
           fill="none"
           stroke="currentColor"
           strokeWidth="1"
           strokeLinecap="round"
+          strokeLinejoin="round"
         />
       </svg>
     </span>
@@ -333,7 +334,7 @@ function ActivityClusterAction({
   const showCountChip = stack.count > 1;
 
   return (
-    <li className="relative flex items-baseline gap-1.5">
+    <li className="relative flex items-baseline gap-1.5 py-0.5">
       {pulse ? (
         <span
           key={stack.latest.id}
@@ -419,7 +420,7 @@ function ActivityVisitClusterBlock({
         </div>
         <div className="min-w-0 flex-1">
           <p className="text-primary">{cluster.locationHeader}</p>
-          <ul className="mt-0.5 flex flex-col gap-0.5">
+          <ul className="mt-1 flex flex-col gap-1">
             {cluster.actions.map((action) => {
               const actionKey = activityStackReactKey(action);
               return (
