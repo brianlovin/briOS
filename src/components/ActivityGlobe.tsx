@@ -7,6 +7,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore
 import type { ActivityEvent } from "@/lib/activity";
 import { activityGlobeMarkers, type ActivityLatLng } from "@/lib/activity-geo";
 import {
+  GLOBE_HANG,
   GLOBE_MARKER_ELEVATION,
   globeDiameterFromHeight,
   latLngToGlobePose,
@@ -23,8 +24,6 @@ const THETA_LIMIT = Math.PI / 2 - 0.08;
 const MIN_FEED_WIDTH = 720;
 const AIM_MS_MIN = 600;
 const AIM_MS_MAX = 850;
-const HANG_RIGHT = 0.333;
-const HANG_BOTTOM = 0.367;
 
 const MARKER_COLOR: [number, number, number] = [252 / 255, 83 / 255, 42 / 255];
 const LIGHT_BASE: [number, number, number] = [1, 1, 1];
@@ -68,13 +67,18 @@ function easeOutCubic(t: number): number {
   return 1 - (1 - t) ** 3;
 }
 
+function paneHeight(host: HTMLElement | null): number {
+  const windowHeight = typeof window === "undefined" ? 960 : window.innerHeight;
+  const hostHeight = host?.clientHeight ?? 0;
+  return Math.max(hostHeight, windowHeight);
+}
+
 function readPaneSize(host: HTMLElement | null): { hasRoom: boolean; size: number } {
   const width =
-    host?.clientWidth ?? (typeof window === "undefined" ? MIN_FEED_WIDTH : window.innerWidth);
-  const height = host?.clientHeight || (typeof window === "undefined" ? 960 : window.innerHeight);
+    host?.clientWidth || (typeof window === "undefined" ? MIN_FEED_WIDTH : window.innerWidth);
   return {
     hasRoom: width >= MIN_FEED_WIDTH,
-    size: globeDiameterFromHeight(height),
+    size: globeDiameterFromHeight(paneHeight(host)),
   };
 }
 
@@ -131,16 +135,18 @@ export function ActivityGlobe({
 
   useEffect(() => {
     const host = overlayRef.current?.parentElement;
-    if (!host) return;
-
     const update = () => {
-      setLayout(readPaneSize(host));
+      setLayout(readPaneSize(host ?? overlayRef.current?.parentElement ?? null));
     };
     update();
 
     const observer = new ResizeObserver(update);
-    observer.observe(host);
-    return () => observer.disconnect();
+    if (host) observer.observe(host);
+    window.addEventListener("resize", update);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", update);
+    };
   }, []);
 
   useEffect(() => {
@@ -332,8 +338,7 @@ export function ActivityGlobe({
     }
   }
 
-  const hangRight = Math.round(layout.size * HANG_RIGHT);
-  const hangBottom = Math.round(layout.size * HANG_BOTTOM);
+  const hang = Math.round(layout.size * GLOBE_HANG);
 
   return (
     <div
@@ -356,8 +361,8 @@ export function ActivityGlobe({
         style={{
           width: layout.size,
           height: layout.size,
-          right: -hangRight,
-          bottom: -hangBottom,
+          right: -hang,
+          bottom: -hang,
         }}
       >
         <canvas
