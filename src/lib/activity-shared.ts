@@ -330,12 +330,23 @@ const GENERIC_HN_STORY_TITLES = new Set([
 ]);
 
 const HN_STORY_PATH_RE = /^\/hn\/(\d+)$/;
+const CMS_POST_PATH_RE = /^\/(writing|til)\/([^/]+)$/;
 
 /** Story id from `/hn/{id}` (and absolute briOS URLs). Index `/hn` is undefined. */
 export function hnStoryIdFromPath(pathname: string): string | undefined {
   const path = normalizeActivityPath(pathnameFromHref(pathname));
   const match = HN_STORY_PATH_RE.exec(path);
   return match?.[1];
+}
+
+/** Writing/TIL child slug from `/writing/{slug}` or `/til/{slug}` (and absolute URLs). */
+export function cmsPostRefFromPath(
+  pathname: string,
+): { kind: "writing" | "til"; slug: string } | undefined {
+  const path = normalizeActivityPath(pathnameFromHref(pathname));
+  const match = CMS_POST_PATH_RE.exec(path);
+  if (!match) return undefined;
+  return { kind: match[1] as "writing" | "til", slug: match[2] };
 }
 
 /** Missing, generic, or identifier titles that should not win over a real HN story name. */
@@ -394,6 +405,14 @@ export function appendKnownSectionSuffix(label: string, pathname: string): strin
 
 function formatSubjectLabel(label: string, pathname: string): string {
   return appendKnownSectionSuffix(formatActivityTitle(label), pathname);
+}
+
+/** Keep a real mixed-case title as-is; title-case only slug leftovers. */
+function preserveOrFormatSubjectLabel(label: string, pathname: string): string {
+  if (!looksLikeDehyphenatedSlug(label)) {
+    return appendKnownSectionSuffix(label, pathname);
+  }
+  return formatSubjectLabel(label, pathname);
 }
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -556,7 +575,7 @@ export function sanitizeActivityTitle(title: string | undefined, path: string): 
   if (!stripped || /^brian lovin$/i.test(stripped)) return fallback;
   if (findForbiddenPii(stripped)) return fallback;
   if (isUnusableActivityTitle(stripped, path)) return fallback;
-  return formatSubjectLabel(stripped, path);
+  return preserveOrFormatSubjectLabel(stripped, path);
 }
 
 export const sanitizeVisitTitle = sanitizeActivityTitle;
@@ -566,6 +585,35 @@ export function looksLikeDehyphenatedSlug(label: string): boolean {
   const trimmed = label.trim();
   if (!trimmed || !/[a-z]/i.test(trimmed)) return false;
   return !/[A-Z]/.test(trimmed);
+}
+
+/**
+ * True when `title` is the path slug (raw, de-hyphenated, or title-cased).
+ * Real CMS titles that differ (apostrophes, `AI`) return false.
+ */
+export function isSlugLikeActivityTitle(title: string | undefined, pathname: string): boolean {
+  const trimmed = title?.trim();
+  if (!trimmed) return true;
+  if (looksLikeDehyphenatedSlug(trimmed)) return true;
+
+  const inferred = inferTitleFromPath(pathname);
+  const normalized = stripTrailingShortIdToken(trimmed)
+    .replace(/-/g, " ")
+    .replace(/\s+/g, " ")
+    .toLowerCase();
+  if (normalized === inferred.toLowerCase()) return true;
+  return trimmed === formatActivityTitle(inferred);
+}
+
+/** Missing, generic, or slug-derived titles that should lose to a CMS lookup. */
+export function shouldLookupCmsPostTitle(title: string | undefined, pathname: string): boolean {
+  if (!cmsPostRefFromPath(pathname)) return false;
+  const trimmed = title?.trim();
+  if (!trimmed) return true;
+  const stripped = stripSiteTitleSuffix(trimmed);
+  if (!stripped || /^brian lovin$/i.test(stripped)) return true;
+  if (isUnusableActivityTitle(stripped, pathname)) return true;
+  return isSlugLikeActivityTitle(stripped, pathname);
 }
 
 /** Title-case a slug-like label. Leaves already-capped titles alone. */
@@ -635,7 +683,7 @@ function displaySubjectLabel(
     if (isUnusableActivityTitle(cleaned, href)) {
       return isProtocolSegment(inferred) ? undefined : formatSubjectLabel(inferred, href);
     }
-    return formatSubjectLabel(cleaned || inferred, href);
+    return preserveOrFormatSubjectLabel(cleaned || inferred, href);
   }
 
   if (!label) return undefined;

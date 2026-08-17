@@ -9,7 +9,7 @@ const SLOT_DIGITS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0] as const;
 const SLOT_DURATION_MS = 280;
 
 /** Wrap 9 → 0 forward onto the duplicate 0 instead of rewinding through 8…1. */
-export function nextSlotOffset(from: number, to: number): number {
+function nextSlotOffset(from: number, to: number): number {
   if (from === 9 && to === 0) return 10;
   return to;
 }
@@ -36,10 +36,7 @@ function SlotDigit({ digit }: { digit: number }) {
   }, [offset]);
 
   return (
-    <span
-      data-slot-digit
-      className="relative inline-block h-[1em] w-[0.65em] overflow-hidden align-baseline leading-none"
-    >
+    <span className="relative inline-block h-[1em] w-[0.65em] overflow-hidden align-baseline leading-none">
       <span
         className={cn("flex flex-col", animate && "ease-out [transition:transform_280ms]")}
         style={{ transform: `translateY(-${offset}em)` }}
@@ -68,7 +65,6 @@ export function SlotDigits({ value, className }: { value: number; className?: st
 
   return (
     <span
-      data-slot-digits
       aria-hidden
       className={cn("inline-flex h-[1em] items-center overflow-hidden leading-none", className)}
     >

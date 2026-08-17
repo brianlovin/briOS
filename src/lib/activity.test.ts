@@ -23,6 +23,7 @@ import {
   hashDigestSubscriber,
   inferTitleFromPath,
   ingestActivityEvent,
+  isSlugLikeActivityTitle,
   likeActivityPayload,
   likeMetaFromRequest,
   looksLikeIdentifier,
@@ -37,11 +38,13 @@ import {
   resolveIngestVisitTitle,
   rollupActivityEvents,
   sanitizeVisitTitle,
+  shouldLookupCmsPostTitle,
   shouldPulseActivityRollup,
   shouldRecordVisit,
   stripSiteTitleSuffix,
   stripTrailingShortIdToken,
 } from "@/lib/activity";
+import * as activityCms from "@/lib/activity-cms";
 import { geoFromVisitMeta, normalizeRegionCode, visitDisplaySummary } from "@/lib/activity-geo";
 import * as activityHn from "@/lib/activity-hn";
 import { parseActivityStreamFields } from "@/lib/activity-redis";
@@ -60,13 +63,16 @@ function baseEvent(overrides: Record<string, unknown> = {}) {
 }
 
 let lookupHnStoryTitleSpy: ReturnType<typeof spyOn>;
+let lookupCmsPostTitleSpy: ReturnType<typeof spyOn>;
 
 beforeEach(() => {
   lookupHnStoryTitleSpy = spyOn(activityHn, "lookupHnStoryTitle").mockResolvedValue(null);
+  lookupCmsPostTitleSpy = spyOn(activityCms, "lookupCmsPostTitle").mockResolvedValue(null);
 });
 
 afterEach(() => {
   lookupHnStoryTitleSpy.mockRestore();
+  lookupCmsPostTitleSpy.mockRestore();
 });
 
 function visitRowEvent(
@@ -586,6 +592,75 @@ describe("recordVisit", () => {
     await expect(resolveIngestVisitTitle("/hn/42991019", "42991019")).resolves.toBe(
       "Some HN Story",
     );
+  });
+
+  test("looks up a writing title at ingest when the client title is generic or empty", async () => {
+    lookupCmsPostTitleSpy.mockResolvedValue("How I'm Feeling About AI in August 2026");
+    const path = "/writing/how-im-feeling-about-ai-in-august-2026-O7e1TFS";
+
+    const store = createMemoryActivityStore();
+    await recordVisit({ path, title: "Brian Lovin" }, store);
+    await recordVisit({ path }, store);
+    await recordVisit({ path, title: "Writing | Brian Lovin" }, store);
+
+    const events = await store.getTail(3);
+    expect(events.map((event) => event.subject?.label)).toEqual([
+      "How I'm Feeling About AI in August 2026",
+      "How I'm Feeling About AI in August 2026",
+      "How I'm Feeling About AI in August 2026",
+    ]);
+    expect(lookupCmsPostTitleSpy).toHaveBeenCalledWith(
+      "writing",
+      "how-im-feeling-about-ai-in-august-2026-O7e1TFS",
+    );
+    expect(getActivityRow(events[0]!).label).toBe("How I'm Feeling About AI in August 2026");
+    expect(getActivityRow(events[0]!).label).not.toBe("How Im Feeling About Ai in August 2026");
+  });
+
+  test("looks up a TIL title at ingest when the client title is slug-like", async () => {
+    lookupCmsPostTitleSpy.mockResolvedValue("Cache-Control: max-age vs s-maxage");
+    const path = "/til/cache-headers-B57IXLJ";
+    const store = createMemoryActivityStore();
+    await recordVisit({ path, title: "cache headers" }, store);
+    const [event] = await store.getTail(1);
+    expect(event?.subject?.label).toBe("Cache-Control: max-age vs s-maxage");
+    expect(lookupCmsPostTitleSpy).toHaveBeenCalledWith("til", "cache-headers-B57IXLJ");
+  });
+
+  test("does not look up a writing title when the client already sent the real title", async () => {
+    lookupCmsPostTitleSpy.mockResolvedValue("Ignored lookup title");
+    const store = createMemoryActivityStore();
+    await recordVisit(
+      {
+        path: "/writing/how-im-feeling-about-ai-in-august-2026-O7e1TFS",
+        title: "How I'm Feeling About AI in August 2026 | Brian Lovin",
+      },
+      store,
+    );
+    const [event] = await store.getTail(1);
+    expect(event?.subject?.label).toBe("How I'm Feeling About AI in August 2026");
+    expect(lookupCmsPostTitleSpy).not.toHaveBeenCalled();
+  });
+
+  test("resolveIngestVisitTitle stores the exact CMS title, not a title-cased slug", async () => {
+    lookupCmsPostTitleSpy.mockResolvedValue("How I'm Feeling About AI in August 2026");
+    const path = "/writing/how-im-feeling-about-ai-in-august-2026-O7e1TFS";
+    await expect(resolveIngestVisitTitle(path, "Brian Lovin")).resolves.toBe(
+      "How I'm Feeling About AI in August 2026",
+    );
+    await expect(resolveIngestVisitTitle(path, "")).resolves.toBe(
+      "How I'm Feeling About AI in August 2026",
+    );
+    await expect(
+      resolveIngestVisitTitle(path, "How Im Feeling About Ai in August 2026"),
+    ).resolves.toBe("How I'm Feeling About AI in August 2026");
+  });
+
+  test("slug fallback may still title-case when the CMS lookup misses", async () => {
+    await expect(
+      resolveIngestVisitTitle("/writing/how-im-feeling-about-ai-in-august-2026-O7e1TFS"),
+    ).resolves.toBe("How Im Feeling About Ai in August 2026");
+    expect(lookupCmsPostTitleSpy).toHaveBeenCalled();
   });
 
   test("strips a trailing short id from the visit title at ingest", async () => {
@@ -1295,12 +1370,51 @@ describe("sanitizeVisitTitle / formatActivityTitle", () => {
     expect(formatActivityTitle("secret for ios")).toBe("Secret for iOS");
     expect(formatActivityTitle("grok bot first impressions")).toBe("Grok Bot First Impressions");
     expect(formatActivityTitle("Secret for iOS")).toBe("Secret for iOS");
+    expect(formatActivityTitle("How I'm Feeling About AI in August 2026")).toBe(
+      "How I'm Feeling About AI in August 2026",
+    );
     expect(formatActivityTitle("https:")).toBe("https:");
     expect(formatActivityTitle("https:")).not.toBe("Https:");
+  });
+
+  test("treats a title-cased slug as slug-like and a real CMS title as not", () => {
+    const path = "/writing/how-im-feeling-about-ai-in-august-2026-O7e1TFS";
+    expect(isSlugLikeActivityTitle("how im feeling about ai in august 2026", path)).toBe(true);
+    expect(isSlugLikeActivityTitle("How Im Feeling About Ai in August 2026", path)).toBe(true);
+    expect(isSlugLikeActivityTitle("How I'm Feeling About AI in August 2026", path)).toBe(false);
+    expect(shouldLookupCmsPostTitle(undefined, path)).toBe(true);
+    expect(shouldLookupCmsPostTitle("Brian Lovin", path)).toBe(true);
+    expect(shouldLookupCmsPostTitle("Writing | Brian Lovin", path)).toBe(true);
+    expect(shouldLookupCmsPostTitle("How I'm Feeling About AI in August 2026", path)).toBe(false);
+    expect(shouldLookupCmsPostTitle("Home", "/")).toBe(false);
   });
 });
 
 describe("getActivityRow page titles", () => {
+  test("keeps an exact stored writing title, including I'm and AI", () => {
+    const row = getActivityRow(
+      visitRowEvent({
+        kind: "writing",
+        label: "How I'm Feeling About AI in August 2026",
+        href: "/writing/how-im-feeling-about-ai-in-august-2026-O7e1TFS",
+      }),
+    );
+    expect(row.label).toBe("How I'm Feeling About AI in August 2026");
+    expect(row.label).not.toBe("How Im Feeling About Ai in August 2026");
+    expect(row.href).toBe("/writing/how-im-feeling-about-ai-in-august-2026-O7e1TFS");
+  });
+
+  test("keeps an exact stored writing title on an absolute briOS href", () => {
+    const row = getActivityRow(
+      visitRowEvent({
+        kind: "writing",
+        label: "How I'm Feeling About AI in August 2026",
+        href: "https://brianlovin.com/writing/how-im-feeling-about-ai-in-august-2026-O7e1TFS",
+      }),
+    );
+    expect(row.label).toBe("How I'm Feeling About AI in August 2026");
+  });
+
   test("infers a writing visit title from an absolute briOS href", () => {
     const stored = getActivityRow({
       v: 1,
