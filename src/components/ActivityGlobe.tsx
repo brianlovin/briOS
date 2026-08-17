@@ -7,9 +7,10 @@ import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore
 import type { ActivityEvent } from "@/lib/activity";
 import { activityGlobeMarkers, type ActivityLatLng } from "@/lib/activity-geo";
 import {
+  GLOBE_MARKER_ELEVATION,
   globeDiameterFromHeight,
-  globeMarkerFacing,
   latLngToGlobePose,
+  projectGlobeMarker,
   shortestAngleDelta,
 } from "@/lib/activity-globe";
 import { cn } from "@/lib/utils";
@@ -20,7 +21,6 @@ const DRAG_ANGLE_SCALE = 0.005;
 const DRAG_THRESHOLD_PX = 6;
 const THETA_LIMIT = Math.PI / 2 - 0.08;
 const MIN_FEED_WIDTH = 720;
-const MARKER_ELEVATION = 0.03;
 const AIM_MS_MIN = 600;
 const AIM_MS_MAX = 850;
 const HANG_RIGHT = 0.333;
@@ -158,8 +158,16 @@ export function ActivityGlobe({
     for (const marker of markersRef.current) {
       const el = orbElsRef.current.get(marker.id);
       if (!el) continue;
-      const facing = globeMarkerFacing(marker.location[0], marker.location[1], phi, theta);
-      el.style.setProperty("--orb-facing", facing.toFixed(3));
+      const projected = projectGlobeMarker(
+        marker.location[0],
+        marker.location[1],
+        phi,
+        theta,
+        GLOBE_MARKER_ELEVATION,
+      );
+      el.style.left = `${(projected.x * 100).toFixed(3)}%`;
+      el.style.top = `${(projected.y * 100).toFixed(3)}%`;
+      el.style.setProperty("--orb-facing", projected.facing.toFixed(3));
     }
   }, []);
 
@@ -219,7 +227,7 @@ export function ActivityGlobe({
       markerColor: MARKER_COLOR,
       glowColor: dark ? DARK_GLOW : LIGHT_GLOW,
       markers: markersRef.current,
-      markerElevation: MARKER_ELEVATION,
+      markerElevation: GLOBE_MARKER_ELEVATION,
       scale: 1,
       offset: [0, 0],
     });
@@ -400,8 +408,6 @@ export function ActivityGlobe({
               if (node) {
                 orbElsRef.current.set(marker.id, node);
                 node.style.setProperty("position-anchor", `--cobe-${marker.id}`);
-                // COBE 2.0.1 sets this to "N" when facing (invalid → visible) and unsets it behind.
-                node.style.setProperty("visibility", `var(--cobe-visible-${marker.id}, hidden)`);
               } else {
                 orbElsRef.current.delete(marker.id);
               }

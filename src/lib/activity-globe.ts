@@ -56,8 +56,34 @@ export function globeMarkerFacing(lat: number, lng: number, phi: number, theta: 
   return Math.min(1, Math.max(0, rz));
 }
 
+/** Same mesh radius as cobe@2 (`GLOBE_R`). */
+export const GLOBE_MESH_RADIUS = 0.8;
+export const GLOBE_MARKER_ELEVATION = 0.03;
+
 export const GLOBE_SIZE_MIN = 240;
 export const GLOBE_SIZE_MAX = 456;
+
+/** Project a lat/lng onto the COBE canvas, matching v2 marker anchors. */
+export function projectGlobeMarker(
+  lat: number,
+  lng: number,
+  phi: number,
+  theta: number,
+  elevation = GLOBE_MARKER_ELEVATION,
+): { x: number; y: number; facing: number } {
+  const unit = latLngToGlobePoint(lat, lng);
+  const radius = GLOBE_MESH_RADIUS + elevation;
+  const [rx, ry] = rotateGlobePoint(
+    [unit[0] * radius, unit[1] * radius, unit[2] * radius],
+    phi,
+    theta,
+  );
+  return {
+    x: (rx + 1) / 2,
+    y: (-ry + 1) / 2,
+    facing: globeMarkerFacing(lat, lng, phi, theta),
+  };
+}
 
 /** Diameter ≈ 1/3 of the activity pane height, clamped for short and very tall viewports. */
 export function globeDiameterFromHeight(height: number): number {

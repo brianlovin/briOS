@@ -1,6 +1,11 @@
 import { describe, expect, test } from "bun:test";
 
-import { globeMarkerFacing, latLngToGlobePose, shortestAngleDelta } from "./activity-globe";
+import {
+  globeMarkerFacing,
+  latLngToGlobePose,
+  projectGlobeMarker,
+  shortestAngleDelta,
+} from "./activity-globe";
 
 describe("latLngToGlobePose", () => {
   test("uses the COBE phi/theta convention", () => {
@@ -23,6 +28,10 @@ describe("latLngToGlobePose", () => {
     for (const [lat, lng] of samples) {
       const { phi, theta } = latLngToGlobePose(lat, lng);
       expect(globeMarkerFacing(lat, lng, phi, theta)).toBeCloseTo(1);
+      const projected = projectGlobeMarker(lat, lng, phi, theta);
+      expect(projected.x).toBeCloseTo(0.5);
+      expect(projected.y).toBeCloseTo(0.5);
+      expect(projected.facing).toBeCloseTo(1);
     }
   });
 });
