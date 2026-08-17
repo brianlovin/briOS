@@ -1,3 +1,5 @@
+import { COUNTRY_CENTROIDS } from "./activity-geo-centroids";
+
 /**
  * Country / region display names for activity visit summaries.
  * Safe to import from client components (no Redis / Node crypto).
@@ -34,6 +36,16 @@ export type ActivityGeo = {
   longitude?: number;
 };
 
+export type ActivityLatLng = {
+  lat: number;
+  lng: number;
+};
+
+export type ActivityGlobeMarker = {
+  location: [number, number];
+  size: number;
+};
+
 /** Persist the same snake_case keys first-party visits store on event.meta. */
 export function activityGeoToMeta(geo: ActivityGeo): Record<string, string | number> {
   const country = geo.country?.trim() || undefined;
@@ -41,8 +53,7 @@ export function activityGeoToMeta(geo: ActivityGeo): Record<string, string | num
   const region = geo.region?.trim() || undefined;
   const regionName = geo.regionName?.trim() || undefined;
   const city = geo.city?.trim() || undefined;
-  const latitude = Number.isFinite(geo.latitude) ? geo.latitude : undefined;
-  const longitude = Number.isFinite(geo.longitude) ? geo.longitude : undefined;
+  const coords = pairCoordinates(geo.latitude, geo.longitude);
 
   return {
     ...(country ? { country } : {}),
@@ -50,8 +61,7 @@ export function activityGeoToMeta(geo: ActivityGeo): Record<string, string | num
     ...(region ? { region } : {}),
     ...(regionName ? { region_name: regionName } : {}),
     ...(city ? { city } : {}),
-    ...(latitude !== undefined ? { latitude } : {}),
-    ...(longitude !== undefined ? { longitude } : {}),
+    ...(coords ?? {}),
   };
 }
 
@@ -468,6 +478,40 @@ function firstHeader(headers: Headers, names: string[]): string | undefined {
   return undefined;
 }
 
+function parseCoordinate(value: unknown, min: number, max: number): number | undefined {
+  if (value == null || value === "") return undefined;
+  const n = typeof value === "number" ? value : Number.parseFloat(String(value).trim());
+  if (!Number.isFinite(n) || n < min || n > max) return undefined;
+  return n;
+}
+
+export function parseLatitude(value: unknown): number | undefined {
+  return parseCoordinate(value, -90, 90);
+}
+
+export function parseLongitude(value: unknown): number | undefined {
+  return parseCoordinate(value, -180, 180);
+}
+
+/** Require a finite lat/lng pair in range. One missing/invalid coordinate drops both. */
+export function pairCoordinates(
+  latitude: unknown,
+  longitude: unknown,
+): { latitude: number; longitude: number } | undefined {
+  const lat = parseLatitude(latitude);
+  const lng = parseLongitude(longitude);
+  if (lat === undefined || lng === undefined) return undefined;
+  return { latitude: lat, longitude: lng };
+}
+
+export function countryCentroid(country: string | null | undefined): ActivityLatLng | undefined {
+  const code = normalizeCountryCode(country);
+  if (!code) return undefined;
+  const point = COUNTRY_CENTROIDS[code];
+  if (!point) return undefined;
+  return { lat: point[0], lng: point[1] };
+}
+
 export function getRequestGeo(headers: Headers): ActivityGeo {
   const country = normalizeCountryCode(
     firstHeader(headers, ["cf-ipcountry", "CF-IPCountry", "x-vercel-ip-country", "x-country"]),
@@ -483,6 +527,10 @@ export function getRequestGeo(headers: Headers): ActivityGeo {
     ? regionNameCandidate
     : undefined;
   const city = decodeHeaderText(firstHeader(headers, ["cf-ipcity", "x-vercel-ip-city"]));
+  const coords = pairCoordinates(
+    firstHeader(headers, ["cf-iplatitude", "CF-IPLatitude", "x-vercel-ip-latitude"]),
+    firstHeader(headers, ["cf-iplongitude", "CF-IPLongitude", "x-vercel-ip-longitude"]),
+  );
 
   return {
     ...(country ? { country } : {}),
@@ -490,6 +538,7 @@ export function getRequestGeo(headers: Headers): ActivityGeo {
     ...(region ? { region } : {}),
     ...(regionName ? { regionName } : {}),
     ...(city ? { city } : {}),
+    ...(coords ?? {}),
   };
 }
 
@@ -555,13 +604,7 @@ export function visitDisplaySummary(summary: string): string {
   return splitVisitSummaryFlag(summary).text.trim();
 }
 
-export function geoFromVisitMeta(meta: Record<string, unknown> | undefined): {
-  country?: string;
-  countryName?: string;
-  region?: string;
-  regionName?: string;
-  city?: string;
-} {
+export function geoFromVisitMeta(meta: Record<string, unknown> | undefined): ActivityGeo {
   if (!meta) return {};
   const country = typeof meta.country === "string" ? meta.country : undefined;
   const region = normalizeRegionCode(
@@ -570,6 +613,7 @@ export function geoFromVisitMeta(meta: Record<string, unknown> | undefined): {
   const regionNameRaw =
     typeof meta.region_name === "string" ? decodeHeaderText(meta.region_name) : undefined;
   const regionName = isUsableRegionLabel(regionNameRaw, country) ? regionNameRaw : undefined;
+  const coords = pairCoordinates(meta.latitude, meta.longitude);
   return {
     country,
     countryName:
@@ -577,5 +621,35 @@ export function geoFromVisitMeta(meta: Record<string, unknown> | undefined): {
     ...(region ? { region } : {}),
     ...(regionName ? { regionName } : {}),
     city: typeof meta.city === "string" ? decodeHeaderText(meta.city) : undefined,
+    ...(coords ?? {}),
   };
+}
+
+/** Prefer stored coords; otherwise the country centroid. Skip mysterious / missing country. */
+export function activityEventLocation(event: {
+  meta?: Record<string, unknown>;
+}): ActivityLatLng | undefined {
+  const geo = geoFromVisitMeta(event.meta);
+  if (geo.latitude !== undefined && geo.longitude !== undefined) {
+    return { lat: geo.latitude, lng: geo.longitude };
+  }
+  return countryCentroid(geo.country);
+}
+
+export function activityGlobeMarkers(
+  events: Array<{ meta?: Record<string, unknown> }>,
+): ActivityGlobeMarker[] {
+  const buckets = new Map<string, { lat: number; lng: number; count: number }>();
+  for (const event of events) {
+    const loc = activityEventLocation(event);
+    if (!loc) continue;
+    const key = `${loc.lat.toFixed(1)},${loc.lng.toFixed(1)}`;
+    const existing = buckets.get(key);
+    if (existing) existing.count += 1;
+    else buckets.set(key, { lat: loc.lat, lng: loc.lng, count: 1 });
+  }
+  return [...buckets.values()].map((bucket) => ({
+    location: [bucket.lat, bucket.lng],
+    size: Math.min(0.08, 0.028 + Math.log2(bucket.count) * 0.01),
+  }));
 }
