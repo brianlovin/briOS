@@ -63,15 +63,23 @@ export {
   verifyGithubWebhookSignature,
 } from "./activity-github";
 export { isRegisteredActivityEvent } from "./activity-registry";
-export type { ActivityLikeTarget, ActivityRollup } from "./activity-rollup";
+export type {
+  ActivityFeedItem,
+  ActivityLikeTarget,
+  ActivityRollup,
+  ActivityVisitCluster,
+} from "./activity-rollup";
 export {
   ACTIVITY_ENTER_STAGGER_MAX,
   ACTIVITY_ENTER_STAGGER_STEP,
   activityEnterStaggerDelays,
   activityEventHref,
+  activityFeedItemCount,
+  activityFeedItemReactKey,
   activityRollupKey,
   activityStackReactKey,
-  markVisitLocationContinuations,
+  activityVisitClusterReactKey,
+  clusterVisitLocationRuns,
   nextActivityEnterState,
   rollupActivityEvents,
   shouldPulseActivityRollup,
@@ -113,6 +121,7 @@ export {
   formatDownloadSummary,
   formatLikeOthersLabel,
   formatTrackedEventsLabel,
+  formatVisitLocationHeader,
   formatVisitRowSummary,
   getActivityRow,
   getCaffeineIcon,

@@ -8,12 +8,14 @@ import {
   type ActivityEvent,
   activitySectionFromPath,
   activitySectionPhrase,
+  formatVisitLocationHeader,
   getActivityRow,
   isAbsoluteHttpUrl,
   isHiddenLikeEvent,
   isHomeLikeTitle,
   isKnownActivitySection,
   visitLocationClusterKey,
+  visitLocationPhrase,
 } from "./activity-shared";
 
 export type ActivityLikeTarget = {
@@ -30,12 +32,40 @@ export type ActivityRollup = {
   sectionLabel: string;
   href?: string;
   likeTargets?: ActivityLikeTarget[];
-  /** Older same-location visit in a consecutive run — omit the someone/location prefix. */
-  omitVisitLocation?: boolean;
 };
+
+/** Consecutive same-location visit stacks, rendered as one block. Actions are oldest → newest. */
+export type ActivityVisitCluster = {
+  type: "visit-cluster";
+  locationKey: string;
+  locationHeader: string;
+  latest: ActivityEvent;
+  actions: ActivityRollup[];
+  /** Oldest event in the cluster — stable as newer actions append. */
+  anchorId: string;
+  count: number;
+};
+
+export type ActivityFeedItem = { type: "row"; stack: ActivityRollup } | ActivityVisitCluster;
 
 export function activityStackReactKey(stack: Pick<ActivityRollup, "key" | "anchorId">): string {
   return `${stack.key}:${stack.anchorId}`;
+}
+
+export function activityVisitClusterReactKey(
+  cluster: Pick<ActivityVisitCluster, "locationKey" | "anchorId">,
+): string {
+  return `visit-cluster:${cluster.locationKey}:${cluster.anchorId}`;
+}
+
+export function activityFeedItemReactKey(item: ActivityFeedItem): string {
+  return item.type === "visit-cluster"
+    ? activityVisitClusterReactKey(item)
+    : activityStackReactKey(item.stack);
+}
+
+export function activityFeedItemCount(item: ActivityFeedItem): number {
+  return item.type === "visit-cluster" ? item.count : item.stack.count;
 }
 
 export const ACTIVITY_ENTER_STAGGER_STEP = 0.05;
@@ -205,19 +235,45 @@ function stackHref(events: ActivityEvent[]): string | undefined {
 
 /**
  * Display pass over already-rolled-up stacks (newest first).
- * Consecutive visit-like rows that share a location key keep the full sentence
- * on the newest row and drop the someone/location prefix on older siblings.
- * Does not merge rows or change ×N rollup counts.
+ * Consecutive visit-like stacks that share a location key become one cluster.
+ * Actions inside a cluster are oldest → newest so a new same-place event appends
+ * at the bottom. A different location or a non-visit starts a new block.
+ * Does not change ×N rollup counts.
  */
-export function markVisitLocationContinuations(stacks: ActivityRollup[]): ActivityRollup[] {
-  let previousKey: string | undefined;
-  return stacks.map((stack) => {
-    const key = visitLocationClusterKey(stack.latest);
-    const omitVisitLocation = Boolean(key && key === previousKey);
-    previousKey = key;
-    if (stack.omitVisitLocation === omitVisitLocation) return stack;
-    if (!omitVisitLocation && stack.omitVisitLocation === undefined) return stack;
-    return { ...stack, omitVisitLocation };
+export function clusterVisitLocationRuns(stacks: ActivityRollup[]): ActivityFeedItem[] {
+  const items: Array<
+    | { type: "row"; stack: ActivityRollup }
+    | { type: "visit-cluster"; locationKey: string; newestFirst: ActivityRollup[] }
+  > = [];
+
+  for (const stack of stacks) {
+    const locationKey = visitLocationClusterKey(stack.latest);
+    const current = items[items.length - 1];
+    if (locationKey && current?.type === "visit-cluster" && current.locationKey === locationKey) {
+      current.newestFirst.push(stack);
+      continue;
+    }
+    if (locationKey) {
+      items.push({ type: "visit-cluster", locationKey, newestFirst: [stack] });
+      continue;
+    }
+    items.push({ type: "row", stack });
+  }
+
+  return items.map((item) => {
+    if (item.type === "row") return item;
+    const actions = [...item.newestFirst].reverse();
+    const newest = item.newestFirst[0]!;
+    const oldest = actions[0]!;
+    return {
+      type: "visit-cluster",
+      locationKey: item.locationKey,
+      locationHeader: formatVisitLocationHeader(visitLocationPhrase(newest.latest)),
+      latest: newest.latest,
+      actions,
+      anchorId: oldest.anchorId,
+      count: actions.reduce((total, action) => total + action.count, 0),
+    };
   });
 }
 

@@ -4,12 +4,14 @@ import {
   activityEnterStaggerDelays,
   type ActivityEvent,
   activityEventLocation,
+  activityFeedItemReactKey,
   activityRollupKey,
   activitySectionFromPath,
   activitySourceFaviconSrc,
   activitySourceUrl,
   activityStackReactKey,
   ANONYMOUS_VISIT_SUMMARY,
+  clusterVisitLocationRuns,
   countryCentroid,
   countryCodeToFlag,
   countryCodeToName,
@@ -33,7 +35,6 @@ import {
   likeMetaFromRequest,
   looksLikeIdentifier,
   looksLikeShortId,
-  markVisitLocationContinuations,
   nextActivityEnterState,
   pathnameFromHref,
   recordCaffeine,
@@ -3248,7 +3249,7 @@ describe("rollupActivityEvents", () => {
     expect(stacks[0]?.sectionLabel).not.toBe("https:");
   });
 
-  test("marks older same-location visit stacks as action-only siblings", () => {
+  test("clusters a same-location visit run as one block, oldest action first", () => {
     const sf = (id: string, href: string, label: string): ActivityEvent =>
       feedEvent({
         id,
@@ -3265,7 +3266,7 @@ describe("rollupActivityEvents", () => {
         },
       });
 
-    const stacks = markVisitLocationContinuations(
+    const items = clusterVisitLocationRuns(
       rollupActivityEvents([
         sf("sf-listening", "/listening", "Listening"),
         sf("sf-ama", "/ama", "AMA"),
@@ -3273,27 +3274,107 @@ describe("rollupActivityEvents", () => {
       ]),
     );
 
-    expect(stacks).toHaveLength(3);
-    expect(stacks.map((stack) => stack.count)).toEqual([1, 1, 1]);
-    expect(stacks[0]?.omitVisitLocation).toBeFalsy();
-    expect(stacks[1]?.omitVisitLocation).toBe(true);
-    expect(stacks[2]?.omitVisitLocation).toBe(true);
+    expect(items).toHaveLength(1);
+    expect(items[0]?.type).toBe("visit-cluster");
+    if (items[0]?.type !== "visit-cluster") return;
+    expect(items[0].locationHeader).toBe("Someone from San Francisco, California");
+    expect(items[0].locationHeader).toContain("Someone from San Francisco");
+    expect(items[0].locationHeader).not.toContain("United States");
+    expect(items[0].actions).toHaveLength(3);
+    expect(items[0].actions.map((action) => action.latest.id)).toEqual([
+      "sf-home",
+      "sf-ama",
+      "sf-listening",
+    ]);
+    expect(items[0].count).toBe(3);
 
-    const rows = stacks.map((stack) =>
-      getActivityRow(stack.latest, { omitVisitLocation: stack.omitVisitLocation }),
+    const actions = items[0].actions.map((action) =>
+      getActivityRow(action.latest, { omitVisitLocation: true }),
     );
-    expect(rows[0]?.summary).toBe("Someone from San Francisco, California viewed");
-    expect(rows[0]?.summary).toContain("Someone from San Francisco");
-    expect(rows[0]?.label).toBe("Listening");
-    expect(rows[1]?.summary).toBe("viewed");
-    expect(rows[1]?.summary).not.toContain("Someone from");
-    expect(rows[1]?.label).toBe("AMA");
-    expect(rows[2]?.summary).toBe("visited");
-    expect(rows[2]?.summary).not.toContain("Someone from");
-    expect(rows[2]?.label).toBe("the site");
+    expect(actions[0]?.summary).toBe("visited");
+    expect(actions[0]?.label).toBe("the site");
+    expect(actions[1]?.summary).toBe("viewed");
+    expect(actions[1]?.label).toBe("AMA");
+    expect(actions[2]?.summary).toBe("viewed");
+    expect(actions[2]?.label).toBe("Listening");
+    expect(actions.every((row) => !row.summary.includes("Someone from"))).toBe(true);
   });
 
-  test("a different location in the middle starts a new labeled run", () => {
+  test("appends a new same-location visit at the bottom and keeps the cluster key", () => {
+    const sf = (id: string, href: string, label: string): ActivityEvent =>
+      feedEvent({
+        id,
+        type: "visit",
+        summary: "Visit from San Francisco, California, United States",
+        subject: { kind: "page", label, href },
+        meta: {
+          country: "US",
+          country_name: "United States",
+          region: "CA",
+          region_name: "California",
+          city: "San Francisco",
+          path: href,
+        },
+      });
+
+    const first = clusterVisitLocationRuns(
+      rollupActivityEvents([sf("sf-ama", "/ama", "AMA"), sf("sf-home", "/", "Home")]),
+    );
+    const next = clusterVisitLocationRuns(
+      rollupActivityEvents([
+        sf("sf-listening", "/listening", "Listening"),
+        sf("sf-ama", "/ama", "AMA"),
+        sf("sf-home", "/", "Home"),
+      ]),
+    );
+
+    expect(first).toHaveLength(1);
+    expect(next).toHaveLength(1);
+    expect(activityFeedItemReactKey(next[0]!)).toBe(activityFeedItemReactKey(first[0]!));
+    if (next[0]?.type !== "visit-cluster") return;
+    expect(next[0].actions.map((action) => action.latest.id)).toEqual([
+      "sf-home",
+      "sf-ama",
+      "sf-listening",
+    ]);
+    expect(next[0].actions[next[0].actions.length - 1]?.latest.id).toBe("sf-listening");
+  });
+
+  test("keeps the ×N chip on an identical action inside a location cluster", () => {
+    const sf = (id: string, href: string, label: string): ActivityEvent =>
+      feedEvent({
+        id,
+        type: "visit",
+        summary: "Visit from San Francisco, California, United States",
+        subject: { kind: "page", label, href },
+        meta: {
+          country: "US",
+          country_name: "United States",
+          region: "CA",
+          region_name: "California",
+          city: "San Francisco",
+          path: href,
+        },
+      });
+
+    const items = clusterVisitLocationRuns(
+      rollupActivityEvents([
+        sf("sf-listening", "/listening", "Listening"),
+        sf("ama-1", "/ama/one", "one"),
+        sf("ama-2", "/ama/two", "two"),
+      ]),
+    );
+
+    expect(items).toHaveLength(1);
+    if (items[0]?.type !== "visit-cluster") return;
+    expect(items[0].actions).toHaveLength(2);
+    expect(items[0].actions[0]?.count).toBe(2);
+    expect(items[0].actions[0]?.sectionLabel).toBe("an AMA question");
+    expect(items[0].actions[1]?.latest.id).toBe("sf-listening");
+    expect(items[0].count).toBe(3);
+  });
+
+  test("a different location in the middle starts a new labeled cluster", () => {
     const visit = (
       id: string,
       href: string,
@@ -3314,7 +3395,7 @@ describe("rollupActivityEvents", () => {
         meta: { ...geo, path: href },
       });
 
-    const stacks = markVisitLocationContinuations(
+    const items = clusterVisitLocationRuns(
       rollupActivityEvents([
         visit("sf-1", "/listening", "Listening", {
           city: "San Francisco",
@@ -3338,17 +3419,25 @@ describe("rollupActivityEvents", () => {
       ]),
     );
 
-    expect(stacks).toHaveLength(3);
-    const rows = stacks.map((stack) =>
-      getActivityRow(stack.latest, { omitVisitLocation: stack.omitVisitLocation }),
-    );
-    expect(rows[0]?.summary).toContain("Someone from San Francisco");
-    expect(rows[1]?.summary).toBe("Someone from London, United Kingdom viewed");
-    expect(rows[2]?.summary).toContain("Someone from San Francisco");
-    expect(rows.every((row) => row.summary.includes("Someone from"))).toBe(true);
+    expect(items).toHaveLength(3);
+    expect(items.map((item) => item.type)).toEqual([
+      "visit-cluster",
+      "visit-cluster",
+      "visit-cluster",
+    ]);
+    if (items[0]?.type !== "visit-cluster") return;
+    if (items[1]?.type !== "visit-cluster") return;
+    if (items[2]?.type !== "visit-cluster") return;
+    expect(items[0].locationHeader).toContain("Someone from San Francisco");
+    expect(items[1].locationHeader).toBe("Someone from London, United Kingdom");
+    expect(items[2].locationHeader).toContain("Someone from San Francisco");
+    expect(items[0].actions).toHaveLength(1);
+    expect(items[1].actions).toHaveLength(1);
+    expect(items[2].actions).toHaveLength(1);
+    expect(activityFeedItemReactKey(items[0])).not.toBe(activityFeedItemReactKey(items[2]));
   });
 
-  test("a non-visit row does not join a visit location run", () => {
+  test("a non-visit row does not join a visit location cluster", () => {
     const sf = (id: string, href: string, label: string): ActivityEvent =>
       feedEvent({
         id,
@@ -3371,7 +3460,7 @@ describe("rollupActivityEvents", () => {
       subject: { kind: "stack", label: "Cursor", href: "https://cursor.com" },
     });
 
-    const stacks = markVisitLocationContinuations(
+    const items = clusterVisitLocationRuns(
       rollupActivityEvents([
         sf("sf-1", "/listening", "Listening"),
         like,
@@ -3379,16 +3468,19 @@ describe("rollupActivityEvents", () => {
       ]),
     );
 
-    expect(stacks).toHaveLength(3);
-    const rows = stacks.map((stack) =>
-      getActivityRow(stack.latest, { omitVisitLocation: stack.omitVisitLocation }),
-    );
-    expect(rows[0]?.summary).toContain("Someone from San Francisco");
-    expect(rows[1]?.summary).toBe("Someone liked");
-    expect(rows[1]?.label).toBe("Cursor");
-    expect(rows[2]?.summary).toContain("Someone from San Francisco");
-    expect(stacks[1]?.omitVisitLocation).toBeFalsy();
-    expect(stacks[2]?.omitVisitLocation).toBeFalsy();
+    expect(items).toHaveLength(3);
+    expect(items[0]?.type).toBe("visit-cluster");
+    expect(items[1]?.type).toBe("row");
+    expect(items[2]?.type).toBe("visit-cluster");
+    if (items[0]?.type !== "visit-cluster") return;
+    if (items[1]?.type !== "row") return;
+    if (items[2]?.type !== "visit-cluster") return;
+    expect(items[0].locationHeader).toContain("Someone from San Francisco");
+    expect(getActivityRow(items[1].stack.latest).summary).toBe("Someone liked");
+    expect(getActivityRow(items[1].stack.latest).label).toBe("Cursor");
+    expect(items[2].locationHeader).toContain("Someone from San Francisco");
+    expect(items[0].actions).toHaveLength(1);
+    expect(items[2].actions).toHaveLength(1);
   });
 
   test("only pulses when the same run's count increments", () => {

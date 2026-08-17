@@ -1013,6 +1013,10 @@ export function visitLocationClusterKey(event: ActivityEvent): string | undefine
   return visitLocationPhrase(event).toLowerCase();
 }
 
+export function formatVisitLocationHeader(location: string): string {
+  return `Someone from ${location}`;
+}
+
 export function formatVisitRowSummary(
   location: string,
   verb: VisitActivityVerb,
@@ -1021,7 +1025,7 @@ export function formatVisitRowSummary(
 ): string {
   const action = hasTitle ? verb : `${siteFallbackVerb(verb)} the site`;
   if (options?.omitLocation) return action;
-  return `Someone from ${location} ${action}`;
+  return `${formatVisitLocationHeader(location)} ${action}`;
 }
 
 function visitSubjectPath(event: ActivityEvent): string | undefined {
