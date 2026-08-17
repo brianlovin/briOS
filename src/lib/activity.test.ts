@@ -15,6 +15,7 @@ import {
   findForbiddenPii,
   formatActivityTitle,
   formatDownloadSummary,
+  formatLikeOthersLabel,
   formatVisitSummary,
   getActivityRow,
   getCaffeineIcon,
@@ -23,6 +24,7 @@ import {
   hashDigestSubscriber,
   inferTitleFromPath,
   ingestActivityEvent,
+  isHiddenLikeEvent,
   isSlugLikeActivityTitle,
   likeActivityPayload,
   likeMetaFromRequest,
@@ -40,6 +42,7 @@ import {
   sanitizeVisitTitle,
   shouldLookupCmsPostTitle,
   shouldPulseActivityRollup,
+  shouldRecordLike,
   shouldRecordVisit,
   stripSiteTitleSuffix,
   stripTrailingShortIdToken,
@@ -444,7 +447,7 @@ describe("recordVisit", () => {
       title: "Grok Bot First Impressions",
     });
     expect(getActivityRow(event!)).toEqual({
-      summary: "Visit from India",
+      summary: "Someone from India read",
       href: "/writing/grok-bot-first-impressions",
       label: "Grok Bot First Impressions",
     });
@@ -715,7 +718,7 @@ describe("recordVisit", () => {
     expect(event?.summary).toBe(ANONYMOUS_VISIT_SUMMARY);
     expect(event?.meta).toEqual({ path: "/writing", title: "Writing" });
     expect(getActivityRow(event!)).toEqual({
-      summary: ANONYMOUS_VISIT_SUMMARY,
+      summary: "Someone from a mysterious place on earth viewed",
       href: "/writing",
       label: "Writing",
     });
@@ -736,9 +739,9 @@ describe("recordVisit", () => {
       subject: { kind: "home", label: "Home", href: "/" },
     });
     expect(row).toEqual({
-      summary: ANONYMOUS_VISIT_SUMMARY,
+      summary: "Someone from a mysterious place on earth visited",
       href: "/",
-      label: "Home",
+      label: "the site",
     });
   });
 
@@ -756,7 +759,7 @@ describe("recordVisit", () => {
       idempotency_key: "old-located",
       subject: { kind: "writing", label: "Writing", href: "/writing" },
     });
-    expect(row.summary).toBe("Visit from France");
+    expect(row.summary).toBe("Someone from France viewed");
   });
 
   test("keeps the existing summary when the country has no flag", async () => {
@@ -784,7 +787,7 @@ describe("recordVisit", () => {
       meta: { country: "IN" },
     });
     expect(row).toEqual({
-      summary: "Visit from India",
+      summary: "Someone from India visited the site",
     });
     expect(row.summary).not.toMatch(/\p{Regional_Indicator}/u);
   });
@@ -804,7 +807,7 @@ describe("recordVisit", () => {
       meta: { country: "IN" },
     });
     expect(row).toEqual({
-      summary: "First visit from IN",
+      summary: "Someone from India visited the site",
     });
   });
 
@@ -947,7 +950,7 @@ describe("HMAC download ingest", () => {
     expect(event?.actor).toBeUndefined();
     expect(JSON.stringify(event)).not.toMatch(/https?:\/\//);
     expect(getActivityRow(event!)).toEqual({
-      summary: "Someone clicked a link",
+      summary: "Someone clicked a link on",
       href: "https://www.shiori.sh",
       label: "Shiori",
     });
@@ -969,7 +972,7 @@ describe("HMAC download ingest", () => {
     expect(result.ok && !result.duplicate).toBe(true);
     const row = getActivityRow((await store.getTail(1))[0]!);
     expect(row).toEqual({
-      summary: "Someone clicked a link",
+      summary: "Someone clicked a link on",
       href: "https://www.shiori.sh",
       label: "Shiori",
     });
@@ -1024,6 +1027,50 @@ describe("recordLike", () => {
     );
     expect(result).toEqual({ skipped: true, reason: "activity_path" });
     expect(await store.getCount()).toBe(0);
+  });
+
+  test("does not ingest a like for / or a Home title", async () => {
+    const store = createMemoryActivityStore();
+    expect(await recordLike({ title: "Home", href: "/", content_type: "home" }, store)).toEqual({
+      skipped: true,
+      reason: "home",
+    });
+    expect(await recordLike({ title: "a page", href: "/", content_type: "home" }, store)).toEqual({
+      skipped: true,
+      reason: "home",
+    });
+    expect(
+      await recordLike({ title: "1Password", href: "", content_type: "stack" }, store),
+    ).toEqual({ skipped: true, reason: "home" });
+    expect(await store.getCount()).toBe(0);
+    expect(await store.getTail(10)).toEqual([]);
+  });
+
+  test("keeps a 1Password like title instead of rewriting it to Home", async () => {
+    const store = createMemoryActivityStore();
+    const result = await recordLike(
+      {
+        title: "1Password",
+        href: "https://1password.com",
+        content_type: "stack",
+        pageId: "stack-1password",
+      },
+      store,
+    );
+    expect("ok" in result && result.ok).toBe(true);
+    const [event] = await store.getTail(1);
+    expect(event?.summary).toBe("Someone liked 1Password");
+    expect(event?.subject).toEqual({
+      kind: "stack",
+      label: "1Password",
+      href: "https://1password.com",
+    });
+    expect(getActivityRow(event!)).toEqual({
+      summary: "Someone liked",
+      href: "https://1password.com",
+      label: "1Password",
+    });
+    expect(getActivityRow(event!).label).not.toBe("Home");
   });
 
   test("writes a public like with subject + meta and no actor", async () => {
@@ -1238,6 +1285,8 @@ describe("inferTitleFromPath", () => {
     );
     expect(looksLikeShortId("writing")).toBe(false);
     expect(looksLikeShortId("stack")).toBe(false);
+    expect(looksLikeShortId("1Password")).toBe(false);
+    expect(looksLikeIdentifier("1Password")).toBe(false);
     expect(looksLikeShortId("kcJun01")).toBe(true);
     expect(looksLikeShortId("B57IXLJ")).toBe(true);
     expect(stripTrailingShortIdToken("grok bot first impressions kcJun01")).toBe(
@@ -1283,6 +1332,8 @@ describe("inferTitleFromPath", () => {
     expect(title).not.toMatch(/^https?:/i);
     expect(inferTitleFromPath("https://brianlovin.com/writing/foo")).toBe("foo");
     expect(inferTitleFromPath("https://brianlovin.com/writing")).toBe("Writing");
+    expect(inferTitleFromPath("https://1password.com")).not.toBe("Home");
+    expect(inferTitleFromPath("https://1password.com")).toBe("");
   });
 });
 
@@ -1490,8 +1541,10 @@ describe("getActivityRow page titles", () => {
       subject: { kind: "home", label: "a page", href: "/" },
       meta: { path: "/", title: "a page", country: "FR" },
     });
-    expect(row.label).toBe("Home");
+    expect(row.label).toBe("the site");
     expect(row.href).toBe("/");
+    expect(row.summary).toBe("Someone from France visited");
+    expect(row.summary).not.toContain("Visit from");
   });
 
   test("strips a stored short id from a writing visit without rewriting Redis", () => {
@@ -1672,25 +1725,25 @@ describe("getActivityRow page titles", () => {
     expect(row.href).toBe("/ama/2f2c711c-0ceb-810d-899d-e5feb99e70f4");
   });
 
-  test("splits a stored Home like into Someone liked plus a Home label", () => {
-    const row = getActivityRow({
+  test("does not display a stored Home like as a liked thing", () => {
+    const event = {
       v: 1,
       id: "like-home",
       ts: "2026-08-16T00:00:00.000Z",
       received_at: "2026-08-16T00:00:00.000Z",
       source: "brios",
       type: "like",
-      speed: "event",
+      speed: "event" as const,
       summary: "Someone liked a page",
-      visibility: "public",
+      visibility: "public" as const,
       idempotency_key: "like-home",
       subject: { kind: "home", label: "a page", href: "/" },
-    });
-    expect(row).toEqual({
-      summary: "Someone liked",
-      href: "/",
-      label: "Home",
-    });
+    };
+    expect(isHiddenLikeEvent(event)).toBe(true);
+    const row = getActivityRow(event);
+    expect(row.label).not.toBe("Home");
+    expect(row.href).toBeUndefined();
+    expect(rollupActivityEvents([event])).toEqual([]);
   });
 
   test("keeps a liked stack item name instead of rewriting it to Stack", () => {
@@ -1741,6 +1794,234 @@ describe("getActivityRow page titles", () => {
   });
 });
 
+describe("getActivityRow visit sentences", () => {
+  test("uses Someone from and read for a San Francisco writing visit", () => {
+    const row = getActivityRow({
+      v: 1,
+      id: "sf-writing",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "visit",
+      speed: "signal",
+      summary: "🇺🇸 Visit from San Francisco, California, United States",
+      visibility: "public",
+      idempotency_key: "sf-writing",
+      subject: {
+        kind: "writing",
+        label: "How I'm Feeling About AI in August 2026",
+        href: "/writing/how-im-feeling-about-ai-in-august-2026-O7e1TFS",
+      },
+      meta: {
+        country: "US",
+        country_name: "United States",
+        region: "CA",
+        region_name: "California",
+        city: "San Francisco",
+        path: "/writing/how-im-feeling-about-ai-in-august-2026-O7e1TFS",
+      },
+    });
+
+    expect(row.summary.startsWith("Someone from")).toBe(true);
+    expect(row.summary).toBe("Someone from San Francisco, California, United States read");
+    expect(row.summary).toContain("read");
+    expect(row.summary).not.toContain("viewed");
+    expect(row.summary).not.toContain("Visit from");
+    expect(row.label).toBe("How I'm Feeling About AI in August 2026");
+  });
+
+  test("views stack and visits home", () => {
+    const stack = getActivityRow(
+      visitRowEvent(
+        { kind: "stack", label: "Stack", href: "/stack" },
+        { meta: { country: "US", path: "/stack" } },
+      ),
+    );
+    expect(stack.summary).toBe("Someone from United States viewed");
+    expect(stack.summary).toContain("viewed");
+    expect(stack.summary).not.toContain("read");
+    expect(stack.summary).not.toContain("Visit from");
+    expect(stack.label).toBe("Stack");
+
+    const home = getActivityRow(
+      visitRowEvent(
+        { kind: "home", label: "Home", href: "/" },
+        { meta: { country: "CN", path: "/", title: "Home" } },
+      ),
+    );
+    expect(home.summary).toBe("Someone from China visited");
+    expect(home.summary).toContain("visited");
+    expect(home.summary).not.toContain("read Home");
+    expect(home.summary).not.toContain("Visit from");
+    expect(home.label).toBe("the site");
+    expect(home.label).not.toBe("Home");
+  });
+
+  test("views the HN index and reads an HN story", () => {
+    const index = getActivityRow(
+      visitRowEvent(
+        { kind: "page", label: "Hacker News", href: "/hn" },
+        { meta: { country: "US", path: "/hn" } },
+      ),
+    );
+    expect(index.summary).toBe("Someone from United States viewed");
+    expect(index.summary).toContain("viewed");
+    expect(index.summary).not.toContain("read");
+    expect(index.summary).not.toContain("Visit from");
+    expect(index.label).toBe("Hacker News");
+
+    const story = getActivityRow(
+      visitRowEvent(
+        { kind: "page", label: "Some HN Story", href: "/hn/42991019" },
+        { meta: { country: "CN", path: "/hn/42991019" } },
+      ),
+    );
+    expect(story.summary).toBe("Someone from China read");
+    expect(story.summary).toContain("read");
+    expect(story.summary).not.toContain("viewed");
+    expect(story.summary).not.toContain("Visit from");
+    expect(story.label).toBe("Some HN Story");
+  });
+
+  test("does not leave Visit from on a recovered Redis visit row", () => {
+    const row = getActivityRow({
+      v: 1,
+      id: "old-visit-copy",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "visit",
+      speed: "signal",
+      summary: "Visit from China",
+      visibility: "public",
+      idempotency_key: "old-visit-copy",
+      subject: {
+        kind: "writing",
+        label: "How I'm Feeling About AI in August 2026",
+        href: "/writing/how-im-feeling-about-ai-in-august-2026-O7e1TFS",
+      },
+    });
+    expect(row.summary).toBe("Someone from China read");
+    expect(row.summary).not.toContain("Visit from");
+    expect(row.label).toBe("How I'm Feeling About AI in August 2026");
+  });
+
+  test("listens to a Design Details episode and visits the show home", () => {
+    const episode = getActivityRow(
+      visitRowEvent(
+        { kind: "page", label: "On Leaving", href: "/episodes/on-leaving" },
+        {
+          source: "design-details",
+          summary: "🇨🇳 Visit from China",
+          meta: { country: "CN", path: "/episodes/on-leaving", title: "On Leaving" },
+        },
+      ),
+    );
+    expect(episode.summary).toBe("Someone from China listened to");
+    expect(episode.summary).not.toContain("visited");
+    expect(episode.summary).not.toContain("listened to Design Details");
+    expect(episode.summary).not.toContain("Visit from");
+    expect(episode.label).toBe("On Leaving");
+    expect(episode.href).toBe("/episodes/on-leaving");
+
+    const home = getActivityRow(
+      visitRowEvent(
+        { kind: "home", label: "Home", href: "/" },
+        {
+          source: "design-details",
+          summary: "🇨🇳 Visit from China",
+          meta: { country: "CN", path: "/", title: "Home" },
+        },
+      ),
+    );
+    expect(home.summary).toBe("Someone from China visited");
+    expect(home.summary).not.toContain("listened to");
+    expect(home.summary).not.toContain("Visit from");
+    expect(home.label).toBe("Design Details");
+    expect(home.href).toBe("https://designdetails.fm");
+  });
+
+  test("listens to a briOS Design Details episode and visits the index", () => {
+    const episode = getActivityRow(
+      visitRowEvent(
+        { kind: "design_details", label: "On Leaving", href: "/design-details/on-leaving" },
+        { meta: { country: "CN", path: "/design-details/on-leaving" } },
+      ),
+    );
+    expect(episode.summary).toBe("Someone from China listened to");
+    expect(episode.label).toBe("On Leaving Design Details");
+    expect(episode.summary).not.toContain("listened to Design Details");
+
+    const index = getActivityRow(
+      visitRowEvent(
+        { kind: "design_details", label: "Design Details", href: "/design-details" },
+        { meta: { country: "CN", path: "/design-details" } },
+      ),
+    );
+    expect(index.summary).toBe("Someone from China visited");
+    expect(index.summary).not.toContain("listened to");
+    expect(index.label).toBe("Design Details");
+  });
+
+  test("reads a staff.design interview and visits the staff.design home", () => {
+    const interview = getActivityRow(
+      visitRowEvent(
+        { kind: "page", label: "Karla Mickens Cole", href: "/karla-mickens-cole" },
+        {
+          source: "staff-design",
+          summary: "🇩🇪 Visit from Germany",
+          meta: { country: "DE", path: "/karla-mickens-cole", title: "Karla Mickens Cole" },
+        },
+      ),
+    );
+    expect(interview.summary).toBe("Someone from Germany read");
+    expect(interview.summary).not.toContain("visited");
+    expect(interview.summary).not.toContain("Visit from");
+    expect(interview.label).toBe("Karla Mickens Cole");
+
+    const home = getActivityRow(
+      visitRowEvent(
+        { kind: "home", label: "Home", href: "/" },
+        {
+          source: "staff-design",
+          summary: "🇺🇸 Visit from United States",
+          meta: { country: "US", path: "/", title: "Home" },
+        },
+      ),
+    );
+    expect(home.summary).toBe("Someone from United States visited");
+    expect(home.summary).not.toContain("read");
+    expect(home.label).toBe("Staff Design");
+    expect(home.href).toBe("https://staff.design");
+  });
+
+  test("views an app dissection post and visits tax-ui home", () => {
+    const teardown = getActivityRow(
+      visitRowEvent(
+        { kind: "app_dissection", label: "Secret for iOS", href: "/app-dissection/secret-for-ios" },
+        { meta: { country: "FR", path: "/app-dissection/secret-for-ios" } },
+      ),
+    );
+    expect(teardown.summary).toBe("Someone from France viewed");
+    expect(teardown.summary).not.toContain("read");
+    expect(teardown.label).toBe("Secret for iOS App Dissection");
+
+    const taxUi = getActivityRow(
+      visitRowEvent(
+        { kind: "home", label: "Home", href: "/" },
+        {
+          source: "tax-ui",
+          summary: "🇺🇸 Visit from United States",
+          meta: { country: "US", path: "/" },
+        },
+      ),
+    );
+    expect(taxUi.summary).toBe("Someone from United States visited");
+    expect(taxUi.label).toBe("Tax UI");
+    expect(taxUi.href).toBe("https://tax-ui.brianlovin.com/");
+  });
+});
+
 describe("getActivityRow source metadata", () => {
   function rowEvent(overrides: Partial<ActivityEvent>): ActivityEvent {
     return {
@@ -1760,7 +2041,7 @@ describe("getActivityRow source metadata", () => {
 
   test("lifts Shiori out of save/click/signup/subscribe/download summaries", () => {
     expect(getActivityRow(rowEvent({ type: "link_saved" }))).toEqual({
-      summary: "Someone saved a link",
+      summary: "Someone saved a link on",
       href: "https://www.shiori.sh",
       label: "Shiori",
     });
@@ -1773,7 +2054,7 @@ describe("getActivityRow source metadata", () => {
         }),
       ),
     ).toEqual({
-      summary: "Someone clicked a link",
+      summary: "Someone clicked a link on",
       href: "https://www.shiori.sh",
       label: "Shiori",
     });
@@ -1785,7 +2066,7 @@ describe("getActivityRow source metadata", () => {
         }),
       ),
     ).toEqual({
-      summary: "Someone signed up",
+      summary: "Someone signed up for",
       href: "https://www.shiori.sh",
       label: "Shiori",
     });
@@ -1797,7 +2078,7 @@ describe("getActivityRow source metadata", () => {
         }),
       ),
     ).toEqual({
-      summary: "Someone subscribed",
+      summary: "Someone subscribed on",
       href: "https://www.shiori.sh",
       label: "Shiori",
     });
@@ -1829,7 +2110,7 @@ describe("getActivityRow source metadata", () => {
         }),
       ),
     ).toEqual({
-      summary: "Visit from United States",
+      summary: "Someone from United States visited",
       href: "https://designdetails.fm",
       label: "Design Details",
     });
@@ -1852,7 +2133,7 @@ describe("getActivityRow source metadata", () => {
         }),
       ),
     ).toEqual({
-      summary: "Visit from Germany",
+      summary: "Someone from Germany read",
       href: "/karla-mickens-cole",
       label: "Karla Mickens Cole",
     });
@@ -1910,7 +2191,7 @@ describe("getActivityRow source metadata", () => {
         }),
       ),
     ).toEqual({
-      summary: "Visit from India",
+      summary: "Someone from India read",
       href: "/writing/grok-bot-first-impressions",
       label: "Grok Bot first impressions",
     });
@@ -2096,6 +2377,29 @@ describe("shouldRecordVisit / likeMetaFromRequest", () => {
     expect(activity).toBeNull();
   });
 
+  test("does not default a missing like href to /", () => {
+    expect(shouldRecordLike("/")).toBe(false);
+    expect(shouldRecordLike("")).toBe(false);
+    expect(shouldRecordLike(undefined)).toBe(false);
+    expect(shouldRecordLike("/stack/1password", "1Password")).toBe(true);
+    expect(shouldRecordLike("https://1password.com", "1Password")).toBe(true);
+    expect(shouldRecordLike("https://1password.com", "Home")).toBe(false);
+
+    expect(likeMetaFromRequest(new Request("https://brianlovin.com/api/likes/1"))).toBeNull();
+    expect(
+      likeMetaFromRequest(new Request("https://brianlovin.com/api/likes/1"), { href: "/" }),
+    ).toBeNull();
+    expect(
+      likeMetaFromRequest(
+        new Request("https://brianlovin.com/api/likes/1", {
+          headers: { referer: "https://brianlovin.com/" },
+        }),
+      ),
+    ).toBeNull();
+    expect(likeActivityPayload({ title: "Home", href: "/", contentType: "home" })).toBeNull();
+    expect(likeActivityPayload({}, { title: "Brian Lovin", href: "/" })).toBeNull();
+  });
+
   test("uses a passed item title instead of falling back to Stack", () => {
     const request = new Request("https://brianlovin.com/api/likes/1", {
       headers: { referer: "https://brianlovin.com/stack" },
@@ -2182,6 +2486,20 @@ describe("likeActivityPayload", () => {
       href: "/writing/hello-world",
       content_type: "writing",
     });
+  });
+
+  test("keeps a 1Password title and does not default href to /", () => {
+    expect(
+      likeActivityPayload(
+        { title: "1Password", href: "https://1password.com", contentType: "stack" },
+        { title: "Home", href: "/" },
+      ),
+    ).toEqual({
+      title: "1Password",
+      href: "https://1password.com",
+      content_type: "stack",
+    });
+    expect(likeActivityPayload({}, { title: "Home | Brian Lovin", href: "/" })).toBeNull();
   });
 });
 
@@ -2415,7 +2733,7 @@ describe("rollupActivityEvents", () => {
     expect(stacks[0]?.key).toBe("shiori:link_saved");
     expect(stacks[0]?.latest.id).toBe("s1");
     expect(stacks[1]?.count).toBe(1);
-    expect(stacks[1]?.key).toBe("like:/stack");
+    expect(stacks[1]?.key).toBe("like");
   });
 
   test("stacks consecutive Shiori link_clicked events separately from saves", () => {
@@ -2441,7 +2759,7 @@ describe("rollupActivityEvents", () => {
     expect(stacks[1]?.key).toBe("shiori:link_saved");
   });
 
-  test("does not stack likes for different apps", () => {
+  test("stacks consecutive likes of different pages as one run", () => {
     const stacks = rollupActivityEvents([
       feedEvent({
         id: "like-cursor",
@@ -2457,13 +2775,45 @@ describe("rollupActivityEvents", () => {
       }),
     ]);
 
-    expect(stacks).toHaveLength(2);
-    expect(stacks[0]?.key).toBe("like:https://cursor.com");
-    expect(stacks[1]?.key).toBe("like:https://www.raycast.com");
+    expect(stacks).toHaveLength(1);
+    expect(stacks[0]?.key).toBe("like");
+    expect(stacks[0]?.count).toBe(2);
+    expect(stacks[0]?.likeTargets).toEqual([
+      { title: "Cursor", href: "https://cursor.com" },
+      { title: "Raycast", href: "https://www.raycast.com" },
+    ]);
+    expect(formatLikeOthersLabel((stacks[0]?.likeTargets?.length ?? 1) - 1)).toBe("+ 1 other");
     expect(getActivityRow(stacks[0]!.latest).summary).toBe("Someone liked");
     expect(getActivityRow(stacks[0]!.latest).label).toBe("Cursor");
-    expect(getActivityRow(stacks[1]!.latest).summary).toBe("Someone liked");
-    expect(getActivityRow(stacks[1]!.latest).label).toBe("Raycast");
+    expect(stacks[0]?.likeTargets?.map((target) => target.title)).toEqual(["Cursor", "Raycast"]);
+  });
+
+  test("drops a stored Home like from a mixed like run", () => {
+    const stacks = rollupActivityEvents([
+      feedEvent({
+        id: "like-1password",
+        type: "like",
+        summary: "Someone liked 1Password",
+        subject: { kind: "stack", label: "1Password", href: "https://1password.com" },
+      }),
+      feedEvent({
+        id: "like-home",
+        type: "like",
+        summary: "Someone liked a page",
+        subject: { kind: "home", label: "a page", href: "/" },
+      }),
+      feedEvent({
+        id: "like-cursor",
+        type: "like",
+        summary: "Someone liked Cursor",
+        subject: { kind: "stack", label: "Cursor", href: "https://cursor.com" },
+      }),
+    ]);
+
+    expect(stacks).toHaveLength(1);
+    expect(stacks[0]?.count).toBe(2);
+    expect(stacks[0]?.likeTargets?.map((target) => target.title)).toEqual(["1Password", "Cursor"]);
+    expect(stacks[0]?.likeTargets?.some((target) => target.title === "Home")).toBe(false);
   });
 
   test("does not merge the same type across a different intervening event", () => {
@@ -2483,7 +2833,7 @@ describe("rollupActivityEvents", () => {
     expect(stacks[0]?.key).toBe(stacks[2]?.key);
   });
 
-  test("staggers only newly inserted keys, newest first, and caps the delay", () => {
+  test("staggers only newly inserted keys, oldest first, and caps the delay", () => {
     expect(activityEnterStaggerDelays(["a", "b"], null).size).toBe(0);
 
     const previous = new Set(["old-1", "old-2"]);
@@ -2492,18 +2842,19 @@ describe("rollupActivityEvents", () => {
       previous,
     );
     expect([...delays.entries()]).toEqual([
-      ["new-1", 0],
-      ["new-2", 0.05],
+      ["new-1", 0.2],
+      ["new-2", 0.15],
       ["new-3", 0.1],
-      ["new-4", 0.15],
-      ["new-5", 0.2],
+      ["new-4", 0.05],
+      ["new-5", 0],
     ]);
 
     const many = Array.from({ length: 16 }, (_, index) => `n-${index}`);
     const capped = activityEnterStaggerDelays(many, new Set());
-    expect(capped.get("n-0")).toBe(0);
-    expect(capped.get("n-8")).toBe(0.4);
-    expect(capped.get("n-15")).toBe(0.4);
+    expect(capped.get("n-15")).toBe(0);
+    expect(capped.get("n-8")).toBe(0.35);
+    expect(capped.get("n-7")).toBe(0.4);
+    expect(capped.get("n-0")).toBe(0.4);
     expect(capped.has("old-1")).toBe(false);
   });
 
@@ -2522,6 +2873,15 @@ describe("rollupActivityEvents", () => {
     expect(next.delays.has("old-1")).toBe(false);
     expect(next.delays.has("old-2")).toBe(false);
     expect(next.seen).toEqual(new Set(["new-1", "old-1", "old-2"]));
+  });
+
+  test("a batch of new stacks staggers oldest incoming first", () => {
+    const previous = new Set(["old-1"]);
+    const next = nextActivityEnterState(["newest", "middle", "oldest-new", "old-1"], previous);
+    expect(next.delays.get("oldest-new")).toBe(0);
+    expect(next.delays.get("middle")).toBe(0.05);
+    expect(next.delays.get("newest")).toBe(0.1);
+    expect(next.delays.has("old-1")).toBe(false);
   });
 
   test("keeps two public PR merges on the same repo as separate rows", () => {

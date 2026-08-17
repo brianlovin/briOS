@@ -4,7 +4,6 @@
  */
 
 import {
-  ANONYMOUS_VISIT_SUMMARY,
   formatVisitSummary,
   geoFromVisitMeta,
   normalizeCountryCode,
@@ -111,17 +110,12 @@ function hasSpecificSubjectHref(source: string, href: string | undefined): boole
   return Boolean(href?.trim()) && !isSourceHomeHref(source, href);
 }
 
+/** Lift a trailing source name so the feed can link it. Keep on/for so "on {source}" still reads as a sentence. */
 function stripSourceNameFromSummary(summary: string, sourceLabel: string): string {
   const escaped = sourceLabel.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const trimmed = summary.trim();
-  const withoutSuffix = trimmed
-    .replace(new RegExp(`\\s+(?:on|for)\\s+${escaped}$`, "i"), "")
-    .trim();
-  if (withoutSuffix !== trimmed) return withoutSuffix;
-
-  const downloaded = trimmed.match(new RegExp(`^(Someone downloaded)\\s+${escaped}$`, "i"));
-  if (downloaded?.[1]) return downloaded[1];
-  return summary;
+  const withoutName = trimmed.replace(new RegExp(`\\s+${escaped}$`, "i"), "").trim();
+  return withoutName || summary;
 }
 
 function attachSourceMetadata(
@@ -202,7 +196,7 @@ export type ActivityEvent = {
 };
 
 export const ACTIVITY_TRACKED_SINCE = "August 16, 2026";
-export const ACTIVITY_TRACKED_SINCE_TOOLTIP = `Tracked since ${ACTIVITY_TRACKED_SINCE}`;
+export const ACTIVITY_TRACKED_SINCE_TOOLTIP = `Events tracked since ${ACTIVITY_TRACKED_SINCE}`;
 
 export type ActivityFeedPayload = {
   events: ActivityEvent[];
@@ -271,6 +265,35 @@ export function shouldRecordVisit(pathname: string): boolean {
     return false;
   }
   return !isActivityPath(path);
+}
+
+const HOME_LIKE_TITLES = new Set(["home", "a page"]);
+
+/** Titles that must never appear as a liked thing. Empty is not Home. */
+export function isHomeLikeTitle(title: string | undefined): boolean {
+  const trimmed = title?.trim().toLowerCase();
+  if (!trimmed) return false;
+  return HOME_LIKE_TITLES.has(trimmed);
+}
+
+/**
+ * Site-relative home (`/`, empty). External product URLs stay likeable even
+ * when their pathname is `/` (e.g. `https://1password.com`).
+ */
+export function isSiteHomeLikeHref(href: string | undefined): boolean {
+  const trimmed = href?.trim();
+  if (!trimmed) return true;
+  if (isAbsoluteHttpUrl(trimmed)) return false;
+  const path = normalizeActivityPath(trimmed.split("?")[0] ?? trimmed);
+  return path === "/";
+}
+
+/** Ingest gate for likes — skip home, empty href, and activity paths. */
+export function shouldRecordLike(href: string | undefined, title?: string): boolean {
+  if (isSiteHomeLikeHref(href)) return false;
+  if (isActivityPath(href!)) return false;
+  if (title !== undefined && isHomeLikeTitle(title)) return false;
+  return true;
 }
 
 export function inferContentTypeFromPath(pathname: string): string {
@@ -432,6 +455,8 @@ function normalizeActivityPath(pathname: string): string {
 export function looksLikeShortId(token: string): boolean {
   if (token.length < 5 || token.length > 12) return false;
   if (!/^[A-Za-z0-9]+$/.test(token)) return false;
+  // Product names like 1Password start with a digit; Notion short ids do not.
+  if (/^\d/.test(token)) return false;
 
   const hasDigit = /\d/.test(token);
   const hasUpper = /[A-Z]/.test(token);
@@ -502,7 +527,7 @@ export function activitySectionFromPath(pathname: string | undefined): string {
 
 /** Smart section phrase for stacked visit subtitles — never a raw id. */
 export function activitySectionPhrase(section: string): string {
-  if (!section || section === "home" || isProtocolSegment(section)) return "Home";
+  if (!section || section === "home" || isProtocolSegment(section)) return SITE_VISIT_LABEL;
   if (section === "ama") return "an AMA question";
   const known = KNOWN_PATH_TITLES[`/${section}`];
   if (known) return known;
@@ -510,13 +535,17 @@ export function activitySectionPhrase(section: string): string {
 }
 
 export function inferTitleFromPath(pathname: string): string {
+  const absolute = isAbsoluteHttpUrl(pathname);
   const path = normalizeActivityPath(pathnameFromHref(pathname));
-  const known = KNOWN_PATH_TITLES[path];
-  if (known) return known;
+  // External product homes (`https://1password.com`) are not this site's Home.
+  if (!absolute || path !== "/") {
+    const known = KNOWN_PATH_TITLES[path];
+    if (known) return known;
+  }
 
   const segments = path.split("/").filter(Boolean);
   const last = segments[segments.length - 1];
-  if (!last) return "Home";
+  if (!last) return absolute ? "" : "Home";
 
   let decodedLast = last;
   try {
@@ -648,11 +677,17 @@ export type LikeActivityPayload = {
 export function likeActivityPayload(
   target: LikeActivityTarget = {},
   fallback: { title?: string; href?: string } = {},
-): LikeActivityPayload {
-  const href = target.href?.trim() || fallback.href?.trim() || "/";
+): LikeActivityPayload | null {
+  const href = target.href?.trim() || fallback.href?.trim() || "";
+  if (!shouldRecordLike(href)) return null;
   const title = sanitizeActivityTitle(target.title || fallback.title, href);
+  if (!title.trim() || isHomeLikeTitle(title)) return null;
   const content_type = target.contentType?.trim() || inferContentTypeFromPath(href);
   return { title, href, content_type };
+}
+
+export function formatLikeOthersLabel(otherCount: number): string {
+  return otherCount === 1 ? "+ 1 other" : `+ ${otherCount} others`;
 }
 
 export function isKnownActivityTitle(label: string): boolean {
@@ -696,9 +731,22 @@ function likedTitleFromSummary(summary: string): string | undefined {
   const trimmed = summary.trim();
   if (/^someone liked$/i.test(trimmed)) return undefined;
   const rest = trimmed.replace(/^Someone liked\s+/i, "").trim();
-  if (!rest) return undefined;
-  if (rest === "a page") return "Home";
+  if (!rest || isHomeLikeTitle(rest)) return undefined;
   return rest;
+}
+
+/** Old Redis home likes (`/` + "a page" / Home) — hide instead of showing Home. */
+export function isHiddenLikeEvent(event: ActivityEvent): boolean {
+  if (event.type !== "like") return false;
+  if (isHomeLikeTitle(event.subject?.label)) return true;
+  const rest = event.summary.replace(/^Someone liked\s+/i, "").trim();
+  if (!event.subject?.label && isHomeLikeTitle(rest)) return true;
+  const href = event.subject?.href?.trim();
+  if (href && !isAbsoluteHttpUrl(href)) {
+    const path = normalizeActivityPath(href.split("?")[0] ?? href);
+    if (path === "/") return true;
+  }
+  return false;
 }
 
 const EMAIL_RE = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i;
@@ -837,6 +885,159 @@ function publicPullRequestHref(event: ActivityEvent): string | undefined {
   return typeof metaHref === "string" && metaHref ? metaHref : undefined;
 }
 
+/** Linked fallback when a visit has no real page title. Never “Home”. */
+export const SITE_VISIT_LABEL = "the site";
+
+/** Location words for visits with no usable geo. No flag. */
+export const MYSTERIOUS_PLACE_LOCATION = "a mysterious place on earth";
+
+export type VisitActivityVerb = "read" | "viewed" | "visited" | "listened to";
+
+const VISIT_SENTENCE_VERB_RE = "(?:listened to|read|viewed|visited)";
+
+function isSiteHomePath(source: string, pathname: string | undefined): boolean {
+  if (!pathname?.trim()) return true;
+  const path = normalizeActivityPath(pathnameFromHref(pathname));
+  if (path === "/") return true;
+  return isSourceHomeHref(source, pathname);
+}
+
+/**
+ * Verb from the event source plus the path they opened.
+ * Site homes → visited; briOS listings → viewed; posts/stories/interviews → read;
+ * Design Details episodes → listened to.
+ */
+export function visitVerbFromPath(
+  pathname: string | undefined,
+  source: string = ACTIVITY_SOURCE_BRIOS,
+): VisitActivityVerb {
+  const path = pathname ? normalizeActivityPath(pathnameFromHref(pathname)) : "";
+  const atHome = isSiteHomePath(source, pathname);
+
+  if (source === "design-details") {
+    return atHome ? "visited" : "listened to";
+  }
+  if (source === "staff-design") {
+    return atHome ? "visited" : "read";
+  }
+  if (source === "tax-ui") {
+    return atHome ? "visited" : "viewed";
+  }
+
+  if (path === "/design-details") return "visited";
+  if (path.startsWith("/design-details/")) return "listened to";
+  if (cmsPostRefFromPath(pathname ?? path)) return "read";
+  if (hnStoryIdFromPath(pathname ?? path)) return "read";
+  if (atHome) return "visited";
+  return "viewed";
+}
+
+function siteFallbackVerb(verb: VisitActivityVerb): "visited" | "viewed" {
+  return verb === "visited" ? "visited" : "viewed";
+}
+
+function isUsableVisitTitle(label: string | undefined): boolean {
+  const trimmed = label?.trim();
+  if (!trimmed) return false;
+  if (trimmed === "Home" || trimmed === "a page") return false;
+  if (looksLikeIdentifier(trimmed)) return false;
+  return true;
+}
+
+function locationFromVisitText(text: string): string | undefined {
+  const trimmed = text.trim();
+  if (!trimmed) return undefined;
+  if (/mysterious place on earth/i.test(trimmed)) return MYSTERIOUS_PLACE_LOCATION;
+
+  const visitFrom = /^(?:First\s+)?Visit from\s+(.+)$/i.exec(trimmed);
+  if (visitFrom?.[1]) return visitFrom[1].trim();
+
+  const someoneVisited = /^Someone visited from\s+(.+)$/i.exec(trimmed);
+  if (someoneVisited?.[1]) return someoneVisited[1].trim();
+
+  const someoneFromVerb = new RegExp(
+    `^Someone from\\s+(.+?)\\s+${VISIT_SENTENCE_VERB_RE}(?:\\s+the site)?$`,
+    "i",
+  ).exec(trimmed);
+  if (someoneFromVerb?.[1]) return someoneFromVerb[1].trim();
+
+  const someoneFrom = /^Someone from\s+(.+)$/i.exec(trimmed);
+  if (someoneFrom?.[1]) return someoneFrom[1].trim();
+
+  return undefined;
+}
+
+/** City / region / country, or the mysterious-place words. Display only. */
+export function visitLocationPhrase(event: ActivityEvent): string {
+  const geo = geoFromVisitMeta(event.meta);
+  const hasLocation = Boolean(geo.country || geo.city || geo.countryName);
+  if (hasLocation) {
+    return (
+      locationFromVisitText(visitDisplaySummary(formatVisitSummary(geo))) ??
+      MYSTERIOUS_PLACE_LOCATION
+    );
+  }
+
+  const storedText = visitDisplaySummary(event.summary);
+  if (!storedText || storedText === "Visit") return MYSTERIOUS_PLACE_LOCATION;
+  return locationFromVisitText(storedText) ?? MYSTERIOUS_PLACE_LOCATION;
+}
+
+export function formatVisitRowSummary(
+  location: string,
+  verb: VisitActivityVerb,
+  hasTitle: boolean,
+): string {
+  if (!hasTitle) return `Someone from ${location} ${siteFallbackVerb(verb)} the site`;
+  return `Someone from ${location} ${verb}`;
+}
+
+function visitSubjectPath(event: ActivityEvent): string | undefined {
+  if (event.subject?.href) return event.subject.href;
+  const path = event.meta?.path;
+  return typeof path === "string" && path ? path : undefined;
+}
+
+function visitActivityRow(event: ActivityEvent): {
+  summary: string;
+  flag?: string;
+  icon?: string;
+  href?: string;
+  label?: string;
+} {
+  const path = visitSubjectPath(event);
+  const row = attachSourceMetadata(event, {
+    summary: event.summary,
+    href: path,
+    label: displaySubjectLabel(event.subject?.label, path),
+  });
+  const location = visitLocationPhrase(event);
+  const verb = visitVerbFromPath(row.href ?? path, event.source);
+  if (isUsableVisitTitle(row.label)) {
+    return { ...row, summary: formatVisitRowSummary(location, verb, true) };
+  }
+  if (verb === "listened to") {
+    return {
+      ...row,
+      summary: formatVisitRowSummary(location, verb, true),
+      label: "a Design Details episode",
+    };
+  }
+  const fallbackVerb = siteFallbackVerb(verb);
+  if (row.href) {
+    return {
+      ...row,
+      summary: formatVisitRowSummary(location, fallbackVerb, true),
+      label: SITE_VISIT_LABEL,
+    };
+  }
+  return {
+    ...row,
+    summary: formatVisitRowSummary(location, fallbackVerb, false),
+    label: undefined,
+  };
+}
+
 /** Real PR title, or `repo#number` / “a pull request”. Never a site path title. */
 function publicPullRequestLabel(event: ActivityEvent): string {
   const stored =
@@ -879,45 +1080,35 @@ export function getActivityRow(event: ActivityEvent): {
     });
   }
 
-  if (event.type === "visit") {
-    const geo = geoFromVisitMeta(event.meta);
-    const hasLocation = Boolean(geo.country || geo.city || geo.countryName);
-    const storedText = visitDisplaySummary(event.summary);
-    const summary = hasLocation
-      ? visitDisplaySummary(formatVisitSummary(geo))
-      : !storedText || storedText === "Visit"
-        ? ANONYMOUS_VISIT_SUMMARY
-        : storedText;
-    return attachSourceMetadata(event, {
-      summary,
-      href: event.subject?.href,
-      label: displaySubjectLabel(event.subject?.label, event.subject?.href),
-    });
-  }
-
-  if (event.type === "visit_country_first") {
-    return attachSourceMetadata(event, {
-      summary: visitDisplaySummary(event.summary),
-      href: event.subject?.href,
-      label: displaySubjectLabel(event.subject?.label, event.subject?.href),
-    });
+  if (event.type === "visit" || event.type === "visit_country_first") {
+    return visitActivityRow(event);
   }
 
   if (event.type === "like") {
+    if (isHiddenLikeEvent(event)) {
+      return attachSourceMetadata(event, { summary: "Someone liked" });
+    }
     const label = displaySubjectLabel(event.subject?.label, event.subject?.href, {
       preferStored: true,
     });
     const fromSummary = likedTitleFromSummary(event.summary);
-    const name = label || fromSummary || "Home";
+    const name = label || fromSummary;
+    if (!name || isHomeLikeTitle(name)) {
+      return attachSourceMetadata(event, { summary: "Someone liked" });
+    }
     return attachSourceMetadata(event, {
       summary: "Someone liked",
-      href: event.subject?.href || (name === "Home" ? "/" : undefined),
+      href: event.subject?.href,
       label: name,
     });
   }
 
-  if (event.source === "shiori" && (event.type === "link_saved" || event.type === "link_clicked")) {
-    return attachSourceMetadata(event, { summary: event.summary });
+  if (event.source === "shiori" && event.type === "link_saved") {
+    return attachSourceMetadata(event, { summary: "Someone saved a link on" });
+  }
+
+  if (event.source === "shiori" && event.type === "link_clicked") {
+    return attachSourceMetadata(event, { summary: "Someone clicked a link on" });
   }
 
   return attachSourceMetadata(event, {
