@@ -8,7 +8,7 @@ import type { ActivityEvent } from "@/lib/activity";
 import { activityGlobeMarkers } from "@/lib/activity-geo";
 import { cn } from "@/lib/utils";
 
-const GLOBE_SIZE = 440;
+const GLOBE_SIZE = 480;
 const IDLE_SPIN = 0.003;
 const VELOCITY_EASE = 0.035;
 const DRAG_ANGLE_SCALE = 0.005;
@@ -221,7 +221,7 @@ export function ActivityGlobe({ events }: { events: ActivityEvent[] }) {
           "dark:bg-[radial-gradient(ellipse_100%_90%_at_100%_100%,#000_0%,#000_32%,transparent_72%)]",
         )}
       />
-      <div ref={wrapRef} className="absolute -right-28 -bottom-32 size-[440px]">
+      <div ref={wrapRef} className="absolute -right-40 -bottom-44 size-[480px]">
         <canvas
           ref={canvasRef}
           width={GLOBE_SIZE * 2}
