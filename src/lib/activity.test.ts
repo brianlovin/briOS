@@ -2412,7 +2412,7 @@ describe("getActivityRow source metadata", () => {
         }),
       ),
     ).toEqual({
-      summary: "Opened a pull request on briOS",
+      summary: "Opened #42 on briOS",
       href: "https://github.com/brianlovin/briOS/pull/42",
       label: "Add activity feed",
     });
@@ -2534,7 +2534,7 @@ describe("getActivityRow private pull requests", () => {
       }),
     );
     expect(row).toEqual({
-      summary: "Opened a pull request on briOS",
+      summary: "Opened #42 on briOS",
       href: "https://github.com/brianlovin/briOS/pull/42",
       label: "Add activity feed",
     });
@@ -2576,7 +2576,7 @@ describe("getActivityRow private pull requests", () => {
       }),
     );
     expect(row).toEqual({
-      summary: "Opened a pull request on briOS",
+      summary: "Opened #42 on briOS",
       href: "https://github.com/brianlovin/briOS/pull/42",
       label: "briOS#42",
     });
@@ -2595,6 +2595,71 @@ describe("getActivityRow private pull requests", () => {
     );
     expect(row.label).toBe("a pull request");
     expect(row.href).toBe("https://github.com/brianlovin/briOS/pull/42");
+  });
+
+  test("opened PR with number 2324 uses Opened #2324 and the repo, not a pull request", () => {
+    const row = getActivityRow(
+      prEvent({
+        summary: "Opened a pull request on briOS",
+        subject: {
+          kind: "pull_request",
+          label: "Add activity feed",
+          href: "https://github.com/brianlovin/briOS/pull/2324",
+        },
+        meta: {
+          repo: "briOS",
+          title: "Add activity feed",
+          number: 2324,
+          href: "https://github.com/brianlovin/briOS/pull/2324",
+        },
+      }),
+    );
+    expect(row.summary).toContain("Opened #2324");
+    expect(row.summary).toContain("briOS");
+    expect(row.summary).not.toContain("a pull request");
+    expect(row.label).toBe("Add activity feed");
+  });
+
+  test("merged PR with number 2 uses Merged #2", () => {
+    const row = getActivityRow(
+      prEvent({
+        type: "pr_merged",
+        summary: "Merged a pull request on staff-design",
+        subject: {
+          kind: "pull_request",
+          label: "First ship",
+          href: "https://github.com/brianlovin/staff-design/pull/2",
+        },
+        meta: {
+          repo: "staff-design",
+          title: "First ship",
+          number: 2,
+          href: "https://github.com/brianlovin/staff-design/pull/2",
+        },
+      }),
+    );
+    expect(row.summary).toContain("Merged #2");
+    expect(row.summary).toContain("staff-design");
+    expect(row.summary).not.toContain("a pull request");
+    expect(row.label).toBe("First ship");
+  });
+
+  test("missing number still says a pull request and has no bare #", () => {
+    const row = getActivityRow(
+      prEvent({
+        summary: "Opened a pull request on briOS",
+        subject: {
+          kind: "pull_request",
+          label: "Add activity feed",
+        },
+        meta: { repo: "briOS", title: "Add activity feed" },
+      }),
+    );
+    expect(row.summary).toBe("Opened a pull request on briOS");
+    expect(row.summary).toContain("a pull request");
+    expect(row.summary).not.toMatch(/#(?!\d)/);
+    expect(row.summary).not.toContain("# ");
+    expect(row.label).toBe("Add activity feed");
   });
 });
 
@@ -3190,12 +3255,12 @@ describe("rollupActivityEvents", () => {
 
     const rows = stacks.map((stack) => getActivityRow(stack.latest));
     expect(rows[0]).toEqual({
-      summary: "Merged a pull request on designdetails",
+      summary: "Merged #719 on designdetails",
       href: "https://github.com/designdetails/designdetails/pull/719",
       label: "Fix player skip",
     });
     expect(rows[1]).toEqual({
-      summary: "Merged a pull request on designdetails",
+      summary: "Merged #720 on designdetails",
       href: "https://github.com/designdetails/designdetails/pull/720",
       label: "Tweak chapter marks",
     });

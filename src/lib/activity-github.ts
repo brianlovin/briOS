@@ -4,6 +4,7 @@ import {
   ACTIVITY_SOURCE_GITHUB,
   type ActivityIngestInput,
   privatePullRequestSummary,
+  publicPullRequestSummary,
 } from "./activity-shared";
 import { safeCompare } from "./api-utils";
 
@@ -129,14 +130,10 @@ function pullRequestInput(
     };
   }
 
-  const summary =
-    type === "pr_opened"
-      ? `Opened a pull request on ${repoShortName(repository)}`
-      : `Merged a pull request on ${repoShortName(repository)}`;
-
+  const repo = repoShortName(repository);
+  const summary = publicPullRequestSummary(type, repo, number);
   const title = asString(pullRequest?.title) || "a pull request";
   const href = asString(pullRequest?.html_url);
-  const repo = repoShortName(repository);
   const diff = type === "pr_merged" ? pullRequestDiffMeta(pullRequest) : {};
 
   return {

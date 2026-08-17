@@ -104,7 +104,7 @@ describe("githubActivityFromWebhook", () => {
         type: "pr_opened",
         speed: "event",
         visibility: "public",
-        summary: "Opened a pull request on briOS",
+        summary: "Opened #42 on briOS",
         idempotency_key: "github:pr_opened:briOS:42",
         subject: {
           kind: "pull_request",
@@ -141,7 +141,7 @@ describe("githubActivityFromWebhook", () => {
     expect(merged.status).toBe("ingest");
     if (merged.status === "ingest") {
       expect(merged.input.type).toBe("pr_merged");
-      expect(merged.input.summary).toBe("Merged a pull request on briOS");
+      expect(merged.input.summary).toBe("Merged #42 on briOS");
       expect(merged.input.idempotency_key).toBe("github:pr_merged:briOS:42");
       expect(merged.input.subject).toEqual({
         kind: "pull_request",
@@ -306,7 +306,7 @@ describe("githubActivityFromWebhook", () => {
     expect(agent.status).toBe("ingest");
     if (agent.status === "ingest") {
       expect(agent.input.type).toBe("pr_opened");
-      expect(agent.input.summary).toBe("Opened a pull request on briOS");
+      expect(agent.input.summary).toBe("Opened #10 on briOS");
       expect(agent.input.subject).toEqual({
         kind: "pull_request",
         label: "Agent PR",
@@ -360,7 +360,7 @@ describe("recordGithubActivity", () => {
     expect(result).toEqual(expect.objectContaining({ ok: true, duplicate: false }));
     const [event] = await store.getTail(1);
     expect(event?.type).toBe("pr_merged");
-    expect(event?.summary).toBe("Merged a pull request on briOS");
+    expect(event?.summary).toBe("Merged #42 on briOS");
     expect(event?.subject).toEqual({
       kind: "pull_request",
       label: "Add activity feed",
