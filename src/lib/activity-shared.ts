@@ -235,6 +235,9 @@ export type ActivityIngestInput = {
   actor?: ActivityRef;
   subject?: ActivityRef;
   meta?: Record<string, unknown>;
+  /** Optional visit coords. Copied onto `meta` at ingest (HMAC producers). */
+  latitude?: number;
+  longitude?: number;
   /** When false, increment the lifetime count only (used for sampled visits). */
   writeToStream?: boolean;
   /** Override idempotency TTL. `0` keeps the key forever (publish / first-seen events). */

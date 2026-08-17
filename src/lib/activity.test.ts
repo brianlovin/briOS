@@ -3,12 +3,14 @@ import { afterEach, beforeEach, describe, expect, spyOn, test } from "bun:test";
 import {
   activityEnterStaggerDelays,
   type ActivityEvent,
+  activityEventLocation,
   activityRollupKey,
   activitySectionFromPath,
   activitySourceFaviconSrc,
   activitySourceUrl,
   activityStackReactKey,
   ANONYMOUS_VISIT_SUMMARY,
+  countryCentroid,
   countryCodeToFlag,
   countryCodeToName,
   createMemoryActivityStore,
@@ -234,6 +236,52 @@ describe("ingestActivityEvent", () => {
     expect(event?.summary).toContain("San Francisco");
     expect(event?.summary).not.toContain("San%20Francisco");
     expect(JSON.stringify(event?.meta)).not.toContain("San%20Francisco");
+  });
+
+  test("HMAC visit ingest persists latitude and longitude on meta", async () => {
+    const store = createMemoryActivityStore();
+    const result = await ingestActivityEvent(
+      {
+        source: "staff-design",
+        type: "visit",
+        idempotency_key: "hmac:staff-design:visit:coords",
+        latitude: 52.52,
+        longitude: 13.405,
+        meta: { path: "/karla-mickens-cole", title: "Karla Mickens Cole", country: "DE" },
+      },
+      store,
+    );
+
+    expect(result.ok && !result.duplicate).toBe(true);
+    const [event] = await store.getTail(1);
+    expect(event?.meta?.latitude).toBe(52.52);
+    expect(event?.meta?.longitude).toBe(13.405);
+    expect(event?.meta?.country).toBe("DE");
+  });
+
+  test("HMAC visit ingest accepts latitude and longitude in meta", async () => {
+    const store = createMemoryActivityStore();
+    const result = await ingestActivityEvent(
+      {
+        source: "tax-ui",
+        type: "visit",
+        idempotency_key: "hmac:tax-ui:visit:meta-coords",
+        meta: {
+          path: "/",
+          country: "US",
+          city: "San Francisco",
+          latitude: "37.7749",
+          longitude: "-122.4194",
+        },
+      },
+      store,
+    );
+
+    expect(result.ok && !result.duplicate).toBe(true);
+    const [event] = await store.getTail(1);
+    expect(event?.meta?.latitude).toBe(37.7749);
+    expect(event?.meta?.longitude).toBe(-122.4194);
+    expect(event?.meta?.city).toBe("San Francisco");
   });
 
   test("HMAC ingest of staff-design + like is rejected", async () => {
@@ -679,6 +727,18 @@ describe("recordVisit", () => {
       href: "/writing/grok-bot-first-impressions-kcJun01",
     });
     expect(event?.meta).toEqual(expect.objectContaining({ title: "Grok Bot First Impressions" }));
+  });
+
+  test("persists latitude and longitude on visit meta", async () => {
+    const store = createMemoryActivityStore();
+    await recordVisit(
+      { path: "/writing", country: "US", latitude: 37.77, longitude: -122.42 },
+      store,
+    );
+    const [event] = await store.getTail(1);
+    expect(event?.meta?.latitude).toBe(37.77);
+    expect(event?.meta?.longitude).toBe(-122.42);
+    expect(event?.meta?.country).toBe("US");
   });
 
   test("prefers city and region in the visit summary", async () => {
@@ -1235,6 +1295,58 @@ describe("getRequestGeo", () => {
     });
     expect(geo).not.toHaveProperty("region");
     expect(geo).not.toHaveProperty("regionName");
+  });
+
+  test("reads Vercel latitude and longitude headers", () => {
+    const geo = getRequestGeo(
+      new Headers({
+        "x-vercel-ip-country": "US",
+        "x-vercel-ip-latitude": "37.7749",
+        "x-vercel-ip-longitude": "-122.4194",
+      }),
+    );
+    expect(geo.latitude).toBe(37.7749);
+    expect(geo.longitude).toBe(-122.4194);
+  });
+
+  test("ignores non-finite or out-of-range coordinates", () => {
+    const geo = getRequestGeo(
+      new Headers({
+        "x-vercel-ip-latitude": "not-a-number",
+        "x-vercel-ip-longitude": "200",
+      }),
+    );
+    expect(geo).not.toHaveProperty("latitude");
+    expect(geo).not.toHaveProperty("longitude");
+  });
+});
+
+describe("countryCentroid", () => {
+  test("returns a point for US", () => {
+    const point = countryCentroid("US");
+    expect(point).toEqual({
+      lat: expect.any(Number),
+      lng: expect.any(Number),
+    });
+    expect(Number.isFinite(point?.lat)).toBe(true);
+    expect(Number.isFinite(point?.lng)).toBe(true);
+  });
+
+  test("returns nothing for empty", () => {
+    expect(countryCentroid("")).toBeUndefined();
+    expect(countryCentroid(undefined)).toBeUndefined();
+  });
+
+  test("activityEventLocation prefers stored coords over the country centroid", () => {
+    const stored = activityEventLocation({
+      meta: { country: "US", latitude: 37.77, longitude: -122.42 },
+    });
+    expect(stored).toEqual({ lat: 37.77, lng: -122.42 });
+
+    const fallback = activityEventLocation({ meta: { country: "US" } });
+    expect(fallback).toEqual(countryCentroid("US"));
+
+    expect(activityEventLocation({ meta: {} })).toBeUndefined();
   });
 });
 
