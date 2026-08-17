@@ -15,10 +15,18 @@ import { ListDetailWrapper } from "@/components/ListDetailWrapper";
 import { SlotDigits } from "@/components/SlotDigits";
 import { useTopBarActions } from "@/components/TopBarActions";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip";
-import type { ActivityEvent, ActivityLikeTarget, ActivityRollup } from "@/lib/activity";
+import type {
+  ActivityEvent,
+  ActivityFeedItem,
+  ActivityLikeTarget,
+  ActivityRollup,
+  ActivityVisitCluster,
+} from "@/lib/activity";
 import {
+  activityFeedItemCount,
+  activityFeedItemReactKey,
   activityStackReactKey,
-  markVisitLocationContinuations,
+  clusterVisitLocationRuns,
   nextActivityEnterState,
   rollupActivityEvents,
   shouldPulseActivityRollup,
@@ -172,6 +180,17 @@ function likeTargetsFromRow(
   return [{ title, ...(row.href ? { href: row.href } : {}) }];
 }
 
+function ActivityCountChip({ count }: { count: number }) {
+  return (
+    <span
+      data-count={count}
+      className="text-tertiary border-secondary shrink-0 -translate-y-[2px] rounded-sm border px-1.5 py-px font-mono text-xs leading-4 tabular-nums"
+    >
+      ×<SlotDigits value={count} />
+    </span>
+  );
+}
+
 export function ActivityRow({
   event,
   count = 1,
@@ -179,7 +198,6 @@ export function ActivityRow({
   href: hrefOverride,
   pulse = false,
   likeTargets: likeTargetsProp,
-  omitVisitLocation = false,
 }: {
   event: ActivityEvent;
   count?: number;
@@ -187,9 +205,8 @@ export function ActivityRow({
   href?: string;
   pulse?: boolean;
   likeTargets?: ActivityLikeTarget[];
-  omitVisitLocation?: boolean;
 }) {
-  const row = getActivityRow(event, { omitVisitLocation });
+  const row = getActivityRow(event);
   const homeUrl = activitySourceUrl(event.source);
   const isLike = event.type === "like";
   const likeTargets = likeTargetsFromRow(event, row, likeTargetsProp);
@@ -228,9 +245,7 @@ export function ActivityRow({
         </div>
         <p className="flex min-w-0 items-baseline gap-1.5">
           <span className="min-w-0">
-            <span className={omitVisitLocation ? "text-tertiary" : "text-primary"}>
-              {row.summary}
-            </span>
+            <span className="text-primary">{row.summary}</span>
             {href && context ? (
               <>
                 {" "}
@@ -246,14 +261,7 @@ export function ActivityRow({
               </>
             ) : null}
           </span>
-          {showCountChip ? (
-            <span
-              data-count={count}
-              className="text-tertiary border-secondary shrink-0 -translate-y-[2px] rounded-sm border px-1.5 py-px font-mono text-xs leading-4 tabular-nums"
-            >
-              ×<SlotDigits value={count} />
-            </span>
-          ) : null}
+          {showCountChip ? <ActivityCountChip count={count} /> : null}
           {diff ? (
             <span className="shrink-0 text-sm tabular-nums">
               <span className="text-green-600">+{diff.additions}</span>{" "}
@@ -261,6 +269,130 @@ export function ActivityRow({
             </span>
           ) : null}
         </p>
+      </div>
+    </div>
+  );
+}
+
+function VisitClusterRail() {
+  return (
+    <span
+      aria-hidden
+      className="text-tertiary pointer-events-none absolute inset-x-0 top-8 bottom-1 flex flex-col"
+    >
+      <span className="mx-auto w-px flex-1 bg-current opacity-50" />
+      <svg width="32" height="10" viewBox="0 0 32 10" className="overflow-visible">
+        <path
+          d="M16 0 V3 Q16 9 30 9"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1"
+          strokeLinecap="round"
+        />
+      </svg>
+    </span>
+  );
+}
+
+function ActivityClusterAction({
+  stack,
+  pulse = false,
+}: {
+  stack: ActivityRollup;
+  pulse?: boolean;
+}) {
+  const row = getActivityRow(stack.latest, { omitVisitLocation: true });
+  const label = stack.sectionLabel ?? row.label;
+  const rawHref = stack.href ?? row.href;
+  const href = resolveActivitySourceHref(stack.latest.source, rawHref) ?? rawHref;
+  const context = label ?? (href || undefined);
+  const showCountChip = stack.count > 1;
+
+  return (
+    <li className="relative flex items-baseline gap-1.5">
+      {pulse ? (
+        <span
+          key={stack.latest.id}
+          aria-hidden
+          className="activity-rollup-pulse pointer-events-none absolute inset-0 z-0"
+        />
+      ) : null}
+      <span className="relative z-10 min-w-0">
+        <span className="text-tertiary">{row.summary}</span>
+        {href && context ? (
+          <>
+            {" "}
+            <ActivityContextLink href={href}>{context}</ActivityContextLink>
+          </>
+        ) : context ? (
+          <span className="text-tertiary"> {context}</span>
+        ) : null}
+      </span>
+      {showCountChip ? <ActivityCountChip count={stack.count} /> : null}
+    </li>
+  );
+}
+
+function ActivityVisitClusterBlock({
+  cluster,
+  pulse = false,
+  pulseActionKey = null,
+}: {
+  cluster: ActivityVisitCluster;
+  pulse?: boolean;
+  pulseActionKey?: string | null;
+}) {
+  const iconEvent = cluster.actions[0]?.latest ?? cluster.latest;
+  const showRail = cluster.actions.length > 1;
+
+  if (cluster.actions.length === 1) {
+    const stack = cluster.actions[0]!;
+    return (
+      <ActivityRow
+        event={stack.latest}
+        count={stack.count}
+        sectionLabel={stack.sectionLabel}
+        href={stack.href}
+        likeTargets={stack.likeTargets}
+        pulse={pulse}
+      />
+    );
+  }
+
+  return (
+    <div
+      data-rollup-pulse={pulse ? "" : undefined}
+      className="group hover:bg-secondary relative isolate px-4 py-3 md:py-2 md:dark:hover:bg-white/5"
+    >
+      {pulse ? (
+        <span
+          key={cluster.latest.id}
+          aria-hidden
+          className="activity-rollup-pulse pointer-events-none absolute inset-0 z-0"
+        />
+      ) : null}
+      <div className="relative z-10 flex items-start gap-3">
+        <div className="relative w-8 flex-none self-stretch">
+          <div className="flex size-8 items-center justify-center">
+            <ActivityRowIcon event={iconEvent} />
+          </div>
+          {showRail ? <VisitClusterRail /> : null}
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-primary">{cluster.locationHeader}</p>
+          <ul className="mt-0.5 flex flex-col gap-0.5">
+            {cluster.actions.map((action) => {
+              const actionKey = activityStackReactKey(action);
+              return (
+                <ActivityClusterAction
+                  key={actionKey}
+                  stack={action}
+                  pulse={pulseActionKey === actionKey}
+                />
+              );
+            })}
+          </ul>
+        </div>
       </div>
     </div>
   );
@@ -376,16 +508,18 @@ function mergeEnterDelays(
 }
 
 function ActivityStackList({
-  stacks,
+  items,
   pulseKey,
+  pulseActionKey,
 }: {
-  stacks: ActivityRollup[];
+  items: ActivityFeedItem[];
   pulseKey: string | null;
+  pulseActionKey: string | null;
 }) {
   const hydrated = useHydrated();
   const prefersReducedMotion = useReducedMotion();
   const canAnimate = hydrated && prefersReducedMotion !== true;
-  const keys = stacks.map(activityStackReactKey);
+  const keys = items.map(activityFeedItemReactKey);
   const liveKeys = new Set(keys);
   const [seenKeys, setSeenKeys] = useState<Set<string> | null>(null);
   const [enterDelays, setEnterDelays] = useState<Map<string, number>>(() => new Map());
@@ -403,10 +537,11 @@ function ActivityStackList({
   return (
     <div className="divide-secondary divide-y">
       <AnimatePresence initial={false}>
-        {stacks.map((stack) => {
-          const reactKey = activityStackReactKey(stack);
+        {items.map((item) => {
+          const reactKey = activityFeedItemReactKey(item);
           const delay = nextDelays.get(reactKey);
           const isEntering = canAnimate && delay !== undefined;
+          const pulse = pulseKey === reactKey || enterPulseKeys.has(reactKey);
 
           return (
             <motion.div
@@ -425,15 +560,22 @@ function ActivityStackList({
               }}
               className={isEntering ? "overflow-hidden" : "[clip-path:inset(0)]"}
             >
-              <ActivityRow
-                event={stack.latest}
-                count={stack.count}
-                sectionLabel={stack.sectionLabel}
-                href={stack.href}
-                likeTargets={stack.likeTargets}
-                omitVisitLocation={stack.omitVisitLocation}
-                pulse={pulseKey === reactKey || enterPulseKeys.has(reactKey)}
-              />
+              {item.type === "visit-cluster" ? (
+                <ActivityVisitClusterBlock
+                  cluster={item}
+                  pulse={pulse}
+                  pulseActionKey={pulseKey === reactKey ? pulseActionKey : null}
+                />
+              ) : (
+                <ActivityRow
+                  event={item.stack.latest}
+                  count={item.stack.count}
+                  sectionLabel={item.stack.sectionLabel}
+                  href={item.stack.href}
+                  likeTargets={item.stack.likeTargets}
+                  pulse={pulse}
+                />
+              )}
             </motion.div>
           );
         })}
@@ -442,13 +584,25 @@ function ActivityStackList({
   );
 }
 
-function useRollupPulse(stacks: ActivityRollup[]): string | null {
+function newestActionKey(item: ActivityFeedItem): string {
+  if (item.type === "row") return activityStackReactKey(item.stack);
+  const newest = item.actions[item.actions.length - 1]!;
+  return activityStackReactKey(newest);
+}
+
+function useRollupPulse(items: ActivityFeedItem[]): {
+  pulseKey: string | null;
+  pulseActionKey: string | null;
+} {
   const prefersReducedMotion = useReducedMotion();
-  const top = stacks[0];
-  const topReactKey = top ? activityStackReactKey(top) : null;
+  const top = items[0];
+  const topReactKey = top ? activityFeedItemReactKey(top) : null;
+  const topActionKey = top ? newestActionKey(top) : null;
+  const topCount = top ? activityFeedItemCount(top) : 0;
   const [seenTop, setSeenTop] = useState<{ key: string; count: number } | null>(null);
   const [pulseKey, setPulseKey] = useState<string | null>(null);
-  const nextSeen = topReactKey && top ? { key: topReactKey, count: top.count } : null;
+  const [pulseActionKey, setPulseActionKey] = useState<string | null>(null);
+  const nextSeen = topReactKey && top ? { key: topReactKey, count: topCount } : null;
   const shouldPulse =
     prefersReducedMotion !== true && shouldPulseActivityRollup(seenTop, nextSeen ?? undefined);
   const seenChanged = seenTop?.key !== nextSeen?.key || seenTop?.count !== nextSeen?.count;
@@ -457,18 +611,26 @@ function useRollupPulse(stacks: ActivityRollup[]): string | null {
     setSeenTop(nextSeen);
     if (shouldPulse && topReactKey) {
       setPulseKey(topReactKey);
+      setPulseActionKey(topActionKey);
     } else if (pulseKey && nextSeen?.key !== pulseKey) {
       setPulseKey(null);
+      setPulseActionKey(null);
     }
   }
 
   useEffect(() => {
     if (!pulseKey) return;
-    const timeout = window.setTimeout(() => setPulseKey(null), ROLLUP_PULSE_MS);
+    const timeout = window.setTimeout(() => {
+      setPulseKey(null);
+      setPulseActionKey(null);
+    }, ROLLUP_PULSE_MS);
     return () => window.clearTimeout(timeout);
-  }, [pulseKey, top?.count]);
+  }, [pulseKey, topCount]);
 
-  return shouldPulse && topReactKey ? topReactKey : pulseKey;
+  if (shouldPulse && topReactKey) {
+    return { pulseKey: topReactKey, pulseActionKey: topActionKey };
+  }
+  return { pulseKey, pulseActionKey };
 }
 
 export function ActivityFeed({
@@ -479,11 +641,8 @@ export function ActivityFeed({
   initialCount: number;
 }) {
   const { events, count } = useActivity(initialEvents, initialCount);
-  const stacks = useMemo(
-    () => markVisitLocationContinuations(rollupActivityEvents(events)),
-    [events],
-  );
-  const pulseKey = useRollupPulse(stacks);
+  const items = useMemo(() => clusterVisitLocationRuns(rollupActivityEvents(events)), [events]);
+  const { pulseKey, pulseActionKey } = useRollupPulse(items);
 
   const topBarContent = useMemo(() => <ActivityTrackedCount count={count} />, [count]);
   useTopBarActions(topBarContent);
@@ -498,7 +657,11 @@ export function ActivityFeed({
             </p>
           ) : (
             <>
-              <ActivityStackList stacks={stacks} pulseKey={pulseKey} />
+              <ActivityStackList
+                items={items}
+                pulseKey={pulseKey}
+                pulseActionKey={pulseActionKey}
+              />
               <p className="text-tertiary p-32 text-center text-sm">
                 Older activity is dust in the wind...
               </p>
