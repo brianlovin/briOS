@@ -827,7 +827,7 @@ describe("ActivityRow", () => {
     );
 
     expect(markup).toContain("shiori-icon.png");
-    expect(markup).toContain("Someone saved a link");
+    expect(markup).toContain("saved a link on");
     expect(markup).not.toContain("Someone saved a link on Shiori");
     expect(markup).toContain(">Shiori<");
     expect(markup).toContain('href="https://www.shiori.sh"');
@@ -840,17 +840,17 @@ describe("ActivityRow", () => {
       {
         type: "link_clicked" as const,
         summary: "Someone clicked a link on Shiori",
-        stripped: "Someone clicked a link",
+        stripped: "Someone clicked a link on",
       },
       {
         type: "signed_up" as const,
         summary: "Someone signed up for Shiori",
-        stripped: "Someone signed up",
+        stripped: "Someone signed up for",
       },
       {
         type: "subscription_started" as const,
         summary: "Someone subscribed on Shiori",
-        stripped: "Someone subscribed",
+        stripped: "Someone subscribed on",
       },
       {
         type: "download" as const,
@@ -985,7 +985,7 @@ describe("ActivityRow", () => {
     );
 
     expect(markup).toContain("shiori-icon.png");
-    expect(markup).toContain("Someone clicked a link");
+    expect(markup).toContain("clicked a link on");
     expect(markup).not.toContain("Someone clicked a link on Shiori");
     expect(markup).toContain(">Shiori<");
     expect(markup).toContain('href="https://www.shiori.sh"');
@@ -1129,15 +1129,17 @@ describe("ActivityTrackedCount", () => {
     expect(formatTrackedEventsLabel(1)).toBe("1 event tracked");
     expect(formatTrackedEventsLabel(2)).toBe("2 events tracked");
     expect(formatTrackedEventsLabel(1500)).toBe("1,500 events tracked");
-    expect(ACTIVITY_TRACKED_SINCE_TOOLTIP).toBe("Tracked since August 16, 2026");
+    expect(ACTIVITY_TRACKED_SINCE_TOOLTIP).toBe("Events tracked since August 16, 2026");
   });
 
-  test("renders the lifetime count", () => {
+  test("shows the numeric count and a since-date tooltip", () => {
     const one = renderToStaticMarkup(<ActivityTrackedCount count={1} />);
     const many = renderToStaticMarkup(<ActivityTrackedCount count={12} />);
 
-    expect(one).toContain("1 event tracked");
-    expect(many).toContain("12 events tracked");
+    expect(one).toContain('aria-label="1. Events tracked since August 16, 2026"');
+    expect(one).not.toContain("1 event tracked");
+    expect(many).toContain('aria-label="12. Events tracked since August 16, 2026"');
+    expect(many).not.toContain("12 events tracked");
     expect(many).not.toContain("Live");
   });
 });

@@ -950,7 +950,7 @@ describe("HMAC download ingest", () => {
     expect(event?.actor).toBeUndefined();
     expect(JSON.stringify(event)).not.toMatch(/https?:\/\//);
     expect(getActivityRow(event!)).toEqual({
-      summary: "Someone clicked a link",
+      summary: "Someone clicked a link on",
       href: "https://www.shiori.sh",
       label: "Shiori",
     });
@@ -972,7 +972,7 @@ describe("HMAC download ingest", () => {
     expect(result.ok && !result.duplicate).toBe(true);
     const row = getActivityRow((await store.getTail(1))[0]!);
     expect(row).toEqual({
-      summary: "Someone clicked a link",
+      summary: "Someone clicked a link on",
       href: "https://www.shiori.sh",
       label: "Shiori",
     });
@@ -1812,7 +1812,7 @@ describe("getActivityRow source metadata", () => {
 
   test("lifts Shiori out of save/click/signup/subscribe/download summaries", () => {
     expect(getActivityRow(rowEvent({ type: "link_saved" }))).toEqual({
-      summary: "Someone saved a link",
+      summary: "Someone saved a link on",
       href: "https://www.shiori.sh",
       label: "Shiori",
     });
@@ -1825,7 +1825,7 @@ describe("getActivityRow source metadata", () => {
         }),
       ),
     ).toEqual({
-      summary: "Someone clicked a link",
+      summary: "Someone clicked a link on",
       href: "https://www.shiori.sh",
       label: "Shiori",
     });
@@ -1837,7 +1837,7 @@ describe("getActivityRow source metadata", () => {
         }),
       ),
     ).toEqual({
-      summary: "Someone signed up",
+      summary: "Someone signed up for",
       href: "https://www.shiori.sh",
       label: "Shiori",
     });
@@ -1849,7 +1849,7 @@ describe("getActivityRow source metadata", () => {
         }),
       ),
     ).toEqual({
-      summary: "Someone subscribed",
+      summary: "Someone subscribed on",
       href: "https://www.shiori.sh",
       label: "Shiori",
     });

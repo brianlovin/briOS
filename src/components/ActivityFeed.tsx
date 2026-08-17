@@ -2,15 +2,7 @@
 
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
-import {
-  type ReactNode,
-  type RefObject,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  useSyncExternalStore,
-} from "react";
+import { type ReactNode, useEffect, useMemo, useState, useSyncExternalStore } from "react";
 
 import { Activity } from "@/components/icons/Activity";
 import { Github } from "@/components/icons/Github";
@@ -18,7 +10,7 @@ import { Heart } from "@/components/icons/Heart";
 import { Shiori } from "@/components/icons/Shiori";
 import { World } from "@/components/icons/World";
 import { ListDetailWrapper } from "@/components/ListDetailWrapper";
-import { RollingDigits } from "@/components/RollingDigits";
+import { SlotDigits } from "@/components/SlotDigits";
 import { useTopBarActions } from "@/components/TopBarActions";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip";
 import type { ActivityEvent, ActivityLikeTarget, ActivityRollup } from "@/lib/activity";
@@ -33,7 +25,6 @@ import {
   activitySourceFaviconSrc,
   activitySourceUrl,
   formatLikeOthersLabel,
-  formatTrackedEventsLabel,
   getActivityRow,
   getMergedPullRequestDiff,
   isHomeLikeTitle,
@@ -41,42 +32,6 @@ import {
 } from "@/lib/activity-shared";
 import { useActivity } from "@/lib/hooks/useActivity";
 import { cn } from "@/lib/utils";
-
-function formatRelativeTime(iso: string): string {
-  const then = new Date(iso).getTime();
-  if (Number.isNaN(then)) return "";
-  const delta = Math.max(0, Date.now() - then);
-  const seconds = Math.floor(delta / 1000);
-  if (seconds < 5) return "just now";
-  if (seconds < 60) return `${seconds}s ago`;
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes}m ago`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
-  const days = Math.floor(hours / 24);
-  return `${days}d ago`;
-}
-
-function RelativeTime({ iso, className }: { iso: string; className?: string }) {
-  const [label, setLabel] = useState("");
-
-  useEffect(() => {
-    const tick = () => setLabel(formatRelativeTime(iso));
-    tick();
-    const id = window.setInterval(tick, 1000);
-    return () => window.clearInterval(id);
-  }, [iso]);
-
-  return (
-    <time
-      className={cn("text-quaternary shrink-0 text-right text-sm tabular-nums", className)}
-      dateTime={iso}
-      title={iso}
-    >
-      {label || "\u00a0"}
-    </time>
-  );
-}
 
 function ActivitySourceFavicon({ src, source }: { src: string; source: string }) {
   const [failed, setFailed] = useState(false);
@@ -114,7 +69,7 @@ function ActivityRowIcon({ event, icon }: { event: ActivityEvent; icon?: string 
   }
 
   if (event.type === "like") {
-    return <Heart size={16} className="fill-current text-red-500" aria-hidden />;
+    return <Heart size={24} className="fill-current text-red-500" aria-hidden />;
   }
 
   if (isGithubActivity(event)) {
@@ -251,7 +206,7 @@ export function ActivityRow({
   return (
     <div
       data-rollup-pulse={pulse ? "" : undefined}
-      className="group hover:bg-secondary relative isolate flex w-max min-w-full items-center gap-3 py-3 pl-4 md:grid md:w-auto md:min-w-0 md:grid-cols-[2rem_minmax(0,1fr)_auto] md:gap-4 md:px-4 md:py-2 md:dark:hover:bg-white/5"
+      className="group hover:bg-secondary relative isolate flex items-center gap-3 px-4 py-3 md:gap-4 md:py-2 md:dark:hover:bg-white/5"
     >
       {pulse ? (
         <span
@@ -263,8 +218,8 @@ export function ActivityRow({
       <div className="relative z-10 flex size-8 shrink-0 items-center justify-center">
         <ActivityRowIcon event={event} icon={row.icon} />
       </div>
-      <p className="relative z-10 flex items-baseline gap-1.5 whitespace-nowrap md:min-w-0">
-        <span className="md:min-w-0 md:truncate">
+      <p className="relative z-10 flex min-w-0 items-baseline gap-1.5">
+        <span className="min-w-0">
           <span className="text-primary">{row.summary}</span>
           {href && context ? (
             <>
@@ -286,7 +241,7 @@ export function ActivityRow({
             data-count={count}
             className="text-tertiary border-secondary shrink-0 -translate-y-[2px] rounded-sm border px-1.5 py-px font-mono text-xs leading-4 tabular-nums"
           >
-            <RollingDigits value={count} />
+            <SlotDigits value={count} />
           </span>
         ) : null}
         {diff ? (
@@ -296,35 +251,29 @@ export function ActivityRow({
           </span>
         ) : null}
       </p>
-      <RelativeTime
-        iso={event.received_at}
-        className={cn(
-          "sticky right-0 z-10 ml-auto bg-white px-4 dark:bg-black",
-          "group-hover:bg-inherit group-data-[rollup-pulse]:bg-inherit",
-          "max-md:[box-shadow:inset_1px_0_0_var(--border-color-secondary)]",
-          "md:static md:ml-0 md:bg-transparent md:px-0 md:shadow-none md:dark:bg-transparent",
-          "md:group-hover:bg-inherit md:group-data-[rollup-pulse]:bg-inherit md:dark:group-hover:bg-white/5",
-        )}
-      />
     </div>
   );
 }
 
 export function ActivityTrackedCount({ count }: { count: number }) {
+  const formatted = count.toLocaleString("en-US");
+
   return (
     <Tooltip delay={0} closeDelay={0}>
       <TooltipTrigger
         delay={0}
         closeDelay={0}
-        className="text-tertiary hidden cursor-default bg-transparent p-0 text-sm tabular-nums md:inline"
+        aria-label={`${formatted}. ${ACTIVITY_TRACKED_SINCE_TOOLTIP}`}
+        className="text-quaternary hidden cursor-default bg-transparent p-0 font-mono text-sm tabular-nums md:inline"
       >
-        {formatTrackedEventsLabel(count)}
+        <SlotDigits value={count} />
       </TooltipTrigger>
       <TooltipContent
         side="bottom"
         align="end"
         collisionPadding={8}
         container={typeof document === "undefined" ? undefined : document.body}
+        collisionBoundary={typeof document === "undefined" ? undefined : document.documentElement}
         className="overflow-visible whitespace-nowrap"
       >
         {ACTIVITY_TRACKED_SINCE_TOOLTIP}
@@ -346,75 +295,6 @@ function useHydrated(): boolean {
     () => true,
     () => false,
   );
-}
-
-function useIsMobile(): boolean {
-  return useSyncExternalStore(
-    (onChange) => {
-      const media = window.matchMedia("(max-width: 767px)");
-      media.addEventListener("change", onChange);
-      return () => media.removeEventListener("change", onChange);
-    },
-    () => window.matchMedia("(max-width: 767px)").matches,
-    () => false,
-  );
-}
-
-function useMobileAxisLock(ref: RefObject<HTMLElement | null>, enabled: boolean) {
-  useEffect(() => {
-    const container = ref.current;
-    if (!container || !enabled) return;
-
-    let touchStartPos: { x: number; y: number } | null = null;
-    let lockedAxis: "x" | "y" | null = null;
-    let lockedScrollValue: number | null = null;
-    const threshold = 5;
-
-    const handleTouchStart = (event: TouchEvent) => {
-      const touch = event.touches[0];
-      if (!touch) return;
-      touchStartPos = { x: touch.clientX, y: touch.clientY };
-      lockedAxis = null;
-      lockedScrollValue = null;
-    };
-
-    const handleTouchMove = (event: TouchEvent) => {
-      if (!touchStartPos) return;
-      const touch = event.touches[0];
-      if (!touch || lockedAxis !== null) return;
-
-      const deltaX = Math.abs(touch.clientX - touchStartPos.x);
-      const deltaY = Math.abs(touch.clientY - touchStartPos.y);
-      if (deltaX <= threshold && deltaY <= threshold) return;
-
-      lockedAxis = deltaX > deltaY ? "x" : "y";
-      lockedScrollValue = lockedAxis === "x" ? container.scrollTop : container.scrollLeft;
-    };
-
-    const handleScroll = () => {
-      if (lockedAxis === null || lockedScrollValue === null) return;
-      if (lockedAxis === "x" && container.scrollTop !== lockedScrollValue) {
-        container.scrollTop = lockedScrollValue;
-      } else if (lockedAxis === "y" && container.scrollLeft !== lockedScrollValue) {
-        container.scrollLeft = lockedScrollValue;
-      }
-    };
-
-    const handleTouchEnd = () => {
-      touchStartPos = null;
-    };
-
-    container.addEventListener("touchstart", handleTouchStart, { passive: true });
-    container.addEventListener("touchmove", handleTouchMove, { passive: true });
-    container.addEventListener("touchend", handleTouchEnd);
-    container.addEventListener("scroll", handleScroll);
-    return () => {
-      container.removeEventListener("touchstart", handleTouchStart);
-      container.removeEventListener("touchmove", handleTouchMove);
-      container.removeEventListener("touchend", handleTouchEnd);
-      container.removeEventListener("scroll", handleScroll);
-    };
-  }, [enabled, ref]);
 }
 
 function pruneEnterDelays(delays: Map<string, number>, liveKeys: Set<string>): Map<string, number> {
@@ -459,7 +339,7 @@ function ActivityStackList({
   if (nextDelays !== enterDelays) setEnterDelays(nextDelays);
 
   return (
-    <div className="divide-secondary min-w-max divide-y md:min-w-0">
+    <div className="divide-secondary divide-y">
       <AnimatePresence initial={false}>
         {stacks.map((stack) => {
           const reactKey = activityStackReactKey(stack);
@@ -481,10 +361,7 @@ function ActivityStackList({
                   return remaining;
                 });
               }}
-              className={cn(
-                "w-max min-w-full md:w-auto md:min-w-0",
-                isEntering ? "overflow-hidden" : "[clip-path:inset(0)]",
-              )}
+              className={isEntering ? "overflow-hidden" : "[clip-path:inset(0)]"}
             >
               <ActivityRow
                 event={stack.latest}
@@ -541,9 +418,6 @@ export function ActivityFeed({
   const { events, count } = useActivity(initialEvents, initialCount);
   const stacks = useMemo(() => rollupActivityEvents(events), [events]);
   const pulseKey = useRollupPulse(stacks);
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const isMobile = useIsMobile();
-  useMobileAxisLock(scrollRef, isMobile);
 
   const topBarContent = useMemo(() => <ActivityTrackedCount count={count} />, [count]);
   useTopBarActions(topBarContent);
@@ -551,11 +425,7 @@ export function ActivityFeed({
   return (
     <ListDetailWrapper>
       <div className="relative flex min-h-0 flex-1 overflow-hidden">
-        <div
-          ref={scrollRef}
-          data-scrollable
-          className="relative min-w-0 flex-1 overflow-auto overscroll-contain [-webkit-overflow-scrolling:touch]"
-        >
+        <div data-scrollable className="relative min-w-0 flex-1 overflow-auto">
           {events.length === 0 ? (
             <p className="text-tertiary px-4 py-10">
               Nothing yet. Likes and visits will show up here.

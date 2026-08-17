@@ -36,6 +36,8 @@ interface TooltipContentProps extends React.ComponentPropsWithoutRef<typeof Base
   side?: "top" | "bottom" | "left" | "right";
   align?: "start" | "center" | "end";
   collisionPadding?: number;
+  collisionBoundary?: React.ComponentProps<typeof BaseUITooltip.Positioner>["collisionBoundary"];
+  positionMethod?: React.ComponentProps<typeof BaseUITooltip.Positioner>["positionMethod"];
   container?: React.ComponentProps<typeof BaseUITooltip.Portal>["container"];
 }
 
@@ -50,6 +52,8 @@ const TooltipContent = React.forwardRef<
       side = "top",
       align,
       collisionPadding,
+      collisionBoundary,
+      positionMethod = "fixed",
       container,
       children,
       ...props
@@ -58,10 +62,13 @@ const TooltipContent = React.forwardRef<
   ) => (
     <TooltipPortal container={container}>
       <TooltipPositioner
+        className="z-50"
         side={side}
         sideOffset={sideOffset}
         align={align}
         collisionPadding={collisionPadding}
+        collisionBoundary={collisionBoundary}
+        positionMethod={positionMethod}
       >
         <BaseUITooltip.Popup
           ref={ref}
