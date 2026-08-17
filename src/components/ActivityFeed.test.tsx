@@ -1183,7 +1183,7 @@ describe("ActivityFeed", () => {
     expect(countryOnly).toContain("Stack");
   });
 
-  test("keeps every same-location visit row and says the place only on the newest", () => {
+  test("renders a same-location visit run as one block, oldest action first", () => {
     const markup = renderToStaticMarkup(
       <ActivityFeed
         initialEvents={[
@@ -1232,14 +1232,18 @@ describe("ActivityFeed", () => {
     );
 
     expect(markup.match(/Someone from San Francisco/g)?.length).toBe(1);
+    expect(markup).toContain("Someone from San Francisco, California");
+    expect(markup).not.toContain("United States");
     expect(markup).toContain("viewed");
     expect(markup).toContain("Listening");
     expect(markup).toContain("AMA");
     expect(markup).toContain("visited");
     expect(markup).toContain("the site");
+    expect(markup.indexOf("the site")).toBeLessThan(markup.indexOf("AMA"));
+    expect(markup.indexOf("AMA")).toBeLessThan(markup.indexOf("Listening"));
   });
 
-  test("a different location in the middle labels both visit runs", () => {
+  test("a different location in the middle labels two visit clusters", () => {
     const markup = renderToStaticMarkup(
       <ActivityFeed
         initialEvents={[
@@ -1292,7 +1296,7 @@ describe("ActivityFeed", () => {
     expect(markup).toContain("AMA");
   });
 
-  test("a like does not join a consecutive visit location run", () => {
+  test("a like does not join a visit location cluster", () => {
     const markup = renderToStaticMarkup(
       <ActivityFeed
         initialEvents={[
