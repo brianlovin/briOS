@@ -257,9 +257,9 @@ export function selectHNPostsForDigest(
 }
 
 /**
- * Fresh fetch for the daily email. Do not wrap this in `unstable_cache` —
- * a dateless key like `["hn:digest"]` can survive past the 1h revalidate
- * on Vercel cron and send yesterday's identical snapshot.
+ * Fresh fetch for the daily email. Do not wrap this in `unstable_cache`
+ * with a dateless key — that can survive past the 1h revalidate on Vercel
+ * cron and send yesterday's identical snapshot.
  */
 export async function getHNPostsForDigest(): Promise<HackerNewsPost[]> {
   const topPostIds = await fetchPostIds();

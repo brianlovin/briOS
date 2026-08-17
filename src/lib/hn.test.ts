@@ -128,7 +128,7 @@ describe("getHNPostsForDigest cache", () => {
     const source = readFileSync(resolve(import.meta.dir, "hn.ts"), "utf8");
 
     expect(source).not.toMatch(/getHNPostsForDigest\s*=\s*unstable_cache/);
-    expect(source).not.toContain('["hn:digest"]');
+    expect(source).not.toMatch(/unstable_cache\([\s\S]*?,\s*\["hn:digest"\]/);
     expect(source).toMatch(/export async function getHNPostsForDigest/);
   });
 });
