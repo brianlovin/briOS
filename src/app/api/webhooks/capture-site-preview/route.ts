@@ -118,7 +118,7 @@ export async function POST(request: Request) {
       await purgeContentType("sites");
 
       afterActivity((store) =>
-        recordSiteAdded({ id: pageId, title: titleFromNotionPage(currentPage) }, store),
+        recordSiteAdded({ id: pageId, title: titleFromNotionPage(currentPage), url }, store),
       );
 
       return NextResponse.json(

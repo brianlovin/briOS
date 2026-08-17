@@ -14,6 +14,7 @@ import {
 
 import { ActivityGlobe, type ActivityGlobeAimRequest } from "@/components/ActivityGlobe";
 import { Activity } from "@/components/icons/Activity";
+import { Compass } from "@/components/icons/Compass";
 import { Github } from "@/components/icons/Github";
 import { Heart } from "@/components/icons/Heart";
 import { Shiori } from "@/components/icons/Shiori";
@@ -113,6 +114,10 @@ function ActivityRowIcon({ event, icon }: { event: ActivityEvent; icon?: string 
         {icon ?? "🥤"}
       </span>
     );
+  }
+
+  if (event.type === "site_added") {
+    return <Compass size={16} className="text-tertiary" aria-hidden />;
   }
 
   return <Activity size={16} className="text-tertiary" aria-hidden />;

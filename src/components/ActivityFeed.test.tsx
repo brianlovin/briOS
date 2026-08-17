@@ -411,6 +411,49 @@ describe("ActivityRow", () => {
     }
   });
 
+  test("uses the Compass icon and saved title for site_added events", () => {
+    const pulsePath = "M4.75 11.75H8.25L10.25 4.75L13.75 19.25L15.75 11.75H19.25";
+    const compassNeedle =
+      "M10.409 10.409L15.2499 8.74997L13.591 13.591L8.75012 15.25L10.409 10.409Z";
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          type: "site_added",
+          speed: "event",
+          summary: "A good website was added",
+          subject: { kind: "site", label: "Linear", href: "https://linear.app" },
+          meta: { title: "Linear", href: "https://linear.app" },
+        })}
+      />,
+    );
+
+    expect(markup).toContain(compassNeedle);
+    expect(markup).not.toContain(pulsePath);
+    expect(markup).toContain("A good website was added");
+    expect(markup).toContain(">Linear<");
+    expect(markup).not.toContain(">Sites<");
+    expect(markup).toContain('href="https://linear.app"');
+  });
+
+  test("links a stored site title to /sites when the event has no site URL", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityRow
+        event={event({
+          type: "site_added",
+          speed: "event",
+          summary: "A good website was added",
+          subject: { kind: "site", label: "A good website", href: "/sites" },
+          meta: { title: "A good website", href: "/sites" },
+        })}
+      />,
+    );
+
+    expect(markup).toContain("A good website was added");
+    expect(markup).toContain(">A good website<");
+    expect(markup).not.toContain(">Sites<");
+    expect(markup).toContain('href="/sites"');
+  });
+
   test("links Tax UI in a download summary even without subject.href", () => {
     const markup = renderToStaticMarkup(
       <ActivityRow

@@ -1244,6 +1244,18 @@ export function getActivityRow(
     return attachSourceMetadata(event, { summary: "Someone clicked a link on" });
   }
 
+  // List-page hrefs like `/sites` or `/stack` would otherwise replace a
+  // specific item name with the section title ("Sites", "Stack").
+  if (event.type === "site_added" || event.type === "stack_added") {
+    return attachSourceMetadata(event, {
+      summary: event.summary,
+      href: event.subject?.href,
+      label: displaySubjectLabel(event.subject?.label, event.subject?.href, {
+        preferStored: true,
+      }),
+    });
+  }
+
   return attachSourceMetadata(event, {
     summary: event.summary,
     href: event.subject?.href,

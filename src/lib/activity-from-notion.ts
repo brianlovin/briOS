@@ -9,7 +9,7 @@ import {
   recordWritingPublished,
 } from "./activity";
 import { notion } from "./notion/client";
-import { richText, select, title } from "./notion/properties";
+import { richText, select, title, url } from "./notion/properties";
 import { type PurgeableContentType } from "./notion/purge";
 import { isFullPage, type PageResponse } from "./notion/types";
 import { buildSlug } from "./short-id";
@@ -57,7 +57,14 @@ export async function ingestActivityFromContentPurge(
       return;
     }
     case "sites": {
-      await recordSiteAdded({ id: pageId, title: title(properties, "Name") ?? "Untitled" }, store);
+      await recordSiteAdded(
+        {
+          id: pageId,
+          title: title(properties, "Name") ?? "Untitled",
+          url: url(properties, "URL"),
+        },
+        store,
+      );
       return;
     }
   }
