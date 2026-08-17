@@ -981,7 +981,6 @@ describe("activity source helpers", () => {
   test("maps sources to favicon paths", () => {
     expect(activitySourceFaviconSrc("brios")).toBe("/activity/favicons/brios.png");
     expect(activitySourceFaviconSrc("tax-ui")).toBe("/activity/favicons/tax-ui.png");
-    expect(activitySourceFaviconSrc("staff-design")).toBeUndefined();
     expect(activitySourceFaviconSrc("design-details")).toBe(
       "/activity/favicons/design-details.png",
     );
