@@ -1062,7 +1062,8 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(markup).toContain("Someone from Spring Lake, North Carolina, United States viewed");
+    expect(markup).toContain("Someone from Spring Lake, North Carolina viewed");
+    expect(markup).not.toContain("United States");
     expect(markup).not.toContain("Visit from");
     expect(markup).toContain("an AMA question");
     expect(markup).toContain('href="/ama"');
@@ -1138,6 +1139,206 @@ describe("ActivityFeed", () => {
     expect(markup).toContain("Someone from San Francisco");
     expect(markup).not.toContain("Visit from");
     expect(markup).toContain("Someone liked");
+  });
+
+  test("omits United States on a city and state visit and keeps it for country-only US", () => {
+    const cityState = renderToStaticMarkup(
+      <ActivityFeed
+        initialEvents={[
+          event({
+            id: "sf",
+            summary: "Visit from San Francisco, California, United States",
+            subject: { kind: "page", label: "Listening", href: "/listening" },
+            meta: {
+              country: "US",
+              country_name: "United States",
+              region: "CA",
+              region_name: "California",
+              city: "San Francisco",
+              path: "/listening",
+            },
+          }),
+        ]}
+        initialCount={1}
+      />,
+    );
+    const countryOnly = renderToStaticMarkup(
+      <ActivityFeed
+        initialEvents={[
+          event({
+            id: "us",
+            summary: "Visit from United States",
+            subject: { kind: "page", label: "Stack", href: "/stack" },
+            meta: { country: "US", path: "/stack" },
+          }),
+        ]}
+        initialCount={1}
+      />,
+    );
+
+    expect(cityState).toContain("Someone from San Francisco, California viewed");
+    expect(cityState).toContain("Listening");
+    expect(cityState).not.toContain("United States");
+    expect(countryOnly).toContain("Someone from United States viewed");
+    expect(countryOnly).toContain("Stack");
+  });
+
+  test("keeps every same-location visit row and says the place only on the newest", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityFeed
+        initialEvents={[
+          event({
+            id: "sf-listening",
+            summary: "Visit from San Francisco, California, United States",
+            subject: { kind: "page", label: "Listening", href: "/listening" },
+            meta: {
+              country: "US",
+              country_name: "United States",
+              region: "CA",
+              region_name: "California",
+              city: "San Francisco",
+              path: "/listening",
+            },
+          }),
+          event({
+            id: "sf-ama",
+            summary: "Visit from San Francisco, California, United States",
+            subject: { kind: "page", label: "AMA", href: "/ama" },
+            meta: {
+              country: "US",
+              country_name: "United States",
+              region: "CA",
+              region_name: "California",
+              city: "San Francisco",
+              path: "/ama",
+            },
+          }),
+          event({
+            id: "sf-home",
+            summary: "Visit from San Francisco, California, United States",
+            subject: { kind: "home", label: "Home", href: "/" },
+            meta: {
+              country: "US",
+              country_name: "United States",
+              region: "CA",
+              region_name: "California",
+              city: "San Francisco",
+              path: "/",
+            },
+          }),
+        ]}
+        initialCount={3}
+      />,
+    );
+
+    expect(markup.match(/Someone from San Francisco/g)?.length).toBe(1);
+    expect(markup).toContain("viewed");
+    expect(markup).toContain("Listening");
+    expect(markup).toContain("AMA");
+    expect(markup).toContain("visited");
+    expect(markup).toContain("the site");
+  });
+
+  test("a different location in the middle labels both visit runs", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityFeed
+        initialEvents={[
+          event({
+            id: "sf-listening",
+            summary: "Visit from San Francisco, California, United States",
+            subject: { kind: "page", label: "Listening", href: "/listening" },
+            meta: {
+              country: "US",
+              country_name: "United States",
+              region: "CA",
+              region_name: "California",
+              city: "San Francisco",
+              path: "/listening",
+            },
+          }),
+          event({
+            id: "london",
+            summary: "Visit from London, United Kingdom",
+            subject: { kind: "page", label: "Writing", href: "/writing" },
+            meta: {
+              country: "GB",
+              country_name: "United Kingdom",
+              city: "London",
+              path: "/writing",
+            },
+          }),
+          event({
+            id: "sf-ama",
+            summary: "Visit from San Francisco, California, United States",
+            subject: { kind: "page", label: "AMA", href: "/ama" },
+            meta: {
+              country: "US",
+              country_name: "United States",
+              region: "CA",
+              region_name: "California",
+              city: "San Francisco",
+              path: "/ama",
+            },
+          }),
+        ]}
+        initialCount={3}
+      />,
+    );
+
+    expect(markup.match(/Someone from San Francisco/g)?.length).toBe(2);
+    expect(markup).toContain("Someone from London, United Kingdom");
+    expect(markup).toContain("Listening");
+    expect(markup).toContain("Writing");
+    expect(markup).toContain("AMA");
+  });
+
+  test("a like does not join a consecutive visit location run", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityFeed
+        initialEvents={[
+          event({
+            id: "sf-listening",
+            summary: "Visit from San Francisco, California, United States",
+            subject: { kind: "page", label: "Listening", href: "/listening" },
+            meta: {
+              country: "US",
+              country_name: "United States",
+              region: "CA",
+              region_name: "California",
+              city: "San Francisco",
+              path: "/listening",
+            },
+          }),
+          event({
+            id: "like-1",
+            type: "like",
+            speed: "event",
+            summary: "Someone liked Cursor",
+            subject: { kind: "stack", label: "Cursor", href: "https://cursor.com" },
+          }),
+          event({
+            id: "sf-ama",
+            summary: "Visit from San Francisco, California, United States",
+            subject: { kind: "page", label: "AMA", href: "/ama" },
+            meta: {
+              country: "US",
+              country_name: "United States",
+              region: "CA",
+              region_name: "California",
+              city: "San Francisco",
+              path: "/ama",
+            },
+          }),
+        ]}
+        initialCount={3}
+      />,
+    );
+
+    expect(markup.match(/Someone from San Francisco/g)?.length).toBe(2);
+    expect(markup).toContain("Someone liked");
+    expect(markup).toContain("Cursor");
+    expect(markup).toContain("Listening");
+    expect(markup).toContain("AMA");
   });
 
   test("shows the end-cap after a non-empty feed and not on the empty state", () => {

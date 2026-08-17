@@ -18,6 +18,7 @@ import {
   formatActivityTitle,
   formatDownloadSummary,
   formatLikeOthersLabel,
+  formatVisitRowSummary,
   formatVisitSummary,
   getActivityRow,
   getCaffeineIcon,
@@ -32,6 +33,7 @@ import {
   likeMetaFromRequest,
   looksLikeIdentifier,
   looksLikeShortId,
+  markVisitLocationContinuations,
   nextActivityEnterState,
   pathnameFromHref,
   recordCaffeine,
@@ -48,6 +50,7 @@ import {
   shouldRecordVisit,
   stripSiteTitleSuffix,
   stripTrailingShortIdToken,
+  visitLocationPhrase,
 } from "@/lib/activity";
 import * as activityCms from "@/lib/activity-cms";
 import { geoFromVisitMeta, normalizeRegionCode, visitDisplaySummary } from "@/lib/activity-geo";
@@ -1997,7 +2000,8 @@ describe("getActivityRow visit sentences", () => {
     });
 
     expect(row.summary.startsWith("Someone from")).toBe(true);
-    expect(row.summary).toBe("Someone from San Francisco, California, United States read");
+    expect(row.summary).toBe("Someone from San Francisco, California read");
+    expect(row.summary).not.toContain("United States");
     expect(row.summary).toContain("read");
     expect(row.summary).not.toContain("viewed");
     expect(row.summary).not.toContain("Visit from");
@@ -2193,6 +2197,85 @@ describe("getActivityRow visit sentences", () => {
     expect(taxUi.summary).toBe("Someone from United States visited");
     expect(taxUi.label).toBe("Tax UI");
     expect(taxUi.href).toBe("https://tax-ui.brianlovin.com/");
+  });
+});
+
+describe("visitLocationPhrase US display", () => {
+  test("omits United States when city and state exist", () => {
+    const phrase = visitLocationPhrase({
+      v: 1,
+      id: "sf",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "visit",
+      speed: "signal",
+      summary: "🇺🇸 Visit from San Francisco, California, United States",
+      visibility: "public",
+      idempotency_key: "sf",
+      meta: {
+        country: "US",
+        country_name: "United States",
+        region: "CA",
+        region_name: "California",
+        city: "San Francisco",
+      },
+    });
+    expect(phrase).toBe("San Francisco, California");
+    expect(phrase).not.toContain("United States");
+  });
+
+  test("keeps United States when that is all we have", () => {
+    expect(
+      visitLocationPhrase(
+        visitRowEvent(
+          { kind: "page", label: "Stack", href: "/stack" },
+          { meta: { country: "US", path: "/stack" } },
+        ),
+      ),
+    ).toBe("United States");
+  });
+
+  test("keeps country on a non-US city row", () => {
+    expect(
+      visitLocationPhrase(
+        visitRowEvent(
+          { kind: "page", label: "Writing", href: "/writing" },
+          { summary: "Visit from London, United Kingdom", meta: { country: "GB", city: "London" } },
+        ),
+      ),
+    ).toBe("London, United Kingdom");
+  });
+
+  test("trims United States from a stored summary when meta has no city", () => {
+    expect(
+      visitLocationPhrase({
+        v: 1,
+        id: "stored-sf",
+        ts: "2026-08-16T00:00:00.000Z",
+        received_at: "2026-08-16T00:00:00.000Z",
+        source: "brios",
+        type: "visit",
+        speed: "signal",
+        summary: "Visit from San Francisco, California, United States",
+        visibility: "public",
+        idempotency_key: "stored-sf",
+      }),
+    ).toBe("San Francisco, California");
+  });
+});
+
+describe("formatVisitRowSummary location prefix", () => {
+  test("can omit the someone/location prefix and keep the action", () => {
+    expect(formatVisitRowSummary("San Francisco, California", "viewed", true)).toBe(
+      "Someone from San Francisco, California viewed",
+    );
+    expect(
+      formatVisitRowSummary("San Francisco, California", "viewed", true, { omitLocation: true }),
+    ).toBe("viewed");
+    expect(
+      formatVisitRowSummary("San Francisco, California", "visited", false, { omitLocation: true }),
+    ).toBe("visited the site");
   });
 });
 
@@ -3163,6 +3246,149 @@ describe("rollupActivityEvents", () => {
     expect(stacks[0]?.href).toBe("https://github.com/designdetails/designdetails/pull/2");
     expect(stacks[0]?.href).not.toBe("/https:");
     expect(stacks[0]?.sectionLabel).not.toBe("https:");
+  });
+
+  test("marks older same-location visit stacks as action-only siblings", () => {
+    const sf = (id: string, href: string, label: string): ActivityEvent =>
+      feedEvent({
+        id,
+        type: "visit",
+        summary: "Visit from San Francisco, California, United States",
+        subject: { kind: "page", label, href },
+        meta: {
+          country: "US",
+          country_name: "United States",
+          region: "CA",
+          region_name: "California",
+          city: "San Francisco",
+          path: href,
+        },
+      });
+
+    const stacks = markVisitLocationContinuations(
+      rollupActivityEvents([
+        sf("sf-listening", "/listening", "Listening"),
+        sf("sf-ama", "/ama", "AMA"),
+        sf("sf-home", "/", "Home"),
+      ]),
+    );
+
+    expect(stacks).toHaveLength(3);
+    expect(stacks.map((stack) => stack.count)).toEqual([1, 1, 1]);
+    expect(stacks[0]?.omitVisitLocation).toBeFalsy();
+    expect(stacks[1]?.omitVisitLocation).toBe(true);
+    expect(stacks[2]?.omitVisitLocation).toBe(true);
+
+    const rows = stacks.map((stack) =>
+      getActivityRow(stack.latest, { omitVisitLocation: stack.omitVisitLocation }),
+    );
+    expect(rows[0]?.summary).toBe("Someone from San Francisco, California viewed");
+    expect(rows[0]?.summary).toContain("Someone from San Francisco");
+    expect(rows[0]?.label).toBe("Listening");
+    expect(rows[1]?.summary).toBe("viewed");
+    expect(rows[1]?.summary).not.toContain("Someone from");
+    expect(rows[1]?.label).toBe("AMA");
+    expect(rows[2]?.summary).toBe("visited");
+    expect(rows[2]?.summary).not.toContain("Someone from");
+    expect(rows[2]?.label).toBe("the site");
+  });
+
+  test("a different location in the middle starts a new labeled run", () => {
+    const visit = (
+      id: string,
+      href: string,
+      label: string,
+      geo: {
+        city?: string;
+        region?: string;
+        region_name?: string;
+        country: string;
+        country_name: string;
+      },
+    ): ActivityEvent =>
+      feedEvent({
+        id,
+        type: "visit",
+        summary: `Visit from ${[geo.city, geo.region_name, geo.country_name].filter(Boolean).join(", ")}`,
+        subject: { kind: "page", label, href },
+        meta: { ...geo, path: href },
+      });
+
+    const stacks = markVisitLocationContinuations(
+      rollupActivityEvents([
+        visit("sf-1", "/listening", "Listening", {
+          city: "San Francisco",
+          region: "CA",
+          region_name: "California",
+          country: "US",
+          country_name: "United States",
+        }),
+        visit("london", "/writing", "Writing", {
+          city: "London",
+          country: "GB",
+          country_name: "United Kingdom",
+        }),
+        visit("sf-2", "/ama", "AMA", {
+          city: "San Francisco",
+          region: "CA",
+          region_name: "California",
+          country: "US",
+          country_name: "United States",
+        }),
+      ]),
+    );
+
+    expect(stacks).toHaveLength(3);
+    const rows = stacks.map((stack) =>
+      getActivityRow(stack.latest, { omitVisitLocation: stack.omitVisitLocation }),
+    );
+    expect(rows[0]?.summary).toContain("Someone from San Francisco");
+    expect(rows[1]?.summary).toBe("Someone from London, United Kingdom viewed");
+    expect(rows[2]?.summary).toContain("Someone from San Francisco");
+    expect(rows.every((row) => row.summary.includes("Someone from"))).toBe(true);
+  });
+
+  test("a non-visit row does not join a visit location run", () => {
+    const sf = (id: string, href: string, label: string): ActivityEvent =>
+      feedEvent({
+        id,
+        type: "visit",
+        summary: "Visit from San Francisco, California, United States",
+        subject: { kind: "page", label, href },
+        meta: {
+          country: "US",
+          country_name: "United States",
+          region: "CA",
+          region_name: "California",
+          city: "San Francisco",
+          path: href,
+        },
+      });
+    const like = feedEvent({
+      id: "like-1",
+      type: "like",
+      summary: "Someone liked Cursor",
+      subject: { kind: "stack", label: "Cursor", href: "https://cursor.com" },
+    });
+
+    const stacks = markVisitLocationContinuations(
+      rollupActivityEvents([
+        sf("sf-1", "/listening", "Listening"),
+        like,
+        sf("sf-2", "/ama", "AMA"),
+      ]),
+    );
+
+    expect(stacks).toHaveLength(3);
+    const rows = stacks.map((stack) =>
+      getActivityRow(stack.latest, { omitVisitLocation: stack.omitVisitLocation }),
+    );
+    expect(rows[0]?.summary).toContain("Someone from San Francisco");
+    expect(rows[1]?.summary).toBe("Someone liked");
+    expect(rows[1]?.label).toBe("Cursor");
+    expect(rows[2]?.summary).toContain("Someone from San Francisco");
+    expect(stacks[1]?.omitVisitLocation).toBeFalsy();
+    expect(stacks[2]?.omitVisitLocation).toBeFalsy();
   });
 
   test("only pulses when the same run's count increments", () => {
