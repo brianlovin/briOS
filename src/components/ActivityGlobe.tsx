@@ -163,8 +163,8 @@ export function ActivityGlobe({
     }
   }, []);
 
-  const aimAt = useCallback<ActivityGlobeAim>(
-    (location) => {
+  const aimAt = useCallback(
+    (location: ActivityLatLng) => {
       const pose = latLngToGlobePose(location.lat, location.lng);
       const dPhi = shortestAngleDelta(phiRef.current, pose.phi);
       const dTheta = clampTheta(pose.theta) - thetaRef.current;
@@ -397,15 +397,16 @@ export function ActivityGlobe({
           <div
             key={marker.id}
             ref={(node) => {
-              if (node) orbElsRef.current.set(marker.id, node);
-              else orbElsRef.current.delete(marker.id);
+              if (node) {
+                orbElsRef.current.set(marker.id, node);
+                node.style.setProperty("position-anchor", `--cobe-${marker.id}`);
+                // COBE 2.0.1 sets this to "N" when facing (invalid → visible) and unsets it behind.
+                node.style.setProperty("visibility", `var(--cobe-visible-${marker.id}, hidden)`);
+              } else {
+                orbElsRef.current.delete(marker.id);
+              }
             }}
             className="activity-globe-orb"
-            style={{
-              positionAnchor: `--cobe-${marker.id}`,
-              // COBE 2.0.1 sets this to "N" when facing (invalid → visible) and unsets it behind.
-              visibility: `var(--cobe-visible-${marker.id}, hidden)`,
-            }}
           />
         ))}
       </div>
