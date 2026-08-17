@@ -32,7 +32,6 @@ import {
   ACTIVITY_TRACKED_SINCE_TOOLTIP,
   activitySourceFaviconSrc,
   activitySourceUrl,
-  formatTrackedEventsLabel,
   getActivityRow,
   getMergedPullRequestDiff,
   resolveActivitySourceHref,
@@ -248,20 +247,24 @@ export function ActivityRow({
 }
 
 export function ActivityTrackedCount({ count }: { count: number }) {
+  const formatted = count.toLocaleString("en-US");
+
   return (
     <Tooltip delay={0} closeDelay={0}>
       <TooltipTrigger
         delay={0}
         closeDelay={0}
-        className="text-tertiary hidden cursor-default bg-transparent p-0 text-sm tabular-nums md:inline"
+        aria-label={`${formatted}. ${ACTIVITY_TRACKED_SINCE_TOOLTIP}`}
+        className="text-quaternary hidden cursor-default bg-transparent p-0 font-mono text-sm tabular-nums md:inline"
       >
-        {formatTrackedEventsLabel(count)}
+        <SlotDigits value={count} />
       </TooltipTrigger>
       <TooltipContent
         side="bottom"
         align="end"
         collisionPadding={8}
         container={typeof document === "undefined" ? undefined : document.body}
+        collisionBoundary={typeof document === "undefined" ? undefined : document.documentElement}
         className="overflow-visible whitespace-nowrap"
       >
         {ACTIVITY_TRACKED_SINCE_TOOLTIP}
