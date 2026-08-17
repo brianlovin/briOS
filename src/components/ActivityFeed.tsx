@@ -18,6 +18,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip
 import type { ActivityEvent, ActivityLikeTarget, ActivityRollup } from "@/lib/activity";
 import {
   activityStackReactKey,
+  markVisitLocationContinuations,
   nextActivityEnterState,
   rollupActivityEvents,
   shouldPulseActivityRollup,
@@ -178,6 +179,7 @@ export function ActivityRow({
   href: hrefOverride,
   pulse = false,
   likeTargets: likeTargetsProp,
+  omitVisitLocation = false,
 }: {
   event: ActivityEvent;
   count?: number;
@@ -185,8 +187,9 @@ export function ActivityRow({
   href?: string;
   pulse?: boolean;
   likeTargets?: ActivityLikeTarget[];
+  omitVisitLocation?: boolean;
 }) {
-  const row = getActivityRow(event);
+  const row = getActivityRow(event, { omitVisitLocation });
   const homeUrl = activitySourceUrl(event.source);
   const isLike = event.type === "like";
   const likeTargets = likeTargetsFromRow(event, row, likeTargetsProp);
@@ -225,7 +228,9 @@ export function ActivityRow({
         </div>
         <p className="flex min-w-0 items-baseline gap-1.5">
           <span className="min-w-0">
-            <span className="text-primary">{row.summary}</span>
+            <span className={omitVisitLocation ? "text-tertiary" : "text-primary"}>
+              {row.summary}
+            </span>
             {href && context ? (
               <>
                 {" "}
@@ -426,6 +431,7 @@ function ActivityStackList({
                 sectionLabel={stack.sectionLabel}
                 href={stack.href}
                 likeTargets={stack.likeTargets}
+                omitVisitLocation={stack.omitVisitLocation}
                 pulse={pulseKey === reactKey || enterPulseKeys.has(reactKey)}
               />
             </motion.div>
@@ -473,7 +479,10 @@ export function ActivityFeed({
   initialCount: number;
 }) {
   const { events, count } = useActivity(initialEvents, initialCount);
-  const stacks = useMemo(() => rollupActivityEvents(events), [events]);
+  const stacks = useMemo(
+    () => markVisitLocationContinuations(rollupActivityEvents(events)),
+    [events],
+  );
   const pulseKey = useRollupPulse(stacks);
 
   const topBarContent = useMemo(() => <ActivityTrackedCount count={count} />, [count]);
