@@ -847,6 +847,8 @@ describe("ActivityRow", () => {
     expect(staff).toContain("Visit from United States");
     expect(staff).not.toContain("🇺🇸");
     expect(staff).toContain(">Staff Design<");
+    expect(staff).toContain("M14.1162 6.12019");
+    expect(staff).not.toContain("staff-design.png");
     expect(staff).toContain('href="https://staff.design"');
     expect(staff).toContain('target="_blank"');
     expect(details).toContain("Visit from San Francisco");

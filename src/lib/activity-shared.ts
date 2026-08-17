@@ -35,7 +35,6 @@ export const ACTIVITY_SOURCE_LABELS: Record<string, string> = {
 const ACTIVITY_SOURCE_FAVICONS: Record<string, string> = {
   [ACTIVITY_SOURCE_BRIOS]: "/activity/favicons/brios.png",
   "tax-ui": "/activity/favicons/tax-ui.png",
-  "staff-design": "/activity/favicons/staff-design.png",
   "design-details": "/activity/favicons/design-details.png",
   shiori: "/img/shiori-icon.png",
 };
