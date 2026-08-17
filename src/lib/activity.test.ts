@@ -1153,6 +1153,68 @@ describe("recordLike", () => {
     expect(event?.subject?.label).toBe("Hello World");
     expect(event?.summary).not.toContain("@");
   });
+
+  test("persists request geo onto like event meta", async () => {
+    const store = createMemoryActivityStore();
+    const result = await recordLike(
+      {
+        title: "A post",
+        href: "/writing/a-post",
+        content_type: "writing",
+        pageId: "abc",
+        ...getRequestGeo(
+          new Headers({
+            "x-vercel-ip-country": "US",
+            "x-vercel-ip-country-region": "CA",
+            "x-vercel-ip-city": "San%20Francisco",
+          }),
+        ),
+      },
+      store,
+    );
+    expect("ok" in result && result.ok).toBe(true);
+    const [event] = await store.getTail(1);
+    expect(event?.summary).toBe("Someone liked A post");
+    expect(event?.meta).toEqual({
+      content_type: "writing",
+      title: "A post",
+      href: "/writing/a-post",
+      country: "US",
+      country_name: "United States",
+      region: "CA",
+      region_name: "California",
+      city: "San Francisco",
+    });
+  });
+
+  test("persists latitude and longitude from a geo object onto like event meta", async () => {
+    const store = createMemoryActivityStore();
+    const result = await recordLike(
+      {
+        title: "A post",
+        href: "/writing/a-post",
+        content_type: "writing",
+        country: "US",
+        countryName: "United States",
+        city: "San Francisco",
+        latitude: 37.7749,
+        longitude: -122.4194,
+      },
+      store,
+    );
+    expect("ok" in result && result.ok).toBe(true);
+    const [event] = await store.getTail(1);
+    expect(event?.meta).toEqual({
+      content_type: "writing",
+      title: "A post",
+      href: "/writing/a-post",
+      country: "US",
+      country_name: "United States",
+      city: "San Francisco",
+      latitude: 37.7749,
+      longitude: -122.4194,
+    });
+  });
 });
 
 describe("parseActivityStreamFields", () => {

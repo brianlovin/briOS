@@ -3,6 +3,7 @@ import { createHash } from "crypto";
 import { lookupCmsPostTitle } from "./activity-cms";
 import {
   type ActivityGeo,
+  activityGeoToMeta,
   countryCodeToName,
   formatVisitSummary,
   geoFromVisitMeta,
@@ -417,7 +418,7 @@ export async function ingestActivityEvent(
 }
 
 export async function recordLike(
-  input: { title: string; href: string; content_type: string; pageId?: string },
+  input: { title: string; href: string; content_type: string; pageId?: string } & ActivityGeo,
   store: ActivityStore,
   now: Date = new Date(),
 ): Promise<IngestResult | { skipped: true; reason: string }> {
@@ -444,7 +445,7 @@ export async function recordLike(
       visibility: "public",
       idempotency_key: `brios:like:${input.pageId ?? href}:${crypto.randomUUID()}`,
       subject: { kind: contentType, label: title, href },
-      meta: { content_type: contentType, title, href },
+      meta: { content_type: contentType, title, href, ...activityGeoToMeta(input) },
     },
     store,
     now,
