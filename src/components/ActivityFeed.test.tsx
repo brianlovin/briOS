@@ -35,11 +35,13 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(markup).toContain("Visit from India");
+    expect(markup).toContain("Someone from India viewed");
+    expect(markup).not.toContain("Visit from");
     expect(markup).not.toContain("🇮🇳");
     expect(markup).toContain("/activity/favicons/brios.png");
     expect(markup).toContain('href="/"');
-    expect(markup).toContain("Home");
+    expect(markup).toContain("the site");
+    expect(markup).not.toContain("Home");
     expect(markup).not.toContain("a page");
   });
 
@@ -62,6 +64,8 @@ describe("ActivityRow", () => {
       />,
     );
 
+    expect(markup).toContain("Someone from India read");
+    expect(markup).not.toContain("Visit from");
     expect(markup).toContain("How I&#x27;m Feeling About AI in August 2026");
     expect(markup).not.toContain("How Im Feeling About Ai in August 2026");
     expect(markup).toContain('href="/writing/how-im-feeling-about-ai-in-august-2026-O7e1TFS"');
@@ -183,6 +187,8 @@ describe("ActivityRow", () => {
       />,
     );
 
+    expect(markup).toContain("Someone from United States viewed");
+    expect(markup).not.toContain("Visit from");
     expect(markup).toContain("Hacker News");
     expect(markup).toContain('href="/hn"');
     expect(markup).not.toContain("a Hacker News story");
@@ -219,6 +225,8 @@ describe("ActivityRow", () => {
       />,
     );
 
+    expect(markup).toContain("Someone from United States read");
+    expect(markup).not.toContain("Visit from");
     expect(markup).toContain(">Some HN Story<");
     expect(markup).toContain('href="/hn/42991019"');
     expect(markup).not.toContain("a Hacker News story");
@@ -236,6 +244,8 @@ describe("ActivityRow", () => {
       />,
     );
 
+    expect(markup).toContain("Someone from China read");
+    expect(markup).not.toContain("Visit from");
     expect(markup).toContain("a Hacker News story");
     expect(markup).toContain('href="/hn/46993596"');
     expect(markup).not.toContain(">46993596<");
@@ -273,7 +283,8 @@ describe("ActivityRow", () => {
     );
 
     expect(visit).toContain("/activity/favicons/tax-ui.png");
-    expect(visit).toContain("Visit from United States");
+    expect(visit).toContain("Someone from United States viewed");
+    expect(visit).not.toContain("Visit from");
     expect(visit).not.toContain("🇺🇸");
     expect(download).toContain("/activity/favicons/design-details.png");
     expect(download).toContain("Someone downloaded");
@@ -283,7 +294,8 @@ describe("ActivityRow", () => {
     expect(download).toContain('target="_blank"');
     expect(download).toContain("noopener noreferrer");
     expect(unknown).not.toContain("/activity/favicons/");
-    expect(unknown).toContain("Visit from United States");
+    expect(unknown).toContain("Someone from United States viewed the site");
+    expect(unknown).not.toContain("Visit from");
     expect(unknown).not.toContain("🇺🇸");
   });
 
@@ -292,7 +304,8 @@ describe("ActivityRow", () => {
       <ActivityRow event={event({ summary: "Visit from TW", meta: { country: "TW" } })} />,
     );
     expect(markup).not.toContain("🇹🇼");
-    expect(markup).toContain("Visit from Taiwan");
+    expect(markup).toContain("Someone from Taiwan viewed the site");
+    expect(markup).not.toContain("Visit from");
   });
 
   test("uses the globe and mysterious-place copy when a visit has no country", () => {
@@ -305,8 +318,10 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(markup).toContain("Someone visited from a mysterious place on earth");
-    expect(markup).toContain("Home");
+    expect(markup).toContain("Someone from a mysterious place on earth viewed");
+    expect(markup).toContain("the site");
+    expect(markup).not.toContain("Someone visited from a mysterious place on earth");
+    expect(markup).not.toContain("Home");
     expect(markup).not.toContain(">Visit<");
     expect(markup).not.toContain("🇮🇳");
   });
@@ -343,7 +358,8 @@ describe("ActivityRow", () => {
     expect(like).not.toContain("Someone liked Grok Bot first impressions");
     expect(like).toContain('href="/writing/grok-bot-first-impressions"');
     expect(visit).not.toContain(heartPath);
-    expect(visit).toContain("Visit from India");
+    expect(visit).toContain("Someone from India read");
+    expect(visit).not.toContain("Visit from");
     expect(visit).not.toContain("🇮🇳");
     expect(visit).toContain("/activity/favicons/brios.png");
     expect(like).not.toContain("/activity/favicons/");
@@ -771,7 +787,7 @@ describe("ActivityRow", () => {
     );
 
     expect(markup).toContain("shiori-icon.png");
-    expect(markup).toContain("Someone saved a link");
+    expect(markup).toContain("Someone saved a link on");
     expect(markup).not.toContain("Someone saved a link on Shiori");
     expect(markup).toContain(">Shiori<");
     expect(markup).toContain('href="https://www.shiori.sh"');
@@ -784,7 +800,7 @@ describe("ActivityRow", () => {
       {
         type: "link_clicked" as const,
         summary: "Someone clicked a link on Shiori",
-        stripped: "Someone clicked a link",
+        stripped: "Someone clicked a link on",
       },
       {
         type: "signed_up" as const,
@@ -844,12 +860,14 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(staff).toContain("Visit from United States");
+    expect(staff).toContain("Someone from United States viewed");
+    expect(staff).not.toContain("Visit from");
     expect(staff).not.toContain("🇺🇸");
     expect(staff).toContain(">Staff Design<");
     expect(staff).toContain('href="https://staff.design"');
     expect(staff).toContain('target="_blank"');
-    expect(details).toContain("Visit from San Francisco");
+    expect(details).toContain("Someone from San Francisco");
+    expect(details).not.toContain("Visit from");
     expect(details).toContain(">Design Details<");
     expect(details).toContain('href="https://designdetails.fm"');
     expect(details).toContain('target="_blank"');
@@ -872,7 +890,8 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(markup).toContain("Visit from Germany");
+    expect(markup).toContain("Someone from Germany viewed");
+    expect(markup).not.toContain("Visit from");
     expect(markup).not.toContain("🇩🇪");
     expect(markup).toContain(">Karla Mickens Cole<");
     expect(markup).toContain('href="https://staff.design/karla-mickens-cole"');
@@ -909,8 +928,9 @@ describe("ActivityRow", () => {
     expect(like).toContain('href="/writing/grok-bot-first-impressions"');
     expect(like).not.toContain(">briOS<");
     expect(like).not.toContain('target="_blank"');
-    expect(visit).toContain(">Home<");
+    expect(visit).toContain(">the site<");
     expect(visit).toContain('href="/"');
+    expect(visit).not.toContain(">Home<");
     expect(visit).not.toContain(">briOS<");
     expect(visit).not.toContain('target="_blank"');
   });
@@ -929,7 +949,7 @@ describe("ActivityRow", () => {
     );
 
     expect(markup).toContain("shiori-icon.png");
-    expect(markup).toContain("Someone clicked a link");
+    expect(markup).toContain("Someone clicked a link on");
     expect(markup).not.toContain("Someone clicked a link on Shiori");
     expect(markup).toContain(">Shiori<");
     expect(markup).toContain('href="https://www.shiori.sh"');
@@ -963,12 +983,13 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(markup).toContain("Visit from Spring Lake, North Carolina, United States");
+    expect(markup).toContain("Someone from Spring Lake, North Carolina, United States viewed");
+    expect(markup).not.toContain("Visit from");
     expect(markup).toContain("an AMA question");
     expect(markup).toContain('href="/ama"');
     expect(markup).not.toContain("2f2c711c-0ceb-810d-899d-e5feb99e70f4");
     expect(markup).toMatch(
-      /Visit from Spring Lake[\s\S]*href="\/ama"[^>]*>an AMA question[\s\S]*>6</,
+      /Someone from Spring Lake[\s\S]*href="\/ama"[^>]*>an AMA question[\s\S]*>6</,
     );
 
     const single = renderToStaticMarkup(
@@ -1001,7 +1022,8 @@ describe("ActivityFeed", () => {
       />,
     );
 
-    expect(markup).toContain("Visit from India");
+    expect(markup).toContain("Someone from India viewed the site");
+    expect(markup).not.toContain("Visit from");
     expect(markup).not.toContain("🇮🇳");
     expect(markup).not.toContain(">Event<");
     expect(markup).not.toContain(">Time<");
@@ -1033,8 +1055,9 @@ describe("ActivityFeed", () => {
       />,
     );
 
-    expect(markup).toContain("Visit from India");
-    expect(markup).toContain("Visit from San Francisco");
+    expect(markup).toContain("Someone from India viewed");
+    expect(markup).toContain("Someone from San Francisco");
+    expect(markup).not.toContain("Visit from");
     expect(markup).toContain("Someone liked");
   });
 
