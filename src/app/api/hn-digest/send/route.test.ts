@@ -1,10 +1,15 @@
 import { describe, expect, test } from "bun:test";
-
-import { dynamic, revalidate } from "@/app/api/hn-digest/send/route";
+import { readFileSync } from "fs";
+import { resolve } from "path";
 
 describe("GET /api/hn-digest/send", () => {
-  test("is force-dynamic so the cron response is never cached across days", () => {
-    expect(dynamic).toBe("force-dynamic");
-    expect(revalidate).toBe(0);
+  test("opts the cron into request-time rendering without cacheComponents-incompatible segment configs", () => {
+    const source = readFileSync(resolve(import.meta.dir, "route.ts"), "utf8");
+
+    expect(source).not.toMatch(/export const dynamic/);
+    expect(source).not.toMatch(/export const revalidate/);
+    expect(source).toMatch(/await connection\(\)/);
+    expect(source).toContain("Cache-Control");
+    expect(source).toContain("no-store");
   });
 });

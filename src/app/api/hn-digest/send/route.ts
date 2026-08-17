@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { connection, NextResponse } from "next/server";
 
 import { recordDigestSent } from "@/lib/activity";
 import { afterActivity } from "@/lib/activity-schedule";
@@ -9,12 +9,13 @@ import { getHNPostsForDigest } from "@/lib/hn";
 import { getHNSubscribers } from "@/lib/subscriptions";
 import { formatDigestDate } from "@/lib/urls";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-
 const IS_PROD = process.env.NODE_ENV === "production";
 
 export async function GET(request: Request) {
+  // cacheComponents forbids `dynamic` / `revalidate` segment configs.
+  // connection() is the Next 16 equivalent of force-dynamic for this cron.
+  await connection();
+
   try {
     const authHeader = request.headers.get("authorization");
     const providedToken = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null;
