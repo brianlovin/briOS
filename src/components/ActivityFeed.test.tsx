@@ -771,7 +771,7 @@ describe("ActivityRow", () => {
     );
 
     expect(markup).toContain("shiori-icon.png");
-    expect(markup).toContain("Someone saved a link");
+    expect(markup).toContain("saved a link on");
     expect(markup).not.toContain("Someone saved a link on Shiori");
     expect(markup).toContain(">Shiori<");
     expect(markup).toContain('href="https://www.shiori.sh"');
@@ -784,17 +784,17 @@ describe("ActivityRow", () => {
       {
         type: "link_clicked" as const,
         summary: "Someone clicked a link on Shiori",
-        stripped: "Someone clicked a link",
+        stripped: "Someone clicked a link on",
       },
       {
         type: "signed_up" as const,
         summary: "Someone signed up for Shiori",
-        stripped: "Someone signed up",
+        stripped: "Someone signed up for",
       },
       {
         type: "subscription_started" as const,
         summary: "Someone subscribed on Shiori",
-        stripped: "Someone subscribed",
+        stripped: "Someone subscribed on",
       },
       {
         type: "download" as const,
@@ -929,7 +929,7 @@ describe("ActivityRow", () => {
     );
 
     expect(markup).toContain("shiori-icon.png");
-    expect(markup).toContain("Someone clicked a link");
+    expect(markup).toContain("clicked a link on");
     expect(markup).not.toContain("Someone clicked a link on Shiori");
     expect(markup).toContain(">Shiori<");
     expect(markup).toContain('href="https://www.shiori.sh"');
