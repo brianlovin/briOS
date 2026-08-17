@@ -21,7 +21,7 @@ import { ListDetailWrapper } from "@/components/ListDetailWrapper";
 import { RollingDigits } from "@/components/RollingDigits";
 import { useTopBarActions } from "@/components/TopBarActions";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip";
-import type { ActivityEvent, ActivityRollup } from "@/lib/activity";
+import type { ActivityEvent, ActivityLikeTarget, ActivityRollup } from "@/lib/activity";
 import {
   activityStackReactKey,
   nextActivityEnterState,
@@ -32,9 +32,11 @@ import {
   ACTIVITY_TRACKED_SINCE_TOOLTIP,
   activitySourceFaviconSrc,
   activitySourceUrl,
+  formatLikeOthersLabel,
   formatTrackedEventsLabel,
   getActivityRow,
   getMergedPullRequestDiff,
+  isHomeLikeTitle,
   resolveActivitySourceHref,
 } from "@/lib/activity-shared";
 import { useActivity } from "@/lib/hooks/useActivity";
@@ -159,37 +161,92 @@ function ActivityContextLink({ href, children }: { href: string; children: React
   );
 }
 
+function LikeOthersTooltip({
+  targets,
+  otherCount,
+}: {
+  targets: ActivityLikeTarget[];
+  otherCount: number;
+}) {
+  return (
+    <Tooltip delay={0} closeDelay={0}>
+      <TooltipTrigger
+        delay={0}
+        closeDelay={0}
+        className="text-tertiary cursor-default bg-transparent p-0"
+      >
+        {formatLikeOthersLabel(otherCount)}
+        <span className="sr-only">{targets.map((target) => target.title).join(", ")}</span>
+      </TooltipTrigger>
+      <TooltipContent
+        side="bottom"
+        align="start"
+        collisionPadding={8}
+        container={typeof document === "undefined" ? undefined : document.body}
+        className="overflow-visible"
+      >
+        <ul className="flex flex-col gap-1">
+          {targets.map((target) => (
+            <li key={`${target.title}:${target.href ?? ""}`}>
+              {target.href ? (
+                <ActivityContextLink href={target.href}>{target.title}</ActivityContextLink>
+              ) : (
+                <span>{target.title}</span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </TooltipContent>
+    </Tooltip>
+  );
+}
+
+function likeTargetsFromRow(
+  event: ActivityEvent,
+  row: ReturnType<typeof getActivityRow>,
+  likeTargets?: ActivityLikeTarget[],
+): ActivityLikeTarget[] {
+  if (likeTargets && likeTargets.length > 0) return likeTargets;
+  const title = row.label?.trim();
+  if (event.type !== "like" || !title || isHomeLikeTitle(title)) return [];
+  return [{ title, ...(row.href ? { href: row.href } : {}) }];
+}
+
 export function ActivityRow({
   event,
   count = 1,
   sectionLabel,
   href: hrefOverride,
   pulse = false,
+  likeTargets: likeTargetsProp,
 }: {
   event: ActivityEvent;
   count?: number;
   sectionLabel?: string;
   href?: string;
   pulse?: boolean;
+  likeTargets?: ActivityLikeTarget[];
 }) {
   const row = getActivityRow(event);
   const homeUrl = activitySourceUrl(event.source);
   const isLike = event.type === "like";
-  const likeTitle = isLike ? row.label || "Home" : "";
+  const likeTargets = likeTargetsFromRow(event, row, likeTargetsProp);
+  const featured = likeTargets[0];
+  const othersCount = Math.max(0, likeTargets.length - 1);
+  const likeTitle = featured?.title ?? "";
   const label = isLike ? likeTitle : (sectionLabel ?? row.label);
-  const rawHref = hrefOverride ?? row.href;
+  const rawHref = hrefOverride ?? featured?.href ?? row.href;
   const href =
     resolveActivitySourceHref(event.source, rawHref) ??
     rawHref ??
-    (isLike
-      ? likeTitle === "Home"
-        ? (homeUrl ?? "/")
-        : undefined
-      : label || event.type === "download"
-        ? homeUrl
-        : undefined);
+    (isLike ? undefined : label || event.type === "download" ? homeUrl : undefined);
   const context = isLike ? likeTitle : (label ?? (href || undefined));
   const diff = event.type === "pr_merged" ? getMergedPullRequestDiff(event.meta) : null;
+  const showCountChip = count > 1 && !(isLike && othersCount > 0);
+
+  if (isLike && likeTargets.length === 0) {
+    return null;
+  }
 
   return (
     <div
@@ -217,8 +274,14 @@ export function ActivityRow({
           ) : context ? (
             <span className="text-tertiary"> {context}</span>
           ) : null}
+          {isLike && othersCount > 0 ? (
+            <>
+              {" "}
+              <LikeOthersTooltip targets={likeTargets} otherCount={othersCount} />
+            </>
+          ) : null}
         </span>
-        {count > 1 ? (
+        {showCountChip ? (
           <span
             data-count={count}
             className="text-tertiary border-secondary shrink-0 rounded-sm border px-1 font-mono text-[11px] leading-4 tabular-nums"
@@ -428,6 +491,7 @@ function ActivityStackList({
                 count={stack.count}
                 sectionLabel={stack.sectionLabel}
                 href={stack.href}
+                likeTargets={stack.likeTargets}
                 pulse={pulseKey === reactKey}
               />
             </motion.div>

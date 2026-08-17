@@ -10,8 +10,15 @@ import {
   activitySectionPhrase,
   getActivityRow,
   isAbsoluteHttpUrl,
+  isHiddenLikeEvent,
+  isHomeLikeTitle,
   isKnownActivitySection,
 } from "./activity-shared";
+
+export type ActivityLikeTarget = {
+  title: string;
+  href?: string;
+};
 
 export type ActivityRollup = {
   key: string;
@@ -21,6 +28,7 @@ export type ActivityRollup = {
   anchorId: string;
   sectionLabel: string;
   href?: string;
+  likeTargets?: ActivityLikeTarget[];
 };
 
 export function activityStackReactKey(stack: Pick<ActivityRollup, "key" | "anchorId">): string {
@@ -115,7 +123,7 @@ export function activityRollupKey(event: ActivityEvent): string {
   }
 
   if (event.type === "like") {
-    return `like:${activityEventHref(event) ?? ""}`;
+    return "like";
   }
 
   if (event.type === "visit" || event.type === "visit_country_first") {
@@ -138,6 +146,10 @@ function stackSectionLabel(events: ActivityEvent[], section: string): string {
   const latestLabel = getActivityRow(events[0]!).label;
   const isVisit = events[0]?.type === "visit" || events[0]?.type === "visit_country_first";
 
+  if (events[0]?.type === "like") {
+    return latestLabel ?? "";
+  }
+
   if (isVisit) {
     if (unique.size !== 1) return activitySectionPhrase(section);
     return labels[0] ?? activitySectionPhrase(section);
@@ -148,7 +160,25 @@ function stackSectionLabel(events: ActivityEvent[], section: string): string {
   return latestLabel ?? "";
 }
 
+function uniqueLikeTargets(events: ActivityEvent[]): ActivityLikeTarget[] {
+  const seen = new Set<string>();
+  const targets: ActivityLikeTarget[] = [];
+  for (const event of events) {
+    const row = getActivityRow(event);
+    const title = row.label?.trim();
+    if (!title || isHomeLikeTitle(title)) continue;
+    const key = title.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    targets.push({ title, ...(row.href ? { href: row.href } : {}) });
+  }
+  return targets;
+}
+
 function stackHref(events: ActivityEvent[]): string | undefined {
+  if (events[0]?.type === "like") {
+    return activityEventHref(events[0]);
+  }
   const hrefs = [
     ...new Set(events.map(activityEventHref).filter((href): href is string => Boolean(href))),
   ];
@@ -177,6 +207,7 @@ export function rollupActivityEvents(events: ActivityEvent[]): ActivityRollup[] 
   }> = [];
 
   for (const event of events) {
+    if (isHiddenLikeEvent(event)) continue;
     const key = activityRollupKey(event);
     const current = runs[runs.length - 1];
     if (current && current.key === key) {
@@ -187,17 +218,24 @@ export function rollupActivityEvents(events: ActivityEvent[]): ActivityRollup[] 
     runs.push({ key, count: 1, latest: event, events: [event] });
   }
 
-  return runs.map((run) => {
+  return runs.flatMap((run) => {
     const section = activitySectionFromPath(activityEventHref(run.latest));
     const href = stackHref(run.events);
-    return {
-      key: run.key,
-      count: run.count,
-      latest: run.latest,
-      anchorId: run.events[run.events.length - 1]!.id,
-      sectionLabel: stackSectionLabel(run.events, section),
-      ...(href ? { href } : {}),
-    };
+    const likeTargets = run.latest.type === "like" ? uniqueLikeTargets(run.events) : undefined;
+    if (run.latest.type === "like" && (!likeTargets || likeTargets.length === 0)) {
+      return [];
+    }
+    return [
+      {
+        key: run.key,
+        count: run.count,
+        latest: run.latest,
+        anchorId: run.events[run.events.length - 1]!.id,
+        sectionLabel: stackSectionLabel(run.events, section),
+        ...(href ? { href } : {}),
+        ...(likeTargets && likeTargets.length > 0 ? { likeTargets } : {}),
+      },
+    ];
   });
 }
 

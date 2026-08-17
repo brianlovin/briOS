@@ -31,11 +31,13 @@ import {
   inferContentTypeFromPath,
   isActivityPath,
   isGenericHnStoryTitle,
+  isHomeLikeTitle,
   likeActivityPayload,
   normalizeCaffeineDrink,
   resolveVisitTitle,
   sanitizeVisitTitle,
   shouldLookupCmsPostTitle,
+  shouldRecordLike,
   shouldRecordVisit,
   stripSiteTitleSuffix,
 } from "./activity-shared";
@@ -55,7 +57,7 @@ export {
   verifyGithubWebhookSignature,
 } from "./activity-github";
 export { isRegisteredActivityEvent } from "./activity-registry";
-export type { ActivityRollup } from "./activity-rollup";
+export type { ActivityLikeTarget, ActivityRollup } from "./activity-rollup";
 export {
   ACTIVITY_ENTER_STAGGER_MAX,
   ACTIVITY_ENTER_STAGGER_STEP,
@@ -101,6 +103,7 @@ export {
   findForbiddenPii,
   formatActivityTitle,
   formatDownloadSummary,
+  formatLikeOthersLabel,
   formatTrackedEventsLabel,
   getActivityRow,
   getCaffeineIcon,
@@ -114,8 +117,11 @@ export {
   isActivityPath,
   isCoffeeFamilyDrink,
   isGenericHnStoryTitle,
+  isHiddenLikeEvent,
+  isHomeLikeTitle,
   isKnownActivitySection,
   isKnownActivityTitle,
+  isSiteHomeLikeHref,
   isSlugLikeActivityTitle,
   isUnusableActivityTitle,
   likeActivityPayload,
@@ -129,6 +135,7 @@ export {
   sanitizeActivityTitle,
   sanitizeVisitTitle,
   shouldLookupCmsPostTitle,
+  shouldRecordLike,
   shouldRecordVisit,
   stripSiteTitleSuffix,
   stripTrailingShortIdToken,
@@ -411,9 +418,15 @@ export async function recordLike(
   if (isActivityPath(input.href)) {
     return { skipped: true, reason: "activity_path" };
   }
+  if (!shouldRecordLike(input.href, input.title)) {
+    return { skipped: true, reason: "home" };
+  }
 
   const href = input.href;
-  const title = sanitizeVisitTitle(input.title, href) || "a page";
+  const title = sanitizeVisitTitle(input.title, href);
+  if (!title.trim() || isHomeLikeTitle(title)) {
+    return { skipped: true, reason: "home" };
+  }
   const contentType = input.content_type || inferContentTypeFromPath(href);
 
   return ingestActivityEvent(
@@ -739,7 +752,7 @@ export function likeMetaFromRequest(
     }
   }
 
-  if (!href) href = "/";
+  if (!href) return null;
   if (isActivityPath(href)) return null;
 
   return likeActivityPayload({

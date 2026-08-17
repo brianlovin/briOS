@@ -274,6 +274,35 @@ export function shouldRecordVisit(pathname: string): boolean {
   return !isActivityPath(path);
 }
 
+const HOME_LIKE_TITLES = new Set(["home", "a page"]);
+
+/** Titles that must never appear as a liked thing. Empty is not Home. */
+export function isHomeLikeTitle(title: string | undefined): boolean {
+  const trimmed = title?.trim().toLowerCase();
+  if (!trimmed) return false;
+  return HOME_LIKE_TITLES.has(trimmed);
+}
+
+/**
+ * Site-relative home (`/`, empty). External product URLs stay likeable even
+ * when their pathname is `/` (e.g. `https://1password.com`).
+ */
+export function isSiteHomeLikeHref(href: string | undefined): boolean {
+  const trimmed = href?.trim();
+  if (!trimmed) return true;
+  if (isAbsoluteHttpUrl(trimmed)) return false;
+  const path = normalizeActivityPath(trimmed.split("?")[0] ?? trimmed);
+  return path === "/";
+}
+
+/** Ingest gate for likes — skip home, empty href, and activity paths. */
+export function shouldRecordLike(href: string | undefined, title?: string): boolean {
+  if (isSiteHomeLikeHref(href)) return false;
+  if (isActivityPath(href!)) return false;
+  if (title !== undefined && isHomeLikeTitle(title)) return false;
+  return true;
+}
+
 export function inferContentTypeFromPath(pathname: string): string {
   if (pathname.startsWith("/writing")) return "writing";
   if (pathname.startsWith("/til")) return "til";
@@ -433,6 +462,8 @@ function normalizeActivityPath(pathname: string): string {
 export function looksLikeShortId(token: string): boolean {
   if (token.length < 5 || token.length > 12) return false;
   if (!/^[A-Za-z0-9]+$/.test(token)) return false;
+  // Product names like 1Password start with a digit; Notion short ids do not.
+  if (/^\d/.test(token)) return false;
 
   const hasDigit = /\d/.test(token);
   const hasUpper = /[A-Z]/.test(token);
@@ -511,13 +542,17 @@ export function activitySectionPhrase(section: string): string {
 }
 
 export function inferTitleFromPath(pathname: string): string {
+  const absolute = isAbsoluteHttpUrl(pathname);
   const path = normalizeActivityPath(pathnameFromHref(pathname));
-  const known = KNOWN_PATH_TITLES[path];
-  if (known) return known;
+  // External product homes (`https://1password.com`) are not this site's Home.
+  if (!absolute || path !== "/") {
+    const known = KNOWN_PATH_TITLES[path];
+    if (known) return known;
+  }
 
   const segments = path.split("/").filter(Boolean);
   const last = segments[segments.length - 1];
-  if (!last) return "Home";
+  if (!last) return absolute ? "" : "Home";
 
   let decodedLast = last;
   try {
@@ -649,11 +684,17 @@ export type LikeActivityPayload = {
 export function likeActivityPayload(
   target: LikeActivityTarget = {},
   fallback: { title?: string; href?: string } = {},
-): LikeActivityPayload {
-  const href = target.href?.trim() || fallback.href?.trim() || "/";
+): LikeActivityPayload | null {
+  const href = target.href?.trim() || fallback.href?.trim() || "";
+  if (!shouldRecordLike(href)) return null;
   const title = sanitizeActivityTitle(target.title || fallback.title, href);
+  if (!title.trim() || isHomeLikeTitle(title)) return null;
   const content_type = target.contentType?.trim() || inferContentTypeFromPath(href);
   return { title, href, content_type };
+}
+
+export function formatLikeOthersLabel(otherCount: number): string {
+  return otherCount === 1 ? "+ 1 other" : `+ ${otherCount} others`;
 }
 
 export function isKnownActivityTitle(label: string): boolean {
@@ -697,9 +738,22 @@ function likedTitleFromSummary(summary: string): string | undefined {
   const trimmed = summary.trim();
   if (/^someone liked$/i.test(trimmed)) return undefined;
   const rest = trimmed.replace(/^Someone liked\s+/i, "").trim();
-  if (!rest) return undefined;
-  if (rest === "a page") return "Home";
+  if (!rest || isHomeLikeTitle(rest)) return undefined;
   return rest;
+}
+
+/** Old Redis home likes (`/` + "a page" / Home) — hide instead of showing Home. */
+export function isHiddenLikeEvent(event: ActivityEvent): boolean {
+  if (event.type !== "like") return false;
+  if (isHomeLikeTitle(event.subject?.label)) return true;
+  const rest = event.summary.replace(/^Someone liked\s+/i, "").trim();
+  if (!event.subject?.label && isHomeLikeTitle(rest)) return true;
+  const href = event.subject?.href?.trim();
+  if (href && !isAbsoluteHttpUrl(href)) {
+    const path = normalizeActivityPath(href.split("?")[0] ?? href);
+    if (path === "/") return true;
+  }
+  return false;
 }
 
 const EMAIL_RE = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i;
@@ -905,14 +959,20 @@ export function getActivityRow(event: ActivityEvent): {
   }
 
   if (event.type === "like") {
+    if (isHiddenLikeEvent(event)) {
+      return attachSourceMetadata(event, { summary: "Someone liked" });
+    }
     const label = displaySubjectLabel(event.subject?.label, event.subject?.href, {
       preferStored: true,
     });
     const fromSummary = likedTitleFromSummary(event.summary);
-    const name = label || fromSummary || "Home";
+    const name = label || fromSummary;
+    if (!name || isHomeLikeTitle(name)) {
+      return attachSourceMetadata(event, { summary: "Someone liked" });
+    }
     return attachSourceMetadata(event, {
       summary: "Someone liked",
-      href: event.subject?.href || (name === "Home" ? "/" : undefined),
+      href: event.subject?.href,
       label: name,
     });
   }
