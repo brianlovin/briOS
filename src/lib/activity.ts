@@ -31,6 +31,7 @@ import {
   formatDownloadSummary,
   hnStoryIdFromPath,
   inferContentTypeFromPath,
+  isAbsoluteHttpUrl,
   isActivityPath,
   isGenericHnStoryTitle,
   isHomeLikeTitle,
@@ -748,13 +749,18 @@ export async function recordStackAdded(
   );
 }
 
+function siteAddedHref(url?: string): string {
+  const trimmed = url?.trim();
+  return trimmed && isAbsoluteHttpUrl(trimmed) ? trimmed : "/sites";
+}
+
 export async function recordSiteAdded(
-  input: { id: string; title: string },
+  input: { id: string; title: string; url?: string },
   store: ActivityStore,
   now: Date = new Date(),
 ): Promise<IngestResult> {
   const title = input.title.trim() || "a site";
-  const href = "/sites";
+  const href = siteAddedHref(input.url);
   return recordBriosEvent(
     {
       type: "site_added",

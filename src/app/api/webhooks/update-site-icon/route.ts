@@ -119,7 +119,7 @@ export async function POST(request: Request) {
 
     const page = await notion.pages.retrieve({ page_id: pageId });
     afterActivity((store) =>
-      recordSiteAdded({ id: pageId, title: titleFromNotionPage(page) }, store),
+      recordSiteAdded({ id: pageId, title: titleFromNotionPage(page), url }, store),
     );
 
     return NextResponse.json(

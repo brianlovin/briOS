@@ -171,6 +171,14 @@ export function activityRollupKey(event: ActivityEvent): string {
     return `${event.source}:${event.type}:${pullRequestIdentity(event)}`;
   }
 
+  if (event.type === "site_added" || event.type === "stack_added") {
+    const identity =
+      event.subject?.label?.trim() ||
+      (typeof event.meta?.title === "string" ? event.meta.title.trim() : "") ||
+      event.summary;
+    return `${event.source}:${event.type}:${identity}`;
+  }
+
   return `${event.source}:${event.type}:${event.summary}`;
 }
 

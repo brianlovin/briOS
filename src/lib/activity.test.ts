@@ -40,6 +40,7 @@ import {
   recordCaffeine,
   recordDigestSubscribed,
   recordLike,
+  recordSiteAdded,
   recordVisit,
   resolveActivitySourceHref,
   resolveIngestVisitTitle,
@@ -1946,6 +1947,50 @@ describe("getActivityRow page titles", () => {
     });
   });
 
+  test("keeps a saved site title instead of rewriting it to Sites", () => {
+    const row = getActivityRow({
+      v: 1,
+      id: "site-linear",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "site_added",
+      speed: "event",
+      summary: "A good website was added",
+      visibility: "public",
+      idempotency_key: "brios:site_added:linear",
+      subject: { kind: "site", label: "Linear", href: "/sites" },
+      meta: { title: "Linear", href: "/sites" },
+    });
+    expect(row).toEqual({
+      summary: "A good website was added",
+      href: "/sites",
+      label: "Linear",
+    });
+  });
+
+  test("keeps a saved stack item title instead of rewriting it to Stack", () => {
+    const row = getActivityRow({
+      v: 1,
+      id: "stack-cursor",
+      ts: "2026-08-16T00:00:00.000Z",
+      received_at: "2026-08-16T00:00:00.000Z",
+      source: "brios",
+      type: "stack_added",
+      speed: "event",
+      summary: "A stack item was added",
+      visibility: "public",
+      idempotency_key: "brios:stack_added:cursor",
+      subject: { kind: "stack", label: "Cursor", href: "/stack" },
+      meta: { title: "Cursor", href: "/stack" },
+    });
+    expect(row).toEqual({
+      summary: "A stack item was added",
+      href: "/stack",
+      label: "Cursor",
+    });
+  });
+
   test("title-cases a stored like slug without rewriting Redis", () => {
     const row = getActivityRow({
       v: 1,
@@ -3393,6 +3438,33 @@ describe("rollupActivityEvents", () => {
     expect(stacks[0]?.sectionLabel).toBe("Fix player skip");
   });
 
+  test("does not roll up consecutive site_added events for different sites", () => {
+    const site = (id: string, title: string, href: string): ActivityEvent =>
+      feedEvent({
+        id,
+        type: "site_added",
+        summary: "A good website was added",
+        subject: { kind: "site", label: title, href },
+        meta: { title, href },
+      });
+
+    const linear = site("site-linear", "Linear", "https://linear.app");
+    const notion = site("site-notion", "Notion", "https://www.notion.so");
+    const stacks = rollupActivityEvents([linear, notion]);
+
+    expect(stacks).toHaveLength(2);
+    expect(activityRollupKey(linear)).not.toBe(activityRollupKey(notion));
+    expect(stacks[0]?.sectionLabel).toBe("Linear");
+    expect(stacks[1]?.sectionLabel).toBe("Notion");
+    expect(stacks[0]?.href).toBe("https://linear.app");
+    expect(stacks[1]?.href).toBe("https://www.notion.so");
+    expect(getActivityRow(linear)).toEqual({
+      summary: "A good website was added",
+      href: "https://linear.app",
+      label: "Linear",
+    });
+  });
+
   test("uses the latest absolute href when a stacked run has mixed GitHub URLs", () => {
     const stacked = (id: string, path: string, label: string): ActivityEvent =>
       feedEvent({
@@ -3711,6 +3783,61 @@ describe("rollupActivityEvents", () => {
         { key: "shiori:link_saved:old-anchor", count: 16 },
       ),
     ).toBe(true);
+  });
+});
+
+describe("recordSiteAdded", () => {
+  test("stores the site title and links to the saved URL", async () => {
+    const store = createMemoryActivityStore();
+    const result = await recordSiteAdded(
+      { id: "page-1", title: "Linear", url: "https://linear.app" },
+      store,
+    );
+
+    expect(result.ok && !result.duplicate).toBe(true);
+    const [event] = await store.getTail(1);
+    expect(event?.type).toBe("site_added");
+    expect(event?.summary).toBe("A good website was added");
+    expect(event?.subject).toEqual({
+      kind: "site",
+      label: "Linear",
+      href: "https://linear.app",
+    });
+    expect(event?.meta).toEqual({ title: "Linear", href: "https://linear.app" });
+    expect(event?.idempotency_key).toBe("brios:site_added:page-1");
+    expect(getActivityRow(event!)).toEqual({
+      summary: "A good website was added",
+      href: "https://linear.app",
+      label: "Linear",
+    });
+  });
+
+  test("falls back to /sites when the URL is missing or not http(s)", async () => {
+    const store = createMemoryActivityStore();
+    const result = await recordSiteAdded({ id: "page-2", title: "A good website" }, store);
+
+    expect(result.ok && !result.duplicate).toBe(true);
+    const [event] = await store.getTail(1);
+    expect(event?.subject).toEqual({
+      kind: "site",
+      label: "A good website",
+      href: "/sites",
+    });
+    expect(getActivityRow(event!)).toEqual({
+      summary: "A good website was added",
+      href: "/sites",
+      label: "A good website",
+    });
+  });
+
+  test("is idempotent for the same Notion page", async () => {
+    const store = createMemoryActivityStore();
+    const first = await recordSiteAdded({ id: "page-1", title: "Linear" }, store);
+    const second = await recordSiteAdded({ id: "page-1", title: "Linear" }, store);
+
+    expect(first.ok && !first.duplicate).toBe(true);
+    expect(second.ok && second.duplicate).toBe(true);
+    expect(await store.getStreamLength()).toBe(1);
   });
 });
 
