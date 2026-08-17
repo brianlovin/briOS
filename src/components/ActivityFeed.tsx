@@ -300,22 +300,22 @@ export function ActivityRow({
 
 function VisitClusterRail() {
   return (
-    <svg
-      aria-hidden
-      viewBox="0 0 32 64"
-      preserveAspectRatio="none"
-      className="text-tertiary pointer-events-none absolute inset-x-0 top-8 bottom-1 block w-full overflow-visible"
-    >
-      <path
-        d="M16 0 L16 52 Q16 62 30 62"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        vectorEffect="nonScalingStroke"
-      />
-    </svg>
+    <span aria-hidden className="pointer-events-none absolute inset-x-0 top-8 bottom-1">
+      <svg
+        viewBox="0 0 32 200"
+        preserveAspectRatio="xMidYMax slice"
+        className="text-tertiary block h-full w-full overflow-hidden"
+      >
+        <path
+          d="M16 0 L16 188 Q16 198 30 198"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </span>
   );
 }
 
