@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
-import { type ReactNode, useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { type ReactNode, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 
 import { Activity } from "@/components/icons/Activity";
 import { Github } from "@/components/icons/Github";
@@ -241,7 +241,7 @@ export function ActivityRow({
             data-count={count}
             className="text-tertiary border-secondary shrink-0 -translate-y-[2px] rounded-sm border px-1.5 py-px font-mono text-xs leading-4 tabular-nums"
           >
-            <SlotDigits value={count} />
+            ×<SlotDigits value={count} />
           </span>
         ) : null}
         {diff ? (
@@ -282,8 +282,52 @@ export function ActivityTrackedCount({ count }: { count: number }) {
   );
 }
 
-const ROLLUP_PULSE_MS = 550;
+const ROLLUP_PULSE_MS = 1500;
 const LIST_MOTION = { duration: 0.14, ease: [0.2, 0, 0, 1] } as const;
+
+function useEnterPulseKeys(incoming: string[], enabled: boolean): Set<string> {
+  const [keys, setKeys] = useState<Set<string>>(() => new Set());
+  const timersRef = useRef<Map<string, number>>(new Map());
+
+  let next = keys;
+  if (enabled && incoming.length > 0) {
+    const merged = new Set(keys);
+    let added = false;
+    for (const key of incoming) {
+      if (!merged.has(key)) {
+        merged.add(key);
+        added = true;
+      }
+    }
+    if (added) next = merged;
+  }
+  if (next !== keys) setKeys(next);
+
+  useEffect(() => {
+    for (const key of next) {
+      if (timersRef.current.has(key)) continue;
+      const timeout = window.setTimeout(() => {
+        timersRef.current.delete(key);
+        setKeys((current) => {
+          if (!current.has(key)) return current;
+          const remaining = new Set(current);
+          remaining.delete(key);
+          return remaining;
+        });
+      }, ROLLUP_PULSE_MS);
+      timersRef.current.set(key, timeout);
+    }
+  }, [next]);
+
+  useEffect(() => {
+    const timers = timersRef.current;
+    return () => {
+      for (const id of timers.values()) window.clearTimeout(id);
+    };
+  }, []);
+
+  return next;
+}
 
 function subscribeNoop(): () => void {
   return () => {};
@@ -321,8 +365,9 @@ function ActivityStackList({
   const liveKeys = new Set(keys);
   const [seenKeys, setSeenKeys] = useState<Set<string> | null>(null);
   const [enterDelays, setEnterDelays] = useState<Map<string, number>>(() => new Map());
-
   const { seen, delays: pending } = nextActivityEnterState(keys, seenKeys);
+  const enterPulseKeys = useEnterPulseKeys(canAnimate ? [...pending.keys()] : [], canAnimate);
+
   let nextSeen = seen;
   let nextDelays = enterDelays;
 
@@ -369,7 +414,7 @@ function ActivityStackList({
                 sectionLabel={stack.sectionLabel}
                 href={stack.href}
                 likeTargets={stack.likeTargets}
-                pulse={pulseKey === reactKey}
+                pulse={pulseKey === reactKey || enterPulseKeys.has(reactKey)}
               />
             </motion.div>
           );
