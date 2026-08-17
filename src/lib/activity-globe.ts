@@ -60,11 +60,12 @@ export function globeMarkerFacing(lat: number, lng: number, phi: number, theta: 
 export const GLOBE_MESH_RADIUS = 0.8;
 export const GLOBE_MARKER_ELEVATION = 0.03;
 
-/** On-screen disc target. 240 was too timid; 1080p should read ~360px visible. */
-export const GLOBE_VISIBLE_MIN = 320;
-export const GLOBE_VISIBLE_MAX = 580;
-/** Fraction of the mesh that hangs off the corner — just enough to kiss the edge. */
-export const GLOBE_HANG = 0.12;
+/** Fraction of the mesh that hangs past the right and bottom edges. */
+export const GLOBE_HANG = 0.4;
+/** Floor so a short pane cannot collapse the sphere back to a marble. */
+export const GLOBE_MESH_MIN = 640;
+/** Mesh is ~90% of pane/window height. No max cap. */
+export const GLOBE_MESH_HEIGHT_RATIO = 0.9;
 
 /** Project a lat/lng onto the COBE canvas, matching v2 marker anchors. */
 export function projectGlobeMarker(
@@ -88,19 +89,8 @@ export function projectGlobeMarker(
   };
 }
 
-/** Visible on-screen disc ≈ 1/3 of the activity pane / window height. */
-export function globeVisibleDiameterFromHeight(height: number): number {
-  if (!Number.isFinite(height) || height <= 0) return GLOBE_VISIBLE_MIN;
-  return Math.round(Math.min(GLOBE_VISIBLE_MAX, Math.max(GLOBE_VISIBLE_MIN, height / 3)));
-}
-
-/** Mesh size so that after `hang` is clipped, the remaining disc is `visible`. */
-export function globeMeshDiameter(visible: number, hang = GLOBE_HANG): number {
-  const fraction = Math.min(0.2, Math.max(0, hang));
-  return Math.round(visible / (1 - fraction));
-}
-
-/** Canvas diameter from pane height: visible 1/3, plus a small corner hang. */
+/** Canvas diameter ≈ 0.9 × pane/window height, clipped off the bottom-right. */
 export function globeDiameterFromHeight(height: number): number {
-  return globeMeshDiameter(globeVisibleDiameterFromHeight(height));
+  if (!Number.isFinite(height) || height <= 0) return GLOBE_MESH_MIN;
+  return Math.round(Math.max(GLOBE_MESH_MIN, height * GLOBE_MESH_HEIGHT_RATIO));
 }
