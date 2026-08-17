@@ -112,17 +112,12 @@ function hasSpecificSubjectHref(source: string, href: string | undefined): boole
   return Boolean(href?.trim()) && !isSourceHomeHref(source, href);
 }
 
+/** Lift a trailing source name so the feed can link it. Keep on/for so "on {source}" still reads as a sentence. */
 function stripSourceNameFromSummary(summary: string, sourceLabel: string): string {
   const escaped = sourceLabel.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const trimmed = summary.trim();
-  const withoutSuffix = trimmed
-    .replace(new RegExp(`\\s+(?:on|for)\\s+${escaped}$`, "i"), "")
-    .trim();
-  if (withoutSuffix !== trimmed) return withoutSuffix;
-
-  const downloaded = trimmed.match(new RegExp(`^(Someone downloaded)\\s+${escaped}$`, "i"));
-  if (downloaded?.[1]) return downloaded[1];
-  return summary;
+  const withoutName = trimmed.replace(new RegExp(`\\s+${escaped}$`, "i"), "").trim();
+  return withoutName || summary;
 }
 
 function attachSourceMetadata(
