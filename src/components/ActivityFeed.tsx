@@ -21,7 +21,6 @@ import { StaffDesign } from "@/components/icons/StaffDesign";
 import { World } from "@/components/icons/World";
 import { ListDetailWrapper } from "@/components/ListDetailWrapper";
 import { SlotDigits } from "@/components/SlotDigits";
-import { useTopBarActions } from "@/components/TopBarActions";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip";
 import {
   type ActivityEvent,
@@ -407,7 +406,7 @@ function ActivityVisitClusterBlock({
           </div>
           {showRail ? <VisitClusterRail /> : null}
         </div>
-        <div className="min-w-0 flex-1">
+        <div className="mt-[5px] min-w-0 flex-1">
           <p className="text-primary">{cluster.locationHeader}</p>
           <ul className="mt-1 flex flex-col gap-1">
             {cluster.actions.map((action) => {
@@ -672,7 +671,6 @@ export function ActivityFeed({
   initialEvents,
   initialCount,
   events: controlledEvents,
-  count: controlledCount,
   globeConfig,
 }: {
   initialEvents: ActivityEvent[];
@@ -686,7 +684,6 @@ export function ActivityFeed({
     enabled: controlledEvents === undefined,
   });
   const events = controlledEvents ?? live.events;
-  const count = controlledCount ?? live.count;
   const items = useMemo(() => clusterVisitLocationRuns(rollupActivityEvents(events)), [events]);
   const { pulseKey, pulseActionKey } = useRollupPulse(items);
   const [globeAim, setGlobeAim] = useState<ActivityGlobeAimRequest | null>(null);
@@ -695,9 +692,6 @@ export function ActivityFeed({
     if (!location) return;
     setGlobeAim((current) => ({ location, nonce: (current?.nonce ?? 0) + 1 }));
   }, []);
-
-  const topBarContent = useMemo(() => <ActivityTrackedCount count={count} />, [count]);
-  useTopBarActions(topBarContent);
 
   return (
     <ListDetailWrapper>
