@@ -1,4 +1,9 @@
 import { COUNTRY_CENTROIDS } from "./activity-geo-centroids";
+import {
+  type ActivityGlobeConfig,
+  DEFAULT_ACTIVITY_GLOBE_CONFIG,
+  markerSizeFromCount,
+} from "./activity-globe-config";
 
 /**
  * Country / region display names for activity visit summaries.
@@ -47,11 +52,26 @@ export type ActivityGlobeMarker = {
   size: number;
 };
 
+/** 0.1° bucket used to merge nearby visits into one globe marker. */
+export function activityGlobeLocationKey(lat: number, lng: number): string {
+  return `${lat.toFixed(1)},${lng.toFixed(1)}`;
+}
+
 /** Stable CSS-safe id for COBE bindable markers (`--cobe-{id}`). */
 export function activityGlobeMarkerId(lat: number, lng: number): string {
   const encode = (value: number): string =>
     value.toFixed(1).replaceAll("-", "n").replaceAll(".", "d");
   return `g${encode(lat)}x${encode(lng)}`;
+}
+
+export function activityGlobeMarkerIdForLocation(
+  location: ActivityLatLng,
+  markers: readonly ActivityGlobeMarker[],
+): string | undefined {
+  const key = activityGlobeLocationKey(location.lat, location.lng);
+  return markers.find(
+    (marker) => activityGlobeLocationKey(marker.location[0], marker.location[1]) === key,
+  )?.id;
 }
 
 /** Persist the same snake_case keys first-party visits store on event.meta. */
@@ -646,12 +666,14 @@ export function activityEventLocation(event: {
 
 export function activityGlobeMarkers(
   events: Array<{ meta?: Record<string, unknown> }>,
+  sizeConfig?: Pick<ActivityGlobeConfig, "markerBaseSize" | "markerSizePerLog" | "markerMaxSize">,
 ): ActivityGlobeMarker[] {
+  const sizing = sizeConfig ?? DEFAULT_ACTIVITY_GLOBE_CONFIG;
   const buckets = new Map<string, { lat: number; lng: number; count: number }>();
   for (const event of events) {
     const loc = activityEventLocation(event);
     if (!loc) continue;
-    const key = `${loc.lat.toFixed(1)},${loc.lng.toFixed(1)}`;
+    const key = activityGlobeLocationKey(loc.lat, loc.lng);
     const existing = buckets.get(key);
     if (existing) existing.count += 1;
     else buckets.set(key, { lat: loc.lat, lng: loc.lng, count: 1 });
@@ -659,7 +681,6 @@ export function activityGlobeMarkers(
   return [...buckets.values()].map((bucket) => ({
     id: activityGlobeMarkerId(bucket.lat, bucket.lng),
     location: [bucket.lat, bucket.lng] as [number, number],
-    // Small WebGL discs: through-the-planet hint. DOM orbs carry facing depth.
-    size: Math.min(0.028, 0.01 + Math.log2(bucket.count) * 0.004),
+    size: markerSizeFromCount(bucket.count, sizing),
   }));
 }

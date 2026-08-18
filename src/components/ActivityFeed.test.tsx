@@ -1393,6 +1393,27 @@ describe("ActivityFeed", () => {
     expect(markup).toContain("AMA");
   });
 
+  test("renders controlled events without the empty state", () => {
+    const markup = renderToStaticMarkup(
+      <ActivityFeed
+        initialEvents={[]}
+        initialCount={0}
+        events={[
+          event({
+            id: "sandbox-1",
+            summary: "Visit from San Francisco, California, United States",
+            subject: { kind: "page", label: "AMA", href: "/ama" },
+            meta: { country: "US", city: "San Francisco", path: "/ama" },
+          }),
+        ]}
+        count={1}
+      />,
+    );
+
+    expect(markup).toContain("Someone from San Francisco");
+    expect(markup).not.toContain("Nothing yet. Likes and visits will show up here.");
+  });
+
   test("shows the end-cap after a non-empty feed and not on the empty state", () => {
     const empty = renderToStaticMarkup(<ActivityFeed initialEvents={[]} initialCount={0} />);
     const filled = renderToStaticMarkup(
@@ -1419,6 +1440,14 @@ describe("ActivityLiveBadge", () => {
     expect(activity).toContain("Live");
     expect(writing).toContain("Writing");
     expect(writing).not.toContain("Live");
+  });
+
+  test("shows Sandbox instead of Live on the sandbox route", () => {
+    const sandbox = renderToStaticMarkup(<TopBarTrail pathname="/activity/sandbox" />);
+    expect(sandbox).toContain("Activity");
+    expect(sandbox).toContain("Sandbox");
+    expect(sandbox).not.toContain("Live");
+    expect(renderToStaticMarkup(<ActivityLiveBadge sandbox />)).toContain("Sandbox");
   });
 });
 

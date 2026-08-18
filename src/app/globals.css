@@ -251,24 +251,35 @@
       animation: none;
     }
   }
-  /* Flat disc: solid fill, not a lit marble. */
-  .activity-globe-orb {
+
+  /* Official COBE bindable-marker fade: --cobe-visible-{id} is `N` or unset. */
+  .activity-globe-dot {
     position: absolute;
-    left: 0;
-    top: 0;
     z-index: 1;
-    pointer-events: none;
-    width: 0.875rem;
-    height: 0.875rem;
     border-radius: 9999px;
-    background-color: #fc532a;
-    box-shadow:
-      0 1px 1px rgba(0, 0, 0, 0.22),
-      inset 0 1px 1px rgba(255, 255, 255, 0.2);
-    opacity: calc(0.12 + var(--orb-facing, 0) * 0.88);
-    transform: translate(-50%, -50%) scale(calc(0.32 + var(--orb-facing, 0) * 0.78));
-    filter: blur(calc((1 - var(--orb-facing, 0)) * 1.4px));
-    will-change: left, top, opacity, transform, filter;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+  }
+  .activity-globe-dot.is-focused {
+    background-color: rgb(255 148 72);
+    box-shadow: 0 0 14px rgb(252 83 42 / 0.65);
+    animation: activity-globe-focus var(--activity-globe-focus-ms, 1.2s) ease-out;
+  }
+  @keyframes activity-globe-focus {
+    0% {
+      transform: translate(-50%, -50%) scale(1);
+    }
+    35% {
+      transform: translate(-50%, -50%) scale(var(--activity-globe-focus-scale, 1.45));
+    }
+    100% {
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .activity-globe-dot.is-focused {
+      animation: none;
+    }
   }
   @keyframes zoom-in {
     from {

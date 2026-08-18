@@ -254,6 +254,11 @@ export function isActivityPath(pathname: string): boolean {
   return ACTIVITY_PATH.test(path);
 }
 
+export function isActivitySandboxPath(pathname: string): boolean {
+  const path = pathname.split("?")[0] ?? pathname;
+  return path === "/activity/sandbox" || path.startsWith("/activity/sandbox/");
+}
+
 const CRAWLER_PROBE_PATHS = new Set(["/robots.txt", "/sitemap.xml", "/favicon.ico"]);
 const VISIT_ASSET_EXTENSION_RE =
   /\.(?:png|svg|ico|jpg|jpeg|webp|gif|txt|xml|json|map|css|js|woff2?)$/i;

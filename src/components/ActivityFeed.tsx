@@ -31,6 +31,7 @@ import {
   type ActivityRollup,
   type ActivityVisitCluster,
 } from "@/lib/activity";
+import type { ActivityGlobeConfig } from "@/lib/activity-globe-config";
 import {
   activityFeedItemCount,
   activityFeedItemReactKey,
@@ -194,7 +195,7 @@ function ActivityCountChip({ count }: { count: number }) {
   return (
     <span
       data-count={count}
-      className="text-tertiary border-secondary shrink-0 -translate-y-[2px] rounded-sm border px-1.5 py-px font-mono text-xs leading-4 tabular-nums"
+      className="text-tertiary border-secondary shrink-0 -translate-y-0.5 rounded-sm border px-1.5 py-px font-mono text-xs leading-4 tabular-nums"
     >
       ×<SlotDigits value={count} />
     </span>
@@ -300,22 +301,10 @@ export function ActivityRow({
 
 function VisitClusterRail() {
   return (
-    <span aria-hidden className="pointer-events-none absolute inset-x-0 top-8 bottom-1">
-      <svg
-        viewBox="0 0 32 200"
-        preserveAspectRatio="xMidYMax slice"
-        className="text-tertiary block h-full w-full overflow-hidden"
-      >
-        <path
-          d="M16 0 L16 188 Q16 198 30 198"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    </span>
+    <span
+      aria-hidden
+      className="text-tertiary pointer-events-none absolute top-8 right-0 bottom-[calc((1lh+0.25rem)/2-3px)] left-[calc(50%-1px)] rounded-bl-lg border-b-2 border-l-2 border-black/10 dark:border-white/15"
+    />
   );
 }
 
@@ -466,7 +455,7 @@ export function ActivityTrackedCount({ count }: { count: number }) {
 }
 
 const ROLLUP_PULSE_MS = 1500;
-const LIST_MOTION = { duration: 0.14, ease: [0.2, 0, 0, 1] } as const;
+const LIST_MOTION = { duration: 0.36, ease: [0.22, 1, 0.36, 1] } as const;
 
 function useEnterPulseKeys(incoming: string[], enabled: boolean): Set<string> {
   const [keys, setKeys] = useState<Set<string>>(() => new Set());
@@ -600,26 +589,28 @@ function ActivityStackList({
                   return remaining;
                 });
               }}
-              className={isEntering ? "overflow-hidden" : "[clip-path:inset(0)]"}
+              className="overflow-hidden"
             >
-              {item.type === "visit-cluster" ? (
-                <ActivityVisitClusterBlock
-                  cluster={item}
-                  pulse={pulse}
-                  pulseActionKey={pulseKey === reactKey ? pulseActionKey : null}
-                  onAimGlobe={onAimGlobe}
-                />
-              ) : (
-                <ActivityRow
-                  event={item.stack.latest}
-                  count={item.stack.count}
-                  sectionLabel={item.stack.sectionLabel}
-                  href={item.stack.href}
-                  likeTargets={item.stack.likeTargets}
-                  pulse={pulse}
-                  onAimGlobe={onAimGlobe}
-                />
-              )}
+              <div>
+                {item.type === "visit-cluster" ? (
+                  <ActivityVisitClusterBlock
+                    cluster={item}
+                    pulse={pulse}
+                    pulseActionKey={pulseKey === reactKey ? pulseActionKey : null}
+                    onAimGlobe={onAimGlobe}
+                  />
+                ) : (
+                  <ActivityRow
+                    event={item.stack.latest}
+                    count={item.stack.count}
+                    sectionLabel={item.stack.sectionLabel}
+                    href={item.stack.href}
+                    likeTargets={item.stack.likeTargets}
+                    pulse={pulse}
+                    onAimGlobe={onAimGlobe}
+                  />
+                )}
+              </div>
             </motion.div>
           );
         })}
@@ -680,11 +671,22 @@ function useRollupPulse(items: ActivityFeedItem[]): {
 export function ActivityFeed({
   initialEvents,
   initialCount,
+  events: controlledEvents,
+  count: controlledCount,
+  globeConfig,
 }: {
   initialEvents: ActivityEvent[];
   initialCount: number;
+  /** When set, skip live polling and render this list. Used by the sandbox. */
+  events?: ActivityEvent[];
+  count?: number;
+  globeConfig?: ActivityGlobeConfig;
 }) {
-  const { events, count } = useActivity(initialEvents, initialCount);
+  const live = useActivity(initialEvents, initialCount, {
+    enabled: controlledEvents === undefined,
+  });
+  const events = controlledEvents ?? live.events;
+  const count = controlledCount ?? live.count;
   const items = useMemo(() => clusterVisitLocationRuns(rollupActivityEvents(events)), [events]);
   const { pulseKey, pulseActionKey } = useRollupPulse(items);
   const [globeAim, setGlobeAim] = useState<ActivityGlobeAimRequest | null>(null);
@@ -719,7 +721,7 @@ export function ActivityFeed({
             </>
           )}
         </div>
-        <ActivityGlobe events={events} aim={globeAim} />
+        <ActivityGlobe events={events} aim={globeAim} config={globeConfig} />
       </div>
     </ListDetailWrapper>
   );

@@ -58,14 +58,35 @@ export function globeMarkerFacing(lat: number, lng: number, phi: number, theta: 
 
 /** Same mesh radius as cobe@2 (`GLOBE_R`). */
 export const GLOBE_MESH_RADIUS = 0.8;
-export const GLOBE_MARKER_ELEVATION = 0.03;
+export const GLOBE_MARKER_ELEVATION = 0;
 
 /** Fraction of the mesh that hangs past the right and bottom edges. */
 export const GLOBE_HANG = 0.4;
 /** Floor so a short pane cannot collapse the sphere back to a marble. */
-export const GLOBE_MESH_MIN = 640;
-/** Mesh is ~90% of pane/window height. No max cap. */
-export const GLOBE_MESH_HEIGHT_RATIO = 0.9;
+export const GLOBE_MESH_MIN = 512;
+/** Mesh is ~72% of pane/window height. No max cap. */
+export const GLOBE_MESH_HEIGHT_RATIO = 0.72;
+
+/**
+ * Phi/theta delta that slides the camera-facing point into the visible
+ * (unclipped) top-left of the mesh. The canvas hangs past the right and
+ * bottom by `GLOBE_HANG`, so the true apex sits low-right of what you see.
+ */
+export function globeAimVisibleBias(hang = GLOBE_HANG): { dPhi: number; dTheta: number } {
+  const visibleEdge = 1 - hang;
+  const discMin = (1 - GLOBE_MESH_RADIUS) / 2;
+  const visibleMid = (discMin + visibleEdge) / 2;
+  const uvOffset = 0.5 - visibleMid;
+  const angle = Math.asin(Math.min(0.95, (uvOffset * 2) / GLOBE_MESH_RADIUS));
+  return { dPhi: -angle, dTheta: -angle };
+}
+
+/** Aim pose that reads as centered in the visible globe, not the full mesh. */
+export function latLngToVisibleGlobePose(lat: number, lng: number): GlobePose {
+  const pose = latLngToGlobePose(lat, lng);
+  const { dPhi, dTheta } = globeAimVisibleBias();
+  return { phi: pose.phi + dPhi, theta: pose.theta + dTheta };
+}
 
 /** Project a lat/lng onto the COBE canvas, matching v2 marker anchors. */
 export function projectGlobeMarker(
@@ -89,8 +110,22 @@ export function projectGlobeMarker(
   };
 }
 
-/** Canvas diameter ≈ 0.9 × pane/window height, clipped off the bottom-right. */
+/** Canvas diameter ≈ 0.72 × pane/window height, clipped off the bottom-right. */
 export function globeDiameterFromHeight(height: number): number {
   if (!Number.isFinite(height) || height <= 0) return GLOBE_MESH_MIN;
   return Math.round(Math.max(GLOBE_MESH_MIN, height * GLOBE_MESH_HEIGHT_RATIO));
+}
+
+/**
+ * Keep marker ids so COBE creates `--cobe-{id}` anchors and `--cobe-visible-{id}`,
+ * but hide the WebGL discs — those do not fade. The CSS dots do.
+ */
+export function bindableGlobeMarkers(
+  markers: ReadonlyArray<{ id: string; location: [number, number]; size?: number }>,
+): Array<{ id: string; location: [number, number]; size: number }> {
+  return markers.map((marker) => ({
+    id: marker.id,
+    location: marker.location,
+    size: 0,
+  }));
 }

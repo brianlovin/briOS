@@ -20,16 +20,21 @@ function getServerVisibilitySnapshot(): DocumentVisibilityState {
   return "visible";
 }
 
-export function useActivity(initialEvents: ActivityEvent[], initialCount: number) {
+export function useActivity(
+  initialEvents: ActivityEvent[],
+  initialCount: number,
+  options?: { enabled?: boolean },
+) {
+  const enabled = options?.enabled ?? true;
   const visibilityState = useSyncExternalStore(
     subscribeVisibility,
     getVisibilitySnapshot,
     getServerVisibilitySnapshot,
   );
 
-  const { data } = useSWR<ActivityFeedPayload>("/api/activity/feed", fetcher, {
+  const { data } = useSWR<ActivityFeedPayload>(enabled ? "/api/activity/feed" : null, fetcher, {
     fallbackData: { events: initialEvents, count: initialCount },
-    refreshInterval: activityFeedRefreshInterval(visibilityState),
+    refreshInterval: enabled ? activityFeedRefreshInterval(visibilityState) : 0,
     revalidateOnFocus: false,
     dedupingInterval: ACTIVITY_FEED_DEDUPING_MS,
   });

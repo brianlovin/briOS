@@ -3272,19 +3272,20 @@ describe("rollupActivityEvents", () => {
       previous,
     );
     expect([...delays.entries()]).toEqual([
-      ["new-1", 0.6],
-      ["new-2", 0.45],
-      ["new-3", 0.3],
-      ["new-4", 0.15],
+      ["new-1", 0.88],
+      ["new-2", 0.66],
+      ["new-3", 0.44],
+      ["new-4", 0.22],
       ["new-5", 0],
     ]);
 
     const many = Array.from({ length: 16 }, (_, index) => `n-${index}`);
     const capped = activityEnterStaggerDelays(many, new Set());
     expect(capped.get("n-15")).toBe(0);
-    expect(capped.get("n-8")).toBe(1.05);
-    expect(capped.get("n-7")).toBe(1.2);
-    expect(capped.get("n-0")).toBe(1.2);
+    expect(capped.get("n-8")).toBe(1.54);
+    expect(capped.get("n-6")).toBe(1.98);
+    expect(capped.get("n-5")).toBe(2);
+    expect(capped.get("n-0")).toBe(2);
     expect(capped.has("old-1")).toBe(false);
   });
 
@@ -3309,8 +3310,8 @@ describe("rollupActivityEvents", () => {
     const previous = new Set(["old-1"]);
     const next = nextActivityEnterState(["newest", "middle", "oldest-new", "old-1"], previous);
     expect(next.delays.get("oldest-new")).toBe(0);
-    expect(next.delays.get("middle")).toBe(0.15);
-    expect(next.delays.get("newest")).toBe(0.3);
+    expect(next.delays.get("middle")).toBe(0.22);
+    expect(next.delays.get("newest")).toBe(0.44);
     expect(next.delays.has("old-1")).toBe(false);
   });
 
