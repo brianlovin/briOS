@@ -27,12 +27,11 @@ const COBE_SLIDERS: SliderDef[] = [
 ];
 
 const MARKER_SLIDERS: SliderDef[] = [
-  { key: "markerDotPx", label: "Dot size (px)", min: 4, max: 24, step: 1 },
+  { key: "markerDotPx", label: "Dot size (px)", min: 3, max: 16, step: 1 },
   { key: "markerBlurPx", label: "Horizon blur (px)", min: 0, max: 20, step: 1 },
-  { key: "markerFadeMs", label: "Fade (ms)", min: 0, max: 800, step: 25 },
-  { key: "markerBaseSize", label: "Count scale base", min: 0.005, max: 0.04, step: 0.001 },
-  { key: "markerSizePerLog", label: "Size per log₂(count)", min: 0, max: 0.01, step: 0.0005 },
-  { key: "markerMaxSize", label: "Max count scale", min: 0.01, max: 0.08, step: 0.001 },
+  { key: "markerFadeMs", label: "Horizon fade (ms)", min: 0, max: 800, step: 25 },
+  { key: "markerRecentCount", label: "Recent markers", min: 1, max: 12, step: 1 },
+  { key: "markerAgeFade", label: "Age fade step", min: 0.05, max: 0.5, step: 0.05 },
   { key: "focusPulseScale", label: "Focus size pulse", min: 0, max: 1.5, step: 0.05 },
   { key: "focusMs", label: "Focus duration (ms)", min: 400, max: 2400, step: 50 },
 ];

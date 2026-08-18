@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 
-import { activityGlobeMarkerIdForLocation, activityGlobeMarkers } from "./activity-geo";
+import { activityGlobeMarkerIdForLocation, activityRecentGlobeMarkers } from "./activity-geo";
 import {
   bindableGlobeMarkers,
   GLOBE_HANG,
@@ -95,13 +95,33 @@ describe("bindableGlobeMarkers", () => {
 
 describe("activityGlobeMarkerIdForLocation", () => {
   test("matches a nearby visit to the existing 0.1° bucket", () => {
-    const markers = activityGlobeMarkers([
-      { meta: { latitude: 37.77, longitude: -122.42 } },
-      { meta: { latitude: 51.51, longitude: -0.13 } },
-    ]);
+    const markers = activityRecentGlobeMarkers(
+      [
+        { id: "sf", meta: { latitude: 37.77, longitude: -122.42 } },
+        { id: "ldn", meta: { latitude: 51.51, longitude: -0.13 } },
+      ],
+      5,
+    );
     expect(activityGlobeMarkerIdForLocation({ lat: 37.81, lng: -122.39 }, markers)).toBe(
       markers[0]?.id,
     );
     expect(activityGlobeMarkerIdForLocation({ lat: 0, lng: 0 }, markers)).toBeUndefined();
+  });
+});
+
+describe("activityRecentGlobeMarkers", () => {
+  test("keeps the newest unique locations and ages the rest", () => {
+    const markers = activityRecentGlobeMarkers(
+      [
+        { id: "tokyo", meta: { latitude: 35.68, longitude: 139.69 } },
+        { id: "tokyo-again", meta: { latitude: 35.68, longitude: 139.69 } },
+        { id: "london", meta: { latitude: 51.51, longitude: -0.13 } },
+        { id: "sf", meta: { latitude: 37.77, longitude: -122.42 } },
+        { id: "sydney", meta: { latitude: -33.87, longitude: 151.21 } },
+      ],
+      3,
+    );
+    expect(markers.map((marker) => marker.eventId)).toEqual(["tokyo", "london", "sf"]);
+    expect(markers.map((marker) => marker.age)).toEqual([0, 1, 2]);
   });
 });

@@ -5,9 +5,9 @@ import {
   DEFAULT_ACTIVITY_GLOBE_CONFIG,
   globeCobeOptions,
   globeThemeColors,
+  markerAgeOpacity,
   markerDotPxForSize,
   markerSizeFromCount,
-  rgbCss,
 } from "./activity-globe-config";
 
 describe("activity-globe-config", () => {
@@ -43,7 +43,13 @@ describe("activity-globe-config", () => {
     expect(style.top).toBe("anchor(center)");
     expect(style.opacity).toBe("var(--cobe-visible-sf, 0)");
     expect(style.filter).toBe("blur(calc((1 - var(--cobe-visible-sf, 0)) * 8px))");
-    expect(style.backgroundColor).toBe(rgbCss(DEFAULT_ACTIVITY_GLOBE_CONFIG.markerColor));
     expect(String(style.transition)).toContain("opacity 300ms");
+  });
+
+  test("markerAgeOpacity drops 20% per older marker", () => {
+    expect(markerAgeOpacity(0, 0.2)).toBe(1);
+    expect(markerAgeOpacity(1, 0.2)).toBeCloseTo(0.8);
+    expect(markerAgeOpacity(4, 0.2)).toBeCloseTo(0.2);
+    expect(markerAgeOpacity(5, 0.2)).toBe(0);
   });
 });

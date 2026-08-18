@@ -52,6 +52,11 @@ export type ActivityGlobeMarker = {
   size: number;
 };
 
+export type ActivityRecentGlobeMarker = ActivityGlobeMarker & {
+  eventId: string;
+  age: number;
+};
+
 /** 0.1° bucket used to merge nearby visits into one globe marker. */
 export function activityGlobeLocationKey(lat: number, lng: number): string {
   return `${lat.toFixed(1)},${lng.toFixed(1)}`;
@@ -683,4 +688,30 @@ export function activityGlobeMarkers(
     location: [bucket.lat, bucket.lng] as [number, number],
     size: markerSizeFromCount(bucket.count, sizing),
   }));
+}
+
+/** Newest-first unique locations, capped so the globe stays a trail instead of a pile. */
+export function activityRecentGlobeMarkers(
+  events: Array<{ id?: string; meta?: Record<string, unknown> }>,
+  limit: number,
+): ActivityRecentGlobeMarker[] {
+  const cap = Math.max(0, Math.floor(limit));
+  const seen = new Set<string>();
+  const markers: ActivityRecentGlobeMarker[] = [];
+  for (const event of events) {
+    if (markers.length >= cap) break;
+    const loc = activityEventLocation(event);
+    if (!loc) continue;
+    const key = activityGlobeLocationKey(loc.lat, loc.lng);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    markers.push({
+      id: activityGlobeMarkerId(loc.lat, loc.lng),
+      eventId: typeof event.id === "string" && event.id ? event.id : key,
+      location: [loc.lat, loc.lng],
+      size: 0,
+      age: markers.length,
+    });
+  }
+  return markers;
 }

@@ -29,9 +29,18 @@ export type ActivityGlobeConfig = {
   markerDotPx: number;
   markerBlurPx: number;
   markerFadeMs: number;
+  /** How many recent unique locations stay on the globe. */
+  markerRecentCount: number;
+  /** Opacity drop per older marker (newest is 1). */
+  markerAgeFade: number;
   focusPulseScale: number;
   focusMs: number;
 };
+
+export function markerAgeOpacity(age: number, step: number): number {
+  if (age < 0) return 0;
+  return Math.max(0, 1 - age * step);
+}
 
 export function markerDotPxForSize(
   size: number,
@@ -63,9 +72,11 @@ export const DEFAULT_ACTIVITY_GLOBE_CONFIG: ActivityGlobeConfig = {
   markerSizePerLog: 0.007,
   markerMaxSize: 0.05,
 
-  markerDotPx: 10,
+  markerDotPx: 6,
   markerBlurPx: 8,
   markerFadeMs: 300,
+  markerRecentCount: 5,
+  markerAgeFade: 0.2,
   focusPulseScale: 0.45,
   focusMs: 1200,
 };
@@ -119,21 +130,15 @@ export function rgbCss(color: RgbTriplet): string {
 /** Official COBE bindable-marker visibility: `--cobe-visible-{id}` is `N` or unset. */
 export function cobeMarkerStyle(
   markerId: string,
-  config: Pick<
-    ActivityGlobeConfig,
-    "markerDotPx" | "markerBlurPx" | "markerFadeMs" | "markerColor"
-  >,
+  config: Pick<ActivityGlobeConfig, "markerBlurPx" | "markerFadeMs">,
 ): Record<string, string | number> {
   const visible = `--cobe-visible-${markerId}`;
   return {
     positionAnchor: `--cobe-${markerId}`,
     left: "anchor(center)",
     top: "anchor(center)",
-    width: config.markerDotPx,
-    height: config.markerDotPx,
-    backgroundColor: rgbCss(config.markerColor),
     opacity: `var(${visible}, 0)`,
     filter: `blur(calc((1 - var(${visible}, 0)) * ${config.markerBlurPx}px))`,
-    transition: `opacity ${config.markerFadeMs}ms ease, filter ${config.markerFadeMs}ms ease, transform ${config.markerFadeMs}ms ease, background-color ${config.markerFadeMs}ms ease, box-shadow ${config.markerFadeMs}ms ease`,
+    transition: `opacity ${config.markerFadeMs}ms ease, filter ${config.markerFadeMs}ms ease`,
   };
 }

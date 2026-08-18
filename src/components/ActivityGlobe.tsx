@@ -15,8 +15,7 @@ import {
 
 import type { ActivityEvent } from "@/lib/activity";
 import {
-  activityGlobeMarkerIdForLocation,
-  activityGlobeMarkers,
+  activityRecentGlobeMarkers,
   type ActivityLatLng,
 } from "@/lib/activity-geo";
 import {
@@ -32,7 +31,8 @@ import {
   cobeMarkerStyle,
   DEFAULT_ACTIVITY_GLOBE_CONFIG,
   globeCobeOptions,
-  markerDotPxForSize,
+  markerAgeOpacity,
+  rgbCss,
 } from "@/lib/activity-globe-config";
 import { cn } from "@/lib/utils";
 
@@ -44,11 +44,6 @@ const THETA_LIMIT = Math.PI / 2 - 0.08;
 const MIN_FEED_WIDTH = 720;
 const AIM_MS_MIN = 600;
 const AIM_MS_MAX = 850;
-
-export type ActivityGlobeAimRequest = {
-  location: ActivityLatLng;
-  nonce: number;
-};
 
 type AimState = {
   fromPhi: number;
@@ -105,11 +100,9 @@ function scrollFeedFromOverlay(overlay: HTMLElement, deltaY: number): void {
 
 export function ActivityGlobe({
   events,
-  aim,
   config: configProp,
 }: {
   events: ActivityEvent[];
-  aim?: ActivityGlobeAimRequest | null;
   config?: ActivityGlobeConfig;
 }) {
   const config = configProp ?? DEFAULT_ACTIVITY_GLOBE_CONFIG;
@@ -125,6 +118,9 @@ export function ActivityGlobe({
   const draggingRef = useRef(false);
   const pendingRef = useRef(false);
   const aimingRef = useRef<AimState | null>(null);
+  const userSteeringRef = useRef(false);
+  const primedNewestRef = useRef<string | null>(null);
+  const skipAutoPanRef = useRef(true);
   const lastXRef = useRef(0);
   const lastYRef = useRef(0);
   const lastTRef = useRef(0);
@@ -134,7 +130,10 @@ export function ActivityGlobe({
   const [grabbing, setGrabbing] = useState(false);
   const [focusId, setFocusId] = useState<string | null>(null);
 
-  const markers = useMemo(() => activityGlobeMarkers(events, config), [events, config]);
+  const markers = useMemo(
+    () => activityRecentGlobeMarkers(events, config.markerRecentCount),
+    [events, config.markerRecentCount],
+  );
   const markersRef = useRef(markers);
   const themeRef = useRef({ isDark, prefersReducedMotion });
   const sizeRef = useRef(layout.size);
@@ -206,17 +205,24 @@ export function ActivityGlobe({
   }, []);
 
   useEffect(() => {
-    if (!aim) return;
-    aimAt(aim.location);
-    const id = activityGlobeMarkerIdForLocation(aim.location, markersRef.current);
-    setFocusId(id ?? null);
-  }, [aim, aimAt]);
+    const newest = markers[0];
+    if (skipAutoPanRef.current) {
+      skipAutoPanRef.current = false;
+      primedNewestRef.current = newest?.eventId ?? null;
+      return;
+    }
+    if (!newest || primedNewestRef.current === newest.eventId) return;
+    primedNewestRef.current = newest.eventId;
+    if (userSteeringRef.current || themeRef.current.prefersReducedMotion) return;
+    aimAt({ lat: newest.location[0], lng: newest.location[1] });
+    setFocusId(newest.id);
+  }, [markers, aimAt]);
 
   useEffect(() => {
     if (!focusId) return;
     const timeout = window.setTimeout(() => setFocusId(null), config.focusMs);
     return () => window.clearTimeout(timeout);
-  }, [focusId, config.focusMs, aim?.nonce]);
+  }, [focusId, config.focusMs]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -240,6 +246,14 @@ export function ActivityGlobe({
     const onRender = () => {
       const { isDark: nextDark, prefersReducedMotion: reduced } = themeRef.current;
       const aimState = aimingRef.current;
+
+      if (draggingRef.current) {
+        userSteeringRef.current = true;
+      } else if (userSteeringRef.current && !aimState) {
+        const idlePhi = Math.abs(velocityRef.current - (reduced ? 0 : IDLE_SPIN)) < 0.0015;
+        const idleTheta = Math.abs(thetaVelocityRef.current) < 0.001;
+        if (idlePhi && idleTheta) userSteeringRef.current = false;
+      }
 
       if (aimState) {
         const t = Math.min(1, (performance.now() - aimState.start) / aimState.duration);
@@ -291,6 +305,7 @@ export function ActivityGlobe({
 
   function beginDrag(clientX: number, clientY: number): void {
     aimingRef.current = null;
+    userSteeringRef.current = true;
     draggingRef.current = true;
     pendingRef.current = false;
     lastXRef.current = clientX;
@@ -400,26 +415,32 @@ export function ActivityGlobe({
           onPointerCancel={endDrag}
         />
       </div>
-      {markers.map((marker) => {
-        const dotPx = markerDotPxForSize(marker.size, config);
-        return (
+      {markers.map((marker) => (
+        <span
+          key={marker.id}
+          className={cn("activity-globe-dot", focusId === marker.id && "is-focused")}
+          style={
+            {
+              ...cobeMarkerStyle(marker.id, {
+                markerBlurPx: config.markerBlurPx,
+                markerFadeMs: prefersReducedMotion ? 0 : config.markerFadeMs,
+              }),
+              "--activity-globe-focus-scale": 1 + config.focusPulseScale,
+              "--activity-globe-focus-ms": `${config.focusMs}ms`,
+            } as CSSProperties
+          }
+        >
           <span
-            key={marker.id}
-            className={cn("activity-globe-dot", focusId === marker.id && "is-focused")}
-            style={
-              {
-                ...cobeMarkerStyle(marker.id, {
-                  ...config,
-                  markerDotPx: dotPx,
-                  markerFadeMs: prefersReducedMotion ? 0 : config.markerFadeMs,
-                }),
-                "--activity-globe-focus-scale": 1 + config.focusPulseScale,
-                "--activity-globe-focus-ms": `${config.focusMs}ms`,
-              } as CSSProperties
-            }
+            className="activity-globe-dot-core"
+            style={{
+              width: config.markerDotPx,
+              height: config.markerDotPx,
+              backgroundColor: rgbCss(config.markerColor),
+              opacity: markerAgeOpacity(marker.age, config.markerAgeFade),
+            }}
           />
-        );
-      })}
+        </span>
+      ))}
     </div>
   );
 }

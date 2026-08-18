@@ -256,28 +256,32 @@
   .activity-globe-dot {
     position: absolute;
     z-index: 1;
-    border-radius: 9999px;
     pointer-events: none;
     transform: translate(-50%, -50%);
   }
-  .activity-globe-dot.is-focused {
+  .activity-globe-dot-core {
+    display: block;
+    border-radius: 9999px;
+    transition: opacity 300ms ease;
+  }
+  .activity-globe-dot.is-focused .activity-globe-dot-core {
     background-color: rgb(255 148 72);
     box-shadow: 0 0 14px rgb(252 83 42 / 0.65);
     animation: activity-globe-focus var(--activity-globe-focus-ms, 1.2s) ease-out;
   }
   @keyframes activity-globe-focus {
     0% {
-      transform: translate(-50%, -50%) scale(1);
+      transform: scale(1);
     }
     35% {
-      transform: translate(-50%, -50%) scale(var(--activity-globe-focus-scale, 1.45));
+      transform: scale(var(--activity-globe-focus-scale, 1.45));
     }
     100% {
-      transform: translate(-50%, -50%) scale(1);
+      transform: scale(1);
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .activity-globe-dot.is-focused {
+    .activity-globe-dot.is-focused .activity-globe-dot-core {
       animation: none;
     }
   }
