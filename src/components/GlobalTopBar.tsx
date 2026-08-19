@@ -8,7 +8,7 @@ import { Suspense, useCallback } from "react";
 import { scrollTargetAtom } from "@/atoms/scrollTarget";
 import { sidebarAtom } from "@/atoms/sidebar";
 import { navigationItems } from "@/config/navigation";
-import { isActivityPath } from "@/lib/activity-shared";
+import { isActivityPath, isActivitySandboxPath } from "@/lib/activity-shared";
 import { cn } from "@/lib/utils";
 
 import { MenuToggle } from "./icons/MenuToggle";
@@ -38,7 +38,15 @@ export function BreadcrumbDivider() {
   return <div className="text-quaternary font-medium opacity-50 dark:opacity-70">/</div>;
 }
 
-export function ActivityLiveBadge() {
+export function ActivityLiveBadge({ sandbox = false }: { sandbox?: boolean }) {
+  if (sandbox) {
+    return (
+      <span className="ml-0.5 inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-1.5 py-0.5 text-[11px] font-medium text-amber-800 dark:text-amber-300">
+        Sandbox
+      </span>
+    );
+  }
+
   return (
     <span className="ml-0.5 inline-flex items-center gap-1 rounded-full bg-green-500/10 px-1.5 py-0.5 text-[11px] font-medium text-green-700 dark:text-green-400">
       <span className="size-1.5 animate-pulse rounded-full bg-green-500" aria-hidden />
@@ -127,7 +135,9 @@ export function TopBarTrail({ pathname, onClose }: { pathname: string; onClose?:
           <BreadcrumbLabel href={currentNavItem.href} onClick={onClose}>
             {currentNavItem.label}
           </BreadcrumbLabel>
-          {isActivityPath(pathname) ? <ActivityLiveBadge /> : null}
+          {isActivityPath(pathname) ? (
+            <ActivityLiveBadge sandbox={isActivitySandboxPath(pathname)} />
+          ) : null}
         </>
       )}
     </>

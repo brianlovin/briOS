@@ -254,6 +254,11 @@ export function isActivityPath(pathname: string): boolean {
   return ACTIVITY_PATH.test(path);
 }
 
+export function isActivitySandboxPath(pathname: string): boolean {
+  const path = pathname.split("?")[0] ?? pathname;
+  return path === "/activity/sandbox" || path.startsWith("/activity/sandbox/");
+}
+
 const CRAWLER_PROBE_PATHS = new Set(["/robots.txt", "/sitemap.xml", "/favicon.ico"]);
 const VISIT_ASSET_EXTENSION_RE =
   /\.(?:png|svg|ico|jpg|jpeg|webp|gif|txt|xml|json|map|css|js|woff2?)$/i;
@@ -981,9 +986,9 @@ function publicPullRequestRepo(event: ActivityEvent): string | undefined {
 }
 
 /** Linked fallback when a visit has no real page title. Never “Home”. */
-export const SITE_VISIT_LABEL = "the site";
+export const SITE_VISIT_LABEL = "brianlovin.com";
 
-/** staff.design home visits use the product name, not “the site”. */
+/** staff.design home visits use the product name, not “brianlovin.com”. */
 export const STAFF_DESIGN_HOME_VISIT_LABEL = "Staff.design";
 
 const ACTIVITY_HOME_VISIT_LABELS: Record<string, string> = {
@@ -1064,7 +1069,7 @@ function locationFromVisitText(text: string): string | undefined {
   if (someoneVisited?.[1]) return someoneVisited[1].trim();
 
   const someoneFromVerb = new RegExp(
-    `^Someone from\\s+(.+?)\\s+${VISIT_SENTENCE_VERB_RE}(?:\\s+the site)?$`,
+    `^Someone from\\s+(.+?)\\s+${VISIT_SENTENCE_VERB_RE}(?:\\s+(?:the site|brianlovin\\.com))?$`,
     "i",
   ).exec(trimmed);
   if (someoneFromVerb?.[1]) return someoneFromVerb[1].trim();

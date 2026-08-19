@@ -251,24 +251,46 @@
       animation: none;
     }
   }
-  /* Flat disc: solid fill, not a lit marble. */
-  .activity-globe-orb {
+
+  /* Official COBE bindable-marker fade: --cobe-visible-{id} is `N` or unset. */
+  .activity-globe-dot {
     position: absolute;
-    left: 0;
-    top: 0;
     z-index: 1;
     pointer-events: none;
-    width: 0.875rem;
-    height: 0.875rem;
+    transform: translate(-50%, -50%);
+  }
+  .activity-globe-dot-core {
+    display: block;
     border-radius: 9999px;
-    background-color: #fc532a;
-    box-shadow:
-      0 1px 1px rgba(0, 0, 0, 0.22),
-      inset 0 1px 1px rgba(255, 255, 255, 0.2);
-    opacity: calc(0.12 + var(--orb-facing, 0) * 0.88);
-    transform: translate(-50%, -50%) scale(calc(0.32 + var(--orb-facing, 0) * 0.78));
-    filter: blur(calc((1 - var(--orb-facing, 0)) * 1.4px));
-    will-change: left, top, opacity, transform, filter;
+    transition:
+      width 300ms ease,
+      height 300ms ease,
+      box-shadow 300ms ease;
+    box-shadow: 0 0 calc(var(--activity-globe-dot-px, 12px) * 1.15) rgb(252 83 42 / 0.95);
+  }
+  .activity-globe-dot-core.is-focused {
+    background-color: rgb(255 196 92);
+    box-shadow: 0 0 calc(var(--activity-globe-dot-px, 12px) * 2.2) rgb(255 150 60 / 1);
+    animation: activity-globe-focus var(--activity-globe-focus-ms, 1.4s) ease-out;
+  }
+  @keyframes activity-globe-focus {
+    0% {
+      transform: scale(1);
+      filter: brightness(1);
+    }
+    28% {
+      transform: scale(var(--activity-globe-focus-scale, 1.75));
+      filter: brightness(1.55);
+    }
+    100% {
+      transform: scale(1);
+      filter: brightness(1);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .activity-globe-dot-core.is-focused {
+      animation: none;
+    }
   }
   @keyframes zoom-in {
     from {

@@ -33,7 +33,7 @@ function ActivityFallback() {
                 <div className="flex size-8 flex-none items-center justify-center">
                   <LoadingSkeleton className="size-6" />
                 </div>
-                <LoadingSkeleton className="h-5 w-2/3" />
+                <LoadingSkeleton className="h-3 w-2/3" />
               </div>
             ))}
           </div>

@@ -1,4 +1,9 @@
 import { COUNTRY_CENTROIDS } from "./activity-geo-centroids";
+import {
+  type ActivityGlobeConfig,
+  DEFAULT_ACTIVITY_GLOBE_CONFIG,
+  markerSizeFromCount,
+} from "./activity-globe-config";
 
 /**
  * Country / region display names for activity visit summaries.
@@ -47,11 +52,31 @@ export type ActivityGlobeMarker = {
   size: number;
 };
 
+export type ActivityRecentGlobeMarker = ActivityGlobeMarker & {
+  eventId: string;
+  age: number;
+};
+
+/** 0.1° bucket used to merge nearby visits into one globe marker. */
+export function activityGlobeLocationKey(lat: number, lng: number): string {
+  return `${lat.toFixed(1)},${lng.toFixed(1)}`;
+}
+
 /** Stable CSS-safe id for COBE bindable markers (`--cobe-{id}`). */
 export function activityGlobeMarkerId(lat: number, lng: number): string {
   const encode = (value: number): string =>
     value.toFixed(1).replaceAll("-", "n").replaceAll(".", "d");
   return `g${encode(lat)}x${encode(lng)}`;
+}
+
+export function activityGlobeMarkerIdForLocation(
+  location: ActivityLatLng,
+  markers: readonly ActivityGlobeMarker[],
+): string | undefined {
+  const key = activityGlobeLocationKey(location.lat, location.lng);
+  return markers.find(
+    (marker) => activityGlobeLocationKey(marker.location[0], marker.location[1]) === key,
+  )?.id;
 }
 
 /** Persist the same snake_case keys first-party visits store on event.meta. */
@@ -633,10 +658,33 @@ export function geoFromVisitMeta(meta: Record<string, unknown> | undefined): Act
   };
 }
 
-/** Prefer stored coords; otherwise the country centroid. Skip mysterious / missing country. */
+/** Brian's home pin — GitHub work and Notion publishes land here. */
+export const ACTIVITY_HOME_LOCATION: ActivityLatLng = { lat: 37.77, lng: -122.42 };
+
+const HOME_ORIGIN_TYPES = new Set([
+  "pr_opened",
+  "pr_merged",
+  "writing_published",
+  "til_published",
+  "stack_added",
+  "site_added",
+  "design_details_added",
+  "app_dissection_published",
+  "ama_answered",
+]);
+
+export function isHomeOriginActivity(event: { type?: string; source?: string }): boolean {
+  if (event.source === "github") return true;
+  return typeof event.type === "string" && HOME_ORIGIN_TYPES.has(event.type);
+}
+
+/** GitHub + Notion publishes always pin to SF. Visits use stored coords, then country centroid. */
 export function activityEventLocation(event: {
+  type?: string;
+  source?: string;
   meta?: Record<string, unknown>;
 }): ActivityLatLng | undefined {
+  if (isHomeOriginActivity(event)) return ACTIVITY_HOME_LOCATION;
   const geo = geoFromVisitMeta(event.meta);
   if (geo.latitude !== undefined && geo.longitude !== undefined) {
     return { lat: geo.latitude, lng: geo.longitude };
@@ -645,13 +693,15 @@ export function activityEventLocation(event: {
 }
 
 export function activityGlobeMarkers(
-  events: Array<{ meta?: Record<string, unknown> }>,
+  events: Array<{ type?: string; source?: string; meta?: Record<string, unknown> }>,
+  sizeConfig?: Pick<ActivityGlobeConfig, "markerBaseSize" | "markerSizePerLog" | "markerMaxSize">,
 ): ActivityGlobeMarker[] {
+  const sizing = sizeConfig ?? DEFAULT_ACTIVITY_GLOBE_CONFIG;
   const buckets = new Map<string, { lat: number; lng: number; count: number }>();
   for (const event of events) {
     const loc = activityEventLocation(event);
     if (!loc) continue;
-    const key = `${loc.lat.toFixed(1)},${loc.lng.toFixed(1)}`;
+    const key = activityGlobeLocationKey(loc.lat, loc.lng);
     const existing = buckets.get(key);
     if (existing) existing.count += 1;
     else buckets.set(key, { lat: loc.lat, lng: loc.lng, count: 1 });
@@ -659,7 +709,32 @@ export function activityGlobeMarkers(
   return [...buckets.values()].map((bucket) => ({
     id: activityGlobeMarkerId(bucket.lat, bucket.lng),
     location: [bucket.lat, bucket.lng] as [number, number],
-    // Small WebGL discs: through-the-planet hint. DOM orbs carry facing depth.
-    size: Math.min(0.028, 0.01 + Math.log2(bucket.count) * 0.004),
+    size: markerSizeFromCount(bucket.count, sizing),
   }));
+}
+
+/** Newest-first unique locations, capped so the globe stays a trail instead of a pile. */
+export function activityRecentGlobeMarkers(
+  events: Array<{ id?: string; type?: string; source?: string; meta?: Record<string, unknown> }>,
+  limit: number,
+): ActivityRecentGlobeMarker[] {
+  const cap = Math.max(0, Math.floor(limit));
+  const seen = new Set<string>();
+  const markers: ActivityRecentGlobeMarker[] = [];
+  for (const event of events) {
+    if (markers.length >= cap) break;
+    const loc = activityEventLocation(event);
+    if (!loc) continue;
+    const key = activityGlobeLocationKey(loc.lat, loc.lng);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    markers.push({
+      id: activityGlobeMarkerId(loc.lat, loc.lng),
+      eventId: typeof event.id === "string" && event.id ? event.id : key,
+      location: [loc.lat, loc.lng],
+      size: 0,
+      age: markers.length,
+    });
+  }
+  return markers;
 }

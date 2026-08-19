@@ -58,6 +58,26 @@ export function activityVisitClusterReactKey(
   return `visit-cluster:${cluster.locationKey}:${cluster.anchorId}`;
 }
 
+/** Consecutive same-source actions inside a location cluster. */
+export type ActivityVisitSourceRun = {
+  source: string;
+  actions: ActivityRollup[];
+};
+
+export function visitClusterSourceRuns(actions: ActivityRollup[]): ActivityVisitSourceRun[] {
+  const runs: ActivityVisitSourceRun[] = [];
+  for (const action of actions) {
+    const source = action.latest.source;
+    const current = runs[runs.length - 1];
+    if (current && current.source === source) {
+      current.actions.push(action);
+      continue;
+    }
+    runs.push({ source, actions: [action] });
+  }
+  return runs;
+}
+
 export function activityFeedItemReactKey(item: ActivityFeedItem): string {
   return item.type === "visit-cluster"
     ? activityVisitClusterReactKey(item)
@@ -68,8 +88,8 @@ export function activityFeedItemCount(item: ActivityFeedItem): number {
   return item.type === "visit-cluster" ? item.count : item.stack.count;
 }
 
-export const ACTIVITY_ENTER_STAGGER_STEP = 0.15;
-export const ACTIVITY_ENTER_STAGGER_MAX = 1.2;
+export const ACTIVITY_ENTER_STAGGER_STEP = 0.22;
+export const ACTIVITY_ENTER_STAGGER_MAX = 2;
 
 /**
  * Enter delays for keys that were not on screen last paint. First paint (`previous` null) is empty.
