@@ -10,6 +10,25 @@ import * as screenshot from "@/lib/screenshot";
 
 const TEST_SECRET = "unit-test-webhook-secret";
 
+type NotionUpdateArg = {
+  page_id?: string;
+  properties?: {
+    "Preview Image"?: { url?: string };
+    "Preview Image Dark"?: { url?: string };
+    "Preview Status"?: { select?: { name?: string } };
+    "Preview Error"?: { rich_text?: { text?: { content?: string } }[] };
+    "Preview Updated"?: { date?: { start?: string } };
+  };
+};
+
+function updateArg(call: unknown[]): NotionUpdateArg {
+  return (call[0] ?? {}) as NotionUpdateArg;
+}
+
+function notionUpdates(update: ReturnType<typeof spyOn>): NotionUpdateArg[] {
+  return (update.mock.calls as unknown[][]).map(updateArg);
+}
+
 function webhookRequest(payload: unknown, headers: Record<string, string> = {}): Request {
   return new Request("http://localhost/api/webhooks/capture-site-preview", {
     method: "POST",
@@ -99,13 +118,10 @@ describe("POST /api/webhooks/capture-site-preview", () => {
     expect(capture).toHaveBeenCalledWith("https://example.com");
     expect(upload).toHaveBeenCalledTimes(2);
 
-    const doneUpdate = update.mock.calls.find(
-      (call) =>
-        (call[0] as { properties?: { "Preview Image"?: unknown } }).properties?.["Preview Image"],
-    );
+    const doneUpdate = notionUpdates(update).find((arg) => arg.properties?.["Preview Image"]);
     expect(doneUpdate).toBeDefined();
 
-    const properties = (doneUpdate?.[0] as { properties: Record<string, unknown> }).properties;
+    const properties = doneUpdate?.properties ?? {};
     expect(properties["Preview Image"]).toEqual({ url: "https://cdn.example/light" });
     expect(properties["Preview Image Dark"]).toEqual({ url: "https://cdn.example/dark" });
     expect(properties["Preview Status"]).toEqual({ select: { name: "Done" } });
@@ -125,11 +141,8 @@ describe("POST /api/webhooks/capture-site-preview", () => {
     );
     expect(res.status).toBe(200);
 
-    const doneUpdate = update.mock.calls.find(
-      (call) =>
-        (call[0] as { properties?: { "Preview Image"?: unknown } }).properties?.["Preview Image"],
-    );
-    const properties = (doneUpdate?.[0] as { properties: Record<string, unknown> }).properties;
+    const doneUpdate = notionUpdates(update).find((arg) => arg.properties?.["Preview Image"]);
+    const properties = doneUpdate?.properties ?? {};
     expect(properties["Preview Image"]).toEqual({ url: "https://cdn.example/light" });
     expect(properties["Preview Image Dark"]).toEqual({ url: "https://cdn.example/dark" });
   });
@@ -140,14 +153,12 @@ describe("POST /api/webhooks/capture-site-preview", () => {
     const res = await POST(webhookRequest(notionPayload));
     expect(res.status).toBe(500);
 
-    const errorUpdate = update.mock.calls.find(
-      (call) =>
-        (call[0] as { properties?: { "Preview Status"?: { select?: { name?: string } } } })
-          .properties?.["Preview Status"]?.select?.name === "Error",
+    const errorUpdate = notionUpdates(update).find(
+      (arg) => arg.properties?.["Preview Status"]?.select?.name === "Error",
     );
     expect(errorUpdate).toBeDefined();
 
-    const properties = (errorUpdate?.[0] as { properties: Record<string, unknown> }).properties;
+    const properties = errorUpdate?.properties ?? {};
     expect(properties["Preview Status"]).toEqual({ select: { name: "Error" } });
     expect(properties["Preview Error"]).toEqual({
       rich_text: [{ text: { content: "tab crashed" } }],
