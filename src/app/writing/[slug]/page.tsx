@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
+import { cacheLife, cacheTag } from "next/cache";
 import { notFound, redirect } from "next/navigation";
-import { Suspense } from "react";
 
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { LikeButton } from "@/components/likes/LikeButton";
@@ -8,9 +8,12 @@ import { renderBlocks } from "@/components/renderBlocks";
 import { List, ListItem, ListItemLabel } from "@/components/shared/ListComponents";
 import { PageTitle } from "@/components/Typography";
 import { FancySeparator } from "@/components/ui/FancySeparator";
-import { getServerLikes } from "@/lib/likes-server";
 import { createArticleJsonLd, createMetadata, truncateDescription } from "@/lib/metadata";
-import { getWritingPostByShortId, getWritingPostContentBySlug } from "@/lib/notion";
+import {
+  getWritingPostByShortId,
+  getWritingPostContentBySlug,
+  isPlaceholderNotionBuild,
+} from "@/lib/notion";
 import { buildSlug, extractShortIdFromSlug } from "@/lib/short-id";
 import { getAllWritingPosts } from "@/lib/writing";
 
@@ -58,36 +61,18 @@ function getRandomPosts<T>(posts: T[], count: number): T[] {
   return shuffled.slice(0, count);
 }
 
-export default function WritingPostPage(props: { params: Promise<{ slug: string }> }) {
-  return (
-    <Suspense fallback={<WritingPostFallback />}>
-      <WritingPostContent params={props.params} />
-    </Suspense>
-  );
-}
-
-function WritingPostFallback() {
-  return (
-    <div className="min-w-0 flex-1">
-      <div className="mx-auto flex max-w-3xl flex-1 flex-col gap-8 px-4 py-12 md:px-6 lg:px-8 lg:py-16 xl:py-20">
-        <div className="flex flex-col gap-6">
-          <div className="bg-tertiary h-4 w-24 animate-pulse rounded" />
-          <div className="bg-tertiary h-10 w-2/3 animate-pulse rounded" />
-          <div className="bg-tertiary h-8 w-16 animate-pulse rounded" />
-        </div>
-        <div className="flex flex-col gap-4">
-          {Array.from({ length: 8 }, (_, index) => (
-            <div key={index} className="bg-tertiary h-5 w-full animate-pulse rounded" />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-async function WritingPostContent(props: { params: Promise<{ slug: string }> }) {
+export default async function WritingPostPage(props: { params: Promise<{ slug: string }> }) {
   const params = await props.params;
-  const slug = params.slug;
+  return <WritingPostContent slug={params.slug} />;
+}
+
+async function WritingPostContent({ slug }: { slug: string }) {
+  "use cache";
+  cacheLife("days");
+  cacheTag("notion:writing");
+  if (isPlaceholderNotionBuild()) {
+    notFound();
+  }
 
   // Try to extract Short ID from the URL
   const shortId = extractShortIdFromSlug(slug);
@@ -113,11 +98,7 @@ async function WritingPostContent(props: { params: Promise<{ slug: string }> }) 
   // Use canonical slug for all URLs
   const canonicalSlug = metadata.shortId ? buildSlug(metadata.title, metadata.shortId) : slug;
 
-  // Fetch likes and related posts in parallel
-  const [initialLikes, allPosts] = await Promise.all([
-    getServerLikes([metadata.id]),
-    getAllWritingPosts(),
-  ]);
+  const allPosts = await getAllWritingPosts();
 
   // Get 5 random posts (excluding current post)
   const otherPosts = allPosts.filter((post) => post.shortId && post.shortId !== metadata.shortId);
@@ -153,7 +134,7 @@ async function WritingPostContent(props: { params: Promise<{ slug: string }> }) 
           <div className="flex flex-col gap-6">
             <p className="text-tertiary">{cleanDate}</p>
             <PageTitle>{metadata.title}</PageTitle>
-            <BatchLikesProvider pageIds={[metadata.id]} initialData={initialLikes}>
+            <BatchLikesProvider pageIds={[metadata.id]}>
               <div className="w-fit">
                 <LikeButton
                   pageId={metadata.id}

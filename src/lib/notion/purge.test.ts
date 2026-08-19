@@ -166,20 +166,36 @@ describe("webhook callers", () => {
 });
 
 describe("use cache page islands", () => {
-  test("stack and sites subscribe to the exact tags purge-cache already busts", () => {
+  test("every PURGE_CONFIG type has page islands subscribed to those exact tags", () => {
     const pagesDir = join(import.meta.dir, "../../app");
-    const islands = {
-      stack: join(pagesDir, "stack/page.tsx"),
-      sites: join(pagesDir, "sites/page.tsx"),
-    } as const;
+    const islands: Record<(typeof PURGEABLE_CONTENT_TYPES)[number], string[]> = {
+      writing: ["page.tsx", "writing/page.tsx", "writing/[slug]/page.tsx"],
+      til: ["til/page.tsx", "til/[slug]/page.tsx"],
+      ama: ["ama/layout.tsx", "ama/[id]/page.tsx"],
+      stack: ["stack/page.tsx"],
+      sites: ["sites/page.tsx"],
+      hn: ["hn/layout.tsx", "hn/[id]/page.tsx"],
+    };
 
-    for (const [type, path] of Object.entries(islands)) {
-      const source = readFileSync(path, "utf8");
-      const tags = [...source.matchAll(/cacheTag\("([^"]+)"\)/g)].map((match) => match[1]);
+    for (const type of PURGEABLE_CONTENT_TYPES) {
+      const subscribed = new Set<string>();
 
-      expect(source.includes('"use cache"')).toBe(true);
-      expect(tags.length).toBeGreaterThan(0);
-      expect(tags).toEqual(PURGE_CONFIG[type as keyof typeof islands].tags);
+      for (const relativePath of islands[type]) {
+        const source = readFileSync(join(pagesDir, relativePath), "utf8");
+        const tags = [...source.matchAll(/cacheTag\("([^"]+)"\)/g)].map((match) => match[1]);
+        expect(source.includes('"use cache"')).toBe(true);
+        expect(tags.length).toBeGreaterThan(0);
+        for (const tag of tags) {
+          expect(PURGE_CONFIG[type].tags).toContain(tag);
+          subscribed.add(tag);
+        }
+      }
+
+      if (type === "hn") {
+        expect([...subscribed].sort()).toEqual(["hn:post", "hn:ranked"]);
+      } else {
+        expect([...subscribed]).toEqual(PURGE_CONFIG[type].tags);
+      }
     }
   });
 });

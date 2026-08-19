@@ -1,93 +1,23 @@
-"use client";
+import { cacheLife, cacheTag } from "next/cache";
+import type { ReactNode } from "react";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import React, { Suspense, useMemo } from "react";
-
-import { ListDetailLayout } from "@/components/ListDetailLayout";
-import { ListDetailWrapper } from "@/components/ListDetailWrapper";
-import { useListNavigation } from "@/hooks/useListNavigation";
-import { useHNPosts } from "@/lib/hooks/useHn";
-import { cn } from "@/lib/utils";
+import { getRankedHNPosts } from "@/lib/hn";
 import { HackerNewsPost } from "@/types/hackernews";
 
-import { LoadingSpinner } from "../../components/ui/LoadingSpinner";
-import { HNPostsProvider, useHNPostsContext } from "./HNPostsContext";
+import { HNLayoutClient } from "./HNLayoutClient";
 
-const EMPTY_HN_POSTS: HackerNewsPost[] = [];
-
-export default function HNLayout({ children }: { children: React.ReactNode }) {
-  const { data: posts, isLoading, isError } = useHNPosts();
-
-  return (
-    <HNPostsProvider posts={posts} isLoading={isLoading} isError={isError}>
-      <ListDetailWrapper>
-        <ListDetailLayout
-          backHref="/hn"
-          list={
-            <Suspense fallback={<div className="bg-tertiary min-h-48 animate-pulse rounded" />}>
-              <HNStoriesList />
-            </Suspense>
-          }
-        >
-          {children}
-        </ListDetailLayout>
-      </ListDetailWrapper>
-    </HNPostsProvider>
-  );
+export default async function HNLayout({ children }: { children: ReactNode }) {
+  const initialPosts = await getCachedRankedHNPosts();
+  return <HNLayoutClient initialPosts={initialPosts}>{children}</HNLayoutClient>;
 }
 
-function HNStoriesList() {
-  const pathname = usePathname();
-  const { posts, isLoading, isError } = useHNPostsContext();
-  const validPosts = posts ?? EMPTY_HN_POSTS;
-
-  // Get current post ID from URL and find its index
-  const currentPostId = pathname.split("/").pop();
-  const currentIndex = useMemo(
-    () => validPosts.findIndex((post) => post.id.toString() === currentPostId),
-    [validPosts, currentPostId],
-  );
-
-  useListNavigation(validPosts, currentIndex, (item) => `/hn/${item.id}`);
-
-  if (isLoading) {
-    return (
-      <div className="flex h-full flex-1 items-center justify-center">
-        <LoadingSpinner />
-      </div>
-    );
+async function getCachedRankedHNPosts(): Promise<HackerNewsPost[]> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("hn:ranked");
+  try {
+    return await getRankedHNPosts();
+  } catch {
+    return [];
   }
-
-  if (isError || (validPosts.length === 0 && !isLoading)) {
-    return (
-      <div className="text-quaternary flex flex-1 items-center justify-center">
-        Unable to load stories
-      </div>
-    );
-  }
-
-  return (
-    <ul className="flex flex-col gap-0.5 md:p-3">
-      {validPosts.map((post) => {
-        const isSelected = post.id.toString() === currentPostId;
-        return (
-          <li key={post.id} data-id={post.id} className="scroll-my-3">
-            <Link
-              className={cn(
-                "hover:bg-tertiary border-secondary dark:hover:bg-secondary dark:hover:shadow-contrast flex flex-col gap-0.5 border-b px-3.5 py-3 md:rounded-lg md:border-b-0",
-                {
-                  "bg-tertiary dark:bg-secondary dark:shadow-contrast": isSelected,
-                },
-              )}
-              href={`/hn/${post.id}`}
-            >
-              <span className="text-primary line-clamp-2 font-medium">{post.title}</span>
-              {post.domain && <span className="text-quaternary">{post.domain}</span>}
-            </Link>
-          </li>
-        );
-      })}
-    </ul>
-  );
 }

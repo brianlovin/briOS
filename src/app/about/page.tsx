@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { Suspense } from "react";
 
 import { ProjectsList } from "@/components/home/ProjectsList";
 import { SpeakingList } from "@/components/home/SpeakingList";
-import { SpeakingListSkeleton } from "@/components/home/SpeakingListSkeleton";
 import { BufferLogoSVG, GitHubIcon, XIcon, YouTubeIcon } from "@/components/icons/SocialIcons";
 import {
   InlineLink,
@@ -140,9 +138,7 @@ export default function About() {
 
             <Section>
               <SectionHeading>Speaking</SectionHeading>
-              <Suspense fallback={<SpeakingListSkeleton />}>
-                <SpeakingList />
-              </Suspense>
+              <SpeakingList />
             </Section>
 
             <Section>

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
+import { cacheLife, cacheTag } from "next/cache";
 
 import { getPostById } from "@/lib/hn";
 import { createMetadata, truncateDescription } from "@/lib/metadata";
@@ -45,17 +45,15 @@ export async function generateMetadata(props: {
   }
 }
 
-export default function HNPostPage(props: { params: Promise<{ id: string }> }) {
-  return (
-    <Suspense fallback={<div className="bg-tertiary/30 min-h-full min-w-0 flex-1 animate-pulse" />}>
-      <HNPostContent params={props.params} />
-    </Suspense>
-  );
+export default async function HNPostPage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
+  return <HNPostContent id={params.id} />;
 }
 
-async function HNPostContent(props: { params: Promise<{ id: string }> }) {
-  const params = await props.params;
-  const id = params.id;
+async function HNPostContent({ id }: { id: string }) {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("hn:post");
 
   // Fetch post with comments on server - React cache() deduplicates with generateMetadata
   const post = await getPostById(id, true);

@@ -32,6 +32,15 @@ async function fetchAllWritingPosts(): Promise<NotionWritingItem[]> {
 // Request-level dedup: prevents duplicate calls within a single render
 export const getAllWritingPosts = cache(fetchAllWritingPosts);
 
+export function writingPostLink(post: Pick<NotionWritingItem, "id" | "title" | "shortId">) {
+  if (!post.shortId) return null;
+  return {
+    id: post.id,
+    title: post.title,
+    href: `/writing/${buildSlug(post.title, post.shortId)}`,
+  };
+}
+
 export function recentWritingLinks(posts: NotionWritingItem[]) {
   return posts
     .slice(0, 5)

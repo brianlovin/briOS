@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
+import { cacheLife, cacheTag } from "next/cache";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
 
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { LikeButton } from "@/components/likes/LikeButton";
 import { renderBlocks } from "@/components/renderBlocks";
 import { PageTitle } from "@/components/Typography";
-import { getServerLikes } from "@/lib/likes-server";
 import { createArticleJsonLd, createMetadata, truncateDescription } from "@/lib/metadata";
-import { getTilByShortId } from "@/lib/notion";
+import { getTilByShortId, isPlaceholderNotionBuild } from "@/lib/notion";
 import { buildSlug, extractShortIdFromSlug } from "@/lib/short-id";
 
 // Generate metadata for each TIL entry
@@ -39,17 +38,18 @@ export async function generateMetadata(props: {
   });
 }
 
-export default function TilEntryPage(props: { params: Promise<{ slug: string }> }) {
-  return (
-    <Suspense fallback={<div className="bg-tertiary/30 min-h-full min-w-0 flex-1 animate-pulse" />}>
-      <TilEntryContent params={props.params} />
-    </Suspense>
-  );
+export default async function TilEntryPage(props: { params: Promise<{ slug: string }> }) {
+  const params = await props.params;
+  return <TilEntryContent slug={params.slug} />;
 }
 
-async function TilEntryContent(props: { params: Promise<{ slug: string }> }) {
-  const params = await props.params;
-  const slug = params.slug;
+async function TilEntryContent({ slug }: { slug: string }) {
+  "use cache";
+  cacheLife("days");
+  cacheTag("notion:til");
+  if (isPlaceholderNotionBuild()) {
+    notFound();
+  }
 
   const shortId = extractShortIdFromSlug(slug);
   if (!shortId) {
@@ -62,9 +62,6 @@ async function TilEntryContent(props: { params: Promise<{ slug: string }> }) {
   }
 
   const canonicalSlug = content.shortId ? buildSlug(content.title, content.shortId) : slug;
-
-  // Fetch likes server-side
-  const initialLikes = await getServerLikes([content.id]);
 
   const cleanDate = new Date(content.published).toLocaleDateString("en-US", {
     month: "long",
@@ -96,7 +93,7 @@ async function TilEntryContent(props: { params: Promise<{ slug: string }> }) {
           <div className="notion-blocks flex min-w-0 flex-col gap-4 text-lg">
             {renderBlocks(content.blocks)}
           </div>
-          <BatchLikesProvider pageIds={[content.id]} initialData={initialLikes}>
+          <BatchLikesProvider pageIds={[content.id]}>
             <div className="w-fit">
               <LikeButton
                 pageId={content.id}

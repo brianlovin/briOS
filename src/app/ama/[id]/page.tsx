@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { cacheLife, cacheTag } from "next/cache";
+import { notFound } from "next/navigation";
 
 import AMADetail from "@/app/ama/AMADetail";
 import { createMetadata, truncateDescription } from "@/lib/metadata";
-import { getAmaItemContent } from "@/lib/notion";
+import { getAmaItemContent, isPlaceholderNotionBuild } from "@/lib/notion";
 
 export async function generateMetadata(props: {
   params: Promise<{ id: string }>;
@@ -33,6 +35,23 @@ export async function generateMetadata(props: {
   }
 }
 
-export default function AMADetailPage() {
-  return <AMADetail />;
+export default async function AMADetailPage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
+  return <CachedAmaDetail id={params.id} />;
+}
+
+async function CachedAmaDetail({ id }: { id: string }) {
+  "use cache";
+  cacheLife("days");
+  cacheTag("notion:ama");
+  if (isPlaceholderNotionBuild()) {
+    notFound();
+  }
+
+  const item = await getAmaItemContent(id);
+  if (!item) {
+    notFound();
+  }
+
+  return <AMADetail initialQuestion={item} />;
 }

@@ -233,6 +233,14 @@ export const getRankedHNPosts = unstable_cache(
   { revalidate: HN_REVALIDATE, tags: ["hn:ranked"] },
 );
 
+export function hnPostLinks(posts: HackerNewsPost[]) {
+  return posts.map((post) => ({
+    id: post.id,
+    title: post.title,
+    href: `/hn/${post.id}`,
+  }));
+}
+
 const DIGEST_WINDOW_SECONDS = 60 * 60 * 24;
 const DIGEST_POST_LIMIT = 16;
 

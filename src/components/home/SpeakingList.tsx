@@ -1,3 +1,6 @@
+import { cacheLife } from "next/cache";
+
+import { isPlaceholderNotionBuild } from "@/lib/notion";
 import { getSpeakingItems } from "@/lib/notion/queries";
 
 import { List, ListItem, ListItemLabel, ListItemSubLabel } from "../shared/ListComponents";
@@ -19,7 +22,9 @@ function formatSpeakingDate(isoDate: string): string {
 }
 
 export async function SpeakingList() {
-  const speakingItems = await getSpeakingItems();
+  "use cache";
+  cacheLife("days");
+  const speakingItems = isPlaceholderNotionBuild() ? [] : await getSpeakingItems();
 
   return (
     <List>

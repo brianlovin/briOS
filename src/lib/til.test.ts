@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 
 import type { NotionTilItem, NotionTilItemWithContent, ProcessedBlock } from "@/lib/notion";
-import { hydrateTilEntries, type TilEntry } from "@/lib/til";
+import { hydrateTilEntries, type TilEntry, tilEntryLink } from "@/lib/til";
 
 function item(id: string, title = id): NotionTilItem {
   return { id, title, published: "2026-01-01" };
@@ -67,5 +67,19 @@ describe("hydrateTilEntries", () => {
       published: "2026-08-15",
       shortId: "abc1234",
     });
+  });
+});
+
+describe("tilEntryLink", () => {
+  test("builds the canonical title and href", () => {
+    expect(tilEntryLink({ id: "1", title: "Cache tags must match", shortId: "abc1234" })).toEqual({
+      id: "1",
+      title: "Cache tags must match",
+      href: "/til/cache-tags-must-match-abc1234",
+    });
+  });
+
+  test("omits entries with no short id", () => {
+    expect(tilEntryLink({ id: "1", title: "Draft" })).toBeNull();
   });
 });

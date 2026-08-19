@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 
 import type { NotionWritingItem } from "@/lib/notion";
-import { recentWritingLinks } from "@/lib/writing";
+import { recentWritingLinks, writingPostLink } from "@/lib/writing";
 
 function post(overrides: Partial<NotionWritingItem> & Pick<NotionWritingItem, "id" | "title">) {
   return {
@@ -43,5 +43,17 @@ describe("recentWritingLinks", () => {
     ]);
 
     expect(links).toEqual([{ id: "2", title: "Published", href: "/writing/published-abc1234" }]);
+  });
+});
+
+describe("writingPostLink", () => {
+  test("builds the canonical title and href", () => {
+    expect(
+      writingPostLink(post({ id: "1", title: "How I'm Feeling About AI", shortId: "O7e1TFS" })),
+    ).toEqual({
+      id: "1",
+      title: "How I'm Feeling About AI",
+      href: "/writing/how-im-feeling-about-ai-O7e1TFS",
+    });
   });
 });

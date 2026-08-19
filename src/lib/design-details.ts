@@ -27,3 +27,11 @@ export async function getDesignDetailsEpisodeById(
   const episodes = await getDesignDetailsEpisodes();
   return episodes.find((e) => e.id === id);
 }
+
+export function designDetailsEpisodeLinks(items: DesignDetailsEpisode[]) {
+  return items.map((item) => ({
+    id: item.id,
+    title: item.title,
+    href: `/design-details/${item.id}`,
+  }));
+}
