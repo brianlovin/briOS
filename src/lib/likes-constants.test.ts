@@ -4,6 +4,8 @@ import {
   isViewerLikeData,
   type LikeCount,
   type LikeData,
+  optimisticAddLike,
+  optimisticRemoveLike,
   resolveLikeState,
 } from "@/lib/likes-constants";
 
@@ -30,6 +32,22 @@ describe("resolveLikeState", () => {
 
   test("does not invent a clickable empty viewer from missing data", () => {
     expect(resolveLikeState(undefined, undefined)).toEqual({
+      count: undefined,
+      userLikes: 0,
+      viewerKnown: false,
+    });
+  });
+
+  test("keeps a provided public count of 506 without treating it as unknown", () => {
+    expect(resolveLikeState({ count: 506 }, undefined)).toEqual({
+      count: 506,
+      userLikes: 0,
+      viewerKnown: false,
+    });
+  });
+
+  test("treats an actual cached count of 0 as known zero", () => {
+    expect(resolveLikeState({ count: 0 }, undefined)).toEqual({
       count: 0,
       userLikes: 0,
       viewerKnown: false,
@@ -60,5 +78,25 @@ describe("resolveLikeState", () => {
       userLikes: 0,
       viewerKnown: true,
     });
+  });
+});
+
+describe("optimistic like", () => {
+  test("increments the displayed count and viewer likes", () => {
+    expect(optimisticAddLike(506, 0)).toEqual({ count: 507, userLikes: 1 });
+    expect(resolveLikeState({ count: 506 }, undefined, optimisticAddLike(506, 0))).toEqual({
+      count: 507,
+      userLikes: 1,
+      viewerKnown: true,
+    });
+  });
+
+  test("increments from an unknown count without flashing 0 first", () => {
+    expect(optimisticAddLike(undefined, 0)).toEqual({ count: 1, userLikes: 1 });
+  });
+
+  test("decrements and floors at 0", () => {
+    expect(optimisticRemoveLike(1, 1)).toEqual({ count: 0, userLikes: 0 });
+    expect(optimisticRemoveLike(0, 1)).toEqual({ count: 0, userLikes: 0 });
   });
 });

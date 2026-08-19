@@ -6,8 +6,13 @@ import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { LikeButton } from "@/components/likes/LikeButton";
 import { renderBlocks } from "@/components/renderBlocks";
 import { PageTitle } from "@/components/Typography";
+import { getServerLikes, type LikeCount } from "@/lib/likes-server";
 import { createArticleJsonLd, createMetadata, truncateDescription } from "@/lib/metadata";
-import { getTilByShortId, isPlaceholderNotionBuild } from "@/lib/notion";
+import {
+  getTilByShortId,
+  isPlaceholderNotionBuild,
+  type NotionTilItemWithContent,
+} from "@/lib/notion";
 import { buildSlug, extractShortIdFromSlug } from "@/lib/short-id";
 
 export const instant = false;
@@ -40,12 +45,22 @@ export async function generateMetadata(props: {
   });
 }
 
+type CachedTilEntry = {
+  content: NotionTilItemWithContent;
+  canonicalSlug: string;
+  cleanDate: string;
+  articleJsonLd: ReturnType<typeof createArticleJsonLd>;
+};
+
 export default async function TilEntryPage(props: { params: Promise<{ slug: string }> }) {
   const params = await props.params;
-  return <TilEntryContent slug={params.slug} />;
+  const entry = await getCachedTilEntry(params.slug);
+  const initialLikes = await getServerLikes([entry.content.id]);
+
+  return <TilEntryView entry={entry} initialLikes={initialLikes} />;
 }
 
-async function TilEntryContent({ slug }: { slug: string }) {
+async function getCachedTilEntry(slug: string): Promise<CachedTilEntry> {
   "use cache";
   cacheLife("days");
   cacheTag("notion:til");
@@ -79,6 +94,18 @@ async function TilEntryContent({ slug }: { slug: string }) {
     publishedTime: content.published,
   });
 
+  return { content, canonicalSlug, cleanDate, articleJsonLd };
+}
+
+function TilEntryView({
+  entry,
+  initialLikes,
+}: {
+  entry: CachedTilEntry;
+  initialLikes: Record<string, LikeCount>;
+}) {
+  const { content, canonicalSlug, cleanDate, articleJsonLd } = entry;
+
   return (
     <>
       <script
@@ -95,7 +122,7 @@ async function TilEntryContent({ slug }: { slug: string }) {
           <div className="notion-blocks flex min-w-0 flex-col gap-4 text-lg">
             {renderBlocks(content.blocks)}
           </div>
-          <BatchLikesProvider pageIds={[content.id]}>
+          <BatchLikesProvider pageIds={[content.id]} initialData={initialLikes}>
             <div className="w-fit">
               <LikeButton
                 pageId={content.id}

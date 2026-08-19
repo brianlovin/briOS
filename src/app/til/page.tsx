@@ -3,9 +3,10 @@ import { cacheLife, cacheTag } from "next/cache";
 
 import { TilFeed } from "@/components/TilFeed";
 import { PageTitle } from "@/components/Typography";
+import { getServerLikes } from "@/lib/likes-server";
 import { createMetadata, SITE_CONFIG } from "@/lib/metadata";
 import { getTilDatabaseItems, getTilItemContent, isPlaceholderNotionBuild } from "@/lib/notion";
-import { hydrateTilEntries } from "@/lib/til";
+import { hydrateTilEntries, type TilPage } from "@/lib/til";
 
 export const metadata: Metadata = {
   ...createMetadata({
@@ -28,21 +29,28 @@ export default function TilPage() {
           <div className="hidden sm:block" />
           <PageTitle>TIL</PageTitle>
         </div>
-        <TilFeedContent />
+        <TilFeedWithLikes />
       </div>
     </div>
   );
 }
 
-async function TilFeedContent() {
+async function TilFeedWithLikes() {
+  const page = await getCachedTilFeed();
+  const initialLikes = await getServerLikes(page.items.map((entry) => entry.id));
+
+  return <TilFeed fallbackData={[page]} initialLikes={initialLikes} />;
+}
+
+async function getCachedTilFeed(): Promise<TilPage> {
   "use cache";
   cacheLife("days");
   cacheTag("notion:til");
   if (isPlaceholderNotionBuild()) {
-    return <TilFeed fallbackData={[{ items: [], nextCursor: null }]} />;
+    return { items: [], nextCursor: null };
   }
   const { items, nextCursor } = await getTilDatabaseItems(undefined, 10);
   const contents = await Promise.all(items.map((entry) => getTilItemContent(entry.id)));
 
-  return <TilFeed fallbackData={[{ items: hydrateTilEntries(items, contents), nextCursor }]} />;
+  return { items: hydrateTilEntries(items, contents), nextCursor };
 }

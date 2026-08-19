@@ -3,8 +3,14 @@ import { cacheLife, cacheTag } from "next/cache";
 import { notFound } from "next/navigation";
 
 import AMADetail from "@/app/ama/AMADetail";
+import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
+import { getServerLikes } from "@/lib/likes-server";
 import { createMetadata, truncateDescription } from "@/lib/metadata";
-import { getAmaItemContent, isPlaceholderNotionBuild } from "@/lib/notion";
+import {
+  getAmaItemContent,
+  isPlaceholderNotionBuild,
+  type NotionAmaItemWithContent,
+} from "@/lib/notion";
 
 export const instant = false;
 
@@ -39,10 +45,17 @@ export async function generateMetadata(props: {
 
 export default async function AMADetailPage(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
-  return <CachedAmaDetail id={params.id} />;
+  const item = await getCachedAmaDetail(params.id);
+  const initialLikes = await getServerLikes([item.id]);
+
+  return (
+    <BatchLikesProvider pageIds={[item.id]} initialData={initialLikes}>
+      <AMADetail initialQuestion={item} />
+    </BatchLikesProvider>
+  );
 }
 
-async function CachedAmaDetail({ id }: { id: string }) {
+async function getCachedAmaDetail(id: string): Promise<NotionAmaItemWithContent> {
   "use cache";
   cacheLife("days");
   cacheTag("notion:ama");
@@ -55,5 +68,5 @@ async function CachedAmaDetail({ id }: { id: string }) {
     notFound();
   }
 
-  return <AMADetail initialQuestion={item} />;
+  return item;
 }

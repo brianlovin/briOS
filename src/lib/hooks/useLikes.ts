@@ -9,6 +9,8 @@ import {
   type LikeCount,
   type LikeData,
   MAX_LIKES_PER_USER,
+  optimisticAddLike,
+  optimisticRemoveLike,
   resolveLikeState,
 } from "@/lib/likes-constants";
 
@@ -31,6 +33,7 @@ export const BatchLikesContext = createContext<BatchLikesContextType | null>(nul
 export function useLikes(pageId: string, target: LikeActivityTarget = {}) {
   const batchContext = useContext(BatchLikesContext);
   const inBatch = batchContext !== null;
+  const countOnly = batchContext?.counts?.[pageId];
 
   const { data, error } = useSWR<LikeData>(
     pageId ? `/api/likes/${pageId}` : null,
@@ -43,13 +46,13 @@ export function useLikes(pageId: string, target: LikeActivityTarget = {}) {
   );
 
   const { count, userLikes, viewerKnown } = resolveLikeState(
-    batchContext?.counts?.[pageId],
+    countOnly,
     batchContext?.viewer?.[pageId],
     data,
   );
 
   const addLike = async () => {
-    if (!viewerKnown || userLikes >= MAX_LIKES_PER_USER) return;
+    if (userLikes >= MAX_LIKES_PER_USER) return;
 
     const payload = likeActivityPayload(target, {
       title: document.title,
@@ -57,10 +60,7 @@ export function useLikes(pageId: string, target: LikeActivityTarget = {}) {
     });
     if (!payload) return;
 
-    const optimisticData: LikeData = {
-      count: count + 1,
-      userLikes: userLikes + 1,
-    };
+    const optimisticData = optimisticAddLike(count, userLikes);
 
     await mutate(
       `/api/likes/${pageId}`,
@@ -84,12 +84,9 @@ export function useLikes(pageId: string, target: LikeActivityTarget = {}) {
   };
 
   const removeLike = async () => {
-    if (!viewerKnown || userLikes <= 0) return;
+    if (userLikes <= 0) return;
 
-    const optimisticData: LikeData = {
-      count: Math.max(0, count - 1),
-      userLikes: userLikes - 1,
-    };
+    const optimisticData = optimisticRemoveLike(count, userLikes);
 
     await mutate(
       `/api/likes/${pageId}`,

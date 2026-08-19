@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import { cacheLife, cacheTag } from "next/cache";
 
 import { StackPageClient } from "@/components/stack/StackPageClient";
+import { getServerLikes } from "@/lib/likes-server";
 import { createMetadata, SITE_CONFIG } from "@/lib/metadata";
 import { isPlaceholderNotionBuild } from "@/lib/notion";
-import { getStacks } from "@/lib/stack";
+import { getStacks, type StackItem } from "@/lib/stack";
 
 export const metadata: Metadata = {
   ...createMetadata({
@@ -20,15 +21,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function StackPage() {
-  return <StackContent />;
+export default async function StackPage() {
+  const allStacks = await getCachedStacks();
+  const initialLikes = await getServerLikes(allStacks.map((item) => item.id));
+
+  return <StackPageClient initialData={allStacks} initialLikes={initialLikes} />;
 }
 
-async function StackContent() {
+async function getCachedStacks(): Promise<StackItem[]> {
   "use cache";
   cacheLife("days");
   cacheTag("notion:stack");
-  const allStacks = isPlaceholderNotionBuild() ? [] : await getStacks();
-
-  return <StackPageClient initialData={allStacks} />;
+  return isPlaceholderNotionBuild() ? [] : await getStacks();
 }
