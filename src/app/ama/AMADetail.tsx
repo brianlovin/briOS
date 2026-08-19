@@ -9,12 +9,17 @@ import { PageTitle } from "@/components/Typography";
 import { FancySeparator } from "@/components/ui/FancySeparator";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { useAmaQuestion } from "@/lib/hooks/useAma";
+import type { NotionAmaItemWithContent } from "@/lib/notion";
 
-export default function AMADetail() {
+export default function AMADetail({
+  initialQuestion,
+}: {
+  initialQuestion?: NotionAmaItemWithContent | null;
+}) {
   const { id } = useParams();
 
   // Fetch the full question with content blocks from the API
-  const { question, isLoading, isError } = useAmaQuestion(id as string);
+  const { question, isLoading, isError } = useAmaQuestion(id as string, initialQuestion);
 
   // Update document title when question is available
   useEffect(() => {

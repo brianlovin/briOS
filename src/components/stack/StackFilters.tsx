@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/Select";
@@ -16,33 +16,31 @@ const STATUS_OPTIONS = [
 
 interface StackFiltersProps {
   isLoading?: boolean;
+  status?: string;
+  platform?: string;
 }
 
-export function StackFilters({ isLoading }: StackFiltersProps) {
+export function StackFilters({ isLoading, status = "active", platform = "" }: StackFiltersProps) {
   const router = useRouter();
-  const searchParams = useSearchParams();
 
-  const urlStatus = searchParams.get("status") || "active";
-  const urlPlatform = searchParams.get("platform") || "all-platforms";
-
-  const [currentStatus, setCurrentStatus] = useState(urlStatus);
+  const urlPlatform = platform || "all-platforms";
+  const [currentStatus, setCurrentStatus] = useState(status);
   const [currentPlatform, setCurrentPlatform] = useState(urlPlatform);
 
   // Sync local state with URL params (for back/forward navigation)
   useEffect(() => {
-    setCurrentStatus(urlStatus);
-  }, [urlStatus]);
+    setCurrentStatus(status);
+  }, [status]);
 
   useEffect(() => {
     setCurrentPlatform(urlPlatform);
   }, [urlPlatform]);
 
-  const updateParam = (key: string, value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (value && value !== "all-platforms") {
-      params.set(key, value);
-    } else {
-      params.delete(key);
+  const pushFilters = (nextStatus: string, nextPlatform: string) => {
+    const params = new URLSearchParams();
+    if (nextStatus) params.set("status", nextStatus);
+    if (nextPlatform && nextPlatform !== "all-platforms") {
+      params.set("platform", nextPlatform);
     }
     const query = params.toString();
     router.push(`/stack${query ? `?${query}` : ""}`);
@@ -52,16 +50,14 @@ export function StackFilters({ isLoading }: StackFiltersProps) {
     if (value === null) return;
     // Update local state immediately for instant UI feedback
     setCurrentStatus(value);
-    // Then update URL which triggers data refetch
-    updateParam("status", value);
+    pushFilters(value, currentPlatform);
   };
 
   const handlePlatformChange = (value: string | null) => {
     if (value === null) return;
     // Update local state immediately for instant UI feedback
     setCurrentPlatform(value);
-    // Then update URL which triggers data refetch
-    updateParam("platform", value);
+    pushFilters(currentStatus, value);
   };
 
   const currentStatusLabel = STATUS_OPTIONS.find((opt) => opt.value === currentStatus)?.label;

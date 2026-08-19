@@ -2,7 +2,8 @@
 
 import { useAtom } from "jotai";
 import Image from "next/image";
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useMemo, useState } from "react";
 
 import {
   getNextTableSort,
@@ -31,17 +32,33 @@ interface GoodWebsitesPageClientProps {
   initialLikes?: Record<string, LikeCount>;
 }
 
-// Hydration check using useSyncExternalStore to avoid layout flicker
-const subscribe = () => () => {};
-const getSnapshot = () => true;
-const getServerSnapshot = () => false;
+interface GoodWebsitesPageBodyProps extends GoodWebsitesPageClientProps {
+  tag?: string;
+}
+
 const textCollator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
 
-export function GoodWebsitesPageClient({ initialData, initialLikes }: GoodWebsitesPageClientProps) {
-  const { goodWebsites, isInitialLoading, isValidating, isError } = useGoodWebsites(initialData);
+export function GoodWebsitesPageClient(props: GoodWebsitesPageClientProps) {
+  return (
+    <Suspense fallback={<GoodWebsitesPageBody {...props} />}>
+      <GoodWebsitesPageFromSearchParams {...props} />
+    </Suspense>
+  );
+}
+
+function GoodWebsitesPageFromSearchParams(props: GoodWebsitesPageClientProps) {
+  const searchParams = useSearchParams();
+
+  return <GoodWebsitesPageBody {...props} tag={searchParams.get("tag") || ""} />;
+}
+
+function GoodWebsitesPageBody({ initialData, initialLikes, tag = "" }: GoodWebsitesPageBodyProps) {
+  const { goodWebsites, isInitialLoading, isValidating, isError } = useGoodWebsites(
+    initialData,
+    tag,
+  );
   const [viewMode, setViewMode] = useAtom(sitesViewModeAtom);
   const [tableSort, setTableSort] = useAtom(sitesTableSortAtom);
-  const isHydrated = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   // Collect all page IDs for batch likes fetching
   const pageIds = useMemo(() => goodWebsites.map((item) => item.id), [goodWebsites]);
@@ -77,16 +94,14 @@ export function GoodWebsitesPageClient({ initialData, initialLikes }: GoodWebsit
     () => (
       <span className="hidden items-center gap-3 md:flex">
         <ViewToggle view={viewMode} onChange={setViewMode} />
-        <GoodWebsitesFilters />
+        <GoodWebsitesFilters tag={tag} />
       </span>
     ),
-    [viewMode, setViewMode],
+    [viewMode, setViewMode, tag],
   );
   useTopBarActions(topBarContent);
 
-  // Wait for hydration to avoid layout flicker from view mode preference
-  // Also show loading on initial data load (without fallback data)
-  if (!isHydrated || (isInitialLoading && goodWebsites.length === 0)) {
+  if (isInitialLoading && goodWebsites.length === 0) {
     return (
       <ListDetailWrapper>
         <div className="flex h-full flex-1 items-center justify-center">
@@ -114,7 +129,7 @@ export function GoodWebsitesPageClient({ initialData, initialLikes }: GoodWebsit
             {/* Filters - mobile only */}
             <div className="border-secondary flex items-center justify-between border-b p-4 md:hidden">
               <ViewToggle view={viewMode} onChange={setViewMode} />
-              <GoodWebsitesFilters isLoading={isValidating && !isInitialLoading} />
+              <GoodWebsitesFilters isLoading={isValidating && !isInitialLoading} tag={tag} />
             </div>
 
             {/* Content */}

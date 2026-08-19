@@ -1,23 +1,24 @@
+import { cacheLife } from "next/cache";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
 
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { LikeButton } from "@/components/likes/LikeButton";
 import { renderBlocks } from "@/components/renderBlocks";
-import { getServerLikes, type LikeCount } from "@/lib/likes-server";
-import { getFullContent } from "@/lib/notion";
+import { getFullContent, isPlaceholderNotionBuild } from "@/lib/notion";
 
-export default function EpisodePage(props: { params: Promise<{ id: string }> }) {
-  return (
-    <Suspense fallback={<div className="bg-tertiary/30 min-h-full min-w-0 flex-1 animate-pulse" />}>
-      <EpisodeContent params={props.params} />
-    </Suspense>
-  );
+export const instant = false;
+
+export default async function EpisodePage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
+  return <EpisodeContent id={params.id} />;
 }
 
-async function EpisodeContent(props: { params: Promise<{ id: string }> }) {
-  const params = await props.params;
-  const id = params.id;
+async function EpisodeContent({ id }: { id: string }) {
+  "use cache";
+  cacheLife("days");
+  if (isPlaceholderNotionBuild()) {
+    notFound();
+  }
 
   // Let Notion errors propagate to error.tsx — crawlers should see 5xx (retry)
   // rather than a 404 that could deindex a valid URL during a transient outage.
@@ -28,19 +29,6 @@ async function EpisodeContent(props: { params: Promise<{ id: string }> }) {
   }
 
   const { blocks, metadata } = content;
-
-  // Likes are non-essential — if the fetch fails, render zero counts instead
-  // of crashing the whole page. The client-side BatchLikesProvider will
-  // refresh the real count after hydration.
-  let initialLikes: Record<string, LikeCount>;
-  try {
-    initialLikes = await getServerLikes([metadata.id]);
-  } catch (err) {
-    console.error(`[design-details] getServerLikes failed for ${metadata.id}:`, err);
-    initialLikes = {
-      [metadata.id]: { count: 0 },
-    };
-  }
 
   const date = new Date(metadata.published || metadata.createdTime).toLocaleDateString("en-US", {
     month: "long",
@@ -53,7 +41,7 @@ async function EpisodeContent(props: { params: Promise<{ id: string }> }) {
       <div className="flex flex-col gap-1">
         <h1 className="text-primary text-2xl font-semibold">{metadata.title}</h1>
         <span className="text-quaternary text-sm">{date}</span>
-        <BatchLikesProvider pageIds={[metadata.id]} initialData={initialLikes}>
+        <BatchLikesProvider pageIds={[metadata.id]}>
           <LikeButton
             pageId={metadata.id}
             title={metadata.title}

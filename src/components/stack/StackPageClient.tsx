@@ -3,7 +3,7 @@
 import { useAtom } from "jotai";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { Suspense, useMemo, useState } from "react";
 
 import {
   getNextTableSort,
@@ -28,22 +28,51 @@ interface StackPageClientProps {
   initialLikes?: Record<string, LikeCount>;
 }
 
-const subscribe = () => () => {};
-const getSnapshot = () => true;
-const getServerSnapshot = () => false;
+interface StackPageBodyProps extends StackPageClientProps {
+  status?: string;
+  platform?: string;
+}
+
 const textCollator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
 
-export function StackPageClient({ initialData, initialLikes }: StackPageClientProps) {
-  const { stacks, isInitialLoading, isValidating, isError } = useStacks(initialData);
+export function StackPageClient(props: StackPageClientProps) {
+  return (
+    <Suspense fallback={<StackPageBody {...props} />}>
+      <StackPageFromSearchParams {...props} />
+    </Suspense>
+  );
+}
+
+function StackPageFromSearchParams(props: StackPageClientProps) {
+  const searchParams = useSearchParams();
+
+  return (
+    <StackPageBody
+      {...props}
+      status={searchParams.get("status") || "active"}
+      platform={searchParams.get("platform") || ""}
+    />
+  );
+}
+
+function StackPageBody({
+  initialData,
+  initialLikes,
+  status = "active",
+  platform = "",
+}: StackPageBodyProps) {
+  const { stacks, isInitialLoading, isValidating, isError } = useStacks(initialData, {
+    status,
+    platform,
+  });
   const [tableSort, setTableSort] = useAtom(stackTableSortAtom);
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const isHydrated = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
-  const handlePlatformFilter = (platform: string, e: React.MouseEvent) => {
+  const handlePlatformFilter = (nextPlatform: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("platform", platform);
+    const params = new URLSearchParams();
+    if (status) params.set("status", status);
+    params.set("platform", nextPlatform);
     router.push(`/stack?${params.toString()}`);
   };
 
@@ -89,14 +118,14 @@ export function StackPageClient({ initialData, initialLikes }: StackPageClientPr
   const topBarContent = useMemo(
     () => (
       <span className="hidden md:block">
-        <StackFilters />
+        <StackFilters status={status} platform={platform} />
       </span>
     ),
-    [],
+    [status, platform],
   );
   useTopBarActions(topBarContent);
 
-  if (!isHydrated || (isInitialLoading && stacks.length === 0)) {
+  if (isInitialLoading && stacks.length === 0) {
     return (
       <ListDetailWrapper>
         <div className="flex h-full flex-1 items-center justify-center">
@@ -123,7 +152,11 @@ export function StackPageClient({ initialData, initialLikes }: StackPageClientPr
           <div className="flex flex-1 flex-col overflow-hidden">
             {/* Filters */}
             <div className="border-secondary flex border-b p-4 md:hidden">
-              <StackFilters isLoading={isValidating && !isInitialLoading} />
+              <StackFilters
+                isLoading={isValidating && !isInitialLoading}
+                status={status}
+                platform={platform}
+              />
             </div>
 
             {/* Table */}

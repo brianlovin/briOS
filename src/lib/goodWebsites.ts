@@ -42,3 +42,13 @@ export async function getGoodWebsites(seed: number): Promise<GoodWebsiteItem[]> 
 export async function getGoodWebsitesForRss(): Promise<GoodWebsiteItemWithDate[]> {
   return getGoodWebsitesDatabaseItemsForRss();
 }
+
+export function filterGoodWebsites(items: GoodWebsiteItem[], { tag = "" }: { tag?: string } = {}) {
+  return items.filter((item) => (tag ? item.tags?.includes(tag) : true));
+}
+
+export function goodWebsiteLinks(items: GoodWebsiteItem[]) {
+  return items.flatMap((item) =>
+    item.url ? [{ id: item.id, title: item.name, href: item.url }] : [],
+  );
+}

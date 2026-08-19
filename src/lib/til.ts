@@ -7,6 +7,7 @@ import {
   NotionTilItemWithContent,
   ProcessedBlock,
 } from "@/lib/notion";
+import { buildSlug } from "@/lib/short-id";
 
 export type TilEntry = NotionTilItem & { blocks?: ProcessedBlock[] };
 
@@ -56,3 +57,12 @@ async function fetchAllTilEntries(): Promise<NotionTilItem[]> {
 }
 
 export const getAllTilEntries = cache(fetchAllTilEntries);
+
+export function tilEntryLink(entry: Pick<NotionTilItem, "id" | "title" | "shortId">) {
+  if (!entry.shortId) return null;
+  return {
+    id: entry.id,
+    title: entry.title,
+    href: `/til/${buildSlug(entry.title, entry.shortId)}`,
+  };
+}

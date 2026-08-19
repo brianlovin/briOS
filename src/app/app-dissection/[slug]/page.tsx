@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
+import { cacheLife, cacheTag } from "next/cache";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
 
 import { createArticleJsonLd, createMetadata, truncateDescription } from "@/lib/metadata";
+import { isPlaceholderNotionBuild } from "@/lib/notion";
 import { getAppDissectionDatabaseItems, getAppDissectionItemBySlug } from "@/lib/notion/queries";
 import { extractPreviewText } from "@/lib/notion/types";
 
 import { AppDissectionDetail } from "./components/AppDissectionDetail";
+
+export const instant = false;
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;
@@ -31,18 +34,21 @@ export async function generateMetadata(props: {
   });
 }
 
-export default function AppDissectionPostPage(props: { params: Promise<{ slug: string }> }) {
-  return (
-    <Suspense fallback={<div className="bg-tertiary/30 min-h-full min-w-0 flex-1 animate-pulse" />}>
-      <AppDissectionPostContent params={props.params} />
-    </Suspense>
-  );
+export default async function AppDissectionPostPage(props: { params: Promise<{ slug: string }> }) {
+  const params = await props.params;
+  return <AppDissectionPostContent slug={params.slug} />;
 }
 
-async function AppDissectionPostContent(props: { params: Promise<{ slug: string }> }) {
-  const params = await props.params;
+async function AppDissectionPostContent({ slug }: { slug: string }) {
+  "use cache";
+  cacheLife("days");
+  cacheTag("notion:app-dissection");
+  if (isPlaceholderNotionBuild()) {
+    notFound();
+  }
+
   const [post, allItems] = await Promise.all([
-    getAppDissectionItemBySlug(params.slug),
+    getAppDissectionItemBySlug(slug),
     getAppDissectionDatabaseItems(),
   ]);
 

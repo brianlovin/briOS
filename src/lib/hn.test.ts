@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { readFileSync } from "fs";
 import { resolve } from "path";
 
-import { processPost, selectHNPostsForDigest } from "@/lib/hn";
+import { hnPostLinks, processPost, selectHNPostsForDigest } from "@/lib/hn";
 import { HackerNewsComment, HackerNewsPost } from "@/types/hackernews";
 
 function makePost(overrides: Partial<HackerNewsPost> = {}): HackerNewsPost {
@@ -120,6 +120,14 @@ describe("selectHNPostsForDigest", () => {
     ];
 
     expect(selectHNPostsForDigest(posts, now).map((post) => post.id)).toEqual([2, 1]);
+  });
+});
+
+describe("hnPostLinks", () => {
+  test("lists story titles and hrefs", () => {
+    expect(hnPostLinks([makePost({ id: 42, title: "Show HN: Cache" })])).toEqual([
+      { id: 42, title: "Show HN: Cache", href: "/hn/42" },
+    ]);
   });
 });
 

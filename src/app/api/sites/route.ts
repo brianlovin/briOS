@@ -1,5 +1,5 @@
 import { cachedResponse, errorResponse } from "@/lib/api-utils";
-import { getGoodWebsites, getGoodWebsitesSeed } from "@/lib/goodWebsites";
+import { filterGoodWebsites, getGoodWebsites, getGoodWebsitesSeed } from "@/lib/goodWebsites";
 
 export async function GET(request: Request) {
   try {
@@ -8,12 +8,7 @@ export async function GET(request: Request) {
 
     // Use the same function as the page to get randomized results
     const items = await getGoodWebsites(getGoodWebsitesSeed());
-
-    // Filter items based on query parameters
-    const filteredItems = items.filter((item) => {
-      const tagMatch = tag ? item.tags?.includes(tag) : true;
-      return tagMatch;
-    });
+    const filteredItems = filterGoodWebsites(items, { tag });
 
     // Cache for 5 minutes to match ISR revalidation
     return cachedResponse(filteredItems, 300);
