@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { cacheLife, cacheTag } from "next/cache";
-import { Suspense } from "react";
 
 import {
   List,
@@ -10,8 +9,8 @@ import {
   SectionHeading,
 } from "@/components/shared/ListComponents";
 import { PageTitle } from "@/components/Typography";
-import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { createMetadata } from "@/lib/metadata";
+import { isPlaceholderNotionBuild } from "@/lib/notion";
 import { buildSlug } from "@/lib/short-id";
 import { getAllWritingPosts } from "@/lib/writing";
 
@@ -29,25 +28,9 @@ export default function WritingPage() {
         <Section>
           <PageTitle>Writing</PageTitle>
         </Section>
-        <Suspense fallback={<WritingPostsFallback />}>
-          <WritingPosts />
-        </Suspense>
+        <WritingPosts />
       </div>
     </div>
-  );
-}
-
-function WritingPostsFallback() {
-  return (
-    <Section>
-      <List>
-        {Array.from({ length: 6 }, (_, index) => (
-          <ListItem key={index} className="py-1">
-            <LoadingSkeleton className="h-3.5 max-w-sm flex-1" />
-          </ListItem>
-        ))}
-      </List>
-    </Section>
   );
 }
 
@@ -55,7 +38,7 @@ async function WritingPosts() {
   "use cache";
   cacheLife("days");
   cacheTag("notion:writing");
-  const posts = await getAllWritingPosts();
+  const posts = isPlaceholderNotionBuild() ? [] : await getAllWritingPosts();
 
   // Group posts by year
   const postsByYear: Record<string, typeof posts> = {};

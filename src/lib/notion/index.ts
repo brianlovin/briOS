@@ -96,7 +96,12 @@ export {
 } from "./queries";
 
 // Cache
-export { CONTENT_CACHE_VERSION, invalidateNotionCache, notionContentCacheKey } from "./cache";
+export {
+  CONTENT_CACHE_VERSION,
+  invalidateNotionCache,
+  isPlaceholderNotionBuild,
+  notionContentCacheKey,
+} from "./cache";
 
 // Mutations
 export {
