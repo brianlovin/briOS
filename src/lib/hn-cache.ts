@@ -131,3 +131,41 @@ export async function setCachedPosts(posts: Map<string, HackerNewsPost>): Promis
     console.error("[HN Cache] Error batch writing to cache:", error);
   }
 }
+
+/** Minimal Redis surface used by `clearHnCache` (HN cache DB only). */
+export type HnCacheRedis = {
+  del: (...keys: string[]) => Promise<number>;
+  scan: (cursor: string, opts: { match: string; count: number }) => Promise<[string, string[]]>;
+};
+
+/**
+ * Delete the top-ids key and every `hn:post:*` entry in the HN Redis DB.
+ * Used by `/api/purge-cache?type=hn` — do not call the Notion cache helper.
+ */
+export async function clearHnCache(client: HnCacheRedis | null = getRedis()): Promise<number> {
+  if (!client) return 0;
+
+  try {
+    let deleted = await client.del(HN_TOP_IDS_KEY);
+
+    let cursor = "0";
+    do {
+      const result: [string, string[]] = await client.scan(cursor, {
+        match: `${HN_POST_KEY_PREFIX}*`,
+        count: 100,
+      });
+      cursor = result[0];
+      const keys = result[1];
+
+      if (keys.length > 0) {
+        deleted += await client.del(...keys);
+      }
+    } while (cursor !== "0");
+
+    console.log(`[HN Cache] Invalidated ${deleted} keys`);
+    return deleted;
+  } catch (error) {
+    console.error("[HN Cache] Error clearing cache:", error);
+    return 0;
+  }
+}
