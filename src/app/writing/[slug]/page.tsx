@@ -8,11 +8,14 @@ import { renderBlocks } from "@/components/renderBlocks";
 import { List, ListItem, ListItemLabel } from "@/components/shared/ListComponents";
 import { PageTitle } from "@/components/Typography";
 import { FancySeparator } from "@/components/ui/FancySeparator";
+import { getServerLikes, type LikeCount } from "@/lib/likes-server";
 import { createArticleJsonLd, createMetadata, truncateDescription } from "@/lib/metadata";
 import {
   getWritingPostByShortId,
   getWritingPostContentBySlug,
   isPlaceholderNotionBuild,
+  type NotionWritingItem,
+  type ProcessedBlock,
 } from "@/lib/notion";
 import { buildSlug, extractShortIdFromSlug } from "@/lib/short-id";
 import { getAllWritingPosts } from "@/lib/writing";
@@ -63,12 +66,24 @@ function getRandomPosts<T>(posts: T[], count: number): T[] {
   return shuffled.slice(0, count);
 }
 
+type CachedWritingPost = {
+  blocks: ProcessedBlock[];
+  metadata: NotionWritingItem;
+  canonicalSlug: string;
+  randomPosts: NotionWritingItem[];
+  articleJsonLd: ReturnType<typeof createArticleJsonLd>;
+  cleanDate: string;
+};
+
 export default async function WritingPostPage(props: { params: Promise<{ slug: string }> }) {
   const params = await props.params;
-  return <WritingPostContent slug={params.slug} />;
+  const post = await getCachedWritingPost(params.slug);
+  const initialLikes = await getServerLikes([post.metadata.id]);
+
+  return <WritingPostView post={post} initialLikes={initialLikes} />;
 }
 
-async function WritingPostContent({ slug }: { slug: string }) {
+async function getCachedWritingPost(slug: string): Promise<CachedWritingPost> {
   "use cache";
   cacheLife("days");
   cacheTag("notion:writing");
@@ -125,6 +140,18 @@ async function WritingPostContent({ slug }: { slug: string }) {
     },
   );
 
+  return { blocks, metadata, canonicalSlug, randomPosts, articleJsonLd, cleanDate };
+}
+
+function WritingPostView({
+  post,
+  initialLikes,
+}: {
+  post: CachedWritingPost;
+  initialLikes: Record<string, LikeCount>;
+}) {
+  const { blocks, metadata, canonicalSlug, randomPosts, articleJsonLd, cleanDate } = post;
+
   return (
     <>
       <script
@@ -136,7 +163,7 @@ async function WritingPostContent({ slug }: { slug: string }) {
           <div className="flex flex-col gap-6">
             <p className="text-tertiary">{cleanDate}</p>
             <PageTitle>{metadata.title}</PageTitle>
-            <BatchLikesProvider pageIds={[metadata.id]}>
+            <BatchLikesProvider pageIds={[metadata.id]} initialData={initialLikes}>
               <div className="w-fit">
                 <LikeButton
                   pageId={metadata.id}
@@ -161,9 +188,12 @@ async function WritingPostContent({ slug }: { slug: string }) {
               <div className="bg-brand h-1 w-5 rounded-full" />
               <h2 className="text-tertiary text-base">Read next</h2>
               <List>
-                {randomPosts.map((post) => (
-                  <ListItem key={post.id} href={`/writing/${buildSlug(post.title, post.shortId!)}`}>
-                    <ListItemLabel>{post.title}</ListItemLabel>
+                {randomPosts.map((nextPost) => (
+                  <ListItem
+                    key={nextPost.id}
+                    href={`/writing/${buildSlug(nextPost.title, nextPost.shortId!)}`}
+                  >
+                    <ListItemLabel>{nextPost.title}</ListItemLabel>
                   </ListItem>
                 ))}
               </List>

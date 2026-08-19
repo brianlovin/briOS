@@ -1,8 +1,15 @@
 "use client";
 
-import { ReactNode, useEffect, useMemo, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState, useSyncExternalStore } from "react";
 
 import { BatchLikesContext, type LikeCount, type LikeData } from "@/lib/hooks/useLikes";
+import {
+  getServerViewerLikesSnapshot,
+  getStoredViewerLikesSnapshot,
+  storedViewerHints,
+  subscribeStoredViewerLikes,
+  writeStoredViewerLikes,
+} from "@/lib/likes-viewer-store";
 
 interface BatchLikesProviderProps {
   pageIds: string[];
@@ -12,20 +19,31 @@ interface BatchLikesProviderProps {
 
 export function BatchLikesProvider({ pageIds, initialData, children }: BatchLikesProviderProps) {
   const [viewer, setViewer] = useState<Record<string, LikeData> | null>(null);
+  const pageIdsKey = pageIds.join(",");
+  const stored = useSyncExternalStore(
+    subscribeStoredViewerLikes,
+    getStoredViewerLikesSnapshot,
+    getServerViewerLikesSnapshot,
+  );
+  const storedHint = useMemo(
+    () => storedViewerHints(stored, pageIdsKey ? pageIdsKey.split(",") : []),
+    [stored, pageIdsKey],
+  );
 
   // Always fetch viewer overlay client-side (SSR only provides counts)
   useEffect(() => {
-    if (pageIds.length === 0) return;
+    if (!pageIdsKey) return;
 
     const controller = new AbortController();
 
     const fetchBatchLikes = async () => {
       try {
-        const res = await fetch(`/api/likes/batch?ids=${pageIds.join(",")}`, {
+        const res = await fetch(`/api/likes/batch?ids=${pageIdsKey}`, {
           signal: controller.signal,
         });
         if (res.ok) {
           const data: Record<string, LikeData> = await res.json();
+          writeStoredViewerLikes(data);
           setViewer(data);
         }
       } catch (error) {
@@ -37,14 +55,14 @@ export function BatchLikesProvider({ pageIds, initialData, children }: BatchLike
     fetchBatchLikes();
 
     return () => controller.abort();
-  }, [pageIds]);
+  }, [pageIdsKey]);
 
   const contextValue = useMemo(
     () => ({
       counts: initialData ?? {},
-      viewer,
+      viewer: viewer ?? storedHint,
     }),
-    [initialData, viewer],
+    [initialData, viewer, storedHint],
   );
 
   return <BatchLikesContext.Provider value={contextValue}>{children}</BatchLikesContext.Provider>;

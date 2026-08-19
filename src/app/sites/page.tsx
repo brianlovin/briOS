@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { cacheLife, cacheTag } from "next/cache";
 
 import { GoodWebsitesPageClient } from "@/components/good-websites/GoodWebsitesPageClient";
-import { getGoodWebsites, getGoodWebsitesSeed } from "@/lib/goodWebsites";
+import { getGoodWebsites, getGoodWebsitesSeed, type GoodWebsiteItem } from "@/lib/goodWebsites";
+import { getServerLikes } from "@/lib/likes-server";
 import { createMetadata, SITE_CONFIG } from "@/lib/metadata";
 import { isPlaceholderNotionBuild } from "@/lib/notion";
 
@@ -19,17 +20,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function GoodWebsitesPage() {
-  return <GoodWebsitesContent />;
+export default async function GoodWebsitesPage() {
+  const allWebsites = await getCachedGoodWebsites();
+  const initialLikes = await getServerLikes(allWebsites.map((item) => item.id));
+
+  return <GoodWebsitesPageClient initialData={allWebsites} initialLikes={initialLikes} />;
 }
 
-async function GoodWebsitesContent() {
+async function getCachedGoodWebsites(): Promise<GoodWebsiteItem[]> {
   "use cache";
   cacheLife("days");
   cacheTag("notion:good-websites");
-  const allWebsites = isPlaceholderNotionBuild()
-    ? []
-    : await getGoodWebsites(getGoodWebsitesSeed());
-
-  return <GoodWebsitesPageClient initialData={allWebsites} />;
+  return isPlaceholderNotionBuild() ? [] : await getGoodWebsites(getGoodWebsitesSeed());
 }

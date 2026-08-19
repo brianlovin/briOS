@@ -99,6 +99,7 @@ export function LikeButton({
     href,
     contentType,
   });
+  const countKnown = count !== undefined;
   const [isShaking, setIsShaking] = useState(false);
   const [particles, setParticles] = useState<ReturnType<typeof generateParticles>>([]);
   const [particleKey, setParticleKey] = useState(0);
@@ -112,8 +113,6 @@ export function LikeButton({
   const heartSpring = useSpring(heartScale, { stiffness: 500, damping: 15, mass: 0.5 });
 
   const handleClick = async () => {
-    if (isLoading) return;
-
     if (userLikes >= MAX_LIKES_PER_USER) {
       // At max likes - shake it!
       setIsShaking(true);
@@ -159,7 +158,7 @@ export function LikeButton({
 
   const handleContextMenu = async (e: React.MouseEvent) => {
     e.preventDefault();
-    if (isLoading || userLikes <= 0) return;
+    if (userLikes <= 0) return;
 
     // Subtle feedback for unlike
     buttonScale.set(0.98);
@@ -198,7 +197,6 @@ export function LikeButton({
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
         onPointerLeave={handlePointerUp}
-        disabled={isLoading}
         className={cn(
           "h-7 flex-row gap-1 rounded-full pr-2.5 pl-2 disabled:opacity-100",
           variant === "default" && [
@@ -216,9 +214,11 @@ export function LikeButton({
           className,
         )}
         aria-label={
-          isLoading
-            ? `Like this. Current likes: ${count}.`
-            : `Like this. Current likes: ${count}. You've liked ${userLikes} times.`
+          !countKnown
+            ? "Like this."
+            : isLoading
+              ? `Like this. Current likes: ${count}.`
+              : `Like this. Current likes: ${count}. You've liked ${userLikes} times.`
         }
         style={isFilled ? { color: heartColor } : undefined}
       >
@@ -260,7 +260,11 @@ export function LikeButton({
         </div>
 
         <span className="-translate-x-px translate-y-px leading-none">
-          <AnimatedNumber value={count} />
+          {count !== undefined ? (
+            <AnimatedNumber value={count} />
+          ) : (
+            <span aria-hidden="true">{"\u2013"}</span>
+          )}
         </span>
       </Button>
     </motion.div>
