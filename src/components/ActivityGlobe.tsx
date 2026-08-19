@@ -27,6 +27,7 @@ import {
 import {
   type ActivityGlobeConfig,
   cobeMarkerStyle,
+  cssPx,
   DEFAULT_ACTIVITY_GLOBE_CONFIG,
   globeCobeOptions,
   markerDotPxForAge,
@@ -60,6 +61,25 @@ function subscribeDark(onChange: () => void): () => void {
 
 function isDarkClass(): boolean {
   return document.documentElement.classList.contains("dark");
+}
+
+function subscribeNoop(): () => void {
+  return () => {};
+}
+
+/**
+ * The CSS dots are inert until COBE exists: they sit at `opacity: 0` and anchor
+ * to `--cobe-*` positions that only the client creates. Rendering them on the
+ * server buys nothing and costs two hydration mismatches — `useReducedMotion()`
+ * reads the media query during render, and dot sizes come out of `**`, which is
+ * not correctly rounded and so differs in the last bit between Bun and Chrome.
+ */
+function useHydrated(): boolean {
+  return useSyncExternalStore(
+    subscribeNoop,
+    () => true,
+    () => false,
+  );
 }
 
 function useIsDark(): boolean {
@@ -122,6 +142,7 @@ export function ActivityGlobe({
   const lastXRef = useRef(0);
   const lastYRef = useRef(0);
   const lastTRef = useRef(0);
+  const hydrated = useHydrated();
   const isDark = useIsDark();
   const prefersReducedMotion = useReducedMotion() === true;
   const [layout, setLayout] = useState({ hasRoom: true, size: GLOBE_MESH_MIN });
@@ -428,38 +449,45 @@ export function ActivityGlobe({
           onPointerCancel={endDrag}
         />
       </div>
-      {markers.map((marker) => {
-        const px = markerDotPxForAge(marker.age, config, globeMapDotPx(layout.size, config.scale));
-        return (
-          <span
-            key={marker.id}
-            className="activity-globe-dot"
-            style={
-              {
-                ...cobeMarkerStyle(marker.id, {
-                  markerBlurPx: config.markerBlurPx,
-                  markerFadeMs: prefersReducedMotion ? 0 : config.markerFadeMs,
-                }),
-                "--activity-globe-focus-scale": 1 + config.focusPulseScale,
-                "--activity-globe-focus-ms": `${config.focusMs}ms`,
-              } as CSSProperties
-            }
-          >
-            <span
-              key={focusId === marker.eventId ? focusId : "idle"}
-              className={cn("activity-globe-dot-core", focusId === marker.eventId && "is-focused")}
-              style={
-                {
-                  width: px,
-                  height: px,
-                  backgroundColor: rgbCss(config.markerColor),
-                  "--activity-globe-dot-px": `${px}px`,
-                } as CSSProperties
-              }
-            />
-          </span>
-        );
-      })}
+      {hydrated
+        ? markers.map((marker) => {
+            const px = cssPx(
+              markerDotPxForAge(marker.age, config, globeMapDotPx(layout.size, config.scale)),
+            );
+            return (
+              <span
+                key={marker.id}
+                className="activity-globe-dot"
+                style={
+                  {
+                    ...cobeMarkerStyle(marker.id, {
+                      markerBlurPx: config.markerBlurPx,
+                      markerFadeMs: prefersReducedMotion ? 0 : config.markerFadeMs,
+                    }),
+                    "--activity-globe-focus-scale": 1 + config.focusPulseScale,
+                    "--activity-globe-focus-ms": `${config.focusMs}ms`,
+                  } as CSSProperties
+                }
+              >
+                <span
+                  key={focusId === marker.eventId ? focusId : "idle"}
+                  className={cn(
+                    "activity-globe-dot-core",
+                    focusId === marker.eventId && "is-focused",
+                  )}
+                  style={
+                    {
+                      width: px,
+                      height: px,
+                      backgroundColor: rgbCss(config.markerColor),
+                      "--activity-globe-dot-px": px,
+                    } as CSSProperties
+                  }
+                />
+              </span>
+            );
+          })
+        : null}
     </div>
   );
 }

@@ -135,9 +135,26 @@ export function globeCobeOptions(isDark: boolean, config: ActivityGlobeConfig) {
   };
 }
 
+/**
+ * Rounded `Npx` string for inline styles.
+ *
+ * `**` is not correctly rounded, so the SSR runtime and the browser can disagree
+ * in the last bit: `12 * 0.9 ** 4` is `7.8732000000000015` in Bun/Node and
+ * `7.873200000000001` in Chrome. React hydration compares the raw `style`
+ * attribute string, so that one bit is a mismatch. Rounding kills it.
+ */
+export function cssPx(value: number): string {
+  if (!Number.isFinite(value)) return "0px";
+  return `${Number(value.toFixed(2))}px`;
+}
+
+/** Hex keeps the marker color one stable token in the serialized style attribute. */
 export function rgbCss(color: RgbTriplet): string {
-  const channel = (value: number) => Math.round(Math.min(1, Math.max(0, value)) * 255);
-  return `rgb(${channel(color[0])} ${channel(color[1])} ${channel(color[2])})`;
+  const channel = (value: number) =>
+    Math.round(Math.min(1, Math.max(0, value)) * 255)
+      .toString(16)
+      .padStart(2, "0");
+  return `#${channel(color[0])}${channel(color[1])}${channel(color[2])}`;
 }
 
 /** Official COBE bindable-marker visibility: `--cobe-visible-{id}` is `N` or unset. */

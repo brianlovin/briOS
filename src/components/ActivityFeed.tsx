@@ -56,23 +56,46 @@ import {
 import { useActivity } from "@/lib/hooks/useActivity";
 import { cn } from "@/lib/utils";
 
+const ACTIVITY_EVENT_ICON_SIZE = 16;
+/** Iconic 24-up artwork sits in ~4–20. Crop so it fills the 16px favicon slot. */
+const ACTIVITY_STROKE_ICON_VIEWBOX = "4 4 16 16";
+
+function ActivityEventIcon({ children }: { children: ReactNode }) {
+  return (
+    <span className="flex size-4 items-center justify-center [&_img]:block [&_img]:size-4 [&_svg]:block [&_svg]:size-4">
+      {children}
+    </span>
+  );
+}
+
 function ActivitySourceFavicon({ src }: { src: string }) {
   const [failed, setFailed] = useState(false);
   if (failed) {
-    return <World size={16} className="text-tertiary" aria-hidden />;
+    return (
+      <ActivityEventIcon>
+        <World
+          size={ACTIVITY_EVENT_ICON_SIZE}
+          viewBox={ACTIVITY_STROKE_ICON_VIEWBOX}
+          className="text-tertiary"
+          aria-hidden
+        />
+      </ActivityEventIcon>
+    );
   }
 
   return (
-    /* eslint-disable-next-line @next/next/no-img-element -- tiny static favicon */
-    <img
-      src={src}
-      alt=""
-      width={16}
-      height={16}
-      className="block size-4 rounded-[3px]"
-      aria-hidden
-      onError={() => setFailed(true)}
-    />
+    <ActivityEventIcon>
+      {/* eslint-disable-next-line @next/next/no-img-element -- tiny static favicon */}
+      <img
+        src={src}
+        alt=""
+        width={ACTIVITY_EVENT_ICON_SIZE}
+        height={ACTIVITY_EVENT_ICON_SIZE}
+        className="rounded-[3px]"
+        aria-hidden
+        onError={() => setFailed(true)}
+      />
+    </ActivityEventIcon>
   );
 }
 
@@ -87,45 +110,104 @@ function isGithubActivity(event: ActivityEvent): boolean {
 
 function ActivityRowIcon({ event, icon }: { event: ActivityEvent; icon?: string }) {
   if (event.source === "shiori") {
-    return <Shiori size={16} />;
+    return (
+      <ActivityEventIcon>
+        <Shiori size={ACTIVITY_EVENT_ICON_SIZE} />
+      </ActivityEventIcon>
+    );
   }
 
   if (event.source === "staff-design") {
-    return <StaffDesign size={20} className="text-primary" aria-hidden />;
+    return (
+      <ActivityEventIcon>
+        <StaffDesign size={ACTIVITY_EVENT_ICON_SIZE} className="text-primary" aria-hidden />
+      </ActivityEventIcon>
+    );
   }
 
   if (event.type === "like") {
-    return <Heart size={24} className="fill-current text-red-500" aria-hidden />;
+    return (
+      <ActivityEventIcon>
+        <Heart
+          size={ACTIVITY_EVENT_ICON_SIZE}
+          viewBox="4 5 16 13.5"
+          className="fill-current text-red-500"
+          aria-hidden
+        />
+      </ActivityEventIcon>
+    );
   }
 
   if (isGithubActivity(event)) {
-    return <Github size={20} className="text-primary" aria-hidden />;
+    return (
+      <ActivityEventIcon>
+        <Github
+          size={ACTIVITY_EVENT_ICON_SIZE}
+          viewBox="2 2 20 20"
+          className="text-primary"
+          aria-hidden
+        />
+      </ActivityEventIcon>
+    );
   }
 
   if (event.type === "visit" || event.type === "visit_country_first" || event.type === "download") {
     if (isHnActivityEvent(event)) {
-      return <YCombinator size={16} />;
+      return (
+        <ActivityEventIcon>
+          <YCombinator size={ACTIVITY_EVENT_ICON_SIZE} />
+        </ActivityEventIcon>
+      );
     }
     const faviconSrc = activitySourceFaviconSrc(event.source);
     if (faviconSrc) {
       return <ActivitySourceFavicon src={faviconSrc} />;
     }
-    return <World size={16} className="text-tertiary" aria-hidden />;
+    return (
+      <ActivityEventIcon>
+        <World
+          size={ACTIVITY_EVENT_ICON_SIZE}
+          viewBox={ACTIVITY_STROKE_ICON_VIEWBOX}
+          className="text-tertiary"
+          aria-hidden
+        />
+      </ActivityEventIcon>
+    );
   }
 
   if (event.type === "caffeinated") {
     return (
-      <span className="text-base leading-none" aria-hidden>
-        {icon ?? "🥤"}
-      </span>
+      <ActivityEventIcon>
+        <span className="text-base leading-none" aria-hidden>
+          {icon ?? "🥤"}
+        </span>
+      </ActivityEventIcon>
     );
   }
 
   if (event.type === "site_added") {
-    return <Compass size={16} className="text-tertiary" aria-hidden />;
+    return (
+      <ActivityEventIcon>
+        <Compass
+          size={ACTIVITY_EVENT_ICON_SIZE}
+          viewBox={ACTIVITY_STROKE_ICON_VIEWBOX}
+          className="text-tertiary"
+          aria-hidden
+        />
+      </ActivityEventIcon>
+    );
   }
 
-  return <Activity size={16} className="text-tertiary" aria-hidden />;
+  return (
+    <ActivityEventIcon>
+      <Activity
+        size={ACTIVITY_EVENT_ICON_SIZE}
+        viewBox={ACTIVITY_STROKE_ICON_VIEWBOX}
+        className="text-tertiary"
+        aria-hidden
+      />
+    </ActivityEventIcon>
+  );
 }
 
 function isAbsoluteHttpUrl(href: string): boolean {
