@@ -4,35 +4,35 @@ import { useMemo } from "react";
 import useSWR from "swr";
 
 import { fetcher } from "@/lib/fetcher";
-import { filterGoodWebsites, type GoodWebsiteItem } from "@/lib/goodWebsites";
+import {
+  type GoodWebsiteItem,
+  goodWebsitesClientKey,
+  resolveGoodWebsitesOrder,
+} from "@/lib/goodWebsites";
 
 export function useGoodWebsites(fallbackData?: GoodWebsiteItem[], tag = "") {
-  const filteredFallback = useMemo(
-    () => (fallbackData ? filterGoodWebsites(fallbackData, { tag }) : undefined),
-    [fallbackData, tag],
-  );
-
-  // Build query string for API
-  const params = new URLSearchParams();
-  if (tag) params.set("tag", tag);
-
-  const queryString = params.toString();
-  const url = `/api/sites${queryString ? `?${queryString}` : ""}`;
+  const url = goodWebsitesClientKey(fallbackData !== undefined, tag);
 
   const { data, error, isLoading, isValidating, mutate } = useSWR<GoodWebsiteItem[]>(url, fetcher, {
-    // Keep previous data while revalidating to enable optimistic updates
     keepPreviousData: true,
-    // Use server-provided fallback data for instant initial render
-    fallbackData: filteredFallback,
+    fallbackData,
+    revalidateOnMount: false,
+    revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
   });
 
+  const goodWebsites = useMemo(
+    () => resolveGoodWebsitesOrder(fallbackData, data, tag),
+    [data, fallbackData, tag],
+  );
+
   return {
-    goodWebsites: data || filteredFallback || [],
+    goodWebsites,
     isLoading,
     isValidating,
     isError: error,
     mutate,
-    // Helper to determine if this is initial loading vs filter change
-    isInitialLoading: isLoading && !data && !filteredFallback,
+    isInitialLoading: isLoading && !data && fallbackData === undefined,
   };
 }
