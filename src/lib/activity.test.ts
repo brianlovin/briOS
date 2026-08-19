@@ -20,6 +20,7 @@ import {
   formatActivityTitle,
   formatDownloadSummary,
   formatLikeOthersLabel,
+  formatVisitLocationHeader,
   formatVisitRowSummary,
   formatVisitSummary,
   getActivityRow,
@@ -2117,7 +2118,7 @@ describe("getActivityRow visit sentences", () => {
         { meta: { country: "US", path: "/stack" } },
       ),
     );
-    expect(stack.summary).toBe("Someone from United States viewed");
+    expect(stack.summary).toBe("Someone from The United States viewed");
     expect(stack.summary).toContain("viewed");
     expect(stack.summary).not.toContain("read");
     expect(stack.summary).not.toContain("Visit from");
@@ -2144,7 +2145,7 @@ describe("getActivityRow visit sentences", () => {
         { meta: { country: "US", path: "/hn" } },
       ),
     );
-    expect(index.summary).toBe("Someone from United States viewed");
+    expect(index.summary).toBe("Someone from The United States viewed");
     expect(index.summary).toContain("viewed");
     expect(index.summary).not.toContain("read");
     expect(index.summary).not.toContain("Visit from");
@@ -2269,7 +2270,7 @@ describe("getActivityRow visit sentences", () => {
         },
       ),
     );
-    expect(home.summary).toBe("Someone from United States visited");
+    expect(home.summary).toBe("Someone from The United States visited");
     expect(home.summary).not.toContain("read");
     expect(home.summary).not.toContain("brianlovin.com");
     expect(home.label).toBe("Staff.design");
@@ -2379,7 +2380,7 @@ describe("getActivityRow visit sentences", () => {
         },
       ),
     );
-    expect(taxUi.summary).toBe("Someone from United States visited");
+    expect(taxUi.summary).toBe("Someone from The United States visited");
     expect(taxUi.label).toBe("Tax UI");
     expect(taxUi.href).toBe("https://tax-ui.brianlovin.com/");
   });
@@ -2451,6 +2452,17 @@ describe("visitLocationPhrase US display", () => {
 });
 
 describe("formatVisitRowSummary location prefix", () => {
+  test("adds The before a country-only United States location", () => {
+    expect(
+      formatVisitRowSummary("United States", "visited", false, { source: "staff-design" }),
+    ).toBe("Someone from The United States visited Staff.design");
+    expect(formatVisitLocationHeader("United States")).toBe("Someone from The United States");
+    expect(formatVisitLocationHeader("The United States")).toBe("Someone from The United States");
+    expect(formatVisitLocationHeader("San Francisco, California")).toBe(
+      "Someone from San Francisco, California",
+    );
+  });
+
   test("can omit the someone/location prefix and keep the action", () => {
     expect(formatVisitRowSummary("San Francisco, California", "viewed", true)).toBe(
       "Someone from San Francisco, California viewed",
@@ -2569,7 +2581,7 @@ describe("getActivityRow source metadata", () => {
         }),
       ),
     ).toEqual({
-      summary: "Someone from United States visited",
+      summary: "Someone from The United States visited",
       href: "https://designdetails.fm",
       label: "Design Details",
     });

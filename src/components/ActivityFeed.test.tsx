@@ -187,7 +187,7 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(markup).toContain("Someone from United States viewed");
+    expect(markup).toContain("Someone from The United States viewed");
     expect(markup).not.toContain("Visit from");
     expect(markup).toContain("Hacker News");
     expect(markup).toContain('href="/hn"');
@@ -225,7 +225,7 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(markup).toContain("Someone from United States read");
+    expect(markup).toContain("Someone from The United States read");
     expect(markup).not.toContain("Visit from");
     expect(markup).toContain(">Some HN Story<");
     expect(markup).toContain('href="/hn/42991019"');
@@ -283,7 +283,7 @@ describe("ActivityRow", () => {
     );
 
     expect(visit).toContain("/activity/favicons/tax-ui.png");
-    expect(visit).toContain("Someone from United States visited");
+    expect(visit).toContain("Someone from The United States visited");
     expect(visit).not.toContain("Visit from");
     expect(visit).not.toContain("🇺🇸");
     expect(download).toContain("/activity/favicons/design-details.png");
@@ -294,7 +294,7 @@ describe("ActivityRow", () => {
     expect(download).toContain('target="_blank"');
     expect(download).toContain("noopener noreferrer");
     expect(unknown).not.toContain("/activity/favicons/");
-    expect(unknown).toContain("Someone from United States visited brianlovin.com");
+    expect(unknown).toContain("Someone from The United States visited brianlovin.com");
     expect(unknown).not.toContain("Visit from");
     expect(unknown).not.toContain("🇺🇸");
   });
@@ -959,7 +959,7 @@ describe("ActivityRow", () => {
       />,
     );
 
-    expect(staff).toContain("Someone from United States visited");
+    expect(staff).toContain("Someone from The United States visited");
     expect(staff).not.toContain("Visit from");
     expect(staff).not.toContain("🇺🇸");
     expect(staff).toContain(">Staff.design<");
@@ -1224,7 +1224,7 @@ describe("ActivityFeed", () => {
     expect(cityState).toContain("Someone from San Francisco, California viewed");
     expect(cityState).toContain("Listening");
     expect(cityState).not.toContain("United States");
-    expect(countryOnly).toContain("Someone from United States viewed");
+    expect(countryOnly).toContain("Someone from The United States viewed");
     expect(countryOnly).toContain("Stack");
   });
 
