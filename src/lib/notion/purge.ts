@@ -1,9 +1,12 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 
+import { clearHnCache } from "@/lib/hn-cache";
+
 import { invalidateNotionCache } from "./cache";
 
-export const PURGEABLE_CONTENT_TYPES = ["writing", "til", "ama", "stack", "sites"] as const;
+export const PURGEABLE_CONTENT_TYPES = ["writing", "til", "ama", "stack", "sites", "hn"] as const;
 export type PurgeableContentType = (typeof PURGEABLE_CONTENT_TYPES)[number];
+export type NotionPurgeableContentType = Exclude<PurgeableContentType, "hn">;
 
 export const PURGE_CACHE_TYPES = [...PURGEABLE_CONTENT_TYPES, "all"] as const;
 export type PurgeCacheType = (typeof PURGE_CACHE_TYPES)[number];
@@ -19,6 +22,7 @@ export type PurgeCacheType = (typeof PURGE_CACHE_TYPES)[number];
  * - ama → `notion:ama:*`
  * - stack → `notion:stack:*`
  * - sites → `notion:good-websites:*` (list + rss; content type name ≠ Redis prefix)
+ * - hn → `hn:top_ids` + `hn:post:*` in the HN Redis DB (not Notion Redis)
  */
 export const PURGE_CONFIG: Record<
   PurgeableContentType,
@@ -54,18 +58,29 @@ export const PURGE_CONFIG: Record<
     paths: ["/sites", "/api/sites"],
     pagePaths: [],
   },
+  hn: {
+    patterns: ["hn:top_ids", "hn:post:*"],
+    tags: ["hn:post-ids", "hn:post", "hn:ranked"],
+    paths: ["/hn"],
+    pagePaths: ["/hn/[id]"],
+  },
 };
 
 /**
  * Invalidate Upstash + Next.js caches for one content type.
  * Used by `/api/purge-cache` and every webhook that writes Notion.
+ * `hn` clears the HN Redis DB via `clearHnCache`, not Notion Redis.
  */
 export async function purgeContentType(type: PurgeableContentType): Promise<number> {
   const config = PURGE_CONFIG[type];
 
   let deleted = 0;
-  for (const pattern of config.patterns) {
-    deleted += await invalidateNotionCache(pattern);
+  if (type === "hn") {
+    deleted = await clearHnCache();
+  } else {
+    for (const pattern of config.patterns) {
+      deleted += await invalidateNotionCache(pattern);
+    }
   }
 
   // Next 16 requires a cacheLife profile as the second arg; "max" gives

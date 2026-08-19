@@ -4,6 +4,7 @@ import { ingestActivityFromContentPurge } from "@/lib/activity-from-notion";
 import { afterActivity } from "@/lib/activity-schedule";
 import { errorResponse, safeCompare } from "@/lib/api-utils";
 import {
+  type NotionPurgeableContentType,
   PURGE_CACHE_TYPES,
   PURGEABLE_CONTENT_TYPES,
   type PurgeableContentType,
@@ -43,9 +44,9 @@ async function purgeCache(request: Request): Promise<NextResponse> {
     results[t] = await purgeContentType(t);
   }
 
-  if (pageId && type !== "all") {
+  if (pageId && type !== "all" && type !== "hn") {
     afterActivity((store) =>
-      ingestActivityFromContentPurge(type as PurgeableContentType, pageId, store),
+      ingestActivityFromContentPurge(type as NotionPurgeableContentType, pageId, store),
     );
   }
 

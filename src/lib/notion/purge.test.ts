@@ -11,6 +11,7 @@ mock.module("next/cache", () => ({
   revalidatePath,
 }));
 
+import * as hnCache from "../hn-cache";
 import * as cache from "./cache";
 import {
   PURGE_CACHE_TYPES,
@@ -55,10 +56,17 @@ describe("PURGE_CONFIG", () => {
       paths: ["/sites", "/api/sites"],
       pagePaths: [],
     });
+    expect(PURGE_CONFIG.hn).toEqual({
+      patterns: ["hn:top_ids", "hn:post:*"],
+      tags: ["hn:post-ids", "hn:post", "hn:ranked"],
+      paths: ["/hn"],
+      pagePaths: ["/hn/[id]"],
+    });
   });
 
   test("includes all as a purge-cache type without its own config row", () => {
-    expect(PURGE_CACHE_TYPES).toEqual(["writing", "til", "ama", "stack", "sites", "all"]);
+    expect(PURGE_CACHE_TYPES).toEqual(["writing", "til", "ama", "stack", "sites", "hn", "all"]);
+    expect(PURGE_CACHE_TYPES).toContain("hn");
     expect(PURGE_CONFIG).not.toHaveProperty("all");
   });
 });
@@ -103,6 +111,22 @@ describe("purgeContentType", () => {
     expect(revalidatePath).toHaveBeenCalledTimes(2);
     expect(revalidatePath).toHaveBeenCalledWith("/stack");
     expect(revalidatePath).toHaveBeenCalledWith("/api/stacks");
+  });
+
+  test("clears HN Redis and Next tags/paths without touching Notion Redis", async () => {
+    const clearHn = spyOn(hnCache, "clearHnCache").mockResolvedValue(5);
+    const invalidate = spyOn(cache, "invalidateNotionCache").mockResolvedValue(99);
+
+    await expect(purgeContentType("hn")).resolves.toBe(5);
+    expect(clearHn).toHaveBeenCalledTimes(1);
+    expect(invalidate).not.toHaveBeenCalled();
+    expect(revalidateTag).toHaveBeenCalledTimes(3);
+    expect(revalidateTag).toHaveBeenCalledWith("hn:post-ids", "max");
+    expect(revalidateTag).toHaveBeenCalledWith("hn:post", "max");
+    expect(revalidateTag).toHaveBeenCalledWith("hn:ranked", "max");
+    expect(revalidatePath).toHaveBeenCalledTimes(2);
+    expect(revalidatePath).toHaveBeenCalledWith("/hn");
+    expect(revalidatePath).toHaveBeenCalledWith("/hn/[id]", "page");
   });
 });
 

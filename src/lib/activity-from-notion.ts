@@ -10,7 +10,7 @@ import {
 } from "./activity";
 import { notion } from "./notion/client";
 import { richText, select, title, url } from "./notion/properties";
-import { type PurgeableContentType } from "./notion/purge";
+import { type NotionPurgeableContentType } from "./notion/purge";
 import { isFullPage, type PageResponse } from "./notion/types";
 import { buildSlug } from "./short-id";
 
@@ -21,7 +21,7 @@ export function titleFromNotionPage(page: unknown, propertyName = "Name"): strin
 }
 
 export async function ingestActivityFromContentPurge(
-  type: PurgeableContentType,
+  type: NotionPurgeableContentType,
   pageId: string,
   store: ActivityStore,
 ): Promise<void> {
