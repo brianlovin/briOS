@@ -3720,12 +3720,7 @@ describe("rollupActivityEvents", () => {
   });
 
   test("groups a location cluster into consecutive property runs", () => {
-    const visit = (
-      id: string,
-      source: string,
-      href: string,
-      label: string,
-    ): ActivityEvent =>
+    const visit = (id: string, source: string, href: string, label: string): ActivityEvent =>
       feedEvent({
         id,
         source,

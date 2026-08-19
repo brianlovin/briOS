@@ -98,9 +98,7 @@ describe("globeMapDotPx", () => {
 
 describe("bindableGlobeMarkers", () => {
   test("keeps ids and locations so COBE can bind CSS anchors", () => {
-    const markers = bindableGlobeMarkers([
-      { id: "sf", location: [37.77, -122.42], size: 0.02 },
-    ]);
+    const markers = bindableGlobeMarkers([{ id: "sf", location: [37.77, -122.42], size: 0.02 }]);
     expect(markers).toEqual([{ id: "sf", location: [37.77, -122.42], size: 0 }]);
   });
 });

@@ -396,7 +396,7 @@ function ActivityVisitClusterBlock({
         <div className="flex size-8 items-center justify-center">
           <ActivityRowIcon event={iconEvent} />
         </div>
-        <p className="mt-[5px] text-primary">{cluster.locationHeader}</p>
+        <p className="text-primary mt-[5px]">{cluster.locationHeader}</p>
         {sourceRuns.map((run, runIndex) => {
           const showMark = runIndex > 0;
           const isLastRun = runIndex === sourceRuns.length - 1;

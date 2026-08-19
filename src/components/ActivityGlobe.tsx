@@ -14,10 +14,7 @@ import {
 } from "react";
 
 import type { ActivityEvent } from "@/lib/activity";
-import {
-  activityRecentGlobeMarkers,
-  type ActivityLatLng,
-} from "@/lib/activity-geo";
+import { type ActivityLatLng, activityRecentGlobeMarkers } from "@/lib/activity-geo";
 import {
   bindableGlobeMarkers,
   GLOBE_HANG,
@@ -135,6 +132,12 @@ export function ActivityGlobe({
     () => activityRecentGlobeMarkers(events, config.markerRecentCount),
     [events, config.markerRecentCount],
   );
+  const newestId = markers[0]?.eventId ?? null;
+  const [seenNewestId, setSeenNewestId] = useState(newestId);
+  if (newestId !== seenNewestId) {
+    setSeenNewestId(newestId);
+    setFocusId(newestId);
+  }
   const markersRef = useRef(markers);
   const themeRef = useRef({ isDark, prefersReducedMotion });
   const sizeRef = useRef(layout.size);
@@ -226,7 +229,6 @@ export function ActivityGlobe({
     }
     if (userSteeringRef.current) return;
     aimAt(location);
-    setFocusId(newest.eventId);
   }, [markers, aimAt]);
 
   useEffect(() => {
@@ -427,11 +429,7 @@ export function ActivityGlobe({
         />
       </div>
       {markers.map((marker) => {
-        const px = markerDotPxForAge(
-          marker.age,
-          config,
-          globeMapDotPx(layout.size, config.scale),
-        );
+        const px = markerDotPxForAge(marker.age, config, globeMapDotPx(layout.size, config.scale));
         return (
           <span
             key={marker.id}
