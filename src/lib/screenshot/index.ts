@@ -1,5 +1,5 @@
 import chromium from "@sparticuz/chromium";
-import puppeteer from "puppeteer-core";
+import puppeteer, { type Browser, type Page } from "puppeteer-core";
 
 const VIEWPORT = {
   width: 1280,
@@ -12,8 +12,32 @@ const TIMEOUT = 30000; // 30 seconds
 // the screenshot is of the settled page rather than a splash or fade-in.
 const SETTLE_DELAY = 2500;
 
+const USER_AGENT =
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+
 // Check if running in serverless environment
 const IS_SERVERLESS = !!process.env.AWS_LAMBDA_FUNCTION_NAME || !!process.env.VERCEL;
+
+export type ColorScheme = "light" | "dark";
+
+export type MediaFeature = {
+  name: string;
+  value: string;
+};
+
+/**
+ * Media features that make `prefers-color-scheme` resolve to the given scheme.
+ * Sites that only read the preference at first paint need this set before navigation.
+ */
+export function colorSchemeMediaFeatures(colorScheme: ColorScheme): MediaFeature[] {
+  return [{ name: "prefers-color-scheme", value: colorScheme }];
+}
+
+export type PageLike = {
+  emulateMediaFeatures(features?: MediaFeature[]): Promise<void>;
+  goto(url: string, options?: Record<string, unknown>): Promise<unknown>;
+  screenshot(options?: Record<string, unknown>): Promise<Uint8Array | Buffer | string>;
+};
 
 /**
  * Get the Chrome executable path based on environment
@@ -45,14 +69,10 @@ async function getExecutablePath(): Promise<string> {
   );
 }
 
-/**
- * Capture a screenshot of a website using Puppeteer
- * Works in both local development (uses system Chrome) and serverless (uses @sparticuz/chromium)
- */
-export async function captureScreenshot(url: string): Promise<Buffer> {
+async function launchBrowser(): Promise<Browser> {
   const executablePath = process.env.CHROME_PATH || (await getExecutablePath());
 
-  const browser = await puppeteer.launch({
+  return puppeteer.launch({
     args: IS_SERVERLESS
       ? chromium.args
       : ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"],
@@ -60,31 +80,80 @@ export async function captureScreenshot(url: string): Promise<Buffer> {
     executablePath,
     headless: true,
   });
+}
+
+async function preparePage(browser: Browser): Promise<Page> {
+  const page = await browser.newPage();
+  await page.setUserAgent(USER_AGENT);
+  return page;
+}
+
+/**
+ * Capture a viewport screenshot after emulating the given color scheme and navigating.
+ *
+ * A second navigation (not a same-page media swap) is the reliable path: many sites
+ * only apply `prefers-color-scheme` on first paint. Emulation is set before `goto`.
+ */
+export async function capturePageScreenshot(
+  page: PageLike,
+  url: string,
+  options: { colorScheme?: ColorScheme; settleDelayMs?: number } = {},
+): Promise<Buffer> {
+  const colorScheme = options.colorScheme ?? "light";
+  const settleDelayMs = options.settleDelayMs ?? SETTLE_DELAY;
+
+  await page.emulateMediaFeatures(colorSchemeMediaFeatures(colorScheme));
+
+  await page.goto(url, {
+    waitUntil: "networkidle2",
+    timeout: TIMEOUT,
+  });
+
+  // Wait in Node (not page JS) so a site that overrides timers still settles
+  await new Promise((resolve) => setTimeout(resolve, settleDelayMs));
+
+  const screenshot = await page.screenshot({
+    type: "png",
+    fullPage: false,
+  });
+
+  return Buffer.from(screenshot);
+}
+
+/**
+ * Capture a screenshot of a website using Puppeteer.
+ * Works in both local development (uses system Chrome) and serverless (uses @sparticuz/chromium).
+ * Defaults to light; pass `{ colorScheme: "dark" }` for a dark capture.
+ */
+export async function captureScreenshot(
+  url: string,
+  options: { colorScheme?: ColorScheme } = {},
+): Promise<Buffer> {
+  const browser = await launchBrowser();
 
   try {
-    const page = await browser.newPage();
+    const page = await preparePage(browser);
+    return await capturePageScreenshot(page, url, options);
+  } finally {
+    await browser.close();
+  }
+}
 
-    // Set a realistic user agent
-    await page.setUserAgent(
-      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-    );
+/**
+ * Capture light and dark viewport screenshots in one browser session.
+ * Dark is a second navigation with `prefers-color-scheme: dark` already emulated.
+ */
+export async function captureLightAndDarkScreenshots(url: string): Promise<{
+  light: Buffer;
+  dark: Buffer;
+}> {
+  const browser = await launchBrowser();
 
-    // Navigate to the page
-    await page.goto(url, {
-      waitUntil: "networkidle2",
-      timeout: TIMEOUT,
-    });
-
-    // Wait in Node (not page JS) so a site that overrides timers still settles
-    await new Promise((resolve) => setTimeout(resolve, SETTLE_DELAY));
-
-    // Take screenshot of the viewport (not full page)
-    const screenshot = await page.screenshot({
-      type: "png",
-      fullPage: false,
-    });
-
-    return Buffer.from(screenshot);
+  try {
+    const page = await preparePage(browser);
+    const light = await capturePageScreenshot(page, url, { colorScheme: "light" });
+    const dark = await capturePageScreenshot(page, url, { colorScheme: "dark" });
+    return { light, dark };
   } finally {
     await browser.close();
   }

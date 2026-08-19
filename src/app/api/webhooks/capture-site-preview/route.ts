@@ -8,10 +8,13 @@ import { optimizeSitePreview } from "@/lib/image-processing/optimize";
 import { notion } from "@/lib/notion";
 import { purgeContentType } from "@/lib/notion/purge";
 import { uploadBufferToR2 } from "@/lib/r2/storage";
-import { captureScreenshot } from "@/lib/screenshot";
+import { captureLightAndDarkScreenshots } from "@/lib/screenshot";
+
+// Two navigations can each take ~30s + settle. One browser, sequential captures.
+export const maxDuration = 120;
 
 /**
- * Webhook endpoint to capture a website screenshot and store it in R2
+ * Webhook endpoint to capture website screenshots and store them in R2
  *
  * POST /api/webhooks/capture-site-preview
  * Notion automation payload: { data: { id, properties: { URL } } }
@@ -19,10 +22,10 @@ import { captureScreenshot } from "@/lib/screenshot";
  * Flow:
  * 1. Extract page ID and URL from Notion webhook
  * 2. Set status to "Processing"
- * 3. Capture screenshot using Puppeteer
- * 4. Optimize image (resize, compress to WebP)
- * 5. Upload to R2 storage
- * 6. Update Notion page with preview URL and status
+ * 3. Capture light and dark viewport screenshots (one browser, two navigations)
+ * 4. Optimize both images (resize, compress to WebP)
+ * 5. Upload both to R2 storage
+ * 6. Update Notion page with preview URLs and status
  */
 export async function POST(request: Request) {
   try {
@@ -90,27 +93,24 @@ export async function POST(request: Request) {
     });
 
     try {
-      // Step 2: Capture screenshot
-      console.log(`Capturing screenshot for: ${url}`);
-      const screenshot = await captureScreenshot(url);
-      console.log(`Screenshot captured: ${(screenshot.length / 1024).toFixed(0)}KB`);
-
-      // Step 3: Optimize the screenshot
-      const optimized = await optimizeSitePreview(screenshot);
+      // Step 2: Capture light and dark screenshots
+      console.log(`Capturing light and dark screenshots for: ${url}`);
+      const screenshots = await captureLightAndDarkScreenshots(url);
       console.log(
-        `Optimized preview: ${optimized.width}x${optimized.height}, ${(optimized.optimizedSize / 1024).toFixed(2)}KB (saved ${optimized.savings.toFixed(1)}%)`,
+        `Screenshots captured: light ${(screenshots.light.length / 1024).toFixed(0)}KB, dark ${(screenshots.dark.length / 1024).toFixed(0)}KB`,
       );
 
-      // Step 4: Upload to R2
-      const r2Url = await uploadBufferToR2(optimized.buffer, optimized.contentType);
-      console.log(`Uploaded to R2: ${r2Url}`);
+      // Step 3–4: Optimize and upload both
+      const previewUrl = await optimizeAndUploadPreview(screenshots.light, "light");
+      const previewUrlDark = await optimizeAndUploadPreview(screenshots.dark, "dark");
 
       // Step 5: Update Notion page with success
       await notion.pages.update({
         page_id: pageId,
         properties: {
           "Preview Status": { select: { name: "Done" } },
-          "Preview Image": { url: r2Url },
+          "Preview Image": { url: previewUrl },
+          "Preview Image Dark": { url: previewUrlDark },
           "Preview Updated": { date: { start: new Date().toISOString() } },
         },
       });
@@ -125,7 +125,8 @@ export async function POST(request: Request) {
         {
           success: true,
           message: "Site preview captured and uploaded successfully",
-          previewUrl: r2Url,
+          previewUrl,
+          previewUrlDark,
         },
         { status: 200 },
       );
@@ -153,4 +154,18 @@ export async function POST(request: Request) {
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return errorResponse(`Failed to capture site preview: ${errorMessage}`, 500, error);
   }
+}
+
+async function optimizeAndUploadPreview(
+  screenshot: Buffer,
+  scheme: "light" | "dark",
+): Promise<string> {
+  const optimized = await optimizeSitePreview(screenshot);
+  console.log(
+    `Optimized ${scheme} preview: ${optimized.width}x${optimized.height}, ${(optimized.optimizedSize / 1024).toFixed(2)}KB (saved ${optimized.savings.toFixed(1)}%)`,
+  );
+
+  const r2Url = await uploadBufferToR2(optimized.buffer, optimized.contentType);
+  console.log(`Uploaded ${scheme} preview to R2: ${r2Url}`);
+  return r2Url;
 }
