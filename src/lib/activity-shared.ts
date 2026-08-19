@@ -1114,7 +1114,8 @@ export function visitLocationClusterKey(event: ActivityEvent): string | undefine
 }
 
 export function formatVisitLocationHeader(location: string): string {
-  return `Someone from ${location}`;
+  const name = /^united states$/i.test(location.trim()) ? "The United States" : location;
+  return `Someone from ${name}`;
 }
 
 export function formatVisitRowSummary(
