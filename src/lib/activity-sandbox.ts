@@ -88,7 +88,7 @@ export const SANDBOX_PLACES = {
 } as const satisfies Record<string, SandboxPlace>;
 
 export const SANDBOX_PAGES = {
-  home: { path: "/", label: "the site", kind: "home" },
+  home: { path: "/", label: "Home", kind: "home" },
   ama: { path: "/ama", label: "AMA", kind: "page" },
   listening: { path: "/listening", label: "Listening", kind: "page" },
   writing: {
@@ -107,6 +107,12 @@ export const SANDBOX_PAGES = {
   staffInterview: {
     path: "/interviews/rasmus-andersson",
     label: "Rasmus Andersson",
+    kind: "page",
+    source: "staff-design",
+  },
+  staffVivian: {
+    path: "/interviews/vivian-wang",
+    label: "Vivian Wang",
     kind: "page",
     source: "staff-design",
   },
@@ -226,6 +232,26 @@ export function sandboxPullMerged(overrides: Partial<ActivityEvent> = {}): Activ
   });
 }
 
+export function sandboxStackAdded(overrides: Partial<ActivityEvent> = {}): ActivityEvent {
+  return baseEvent({
+    type: "stack_added",
+    summary: "A stack item was added",
+    subject: { kind: "stack", label: "Cursor", href: "/stack" },
+    meta: { title: "Cursor", href: "/stack" },
+    ...overrides,
+  });
+}
+
+export function sandboxSiteAdded(overrides: Partial<ActivityEvent> = {}): ActivityEvent {
+  return baseEvent({
+    type: "site_added",
+    summary: "A good website was added",
+    subject: { kind: "site", label: "cobe.vercel.app", href: "/sites" },
+    meta: { title: "cobe.vercel.app", href: "/sites" },
+    ...overrides,
+  });
+}
+
 export function sandboxCaffeinated(
   drink = "Latte",
   overrides: Partial<ActivityEvent> = {},
@@ -329,6 +355,18 @@ export const SANDBOX_SCENARIOS = {
         sandboxVisit(SANDBOX_PLACES.sf, SANDBOX_PAGES.home),
       ]),
   },
+  "property-hop": {
+    label: "Property hop",
+    hint: "One location, brianlovin.com then staff.design",
+    build: (): ActivityEvent[] =>
+      stampBatch([
+        sandboxVisit(SANDBOX_PLACES.sf, SANDBOX_PAGES.staffHome),
+        sandboxVisit(SANDBOX_PLACES.sf, SANDBOX_PAGES.staffVivian),
+        sandboxVisit(SANDBOX_PLACES.sf, SANDBOX_PAGES.home),
+        sandboxVisit(SANDBOX_PLACES.sf, SANDBOX_PAGES.stack),
+        sandboxVisit(SANDBOX_PLACES.sf, SANDBOX_PAGES.hn),
+      ]),
+  },
   likes: {
     label: "Like stack",
     hint: "Three likes roll into + others",
@@ -372,6 +410,8 @@ export const SANDBOX_SINGLES = [
   { id: "visit-mystery", label: "Mystery visit", build: () => sandboxMysteriousVisit() },
   { id: "like", label: "Like", build: () => sandboxLike("Cursor", "/stack") },
   { id: "pr", label: "PR merged", build: () => sandboxPullMerged() },
+  { id: "stack", label: "New stack", build: () => sandboxStackAdded() },
+  { id: "site", label: "New site", build: () => sandboxSiteAdded() },
   { id: "coffee", label: "Coffee", build: () => sandboxCaffeinated("Latte") },
   { id: "shiori", label: "Shiori save", build: () => sandboxShioriSave() },
 ] as const;

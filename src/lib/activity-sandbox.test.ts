@@ -1,7 +1,11 @@
 import { describe, expect, test } from "bun:test";
 
 import { activityEventLocation } from "./activity-geo";
-import { clusterVisitLocationRuns, rollupActivityEvents } from "./activity-rollup";
+import {
+  clusterVisitLocationRuns,
+  rollupActivityEvents,
+  visitClusterSourceRuns,
+} from "./activity-rollup";
 import {
   resetSandboxIds,
   SANDBOX_PAGES,
@@ -9,6 +13,9 @@ import {
   SANDBOX_SCENARIOS,
   sandboxLike,
   sandboxMysteriousVisit,
+  sandboxPullMerged,
+  sandboxSiteAdded,
+  sandboxStackAdded,
   sandboxVisit,
   stampBatch,
 } from "./activity-sandbox";
@@ -39,6 +46,12 @@ describe("sandbox fixtures", () => {
     const event = sandboxMysteriousVisit();
     expect(activityEventLocation(event)).toBeUndefined();
     expect(visitLocationClusterKey(event)).toBe("a mysterious place on earth");
+  });
+
+  test("GitHub and Notion publishes pin to San Francisco", () => {
+    expect(activityEventLocation(sandboxPullMerged())).toEqual({ lat: 37.77, lng: -122.42 });
+    expect(activityEventLocation(sandboxStackAdded())).toEqual({ lat: 37.77, lng: -122.42 });
+    expect(activityEventLocation(sandboxSiteAdded())).toEqual({ lat: 37.77, lng: -122.42 });
   });
 
   test("stampBatch is newest-first", () => {
@@ -78,6 +91,19 @@ describe("sandbox scenarios", () => {
       }),
     );
     expect(coords.size).toBe(events.length);
+  });
+
+  test("property hop stays one location cluster with two source runs", () => {
+    const items = clusterVisitLocationRuns(
+      rollupActivityEvents(SANDBOX_SCENARIOS["property-hop"].build()),
+    );
+    expect(items).toHaveLength(1);
+    expect(items[0]?.type).toBe("visit-cluster");
+    if (items[0]?.type !== "visit-cluster") return;
+    expect(visitClusterSourceRuns(items[0].actions).map((run) => run.source)).toEqual([
+      "brios",
+      "staff-design",
+    ]);
   });
 
   test("interrupted cluster splits SF visits around a like", () => {

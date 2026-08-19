@@ -658,10 +658,33 @@ export function geoFromVisitMeta(meta: Record<string, unknown> | undefined): Act
   };
 }
 
-/** Prefer stored coords; otherwise the country centroid. Skip mysterious / missing country. */
+/** Brian's home pin — GitHub work and Notion publishes land here. */
+export const ACTIVITY_HOME_LOCATION: ActivityLatLng = { lat: 37.77, lng: -122.42 };
+
+const HOME_ORIGIN_TYPES = new Set([
+  "pr_opened",
+  "pr_merged",
+  "writing_published",
+  "til_published",
+  "stack_added",
+  "site_added",
+  "design_details_added",
+  "app_dissection_published",
+  "ama_answered",
+]);
+
+export function isHomeOriginActivity(event: { type?: string; source?: string }): boolean {
+  if (event.source === "github") return true;
+  return typeof event.type === "string" && HOME_ORIGIN_TYPES.has(event.type);
+}
+
+/** GitHub + Notion publishes always pin to SF. Visits use stored coords, then country centroid. */
 export function activityEventLocation(event: {
+  type?: string;
+  source?: string;
   meta?: Record<string, unknown>;
 }): ActivityLatLng | undefined {
+  if (isHomeOriginActivity(event)) return ACTIVITY_HOME_LOCATION;
   const geo = geoFromVisitMeta(event.meta);
   if (geo.latitude !== undefined && geo.longitude !== undefined) {
     return { lat: geo.latitude, lng: geo.longitude };
@@ -670,7 +693,7 @@ export function activityEventLocation(event: {
 }
 
 export function activityGlobeMarkers(
-  events: Array<{ meta?: Record<string, unknown> }>,
+  events: Array<{ type?: string; source?: string; meta?: Record<string, unknown> }>,
   sizeConfig?: Pick<ActivityGlobeConfig, "markerBaseSize" | "markerSizePerLog" | "markerMaxSize">,
 ): ActivityGlobeMarker[] {
   const sizing = sizeConfig ?? DEFAULT_ACTIVITY_GLOBE_CONFIG;
@@ -692,7 +715,7 @@ export function activityGlobeMarkers(
 
 /** Newest-first unique locations, capped so the globe stays a trail instead of a pile. */
 export function activityRecentGlobeMarkers(
-  events: Array<{ id?: string; meta?: Record<string, unknown> }>,
+  events: Array<{ id?: string; type?: string; source?: string; meta?: Record<string, unknown> }>,
   limit: number,
 ): ActivityRecentGlobeMarker[] {
   const cap = Math.max(0, Math.floor(limit));

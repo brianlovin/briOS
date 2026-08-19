@@ -4,7 +4,10 @@ import { activityGlobeMarkerIdForLocation, activityRecentGlobeMarkers } from "./
 import {
   bindableGlobeMarkers,
   GLOBE_HANG,
+  GLOBE_MAP_DOT_CHORD,
+  GLOBE_MESH_RADIUS,
   globeAimVisibleBias,
+  globeMapDotPx,
   globeMarkerFacing,
   latLngToGlobePose,
   latLngToVisibleGlobePose,
@@ -84,6 +87,15 @@ describe("shortestAngleDelta", () => {
   });
 });
 
+describe("globeMapDotPx", () => {
+  test("matches a facing-center COBE land dot on the mesh", () => {
+    expect(globeMapDotPx(512)).toBeCloseTo(GLOBE_MAP_DOT_CHORD * GLOBE_MESH_RADIUS * 512);
+    expect(globeMapDotPx(1000)).toBeGreaterThan(globeMapDotPx(512));
+    expect(globeMapDotPx(512, 1.2)).toBeCloseTo(globeMapDotPx(512) * 1.2);
+    expect(globeMapDotPx(0)).toBe(2);
+  });
+});
+
 describe("bindableGlobeMarkers", () => {
   test("keeps ids and locations so COBE can bind CSS anchors", () => {
     const markers = bindableGlobeMarkers([
@@ -123,5 +135,20 @@ describe("activityRecentGlobeMarkers", () => {
     );
     expect(markers.map((marker) => marker.eventId)).toEqual(["tokyo", "london", "sf"]);
     expect(markers.map((marker) => marker.age)).toEqual([0, 1, 2]);
+  });
+
+  test("places GitHub and Notion publish events in San Francisco", () => {
+    const markers = activityRecentGlobeMarkers(
+      [
+        { id: "pr", type: "pr_merged", source: "github" },
+        { id: "stack", type: "stack_added", source: "brios" },
+        { id: "tokyo", meta: { latitude: 35.68, longitude: 139.69 } },
+      ],
+      5,
+    );
+    expect(markers).toHaveLength(2);
+    expect(markers[0]?.location).toEqual([37.77, -122.42]);
+    expect(markers[0]?.eventId).toBe("pr");
+    expect(markers[1]?.location).toEqual([35.68, 139.69]);
   });
 });

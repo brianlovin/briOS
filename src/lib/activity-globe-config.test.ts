@@ -5,7 +5,8 @@ import {
   DEFAULT_ACTIVITY_GLOBE_CONFIG,
   globeCobeOptions,
   globeThemeColors,
-  markerAgeOpacity,
+  markerAgeScale,
+  markerDotPxForAge,
   markerDotPxForSize,
   markerSizeFromCount,
 } from "./activity-globe-config";
@@ -46,10 +47,18 @@ describe("activity-globe-config", () => {
     expect(String(style.transition)).toContain("opacity 300ms");
   });
 
-  test("markerAgeOpacity drops 20% per older marker", () => {
-    expect(markerAgeOpacity(0, 0.2)).toBe(1);
-    expect(markerAgeOpacity(1, 0.2)).toBeCloseTo(0.8);
-    expect(markerAgeOpacity(4, 0.2)).toBeCloseTo(0.2);
-    expect(markerAgeOpacity(5, 0.2)).toBe(0);
+  test("markerAgeScale shrinks ~10% per older marker", () => {
+    expect(markerAgeScale(0, 0.1)).toBe(1);
+    expect(markerAgeScale(1, 0.1)).toBeCloseTo(0.9);
+    expect(markerAgeScale(2, 0.1)).toBeCloseTo(0.81);
+    expect(markerAgeScale(9, 0.1)).toBeCloseTo(0.9 ** 9);
+    expect(markerAgeScale(1, DEFAULT_ACTIVITY_GLOBE_CONFIG.markerAgeShrink)).toBeCloseTo(0.9);
+  });
+
+  test("markerDotPxForAge never shrinks below the land-dot floor", () => {
+    const cfg = DEFAULT_ACTIVITY_GLOBE_CONFIG;
+    expect(markerDotPxForAge(0, cfg, 5)).toBeCloseTo(cfg.markerDotPx);
+    expect(markerDotPxForAge(9, cfg, 5)).toBe(5);
+    expect(markerDotPxForAge(9, cfg, 0)).toBeCloseTo(cfg.markerDotPx * 0.9 ** 9);
   });
 });

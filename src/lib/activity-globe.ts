@@ -59,6 +59,11 @@ export function globeMarkerFacing(lat: number, lng: number, phi: number, theta: 
 /** Same mesh radius as cobe@2 (`GLOBE_R`). */
 export const GLOBE_MESH_RADIUS = 0.8;
 export const GLOBE_MARKER_ELEVATION = 0;
+/**
+ * COBE land-dot radius in unit-sphere chord length.
+ * Fragment shader: `smoothstep(8e-3, 0., distanceToLattice)`.
+ */
+export const GLOBE_MAP_DOT_CHORD = 0.008;
 
 /** Fraction of the mesh that hangs past the right and bottom edges. */
 export const GLOBE_HANG = 0.4;
@@ -114,6 +119,13 @@ export function projectGlobeMarker(
 export function globeDiameterFromHeight(height: number): number {
   if (!Number.isFinite(height) || height <= 0) return GLOBE_MESH_MIN;
   return Math.round(Math.max(GLOBE_MESH_MIN, height * GLOBE_MESH_HEIGHT_RATIO));
+}
+
+/** CSS px of one COBE country-shape dot at the facing center of the mesh. */
+export function globeMapDotPx(meshSize: number, scale = 1): number {
+  if (!Number.isFinite(meshSize) || meshSize <= 0) return 2;
+  const safeScale = Number.isFinite(scale) && scale > 0 ? scale : 1;
+  return Math.max(2, GLOBE_MAP_DOT_CHORD * GLOBE_MESH_RADIUS * meshSize * safeScale);
 }
 
 /**

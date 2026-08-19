@@ -31,15 +31,28 @@ export type ActivityGlobeConfig = {
   markerFadeMs: number;
   /** How many recent unique locations stay on the globe. */
   markerRecentCount: number;
-  /** Opacity drop per older marker (newest is 1). */
-  markerAgeFade: number;
+  /** Size drop per older marker (0.1 = each step is 90% of the one before). */
+  markerAgeShrink: number;
   focusPulseScale: number;
   focusMs: number;
 };
 
-export function markerAgeOpacity(age: number, step: number): number {
+export function markerAgeScale(age: number, shrink: number): number {
   if (age < 0) return 0;
-  return Math.max(0, 1 - age * step);
+  if (shrink <= 0) return 1;
+  if (shrink >= 1) return age === 0 ? 1 : 0;
+  return (1 - shrink) ** age;
+}
+
+/** Newest is `markerDotPx`; each older step shrinks, never below the land-dot floor. */
+export function markerDotPxForAge(
+  age: number,
+  config: Pick<ActivityGlobeConfig, "markerDotPx" | "markerAgeShrink">,
+  minPx: number,
+): number {
+  const scaled = config.markerDotPx * markerAgeScale(age, config.markerAgeShrink);
+  const floor = Number.isFinite(minPx) ? Math.max(0, minPx) : 0;
+  return Math.max(floor, scaled);
 }
 
 export function markerDotPxForSize(
@@ -51,11 +64,11 @@ export function markerDotPxForSize(
 }
 
 export const DEFAULT_ACTIVITY_GLOBE_CONFIG: ActivityGlobeConfig = {
-  diffuse: 1.2,
-  mapSamples: 16000,
-  mapBrightness: 6,
+  diffuse: 0.6,
+  mapSamples: 19000,
+  mapBrightness: 3.1,
   mapBaseBrightness: 0,
-  mapBrightnessDark: 5,
+  mapBrightnessDark: 6,
   scale: 1,
   offsetX: 0,
   offsetY: 0,
@@ -72,13 +85,13 @@ export const DEFAULT_ACTIVITY_GLOBE_CONFIG: ActivityGlobeConfig = {
   markerSizePerLog: 0.007,
   markerMaxSize: 0.05,
 
-  markerDotPx: 6,
+  markerDotPx: 12,
   markerBlurPx: 8,
   markerFadeMs: 300,
-  markerRecentCount: 5,
-  markerAgeFade: 0.2,
-  focusPulseScale: 0.45,
-  focusMs: 1200,
+  markerRecentCount: 10,
+  markerAgeShrink: 0.1,
+  focusPulseScale: 0.75,
+  focusMs: 1400,
 };
 
 export function markerSizeFromCount(

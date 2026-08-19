@@ -23,6 +23,7 @@ import {
   GLOBE_HANG,
   GLOBE_MESH_MIN,
   globeDiameterFromHeight,
+  globeMapDotPx,
   latLngToVisibleGlobePose,
   shortestAngleDelta,
 } from "@/lib/activity-globe";
@@ -31,12 +32,12 @@ import {
   cobeMarkerStyle,
   DEFAULT_ACTIVITY_GLOBE_CONFIG,
   globeCobeOptions,
-  markerAgeOpacity,
+  markerDotPxForAge,
   rgbCss,
 } from "@/lib/activity-globe-config";
 import { cn } from "@/lib/utils";
 
-const IDLE_SPIN = 0.003;
+const IDLE_SPIN = 0.0015;
 const VELOCITY_EASE = 0.035;
 const DRAG_ANGLE_SCALE = 0.005;
 const DRAG_THRESHOLD_PX = 6;
@@ -173,6 +174,7 @@ export function ActivityGlobe({
   useEffect(() => {
     if (prefersReducedMotion) {
       velocityRef.current = 0;
+      thetaVelocityRef.current = 0;
       aimingRef.current = null;
     } else if (!draggingRef.current && !aimingRef.current) {
       velocityRef.current = IDLE_SPIN;
@@ -206,16 +208,25 @@ export function ActivityGlobe({
 
   useEffect(() => {
     const newest = markers[0];
-    if (skipAutoPanRef.current) {
+    if (!newest) {
       skipAutoPanRef.current = false;
-      primedNewestRef.current = newest?.eventId ?? null;
+      primedNewestRef.current = null;
       return;
     }
-    if (!newest || primedNewestRef.current === newest.eventId) return;
+    if (primedNewestRef.current === newest.eventId) return;
     primedNewestRef.current = newest.eventId;
-    if (userSteeringRef.current || themeRef.current.prefersReducedMotion) return;
-    aimAt({ lat: newest.location[0], lng: newest.location[1] });
-    setFocusId(newest.id);
+
+    const location = { lat: newest.location[0], lng: newest.location[1] };
+    if (skipAutoPanRef.current) {
+      skipAutoPanRef.current = false;
+      const pose = latLngToVisibleGlobePose(location.lat, location.lng);
+      phiRef.current = pose.phi;
+      thetaRef.current = clampTheta(pose.theta);
+      return;
+    }
+    if (userSteeringRef.current) return;
+    aimAt(location);
+    setFocusId(newest.eventId);
   }, [markers, aimAt]);
 
   useEffect(() => {
@@ -250,7 +261,7 @@ export function ActivityGlobe({
       if (draggingRef.current) {
         userSteeringRef.current = true;
       } else if (userSteeringRef.current && !aimState) {
-        const idlePhi = Math.abs(velocityRef.current - (reduced ? 0 : IDLE_SPIN)) < 0.0015;
+        const idlePhi = Math.abs(velocityRef.current - (reduced ? 0 : IDLE_SPIN)) < 0.001;
         const idleTheta = Math.abs(thetaVelocityRef.current) < 0.001;
         if (idlePhi && idleTheta) userSteeringRef.current = false;
       }
@@ -415,32 +426,42 @@ export function ActivityGlobe({
           onPointerCancel={endDrag}
         />
       </div>
-      {markers.map((marker) => (
-        <span
-          key={marker.id}
-          className={cn("activity-globe-dot", focusId === marker.id && "is-focused")}
-          style={
-            {
-              ...cobeMarkerStyle(marker.id, {
-                markerBlurPx: config.markerBlurPx,
-                markerFadeMs: prefersReducedMotion ? 0 : config.markerFadeMs,
-              }),
-              "--activity-globe-focus-scale": 1 + config.focusPulseScale,
-              "--activity-globe-focus-ms": `${config.focusMs}ms`,
-            } as CSSProperties
-          }
-        >
+      {markers.map((marker) => {
+        const px = markerDotPxForAge(
+          marker.age,
+          config,
+          globeMapDotPx(layout.size, config.scale),
+        );
+        return (
           <span
-            className="activity-globe-dot-core"
-            style={{
-              width: config.markerDotPx,
-              height: config.markerDotPx,
-              backgroundColor: rgbCss(config.markerColor),
-              opacity: markerAgeOpacity(marker.age, config.markerAgeFade),
-            }}
-          />
-        </span>
-      ))}
+            key={marker.id}
+            className="activity-globe-dot"
+            style={
+              {
+                ...cobeMarkerStyle(marker.id, {
+                  markerBlurPx: config.markerBlurPx,
+                  markerFadeMs: prefersReducedMotion ? 0 : config.markerFadeMs,
+                }),
+                "--activity-globe-focus-scale": 1 + config.focusPulseScale,
+                "--activity-globe-focus-ms": `${config.focusMs}ms`,
+              } as CSSProperties
+            }
+          >
+            <span
+              key={focusId === marker.eventId ? focusId : "idle"}
+              className={cn("activity-globe-dot-core", focusId === marker.eventId && "is-focused")}
+              style={
+                {
+                  width: px,
+                  height: px,
+                  backgroundColor: rgbCss(config.markerColor),
+                  "--activity-globe-dot-px": `${px}px`,
+                } as CSSProperties
+              }
+            />
+          </span>
+        );
+      })}
     </div>
   );
 }

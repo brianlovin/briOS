@@ -3,7 +3,20 @@
 import { useCallback, useState } from "react";
 
 import { Button } from "@/components/ui/Button";
-import { type ActivityGlobeConfig, DEFAULT_ACTIVITY_GLOBE_CONFIG } from "@/lib/activity-globe-config";
+import { DialSlider } from "@/components/ui/DialSlider";
+import {
+  type ActivityGlobeConfig,
+  DEFAULT_ACTIVITY_GLOBE_CONFIG,
+} from "@/lib/activity-globe-config";
+
+export function SandboxHeading({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="text-quaternary mb-1.5 ml-1 flex items-center gap-2 text-xs font-medium">
+      <span className="shrink-0">{children}</span>
+      <span className="bg-secondary h-px min-w-0 flex-1" aria-hidden />
+    </p>
+  );
+}
 
 type SliderDef = {
   key: keyof ActivityGlobeConfig;
@@ -30,8 +43,8 @@ const MARKER_SLIDERS: SliderDef[] = [
   { key: "markerDotPx", label: "Dot size (px)", min: 3, max: 16, step: 1 },
   { key: "markerBlurPx", label: "Horizon blur (px)", min: 0, max: 20, step: 1 },
   { key: "markerFadeMs", label: "Horizon fade (ms)", min: 0, max: 800, step: 25 },
-  { key: "markerRecentCount", label: "Recent markers", min: 1, max: 12, step: 1 },
-  { key: "markerAgeFade", label: "Age fade step", min: 0.05, max: 0.5, step: 0.05 },
+  { key: "markerRecentCount", label: "Recent markers", min: 1, max: 16, step: 1 },
+  { key: "markerAgeShrink", label: "Age size shrink", min: 0.04, max: 0.25, step: 0.01 },
   { key: "focusPulseScale", label: "Focus size pulse", min: 0, max: 1.5, step: 0.05 },
   { key: "focusMs", label: "Focus duration (ms)", min: 400, max: 2400, step: 50 },
 ];
@@ -46,36 +59,6 @@ const RGB_FIELDS: Array<{
   { key: "darkBaseColor", label: "Dark base" },
   { key: "darkGlowColor", label: "Dark glow" },
 ];
-
-function GlobeSlider({
-  def,
-  value,
-  onChange,
-}: {
-  def: SliderDef;
-  value: number;
-  onChange: (value: number) => void;
-}) {
-  return (
-    <label className="flex flex-col gap-1">
-      <span className="text-tertiary flex items-center justify-between text-[11px]">
-        <span>{def.label}</span>
-        <span className="text-quaternary font-mono tabular-nums">
-          {Number.isInteger(def.step) ? value : value.toFixed(3)}
-        </span>
-      </span>
-      <input
-        type="range"
-        min={def.min}
-        max={def.max}
-        step={def.step}
-        value={value}
-        onChange={(event) => onChange(Number(event.target.value))}
-        className="w-full accent-current"
-      />
-    </label>
-  );
-}
 
 function RgbControl({
   label,
@@ -125,17 +108,16 @@ function GlobeSliderSection({
 }) {
   return (
     <div>
-      {title ? (
-        <p className="text-quaternary mb-2 text-[11px] font-medium tracking-wide uppercase">
-          {title}
-        </p>
-      ) : null}
-      <div className="flex flex-col gap-2.5">
+      {title ? <SandboxHeading>{title}</SandboxHeading> : null}
+      <div className="flex flex-col gap-1.5">
         {sliders.map((def) => (
-          <GlobeSlider
+          <DialSlider
             key={def.key}
-            def={def}
+            label={def.label}
             value={config[def.key] as number}
+            min={def.min}
+            max={def.max}
+            step={def.step}
             onChange={(value) => onPatch({ [def.key]: value })}
           />
         ))}
@@ -172,31 +154,12 @@ export function ActivityGlobeSandboxPanel({
   }, [config]);
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
-      <div className="mb-3 flex items-center justify-end gap-2">
-        <div className="flex gap-1">
-          <Button
-            type="button"
-            size="xs"
-            variant="ghost"
-            className="text-tertiary"
-            onClick={() => onChange(DEFAULT_ACTIVITY_GLOBE_CONFIG)}
-          >
-            Reset
-          </Button>
-          <Button type="button" size="xs" variant="secondary" onClick={copyConfig}>
-            {copied ? "Copied" : "Copy JSON"}
-          </Button>
-        </div>
-      </div>
-
-      <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto pr-1">
+    <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+      <div className="flex flex-col gap-5">
         <GlobeSliderSection title="COBE" sliders={COBE_SLIDERS} config={config} onPatch={patch} />
 
         <div>
-          <p className="text-quaternary mb-2 text-[11px] font-medium tracking-wide uppercase">
-            Colors (0–1 RGB)
-          </p>
+          <SandboxHeading>Colors (0–1 RGB)</SandboxHeading>
           <div className="flex flex-col gap-2">
             {RGB_FIELDS.map(({ key, label }) => (
               <RgbControl
@@ -215,6 +178,20 @@ export function ActivityGlobeSandboxPanel({
           config={config}
           onPatch={patch}
         />
+
+        <div className="flex flex-wrap gap-1.5">
+          <Button
+            type="button"
+            size="xs"
+            variant="outline"
+            onClick={() => onChange(DEFAULT_ACTIVITY_GLOBE_CONFIG)}
+          >
+            Reset
+          </Button>
+          <Button type="button" size="xs" variant="outline" onClick={copyConfig}>
+            {copied ? "Copied" : "Copy JSON"}
+          </Button>
+        </div>
       </div>
     </div>
   );
