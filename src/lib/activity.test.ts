@@ -2453,9 +2453,9 @@ describe("visitLocationPhrase US display", () => {
 
 describe("formatVisitRowSummary location prefix", () => {
   test("adds The before a country-only United States location", () => {
-    expect(formatVisitRowSummary("United States", "visited", false, { source: "staff-design" })).toBe(
-      "Someone from The United States visited Staff.design",
-    );
+    expect(
+      formatVisitRowSummary("United States", "visited", false, { source: "staff-design" }),
+    ).toBe("Someone from The United States visited Staff.design");
     expect(formatVisitLocationHeader("United States")).toBe("Someone from The United States");
     expect(formatVisitLocationHeader("The United States")).toBe("Someone from The United States");
     expect(formatVisitLocationHeader("San Francisco, California")).toBe(
