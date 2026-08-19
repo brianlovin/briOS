@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { LikeButton } from "@/components/likes/LikeButton";
-import type { LikeCount } from "@/lib/hooks/useLikes";
+import { BatchLikesContext, type LikeCount } from "@/lib/hooks/useLikes";
 
 function markup(initialLikes?: Record<string, LikeCount>) {
   return renderToStaticMarkup(
@@ -26,5 +26,37 @@ describe("LikeButton first markup", () => {
 
   test("renders an actual cached count of 0", () => {
     expect(markup({ "page-1": { count: 0 } })).toContain("Current likes: 0");
+  });
+
+  test("stored viewer state fills the heart and count before batch", () => {
+    const html = renderToStaticMarkup(
+      <BatchLikesContext.Provider
+        value={{
+          counts: { "page-1": { count: 506 } },
+          viewer: { "page-1": { count: 507, userLikes: 1 } },
+        }}
+      >
+        <LikeButton pageId="page-1" title="Cursor" href="/stack" contentType="stack" />
+      </BatchLikesContext.Provider>,
+    );
+    expect(html).toContain("Current likes: 507");
+    expect(html).toContain("liked 1 times");
+    expect(html).not.toContain("Current likes: 0");
+  });
+
+  test("live batch overlay wins over a stale stored viewer", () => {
+    const html = renderToStaticMarkup(
+      <BatchLikesContext.Provider
+        value={{
+          counts: { "page-1": { count: 506 } },
+          viewer: { "page-1": { count: 510, userLikes: 2 } },
+        }}
+      >
+        <LikeButton pageId="page-1" title="Cursor" href="/stack" contentType="stack" />
+      </BatchLikesContext.Provider>,
+    );
+    expect(html).toContain("Current likes: 510");
+    expect(html).toContain("liked 2 times");
+    expect(html).not.toContain("Current likes: 507");
   });
 });

@@ -1,9 +1,11 @@
+import { revalidateTag } from "next/cache";
 import { after, NextResponse } from "next/server";
 import { z } from "zod";
 
 import { getRequestGeo, likeMetaFromRequest, recordLike } from "@/lib/activity";
 import { getActivityStore } from "@/lib/activity-redis";
 import { errorResponse } from "@/lib/api-utils";
+import { LIKES_SERVER_CACHE_TAG } from "@/lib/likes-constants";
 import {
   addLike,
   checkRateLimit,
@@ -13,6 +15,10 @@ import {
   removeLike,
 } from "@/lib/likes-redis";
 import { getClientIp, hashUserIp } from "@/lib/user-hash";
+
+function bustLikesServerSnapshot() {
+  revalidateTag(LIKES_SERVER_CACHE_TAG, "max");
+}
 
 const paramsSchema = z.object({
   id: z.string().min(1).max(50),
@@ -70,6 +76,7 @@ export async function POST(request: Request, props: { params: Promise<{ id: stri
 
     // Add the like
     const newCount = await addLike(userId, id);
+    bustLikesServerSnapshot();
 
     let body: { title?: string; href?: string; content_type?: string } = {};
     try {
@@ -130,6 +137,7 @@ export async function DELETE(request: Request, props: { params: Promise<{ id: st
 
     // Remove the like
     const { count: newCount, userLikes: newUserLikes } = await removeLike(userId, id);
+    bustLikesServerSnapshot();
 
     return NextResponse.json({
       count: newCount,

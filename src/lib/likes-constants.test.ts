@@ -4,10 +4,17 @@ import {
   isViewerLikeData,
   type LikeCount,
   type LikeData,
+  LIKES_SERVER_CACHE_TAG,
   optimisticAddLike,
   optimisticRemoveLike,
   resolveLikeState,
 } from "@/lib/likes-constants";
+
+describe("LIKES_SERVER_CACHE_TAG", () => {
+  test("is the public count cache tag busted on write", () => {
+    expect(LIKES_SERVER_CACHE_TAG).toBe("likes:server");
+  });
+});
 
 describe("isViewerLikeData", () => {
   test("is false for count-only SSR payloads", () => {

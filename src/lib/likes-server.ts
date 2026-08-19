@@ -2,7 +2,7 @@ import "server-only";
 
 import { unstable_cache } from "next/cache";
 
-import { type LikeCount } from "./likes-constants";
+import { type LikeCount, LIKES_SERVER_CACHE_TAG } from "./likes-constants";
 import { getBatchLikeCounts } from "./likes-redis";
 
 export type { LikeCount, LikeData } from "./likes-constants";
@@ -38,6 +38,6 @@ export const getServerLikes = unstable_cache(
 
     return result;
   },
-  ["likes:server"],
-  { revalidate: LIKES_REVALIDATE, tags: ["likes:server"] },
+  [LIKES_SERVER_CACHE_TAG],
+  { revalidate: LIKES_REVALIDATE, tags: [LIKES_SERVER_CACHE_TAG] },
 );

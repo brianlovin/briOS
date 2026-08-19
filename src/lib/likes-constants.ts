@@ -5,6 +5,9 @@
 
 export const MAX_LIKES_PER_USER = 16;
 
+/** `unstable_cache` tag for public like counts. Bust on POST/DELETE. */
+export const LIKES_SERVER_CACHE_TAG = "likes:server";
+
 /** SSR / cached count. Viewer state is unknown. */
 export interface LikeCount {
   count: number;
