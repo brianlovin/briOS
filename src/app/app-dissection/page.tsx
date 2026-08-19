@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
+import { cacheLife, cacheTag } from "next/cache";
 import Image from "next/image";
 import Link from "next/link";
-import { connection } from "next/server";
 import { Suspense } from "react";
 
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
@@ -53,7 +53,9 @@ function AppDissectionFallback() {
 }
 
 async function AppDissectionGrid() {
-  await connection();
+  "use cache";
+  cacheLife("days");
+  cacheTag("notion:app-dissection");
   const items = await getAppDissectionDatabaseItems();
 
   return (

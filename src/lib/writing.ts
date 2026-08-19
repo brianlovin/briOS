@@ -2,6 +2,7 @@ import { cache } from "react";
 
 import { InfiniteScrollPage, useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { getWritingDatabaseItems, NotionWritingItem } from "@/lib/notion";
+import { buildSlug } from "@/lib/short-id";
 
 export type WritingPage = InfiniteScrollPage<NotionWritingItem>;
 
@@ -30,3 +31,14 @@ async function fetchAllWritingPosts(): Promise<NotionWritingItem[]> {
 
 // Request-level dedup: prevents duplicate calls within a single render
 export const getAllWritingPosts = cache(fetchAllWritingPosts);
+
+export function recentWritingLinks(posts: NotionWritingItem[]) {
+  return posts
+    .slice(0, 5)
+    .filter((post): post is NotionWritingItem & { shortId: string } => Boolean(post.shortId))
+    .map((post) => ({
+      id: post.id,
+      title: post.title,
+      href: `/writing/${buildSlug(post.title, post.shortId)}`,
+    }));
+}

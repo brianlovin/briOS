@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { connection } from "next/server";
+import { cacheLife, cacheTag } from "next/cache";
 import { Suspense } from "react";
 
 import {
@@ -52,7 +52,9 @@ function WritingPostsFallback() {
 }
 
 async function WritingPosts() {
-  await connection();
+  "use cache";
+  cacheLife("days");
+  cacheTag("notion:writing");
   const posts = await getAllWritingPosts();
 
   // Group posts by year

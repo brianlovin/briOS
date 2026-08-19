@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
+import { cacheLife, cacheTag } from "next/cache";
 import Link from "next/link";
-import { connection } from "next/server";
 import { Suspense } from "react";
 
 import { HomeHero } from "@/components/home/HomeHero";
@@ -16,8 +16,7 @@ import {
 } from "@/components/shared/ListComponents";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { createMetadata, createPersonJsonLd } from "@/lib/metadata";
-import { buildSlug } from "@/lib/short-id";
-import { getAllWritingPosts } from "@/lib/writing";
+import { getAllWritingPosts, recentWritingLinks } from "@/lib/writing";
 
 export const metadata: Metadata = createMetadata({
   title: "Brian Lovin",
@@ -98,19 +97,18 @@ function RecentWritingFallback() {
 }
 
 async function RecentWriting() {
-  await connection();
+  "use cache";
+  cacheLife("days");
+  cacheTag("notion:writing");
   const allPosts = await getAllWritingPosts();
 
   return (
     <List>
-      {allPosts
-        .slice(0, 5)
-        .filter((post) => post.shortId)
-        .map((post) => (
-          <ListItem key={post.id} href={`/writing/${buildSlug(post.title, post.shortId!)}`}>
-            <ListItemLabel className="line-clamp-none">{post.title}</ListItemLabel>
-          </ListItem>
-        ))}
+      {recentWritingLinks(allPosts).map((post) => (
+        <ListItem key={post.id} href={post.href}>
+          <ListItemLabel className="line-clamp-none">{post.title}</ListItemLabel>
+        </ListItem>
+      ))}
     </List>
   );
 }

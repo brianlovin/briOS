@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import { connection } from "next/server";
+import { cacheLife, cacheTag } from "next/cache";
 import { Suspense } from "react";
 
 import { TilFeed } from "@/components/TilFeed";
 import { PageTitle } from "@/components/Typography";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
-import { getServerLikes } from "@/lib/likes-server";
 import { createMetadata, SITE_CONFIG } from "@/lib/metadata";
 import { getTilDatabaseItems, getTilItemContent } from "@/lib/notion";
 import { hydrateTilEntries } from "@/lib/til";
@@ -62,18 +61,11 @@ function TilFeedFallback() {
 }
 
 async function TilFeedContent() {
-  await connection();
+  "use cache";
+  cacheLife("days");
+  cacheTag("notion:til");
   const { items, nextCursor } = await getTilDatabaseItems(undefined, 10);
-  const pageIds = items.map((entry) => entry.id);
-  const [contents, initialLikes] = await Promise.all([
-    Promise.all(items.map((entry) => getTilItemContent(entry.id))),
-    getServerLikes(pageIds),
-  ]);
+  const contents = await Promise.all(items.map((entry) => getTilItemContent(entry.id)));
 
-  return (
-    <TilFeed
-      fallbackData={[{ items: hydrateTilEntries(items, contents), nextCursor }]}
-      initialLikes={initialLikes}
-    />
-  );
+  return <TilFeed fallbackData={[{ items: hydrateTilEntries(items, contents), nextCursor }]} />;
 }

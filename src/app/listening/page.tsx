@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { connection } from "next/server";
+import { cacheLife, cacheTag } from "next/cache";
 import { Suspense } from "react";
 
 import { ListDetailWrapper } from "@/components/ListDetailWrapper";
@@ -33,7 +33,9 @@ function ListeningFallback() {
 }
 
 async function ListeningContent() {
-  await connection();
+  "use cache";
+  cacheLife("hours");
+  cacheTag("notion:listening");
   // Fetch initial page of music data on the server
   const initialPage = await getListeningHistoryDatabaseItems(undefined, 20);
 
