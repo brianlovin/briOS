@@ -3,7 +3,7 @@
 import { useAtom } from "jotai";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useMemo, useState } from "react";
 
 import {
   getNextTableSort,
@@ -28,9 +28,6 @@ interface StackPageClientProps {
   initialLikes?: Record<string, LikeCount>;
 }
 
-const subscribe = () => () => {};
-const getSnapshot = () => true;
-const getServerSnapshot = () => false;
 const textCollator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
 
 export function StackPageClient({ initialData, initialLikes }: StackPageClientProps) {
@@ -38,7 +35,6 @@ export function StackPageClient({ initialData, initialLikes }: StackPageClientPr
   const [tableSort, setTableSort] = useAtom(stackTableSortAtom);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const isHydrated = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   const handlePlatformFilter = (platform: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -96,7 +92,7 @@ export function StackPageClient({ initialData, initialLikes }: StackPageClientPr
   );
   useTopBarActions(topBarContent);
 
-  if (!isHydrated || (isInitialLoading && stacks.length === 0)) {
+  if (isInitialLoading && stacks.length === 0) {
     return (
       <ListDetailWrapper>
         <div className="flex h-full flex-1 items-center justify-center">

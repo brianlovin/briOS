@@ -1,15 +1,20 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
+import { useMemo } from "react";
 import useSWR from "swr";
 
 import { fetcher } from "@/lib/fetcher";
-
-import type { GoodWebsiteItem } from "../goodWebsites";
+import { filterGoodWebsites, type GoodWebsiteItem } from "@/lib/goodWebsites";
 
 export function useGoodWebsites(fallbackData?: GoodWebsiteItem[]) {
   const searchParams = useSearchParams();
   const tag = searchParams.get("tag") || "";
+
+  const filteredFallback = useMemo(
+    () => (fallbackData ? filterGoodWebsites(fallbackData, { tag }) : undefined),
+    [fallbackData, tag],
+  );
 
   // Build query string for API
   const params = new URLSearchParams();
@@ -22,16 +27,16 @@ export function useGoodWebsites(fallbackData?: GoodWebsiteItem[]) {
     // Keep previous data while revalidating to enable optimistic updates
     keepPreviousData: true,
     // Use server-provided fallback data for instant initial render
-    fallbackData,
+    fallbackData: filteredFallback,
   });
 
   return {
-    goodWebsites: data || fallbackData || [],
+    goodWebsites: data || filteredFallback || [],
     isLoading,
     isValidating,
     isError: error,
     mutate,
     // Helper to determine if this is initial loading vs filter change
-    isInitialLoading: isLoading && !data && !fallbackData,
+    isInitialLoading: isLoading && !data && !filteredFallback,
   };
 }

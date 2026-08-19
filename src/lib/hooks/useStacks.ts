@@ -1,16 +1,21 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
+import { useMemo } from "react";
 import useSWR from "swr";
 
 import { fetcher } from "@/lib/fetcher";
-
-import type { StackItem } from "../stack";
+import { filterStacks, type StackItem } from "@/lib/stack";
 
 export function useStacks(fallbackData?: StackItem[]) {
   const searchParams = useSearchParams();
   const status = searchParams.get("status") || "active";
   const platform = searchParams.get("platform") || "";
+
+  const filteredFallback = useMemo(
+    () => (fallbackData ? filterStacks(fallbackData, { status, platform }) : undefined),
+    [fallbackData, status, platform],
+  );
 
   // Build query string for API
   const params = new URLSearchParams();
@@ -24,16 +29,16 @@ export function useStacks(fallbackData?: StackItem[]) {
     // Keep previous data while revalidating to enable optimistic updates
     keepPreviousData: true,
     // Use server-provided fallback data for instant initial render
-    fallbackData,
+    fallbackData: filteredFallback,
   });
 
   return {
-    stacks: data || fallbackData || [],
+    stacks: data || filteredFallback || [],
     isLoading,
     isValidating,
     isError: error,
     mutate,
     // Helper to determine if this is initial loading vs filter change
-    isInitialLoading: isLoading && !data && !fallbackData,
+    isInitialLoading: isLoading && !data && !filteredFallback,
   };
 }

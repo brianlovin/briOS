@@ -2,7 +2,7 @@
 
 import { useAtom } from "jotai";
 import Image from "next/image";
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useMemo, useState } from "react";
 
 import {
   getNextTableSort,
@@ -31,17 +31,12 @@ interface GoodWebsitesPageClientProps {
   initialLikes?: Record<string, LikeCount>;
 }
 
-// Hydration check using useSyncExternalStore to avoid layout flicker
-const subscribe = () => () => {};
-const getSnapshot = () => true;
-const getServerSnapshot = () => false;
 const textCollator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
 
 export function GoodWebsitesPageClient({ initialData, initialLikes }: GoodWebsitesPageClientProps) {
   const { goodWebsites, isInitialLoading, isValidating, isError } = useGoodWebsites(initialData);
   const [viewMode, setViewMode] = useAtom(sitesViewModeAtom);
   const [tableSort, setTableSort] = useAtom(sitesTableSortAtom);
-  const isHydrated = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   // Collect all page IDs for batch likes fetching
   const pageIds = useMemo(() => goodWebsites.map((item) => item.id), [goodWebsites]);
@@ -84,9 +79,7 @@ export function GoodWebsitesPageClient({ initialData, initialLikes }: GoodWebsit
   );
   useTopBarActions(topBarContent);
 
-  // Wait for hydration to avoid layout flicker from view mode preference
-  // Also show loading on initial data load (without fallback data)
-  if (!isHydrated || (isInitialLoading && goodWebsites.length === 0)) {
+  if (isInitialLoading && goodWebsites.length === 0) {
     return (
       <ListDetailWrapper>
         <div className="flex h-full flex-1 items-center justify-center">
