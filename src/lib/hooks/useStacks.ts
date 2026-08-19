@@ -1,16 +1,14 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 import useSWR from "swr";
 
 import { fetcher } from "@/lib/fetcher";
-import { filterStacks, type StackItem } from "@/lib/stack";
+import { filterStacks, type StackFilters, type StackItem } from "@/lib/stack";
 
-export function useStacks(fallbackData?: StackItem[]) {
-  const searchParams = useSearchParams();
-  const status = searchParams.get("status") || "active";
-  const platform = searchParams.get("platform") || "";
+export function useStacks(fallbackData?: StackItem[], filters: StackFilters = {}) {
+  const status = filters.status || "active";
+  const platform = filters.platform || "";
 
   const filteredFallback = useMemo(
     () => (fallbackData ? filterStacks(fallbackData, { status, platform }) : undefined),

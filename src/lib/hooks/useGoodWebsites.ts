@@ -1,16 +1,12 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 import useSWR from "swr";
 
 import { fetcher } from "@/lib/fetcher";
 import { filterGoodWebsites, type GoodWebsiteItem } from "@/lib/goodWebsites";
 
-export function useGoodWebsites(fallbackData?: GoodWebsiteItem[]) {
-  const searchParams = useSearchParams();
-  const tag = searchParams.get("tag") || "";
-
+export function useGoodWebsites(fallbackData?: GoodWebsiteItem[], tag = "") {
   const filteredFallback = useMemo(
     () => (fallbackData ? filterGoodWebsites(fallbackData, { tag }) : undefined),
     [fallbackData, tag],

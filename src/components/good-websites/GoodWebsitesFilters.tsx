@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/Select";
@@ -14,13 +14,13 @@ const TAGS = [
 
 interface GoodWebsitesFiltersProps {
   isLoading?: boolean;
+  tag?: string;
 }
 
-export function GoodWebsitesFilters({ isLoading }: GoodWebsitesFiltersProps) {
+export function GoodWebsitesFilters({ isLoading, tag = "" }: GoodWebsitesFiltersProps) {
   const router = useRouter();
-  const searchParams = useSearchParams();
 
-  const urlTag = searchParams.get("tag") || "all";
+  const urlTag = tag || "all";
   const [currentTag, setCurrentTag] = useState(urlTag);
 
   // Sync local state with URL params (for back/forward navigation)
@@ -28,12 +28,10 @@ export function GoodWebsitesFilters({ isLoading }: GoodWebsitesFiltersProps) {
     setCurrentTag(urlTag);
   }, [urlTag]);
 
-  const updateParam = (key: string, value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
+  const pushTag = (value: string) => {
+    const params = new URLSearchParams();
     if (value && value !== "all") {
-      params.set(key, value);
-    } else {
-      params.delete(key);
+      params.set("tag", value);
     }
     const query = params.toString();
     router.push(`/sites${query ? `?${query}` : ""}`);
@@ -43,8 +41,7 @@ export function GoodWebsitesFilters({ isLoading }: GoodWebsitesFiltersProps) {
     if (value === null) return;
     // Update local state immediately for instant UI feedback
     setCurrentTag(value);
-    // Then update URL which triggers data refetch
-    updateParam("tag", value);
+    pushTag(value);
   };
 
   const currentTagLabel =
@@ -56,9 +53,9 @@ export function GoodWebsitesFilters({ isLoading }: GoodWebsitesFiltersProps) {
         <SelectTrigger>{currentTagLabel}</SelectTrigger>
         <SelectContent>
           <SelectItem value="all">All</SelectItem>
-          {TAGS.map((tag) => (
-            <SelectItem key={tag.value} value={tag.value}>
-              {tag.label}
+          {TAGS.map((tagOption) => (
+            <SelectItem key={tagOption.value} value={tagOption.value}>
+              {tagOption.label}
             </SelectItem>
           ))}
         </SelectContent>
