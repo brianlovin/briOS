@@ -3,6 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import {
+  Fragment,
   type ReactNode,
   useEffect,
   useMemo,
@@ -37,6 +38,7 @@ import {
   nextActivityEnterState,
   rollupActivityEvents,
   shouldPulseActivityRollup,
+  visitClusterSourceRuns,
 } from "@/lib/activity-rollup";
 import {
   ACTIVITY_TRACKED_SINCE_TOOLTIP,
@@ -282,11 +284,33 @@ export function ActivityRow({
   );
 }
 
-function VisitClusterRail() {
+function VisitClusterRailSegment({
+  insetStart = false,
+  insetEnd = false,
+  hook = false,
+}: {
+  insetStart?: boolean;
+  insetEnd?: boolean;
+  hook?: boolean;
+}) {
   return (
     <span
       aria-hidden
-      className="text-tertiary pointer-events-none absolute top-8 right-0 bottom-[calc((1lh+0.25rem)/2-3px)] left-[calc(50%-1px)] rounded-bl-lg border-b-2 border-l-2 border-black/10 dark:border-white/15"
+      data-visit-rail={hook ? "hook" : "line"}
+      data-visit-rail-inset={
+        insetStart && insetEnd ? "both" : insetStart ? "start" : insetEnd ? "end" : undefined
+      }
+      className={cn(
+        "pointer-events-none absolute left-[calc(50%-1px)] border-black/10 dark:border-white/15",
+        hook
+          ? "right-0 bottom-[calc((1lh+0.25rem)/2-3px)] rounded-bl-lg border-b-2 border-l-2"
+          : insetEnd
+            ? // Stop 4px above the next run's 20px mark (mt-1 + first-action center).
+              "bottom-[calc(0.625rem-(1lh+0.25rem)/2)] border-l-2"
+            : "bottom-1 border-l-2",
+        // Start 4px below a 20px mark centered on the first action (py-0.5 + 1lh).
+        insetStart ? "top-[calc((1lh+0.25rem)/2+0.875rem)]" : "top-0",
+      )}
     />
   );
 }
@@ -340,7 +364,7 @@ function ActivityVisitClusterBlock({
   pulseActionKey?: string | null;
 }) {
   const iconEvent = cluster.actions[0]?.latest ?? cluster.latest;
-  const showRail = cluster.actions.length > 1;
+  const sourceRuns = visitClusterSourceRuns(cluster.actions);
 
   if (cluster.actions.length === 1) {
     const stack = cluster.actions[0]!;
@@ -368,28 +392,52 @@ function ActivityVisitClusterBlock({
           className="activity-rollup-pulse pointer-events-none absolute inset-0 z-0"
         />
       ) : null}
-      <div className="relative z-10 flex items-start gap-3">
-        <div className="relative w-8 flex-none self-stretch">
-          <div className="flex size-8 items-center justify-center">
-            <ActivityRowIcon event={iconEvent} />
-          </div>
-          {showRail ? <VisitClusterRail /> : null}
+      <div className="relative z-10 grid grid-cols-[2rem_minmax(0,1fr)] items-start gap-x-3">
+        <div className="flex size-8 items-center justify-center">
+          <ActivityRowIcon event={iconEvent} />
         </div>
-        <div className="mt-[5px] min-w-0 flex-1">
-          <p className="text-primary">{cluster.locationHeader}</p>
-          <ul className="mt-1 flex flex-col gap-1">
-            {cluster.actions.map((action) => {
-              const actionKey = activityStackReactKey(action);
-              return (
-                <ActivityClusterAction
-                  key={actionKey}
-                  stack={action}
-                  pulse={pulseActionKey === actionKey}
-                />
-              );
-            })}
-          </ul>
-        </div>
+        <p className="mt-[5px] text-primary">{cluster.locationHeader}</p>
+        {sourceRuns.map((run, runIndex) => {
+          const showMark = runIndex > 0;
+          const isLastRun = runIndex === sourceRuns.length - 1;
+          const showRunRail = showMark ? run.actions.length > 1 : true;
+          const markEvent = run.actions[0]?.latest;
+
+          return (
+            <Fragment key={`${run.source}:${run.actions[0]?.anchorId ?? runIndex}`}>
+              <div className={cn("relative self-stretch", showMark && "mt-1")}>
+                {showMark && markEvent ? (
+                  <span
+                    data-visit-source-mark={run.source}
+                    aria-hidden
+                    className="absolute top-[calc((1lh+0.25rem)/2)] left-1/2 z-10 flex size-5 -translate-x-1/2 -translate-y-1/2 items-center justify-center"
+                  >
+                    <ActivityRowIcon event={markEvent} />
+                  </span>
+                ) : null}
+                {showRunRail ? (
+                  <VisitClusterRailSegment
+                    insetStart={showMark}
+                    insetEnd={!isLastRun}
+                    hook={isLastRun}
+                  />
+                ) : null}
+              </div>
+              <ul className="mt-1 flex flex-col gap-1">
+                {run.actions.map((action) => {
+                  const actionKey = activityStackReactKey(action);
+                  return (
+                    <ActivityClusterAction
+                      key={actionKey}
+                      stack={action}
+                      pulse={pulseActionKey === actionKey}
+                    />
+                  );
+                })}
+              </ul>
+            </Fragment>
+          );
+        })}
       </div>
     </div>
   );

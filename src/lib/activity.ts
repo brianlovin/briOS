@@ -68,6 +68,7 @@ export type {
   ActivityLikeTarget,
   ActivityRollup,
   ActivityVisitCluster,
+  ActivityVisitSourceRun,
 } from "./activity-rollup";
 export {
   ACTIVITY_ENTER_STAGGER_MAX,
@@ -83,6 +84,7 @@ export {
   nextActivityEnterState,
   rollupActivityEvents,
   shouldPulseActivityRollup,
+  visitClusterSourceRuns,
 } from "./activity-rollup";
 export type {
   ActivityEvent,

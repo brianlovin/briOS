@@ -40,7 +40,7 @@ describe("ActivityRow", () => {
     expect(markup).not.toContain("🇮🇳");
     expect(markup).toContain("/activity/favicons/brios.png");
     expect(markup).toContain('href="/"');
-    expect(markup).toContain("the site");
+    expect(markup).toContain("brianlovin.com");
     expect(markup).not.toContain("Home");
     expect(markup).not.toContain("a page");
   });
@@ -294,7 +294,7 @@ describe("ActivityRow", () => {
     expect(download).toContain('target="_blank"');
     expect(download).toContain("noopener noreferrer");
     expect(unknown).not.toContain("/activity/favicons/");
-    expect(unknown).toContain("Someone from United States visited the site");
+    expect(unknown).toContain("Someone from United States visited brianlovin.com");
     expect(unknown).not.toContain("Visit from");
     expect(unknown).not.toContain("🇺🇸");
   });
@@ -304,7 +304,7 @@ describe("ActivityRow", () => {
       <ActivityRow event={event({ summary: "Visit from TW", meta: { country: "TW" } })} />,
     );
     expect(markup).not.toContain("🇹🇼");
-    expect(markup).toContain("Someone from Taiwan visited the site");
+    expect(markup).toContain("Someone from Taiwan visited brianlovin.com");
     expect(markup).not.toContain("Visit from");
   });
 
@@ -319,7 +319,7 @@ describe("ActivityRow", () => {
     );
 
     expect(markup).toContain("Someone from a mysterious place on earth visited");
-    expect(markup).toContain("the site");
+    expect(markup).toContain("brianlovin.com");
     expect(markup).not.toContain("Someone visited from a mysterious place on earth");
     expect(markup).not.toContain("Home");
     expect(markup).not.toContain(">Visit<");
@@ -920,7 +920,7 @@ describe("ActivityRow", () => {
     expect(staff).not.toContain("Visit from");
     expect(staff).not.toContain("🇺🇸");
     expect(staff).toContain(">Staff.design<");
-    expect(staff).not.toContain("the site");
+    expect(staff).not.toContain("brianlovin.com");
     expect(staff).toContain('href="https://staff.design"');
     expect(staff).toContain('target="_blank"');
     expect(details).toContain("Someone from San Francisco");
@@ -1009,7 +1009,7 @@ describe("ActivityRow", () => {
     expect(like).toContain('href="/writing/grok-bot-first-impressions"');
     expect(like).not.toContain(">briOS<");
     expect(like).not.toContain('target="_blank"');
-    expect(visit).toContain(">the site<");
+    expect(visit).toContain(">brianlovin.com<");
     expect(visit).toContain('href="/"');
     expect(visit).not.toContain(">Home<");
     expect(visit).not.toContain(">briOS<");
@@ -1104,7 +1104,7 @@ describe("ActivityFeed", () => {
       />,
     );
 
-    expect(markup).toContain("Someone from India visited the site");
+    expect(markup).toContain("Someone from India visited brianlovin.com");
     expect(markup).not.toContain("Visit from");
     expect(markup).not.toContain("🇮🇳");
     expect(markup).not.toContain(">Event<");
@@ -1240,9 +1240,11 @@ describe("ActivityFeed", () => {
     expect(markup).toContain("Listening");
     expect(markup).toContain("AMA");
     expect(markup).toContain("visited");
-    expect(markup).toContain("the site");
-    expect(markup.indexOf("the site")).toBeLessThan(markup.indexOf("AMA"));
+    expect(markup).toContain("brianlovin.com");
+    expect(markup.indexOf("brianlovin.com")).toBeLessThan(markup.indexOf("AMA"));
     expect(markup.indexOf("AMA")).toBeLessThan(markup.indexOf("Listening"));
+    expect(markup).toContain('data-visit-rail="hook"');
+    expect(markup).not.toContain('data-visit-rail="line"');
   });
 
   test("staff.design home cluster actions say visited Staff.design", () => {
@@ -1288,7 +1290,70 @@ describe("ActivityFeed", () => {
     expect(markup).toContain("visited");
     expect(markup).toContain(">Staff.design<");
     expect(markup).toContain("Karla Mickens Cole");
-    expect(markup).not.toContain("the site");
+    expect(markup).not.toContain("brianlovin.com");
+  });
+
+  test("keeps one location cluster and marks a property change on the rail", () => {
+    const sf = {
+      country: "US",
+      country_name: "United States",
+      region: "CA",
+      region_name: "California",
+      city: "San Francisco",
+    };
+    const markup = renderToStaticMarkup(
+      <ActivityFeed
+        initialEvents={[
+          event({
+            id: "sf-staff-home",
+            source: "staff-design",
+            summary: "Visit from San Francisco, California, United States",
+            subject: { kind: "home", label: "Home", href: "/" },
+            meta: { ...sf, path: "/", title: "Home" },
+          }),
+          event({
+            id: "sf-vivian",
+            source: "staff-design",
+            summary: "Visit from San Francisco, California, United States",
+            subject: {
+              kind: "page",
+              label: "Vivian Wang",
+              href: "/interviews/vivian-wang",
+            },
+            meta: { ...sf, path: "/interviews/vivian-wang", title: "Vivian Wang" },
+          }),
+          event({
+            id: "sf-stack",
+            summary: "Visit from San Francisco, California, United States",
+            subject: { kind: "page", label: "Stack", href: "/stack" },
+            meta: { ...sf, path: "/stack" },
+          }),
+          event({
+            id: "sf-home",
+            summary: "Visit from San Francisco, California, United States",
+            subject: { kind: "home", label: "Home", href: "/" },
+            meta: { ...sf, path: "/", title: "Home" },
+          }),
+        ]}
+        initialCount={4}
+      />,
+    );
+
+    expect(markup.match(/Someone from San Francisco/g)?.length).toBe(1);
+    expect(markup).toContain("/activity/favicons/brios.png");
+    expect(markup).toContain('data-visit-source-mark="staff-design"');
+    expect(markup).not.toContain('data-visit-source-mark="brios"');
+    expect(markup).toContain('data-visit-rail="line"');
+    expect(markup).toContain('data-visit-rail="hook"');
+    expect(markup.match(/data-visit-rail="/g)?.length).toBe(2);
+    expect(markup).toContain('data-visit-rail-inset="end"');
+    expect(markup).toContain('data-visit-rail-inset="start"');
+    expect(markup).toContain("brianlovin.com");
+    expect(markup).toContain("Stack");
+    expect(markup).toContain("Vivian Wang");
+    expect(markup).toContain(">Staff.design<");
+    expect(markup.indexOf("brianlovin.com")).toBeLessThan(markup.indexOf("Stack"));
+    expect(markup.indexOf("Stack")).toBeLessThan(markup.indexOf("Vivian Wang"));
   });
 
   test("a different location in the middle labels two visit clusters", () => {

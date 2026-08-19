@@ -58,6 +58,26 @@ export function activityVisitClusterReactKey(
   return `visit-cluster:${cluster.locationKey}:${cluster.anchorId}`;
 }
 
+/** Consecutive same-source actions inside a location cluster. */
+export type ActivityVisitSourceRun = {
+  source: string;
+  actions: ActivityRollup[];
+};
+
+export function visitClusterSourceRuns(actions: ActivityRollup[]): ActivityVisitSourceRun[] {
+  const runs: ActivityVisitSourceRun[] = [];
+  for (const action of actions) {
+    const source = action.latest.source;
+    const current = runs[runs.length - 1];
+    if (current && current.source === source) {
+      current.actions.push(action);
+      continue;
+    }
+    runs.push({ source, actions: [action] });
+  }
+  return runs;
+}
+
 export function activityFeedItemReactKey(item: ActivityFeedItem): string {
   return item.type === "visit-cluster"
     ? activityVisitClusterReactKey(item)

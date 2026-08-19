@@ -51,6 +51,7 @@ import {
   shouldRecordVisit,
   stripSiteTitleSuffix,
   stripTrailingShortIdToken,
+  visitClusterSourceRuns,
   visitLocationPhrase,
 } from "@/lib/activity";
 import * as activityCms from "@/lib/activity-cms";
@@ -805,7 +806,7 @@ describe("recordVisit", () => {
     expect(row).toEqual({
       summary: "Someone from a mysterious place on earth visited",
       href: "/",
-      label: "the site",
+      label: "brianlovin.com",
     });
   });
 
@@ -851,7 +852,7 @@ describe("recordVisit", () => {
       meta: { country: "IN" },
     });
     expect(row).toEqual({
-      summary: "Someone from India visited the site",
+      summary: "Someone from India visited brianlovin.com",
     });
     expect(row.summary).not.toMatch(/\p{Regional_Indicator}/u);
   });
@@ -871,7 +872,7 @@ describe("recordVisit", () => {
       meta: { country: "IN" },
     });
     expect(row).toEqual({
-      summary: "Someone from India visited the site",
+      summary: "Someone from India visited brianlovin.com",
     });
   });
 
@@ -1414,6 +1415,33 @@ describe("countryCentroid", () => {
 
     expect(activityEventLocation({ meta: {} })).toBeUndefined();
   });
+
+  test("activityEventLocation pins GitHub and Notion publishes to San Francisco", () => {
+    expect(activityEventLocation({ source: "github", type: "pr_merged" })).toEqual({
+      lat: 37.77,
+      lng: -122.42,
+    });
+    expect(activityEventLocation({ source: "github", type: "repo_starred" })).toEqual({
+      lat: 37.77,
+      lng: -122.42,
+    });
+    expect(activityEventLocation({ type: "pr_opened" })).toEqual({ lat: 37.77, lng: -122.42 });
+    expect(activityEventLocation({ type: "stack_added" })).toEqual({ lat: 37.77, lng: -122.42 });
+    expect(activityEventLocation({ type: "site_added" })).toEqual({ lat: 37.77, lng: -122.42 });
+    expect(activityEventLocation({ type: "writing_published" })).toEqual({
+      lat: 37.77,
+      lng: -122.42,
+    });
+    expect(activityEventLocation({ type: "til_published" })).toEqual({ lat: 37.77, lng: -122.42 });
+    expect(activityEventLocation({ type: "like" })).toBeUndefined();
+    expect(
+      activityEventLocation({
+        source: "github",
+        type: "pr_merged",
+        meta: { latitude: 35.68, longitude: 139.69 },
+      }),
+    ).toEqual({ lat: 37.77, lng: -122.42 });
+  });
 });
 
 describe("getRequestCountry", () => {
@@ -1719,7 +1747,7 @@ describe("getActivityRow page titles", () => {
       subject: { kind: "home", label: "a page", href: "/" },
       meta: { path: "/", title: "a page", country: "FR" },
     });
-    expect(row.label).toBe("the site");
+    expect(row.label).toBe("brianlovin.com");
     expect(row.href).toBe("/");
     expect(row.summary).toBe("Someone from France visited");
     expect(row.summary).not.toContain("Visit from");
@@ -2032,7 +2060,7 @@ describe("getActivityRow visit sentences", () => {
     expect(home.summary).toContain("visited");
     expect(home.summary).not.toContain("read Home");
     expect(home.summary).not.toContain("Visit from");
-    expect(home.label).toBe("the site");
+    expect(home.label).toBe("brianlovin.com");
     expect(home.label).not.toBe("Home");
   });
 
@@ -2170,13 +2198,13 @@ describe("getActivityRow visit sentences", () => {
     );
     expect(home.summary).toBe("Someone from United States visited");
     expect(home.summary).not.toContain("read");
-    expect(home.summary).not.toContain("the site");
+    expect(home.summary).not.toContain("brianlovin.com");
     expect(home.label).toBe("Staff.design");
-    expect(home.label).not.toBe("the site");
+    expect(home.label).not.toBe("brianlovin.com");
     expect(home.href).toBe("https://staff.design");
   });
 
-  test("uses Staff.design — not the site — for an untitled staff.design home visit", () => {
+  test("uses Staff.design — not brianlovin.com — for an untitled staff.design home visit", () => {
     const singapore = {
       country: "SG",
       country_name: "Singapore",
@@ -2193,9 +2221,9 @@ describe("getActivityRow visit sentences", () => {
       ),
     );
     expect(`${home.summary} ${home.label}`).toContain("visited Staff.design");
-    expect(home.summary).not.toContain("the site");
+    expect(home.summary).not.toContain("brianlovin.com");
     expect(home.label).toBe("Staff.design");
-    expect(home.label).not.toBe("the site");
+    expect(home.label).not.toBe("brianlovin.com");
 
     const untitled = getActivityRow({
       v: 1,
@@ -2211,7 +2239,7 @@ describe("getActivityRow visit sentences", () => {
       meta: singapore,
     });
     expect(`${untitled.summary} ${untitled.label}`).toContain("visited Staff.design");
-    expect(untitled.summary).not.toContain("the site");
+    expect(untitled.summary).not.toContain("brianlovin.com");
     expect(untitled.label).toBe("Staff.design");
 
     const interview = getActivityRow(
@@ -2235,9 +2263,9 @@ describe("getActivityRow visit sentences", () => {
         { meta: { country: "SG", country_name: "Singapore", city: "Singapore", path: "/" } },
       ),
     );
-    expect(briosHome.label).toBe("the site");
+    expect(briosHome.label).toBe("brianlovin.com");
     expect(briosHome.label).not.toBe("Staff.design");
-    expect(`${briosHome.summary} ${briosHome.label}`).toContain("visited the site");
+    expect(`${briosHome.summary} ${briosHome.label}`).toContain("visited brianlovin.com");
 
     const shioriHome = getActivityRow({
       v: 1,
@@ -2359,7 +2387,7 @@ describe("formatVisitRowSummary location prefix", () => {
     ).toBe("viewed");
     expect(
       formatVisitRowSummary("San Francisco, California", "visited", false, { omitLocation: true }),
-    ).toBe("visited the site");
+    ).toBe("visited brianlovin.com");
     expect(
       formatVisitRowSummary("Singapore, Singapore", "visited", false, {
         source: "staff-design",
@@ -2376,7 +2404,7 @@ describe("formatVisitRowSummary location prefix", () => {
         omitLocation: true,
         source: "brios",
       }),
-    ).toBe("visited the site");
+    ).toBe("visited brianlovin.com");
   });
 });
 
@@ -3458,7 +3486,7 @@ describe("rollupActivityEvents", () => {
       getActivityRow(action.latest, { omitVisitLocation: true }),
     );
     expect(actions[0]?.summary).toBe("visited");
-    expect(actions[0]?.label).toBe("the site");
+    expect(actions[0]?.label).toBe("brianlovin.com");
     expect(actions[1]?.summary).toBe("viewed");
     expect(actions[1]?.label).toBe("AMA");
     expect(actions[2]?.summary).toBe("viewed");
@@ -3500,8 +3528,8 @@ describe("rollupActivityEvents", () => {
     expect(home?.sectionLabel).toBe("Staff.design");
     const homeRow = getActivityRow(home!.latest, { omitVisitLocation: true });
     expect(`${homeRow.summary} ${homeRow.label}`).toBe("visited Staff.design");
-    expect(homeRow.summary).not.toContain("the site");
-    expect(homeRow.label).not.toBe("the site");
+    expect(homeRow.summary).not.toContain("brianlovin.com");
+    expect(homeRow.label).not.toBe("brianlovin.com");
 
     const interview = items[0].actions.find((action) => action.latest.id === "sg-interview");
     expect(interview?.sectionLabel).toBe("Karla Mickens Cole");
@@ -3689,6 +3717,51 @@ describe("rollupActivityEvents", () => {
     expect(items[2].locationHeader).toContain("Someone from San Francisco");
     expect(items[0].actions).toHaveLength(1);
     expect(items[2].actions).toHaveLength(1);
+  });
+
+  test("groups a location cluster into consecutive property runs", () => {
+    const visit = (
+      id: string,
+      source: string,
+      href: string,
+      label: string,
+    ): ActivityEvent =>
+      feedEvent({
+        id,
+        source,
+        type: "visit",
+        summary: "Visit from San Francisco, California, United States",
+        subject: { kind: href === "/" ? "home" : "page", label, href },
+        meta: {
+          country: "US",
+          country_name: "United States",
+          region: "CA",
+          region_name: "California",
+          city: "San Francisco",
+          path: href,
+          title: label,
+        },
+      });
+
+    const items = clusterVisitLocationRuns(
+      rollupActivityEvents([
+        visit("staff-home", "staff-design", "/", "Home"),
+        visit("staff-vivian", "staff-design", "/interviews/vivian-wang", "Vivian Wang"),
+        visit("brios-stack", "brios", "/stack", "Stack"),
+        visit("brios-home", "brios", "/", "Home"),
+      ]),
+    );
+
+    expect(items).toHaveLength(1);
+    if (items[0]?.type !== "visit-cluster") return;
+    expect(items[0].actions).toHaveLength(4);
+    expect(visitClusterSourceRuns(items[0].actions).map((run) => run.source)).toEqual([
+      "brios",
+      "staff-design",
+    ]);
+    expect(visitClusterSourceRuns(items[0].actions).map((run) => run.actions.length)).toEqual([
+      2, 2,
+    ]);
   });
 
   test("only pulses when the same run's count increments", () => {
