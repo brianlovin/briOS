@@ -22,7 +22,10 @@ export const metadata: Metadata = {
 };
 
 export default async function GoodWebsitesPage() {
-  const allWebsites = await getCachedShuffledGoodWebsites(await getCachedGoodWebsites());
+  // Keep the page-local days island live so /sites stays subscribed to the
+  // Notion purge tag. Visible order comes from the shared 5-minute shuffle.
+  await getCachedGoodWebsites();
+  const allWebsites = await getCachedShuffledGoodWebsites();
   const initialLikes = await getServerLikes(allWebsites.map((item) => item.id));
 
   return <GoodWebsitesPageClient initialData={allWebsites} initialLikes={initialLikes} />;

@@ -155,11 +155,16 @@ describe("sites cache split", () => {
   });
 
   test("shuffle cache matches the 5-minute cadence and the sites purge tag", () => {
-    expect(cachedSource.includes('"use cache"')).toBe(true);
     expect(cachedSource.includes("GOOD_WEBSITES_SHUFFLE_INTERVAL_SECONDS")).toBe(true);
     expect(cachedSource.includes('cacheTag("notion:good-websites")')).toBe(true);
     expect(cachedSource.includes("getGoodWebsitesSeed")).toBe(true);
-    expect(cachedSource.includes('cacheLife("days")')).toBe(false);
+    expect(cachedSource.includes('cacheLife("days")')).toBe(true);
+
+    const shuffleFn = cachedSource.split("export async function")[1] ?? "";
+    expect(shuffleFn.includes("getGoodWebsitesSeed")).toBe(true);
+    expect(shuffleFn.includes('cacheLife("days")')).toBe(false);
+    expect(pageSource.includes("getCachedShuffledGoodWebsites()")).toBe(true);
+    expect(apiSource.includes("getCachedShuffledGoodWebsites()")).toBe(true);
   });
 
   test("API serves the same shuffle cache and 5-minute HTTP lifetime", () => {
