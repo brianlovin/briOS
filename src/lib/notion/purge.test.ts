@@ -164,3 +164,22 @@ describe("webhook callers", () => {
     expect(source.includes("purge")).toBe(false);
   });
 });
+
+describe("use cache page islands", () => {
+  test("stack and sites subscribe to the exact tags purge-cache already busts", () => {
+    const pagesDir = join(import.meta.dir, "../../app");
+    const islands = {
+      stack: join(pagesDir, "stack/page.tsx"),
+      sites: join(pagesDir, "sites/page.tsx"),
+    } as const;
+
+    for (const [type, path] of Object.entries(islands)) {
+      const source = readFileSync(path, "utf8");
+      const tags = [...source.matchAll(/cacheTag\("([^"]+)"\)/g)].map((match) => match[1]);
+
+      expect(source.includes('"use cache"')).toBe(true);
+      expect(tags.length).toBeGreaterThan(0);
+      expect(tags).toEqual(PURGE_CONFIG[type as keyof typeof islands].tags);
+    }
+  });
+});
