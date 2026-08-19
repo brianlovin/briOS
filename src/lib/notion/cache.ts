@@ -24,6 +24,11 @@ interface CachedEntry<T> {
   cachedAt: number;
 }
 
+/** CI sets `NOTION_TOKEN=build-placeholder` so prerender must not call Notion. */
+export function isPlaceholderNotionBuild(): boolean {
+  return process.env.NOTION_TOKEN === "build-placeholder";
+}
+
 export const CACHE_TTLS = {
   /** Listings (1 hour) */
   LIST: 3600,

@@ -1,13 +1,10 @@
 import type { Metadata } from "next";
-import { connection } from "next/server";
-import { Suspense } from "react";
+import { cacheLife, cacheTag } from "next/cache";
 
 import { TilFeed } from "@/components/TilFeed";
 import { PageTitle } from "@/components/Typography";
-import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
-import { getServerLikes } from "@/lib/likes-server";
 import { createMetadata, SITE_CONFIG } from "@/lib/metadata";
-import { getTilDatabaseItems, getTilItemContent } from "@/lib/notion";
+import { getTilDatabaseItems, getTilItemContent, isPlaceholderNotionBuild } from "@/lib/notion";
 import { hydrateTilEntries } from "@/lib/til";
 
 export const metadata: Metadata = {
@@ -31,49 +28,21 @@ export default function TilPage() {
           <div className="hidden sm:block" />
           <PageTitle>TIL</PageTitle>
         </div>
-        <Suspense fallback={<TilFeedFallback />}>
-          <TilFeedContent />
-        </Suspense>
+        <TilFeedContent />
       </div>
     </div>
   );
 }
 
-function TilFeedFallback() {
-  return (
-    <div className="flex flex-col gap-12 px-4">
-      {Array.from({ length: 5 }, (_, index) => (
-        <div
-          key={index}
-          className="grid grid-cols-1 gap-2 sm:grid-cols-[140px_1fr] sm:items-baseline sm:gap-6 md:grid-cols-[180px_1fr]"
-        >
-          <LoadingSkeleton className="h-4 w-24" />
-          <div className="flex flex-col gap-3">
-            <LoadingSkeleton className="h-5 w-3/4" />
-            <div className="flex flex-col gap-2">
-              <LoadingSkeleton className="h-4 w-full" />
-              <LoadingSkeleton className="h-4 w-2/3" />
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
 async function TilFeedContent() {
-  await connection();
+  "use cache";
+  cacheLife("days");
+  cacheTag("notion:til");
+  if (isPlaceholderNotionBuild()) {
+    return <TilFeed fallbackData={[{ items: [], nextCursor: null }]} />;
+  }
   const { items, nextCursor } = await getTilDatabaseItems(undefined, 10);
-  const pageIds = items.map((entry) => entry.id);
-  const [contents, initialLikes] = await Promise.all([
-    Promise.all(items.map((entry) => getTilItemContent(entry.id))),
-    getServerLikes(pageIds),
-  ]);
+  const contents = await Promise.all(items.map((entry) => getTilItemContent(entry.id)));
 
-  return (
-    <TilFeed
-      fallbackData={[{ items: hydrateTilEntries(items, contents), nextCursor }]}
-      initialLikes={initialLikes}
-    />
-  );
+  return <TilFeed fallbackData={[{ items: hydrateTilEntries(items, contents), nextCursor }]} />;
 }

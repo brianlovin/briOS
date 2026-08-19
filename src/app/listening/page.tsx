@@ -1,12 +1,9 @@
 import type { Metadata } from "next";
-import { connection } from "next/server";
-import { Suspense } from "react";
+import { cacheLife, cacheTag } from "next/cache";
 
-import { ListDetailWrapper } from "@/components/ListDetailWrapper";
 import { ListeningHistory } from "@/components/ListeningHistory";
-import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { createMetadata } from "@/lib/metadata";
-import { getListeningHistoryDatabaseItems } from "@/lib/notion";
+import { getListeningHistoryDatabaseItems, isPlaceholderNotionBuild } from "@/lib/notion";
 
 export const metadata: Metadata = createMetadata({
   title: "Listening",
@@ -15,27 +12,16 @@ export const metadata: Metadata = createMetadata({
 });
 
 export default function ListeningPage() {
-  return (
-    <Suspense fallback={<ListeningFallback />}>
-      <ListeningContent />
-    </Suspense>
-  );
-}
-
-function ListeningFallback() {
-  return (
-    <ListDetailWrapper>
-      <div className="flex h-full flex-1 items-center justify-center">
-        <LoadingSpinner />
-      </div>
-    </ListDetailWrapper>
-  );
+  return <ListeningContent />;
 }
 
 async function ListeningContent() {
-  await connection();
-  // Fetch initial page of music data on the server
-  const initialPage = await getListeningHistoryDatabaseItems(undefined, 20);
+  "use cache";
+  cacheLife("hours");
+  cacheTag("notion:listening");
+  const initialPage = isPlaceholderNotionBuild()
+    ? { items: [], nextCursor: null }
+    : await getListeningHistoryDatabaseItems(undefined, 20);
 
   return <ListeningHistory initialData={[initialPage]} />;
 }
