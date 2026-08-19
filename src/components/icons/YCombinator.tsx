@@ -16,7 +16,7 @@ export function YCombinator({ size = 16, className, ...rest }: IconProps) {
       <path
         fill="currentColor"
         fillRule="evenodd"
-        d="M0 0h24v24H0V0zm12.7 18.5h-1.4v-6.2L7.1 5.5h1.7l3.2 6.3c.1.2.2.5.3.8h.1c.1-.3.2-.6.3-.8l3.2-6.3h1.7l-4.2 6.8v6.2z"
+        d="m0 0h24v24h-24zm12.8 13.446 4.339-8.303h-1.871q-2.143 4.018-2.839 5.786l-.375.96-.32-.75c-.96-2.374-1.931-4.348-3.022-6.243l.129.243h-1.984l4.286 8.2v5.52h1.657z"
       />
     </svg>
   );

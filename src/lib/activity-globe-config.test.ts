@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 
 import {
   cobeMarkerStyle,
+  cssPx,
   DEFAULT_ACTIVITY_GLOBE_CONFIG,
   globeCobeOptions,
   globeThemeColors,
@@ -9,6 +10,7 @@ import {
   markerDotPxForAge,
   markerDotPxForSize,
   markerSizeFromCount,
+  rgbCss,
 } from "./activity-globe-config";
 
 describe("activity-globe-config", () => {
@@ -60,5 +62,16 @@ describe("activity-globe-config", () => {
     expect(markerDotPxForAge(0, cfg, 5)).toBeCloseTo(cfg.markerDotPx);
     expect(markerDotPxForAge(9, cfg, 5)).toBe(5);
     expect(markerDotPxForAge(9, cfg, 0)).toBeCloseTo(cfg.markerDotPx * 0.9 ** 9);
+  });
+
+  test("cssPx rounds floats so SSR and client serialize the same", () => {
+    expect(cssPx(7.8732000000000015)).toBe("7.87px");
+    expect(cssPx(7.873200000000001)).toBe("7.87px");
+    expect(cssPx(12)).toBe("12px");
+    expect(cssPx(Number.NaN)).toBe("0px");
+  });
+
+  test("rgbCss emits a hex color", () => {
+    expect(rgbCss(DEFAULT_ACTIVITY_GLOBE_CONFIG.markerColor)).toBe("#fc532a");
   });
 });

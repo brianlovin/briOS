@@ -41,7 +41,7 @@
       "description": null,
       "type": "formula",
       "formula": {
-        "expression": "     {{notion:block_property:MWCP:1eac711c-0ceb-8035-87fa-000bbec76c6e:30816cbc-deb8-4977-8ae8-d92f0669fb36}} + \"-\" +\n     formatDate({{notion:block_property:rVH%3D:1eac711c-0ceb-8035-87fa-000bbec76c6e:30816cbc-deb8-4977-8ae8-d92f0669fb36}}, \"yyyy-MM-dd'T'HH:mm:ssX\")"
+        "expression": "     prop(\"Spotify ID\") + \"-\" +\n     formatDate(prop(\"Played At\"), \"yyyy-MM-dd'T'HH:mm:ssX\")"
       }
     },
     "Artist": {
