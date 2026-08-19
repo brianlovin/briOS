@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, spyOn, test } from "bun:test";
+import { afterEach, beforeEach, describe, expect, mock, spyOn, test } from "bun:test";
 
 import { GET, POST } from "@/app/api/purge-cache/route";
 import * as activityFromNotion from "@/lib/activity-from-notion";
@@ -24,6 +24,7 @@ describe("/api/purge-cache", () => {
   });
 
   afterEach(() => {
+    mock.restore();
     if (previousSecret === undefined) {
       delete process.env.CACHE_PURGE_SECRET;
     } else {
@@ -68,7 +69,7 @@ describe("/api/purge-cache", () => {
 
   test("POST type=writing still schedules Notion activity ingest", async () => {
     spyOn(purge, "purgeContentType").mockResolvedValue(1);
-    const after = spyOn(activitySchedule, "afterActivity");
+    const after = spyOn(activitySchedule, "afterActivity").mockImplementation(() => {});
 
     const res = await POST(purgeRequest("POST", "writing", { data: { id: "notion-page-id" } }));
     expect(res.status).toBe(200);
