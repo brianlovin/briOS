@@ -6,6 +6,8 @@ import AMADetail from "@/app/ama/AMADetail";
 import { createMetadata, truncateDescription } from "@/lib/metadata";
 import { getAmaItemContent, isPlaceholderNotionBuild } from "@/lib/notion";
 
+export const instant = false;
+
 export async function generateMetadata(props: {
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {

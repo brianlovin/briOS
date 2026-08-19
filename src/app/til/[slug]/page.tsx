@@ -10,6 +10,8 @@ import { createArticleJsonLd, createMetadata, truncateDescription } from "@/lib/
 import { getTilByShortId, isPlaceholderNotionBuild } from "@/lib/notion";
 import { buildSlug, extractShortIdFromSlug } from "@/lib/short-id";
 
+export const instant = false;
+
 // Generate metadata for each TIL entry
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;

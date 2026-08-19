@@ -6,6 +6,8 @@ import { LikeButton } from "@/components/likes/LikeButton";
 import { renderBlocks } from "@/components/renderBlocks";
 import { getFullContent, isPlaceholderNotionBuild } from "@/lib/notion";
 
+export const instant = false;
+
 export default async function EpisodePage(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   return <EpisodeContent id={params.id} />;

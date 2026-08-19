@@ -17,6 +17,8 @@ import {
 import { buildSlug, extractShortIdFromSlug } from "@/lib/short-id";
 import { getAllWritingPosts } from "@/lib/writing";
 
+export const instant = false;
+
 // Generate metadata for each writing post
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;

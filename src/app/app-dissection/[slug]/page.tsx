@@ -9,6 +9,8 @@ import { extractPreviewText } from "@/lib/notion/types";
 
 import { AppDissectionDetail } from "./components/AppDissectionDetail";
 
+export const instant = false;
+
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
