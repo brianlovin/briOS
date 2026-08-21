@@ -11,14 +11,14 @@ function ruleFor(result: ReturnType<typeof robots>, userAgent: string) {
 }
 
 describe("robots", () => {
-  test("allows * on / and disallows /api/ without a sitemap", () => {
+  test("allows * on / and disallows /api/, and points at the sitemap", () => {
     const result = robots();
     const wildcard = ruleFor(result, "*");
 
     expect(wildcard?.allow).toBe("/");
     expect(wildcard?.disallow).toBe("/api/");
     expect(wildcard?.disallow).not.toBe("/");
-    expect(result.sitemap).toBeUndefined();
+    expect(result.sitemap).toBe("https://brianlovin.com/sitemap.xml");
   });
 
   test("allows Googlebot / and disallows GPTBot /", () => {

@@ -9,7 +9,7 @@ import {
   SectionHeading,
 } from "@/components/shared/ListComponents";
 import { PageTitle } from "@/components/Typography";
-import { createMetadata } from "@/lib/metadata";
+import { createMetadata, SITE_CONFIG } from "@/lib/metadata";
 import { isPlaceholderNotionBuild } from "@/lib/notion";
 import { buildSlug } from "@/lib/short-id";
 import { getAllWritingPosts } from "@/lib/writing";
@@ -19,6 +19,7 @@ export const metadata: Metadata = createMetadata({
   description:
     "Thoughts on design, engineering, and building products. Essays and reflections from Brian Lovin.",
   path: "/writing",
+  rss: `${SITE_CONFIG.url}/writing/rss.xml`,
 });
 
 export default function WritingPage() {

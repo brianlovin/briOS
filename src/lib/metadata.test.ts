@@ -24,6 +24,26 @@ describe("createMetadata", () => {
     const meta = createMetadata({ path: "/writing/hello" });
     // @ts-expect-error openGraph is a resolved object here
     expect(meta.openGraph.url).toBe(`${SITE_CONFIG.url}/writing/hello`);
+    expect(meta.alternates?.canonical).toBe(`${SITE_CONFIG.url}/writing/hello`);
+  });
+
+  test("uses a trailing slash canonical for the homepage", () => {
+    const meta = createMetadata({ path: "/" });
+    expect(meta.alternates?.canonical).toBe(`${SITE_CONFIG.url}/`);
+    // @ts-expect-error openGraph is a resolved object here
+    expect(meta.openGraph.url).toBe(`${SITE_CONFIG.url}/`);
+    // @ts-expect-error openGraph is a resolved object here
+    expect(meta.openGraph.type).toBe("website");
+    // @ts-expect-error openGraph is a resolved object here
+    expect(meta.openGraph.images[0].url).toBe("/img/og.png");
+  });
+
+  test("keeps an explicit canonical override for HN", () => {
+    const meta = createMetadata({
+      path: "/hn",
+      canonical: "https://news.ycombinator.com",
+    });
+    expect(meta.alternates?.canonical).toBe("https://news.ycombinator.com");
   });
 
   test("applies title, description, and image overrides", () => {
@@ -71,6 +91,13 @@ describe("json-ld helpers", () => {
     const jsonLd = createPersonJsonLd();
     expect(jsonLd["@type"]).toBe("Person");
     expect(jsonLd.name).toBe(SITE_CONFIG.author.name);
+    expect(jsonLd.contactPoint).toEqual({
+      "@type": "ContactPoint",
+      contactType: "public",
+      url: `${SITE_CONFIG.url}/contact`,
+    });
+    expect(jsonLd).not.toHaveProperty("address");
+    expect(jsonLd).not.toHaveProperty("telephone");
   });
 
   test("createArticleJsonLd defaults modifiedTime to publishedTime", () => {

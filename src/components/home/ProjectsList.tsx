@@ -6,7 +6,7 @@ import {
   ListItemSubLabel,
 } from "@/components/shared/ListComponents";
 
-const projects = [
+export const HOME_PROJECTS = [
   {
     name: "HN",
     href: "/hn",
@@ -104,7 +104,7 @@ interface ProjectsListProps {
 }
 
 export function ProjectsList({ exclude = [] }: ProjectsListProps) {
-  const filteredProjects = projects.filter((project) => !exclude.includes(project.name));
+  const filteredProjects = HOME_PROJECTS.filter((project) => !exclude.includes(project.name));
 
   return (
     <List>

@@ -20,6 +20,7 @@ const ptSerif = Source_Serif_4({
 export const metadata: Metadata = {
   ...DEFAULT_METADATA,
   alternates: {
+    canonical: `${SITE_CONFIG.url}/`,
     types: {
       "application/rss+xml": `${SITE_CONFIG.url}/writing/rss.xml`,
     },

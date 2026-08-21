@@ -1,11 +1,14 @@
 import type { MetadataRoute } from "next";
 
+import { SITE_CONFIG } from "@/lib/metadata";
+
 /**
  * Honor-system robots.txt: search and retrieval crawlers are allowed;
- * training-only agents are opted out. No sitemap until /sitemap.xml exists.
+ * training-only agents are opted out.
  */
 export default function robots(): MetadataRoute.Robots {
   return {
+    sitemap: `${SITE_CONFIG.url}/sitemap.xml`,
     rules: [
       {
         userAgent: "*",

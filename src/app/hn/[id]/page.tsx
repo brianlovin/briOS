@@ -28,18 +28,14 @@ export async function generateMetadata(props: {
     // Extract text from title (remove HTML if any)
     const cleanTitle = post.title ? stripHtmlTags(post.title) : "Hacker News Post";
 
-    return {
-      ...createMetadata({
-        title: `${cleanTitle} - Hacker News`,
-        description: truncateDescription(
-          post.content || `A discussion on Hacker News with ${post.comments_count || 0} comments.`,
-        ),
-        path: `/hn/${id}`,
-      }),
-      alternates: {
-        canonical: `https://news.ycombinator.com/item?id=${id}`,
-      },
-    };
+    return createMetadata({
+      title: `${cleanTitle} - Hacker News`,
+      description: truncateDescription(
+        post.content || `A discussion on Hacker News with ${post.comments_count || 0} comments.`,
+      ),
+      path: `/hn/${id}`,
+      canonical: `https://news.ycombinator.com/item?id=${id}`,
+    });
   } catch {
     return {
       title: "Hacker News Post",
