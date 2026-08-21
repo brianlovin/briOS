@@ -8,19 +8,13 @@ import { isPlaceholderNotionBuild } from "@/lib/notion";
 import { getAppDissectionDatabaseItems } from "@/lib/notion/queries";
 import { formatPublishedDate, type NotionAppDissectionItem } from "@/lib/notion/types";
 
-export const metadata: Metadata = {
-  ...createMetadata({
-    title: "App Dissection",
-    description:
-      "Breaking down the design details of well-crafted mobile apps. In-depth analysis of UI patterns, interactions, and user experience.",
-    path: "/app-dissection",
-  }),
-  alternates: {
-    types: {
-      "application/rss+xml": `${SITE_CONFIG.url}/app-dissection/rss.xml`,
-    },
-  },
-};
+export const metadata: Metadata = createMetadata({
+  title: "App Dissection",
+  description:
+    "Breaking down the design details of well-crafted mobile apps. In-depth analysis of UI patterns, interactions, and user experience.",
+  path: "/app-dissection",
+  rss: `${SITE_CONFIG.url}/app-dissection/rss.xml`,
+});
 
 export default function AppDissectionIndex() {
   return (

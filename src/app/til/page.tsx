@@ -8,18 +8,12 @@ import { createMetadata, SITE_CONFIG } from "@/lib/metadata";
 import { getTilDatabaseItems, getTilItemContent, isPlaceholderNotionBuild } from "@/lib/notion";
 import { hydrateTilEntries, type TilPage } from "@/lib/til";
 
-export const metadata: Metadata = {
-  ...createMetadata({
-    title: "TIL",
-    description: "Today I Learned - Quick notes and discoveries from Brian Lovin.",
-    path: "/til",
-  }),
-  alternates: {
-    types: {
-      "application/rss+xml": `${SITE_CONFIG.url}/til/rss.xml`,
-    },
-  },
-};
+export const metadata: Metadata = createMetadata({
+  title: "TIL",
+  description: "Today I Learned - Quick notes and discoveries from Brian Lovin.",
+  path: "/til",
+  rss: `${SITE_CONFIG.url}/til/rss.xml`,
+});
 
 export default function TilPage() {
   return (

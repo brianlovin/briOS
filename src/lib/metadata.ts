@@ -60,6 +60,9 @@ export const DEFAULT_METADATA: Metadata = {
     creator: SITE_CONFIG.author.twitter,
     images: ["/img/og.png"],
   },
+  alternates: {
+    canonical: `${SITE_CONFIG.url}/`,
+  },
   robots: {
     index: true,
     follow: true,
@@ -87,6 +90,8 @@ interface CreateMetadataParams {
   publishedTime?: string;
   modifiedTime?: string;
   type?: "website" | "article";
+  canonical?: string;
+  rss?: string;
 }
 
 /**
@@ -111,9 +116,12 @@ export function createMetadata(params: CreateMetadataParams = {}): Metadata {
     publishedTime,
     modifiedTime,
     type = "website",
+    canonical,
+    rss,
   } = params;
 
-  const url = `${SITE_CONFIG.url}${path}`;
+  const url = path === "/" ? `${SITE_CONFIG.url}/` : `${SITE_CONFIG.url}${path}`;
+  const canonicalUrl = canonical ?? url;
 
   const ogImage = image || "/img/og.png";
 
@@ -147,6 +155,16 @@ export function createMetadata(params: CreateMetadataParams = {}): Metadata {
       description,
       creator: SITE_CONFIG.author.twitter,
       images: [ogImage],
+    },
+    alternates: {
+      canonical: canonicalUrl,
+      ...(rss
+        ? {
+            types: {
+              "application/rss+xml": rss,
+            },
+          }
+        : {}),
     },
     robots: {
       index: !noIndex,
@@ -235,6 +253,11 @@ export function createPersonJsonLd() {
       "@type": "Organization",
       name: "Notion",
       url: "https://notion.com",
+    },
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "public",
+      url: `${SITE_CONFIG.url}/contact`,
     },
   };
 }

@@ -22,6 +22,11 @@ export function HomeHero() {
         I&apos;m a software designer living in San Francisco, currently making AI products at
         Notion.
       </p>
+      <p className="text-secondary text-2xl font-semibold text-pretty">
+        Before Notion, I co-founded Campsite and spent four years designing the GitHub Mobile apps
+        after GitHub acquired Spectrum. I also co-hosted the Design Details podcast and created
+        Staff Design.
+      </p>
     </Section>
   );
 }

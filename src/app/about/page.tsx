@@ -35,6 +35,7 @@ export default function About() {
         <div className="flex-1 overflow-y-auto">
           <div className="text-primary mx-auto flex max-w-2xl flex-1 flex-col gap-16 py-16 leading-[1.6] sm:py-32">
             <Section>
+              <h1 className="sr-only">About</h1>
               <Image
                 src="/img/avatar.jpg"
                 alt="Brian Lovin"
@@ -153,6 +154,14 @@ export default function About() {
                   </ListItem>
                 ))}
               </List>
+            </Section>
+
+            <Section>
+              <p className="text-secondary text-xl font-medium">
+                <InlineLink href="/contact">Contact</InlineLink>
+                {" · "}
+                <InlineLink href="/privacy">Privacy</InlineLink>
+              </p>
             </Section>
           </div>
         </div>
