@@ -3,11 +3,15 @@ import { withBotId } from "botid/next/config";
 import type { NextConfig } from "next";
 import path from "path";
 
+import { overthoughtRedirects } from "./src/lib/redirects";
+
 const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   async redirects() {
     return [
+      // Legacy Overthought blog URLs now land on the current writing index.
+      ...overthoughtRedirects,
       // Legacy brianlovin.ai (formerly the brios-api project) now redirects
       // to the main site. Both apex and www hosts, preserving the path.
       {
