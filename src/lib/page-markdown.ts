@@ -401,7 +401,10 @@ async function amaItemMarkdown(id: string): Promise<MarkdownResult> {
 async function listeningMarkdown(): Promise<MarkdownResult> {
   const page = isPlaceholderNotionBuild()
     ? { items: [] }
-    : await safe(() => getListeningHistoryDatabaseItems(undefined, 40), { items: [] });
+    : await safe(() => getListeningHistoryDatabaseItems(undefined, 40), {
+        items: [],
+        nextCursor: null,
+      });
 
   const body = [
     `# Listening`,
