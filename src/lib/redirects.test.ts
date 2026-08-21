@@ -33,4 +33,3 @@ describe("overthought redirects", () => {
     expect(match?.permanent).toBe(true);
   });
 });
-
