@@ -73,6 +73,7 @@ type GlobePerfTracker = {
   frame: (workMs?: number, cheap?: boolean) => void;
   markMarkers: () => void;
   markOptions: () => void;
+  reset: () => void;
   snapshot: () => GlobePerfSnapshot;
 };
 
@@ -151,6 +152,14 @@ function createGlobePerfTracker(): GlobePerfTracker {
     },
     markOptions() {
       optionUpdates += 1;
+    },
+    reset() {
+      dts.length = 0;
+      works.length = 0;
+      last = 0;
+      markerUpdates = 0;
+      optionUpdates = 0;
+      cheapFrames = 0;
     },
     snapshot() {
       const sortedDt = [...dts].sort((a, b) => a - b);
