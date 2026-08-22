@@ -54,16 +54,20 @@ type AimState = {
   duration: number;
 };
 
+type GlobePerfSnapshot = {
+  frames: number;
+  markerUpdates: number;
+  meanDt: number;
+  p95Dt: number;
+  dropped: number;
+  meanWork: number;
+  p95Work: number;
+};
+
 type GlobePerfTracker = {
-  frame: () => void;
+  frame: (workMs?: number) => void;
   markMarkers: () => void;
-  snapshot: () => {
-    frames: number;
-    markerUpdates: number;
-    meanDt: number;
-    p95Dt: number;
-    dropped: number;
-  };
+  snapshot: () => GlobePerfSnapshot;
 };
 
 function subscribeDark(onChange: () => void): () => void {
@@ -110,30 +114,43 @@ function scrollFeedFromOverlay(overlay: HTMLElement, deltaY: number): void {
   }
 }
 
+function percentile(sorted: number[], p: number): number {
+  if (sorted.length === 0) return 0;
+  const index = Math.min(sorted.length - 1, Math.max(0, Math.ceil(sorted.length * p) - 1));
+  return sorted[index] ?? 0;
+}
+
+function mean(values: number[]): number {
+  if (values.length === 0) return 0;
+  return values.reduce((sum, value) => sum + value, 0) / values.length;
+}
+
 function createGlobePerfTracker(): GlobePerfTracker {
   const dts: number[] = [];
+  const works: number[] = [];
   let last = 0;
   let markerUpdates = 0;
   return {
-    frame() {
+    frame(workMs = 0) {
       const now = performance.now();
       if (last) dts.push(now - last);
       last = now;
+      works.push(workMs);
     },
     markMarkers() {
       markerUpdates += 1;
     },
     snapshot() {
-      const sorted = [...dts].sort((a, b) => a - b);
-      const mean = dts.length === 0 ? 0 : dts.reduce((sum, dt) => sum + dt, 0) / dts.length;
-      const p95 =
-        sorted[Math.max(0, Math.floor(sorted.length * 0.95) - (sorted.length > 0 ? 1 : 0))] ?? 0;
+      const sortedDt = [...dts].sort((a, b) => a - b);
+      const sortedWork = [...works].sort((a, b) => a - b);
       return {
         frames: dts.length,
         markerUpdates,
-        meanDt: mean,
-        p95Dt: p95,
+        meanDt: mean(dts),
+        p95Dt: percentile(sortedDt, 0.95),
         dropped: dts.filter((dt) => dt > DROPPED_FRAME_MS).length,
+        meanWork: mean(works),
+        p95Work: percentile(sortedWork, 0.95),
       };
     },
   };
@@ -318,17 +335,23 @@ export function ActivityGlobe({
     themeDirtyRef.current = false;
 
     const perf = isGlobePerfQuery(window.location.search) ? createGlobePerfTracker() : null;
-    let loggedPerf = false;
+    type GlobePerfWindow = Window & {
+      __ACTIVITY_GLOBE_PERF?: ReturnType<GlobePerfTracker["snapshot"]>;
+      __ACTIVITY_GLOBE_PERF_LIVE?: GlobePerfTracker;
+    };
     if (perf) {
-      window.setTimeout(() => {
-        if (loggedPerf) return;
-        loggedPerf = true;
-        const snapshot = perf.snapshot();
-        console.info("[activity-globe]", snapshot);
-        (window as Window & { __ACTIVITY_GLOBE_PERF?: typeof snapshot }).__ACTIVITY_GLOBE_PERF =
-          snapshot;
-      }, 8000);
+      (window as GlobePerfWindow).__ACTIVITY_GLOBE_PERF_LIVE = perf;
     }
+    let loggedPerf = false;
+    const perfTimer = perf
+      ? window.setTimeout(() => {
+          if (loggedPerf) return;
+          loggedPerf = true;
+          const snapshot = perf.snapshot();
+          console.info("[activity-globe]", snapshot);
+          (window as GlobePerfWindow).__ACTIVITY_GLOBE_PERF = snapshot;
+        }, 8000)
+      : 0;
 
     let frame = 0;
     const intersectingRef = { current: true };
@@ -402,8 +425,9 @@ export function ActivityGlobe({
         themeDirtyRef.current = false;
       }
 
+      const workStart = performance.now();
       globe.update(update);
-      perf?.frame();
+      perf?.frame(performance.now() - workStart);
       frame = window.requestAnimationFrame(onRender);
     };
 
@@ -438,6 +462,7 @@ export function ActivityGlobe({
 
     return () => {
       stop();
+      if (perfTimer) window.clearTimeout(perfTimer);
       document.removeEventListener("visibilitychange", onVisibility);
       io.disconnect();
       globeRef.current = null;
