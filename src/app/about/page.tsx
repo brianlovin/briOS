@@ -155,14 +155,6 @@ export default function About() {
                 ))}
               </List>
             </Section>
-
-            <Section>
-              <p className="text-secondary text-xl font-medium">
-                <InlineLink href="/contact">Contact</InlineLink>
-                {" · "}
-                <InlineLink href="/privacy">Privacy</InlineLink>
-              </p>
-            </Section>
           </div>
         </div>
       </div>

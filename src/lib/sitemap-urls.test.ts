@@ -11,9 +11,9 @@ describe("buildSitemapEntries", () => {
     expect(urls).toContain(`${SITE_CONFIG.url}/`);
     expect(urls).toContain(`${SITE_CONFIG.url}/writing`);
     expect(urls).toContain(`${SITE_CONFIG.url}/about`);
-    expect(urls).toContain(`${SITE_CONFIG.url}/contact`);
-    expect(urls).toContain(`${SITE_CONFIG.url}/privacy`);
     expect(urls).toContain(`${SITE_CONFIG.url}/llms.txt`);
+    expect(urls).not.toContain(`${SITE_CONFIG.url}/contact`);
+    expect(urls).not.toContain(`${SITE_CONFIG.url}/privacy`);
     expect(urls).not.toContain(`${SITE_CONFIG.url}/dev`);
     expect(urls).not.toContain(`${SITE_CONFIG.url}/activity/sandbox`);
     expect(urls.some((item) => item.includes("/api/"))).toBe(false);

@@ -254,11 +254,6 @@ export function createPersonJsonLd() {
       name: "Notion",
       url: "https://notion.com",
     },
-    contactPoint: {
-      "@type": "ContactPoint",
-      contactType: "public",
-      url: `${SITE_CONFIG.url}/contact`,
-    },
   };
 }
 

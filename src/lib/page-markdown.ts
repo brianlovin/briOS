@@ -17,12 +17,10 @@ import { blocksToMarkdown } from "@/lib/notion-to-markdown";
 import { buildSlug, extractShortIdFromSlug } from "@/lib/short-id";
 import {
   ABOUT_BIO_PARAGRAPHS,
-  CONTACT_PARAGRAPHS,
   HOME_BIO_PARAGRAPHS,
   INDEXABLE_SECTIONS,
   joinParagraphs,
   markdownNotFoundBody,
-  PRIVACY_PARAGRAPHS,
   PUBLIC_PROFILES,
   SITE_HOST,
   SITE_NAME,
@@ -46,10 +44,9 @@ function md(status: 200 | 404, body: string, cacheTags: string[] = []): Markdown
 
 function linkList(items: Array<{ title: string; href: string; note?: string }>): string {
   return items
-    .map((item) => {
-      const abs = item.href.startsWith("http") ? item.href : item.href;
-      return item.note ? `- [${item.title}](${abs}): ${item.note}` : `- [${item.title}](${abs})`;
-    })
+    .map((item) =>
+      item.note ? `- [${item.title}](${item.href}): ${item.note}` : `- [${item.title}](${item.href})`,
+    )
     .join("\n");
 }
 
@@ -116,51 +113,9 @@ async function aboutMarkdown(): Promise<MarkdownResult> {
     "",
     joinParagraphs(ABOUT_BIO_PARAGRAPHS),
     "",
-    "## Contact",
+    "## Elsewhere",
     "",
-    linkList([
-      ...PUBLIC_PROFILES.map((profile) => ({ title: profile.name, href: profile.href })),
-      { title: "Contact", href: "/contact" },
-      { title: "Privacy", href: "/privacy" },
-    ]),
-  ].join("\n");
-  return md(200, body);
-}
-
-async function contactMarkdown(): Promise<MarkdownResult> {
-  const body = [
-    `# Contact`,
-    "",
-    joinParagraphs(CONTACT_PARAGRAPHS),
-    "",
-    "## Public channels",
-    "",
-    linkList([
-      ...PUBLIC_PROFILES.map((profile) => ({
-        title: profile.name,
-        href: profile.href,
-        note: profile.handle,
-      })),
-      { title: "AMA", href: "/ama", note: "Questions other people may also want answered" },
-      { title: `${SITE_PRODUCT} source`, href: SITE_REPO },
-    ]),
-  ].join("\n");
-  return md(200, body);
-}
-
-async function privacyMarkdown(): Promise<MarkdownResult> {
-  const body = [
-    `# Privacy`,
-    "",
-    joinParagraphs(PRIVACY_PARAGRAPHS),
-    "",
-    "## Related",
-    "",
-    linkList([
-      { title: "Contact", href: "/contact" },
-      { title: "About", href: "/about" },
-      { title: SITE_REPO, href: SITE_REPO, note: "how the site is built" },
-    ]),
+    linkList(PUBLIC_PROFILES.map((profile) => ({ title: profile.name, href: profile.href }))),
   ].join("\n");
   return md(200, body);
 }
@@ -430,15 +385,12 @@ async function activityMarkdown(): Promise<MarkdownResult> {
   const body = [
     `# Activity`,
     "",
-    `A live stream of likes, visits, and other public events on ${SITE_HOST}. The HTML page is a client-rendered feed with a globe; this markdown page describes what you will find there.`,
-    "",
-    "Events can include anonymous likes on writing and collections, coarse visit geography (country or city, never a street address), GitHub pull requests and stars that I have chosen to publish, and HN digest subscriptions (the email itself is never shown).",
+    `A public feed of likes, visits, and other events on ${SITE_HOST}. The HTML page is a live globe; this is a short description.`,
     "",
     "## Related",
     "",
     linkList([
       { title: "Writing", href: "/writing" },
-      { title: "Privacy", href: "/privacy", note: "what the feed collects" },
       { title: "Home", href: "/" },
     ]),
   ].join("\n");
@@ -555,8 +507,6 @@ export async function renderPageMarkdown(pathname: string): Promise<MarkdownResu
 
   if (path === "/") return homeMarkdown();
   if (path === "/about") return aboutMarkdown();
-  if (path === "/contact") return contactMarkdown();
-  if (path === "/privacy") return privacyMarkdown();
   if (path === "/writing") return writingIndexMarkdown();
   if (path === "/hn") return hnIndexMarkdown();
   if (path === "/stack") return stackMarkdown();
