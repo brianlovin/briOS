@@ -112,9 +112,9 @@ describe("globeDevicePixelRatio", () => {
 
 describe("cobeSizeForCssPx", () => {
   test("converts the old 12px + glow target through Cobe's mesh-relative size", () => {
-    expect(cobeCssPxForSize(cobeSizeForCssPx(22, 692), 692)).toBeCloseTo(22);
-    expect(cobeSizeForCssPx(GLOBE_MARKER_TARGET_CSS_PX, 692)).toBeGreaterThan(0.05);
-    expect(cobeSizeForCssPx(GLOBE_MARKER_TARGET_CSS_PX, 692)).toBeLessThan(0.08);
+    expect(cobeCssPxForSize(cobeSizeForCssPx(18, 692), 692)).toBeCloseTo(18);
+    expect(cobeSizeForCssPx(GLOBE_MARKER_TARGET_CSS_PX, 692)).toBeGreaterThan(0.045);
+    expect(cobeSizeForCssPx(GLOBE_MARKER_TARGET_CSS_PX, 692)).toBeLessThan(0.07);
     expect(cobeSizeForCssPx(GLOBE_MARKER_TARGET_CSS_PX, 900)).toBeLessThan(
       cobeSizeForCssPx(GLOBE_MARKER_TARGET_CSS_PX, GLOBE_MESH_MIN),
     );

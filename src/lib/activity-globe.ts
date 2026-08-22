@@ -130,12 +130,12 @@ export function globeDiameterFromHeight(height: number): number {
 export const GLOBE_DEVICE_PIXEL_RATIO_CAP = 2;
 
 /**
- * Production CSS was a 12px disc + ~1.15× / 8px glow. Cobe `size` is mesh-relative
+ * Production CSS was a 12px disc + glow. Cobe `size` is mesh-relative
  * (CSS diameter ≈ size × mesh / 2), so a fixed 0.08 overshoots on a ~0.72×vh
- * canvas. Target the old CSS weight in pixels, then convert at the live mesh.
+ * canvas. Target ~18px (12px core + visible bloom) at the live mesh.
  */
 export const GLOBE_MARKER_CSS_PX = 12;
-export const GLOBE_MARKER_GLOW_CSS_PX = 10;
+export const GLOBE_MARKER_GLOW_CSS_PX = 6;
 export const GLOBE_MARKER_TARGET_CSS_PX = GLOBE_MARKER_CSS_PX + GLOBE_MARKER_GLOW_CSS_PX;
 
 /** Inverse of Cobe's marker vertex scale: diameter_css ≈ size × mesh / 2. */
