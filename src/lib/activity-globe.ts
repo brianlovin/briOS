@@ -124,10 +124,16 @@ export function globeDiameterFromHeight(height: number): number {
 }
 
 /**
- * Cap globe backing-store density. A 512–~1400px mesh at devicePixelRatio 2 is a
- * large fragment workload for a decorative hang; 1x keeps land readable at 60fps.
+ * Same cap as production: retina land dots stay sharp. Do not drop this to 1 —
+ * a 1x backing store is what made the preview look soft.
  */
-export const GLOBE_DEVICE_PIXEL_RATIO = 1;
+export const GLOBE_DEVICE_PIXEL_RATIO_CAP = 2;
+
+export function globeDevicePixelRatio(
+  dpr: number = typeof window === "undefined" ? 1 : window.devicePixelRatio || 1,
+): number {
+  return Math.min(GLOBE_DEVICE_PIXEL_RATIO_CAP, dpr || 1);
+}
 
 export type GlobeMarkerSnapshot = {
   id: string;
@@ -203,7 +209,11 @@ export function cobeGpuMarkers(
   }));
 }
 
-/** WebGL discs from the recent-location trail. Ids are kept for change detection. */
+/**
+ * WebGL discs from the recent-location trail. Ids are kept for change detection.
+ * Focus is a one-shot size/color bump (dirty once on, once off) — not a
+ * per-frame pulse, so panning never re-uploads the marker buffer.
+ */
 export function cobeWebGLMarkers(
   markers: ReadonlyArray<{
     id: string;

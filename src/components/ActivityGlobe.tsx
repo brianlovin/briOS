@@ -17,9 +17,10 @@ import { type ActivityLatLng, activityRecentGlobeMarkers } from "@/lib/activity-
 import {
   cobeGpuMarkers,
   cobeWebGLMarkers,
-  GLOBE_DEVICE_PIXEL_RATIO,
+  GLOBE_DEVICE_PIXEL_RATIO_CAP,
   GLOBE_HANG,
   GLOBE_MESH_MIN,
+  globeDevicePixelRatio,
   globeDiameterFromHeight,
   globeMarkersChanged,
   type GlobeMarkerSnapshot,
@@ -315,6 +316,7 @@ export function ActivityGlobe({
     if (!canvas) return;
 
     const size = sizeRef.current;
+    const dpr = globeDevicePixelRatio();
     const initialMarkers = cobeWebGLMarkers(
       markersRef.current,
       configRef.current,
@@ -322,7 +324,7 @@ export function ActivityGlobe({
     );
     let sentMarkers: GlobeMarkerSnapshot[] = initialMarkers;
     const globe = createGlobe(canvas, {
-      devicePixelRatio: GLOBE_DEVICE_PIXEL_RATIO,
+      devicePixelRatio: dpr,
       width: size,
       height: size,
       phi: phiRef.current,
@@ -355,6 +357,8 @@ export function ActivityGlobe({
 
     let frame = 0;
     const intersectingRef = { current: true };
+    // Reused on the cheap path so idle spin / drag never allocates a new update object.
+    const poseState = { phi: 0, theta: 0 };
 
     const isActive = () =>
       shouldRunGlobeLoop({
@@ -401,28 +405,31 @@ export function ActivityGlobe({
         }
       }
 
-      const update: { phi: number; theta: number } & Record<string, unknown> = {
-        phi: phiRef.current,
-        theta: thetaRef.current,
-      };
+      const markersDirty = markersDirtyRef.current;
+      const themeDirty = themeDirtyRef.current;
+      let update: { phi: number; theta: number } & Record<string, unknown> = poseState;
+      poseState.phi = phiRef.current;
+      poseState.theta = thetaRef.current;
 
-      if (markersDirtyRef.current) {
-        const nextMarkers = cobeWebGLMarkers(
-          markersRef.current,
-          configRef.current,
-          focusIdRef.current,
-        );
-        if (globeMarkersChanged(sentMarkers, nextMarkers)) {
-          update.markers = cobeGpuMarkers(nextMarkers);
-          sentMarkers = nextMarkers;
-          perf?.markMarkers();
+      if (markersDirty || themeDirty) {
+        update = { phi: poseState.phi, theta: poseState.theta };
+        if (markersDirty) {
+          const nextMarkers = cobeWebGLMarkers(
+            markersRef.current,
+            configRef.current,
+            focusIdRef.current,
+          );
+          if (globeMarkersChanged(sentMarkers, nextMarkers)) {
+            update.markers = cobeGpuMarkers(nextMarkers);
+            sentMarkers = nextMarkers;
+            perf?.markMarkers();
+          }
+          markersDirtyRef.current = false;
         }
-        markersDirtyRef.current = false;
-      }
-
-      if (themeDirtyRef.current) {
-        Object.assign(update, globeCobeOptions(themeRef.current.isDark, configRef.current));
-        themeDirtyRef.current = false;
+        if (themeDirty) {
+          Object.assign(update, globeCobeOptions(themeRef.current.isDark, configRef.current));
+          themeDirtyRef.current = false;
+        }
       }
 
       const workStart = performance.now();
@@ -492,6 +499,7 @@ export function ActivityGlobe({
     setGrabbing(true);
   }
 
+  // Pointer-move writes refs only. rAF applies the cheap { phi, theta } update.
   function applyDrag(clientX: number, clientY: number): void {
     const now = performance.now();
     const dx = clientX - lastXRef.current;
@@ -551,8 +559,8 @@ export function ActivityGlobe({
       >
         <canvas
           ref={canvasRef}
-          width={layout.size * GLOBE_DEVICE_PIXEL_RATIO}
-          height={layout.size * GLOBE_DEVICE_PIXEL_RATIO}
+          width={layout.size * GLOBE_DEVICE_PIXEL_RATIO_CAP}
+          height={layout.size * GLOBE_DEVICE_PIXEL_RATIO_CAP}
           className={cn(
             "pointer-events-auto size-full touch-none select-none",
             grabbing ? "cursor-grabbing" : "cursor-grab",

@@ -4,10 +4,12 @@ import { activityGlobeMarkerIdForLocation, activityRecentGlobeMarkers } from "./
 import {
   cobeGpuMarkers,
   cobeWebGLMarkers,
+  GLOBE_DEVICE_PIXEL_RATIO_CAP,
   GLOBE_HANG,
   GLOBE_MAP_DOT_CHORD,
   GLOBE_MESH_RADIUS,
   globeAimVisibleBias,
+  globeDevicePixelRatio,
   globeMapDotPx,
   globeMarkerFacing,
   globeMarkersChanged,
@@ -89,6 +91,16 @@ describe("shortestAngleDelta", () => {
     const target = latLngToGlobePose(0, 0).phi;
     const spun = target + Math.PI * 2 * 3 + 0.4;
     expect(shortestAngleDelta(spun, target)).toBeCloseTo(-0.4);
+  });
+});
+
+describe("globeDevicePixelRatio", () => {
+  test("matches production: cap at 2, pass through 1x and 2x", () => {
+    expect(GLOBE_DEVICE_PIXEL_RATIO_CAP).toBe(2);
+    expect(globeDevicePixelRatio(1)).toBe(1);
+    expect(globeDevicePixelRatio(2)).toBe(2);
+    expect(globeDevicePixelRatio(3)).toBe(2);
+    expect(globeDevicePixelRatio(0)).toBe(1);
   });
 });
 

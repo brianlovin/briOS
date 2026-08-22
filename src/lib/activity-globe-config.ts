@@ -70,9 +70,10 @@ export const DEFAULT_ACTIVITY_GLOBE_CONFIG: ActivityGlobeConfig = {
   darkGlowColor: [0.12, 0.12, 0.12],
   markerColor: [252 / 255, 83 / 255, 42 / 255],
 
-  markerBaseSize: 0.018,
-  markerSizePerLog: 0.007,
-  markerMaxSize: 0.05,
+  // ~12px CSS disc + glow on a 512–900px mesh. 0.018 read as a pinprick.
+  markerBaseSize: 0.045,
+  markerSizePerLog: 0.01,
+  markerMaxSize: 0.09,
 
   markerDotPx: 12,
   markerBlurPx: 8,

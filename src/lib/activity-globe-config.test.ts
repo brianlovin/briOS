@@ -43,6 +43,8 @@ describe("activity-globe-config", () => {
     expect(markerSizeForAge(0, cfg)).toBeCloseTo(cfg.markerBaseSize);
     expect(markerSizeForAge(1, cfg)).toBeCloseTo(cfg.markerBaseSize * 0.9);
     expect(markerSizeForAge(2, cfg)).toBeGreaterThan(0);
+    // Newest discs must stay near the old 12px CSS weight, not the 0.018 pinprick.
+    expect(markerSizeForAge(0, cfg)).toBeGreaterThanOrEqual(0.04);
   });
 
   test("focusMarkerColor stays in 0–1 and is brighter than the base orange", () => {
