@@ -18,6 +18,7 @@ import {
   latLngToVisibleGlobePose,
   projectGlobeMarker,
   shortestAngleDelta,
+  shouldCommitCobeRootStyle,
   shouldRunGlobeLoop,
 } from "./activity-globe";
 import { DEFAULT_ACTIVITY_GLOBE_CONFIG } from "./activity-globe-config";
@@ -178,6 +179,17 @@ describe("isGlobePerfQuery", () => {
     expect(isGlobePerfQuery("?globePerf=1")).toBe(true);
     expect(isGlobePerfQuery("?globePerf=0")).toBe(false);
     expect(isGlobePerfQuery("")).toBe(false);
+  });
+});
+
+describe("shouldCommitCobeRootStyle", () => {
+  test("skips identical and empty :root writes", () => {
+    expect(shouldCommitCobeRootStyle(":root{}", "")).toBe(false);
+    expect(shouldCommitCobeRootStyle("", "")).toBe(false);
+    expect(shouldCommitCobeRootStyle(":root{--cobe-visible-a:N;}", "")).toBe(true);
+    expect(
+      shouldCommitCobeRootStyle(":root{--cobe-visible-a:N;}", ":root{--cobe-visible-a:N;}"),
+    ).toBe(false);
   });
 });
 

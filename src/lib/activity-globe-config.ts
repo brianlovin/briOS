@@ -44,17 +44,19 @@ export function markerAgeScale(age: number, shrink: number): number {
   return (1 - shrink) ** age;
 }
 
-/** Newest is `markerBaseSize`; each older step shrinks by `markerAgeShrink`. */
+/** Newest is `markerBaseSize`; each older step shrinks, never below half that. */
 export function markerSizeForAge(
   age: number,
   config: Pick<ActivityGlobeConfig, "markerBaseSize" | "markerAgeShrink">,
 ): number {
-  return config.markerBaseSize * markerAgeScale(age, config.markerAgeShrink);
+  const scaled = config.markerBaseSize * markerAgeScale(age, config.markerAgeShrink);
+  return Math.max(config.markerBaseSize * 0.5, scaled);
 }
 
 export const DEFAULT_ACTIVITY_GLOBE_CONFIG: ActivityGlobeConfig = {
   diffuse: 0.6,
-  mapSamples: 19000,
+  // 19000 at DPR 2 on a ~0.72×vh mesh dropped frames on retina. 13000 keeps land readable.
+  mapSamples: 13000,
   mapBrightness: 3.1,
   mapBaseBrightness: 0,
   mapBrightnessDark: 6,
@@ -70,10 +72,10 @@ export const DEFAULT_ACTIVITY_GLOBE_CONFIG: ActivityGlobeConfig = {
   darkGlowColor: [0.12, 0.12, 0.12],
   markerColor: [252 / 255, 83 / 255, 42 / 255],
 
-  // ~12px CSS disc + glow on a 512–900px mesh. 0.018 read as a pinprick.
-  markerBaseSize: 0.045,
-  markerSizePerLog: 0.01,
-  markerMaxSize: 0.09,
+  // Cobe clip radius ≈ size * mesh/4. 0.08 ≈ 12px disc + the old 1.15× glow.
+  markerBaseSize: 0.08,
+  markerSizePerLog: 0.014,
+  markerMaxSize: 0.14,
 
   markerDotPx: 12,
   markerBlurPx: 8,

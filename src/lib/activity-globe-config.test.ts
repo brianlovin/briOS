@@ -38,13 +38,19 @@ describe("activity-globe-config", () => {
     expect(markerAgeScale(1, DEFAULT_ACTIVITY_GLOBE_CONFIG.markerAgeShrink)).toBeCloseTo(0.9);
   });
 
-  test("markerSizeForAge shrinks from markerBaseSize", () => {
+  test("markerSizeForAge shrinks from markerBaseSize and floors the trail", () => {
     const cfg = DEFAULT_ACTIVITY_GLOBE_CONFIG;
     expect(markerSizeForAge(0, cfg)).toBeCloseTo(cfg.markerBaseSize);
     expect(markerSizeForAge(1, cfg)).toBeCloseTo(cfg.markerBaseSize * 0.9);
     expect(markerSizeForAge(2, cfg)).toBeGreaterThan(0);
-    // Newest discs must stay near the old 12px CSS weight, not the 0.018 pinprick.
-    expect(markerSizeForAge(0, cfg)).toBeGreaterThanOrEqual(0.04);
+    // Newest discs must match the old ~12px CSS + glow weight.
+    expect(markerSizeForAge(0, cfg)).toBeGreaterThanOrEqual(0.06);
+    expect(markerSizeForAge(9, cfg)).toBeGreaterThanOrEqual(cfg.markerBaseSize * 0.5);
+  });
+
+  test("default mapSamples stays in the 12k–14k band", () => {
+    expect(DEFAULT_ACTIVITY_GLOBE_CONFIG.mapSamples).toBeGreaterThanOrEqual(12000);
+    expect(DEFAULT_ACTIVITY_GLOBE_CONFIG.mapSamples).toBeLessThanOrEqual(14000);
   });
 
   test("focusMarkerColor stays in 0–1 and is brighter than the base orange", () => {

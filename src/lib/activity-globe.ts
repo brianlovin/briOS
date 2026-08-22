@@ -185,6 +185,44 @@ export function isGlobePerfQuery(search: string): boolean {
   }
 }
 
+/**
+ * Cobe's `update()` always does `style.textContent = ":root{...}"`.
+ * With no CSS-anchor ids that string is `:root{}` every frame, which still
+ * invalidates document styles. Skip identical and empty writes.
+ */
+export function shouldCommitCobeRootStyle(next: string, prev: string): boolean {
+  if (next === prev) return false;
+  return next !== ":root{}" && next !== "";
+}
+
+/** First `<style>` Cobe appended to `document.head` during `createGlobe`. */
+export function takeNewHeadStyle(before: ReadonlySet<Element>): HTMLStyleElement | null {
+  if (typeof document === "undefined") return null;
+  for (const node of document.head.querySelectorAll("style")) {
+    if (!before.has(node)) return node;
+  }
+  return null;
+}
+
+/** Neutralize Cobe's empty `:root{}` write so idle spin does not restyle `:root`. */
+export function muteCobeEmptyRootStyle(style: HTMLStyleElement): void {
+  const nativeSet = Object.getOwnPropertyDescriptor(Node.prototype, "textContent")?.set;
+  if (!nativeSet) return;
+  let applied = style.textContent ?? "";
+  Object.defineProperty(style, "textContent", {
+    configurable: true,
+    get() {
+      return applied;
+    },
+    set(value: string) {
+      const next = value ?? "";
+      if (!shouldCommitCobeRootStyle(next, applied)) return;
+      applied = next;
+      nativeSet.call(style, next);
+    },
+  });
+}
+
 /** CSS px of one COBE country-shape dot at the facing center of the mesh. */
 export function globeMapDotPx(meshSize: number, scale = 1): number {
   if (!Number.isFinite(meshSize) || meshSize <= 0) return 2;

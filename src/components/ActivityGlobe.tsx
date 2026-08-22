@@ -26,8 +26,10 @@ import {
   type GlobeMarkerSnapshot,
   isGlobePerfQuery,
   latLngToVisibleGlobePose,
+  muteCobeEmptyRootStyle,
   shortestAngleDelta,
   shouldRunGlobeLoop,
+  takeNewHeadStyle,
 } from "@/lib/activity-globe";
 import {
   type ActivityGlobeConfig,
@@ -58,6 +60,8 @@ type AimState = {
 type GlobePerfSnapshot = {
   frames: number;
   markerUpdates: number;
+  optionUpdates: number;
+  cheapFrames: number;
   meanDt: number;
   p95Dt: number;
   dropped: number;
@@ -66,8 +70,9 @@ type GlobePerfSnapshot = {
 };
 
 type GlobePerfTracker = {
-  frame: (workMs?: number) => void;
+  frame: (workMs?: number, cheap?: boolean) => void;
   markMarkers: () => void;
+  markOptions: () => void;
   snapshot: () => GlobePerfSnapshot;
 };
 
@@ -131,15 +136,21 @@ function createGlobePerfTracker(): GlobePerfTracker {
   const works: number[] = [];
   let last = 0;
   let markerUpdates = 0;
+  let optionUpdates = 0;
+  let cheapFrames = 0;
   return {
-    frame(workMs = 0) {
+    frame(workMs = 0, cheap = true) {
       const now = performance.now();
       if (last) dts.push(now - last);
       last = now;
       works.push(workMs);
+      if (cheap) cheapFrames += 1;
     },
     markMarkers() {
       markerUpdates += 1;
+    },
+    markOptions() {
+      optionUpdates += 1;
     },
     snapshot() {
       const sortedDt = [...dts].sort((a, b) => a - b);
@@ -147,6 +158,8 @@ function createGlobePerfTracker(): GlobePerfTracker {
       return {
         frames: dts.length,
         markerUpdates,
+        optionUpdates,
+        cheapFrames,
         meanDt: mean(dts),
         p95Dt: percentile(sortedDt, 0.95),
         dropped: dts.filter((dt) => dt > DROPPED_FRAME_MS).length,
@@ -323,6 +336,7 @@ export function ActivityGlobe({
       focusIdRef.current,
     );
     let sentMarkers: GlobeMarkerSnapshot[] = initialMarkers;
+    const stylesBefore = new Set(document.head.querySelectorAll("style"));
     const globe = createGlobe(canvas, {
       devicePixelRatio: dpr,
       width: size,
@@ -330,8 +344,12 @@ export function ActivityGlobe({
       phi: phiRef.current,
       theta: thetaRef.current,
       markers: cobeGpuMarkers(initialMarkers),
+      // DPR 2 already supplies the samples; MSAA on a ~0.72×vh mesh is the idle-frame tax.
+      context: { antialias: false, powerPreference: "high-performance" },
       ...globeCobeOptions(themeRef.current.isDark, configRef.current),
     });
+    const cobeStyle = takeNewHeadStyle(stylesBefore);
+    if (cobeStyle) muteCobeEmptyRootStyle(cobeStyle);
     globeRef.current = globe;
     markersDirtyRef.current = false;
     themeDirtyRef.current = false;
@@ -411,7 +429,9 @@ export function ActivityGlobe({
       poseState.phi = phiRef.current;
       poseState.theta = thetaRef.current;
 
+      let cheap = true;
       if (markersDirty || themeDirty) {
+        cheap = false;
         update = { phi: poseState.phi, theta: poseState.theta };
         if (markersDirty) {
           const nextMarkers = cobeWebGLMarkers(
@@ -429,12 +449,13 @@ export function ActivityGlobe({
         if (themeDirty) {
           Object.assign(update, globeCobeOptions(themeRef.current.isDark, configRef.current));
           themeDirtyRef.current = false;
+          perf?.markOptions();
         }
       }
 
       const workStart = performance.now();
       globe.update(update);
-      perf?.frame(performance.now() - workStart);
+      perf?.frame(performance.now() - workStart, cheap);
       frame = window.requestAnimationFrame(onRender);
     };
 
