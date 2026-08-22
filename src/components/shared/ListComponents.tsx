@@ -12,9 +12,9 @@ export function SectionHeading({
   className = "",
 }: PropsWithChildren & { className?: string }) {
   return (
-    <div className={cn("text-quaternary dark:text-tertiary leading-[1.6] select-none", className)}>
+    <h2 className={cn("text-quaternary dark:text-tertiary leading-[1.6] select-none", className)}>
       {children}
-    </div>
+    </h2>
   );
 }
 

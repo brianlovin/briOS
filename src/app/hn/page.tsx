@@ -4,16 +4,12 @@ import { createMetadata } from "@/lib/metadata";
 
 import { HNPageClient } from "./HNPageClient";
 
-export const metadata: Metadata = {
-  ...createMetadata({
-    title: "Hacker News",
-    description: "A minimal, clean interface for reading Hacker News.",
-    path: "/hn",
-  }),
-  alternates: {
-    canonical: "https://news.ycombinator.com",
-  },
-};
+export const metadata: Metadata = createMetadata({
+  title: "Hacker News",
+  description: "A minimal, clean interface for reading Hacker News.",
+  path: "/hn",
+  canonical: "https://news.ycombinator.com",
+});
 
 export default function HNPage() {
   return <HNPageClient />;

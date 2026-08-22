@@ -8,18 +8,12 @@ import { getServerLikes } from "@/lib/likes-server";
 import { createMetadata, SITE_CONFIG } from "@/lib/metadata";
 import { isPlaceholderNotionBuild } from "@/lib/notion";
 
-export const metadata: Metadata = {
-  ...createMetadata({
-    title: "Good websites",
-    description: "A curated collection of inspirational good websites",
-    path: "/sites",
-  }),
-  alternates: {
-    types: {
-      "application/rss+xml": `${SITE_CONFIG.url}/sites/rss.xml`,
-    },
-  },
-};
+export const metadata: Metadata = createMetadata({
+  title: "Good websites",
+  description: "A curated collection of inspirational good websites",
+  path: "/sites",
+  rss: `${SITE_CONFIG.url}/sites/rss.xml`,
+});
 
 export default async function GoodWebsitesPage() {
   // Keep the page-local days island live so /sites stays subscribed to the

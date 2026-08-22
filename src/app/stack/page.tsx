@@ -7,19 +7,13 @@ import { createMetadata, SITE_CONFIG } from "@/lib/metadata";
 import { isPlaceholderNotionBuild } from "@/lib/notion";
 import { getStacks, type StackItem } from "@/lib/stack";
 
-export const metadata: Metadata = {
-  ...createMetadata({
-    title: "Stack",
-    description:
-      "Apps, tools, and services I use every day. My personal stack of productivity tools and software.",
-    path: "/stack",
-  }),
-  alternates: {
-    types: {
-      "application/rss+xml": `${SITE_CONFIG.url}/stack/rss.xml`,
-    },
-  },
-};
+export const metadata: Metadata = createMetadata({
+  title: "Stack",
+  description:
+    "Apps, tools, and services I use every day. My personal stack of productivity tools and software.",
+  path: "/stack",
+  rss: `${SITE_CONFIG.url}/stack/rss.xml`,
+});
 
 export default async function StackPage() {
   const allStacks = await getCachedStacks();
