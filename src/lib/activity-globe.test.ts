@@ -2,18 +2,23 @@ import { describe, expect, test } from "bun:test";
 
 import { activityGlobeMarkerIdForLocation, activityRecentGlobeMarkers } from "./activity-geo";
 import {
-  bindableGlobeMarkers,
+  cobeGpuMarkers,
+  cobeWebGLMarkers,
   GLOBE_HANG,
   GLOBE_MAP_DOT_CHORD,
   GLOBE_MESH_RADIUS,
   globeAimVisibleBias,
   globeMapDotPx,
   globeMarkerFacing,
+  globeMarkersChanged,
+  isGlobePerfQuery,
   latLngToGlobePose,
   latLngToVisibleGlobePose,
   projectGlobeMarker,
   shortestAngleDelta,
+  shouldRunGlobeLoop,
 } from "./activity-globe";
+import { DEFAULT_ACTIVITY_GLOBE_CONFIG } from "./activity-globe-config";
 
 describe("latLngToGlobePose", () => {
   test("uses the COBE phi/theta convention", () => {
@@ -96,10 +101,71 @@ describe("globeMapDotPx", () => {
   });
 });
 
-describe("bindableGlobeMarkers", () => {
-  test("keeps ids and locations so COBE can bind CSS anchors", () => {
-    const markers = bindableGlobeMarkers([{ id: "sf", location: [37.77, -122.42], size: 0.02 }]);
-    expect(markers).toEqual([{ id: "sf", location: [37.77, -122.42], size: 0 }]);
+describe("globeMarkersChanged", () => {
+  const sf = { id: "sf", location: [37.77, -122.42] as [number, number], size: 0.02 };
+  const ldn = { id: "ldn", location: [51.51, -0.13] as [number, number], size: 0.018 };
+
+  test("is a no-op for the same ref or identical id/location/size", () => {
+    const markers = [sf];
+    expect(globeMarkersChanged(markers, markers)).toBe(false);
+    expect(globeMarkersChanged([sf], [{ ...sf, location: [37.77, -122.42] }])).toBe(false);
+  });
+
+  test("detects identity, location, size, and color changes", () => {
+    expect(globeMarkersChanged(null, [sf])).toBe(true);
+    expect(globeMarkersChanged([sf], [ldn])).toBe(true);
+    expect(globeMarkersChanged([sf], [{ ...sf, size: 0.04 }])).toBe(true);
+    expect(globeMarkersChanged([sf], [{ ...sf, location: [37.8, -122.42] }])).toBe(true);
+    expect(globeMarkersChanged([sf], [{ ...sf, color: [1, 0, 0] }])).toBe(true);
+  });
+});
+
+describe("shouldRunGlobeLoop", () => {
+  test("pauses when the document is hidden or the globe is off-screen", () => {
+    expect(shouldRunGlobeLoop({ visibilityState: "visible", isIntersecting: true })).toBe(true);
+    expect(shouldRunGlobeLoop({ visibilityState: "hidden", isIntersecting: true })).toBe(false);
+    expect(shouldRunGlobeLoop({ visibilityState: "visible", isIntersecting: false })).toBe(false);
+  });
+});
+
+describe("cobeWebGLMarkers", () => {
+  test("keeps ids and WebGL sizes greater than zero", () => {
+    const recent = activityRecentGlobeMarkers(
+      [
+        { id: "tokyo", meta: { latitude: 35.68, longitude: 139.69 } },
+        { id: "london", meta: { latitude: 51.51, longitude: -0.13 } },
+      ],
+      5,
+    );
+    const markers = cobeWebGLMarkers(recent, DEFAULT_ACTIVITY_GLOBE_CONFIG, null);
+    expect(markers.length).toBe(2);
+    expect(markers.every((marker) => marker.id && marker.size > 0)).toBe(true);
+    expect(cobeGpuMarkers(markers).every((marker) => !("id" in marker) && marker.size > 0)).toBe(
+      true,
+    );
+  });
+
+  test("enlarges the focused event without changing other sizes", () => {
+    const recent = activityRecentGlobeMarkers(
+      [
+        { id: "tokyo", meta: { latitude: 35.68, longitude: 139.69 } },
+        { id: "london", meta: { latitude: 51.51, longitude: -0.13 } },
+      ],
+      5,
+    );
+    const idle = cobeWebGLMarkers(recent, DEFAULT_ACTIVITY_GLOBE_CONFIG, null);
+    const focused = cobeWebGLMarkers(recent, DEFAULT_ACTIVITY_GLOBE_CONFIG, "tokyo");
+    expect(focused[0]?.size).toBeGreaterThan(idle[0]?.size ?? 0);
+    expect(focused[1]?.size).toBe(idle[1]?.size);
+    expect(focused[0]?.color).toBeDefined();
+  });
+});
+
+describe("isGlobePerfQuery", () => {
+  test("is only on when globePerf=1", () => {
+    expect(isGlobePerfQuery("?globePerf=1")).toBe(true);
+    expect(isGlobePerfQuery("?globePerf=0")).toBe(false);
+    expect(isGlobePerfQuery("")).toBe(false);
   });
 });
 
@@ -133,6 +199,8 @@ describe("activityRecentGlobeMarkers", () => {
     );
     expect(markers.map((marker) => marker.eventId)).toEqual(["tokyo", "london", "sf"]);
     expect(markers.map((marker) => marker.age)).toEqual([0, 1, 2]);
+    expect(markers.every((marker) => marker.size > 0)).toBe(true);
+    expect(markers[0]?.size).toBeGreaterThan(markers[1]?.size ?? 0);
   });
 
   test("places GitHub and Notion publish events in San Francisco", () => {

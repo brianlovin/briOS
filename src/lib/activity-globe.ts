@@ -1,5 +1,7 @@
 /** COBE camera pose and marker depth. Safe for client components. */
 
+import { type ActivityGlobeConfig, focusMarkerColor } from "./activity-globe-config";
+
 export type GlobePose = {
   phi: number;
   theta: number;
@@ -121,6 +123,62 @@ export function globeDiameterFromHeight(height: number): number {
   return Math.round(Math.max(GLOBE_MESH_MIN, height * GLOBE_MESH_HEIGHT_RATIO));
 }
 
+/**
+ * Cap globe backing-store density. A 512–~1400px mesh at devicePixelRatio 2 is a
+ * large fragment workload for a decorative hang; 1x keeps land readable at 60fps.
+ */
+export const GLOBE_DEVICE_PIXEL_RATIO = 1;
+
+export type GlobeMarkerSnapshot = {
+  id: string;
+  location: readonly [number, number];
+  size: number;
+  color?: readonly [number, number, number];
+};
+
+function rgbEqual(
+  a: readonly [number, number, number] | undefined,
+  b: readonly [number, number, number] | undefined,
+): boolean {
+  if (a === b) return true;
+  if (!a || !b) return false;
+  return a[0] === b[0] && a[1] === b[1] && a[2] === b[2];
+}
+
+/** True when Cobe must re-upload the marker GPU buffer. Same ref is a no-op. */
+export function globeMarkersChanged(
+  prev: readonly GlobeMarkerSnapshot[] | null | undefined,
+  next: readonly GlobeMarkerSnapshot[],
+): boolean {
+  if (prev === next) return false;
+  if (!prev || prev.length !== next.length) return true;
+  for (let i = 0; i < next.length; i++) {
+    const a = prev[i];
+    const b = next[i];
+    if (!a || !b) return true;
+    if (a.id !== b.id || a.size !== b.size) return true;
+    if (a.location[0] !== b.location[0] || a.location[1] !== b.location[1]) return true;
+    if (!rgbEqual(a.color, b.color)) return true;
+  }
+  return false;
+}
+
+/** Run the rAF loop only when the tab is visible and the globe is on screen. */
+export function shouldRunGlobeLoop(input: {
+  visibilityState: DocumentVisibilityState | string;
+  isIntersecting: boolean;
+}): boolean {
+  return input.visibilityState === "visible" && input.isIntersecting;
+}
+
+export function isGlobePerfQuery(search: string): boolean {
+  try {
+    return new URLSearchParams(search).get("globePerf") === "1";
+  } catch {
+    return false;
+  }
+}
+
 /** CSS px of one COBE country-shape dot at the facing center of the mesh. */
 export function globeMapDotPx(meshSize: number, scale = 1): number {
   if (!Number.isFinite(meshSize) || meshSize <= 0) return 2;
@@ -129,15 +187,41 @@ export function globeMapDotPx(meshSize: number, scale = 1): number {
 }
 
 /**
- * Keep marker ids so COBE creates `--cobe-{id}` anchors and `--cobe-visible-{id}`,
- * but hide the WebGL discs — those do not fade. The CSS dots do.
+ * GPU payload for Cobe. Ids stay on {@link GlobeMarkerSnapshot} for identity
+ * compares, but are omitted here so Cobe never creates CSS-anchor nodes or
+ * rewrites `--cobe-visible-*` on every `update()`.
  */
-export function bindableGlobeMarkers(
-  markers: ReadonlyArray<{ id: string; location: [number, number]; size?: number }>,
-): Array<{ id: string; location: [number, number]; size: number }> {
+export function cobeGpuMarkers(
+  markers: readonly GlobeMarkerSnapshot[],
+): Array<{ location: [number, number]; size: number; color?: [number, number, number] }> {
   return markers.map((marker) => ({
-    id: marker.id,
-    location: marker.location,
-    size: 0,
+    location: [marker.location[0], marker.location[1]],
+    size: marker.size,
+    ...(marker.color
+      ? { color: [marker.color[0], marker.color[1], marker.color[2]] as [number, number, number] }
+      : {}),
   }));
+}
+
+/** WebGL discs from the recent-location trail. Ids are kept for change detection. */
+export function cobeWebGLMarkers(
+  markers: ReadonlyArray<{
+    id: string;
+    eventId: string;
+    location: [number, number];
+    size: number;
+  }>,
+  config: Pick<ActivityGlobeConfig, "markerColor" | "focusPulseScale">,
+  focusEventId: string | null,
+): GlobeMarkerSnapshot[] {
+  return markers.map((marker) => {
+    const focused = focusEventId !== null && marker.eventId === focusEventId;
+    const size = focused ? marker.size * (1 + config.focusPulseScale) : marker.size;
+    return {
+      id: marker.id,
+      location: marker.location,
+      size,
+      ...(focused ? { color: focusMarkerColor(config.markerColor) } : {}),
+    };
+  });
 }

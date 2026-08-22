@@ -252,46 +252,6 @@
     }
   }
 
-  /* Official COBE bindable-marker fade: --cobe-visible-{id} is `N` or unset. */
-  .activity-globe-dot {
-    position: absolute;
-    z-index: 1;
-    pointer-events: none;
-    transform: translate(-50%, -50%);
-  }
-  .activity-globe-dot-core {
-    display: block;
-    border-radius: 9999px;
-    transition:
-      width 300ms ease,
-      height 300ms ease,
-      box-shadow 300ms ease;
-    box-shadow: 0 0 calc(var(--activity-globe-dot-px, 12px) * 1.15) rgb(252 83 42 / 0.95);
-  }
-  .activity-globe-dot-core.is-focused {
-    background-color: rgb(255 196 92);
-    box-shadow: 0 0 calc(var(--activity-globe-dot-px, 12px) * 2.2) rgb(255 150 60 / 1);
-    animation: activity-globe-focus var(--activity-globe-focus-ms, 1.4s) ease-out;
-  }
-  @keyframes activity-globe-focus {
-    0% {
-      transform: scale(1);
-      filter: brightness(1);
-    }
-    28% {
-      transform: scale(var(--activity-globe-focus-scale, 1.75));
-      filter: brightness(1.55);
-    }
-    100% {
-      transform: scale(1);
-      filter: brightness(1);
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .activity-globe-dot-core.is-focused {
-      animation: none;
-    }
-  }
   @keyframes zoom-in {
     from {
       transform: scale(0.95);

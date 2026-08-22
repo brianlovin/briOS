@@ -40,9 +40,7 @@ const COBE_SLIDERS: SliderDef[] = [
 ];
 
 const MARKER_SLIDERS: SliderDef[] = [
-  { key: "markerDotPx", label: "Dot size (px)", min: 3, max: 16, step: 1 },
-  { key: "markerBlurPx", label: "Horizon blur (px)", min: 0, max: 20, step: 1 },
-  { key: "markerFadeMs", label: "Horizon fade (ms)", min: 0, max: 800, step: 25 },
+  { key: "markerBaseSize", label: "Dot size", min: 0.008, max: 0.08, step: 0.002 },
   { key: "markerRecentCount", label: "Recent markers", min: 1, max: 16, step: 1 },
   { key: "markerAgeShrink", label: "Age size shrink", min: 0.04, max: 0.25, step: 0.01 },
   { key: "focusPulseScale", label: "Focus size pulse", min: 0, max: 1.5, step: 0.05 },
@@ -173,7 +171,7 @@ export function ActivityGlobeSandboxPanel({
         </div>
 
         <GlobeSliderSection
-          title="Markers (CSS fade)"
+          title="Markers"
           sliders={MARKER_SLIDERS}
           config={config}
           onPatch={patch}

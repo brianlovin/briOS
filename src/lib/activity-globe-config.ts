@@ -1,4 +1,4 @@
-/** Tunable COBE + CSS bindable-marker settings for the activity globe. */
+/** Tunable COBE settings for the activity globe. */
 
 export type RgbTriplet = [number, number, number];
 
@@ -20,12 +20,12 @@ export type ActivityGlobeConfig = {
   darkGlowColor: RgbTriplet;
   markerColor: RgbTriplet;
 
-  /** CSS dot scale from visit-count buckets. */
+  /** WebGL disc scale from visit-count buckets / age trail. */
   markerBaseSize: number;
   markerSizePerLog: number;
   markerMaxSize: number;
 
-  /** Bindable CSS dots — same recipe as https://cobe.vercel.app */
+  /** Unused by the live WebGL path; kept so sandbox JSON stays stable. */
   markerDotPx: number;
   markerBlurPx: number;
   markerFadeMs: number;
@@ -44,23 +44,12 @@ export function markerAgeScale(age: number, shrink: number): number {
   return (1 - shrink) ** age;
 }
 
-/** Newest is `markerDotPx`; each older step shrinks, never below the land-dot floor. */
-export function markerDotPxForAge(
+/** Newest is `markerBaseSize`; each older step shrinks by `markerAgeShrink`. */
+export function markerSizeForAge(
   age: number,
-  config: Pick<ActivityGlobeConfig, "markerDotPx" | "markerAgeShrink">,
-  minPx: number,
+  config: Pick<ActivityGlobeConfig, "markerBaseSize" | "markerAgeShrink">,
 ): number {
-  const scaled = config.markerDotPx * markerAgeScale(age, config.markerAgeShrink);
-  const floor = Number.isFinite(minPx) ? Math.max(0, minPx) : 0;
-  return Math.max(floor, scaled);
-}
-
-export function markerDotPxForSize(
-  size: number,
-  config: Pick<ActivityGlobeConfig, "markerBaseSize" | "markerDotPx">,
-): number {
-  if (config.markerBaseSize <= 0) return config.markerDotPx;
-  return config.markerDotPx * (size / config.markerBaseSize);
+  return config.markerBaseSize * markerAgeScale(age, config.markerAgeShrink);
 }
 
 export const DEFAULT_ACTIVITY_GLOBE_CONFIG: ActivityGlobeConfig = {
@@ -135,40 +124,11 @@ export function globeCobeOptions(isDark: boolean, config: ActivityGlobeConfig) {
   };
 }
 
-/**
- * Rounded `Npx` string for inline styles.
- *
- * `**` is not correctly rounded, so the SSR runtime and the browser can disagree
- * in the last bit: `12 * 0.9 ** 4` is `7.8732000000000015` in Bun/Node and
- * `7.873200000000001` in Chrome. React hydration compares the raw `style`
- * attribute string, so that one bit is a mismatch. Rounding kills it.
- */
-export function cssPx(value: number): string {
-  if (!Number.isFinite(value)) return "0px";
-  return `${Number(value.toFixed(2))}px`;
-}
-
-/** Hex keeps the marker color one stable token in the serialized style attribute. */
-export function rgbCss(color: RgbTriplet): string {
-  const channel = (value: number) =>
-    Math.round(Math.min(1, Math.max(0, value)) * 255)
-      .toString(16)
-      .padStart(2, "0");
-  return `#${channel(color[0])}${channel(color[1])}${channel(color[2])}`;
-}
-
-/** Official COBE bindable-marker visibility: `--cobe-visible-{id}` is `N` or unset. */
-export function cobeMarkerStyle(
-  markerId: string,
-  config: Pick<ActivityGlobeConfig, "markerBlurPx" | "markerFadeMs">,
-): Record<string, string | number> {
-  const visible = `--cobe-visible-${markerId}`;
-  return {
-    positionAnchor: `--cobe-${markerId}`,
-    left: "anchor(center)",
-    top: "anchor(center)",
-    opacity: `var(${visible}, 0)`,
-    filter: `blur(calc((1 - var(${visible}, 0)) * ${config.markerBlurPx}px))`,
-    transition: `opacity ${config.markerFadeMs}ms ease, filter ${config.markerFadeMs}ms ease`,
-  };
+/** Brighter orange for the briefly focused newest pin — no CSS animation. */
+export function focusMarkerColor(color: RgbTriplet): RgbTriplet {
+  return [
+    Math.min(1, color[0] * 0.25 + 0.75),
+    Math.min(1, color[1] * 0.35 + 0.55),
+    Math.min(1, color[2] * 0.35 + 0.18),
+  ];
 }

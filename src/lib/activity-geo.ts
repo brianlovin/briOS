@@ -2,6 +2,7 @@ import { COUNTRY_CENTROIDS } from "./activity-geo-centroids";
 import {
   type ActivityGlobeConfig,
   DEFAULT_ACTIVITY_GLOBE_CONFIG,
+  markerSizeForAge,
   markerSizeFromCount,
 } from "./activity-globe-config";
 
@@ -62,7 +63,7 @@ export function activityGlobeLocationKey(lat: number, lng: number): string {
   return `${lat.toFixed(1)},${lng.toFixed(1)}`;
 }
 
-/** Stable CSS-safe id for COBE bindable markers (`--cobe-{id}`). */
+/** Stable id for a location bucket (used for marker identity, not CSS anchors). */
 export function activityGlobeMarkerId(lat: number, lng: number): string {
   const encode = (value: number): string =>
     value.toFixed(1).replaceAll("-", "n").replaceAll(".", "d");
@@ -717,8 +718,10 @@ export function activityGlobeMarkers(
 export function activityRecentGlobeMarkers(
   events: Array<{ id?: string; type?: string; source?: string; meta?: Record<string, unknown> }>,
   limit: number,
+  sizeConfig?: Pick<ActivityGlobeConfig, "markerBaseSize" | "markerAgeShrink">,
 ): ActivityRecentGlobeMarker[] {
   const cap = Math.max(0, Math.floor(limit));
+  const sizing = sizeConfig ?? DEFAULT_ACTIVITY_GLOBE_CONFIG;
   const seen = new Set<string>();
   const markers: ActivityRecentGlobeMarker[] = [];
   for (const event of events) {
@@ -728,12 +731,13 @@ export function activityRecentGlobeMarkers(
     const key = activityGlobeLocationKey(loc.lat, loc.lng);
     if (seen.has(key)) continue;
     seen.add(key);
+    const age = markers.length;
     markers.push({
       id: activityGlobeMarkerId(loc.lat, loc.lng),
       eventId: typeof event.id === "string" && event.id ? event.id : key,
       location: [loc.lat, loc.lng],
-      size: 0,
-      age: markers.length,
+      size: markerSizeForAge(age, sizing),
+      age,
     });
   }
   return markers;

@@ -3,7 +3,6 @@
 import createGlobe from "cobe";
 import { useReducedMotion } from "motion/react";
 import {
-  type CSSProperties,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -16,22 +15,23 @@ import {
 import type { ActivityEvent } from "@/lib/activity";
 import { type ActivityLatLng, activityRecentGlobeMarkers } from "@/lib/activity-geo";
 import {
-  bindableGlobeMarkers,
+  cobeGpuMarkers,
+  cobeWebGLMarkers,
+  GLOBE_DEVICE_PIXEL_RATIO,
   GLOBE_HANG,
   GLOBE_MESH_MIN,
   globeDiameterFromHeight,
-  globeMapDotPx,
+  globeMarkersChanged,
+  type GlobeMarkerSnapshot,
+  isGlobePerfQuery,
   latLngToVisibleGlobePose,
   shortestAngleDelta,
+  shouldRunGlobeLoop,
 } from "@/lib/activity-globe";
 import {
   type ActivityGlobeConfig,
-  cobeMarkerStyle,
-  cssPx,
   DEFAULT_ACTIVITY_GLOBE_CONFIG,
   globeCobeOptions,
-  markerDotPxForAge,
-  rgbCss,
 } from "@/lib/activity-globe-config";
 import { cn } from "@/lib/utils";
 
@@ -43,6 +43,7 @@ const THETA_LIMIT = Math.PI / 2 - 0.08;
 const MIN_FEED_WIDTH = 720;
 const AIM_MS_MIN = 600;
 const AIM_MS_MAX = 850;
+const DROPPED_FRAME_MS = 20;
 
 type AimState = {
   fromPhi: number;
@@ -53,6 +54,18 @@ type AimState = {
   duration: number;
 };
 
+type GlobePerfTracker = {
+  frame: () => void;
+  markMarkers: () => void;
+  snapshot: () => {
+    frames: number;
+    markerUpdates: number;
+    meanDt: number;
+    p95Dt: number;
+    dropped: number;
+  };
+};
+
 function subscribeDark(onChange: () => void): () => void {
   const observer = new MutationObserver(onChange);
   observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
@@ -61,25 +74,6 @@ function subscribeDark(onChange: () => void): () => void {
 
 function isDarkClass(): boolean {
   return document.documentElement.classList.contains("dark");
-}
-
-function subscribeNoop(): () => void {
-  return () => {};
-}
-
-/**
- * The CSS dots are inert until COBE exists: they sit at `opacity: 0` and anchor
- * to `--cobe-*` positions that only the client creates. Rendering them on the
- * server buys nothing and costs two hydration mismatches — `useReducedMotion()`
- * reads the media query during render, and dot sizes come out of `**`, which is
- * not correctly rounded and so differs in the last bit between Bun and Chrome.
- */
-function useHydrated(): boolean {
-  return useSyncExternalStore(
-    subscribeNoop,
-    () => true,
-    () => false,
-  );
 }
 
 function useIsDark(): boolean {
@@ -116,6 +110,35 @@ function scrollFeedFromOverlay(overlay: HTMLElement, deltaY: number): void {
   }
 }
 
+function createGlobePerfTracker(): GlobePerfTracker {
+  const dts: number[] = [];
+  let last = 0;
+  let markerUpdates = 0;
+  return {
+    frame() {
+      const now = performance.now();
+      if (last) dts.push(now - last);
+      last = now;
+    },
+    markMarkers() {
+      markerUpdates += 1;
+    },
+    snapshot() {
+      const sorted = [...dts].sort((a, b) => a - b);
+      const mean = dts.length === 0 ? 0 : dts.reduce((sum, dt) => sum + dt, 0) / dts.length;
+      const p95 =
+        sorted[Math.max(0, Math.floor(sorted.length * 0.95) - (sorted.length > 0 ? 1 : 0))] ?? 0;
+      return {
+        frames: dts.length,
+        markerUpdates,
+        meanDt: mean,
+        p95Dt: p95,
+        dropped: dts.filter((dt) => dt > DROPPED_FRAME_MS).length,
+      };
+    },
+  };
+}
+
 export function ActivityGlobe({
   events,
   config: configProp,
@@ -142,7 +165,6 @@ export function ActivityGlobe({
   const lastXRef = useRef(0);
   const lastYRef = useRef(0);
   const lastTRef = useRef(0);
-  const hydrated = useHydrated();
   const isDark = useIsDark();
   const prefersReducedMotion = useReducedMotion() === true;
   const [layout, setLayout] = useState({ hasRoom: true, size: GLOBE_MESH_MIN });
@@ -150,8 +172,8 @@ export function ActivityGlobe({
   const [focusId, setFocusId] = useState<string | null>(null);
 
   const markers = useMemo(
-    () => activityRecentGlobeMarkers(events, config.markerRecentCount),
-    [events, config.markerRecentCount],
+    () => activityRecentGlobeMarkers(events, config.markerRecentCount, config),
+    [events, config],
   );
   const newestId = markers[0]?.eventId ?? null;
   const [seenNewestId, setSeenNewestId] = useState(newestId);
@@ -160,16 +182,27 @@ export function ActivityGlobe({
     setFocusId(newestId);
   }
   const markersRef = useRef(markers);
+  const focusIdRef = useRef(focusId);
   const themeRef = useRef({ isDark, prefersReducedMotion });
   const sizeRef = useRef(layout.size);
+  const markersDirtyRef = useRef(false);
+  const themeDirtyRef = useRef(false);
 
   useEffect(() => {
     configRef.current = config;
+    markersDirtyRef.current = true;
+    themeDirtyRef.current = true;
   }, [config]);
 
   useEffect(() => {
     markersRef.current = markers;
+    markersDirtyRef.current = true;
   }, [markers]);
+
+  useEffect(() => {
+    focusIdRef.current = focusId;
+    markersDirtyRef.current = true;
+  }, [focusId]);
 
   useEffect(() => {
     sizeRef.current = layout.size;
@@ -177,6 +210,7 @@ export function ActivityGlobe({
 
   useEffect(() => {
     themeRef.current = { isDark, prefersReducedMotion };
+    themeDirtyRef.current = true;
   }, [isDark, prefersReducedMotion]);
 
   useLayoutEffect(() => {
@@ -263,22 +297,55 @@ export function ActivityGlobe({
     const wrap = wrapRef.current;
     if (!canvas) return;
 
-    const dpr = Math.min(2, window.devicePixelRatio || 1);
     const size = sizeRef.current;
+    const initialMarkers = cobeWebGLMarkers(
+      markersRef.current,
+      configRef.current,
+      focusIdRef.current,
+    );
+    let sentMarkers: GlobeMarkerSnapshot[] = initialMarkers;
     const globe = createGlobe(canvas, {
-      devicePixelRatio: dpr,
+      devicePixelRatio: GLOBE_DEVICE_PIXEL_RATIO,
       width: size,
       height: size,
       phi: phiRef.current,
       theta: thetaRef.current,
-      markers: bindableGlobeMarkers(markersRef.current),
+      markers: cobeGpuMarkers(initialMarkers),
       ...globeCobeOptions(themeRef.current.isDark, configRef.current),
     });
     globeRef.current = globe;
+    markersDirtyRef.current = false;
+    themeDirtyRef.current = false;
+
+    const perf = isGlobePerfQuery(window.location.search) ? createGlobePerfTracker() : null;
+    let loggedPerf = false;
+    if (perf) {
+      window.setTimeout(() => {
+        if (loggedPerf) return;
+        loggedPerf = true;
+        const snapshot = perf.snapshot();
+        console.info("[activity-globe]", snapshot);
+        (window as Window & { __ACTIVITY_GLOBE_PERF?: typeof snapshot }).__ACTIVITY_GLOBE_PERF =
+          snapshot;
+      }, 8000);
+    }
 
     let frame = 0;
+    const intersectingRef = { current: true };
+
+    const isActive = () =>
+      shouldRunGlobeLoop({
+        visibilityState: document.visibilityState,
+        isIntersecting: intersectingRef.current,
+      });
+
     const onRender = () => {
-      const { isDark: nextDark, prefersReducedMotion: reduced } = themeRef.current;
+      if (!isActive()) {
+        frame = 0;
+        return;
+      }
+
+      const { prefersReducedMotion: reduced } = themeRef.current;
       const aimState = aimingRef.current;
 
       if (draggingRef.current) {
@@ -311,18 +378,68 @@ export function ActivityGlobe({
         }
       }
 
-      globe.update({
+      const update: { phi: number; theta: number } & Record<string, unknown> = {
         phi: phiRef.current,
         theta: thetaRef.current,
-        markers: bindableGlobeMarkers(markersRef.current),
-        ...globeCobeOptions(nextDark, configRef.current),
-      });
+      };
+
+      if (markersDirtyRef.current) {
+        const nextMarkers = cobeWebGLMarkers(
+          markersRef.current,
+          configRef.current,
+          focusIdRef.current,
+        );
+        if (globeMarkersChanged(sentMarkers, nextMarkers)) {
+          update.markers = cobeGpuMarkers(nextMarkers);
+          sentMarkers = nextMarkers;
+          perf?.markMarkers();
+        }
+        markersDirtyRef.current = false;
+      }
+
+      if (themeDirtyRef.current) {
+        Object.assign(update, globeCobeOptions(themeRef.current.isDark, configRef.current));
+        themeDirtyRef.current = false;
+      }
+
+      globe.update(update);
+      perf?.frame();
       frame = window.requestAnimationFrame(onRender);
     };
-    frame = window.requestAnimationFrame(onRender);
+
+    const start = () => {
+      if (frame) return;
+      if (!isActive()) return;
+      frame = window.requestAnimationFrame(onRender);
+    };
+
+    const stop = () => {
+      if (!frame) return;
+      window.cancelAnimationFrame(frame);
+      frame = 0;
+    };
+
+    const onVisibility = () => {
+      if (document.visibilityState === "hidden") stop();
+      else start();
+    };
+
+    document.addEventListener("visibilitychange", onVisibility);
+
+    const io = new IntersectionObserver((entries) => {
+      intersectingRef.current = entries.some((entry) => entry.isIntersecting);
+      if (intersectingRef.current) start();
+      else stop();
+    });
+    const overlay = overlayRef.current;
+    if (overlay) io.observe(overlay);
+
+    start();
 
     return () => {
-      window.cancelAnimationFrame(frame);
+      stop();
+      document.removeEventListener("visibilitychange", onVisibility);
+      io.disconnect();
       globeRef.current = null;
       globe.destroy();
       if (wrap && canvas.parentElement && canvas.parentElement !== wrap) {
@@ -409,8 +526,8 @@ export function ActivityGlobe({
       >
         <canvas
           ref={canvasRef}
-          width={layout.size * 2}
-          height={layout.size * 2}
+          width={layout.size * GLOBE_DEVICE_PIXEL_RATIO}
+          height={layout.size * GLOBE_DEVICE_PIXEL_RATIO}
           className={cn(
             "pointer-events-auto size-full touch-none select-none",
             grabbing ? "cursor-grabbing" : "cursor-grab",
@@ -418,8 +535,7 @@ export function ActivityGlobe({
           onWheel={(event) => {
             if (draggingRef.current) return;
             const overlay = overlayRef.current;
-            if (!overlay) return;
-            scrollFeedFromOverlay(overlay, event.deltaY);
+            if (overlay) scrollFeedFromOverlay(overlay, event.deltaY);
           }}
           onPointerDown={(event) => {
             lastXRef.current = event.clientX;
@@ -449,45 +565,6 @@ export function ActivityGlobe({
           onPointerCancel={endDrag}
         />
       </div>
-      {hydrated
-        ? markers.map((marker) => {
-            const px = cssPx(
-              markerDotPxForAge(marker.age, config, globeMapDotPx(layout.size, config.scale)),
-            );
-            return (
-              <span
-                key={marker.id}
-                className="activity-globe-dot"
-                style={
-                  {
-                    ...cobeMarkerStyle(marker.id, {
-                      markerBlurPx: config.markerBlurPx,
-                      markerFadeMs: prefersReducedMotion ? 0 : config.markerFadeMs,
-                    }),
-                    "--activity-globe-focus-scale": 1 + config.focusPulseScale,
-                    "--activity-globe-focus-ms": `${config.focusMs}ms`,
-                  } as CSSProperties
-                }
-              >
-                <span
-                  key={focusId === marker.eventId ? focusId : "idle"}
-                  className={cn(
-                    "activity-globe-dot-core",
-                    focusId === marker.eventId && "is-focused",
-                  )}
-                  style={
-                    {
-                      width: px,
-                      height: px,
-                      backgroundColor: rgbCss(config.markerColor),
-                      "--activity-globe-dot-px": px,
-                    } as CSSProperties
-                  }
-                />
-              </span>
-            );
-          })
-        : null}
     </div>
   );
 }
