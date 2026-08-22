@@ -45,7 +45,9 @@ function md(status: 200 | 404, body: string, cacheTags: string[] = []): Markdown
 function linkList(items: Array<{ title: string; href: string; note?: string }>): string {
   return items
     .map((item) =>
-      item.note ? `- [${item.title}](${item.href}): ${item.note}` : `- [${item.title}](${item.href})`,
+      item.note
+        ? `- [${item.title}](${item.href}): ${item.note}`
+        : `- [${item.title}](${item.href})`,
     )
     .join("\n");
 }

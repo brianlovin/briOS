@@ -1,6 +1,12 @@
 import { describe, expect, test } from "bun:test";
 
-import { llmsTxtBody, markdownNotFoundBody, SITE_HOST, SITE_NAME, SITE_REPO } from "@/lib/site-copy";
+import {
+  llmsTxtBody,
+  markdownNotFoundBody,
+  SITE_HOST,
+  SITE_NAME,
+  SITE_REPO,
+} from "@/lib/site-copy";
 
 describe("llms.txt", () => {
   test("names the site and lists public routes", () => {
