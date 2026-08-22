@@ -23,6 +23,7 @@ import {
   globeDevicePixelRatio,
   globeDiameterFromHeight,
   globeMarkersChanged,
+  globeMarkerSizingForMesh,
   type GlobeMarkerSnapshot,
   isGlobePerfQuery,
   latLngToVisibleGlobePose,
@@ -211,9 +212,14 @@ export function ActivityGlobe({
   const [grabbing, setGrabbing] = useState(false);
   const [focusId, setFocusId] = useState<string | null>(null);
 
+  // Sandbox keeps the slider. Live path matches production's 12px + glow at this mesh.
+  const markerSizing = useMemo(
+    () => (configProp ? config : globeMarkerSizingForMesh(layout.size, config)),
+    [config, configProp, layout.size],
+  );
   const markers = useMemo(
-    () => activityRecentGlobeMarkers(events, config.markerRecentCount, config),
-    [events, config],
+    () => activityRecentGlobeMarkers(events, config.markerRecentCount, markerSizing),
+    [events, config.markerRecentCount, markerSizing],
   );
   const newestId = markers[0]?.eventId ?? null;
   const [seenNewestId, setSeenNewestId] = useState(newestId);
@@ -354,7 +360,11 @@ export function ActivityGlobe({
       theta: thetaRef.current,
       markers: cobeGpuMarkers(initialMarkers),
       // DPR 2 already supplies the samples; MSAA on a ~0.72×vh mesh is the idle-frame tax.
-      context: { antialias: false, powerPreference: "high-performance" },
+      context: {
+        antialias: false,
+        powerPreference: "high-performance",
+        desynchronized: true,
+      },
       ...globeCobeOptions(themeRef.current.isDark, configRef.current),
     });
     const cobeStyle = takeNewHeadStyle(stylesBefore);

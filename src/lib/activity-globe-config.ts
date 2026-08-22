@@ -55,8 +55,8 @@ export function markerSizeForAge(
 
 export const DEFAULT_ACTIVITY_GLOBE_CONFIG: ActivityGlobeConfig = {
   diffuse: 0.6,
-  // 19000 at DPR 2 on a ~0.72×vh mesh dropped frames on retina. 13000 keeps land readable.
-  mapSamples: 13000,
+  // 19000 at DPR 2 on a ~0.72×vh mesh dropped frames. 12000 is the low end that still reads.
+  mapSamples: 12000,
   mapBrightness: 3.1,
   mapBaseBrightness: 0,
   mapBrightnessDark: 6,
@@ -72,7 +72,7 @@ export const DEFAULT_ACTIVITY_GLOBE_CONFIG: ActivityGlobeConfig = {
   darkGlowColor: [0.12, 0.12, 0.12],
   markerColor: [252 / 255, 83 / 255, 42 / 255],
 
-  // Cobe clip radius ≈ size * mesh/4. 0.08 ≈ 12px disc + the old 1.15× glow.
+  // Fallback / sandbox. Live path converts 12px+glow → Cobe units at the mesh size.
   markerBaseSize: 0.08,
   markerSizePerLog: 0.014,
   markerMaxSize: 0.14,

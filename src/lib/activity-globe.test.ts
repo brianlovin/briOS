@@ -2,17 +2,22 @@ import { describe, expect, test } from "bun:test";
 
 import { activityGlobeMarkerIdForLocation, activityRecentGlobeMarkers } from "./activity-geo";
 import {
+  cobeCssPxForSize,
   cobeGpuMarkers,
+  cobeSizeForCssPx,
   cobeWebGLMarkers,
   GLOBE_DEVICE_PIXEL_RATIO_CAP,
   GLOBE_HANG,
   GLOBE_MAP_DOT_CHORD,
+  GLOBE_MARKER_TARGET_CSS_PX,
+  GLOBE_MESH_MIN,
   GLOBE_MESH_RADIUS,
   globeAimVisibleBias,
   globeDevicePixelRatio,
   globeMapDotPx,
   globeMarkerFacing,
   globeMarkersChanged,
+  globeMarkerSizingForMesh,
   isGlobePerfQuery,
   latLngToGlobePose,
   latLngToVisibleGlobePose,
@@ -21,7 +26,7 @@ import {
   shouldCommitCobeRootStyle,
   shouldRunGlobeLoop,
 } from "./activity-globe";
-import { DEFAULT_ACTIVITY_GLOBE_CONFIG } from "./activity-globe-config";
+import { DEFAULT_ACTIVITY_GLOBE_CONFIG, markerSizeForAge } from "./activity-globe-config";
 
 describe("latLngToGlobePose", () => {
   test("uses the COBE phi/theta convention", () => {
@@ -102,6 +107,24 @@ describe("globeDevicePixelRatio", () => {
     expect(globeDevicePixelRatio(2)).toBe(2);
     expect(globeDevicePixelRatio(3)).toBe(2);
     expect(globeDevicePixelRatio(0)).toBe(1);
+  });
+});
+
+describe("cobeSizeForCssPx", () => {
+  test("converts the old 12px + glow target through Cobe's mesh-relative size", () => {
+    expect(cobeCssPxForSize(cobeSizeForCssPx(22, 692), 692)).toBeCloseTo(22);
+    expect(cobeSizeForCssPx(GLOBE_MARKER_TARGET_CSS_PX, 692)).toBeGreaterThan(0.05);
+    expect(cobeSizeForCssPx(GLOBE_MARKER_TARGET_CSS_PX, 692)).toBeLessThan(0.08);
+    expect(cobeSizeForCssPx(GLOBE_MARKER_TARGET_CSS_PX, 900)).toBeLessThan(
+      cobeSizeForCssPx(GLOBE_MARKER_TARGET_CSS_PX, GLOBE_MESH_MIN),
+    );
+  });
+
+  test("globeMarkerSizingForMesh keeps newest at the CSS target and floors the trail", () => {
+    const sizing = globeMarkerSizingForMesh(692, DEFAULT_ACTIVITY_GLOBE_CONFIG);
+    expect(cobeCssPxForSize(sizing.markerBaseSize, 692)).toBeCloseTo(GLOBE_MARKER_TARGET_CSS_PX);
+    expect(markerSizeForAge(0, sizing)).toBeCloseTo(sizing.markerBaseSize);
+    expect(markerSizeForAge(9, sizing)).toBeGreaterThanOrEqual(sizing.markerBaseSize * 0.5);
   });
 });
 
