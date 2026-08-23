@@ -10,6 +10,7 @@ import { DoubleChatBubble } from "@/components/icons/DoubleChatBubble";
 import { FileText2 } from "@/components/icons/FileText2";
 import { Headphones3 } from "@/components/icons/Headphones3";
 import { Home } from "@/components/icons/Home";
+import { Keyboard } from "@/components/icons/Keyboard";
 import { LightBulb } from "@/components/icons/LightBulb";
 import { Person } from "@/components/icons/Person";
 import { Terminal } from "@/components/icons/Terminal";
@@ -98,6 +99,15 @@ export const navigationItems: NavigationItem[] = [
     icon: DoubleChatBubble,
     keywords: ["ama", "questions", "ask"],
     isActive: (pathname) => pathname.startsWith("/ama"),
+    section: "projects",
+  },
+  {
+    id: "computer",
+    label: "How to Computer Better",
+    href: "/computer",
+    icon: Keyboard,
+    keywords: ["computer", "tips", "shortcuts", "hotkeys", "workflows"],
+    isActive: (pathname) => pathname.startsWith("/computer"),
     section: "projects",
   },
   {

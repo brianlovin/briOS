@@ -14,6 +14,7 @@ describe("llms.txt", () => {
     expect(body.startsWith(`# ${SITE_NAME}`)).toBe(true);
     expect(body).toContain(SITE_HOST);
     expect(body).toContain("/writing");
+    expect(body).toContain("/computer");
     expect(body).toContain("/sitemap.xml");
     expect(body).toContain(SITE_REPO);
     expect(body).not.toContain("/contact");
@@ -29,6 +30,7 @@ describe("markdown 404", () => {
     expect(body).toContain("/sitemap.xml");
     expect(body).toContain("/llms.txt");
     expect(body).toContain("/writing");
+    expect(body).toContain("/computer");
     expect(body).not.toContain("/contact");
     expect(body).not.toContain("/privacy");
   });

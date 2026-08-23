@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 
 import { getAmaQuestions } from "@/lib/ama";
+import { getComputerTips } from "@/lib/computer";
 import { SITE_CONFIG } from "@/lib/metadata";
 import { getAppDissectionDatabaseItems, isPlaceholderNotionBuild } from "@/lib/notion";
 import { buildSlug } from "@/lib/short-id";
@@ -50,10 +51,11 @@ export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
     return [...unique.values()];
   }
 
-  const [posts, tils, ama, dissections] = await Promise.all([
+  const [posts, tils, ama, computer, dissections] = await Promise.all([
     safeList(() => getAllWritingPosts()),
     safeList(() => getAllTilEntries()),
     safeList(() => getAmaQuestions()),
+    safeList(() => getComputerTips()),
     safeList(() => getAppDissectionDatabaseItems()),
   ]);
 
@@ -78,6 +80,10 @@ export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
       url(`/ama/${question.id}`),
       entry(`/ama/${question.id}`, question.answeredAt || question.createdAt),
     );
+  }
+
+  for (const tip of computer) {
+    unique.set(url(`/computer/${tip.id}`), entry(`/computer/${tip.id}`, tip.createdTime));
   }
 
   for (const item of dissections) {

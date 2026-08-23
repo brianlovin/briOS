@@ -36,6 +36,13 @@ export const AMASchema = z.object({
 
 export type AMA = z.infer<typeof AMASchema>;
 
+export const TipsSchema = z.object({
+  Status: z.enum(["Published", "Pending", "Rejected"]).optional(),
+  Name: z.string().optional(),
+});
+
+export type Tips = z.infer<typeof TipsSchema>;
+
 export const WritingSchema = z.object({
   Slug: z.string().optional(),
   "Generate Short ID": z.any().optional(),

@@ -1,4 +1,5 @@
 import { notion } from "./client";
+import { computerTipCreateProperties, paragraphBlocksFromPlainText } from "./computer";
 import { writeMultiSelect, writeRichText, writeSelect, writeTitle, writeUrl } from "./properties";
 
 // ===== Stack Mutations =====
@@ -152,6 +153,19 @@ export async function createAmaQuestion(title: string, description?: string) {
     parent: { database_id: databaseId },
     properties: properties as any,
   });
+}
+
+// ===== Computer Tip Mutations =====
+
+export async function createComputerTip(data: { title: string; body?: string }) {
+  const databaseId = process.env.NOTION_TIPS_DATABASE_ID || "";
+  const children = data.body?.trim() ? paragraphBlocksFromPlainText(data.body.trim()) : undefined;
+
+  return notion.pages.create({
+    parent: { database_id: databaseId },
+    properties: computerTipCreateProperties(data.title) as any,
+    ...(children ? { children } : {}),
+  } as any);
 }
 
 // ===== Writing Mutations =====

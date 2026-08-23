@@ -4,7 +4,15 @@ import { clearHnCache } from "@/lib/hn-cache";
 
 import { invalidateNotionCache } from "./cache";
 
-export const PURGEABLE_CONTENT_TYPES = ["writing", "til", "ama", "stack", "sites", "hn"] as const;
+export const PURGEABLE_CONTENT_TYPES = [
+  "writing",
+  "til",
+  "ama",
+  "computer",
+  "stack",
+  "sites",
+  "hn",
+] as const;
 export type PurgeableContentType = (typeof PURGEABLE_CONTENT_TYPES)[number];
 export type NotionPurgeableContentType = Exclude<PurgeableContentType, "hn">;
 
@@ -20,6 +28,7 @@ export type PurgeCacheType = (typeof PURGE_CACHE_TYPES)[number];
  * - writing → `notion:writing:*` (list + content by id/slug/shortId)
  * - til → `notion:til:*`
  * - ama → `notion:ama:*`
+ * - computer → `notion:computer:*`
  * - stack → `notion:stack:*`
  * - sites → `notion:good-websites:*` (list + rss; content type name ≠ Redis prefix)
  * - hn → `hn:top_ids` + `hn:post:*` in the HN Redis DB (not Notion Redis)
@@ -45,6 +54,12 @@ export const PURGE_CONFIG: Record<
     tags: ["notion:ama"],
     paths: ["/ama", "/api/ama"],
     pagePaths: ["/ama/[id]"],
+  },
+  computer: {
+    patterns: ["notion:computer:*"],
+    tags: ["notion:computer"],
+    paths: ["/computer", "/api/computer"],
+    pagePaths: ["/computer/[id]"],
   },
   stack: {
     patterns: ["notion:stack:*"],

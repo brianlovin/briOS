@@ -4,6 +4,13 @@ import { getAllBlocks } from "./blocks";
 import { CACHE_TTLS, cachedNotionQuery, notionContentCacheKey } from "./cache";
 import { notion } from "./client";
 import {
+  COMPUTER_LIST_SORTS,
+  COMPUTER_PUBLISHED_FILTER,
+  isPublishedComputerTip,
+  mapComputerItem,
+  rewriteComputerTipLinks,
+} from "./computer";
+import {
   createdTime,
   dateStart,
   iconUrl,
@@ -25,6 +32,8 @@ import {
   type NotionAmaItemWithContent,
   type NotionAppDissectionItem,
   type NotionAppDissectionItemWithContent,
+  type NotionComputerItem,
+  type NotionComputerItemWithContent,
   type NotionDesignDetailsEpisodeItem,
   type NotionItem,
   type NotionListeningHistoryItem,
@@ -819,6 +828,69 @@ export async function getAppDissectionItemBySlug(
         ...item,
         introBlocks,
         details,
+      };
+    },
+    { ttl: CACHE_TTLS.CONTENT },
+  );
+}
+
+// ===== Computer Tips Database =====
+
+export async function getComputerDatabaseItems(): Promise<NotionComputerItem[]> {
+  return cachedNotionQuery(
+    "notion:computer:list",
+    async () => {
+      const databaseId = process.env.NOTION_TIPS_DATABASE_ID || "";
+      if (!databaseId) return [];
+
+      const dataSourceId = await getDataSourceId(databaseId);
+      const items: NotionComputerItem[] = [];
+      let cursor: string | undefined;
+
+      do {
+        const response = await notion.dataSources.query({
+          data_source_id: dataSourceId,
+          page_size: 100,
+          ...(cursor ? { start_cursor: cursor } : {}),
+          filter: COMPUTER_PUBLISHED_FILTER,
+          sorts: COMPUTER_LIST_SORTS,
+        });
+
+        items.push(
+          ...response.results
+            .map(mapComputerItem)
+            .filter((item): item is NotionComputerItem => item !== null),
+        );
+        cursor = response.has_more ? (response.next_cursor ?? undefined) : undefined;
+      } while (cursor);
+
+      return items;
+    },
+    { ttl: CACHE_TTLS.LIST },
+  );
+}
+
+export async function getComputerItemContent(
+  pageId: string,
+): Promise<NotionComputerItemWithContent | null> {
+  return cachedNotionQuery(
+    notionContentCacheKey("computer", pageId),
+    async () => {
+      const page = await notion.pages.retrieve({ page_id: pageId });
+      const item = mapComputerItem(page);
+      if (!item || !isPublishedComputerTip(item)) return null;
+
+      const [blocks, published] = await Promise.all([
+        getAllBlocks(pageId),
+        getComputerDatabaseItems(),
+      ]);
+
+      return {
+        ...item,
+        blocks: rewriteComputerTipLinks(
+          blocks,
+          published.map((tip) => tip.id),
+        ),
       };
     },
     { ttl: CACHE_TTLS.CONTENT },

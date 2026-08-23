@@ -19,6 +19,8 @@ export type {
   NotionAmaItemWithContent,
   NotionAppDissectionItem,
   NotionAppDissectionItemWithContent,
+  NotionComputerItem,
+  NotionComputerItemWithContent,
   NotionDesignDetailsEpisodeItem,
   NotionItem,
   NotionListeningHistoryItem,
@@ -71,6 +73,9 @@ export {
   // App Dissection
   getAppDissectionDatabaseItems,
   getAppDissectionItemBySlug,
+  // Computer tips
+  getComputerDatabaseItems,
+  getComputerItemContent,
   // Design Details
   getDesignDetailsEpisodeDatabaseItems,
   // Generic
@@ -106,6 +111,7 @@ export {
 // Mutations
 export {
   createAmaQuestion,
+  createComputerTip,
   createStackItem,
   updateStackItem,
   updateWritingShortId,

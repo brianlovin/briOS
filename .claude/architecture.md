@@ -66,12 +66,17 @@ Webhook endpoints called by Notion database automations (button properties). All
 - `/api/webhooks/process-stack-icon` — Optimizes existing stack page icons to R2
 - `/api/webhooks/update-site-icon` — Fetches and optimizes favicons for good websites
 
+**Cache purge buttons** (same `CACHE_PURGE_SECRET` as `/api/purge-cache`):
+
+- Writing / TIL / AMA / Stack / Sites / Computer: `https://brianlovin.com/api/purge-cache?secret=<CACHE_PURGE_SECRET>&type=<type>`
+- Computer tips (`type=computer`) should also be added as a Notion button on the Tips database or the How to Computer Better parent page. Publishing a tip in Notion does not invalidate the site until this button is pressed.
+
 **Notion automation setup**:
 
 1. Add a button property to the database
 2. Configure action: "Send webhook"
-3. URL: `https://yoursite.com/api/webhooks/<endpoint>`
-4. Add header: `x-webhook-secret: <your-secret>`
+3. URL: `https://yoursite.com/api/webhooks/<endpoint>` (or `/api/purge-cache?secret=<CACHE_PURGE_SECRET>&type=computer` for tips)
+4. Add header: `x-webhook-secret: <your-secret>` (webhook endpoints) — purge buttons use the `secret` query param instead
 5. Body template: `{ "data": { "id": "{{id}}" } }` (or include properties as needed)
 
 ## Migration Scripts

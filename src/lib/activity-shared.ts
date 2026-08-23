@@ -323,6 +323,7 @@ export function inferContentTypeFromPath(pathname: string): string {
   if (pathname.startsWith("/stack")) return "stack";
   if (pathname.startsWith("/sites")) return "site";
   if (pathname.startsWith("/ama")) return "ama";
+  if (pathname.startsWith("/computer")) return "computer";
   if (pathname.startsWith("/app-dissection")) return "app_dissection";
   if (pathname.startsWith("/design-details")) return "design_details";
   if (pathname.startsWith("/listening")) return "listening";
@@ -340,6 +341,7 @@ const KNOWN_PATH_TITLES: Record<string, string> = {
   "/stack": "Stack",
   "/sites": "Sites",
   "/ama": "AMA",
+  "/computer": "How to Computer Better",
   "/listening": "Listening",
   "/hn": "Hacker News",
   "/app-dissection": "App Dissection",
@@ -356,6 +358,7 @@ export function isKnownActivitySection(section: string): boolean {
 const ID_ROUTE_PHRASES: { prefix: string; label: string }[] = [
   { prefix: "/hn/", label: "a Hacker News story" },
   { prefix: "/ama/", label: "an AMA question" },
+  { prefix: "/computer/", label: "a computer tip" },
 ];
 
 /** Child routes that should keep their section name after `stripSiteTitleSuffix`. */
@@ -565,6 +568,7 @@ export function activitySectionPhrase(section: string, source?: string): string 
     return source ? activityHomeVisitLabel(source) : SITE_VISIT_LABEL;
   }
   if (section === "ama") return "an AMA question";
+  if (section === "computer") return "a computer tip";
   const known = KNOWN_PATH_TITLES[`/${section}`];
   if (known) return known;
   return inferTitleFromPath(`/${section}`);

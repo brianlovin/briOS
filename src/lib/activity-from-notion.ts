@@ -67,5 +67,8 @@ export async function ingestActivityFromContentPurge(
       );
       return;
     }
+    case "computer": {
+      return;
+    }
   }
 }

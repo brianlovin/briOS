@@ -69,9 +69,9 @@ export const HOME_PROJECTS = [
   },
   {
     name: "How to Computer Better",
-    href: "https://brianlovin.notion.site/how-to-computer-better",
+    href: "/computer",
     description: "How to use a computer better",
-    external: true,
+    external: false,
   },
   {
     name: "Crit",
