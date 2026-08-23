@@ -1,5 +1,3 @@
-"use client";
-
 import { Section, SectionHeading } from "@/components/shared/ListComponents";
 import {
   HOW_TERMINALS_WORK_SECTIONS,

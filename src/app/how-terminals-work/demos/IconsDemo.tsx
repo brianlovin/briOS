@@ -326,7 +326,9 @@ const STEPS: Record<ExplainerStep, { title: string; description: string }> = {
 
 export function IconsDemo() {
   const [currentStep, setCurrentStep] = useState<ExplainerStep>("what");
-  const [selectedIcon, setSelectedIcon] = useState(NERD_FONT_ICONS[0]);
+  const [selectedIcon, setSelectedIcon] = useState<(typeof NERD_FONT_ICONS)[number]>(
+    NERD_FONT_ICONS[0],
+  );
   const [showWithIcons, setShowWithIcons] = useState(true);
   const [hoveredFile, setHoveredFile] = useState<number | null>(null);
 

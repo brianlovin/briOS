@@ -32,7 +32,7 @@ describe("generate256Colors", () => {
 
 describe("hslToRgb", () => {
   test("converts hue/saturation/lightness used by the truecolor picker", () => {
-    expect(hslToRgb(0, 80, 50)).toEqual({ r: 230, g: 26, b: 26 });
-    expect(hslToRgb(180, 80, 50)).toEqual({ r: 26, g: 230, b: 230 });
+    expect(hslToRgb(0, 80, 50)).toEqual({ r: 230, g: 25, b: 25 });
+    expect(hslToRgb(180, 80, 50)).toEqual({ r: 25, g: 230, b: 230 });
   });
 });

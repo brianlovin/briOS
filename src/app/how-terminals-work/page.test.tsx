@@ -15,7 +15,7 @@ describe("How Terminals Work page", () => {
 
     const guide = renderToStaticMarkup(<HowTerminalsWorkGuide />);
     expect(guide).toContain("The Grid Model");
-    expect(guide).toContain("What's in a Cell?");
+    expect(guide).toContain("What&#x27;s in a Cell?");
     expect(guide).toContain("Escape Sequences");
     expect(guide).toContain("Input Goes Both Ways");
     expect(guide).toContain("Signals");
