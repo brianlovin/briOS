@@ -10,6 +10,7 @@ import { prefetchComputerTip } from "@/lib/hooks/useComputer";
 import { cn } from "@/lib/utils";
 
 import { useComputerTipsContext } from "./ComputerContext";
+import { ComputerTipIcon } from "./ComputerTipIcon";
 
 export function ComputerList() {
   const pathname = usePathname();
@@ -32,7 +33,7 @@ export function ComputerList() {
   }
 
   return (
-    <ul className="flex flex-col pb-4">
+    <ul className="flex w-full flex-col gap-0.5 md:p-3">
       {tips.map((item) => {
         const isSelected = item.id === currentId;
         return (
@@ -47,16 +48,7 @@ export function ComputerList() {
               href={`/computer/${item.id}`}
               onMouseEnter={() => prefetchComputerTip(item.id)}
             >
-              {item.icon ? (
-                item.icon.startsWith("http") || item.icon.startsWith("data:") ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={item.icon} alt="" className="size-5 shrink-0 rounded-sm" />
-                ) : (
-                  <span className="shrink-0 text-lg leading-none" aria-hidden>
-                    {item.icon}
-                  </span>
-                )
-              ) : null}
+              <ComputerTipIcon icon={item.icon} />
               <span className="text-primary line-clamp-3 font-medium">{item.title}</span>
             </Link>
           </li>

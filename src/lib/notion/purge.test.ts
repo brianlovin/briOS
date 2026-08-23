@@ -187,7 +187,7 @@ describe("use cache page islands", () => {
       writing: ["page.tsx", "writing/page.tsx", "writing/[slug]/page.tsx"],
       til: ["til/page.tsx", "til/[slug]/page.tsx"],
       ama: ["ama/layout.tsx", "ama/[id]/page.tsx"],
-      computer: ["computer/layout.tsx", "computer/[id]/page.tsx"],
+      computer: ["computer/layout.tsx", "computer/page.tsx", "computer/[id]/page.tsx"],
       stack: ["stack/page.tsx"],
       sites: ["sites/page.tsx"],
       hn: ["hn/layout.tsx", "hn/[id]/page.tsx"],
