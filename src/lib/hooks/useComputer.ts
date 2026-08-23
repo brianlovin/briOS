@@ -2,6 +2,7 @@
 
 import useSWR, { preload } from "swr";
 
+import { type ComputerTipsResponse, unwrapComputerTips } from "@/lib/computer";
 import { fetcher } from "@/lib/fetcher";
 import type { NotionComputerItem, NotionComputerItemWithContent } from "@/lib/notion";
 
@@ -10,15 +11,15 @@ export function prefetchComputerTip(id: string) {
 }
 
 export function useComputerTips(fallbackData?: NotionComputerItem[]) {
-  const { data, error, isLoading } = useSWR<NotionComputerItem[]>("/api/computer", fetcher, {
+  const { data, error, isLoading } = useSWR<ComputerTipsResponse>("/api/computer", fetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     refreshInterval: 1000 * 60 * 5,
-    fallbackData,
+    fallbackData: fallbackData ? { items: fallbackData } : undefined,
   });
 
   return {
-    tips: data || fallbackData || [],
+    tips: unwrapComputerTips(data, fallbackData),
     isLoading: isLoading && !fallbackData,
     isError: error,
   };

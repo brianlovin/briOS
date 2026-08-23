@@ -9,6 +9,15 @@ export const COMPUTER_INTRO =
 
 export type ComputerTip = NotionComputerItem;
 
+export type ComputerTipsResponse = { items: ComputerTip[] };
+
+export function unwrapComputerTips(
+  data: ComputerTipsResponse | undefined,
+  fallback?: ComputerTip[],
+): ComputerTip[] {
+  return data?.items ?? fallback ?? [];
+}
+
 async function fetchAllComputerTips(): Promise<ComputerTip[]> {
   return getComputerDatabaseItems();
 }

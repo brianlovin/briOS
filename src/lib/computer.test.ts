@@ -1,7 +1,13 @@
 import { describe, expect, test } from "bun:test";
 
 import { HOME_PROJECTS } from "@/components/home/ProjectsList";
-import { COMPUTER_INTRO, COMPUTER_TITLE, type ComputerTip, computerTipLinks } from "@/lib/computer";
+import {
+  COMPUTER_INTRO,
+  COMPUTER_TITLE,
+  type ComputerTip,
+  computerTipLinks,
+  unwrapComputerTips,
+} from "@/lib/computer";
 import { INDEXABLE_SECTIONS } from "@/lib/site-copy";
 
 function tip(overrides: Partial<ComputerTip> & Pick<ComputerTip, "id" | "title">): ComputerTip {
@@ -30,6 +36,31 @@ describe("computer copy and links", () => {
       { id: "raycast", title: "Raycast", href: "/computer/raycast" },
       { id: "hyperkeys", title: "Hyperkeys", href: "/computer/hyperkeys" },
     ]);
+  });
+});
+
+describe("unwrapComputerTips", () => {
+  const items = [tip({ id: "raycast", title: "Raycast" })];
+  const fallback = [tip({ id: "hyperkeys", title: "Hyperkeys" })];
+
+  test("reads items from the { items } API payload", () => {
+    expect(unwrapComputerTips({ items })).toEqual(items);
+  });
+
+  test("prefers payload items over fallback", () => {
+    expect(unwrapComputerTips({ items }, fallback)).toEqual(items);
+  });
+
+  test("uses fallback when the payload is missing", () => {
+    expect(unwrapComputerTips(undefined, fallback)).toEqual(fallback);
+    expect(unwrapComputerTips(undefined)).toEqual([]);
+  });
+
+  test("returns an array so list lookups cannot treat the response as tips", () => {
+    const tips = unwrapComputerTips({ items });
+    expect(Array.isArray(tips)).toBe(true);
+    expect(tips.findIndex((item) => item.id === "raycast")).toBe(0);
+    expect(tips.map((item) => item.title)).toEqual(["Raycast"]);
   });
 });
 
