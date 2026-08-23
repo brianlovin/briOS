@@ -14,7 +14,7 @@ function tip(overrides: Partial<ComputerTip> & Pick<ComputerTip, "id" | "title">
 }
 
 describe("ComputerCatalog", () => {
-  test("shows the title, intro, suggest control, and tip hrefs", () => {
+  test("shows the title, intro, and tip hrefs", () => {
     const html = renderToStaticMarkup(
       <ComputerCatalog
         tips={[
@@ -27,13 +27,12 @@ describe("ComputerCatalog", () => {
 
     expect(html).toContain(COMPUTER_TITLE);
     expect(html).toContain(COMPUTER_INTRO);
-    expect(html).toContain("Suggest a tip");
+    expect(html).not.toContain("Suggest a tip");
     expect(html).toContain("Raycast");
     expect(html).toContain('href="/computer/raycast-hwmX1CS"');
     expect(html).toContain("Hyperkeys");
     expect(html).toContain('href="/computer/hyperkeys-me9hIdP"');
     expect(html).not.toContain("Hidden without short id");
     expect(html).not.toContain("/computer/draft");
-    expect(html).not.toContain("Tip title...");
   });
 });

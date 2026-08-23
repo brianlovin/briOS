@@ -894,25 +894,6 @@ export async function getComputerItemContent(
   );
 }
 
-export async function computerShortIdExists(shortId: string): Promise<boolean> {
-  const databaseId = process.env.NOTION_TIPS_DATABASE_ID || "";
-  if (!databaseId) return false;
-
-  const dataSourceId = await getDataSourceId(databaseId);
-  const response = await notion.dataSources.query({
-    data_source_id: dataSourceId,
-    page_size: 1,
-    filter: {
-      property: "Short ID",
-      rich_text: {
-        equals: shortId,
-      },
-    },
-  });
-
-  return response.results.length > 0;
-}
-
 export async function getComputerTipByShortId(
   shortId: string,
 ): Promise<NotionComputerItemWithContent | null> {

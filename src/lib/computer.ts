@@ -1,7 +1,6 @@
 import { cache } from "react";
 
 import {
-  createComputerTip,
   getComputerDatabaseItems,
   getComputerItemContent,
   getComputerTipByShortId,
@@ -86,8 +85,4 @@ export function computerTipsFromApi(data: unknown): ComputerTip[] {
     if (Array.isArray(items)) return items as ComputerTip[];
   }
   return [];
-}
-
-export async function submitComputerTip(title: string, details?: string) {
-  await createComputerTip({ title, body: details });
 }

@@ -67,14 +67,13 @@ export { getAllBlocks, processBlockFromResponse } from "./blocks";
 
 // Queries
 export {
-  // Computer tips
-  computerShortIdExists,
   getAmaDatabaseItems,
   // AMA
   getAmaItemContent,
   // App Dissection
   getAppDissectionDatabaseItems,
   getAppDissectionItemBySlug,
+  // Computer tips
   getComputerDatabaseItems,
   getComputerItemContent,
   getComputerTipByShortId,
@@ -113,7 +112,6 @@ export {
 // Mutations
 export {
   createAmaQuestion,
-  createComputerTip,
   createStackItem,
   updateStackItem,
   updateWritingShortId,

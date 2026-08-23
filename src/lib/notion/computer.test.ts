@@ -2,13 +2,9 @@ import { describe, expect, test } from "bun:test";
 
 import {
   COMPUTER_LIST_SORTS,
-  COMPUTER_PENDING_STATUS,
   COMPUTER_PUBLISHED_FILTER,
-  COMPUTER_PUBLISHED_STATUS,
-  computerTipCreateProperties,
   isNotionPageIdParam,
   isPublishedComputerTip,
-  paragraphBlocksFromPlainText,
   resolveComputerTipHref,
   rewriteComputerTipLinks,
 } from "./computer";
@@ -48,29 +44,6 @@ describe("computer published filter", () => {
     expect(isPublishedComputerTip({ status: "Published" })).toBe(true);
     expect(isPublishedComputerTip({ status: "Pending" })).toBe(false);
     expect(isPublishedComputerTip({ status: "Rejected" })).toBe(false);
-  });
-});
-
-describe("createComputerTip payload", () => {
-  test("creates a Pending tip with optional body paragraphs", () => {
-    expect(computerTipCreateProperties("Clipboard history", "1m5Cc9N")).toEqual({
-      Name: { title: [{ text: { content: "Clipboard history" } }] },
-      Status: { select: { name: COMPUTER_PENDING_STATUS } },
-      "Short ID": { rich_text: [{ text: { content: "1m5Cc9N" } }] },
-    });
-    expect(COMPUTER_PENDING_STATUS).toBe("Pending");
-    expect(COMPUTER_PUBLISHED_STATUS).toBe("Published");
-
-    const children = paragraphBlocksFromPlainText("Keep a clipboard history.");
-    expect(children).toEqual([
-      {
-        object: "block",
-        type: "paragraph",
-        paragraph: {
-          rich_text: [{ type: "text", text: { content: "Keep a clipboard history." } }],
-        },
-      },
-    ]);
   });
 });
 

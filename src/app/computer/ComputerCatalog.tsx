@@ -3,7 +3,6 @@ import { PageTitle } from "@/components/Typography";
 import { COMPUTER_INTRO, COMPUTER_TITLE, type ComputerTip, computerTipLink } from "@/lib/computer";
 
 import { ComputerTipIcon } from "./ComputerTipIcon";
-import { SuggestTipControl } from "./SuggestTipControl";
 
 export function ComputerCatalog({ tips }: { tips: ComputerTip[] }) {
   return (
@@ -12,7 +11,6 @@ export function ComputerCatalog({ tips }: { tips: ComputerTip[] }) {
         <Section>
           <PageTitle>{COMPUTER_TITLE}</PageTitle>
           <p className="text-secondary text-lg leading-relaxed">{COMPUTER_INTRO}</p>
-          <SuggestTipControl />
         </Section>
         <Section>
           <List>
