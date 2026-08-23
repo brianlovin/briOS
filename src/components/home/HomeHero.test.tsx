@@ -23,5 +23,8 @@ describe("homepage content", () => {
     expect(projects).toContain('href="/computer"');
     expect(projects).toContain("How to Computer Better");
     expect(projects).not.toContain("notion.site/how-to-computer-better");
+    expect(projects).toContain('href="/how-terminals-work"');
+    expect(projects).toContain("How Terminals Work");
+    expect(projects).not.toContain("how-terminals-work.vercel.app");
   });
 });

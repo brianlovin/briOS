@@ -1572,6 +1572,7 @@ describe("inferTitleFromPath", () => {
     expect(inferTitleFromPath("https://brianlovin.com/writing/foo")).toBe("foo");
     expect(inferTitleFromPath("https://brianlovin.com/writing")).toBe("Writing");
     expect(inferTitleFromPath("/computer")).toBe("How to Computer Better");
+    expect(inferTitleFromPath("/how-terminals-work")).toBe("How Terminals Work");
     expect(inferTitleFromPath("https://1password.com")).not.toBe("Home");
     expect(inferTitleFromPath("https://1password.com")).toBe("");
   });
