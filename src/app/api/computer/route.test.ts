@@ -2,7 +2,7 @@ import { afterEach, describe, expect, mock, spyOn, test } from "bun:test";
 
 import * as notion from "@/lib/notion";
 
-import { GET, POST } from "./route";
+import { GET } from "./route";
 
 describe("/api/computer", () => {
   afterEach(() => {
@@ -39,25 +39,6 @@ describe("/api/computer", () => {
           href: "/computer/raycast-hwmX1CS",
         },
       ],
-    });
-  });
-
-  test("POST creates a tip from title and optional details", async () => {
-    const create = spyOn(notion, "createComputerTip").mockResolvedValue({ id: "new-tip" } as never);
-
-    const res = await POST(
-      new Request("http://localhost/api/computer", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title: "A new shortcut", details: "Bind caps lock." }),
-      }),
-    );
-
-    expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ id: "new-tip" });
-    expect(create).toHaveBeenCalledWith({
-      title: "A new shortcut",
-      body: "Bind caps lock.",
     });
   });
 });

@@ -2,16 +2,7 @@ import type { RichTextItemResponse } from "@notionhq/client/build/src/api-endpoi
 
 import { buildSlug } from "@/lib/short-id";
 
-import {
-  createdTime,
-  iconUrl,
-  richText,
-  select,
-  title,
-  writeRichText,
-  writeSelect,
-  writeTitle,
-} from "./properties";
+import { createdTime, iconUrl, richText, select, title } from "./properties";
 import {
   isFullPage,
   isListItemBlock,
@@ -24,7 +15,6 @@ import {
 export type ComputerTipLinkTarget = Pick<NotionComputerItem, "id" | "title" | "shortId">;
 
 export const COMPUTER_PUBLISHED_STATUS = "Published";
-export const COMPUTER_PENDING_STATUS = "Pending";
 
 export const COMPUTER_PUBLISHED_FILTER = {
   property: "Status",
@@ -42,7 +32,6 @@ export const COMPUTER_LIST_SORTS = [
 
 const UUID_HYPHENATED = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
 const UUID_COMPACT = /[0-9a-f]{32}/i;
-const NOTION_TEXT_LIMIT = 2000;
 
 export function isPublishedComputerTip(item: Pick<NotionComputerItem, "status">): boolean {
   return item.status === COMPUTER_PUBLISHED_STATUS;
@@ -62,40 +51,11 @@ export function mapComputerItem(page: PageResponse): NotionComputerItem | null {
   };
 }
 
-export function computerTipCreateProperties(titleText: string, shortId?: string) {
-  return {
-    Name: writeTitle(titleText),
-    Status: writeSelect(COMPUTER_PENDING_STATUS),
-    ...(shortId ? { "Short ID": writeRichText(shortId) } : {}),
-  };
-}
-
 export function computerTipPublicPath(
   tip: Pick<NotionComputerItem, "title" | "shortId">,
 ): string | null {
   if (!tip.shortId) return null;
   return `/computer/${buildSlug(tip.title, tip.shortId)}`;
-}
-
-export function paragraphBlocksFromPlainText(body: string): Array<{
-  object: "block";
-  type: "paragraph";
-  paragraph: { rich_text: Array<{ type: "text"; text: { content: string } }> };
-}> {
-  const chunks: string[] = [];
-  let remaining = body;
-  while (remaining.length > 0) {
-    chunks.push(remaining.slice(0, NOTION_TEXT_LIMIT));
-    remaining = remaining.slice(NOTION_TEXT_LIMIT);
-  }
-
-  return chunks.map((content) => ({
-    object: "block" as const,
-    type: "paragraph" as const,
-    paragraph: {
-      rich_text: [{ type: "text" as const, text: { content } }],
-    },
-  }));
 }
 
 export function normalizeNotionId(id: string): string {
