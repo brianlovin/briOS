@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import { cacheLife, cacheTag } from "next/cache";
 
-import { COMPUTER_INTRO, COMPUTER_TITLE, type ComputerTip } from "@/lib/computer";
+import {
+  COMPUTER_INTRO,
+  COMPUTER_TITLE,
+  type ComputerTip,
+  publicComputerTips,
+} from "@/lib/computer";
 import { createMetadata } from "@/lib/metadata";
 import { getComputerDatabaseItems, isPlaceholderNotionBuild } from "@/lib/notion";
 
@@ -25,5 +30,5 @@ async function getCachedComputerTips(): Promise<ComputerTip[]> {
   if (isPlaceholderNotionBuild()) {
     return [];
   }
-  return getComputerDatabaseItems();
+  return publicComputerTips(await getComputerDatabaseItems());
 }

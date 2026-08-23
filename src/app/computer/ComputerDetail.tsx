@@ -8,6 +8,7 @@ import { renderBlocks } from "@/components/renderBlocks";
 import { PageTitle } from "@/components/Typography";
 import { FancySeparator } from "@/components/ui/FancySeparator";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { computerTipLink } from "@/lib/computer";
 import { useComputerTip } from "@/lib/hooks/useComputer";
 import type { NotionComputerItemWithContent } from "@/lib/notion";
 
@@ -16,8 +17,8 @@ export default function ComputerDetail({
 }: {
   initialTip?: NotionComputerItemWithContent | null;
 }) {
-  const { id } = useParams();
-  const { tip, isLoading, isError } = useComputerTip(id as string, initialTip);
+  const { slug } = useParams<{ slug: string }>();
+  const { tip, isLoading, isError } = useComputerTip(slug, initialTip);
 
   useEffect(() => {
     if (tip?.title) {
@@ -45,7 +46,7 @@ export default function ComputerDetail({
           <LikeButton
             pageId={tip.id}
             title={tip.title}
-            href={`/computer/${tip.id}`}
+            href={computerTipLink(tip)?.href ?? `/computer/${slug}`}
             contentType="computer"
           />
         </div>

@@ -1,6 +1,13 @@
 import { HOME_PROJECTS } from "@/components/home/ProjectsList";
 import { getAmaQuestions } from "@/lib/ama";
-import { COMPUTER_INTRO, COMPUTER_TITLE, getComputerTips } from "@/lib/computer";
+import {
+  COMPUTER_INTRO,
+  COMPUTER_TITLE,
+  computerTipLink,
+  computerTipLinks,
+  getComputerTips,
+  resolveComputerTipFromSlug,
+} from "@/lib/computer";
 import { getDesignDetailsEpisodes } from "@/lib/design-details";
 import { getGoodWebsitesSource } from "@/lib/goodWebsites";
 import { getPostById, getRankedHNPosts } from "@/lib/hn";
@@ -8,7 +15,6 @@ import {
   getAmaItemContent,
   getAppDissectionDatabaseItems,
   getAppDissectionItemBySlug,
-  getComputerItemContent,
   getListeningHistoryDatabaseItems,
   getTilByShortId,
   getWritingPostByShortId,
@@ -342,6 +348,7 @@ async function amaIndexMarkdown(): Promise<MarkdownResult> {
 
 async function computerIndexMarkdown(): Promise<MarkdownResult> {
   const tips = isPlaceholderNotionBuild() ? [] : await safe(() => getComputerTips(), []);
+  const links = computerTipLinks(tips);
   const body = [
     `# ${COMPUTER_TITLE}`,
     "",
@@ -349,24 +356,23 @@ async function computerIndexMarkdown(): Promise<MarkdownResult> {
     "",
     "## Tips",
     "",
-    tips.length > 0
-      ? linkList(tips.map((item) => ({ title: item.title, href: `/computer/${item.id}` })))
-      : "- Published tips load from Notion when available.",
+    links.length > 0 ? linkList(links) : "- Published tips load from Notion when available.",
   ].join("\n");
   return md(200, body, ["notion:computer"]);
 }
 
-async function computerItemMarkdown(id: string): Promise<MarkdownResult> {
+async function computerItemMarkdown(slug: string): Promise<MarkdownResult> {
   if (isPlaceholderNotionBuild()) return notFoundMarkdown();
-  const item = await safe(() => getComputerItemContent(id), null);
+  const item = await safe(() => resolveComputerTipFromSlug(slug), null);
   if (!item) return notFoundMarkdown();
 
+  const canonicalPath = computerTipLink(item)?.href ?? `/computer/${slug}`;
   const body = [
     `# ${item.title}`,
     "",
     blocksToMarkdown(item.blocks),
     "",
-    `[All tips](/computer)`,
+    `[All tips](/computer) · [HTML](${canonicalPath})`,
   ].join("\n");
   return md(200, body, ["notion:computer"]);
 }

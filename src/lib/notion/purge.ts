@@ -59,7 +59,7 @@ export const PURGE_CONFIG: Record<
     patterns: ["notion:computer:*"],
     tags: ["notion:computer"],
     paths: ["/computer", "/api/computer"],
-    pagePaths: ["/computer/[id]"],
+    pagePaths: ["/computer/[slug]"],
   },
   stack: {
     patterns: ["notion:stack:*"],

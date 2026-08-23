@@ -1,29 +1,26 @@
 import type { Metadata } from "next";
 import { cacheLife, cacheTag } from "next/cache";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import ComputerDetail from "@/app/computer/ComputerDetail";
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
-import { COMPUTER_TITLE } from "@/lib/computer";
+import { COMPUTER_TITLE, computerSlugRedirect, resolveComputerTipFromSlug } from "@/lib/computer";
 import { getServerLikes } from "@/lib/likes-server";
 import { createMetadata, truncateDescription } from "@/lib/metadata";
-import {
-  getComputerItemContent,
-  isPlaceholderNotionBuild,
-  type NotionComputerItemWithContent,
-} from "@/lib/notion";
+import { isPlaceholderNotionBuild, type NotionComputerItemWithContent } from "@/lib/notion";
+import { computerTipPublicPath } from "@/lib/notion/computer";
 import { extractPreviewText } from "@/lib/notion/types";
 
 export const instant = false;
 
 export async function generateMetadata(props: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const params = await props.params;
-  const id = params.id;
+  const slug = params.slug;
 
   try {
-    const item = await getComputerItemContent(id);
+    const item = await resolveComputerTipFromSlug(slug);
 
     if (!item) {
       return {
@@ -33,11 +30,12 @@ export async function generateMetadata(props: {
 
     const preview = extractPreviewText(item.blocks, { maxBlocks: 2 });
     const description = preview || `${COMPUTER_TITLE}: ${item.title}`;
+    const path = computerTipPublicPath(item) ?? `/computer/${slug}`;
 
     return createMetadata({
       title: item.title,
       description: truncateDescription(description),
-      path: `/computer/${id}`,
+      path,
     });
   } catch {
     return {
@@ -46,9 +44,9 @@ export async function generateMetadata(props: {
   }
 }
 
-export default async function ComputerDetailPage(props: { params: Promise<{ id: string }> }) {
+export default async function ComputerDetailPage(props: { params: Promise<{ slug: string }> }) {
   const params = await props.params;
-  const item = await getCachedComputerDetail(params.id);
+  const item = await getCachedComputerDetail(params.slug);
   const initialLikes = await getServerLikes([item.id]);
 
   return (
@@ -58,7 +56,7 @@ export default async function ComputerDetailPage(props: { params: Promise<{ id: 
   );
 }
 
-async function getCachedComputerDetail(id: string): Promise<NotionComputerItemWithContent> {
+async function getCachedComputerDetail(slug: string): Promise<NotionComputerItemWithContent> {
   "use cache";
   cacheLife("days");
   cacheTag("notion:computer");
@@ -66,9 +64,14 @@ async function getCachedComputerDetail(id: string): Promise<NotionComputerItemWi
     notFound();
   }
 
-  const item = await getComputerItemContent(id);
+  const item = await resolveComputerTipFromSlug(slug);
   if (!item) {
     notFound();
+  }
+
+  const canonicalRedirect = computerSlugRedirect(slug, item);
+  if (canonicalRedirect) {
+    redirect(`/computer/${canonicalRedirect}`);
   }
 
   return item;

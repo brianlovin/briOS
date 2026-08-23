@@ -16,6 +16,13 @@ describe("/api/computer", () => {
         title: "Raycast",
         status: "Published",
         createdTime: "2026-08-01T00:00:00.000Z",
+        shortId: "hwmX1CS",
+      },
+      {
+        id: "tip-2",
+        title: "Missing short id",
+        status: "Published",
+        createdTime: "2026-08-01T00:00:00.000Z",
       },
     ]);
 
@@ -28,6 +35,8 @@ describe("/api/computer", () => {
           title: "Raycast",
           status: "Published",
           createdTime: "2026-08-01T00:00:00.000Z",
+          shortId: "hwmX1CS",
+          href: "/computer/raycast-hwmX1CS",
         },
       ],
     });

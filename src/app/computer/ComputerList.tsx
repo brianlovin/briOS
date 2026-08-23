@@ -6,6 +6,7 @@ import { useMemo } from "react";
 
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { useListNavigation } from "@/hooks/useListNavigation";
+import { computerTipLink, isSelectedComputerTip, publicComputerTips } from "@/lib/computer";
 import { prefetchComputerTip } from "@/lib/hooks/useComputer";
 import { cn } from "@/lib/utils";
 
@@ -16,13 +17,18 @@ export function ComputerList() {
   const pathname = usePathname();
   const { tips, isLoading } = useComputerTipsContext();
 
-  const currentId = pathname.split("/").pop();
+  const visibleTips = useMemo(() => publicComputerTips(tips), [tips]);
+  const currentSlug = pathname.split("/").pop();
   const currentIndex = useMemo(
-    () => tips.findIndex((tip) => tip.id === currentId),
-    [tips, currentId],
+    () => visibleTips.findIndex((tip) => isSelectedComputerTip(tip, currentSlug)),
+    [visibleTips, currentSlug],
   );
 
-  useListNavigation(tips, currentIndex, (item) => `/computer/${item.id}`);
+  useListNavigation(
+    visibleTips,
+    currentIndex,
+    (item) => computerTipLink(item)?.href ?? "/computer",
+  );
 
   if (isLoading) {
     return (
@@ -34,8 +40,10 @@ export function ComputerList() {
 
   return (
     <ul className="flex w-full flex-col gap-0.5 md:p-3">
-      {tips.map((item) => {
-        const isSelected = item.id === currentId;
+      {visibleTips.map((item) => {
+        const link = computerTipLink(item);
+        if (!link) return null;
+        const isSelected = isSelectedComputerTip(item, currentSlug);
         return (
           <li key={item.id} data-id={item.id} className="scroll-my-3">
             <Link
@@ -45,8 +53,8 @@ export function ComputerList() {
                   "bg-tertiary dark:bg-secondary dark:shadow-contrast": isSelected,
                 },
               )}
-              href={`/computer/${item.id}`}
-              onMouseEnter={() => prefetchComputerTip(item.id)}
+              href={link.href}
+              onMouseEnter={() => prefetchComputerTip(link.slug)}
             >
               <ComputerTipIcon icon={item.icon} />
               <span className="text-primary line-clamp-3 font-medium">{item.title}</span>

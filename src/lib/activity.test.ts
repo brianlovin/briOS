@@ -687,6 +687,19 @@ describe("recordVisit", () => {
     expect(lookupCmsPostTitleSpy).toHaveBeenCalledWith("til", "cache-headers-B57IXLJ");
   });
 
+  test("looks up a computer tip title at ingest from a slug URL", async () => {
+    lookupCmsPostTitleSpy.mockResolvedValue("Take better screenshots");
+    const path = "/computer/take-better-screenshots-NlSKz9x";
+    const store = createMemoryActivityStore();
+    await recordVisit({ path, title: "a computer tip" }, store);
+    const [event] = await store.getTail(1);
+    expect(event?.subject?.label).toBe("Take better screenshots");
+    expect(lookupCmsPostTitleSpy).toHaveBeenCalledWith(
+      "computer",
+      "take-better-screenshots-NlSKz9x",
+    );
+  });
+
   test("does not look up a writing title when the client already sent the real title", async () => {
     lookupCmsPostTitleSpy.mockResolvedValue("Ignored lookup title");
     const store = createMemoryActivityStore();
@@ -1540,6 +1553,9 @@ describe("inferTitleFromPath", () => {
     expect(inferTitleFromPath("/ama/2f2c711c-0ceb-810d-899d-e5feb99e70f4")).toBe("an AMA question");
     expect(inferTitleFromPath("/computer/2f2c711c-0ceb-810d-899d-e5feb99e70f4")).toBe(
       "a computer tip",
+    );
+    expect(inferTitleFromPath("/computer/take-better-screenshots-NlSKz9x")).toBe(
+      "take better screenshots",
     );
     expect(inferTitleFromPath("/bookmarks/2f2c711c-0ceb-810d-899d-e5feb99e70f4")).toBe("Bookmarks");
     expect(inferTitleFromPath("/design-details/2f2c711c0ceb810d899de5feb99e70f4")).toBe(

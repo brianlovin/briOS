@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 import { getAmaQuestions } from "@/lib/ama";
-import { getComputerTips } from "@/lib/computer";
+import { computerTipLink, getComputerTips } from "@/lib/computer";
 import { SITE_CONFIG } from "@/lib/metadata";
 import { getAppDissectionDatabaseItems, isPlaceholderNotionBuild } from "@/lib/notion";
 import { buildSlug } from "@/lib/short-id";
@@ -83,7 +83,9 @@ export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
   }
 
   for (const tip of computer) {
-    unique.set(url(`/computer/${tip.id}`), entry(`/computer/${tip.id}`, tip.createdTime));
+    const link = computerTipLink(tip);
+    if (!link) continue;
+    unique.set(url(link.href), entry(link.href, tip.createdTime));
   }
 
   for (const item of dissections) {

@@ -376,7 +376,7 @@ const GENERIC_HN_STORY_TITLES = new Set([
 ]);
 
 const HN_STORY_PATH_RE = /^\/hn\/(\d+)$/;
-const CMS_POST_PATH_RE = /^\/(writing|til)\/([^/]+)$/;
+const CMS_POST_PATH_RE = /^\/(writing|til|computer)\/([^/]+)$/;
 
 /** Story id from `/hn/{id}` (and absolute briOS URLs). Index `/hn` is undefined. */
 export function hnStoryIdFromPath(pathname: string): string | undefined {
@@ -398,14 +398,14 @@ export function isHnActivityEvent(event: Pick<ActivityEvent, "subject" | "meta">
   return typeof path === "string" && isHnActivityPath(path);
 }
 
-/** Writing/TIL child slug from `/writing/{slug}` or `/til/{slug}` (and absolute URLs). */
+/** Writing/TIL/computer child slug from `/writing/{slug}`, `/til/{slug}`, or `/computer/{slug}`. */
 export function cmsPostRefFromPath(
   pathname: string,
-): { kind: "writing" | "til"; slug: string } | undefined {
+): { kind: "writing" | "til" | "computer"; slug: string } | undefined {
   const path = normalizeActivityPath(pathnameFromHref(pathname));
   const match = CMS_POST_PATH_RE.exec(path);
   if (!match) return undefined;
-  return { kind: match[1] as "writing" | "til", slug: match[2] };
+  return { kind: match[1] as "writing" | "til" | "computer", slug: match[2] };
 }
 
 /** Missing, generic, or identifier titles that should not win over a real HN story name. */

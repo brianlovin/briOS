@@ -1,12 +1,17 @@
-import { getTilByShortId, getWritingPostByShortId, getWritingPostContentBySlug } from "./notion";
+import {
+  getComputerTipByShortId,
+  getTilByShortId,
+  getWritingPostByShortId,
+  getWritingPostContentBySlug,
+} from "./notion";
 import { extractShortIdFromSlug } from "./short-id";
 
 /**
- * Ingest-only writing/TIL title lookup. Uses the same Notion helpers as the
- * post pages. Never call this from the activity feed render path.
+ * Ingest-only writing/TIL/computer title lookup. Uses the same Notion helpers
+ * as the post pages. Never call this from the activity feed render path.
  */
 export async function lookupCmsPostTitle(
-  kind: "writing" | "til",
+  kind: "writing" | "til" | "computer",
   slug: string,
 ): Promise<string | null> {
   try {
@@ -22,6 +27,13 @@ export async function lookupCmsPostTitle(
 
     const shortId = extractShortIdFromSlug(slug);
     if (!shortId) return null;
+
+    if (kind === "computer") {
+      const content = await getComputerTipByShortId(shortId);
+      const title = content?.title?.trim();
+      return title || null;
+    }
+
     const content = await getTilByShortId(shortId);
     const title = content?.title?.trim();
     return title || null;

@@ -1,6 +1,17 @@
 import type { RichTextItemResponse } from "@notionhq/client/build/src/api-endpoints";
 
-import { createdTime, iconUrl, select, title, writeSelect, writeTitle } from "./properties";
+import { buildSlug } from "@/lib/short-id";
+
+import {
+  createdTime,
+  iconUrl,
+  richText,
+  select,
+  title,
+  writeRichText,
+  writeSelect,
+  writeTitle,
+} from "./properties";
 import {
   isFullPage,
   isListItemBlock,
@@ -9,6 +20,8 @@ import {
   type ProcessedBlock,
   type RichTextContent,
 } from "./types";
+
+export type ComputerTipLinkTarget = Pick<NotionComputerItem, "id" | "title" | "shortId">;
 
 export const COMPUTER_PUBLISHED_STATUS = "Published";
 export const COMPUTER_PENDING_STATUS = "Pending";
@@ -45,14 +58,23 @@ export function mapComputerItem(page: PageResponse): NotionComputerItem | null {
     status: select(properties, "Status") ?? "Pending",
     icon: iconUrl(page, { includeEmoji: true }),
     createdTime: createdTime(properties, "Created time") || page.created_time,
+    shortId: richText(properties, "Short ID"),
   };
 }
 
-export function computerTipCreateProperties(titleText: string) {
+export function computerTipCreateProperties(titleText: string, shortId?: string) {
   return {
     Name: writeTitle(titleText),
     Status: writeSelect(COMPUTER_PENDING_STATUS),
+    ...(shortId ? { "Short ID": writeRichText(shortId) } : {}),
   };
+}
+
+export function computerTipPublicPath(
+  tip: Pick<NotionComputerItem, "title" | "shortId">,
+): string | null {
+  if (!tip.shortId) return null;
+  return `/computer/${buildSlug(tip.title, tip.shortId)}`;
 }
 
 export function paragraphBlocksFromPlainText(body: string): Array<{
@@ -99,14 +121,24 @@ function isNotionHostedHref(href: string): boolean {
   }
 }
 
-export function resolveComputerTipHref(href: string, publishedIds: Iterable<string>): string {
+const UUID_HYPHENATED_EXACT = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const UUID_COMPACT_EXACT = /^[0-9a-f]{32}$/i;
+
+export function isNotionPageIdParam(value: string): boolean {
+  return UUID_HYPHENATED_EXACT.test(value) || UUID_COMPACT_EXACT.test(value);
+}
+
+export function resolveComputerTipHref(
+  href: string,
+  publishedTips: Iterable<ComputerTipLinkTarget>,
+): string {
   if (!isNotionHostedHref(href)) return href;
   const extracted = notionIdFromHref(href);
   if (!extracted) return href;
 
-  for (const id of publishedIds) {
-    if (normalizeNotionId(id) === extracted) {
-      return `/computer/${id}`;
+  for (const tip of publishedTips) {
+    if (normalizeNotionId(tip.id) === extracted) {
+      return computerTipPublicPath(tip) ?? href;
     }
   }
   return href;
@@ -114,12 +146,12 @@ export function resolveComputerTipHref(href: string, publishedIds: Iterable<stri
 
 function rewriteRichText(
   content: RichTextContent[],
-  publishedIds: Iterable<string>,
+  publishedTips: Iterable<ComputerTipLinkTarget>,
 ): RichTextContent[] {
   return content.map((item) => {
     const link = item.text.link;
     if (!link) return item;
-    const resolved = resolveComputerTipHref(link, publishedIds);
+    const resolved = resolveComputerTipHref(link, publishedTips);
     if (resolved === link) return item;
     return { ...item, text: { ...item.text, link: resolved } };
   });
@@ -127,11 +159,11 @@ function rewriteRichText(
 
 function rewriteTableCell(
   cell: RichTextItemResponse[],
-  publishedIds: Iterable<string>,
+  publishedTips: Iterable<ComputerTipLinkTarget>,
 ): RichTextItemResponse[] {
   return cell.map((item) => {
     if (!item.href) return item;
-    const resolved = resolveComputerTipHref(item.href, publishedIds);
+    const resolved = resolveComputerTipHref(item.href, publishedTips);
     if (resolved === item.href) return item;
     return { ...item, href: resolved };
   });
@@ -139,7 +171,7 @@ function rewriteTableCell(
 
 export function rewriteComputerTipLinks(
   blocks: ProcessedBlock[],
-  publishedIds: Iterable<string>,
+  publishedTips: Iterable<ComputerTipLinkTarget>,
 ): ProcessedBlock[] {
   return blocks.map((block) => {
     if (block.type === "table") {
@@ -147,7 +179,7 @@ export function rewriteComputerTipLinks(
         ...block,
         tableRows: block.tableRows?.map((row) => ({
           ...row,
-          cells: row.cells.map((cell) => rewriteTableCell(cell, publishedIds)),
+          cells: row.cells.map((cell) => rewriteTableCell(cell, publishedTips)),
         })),
       };
     }
@@ -155,15 +187,15 @@ export function rewriteComputerTipLinks(
     if (isListItemBlock(block)) {
       return {
         ...block,
-        content: rewriteRichText(block.content, publishedIds),
+        content: rewriteRichText(block.content, publishedTips),
         children: block.children
-          ? rewriteComputerTipLinks(block.children, publishedIds)
+          ? rewriteComputerTipLinks(block.children, publishedTips)
           : block.children,
       };
     }
 
     if ("content" in block) {
-      return { ...block, content: rewriteRichText(block.content, publishedIds) };
+      return { ...block, content: rewriteRichText(block.content, publishedTips) };
     }
 
     return block;

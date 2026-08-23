@@ -18,8 +18,9 @@ describe("ComputerCatalog", () => {
     const html = renderToStaticMarkup(
       <ComputerCatalog
         tips={[
-          tip({ id: "raycast", title: "Raycast", icon: "⌘" }),
-          tip({ id: "hyperkeys", title: "Hyperkeys" }),
+          tip({ id: "raycast", title: "Raycast", shortId: "hwmX1CS", icon: "⌘" }),
+          tip({ id: "hyperkeys", title: "Hyperkeys", shortId: "me9hIdP" }),
+          tip({ id: "draft", title: "Hidden without short id" }),
         ]}
       />,
     );
@@ -28,9 +29,11 @@ describe("ComputerCatalog", () => {
     expect(html).toContain(COMPUTER_INTRO);
     expect(html).toContain("Suggest a tip");
     expect(html).toContain("Raycast");
-    expect(html).toContain('href="/computer/raycast"');
+    expect(html).toContain('href="/computer/raycast-hwmX1CS"');
     expect(html).toContain("Hyperkeys");
-    expect(html).toContain('href="/computer/hyperkeys"');
+    expect(html).toContain('href="/computer/hyperkeys-me9hIdP"');
+    expect(html).not.toContain("Hidden without short id");
+    expect(html).not.toContain("/computer/draft");
     expect(html).not.toContain("Tip title...");
   });
 });

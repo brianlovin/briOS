@@ -1,7 +1,7 @@
 import { cacheLife, cacheTag } from "next/cache";
 import type { ReactNode } from "react";
 
-import { type ComputerTip } from "@/lib/computer";
+import { type ComputerTip, publicComputerTips } from "@/lib/computer";
 import { getComputerDatabaseItems, isPlaceholderNotionBuild } from "@/lib/notion";
 
 import { ComputerLayoutClient } from "./ComputerLayoutClient";
@@ -18,5 +18,5 @@ async function getCachedComputerTips(): Promise<ComputerTip[]> {
   if (isPlaceholderNotionBuild()) {
     return [];
   }
-  return getComputerDatabaseItems();
+  return publicComputerTips(await getComputerDatabaseItems());
 }

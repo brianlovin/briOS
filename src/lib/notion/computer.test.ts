@@ -6,6 +6,7 @@ import {
   COMPUTER_PUBLISHED_FILTER,
   COMPUTER_PUBLISHED_STATUS,
   computerTipCreateProperties,
+  isNotionPageIdParam,
   isPublishedComputerTip,
   paragraphBlocksFromPlainText,
   resolveComputerTipHref,
@@ -28,6 +29,15 @@ function text(content: string, link?: string): RichTextContent {
   };
 }
 
+describe("isNotionPageIdParam", () => {
+  test("accepts hyphenated and compact Notion UUIDs only", () => {
+    expect(isNotionPageIdParam("273c711c-0ceb-804b-b25b-000b277e6ccf")).toBe(true);
+    expect(isNotionPageIdParam("273c711c0ceb804bb25b000b277e6ccf")).toBe(true);
+    expect(isNotionPageIdParam("raycast-hwmX1CS")).toBe(false);
+    expect(isNotionPageIdParam("hwmX1CS")).toBe(false);
+  });
+});
+
 describe("computer published filter", () => {
   test("lists only Published tips, sorted by Name", () => {
     expect(COMPUTER_PUBLISHED_FILTER).toEqual({
@@ -43,9 +53,10 @@ describe("computer published filter", () => {
 
 describe("createComputerTip payload", () => {
   test("creates a Pending tip with optional body paragraphs", () => {
-    expect(computerTipCreateProperties("Clipboard history")).toEqual({
+    expect(computerTipCreateProperties("Clipboard history", "1m5Cc9N")).toEqual({
       Name: { title: [{ text: { content: "Clipboard history" } }] },
       Status: { select: { name: COMPUTER_PENDING_STATUS } },
+      "Short ID": { rich_text: [{ text: { content: "1m5Cc9N" } }] },
     });
     expect(COMPUTER_PENDING_STATUS).toBe("Pending");
     expect(COMPUTER_PUBLISHED_STATUS).toBe("Published");
@@ -64,9 +75,15 @@ describe("createComputerTip payload", () => {
 });
 
 describe("rewriteComputerTipLinks", () => {
-  const published = ["273c711c-0ceb-804b-b25b-000b277e6ccf"];
+  const published = [
+    {
+      id: "273c711c-0ceb-804b-b25b-000b277e6ccf",
+      title: "Raycast",
+      shortId: "hwmX1CS",
+    },
+  ];
 
-  test("rewrites Notion tip links to /computer/{id}", () => {
+  test("rewrites Notion tip links to /computer/{slug}", () => {
     const blocks: ProcessedBlock[] = [
       {
         id: "p1",
@@ -86,17 +103,22 @@ describe("rewriteComputerTipLinks", () => {
     expect(rewritten[0]).toMatchObject({
       type: "paragraph",
       content: [
-        { text: { link: "/computer/273c711c-0ceb-804b-b25b-000b277e6ccf" } },
-        { text: { link: "/computer/273c711c-0ceb-804b-b25b-000b277e6ccf" } },
+        { text: { link: "/computer/raycast-hwmX1CS" } },
+        { text: { link: "/computer/raycast-hwmX1CS" } },
         { text: { link: "https://www.raycast.com" } },
       ],
     });
   });
 
-  test("leaves unknown Notion pages and non-Notion links alone", () => {
+  test("leaves unknown Notion pages, missing short ids, and non-Notion links alone", () => {
     expect(
       resolveComputerTipHref("https://www.notion.so/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", published),
     ).toBe("https://www.notion.so/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    expect(
+      resolveComputerTipHref("https://www.notion.so/273c711c0ceb804bb25b000b277e6ccf", [
+        { id: "273c711c-0ceb-804b-b25b-000b277e6ccf", title: "Raycast" },
+      ]),
+    ).toBe("https://www.notion.so/273c711c0ceb804bb25b000b277e6ccf");
     expect(resolveComputerTipHref("https://example.com/docs", published)).toBe(
       "https://example.com/docs",
     );
