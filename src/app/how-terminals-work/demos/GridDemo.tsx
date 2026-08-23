@@ -107,14 +107,12 @@ export function GridDemo() {
                 return (
                   <div
                     key={`${rowIdx}-${colIdx}`}
-                    className={`border-primary/80 flex h-5 cursor-pointer items-center justify-center border-r border-b text-xs transition-colors duration-75 ${isHovered ? "bg-primary/10 ring-primary ring-1 ring-inset" : ""} ${isCursor ? "bg-primary" : "hover:bg-tertiary"}`}
+                    className={`border-primary/80 flex h-5 cursor-pointer items-center justify-center border-r border-b text-xs transition-colors duration-75 ${isHovered ? "bg-primary/10 ring-primary ring-1 ring-inset" : ""} ${isCursor ? "bg-primary/10 text-primary" : "hover:bg-tertiary"}`}
                     onClick={() => handleCellClick(rowIdx, colIdx)}
                     onMouseEnter={() => setHoveredCell({ row: rowIdx, col: colIdx })}
                     onMouseLeave={() => setHoveredCell(null)}
                   >
-                    <span className={isCursor ? "text-white dark:text-neutral-950" : ""}>
-                      {char}
-                    </span>
+                    <span className={isCursor ? "text-primary" : ""}>{char}</span>
                   </div>
                 );
               }),

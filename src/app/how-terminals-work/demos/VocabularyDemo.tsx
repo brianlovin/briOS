@@ -110,14 +110,14 @@ function ArchitectureDiagram({ highlightedTerm }: { highlightedTerm: Term | null
   };
 
   return (
-    <div className="bg-tertiary border-primary border p-6">
-      <div className="text-primary mb-6 text-sm font-bold">How They Fit Together</div>
+    <div className="space-y-6">
+      <div className="text-primary text-sm font-medium">How They Fit Together</div>
 
       {/* Nested boxes showing containment */}
       <div className="font-mono text-sm">
         {/* Nested layers */}
         <div
-          className={`border-2 p-4 transition-all ${
+          className={`border p-4 transition-all ${
             isHighlighted(["terminal-emulator", "terminal"])
               ? "border-primary bg-primary/5"
               : "border-primary/40"
@@ -129,7 +129,7 @@ function ArchitectureDiagram({ highlightedTerm }: { highlightedTerm: Term | null
           </div>
 
           <div
-            className={`border-2 p-4 transition-all ${
+            className={`border p-4 transition-all ${
               isHighlighted(["pty"]) ? "border-secondary bg-primary/5" : "border-secondary/40"
             }`}
           >
@@ -139,7 +139,7 @@ function ArchitectureDiagram({ highlightedTerm }: { highlightedTerm: Term | null
             </div>
 
             <div
-              className={`border-2 p-4 transition-all ${
+              className={`border p-4 transition-all ${
                 isHighlighted(["shell", "bash", "zsh"])
                   ? "border-primary bg-primary/5"
                   : "border-primary/40"
@@ -151,7 +151,7 @@ function ArchitectureDiagram({ highlightedTerm }: { highlightedTerm: Term | null
               </div>
 
               <div
-                className={`border-2 p-3 transition-all ${
+                className={`border p-3 transition-all ${
                   isHighlighted(["cli"]) ? "border-primary bg-primary/5" : "border-primary/40"
                 }`}
               >
@@ -255,8 +255,8 @@ function ShellLandscape() {
   const selected = shells[selectedShell as keyof typeof shells];
 
   return (
-    <div className="bg-tertiary border-primary space-y-4 border p-6">
-      <div className="text-primary text-sm font-bold">The Shell Family Tree</div>
+    <div className="space-y-4">
+      <div className="text-primary text-sm font-medium">The Shell Family Tree</div>
 
       <div className="flex flex-wrap gap-2">
         {shellKeys.map((key) => (
@@ -364,8 +364,8 @@ function TerminalLandscape() {
   const selected = terminals[selectedTerminal as keyof typeof terminals];
 
   return (
-    <div className="bg-tertiary border-primary space-y-4 border p-6">
-      <div className="text-primary text-sm font-bold">Terminal Emulators</div>
+    <div className="space-y-4">
+      <div className="text-primary text-sm font-medium">Terminal Emulators</div>
 
       <div className="flex flex-wrap gap-2">
         {terminalKeys.map((key) => (
@@ -455,8 +455,8 @@ function CommandFlowDemo() {
   const currentStep = steps[step];
 
   return (
-    <div className="bg-tertiary border-primary space-y-4 border p-6">
-      <div className="text-primary text-sm font-bold">Follow a Command</div>
+    <div className="space-y-4">
+      <div className="text-primary text-sm font-medium">Follow a Command</div>
 
       <div className="flex gap-2">
         <Button size="sm" onClick={() => setStep(Math.max(0, step - 1))} disabled={step === 0}>
@@ -476,7 +476,7 @@ function CommandFlowDemo() {
         </Button>
       </div>
 
-      <div className="bg-secondary border-primary space-y-3 border p-4">
+      <div className="space-y-3">
         <div className="flex items-center gap-3">
           <span className="text-secondary text-sm font-bold">{currentStep?.label}</span>
         </div>
@@ -505,9 +505,9 @@ export function VocabularyDemo() {
   return (
     <div className="space-y-8">
       {/* Glossary */}
-      <div className="bg-tertiary border-primary flex flex-col border lg:flex-row">
+      <div className="flex flex-col gap-8 lg:flex-row">
         {/* Term list */}
-        <div className="border-primary p-4 lg:w-1/2 lg:border-r">
+        <div className="lg:w-1/2">
           <div className="min-h-[320px] space-y-1 font-mono text-sm">
             {termOrder.map((term) => {
               const data = TERMS[term];
@@ -518,7 +518,7 @@ export function VocabularyDemo() {
                   onMouseEnter={() => setActiveTerm(term)}
                   className={`flex w-full cursor-default items-center gap-3 px-3 py-2 text-left transition-all ${
                     isActive
-                      ? "bg-tertiary border-primary border-l-2"
+                      ? "bg-primary/10 border-primary border-l-2"
                       : "border-l-2 border-transparent"
                   }`}
                 >
@@ -533,7 +533,7 @@ export function VocabularyDemo() {
         </div>
 
         {/* Term details */}
-        <div className="border-primary border-t p-4 lg:w-1/2 lg:border-t-0">
+        <div className="lg:w-1/2">
           {termData && (
             <div className="space-y-4">
               <div>
@@ -581,11 +581,11 @@ export function VocabularyDemo() {
       <CommandFlowDemo />
 
       {/* Common Confusions */}
-      <div className="bg-tertiary border-primary space-y-4 border p-6">
-        <h3 className="text-primary text-sm font-bold">Common Confusions</h3>
+      <div className="space-y-4">
+        <h3 className="text-primary text-sm font-medium">Common Confusions</h3>
 
         <div className="grid grid-cols-1 gap-4">
-          <div className="bg-tertiary space-y-2 p-4">
+          <div className="space-y-2">
             <div className="text-primary text-sm font-bold">"I opened my terminal"</div>
             <p className="text-tertiary text-sm">
               You probably mean you opened a{" "}
@@ -594,7 +594,7 @@ export function VocabularyDemo() {
             </p>
           </div>
 
-          <div className="bg-tertiary space-y-2 p-4">
+          <div className="space-y-2">
             <div className="text-primary text-sm font-bold">
               "My terminal can't find the command"
             </div>
@@ -604,7 +604,7 @@ export function VocabularyDemo() {
             </p>
           </div>
 
-          <div className="bg-tertiary space-y-2 p-4">
+          <div className="space-y-2">
             <div className="text-primary text-sm font-bold">"bash vs zsh—which should I use?"</div>
             <p className="text-tertiary text-sm">
               For interactive use, <span className="text-secondary">zsh</span> has better features.
@@ -613,7 +613,7 @@ export function VocabularyDemo() {
             </p>
           </div>
 
-          <div className="bg-tertiary space-y-2 p-4">
+          <div className="space-y-2">
             <div className="text-primary text-sm font-bold">
               "Terminal settings vs shell config"
             </div>
@@ -624,7 +624,7 @@ export function VocabularyDemo() {
             </p>
           </div>
 
-          <div className="bg-tertiary space-y-2 p-4">
+          <div className="space-y-2">
             <div className="text-primary text-sm font-bold">
               "How does Up arrow recall previous commands?"
             </div>
@@ -635,7 +635,7 @@ export function VocabularyDemo() {
             </p>
           </div>
 
-          <div className="bg-tertiary space-y-2 p-4">
+          <div className="space-y-2">
             <div className="text-primary text-sm font-bold">
               "Why restart terminal after editing .zshrc?"
             </div>
@@ -650,10 +650,10 @@ export function VocabularyDemo() {
       </div>
 
       {/* Quick Reference */}
-      <div className="bg-tertiary border-primary space-y-4 border p-6">
-        <h3 className="text-primary text-sm font-bold">Quick Reference</h3>
+      <div className="space-y-4">
+        <h3 className="text-primary text-sm font-medium">Quick Reference</h3>
 
-        <div className="bg-secondary border-primary space-y-2 border p-4 font-mono text-sm">
+        <div className="space-y-2 font-mono text-sm">
           <div className="text-tertiary"># Which shell am I using?</div>
           <div className="text-primary">echo $SHELL</div>
           <div className="text-tertiary mt-3"># What terminal am I in?</div>

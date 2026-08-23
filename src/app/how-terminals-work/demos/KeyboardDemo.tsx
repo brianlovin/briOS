@@ -57,11 +57,11 @@ export function KeyboardDemo() {
                 {lastKey.key === " " ? "Space" : lastKey.key}
               </div>
               <div className="grid grid-cols-2 gap-3 text-sm">
-                <div className="bg-secondary p-3">
+                <div>
                   <div className="text-quaternary mb-1 text-xs uppercase">Bytes</div>
                   <code className="text-secondary">{lastKey.bytes}</code>
                 </div>
-                <div className="bg-secondary p-3">
+                <div>
                   <div className="text-quaternary mb-1 text-xs uppercase">Sequence</div>
                   <code className="text-secondary">{lastKey.sequence}</code>
                 </div>
@@ -82,7 +82,7 @@ export function KeyboardDemo() {
           {history.map((k, i) => (
             <div
               key={i}
-              className="bg-tertiary border-primary border px-3 py-1.5 text-sm"
+              className="border-primary border px-3 py-1.5 text-sm"
               style={{ opacity: 1 - i * 0.1 }}
             >
               <span className="text-primary">{k.key === " " ? "␣" : k.key}</span>

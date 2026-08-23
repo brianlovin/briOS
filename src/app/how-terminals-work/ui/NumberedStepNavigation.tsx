@@ -23,7 +23,7 @@ export function NumberedStepNavigation({
           className={cn(
             "flex h-8 w-8 items-center justify-center border text-sm tabular-nums transition-colors",
             i === currentStep
-              ? "border-primary bg-tertiary text-primary"
+              ? "border-primary bg-primary/10 text-primary"
               : "border-primary text-quaternary hover:text-primary",
           )}
         >

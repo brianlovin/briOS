@@ -210,7 +210,7 @@ export function InputModesDemo() {
         {/* What's Happening */}
         <div className="space-y-4">
           <SubsectionLabel>What's Happening</SubsectionLabel>
-          <div className="bg-tertiary border-primary space-y-4 border p-4">
+          <div className="space-y-4">
             {mode === "cooked" ? (
               <>
                 <div className="flex items-center gap-2">
@@ -289,7 +289,7 @@ export function InputModesDemo() {
       </div>
 
       {/* Explainer */}
-      <InfoPanel className="space-y-4 p-4">
+      <InfoPanel className="space-y-4">
         <div className="flex items-start justify-between gap-4">
           <div className="text-primary text-sm font-medium">{stepContent.title}</div>
           <StepDotsNavigation
@@ -302,8 +302,8 @@ export function InputModesDemo() {
       </InfoPanel>
 
       {/* Comparison Table */}
-      <div className="bg-tertiary border-primary space-y-4 border p-6">
-        <h3 className="text-primary text-sm font-bold">Cooked vs Raw: Quick Comparison</h3>
+      <div className="space-y-4">
+        <h3 className="text-primary text-sm font-medium">Cooked vs Raw: Quick Comparison</h3>
 
         <div className="overflow-x-auto">
           <table className="w-full text-sm">

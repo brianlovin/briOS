@@ -110,9 +110,9 @@ export function SignalsDemo() {
   return (
     <div className="space-y-8">
       {/* Signal Glossary - side-by-side layout like VocabularyDemo */}
-      <div className="bg-tertiary border-primary flex flex-col border lg:flex-row">
+      <div className="flex flex-col gap-8 lg:flex-row">
         {/* Signal list */}
-        <div className="border-primary p-4 lg:w-1/2 lg:border-r">
+        <div className="lg:w-1/2">
           <div className="space-y-1 font-mono text-sm">
             {SIGNALS.map((sig) => {
               const isActive = selectedSignal.key === sig.key;
@@ -122,7 +122,7 @@ export function SignalsDemo() {
                   onMouseEnter={() => setSelectedSignal(sig)}
                   className={`flex w-full cursor-default items-center justify-between px-3 py-3 text-left transition-all ${
                     isActive
-                      ? "bg-tertiary border-primary border-l-2"
+                      ? "bg-primary/10 border-primary border-l-2"
                       : "border-l-2 border-transparent"
                   }`}
                 >
@@ -138,7 +138,7 @@ export function SignalsDemo() {
         </div>
 
         {/* Signal details */}
-        <div className="border-primary border-t p-4 lg:w-1/2 lg:border-t-0">
+        <div className="lg:w-1/2">
           <div className="space-y-4">
             <div>
               <div className="flex items-center gap-3">
@@ -151,7 +151,7 @@ export function SignalsDemo() {
 
             <p className="text-tertiary text-sm leading-relaxed">{selectedSignal.description}</p>
 
-            <div className="bg-secondary border-primary border p-3 text-sm">
+            <div className="text-sm">
               <span className="text-quaternary">Example: </span>
               <span className="text-primary">{selectedSignal.example}</span>
             </div>
@@ -215,7 +215,7 @@ export function SignalsDemo() {
       </div>
 
       {/* Explainer */}
-      <InfoPanel className="space-y-4 p-4">
+      <InfoPanel className="space-y-4">
         <div className="flex items-start justify-between gap-4">
           <div className="text-primary text-sm font-medium">{stepContent.title}</div>
           <StepDotsNavigation
@@ -228,12 +228,12 @@ export function SignalsDemo() {
       </InfoPanel>
 
       {/* Signal vs Character Comparison */}
-      <div className="bg-tertiary border-primary space-y-4 border p-6">
-        <h3 className="text-primary text-sm font-bold">Signals vs Regular Keys</h3>
+      <div className="space-y-4">
+        <h3 className="text-primary text-sm font-medium">Signals vs Regular Keys</h3>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div className="bg-secondary border-primary space-y-3 border p-4">
-            <div className="text-primary text-sm font-bold">Regular Keys</div>
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+          <div className="space-y-3">
+            <div className="text-primary text-sm font-medium">Regular Keys</div>
             <div className="space-y-1 font-mono text-sm">
               <div>
                 <span className="text-secondary">a</span>
@@ -256,8 +256,8 @@ export function SignalsDemo() {
             </div>
           </div>
 
-          <div className="bg-secondary border-primary space-y-3 border p-4">
-            <div className="text-primary text-sm font-bold">Signal Keys</div>
+          <div className="space-y-3">
+            <div className="text-primary text-sm font-medium">Signal Keys</div>
             <div className="space-y-1 font-mono text-sm">
               <div>
                 <span className="text-secondary">Ctrl+C</span>

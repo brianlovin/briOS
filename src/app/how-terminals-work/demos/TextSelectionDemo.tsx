@@ -226,7 +226,7 @@ export function TextSelectionDemo() {
                 }}
                 className={`px-3 py-1 transition-colors ${
                   mode === "terminal"
-                    ? "bg-tertiary text-white dark:text-neutral-950"
+                    ? "border-primary bg-primary/10 text-primary border"
                     : "border-primary hover:border-primary border"
                 }`}
               >
@@ -239,7 +239,7 @@ export function TextSelectionDemo() {
                 }}
                 className={`px-3 py-1 transition-colors ${
                   mode === "app"
-                    ? "bg-primary text-white dark:text-neutral-950"
+                    ? "border-primary bg-primary/10 text-primary border"
                     : "border-primary hover:border-primary border"
                 }`}
               >
@@ -250,7 +250,7 @@ export function TextSelectionDemo() {
             {/* Terminal Grid */}
             <div
               ref={gridRef}
-              className="bg-secondary border-primary overflow-x-auto rounded border p-4 font-mono text-sm"
+              className="overflow-x-auto font-mono text-sm"
               style={{ userSelect: "none" }}
             >
               {SAMPLE_TEXT.map((line, row) => (
@@ -268,7 +268,7 @@ export function TextSelectionDemo() {
                           key={col}
                           onMouseDown={(e) => handleCellMouseDown(row, col, e)}
                           onMouseMove={() => handleCellMouseMove(row, col)}
-                          className={`inline-block h-[1.4em] w-[0.6em] text-center leading-[1.4em] transition-colors ${isSelected ? "bg-white text-black" : ""} ${isCursor ? "bg-primary text-white dark:text-neutral-950" : ""} ${mode === "terminal" ? "cursor-text" : "cursor-pointer"} `}
+                          className={`inline-block h-[1.4em] w-[0.6em] text-center leading-[1.4em] transition-colors ${isSelected ? "bg-primary/10 text-primary" : ""} ${isCursor ? "bg-primary/10 text-primary" : ""} ${mode === "terminal" ? "cursor-text" : "cursor-pointer"} `}
                         >
                           {char === "_" && row === SAMPLE_TEXT.length - 1 && col === 15 ? (
                             <span>_</span>
@@ -354,7 +354,7 @@ export function TextSelectionDemo() {
 
       {/* How it works explanation */}
       <div className="space-y-4">
-        <div className="bg-tertiary border-primary space-y-4 border px-4 py-4">
+        <div className="space-y-4">
           <div className="flex items-start justify-between gap-4">
             <div className="text-primary text-sm font-medium">{stepContent.title}</div>
             <StepDotsNavigation
@@ -367,7 +367,7 @@ export function TextSelectionDemo() {
             <p className="text-tertiary text-sm leading-relaxed">{stepContent.description}</p>
 
             {currentStep === "terminal-selection" && (
-              <div className="bg-tertiary space-y-2 p-3 font-mono text-xs">
+              <div className="space-y-2 font-mono text-xs">
                 <div className="text-quaternary">// Terminal emulator handles selection</div>
                 <div className="space-y-1">
                   <div>
@@ -391,7 +391,7 @@ export function TextSelectionDemo() {
             )}
 
             {currentStep === "cursor-positioning" && (
-              <div className="bg-tertiary space-y-2 p-3 font-mono text-xs">
+              <div className="space-y-2 font-mono text-xs">
                 <div className="text-quaternary">// App controls cursor with escape sequences</div>
                 <div className="space-y-1">
                   <div>
@@ -417,7 +417,7 @@ export function TextSelectionDemo() {
             )}
 
             {currentStep === "option-click" && (
-              <div className="bg-tertiary space-y-2 p-3 font-mono text-xs">
+              <div className="space-y-2 font-mono text-xs">
                 <div className="text-quaternary">// Option+Click at (5, 15), cursor at (3, 5)</div>
                 <div className="space-y-1">
                   <div>
@@ -444,7 +444,7 @@ export function TextSelectionDemo() {
             )}
 
             {currentStep === "why-different" && (
-              <div className="bg-tertiary space-y-2 p-3 font-mono text-xs">
+              <div className="space-y-2 font-mono text-xs">
                 <div className="text-quaternary">// Terminal doesn't know what you're running:</div>
                 <div className="mt-2 space-y-1">
                   <div>
@@ -473,21 +473,21 @@ export function TextSelectionDemo() {
       </div>
 
       {/* Key Insight Box */}
-      <div className="border-primary bg-tertiary space-y-6 border p-6">
-        <h3 className="text-primary text-sm font-bold">
+      <div className="space-y-6">
+        <h3 className="text-primary text-sm font-medium">
           Why You Can't Just Click to Move the Cursor
         </h3>
 
-        <div className="flex flex-col items-stretch gap-4 md:flex-row">
-          <div className="bg-tertiary flex-1 p-4">
-            <div className="text-primary mb-2 text-sm font-bold">What You Expect</div>
+        <div className="flex flex-col items-stretch gap-6 lg:flex-row">
+          <div className="flex-1">
+            <div className="text-primary mb-2 text-sm font-medium">What You Expect</div>
             <div className="text-quaternary text-xs">
               Click at position → cursor moves there instantly, like in a text editor or browser.
             </div>
           </div>
           <div className="text-quaternary flex items-center justify-center text-2xl">≠</div>
-          <div className="bg-tertiary flex-1 p-4">
-            <div className="text-primary mb-2 text-sm font-bold">What Actually Happens</div>
+          <div className="flex-1">
+            <div className="text-primary mb-2 text-sm font-medium">What Actually Happens</div>
             <div className="text-quaternary text-xs">
               Click → terminal shows selection OR sends mouse event to app (if enabled) → app
               decides what to do.

@@ -349,7 +349,7 @@ export function AdvancedTUIDemo() {
 
         {/* Right: Explanation */}
         <div className="space-y-4">
-          <div className="bg-tertiary border-primary space-y-4 border px-4 py-4">
+          <div className="space-y-4">
             <div className="flex items-start justify-between gap-4">
               <div className="text-primary text-sm font-medium">{stepContent.title}</div>
               <StepDotsNavigation
@@ -363,7 +363,7 @@ export function AdvancedTUIDemo() {
 
               {/* Step-specific visualizations */}
               {currentStep === "layout-system" && (
-                <div className="bg-tertiary space-y-2 p-3 font-mono text-xs">
+                <div className="space-y-2 font-mono text-xs">
                   <div className="text-quaternary">// Region data structure</div>
                   <div className="text-primary">
                     {regions.map((r) => (
@@ -380,7 +380,7 @@ export function AdvancedTUIDemo() {
               )}
 
               {currentStep === "focus-management" && (
-                <div className="bg-tertiary space-y-2 p-3">
+                <div className="space-y-2">
                   <div className="space-y-1 text-xs">
                     <div className="flex items-center gap-2">
                       <span className="border-primary bg-primary/10 h-3 w-3 rounded border-2"></span>
@@ -397,7 +397,7 @@ export function AdvancedTUIDemo() {
               )}
 
               {currentStep === "resize-handling" && (
-                <div className="bg-tertiary space-y-2 p-3 font-mono text-xs">
+                <div className="space-y-2 font-mono text-xs">
                   <div className="text-quaternary">// Terminal resize sequence</div>
                   <div className="space-y-1">
                     <div>
@@ -428,7 +428,7 @@ export function AdvancedTUIDemo() {
               )}
 
               {currentStep === "rendering" && (
-                <div className="bg-tertiary space-y-2 p-3 font-mono text-xs">
+                <div className="space-y-2 font-mono text-xs">
                   <div className="text-quaternary">// Escape sequences for TUI rendering</div>
                   <div className="space-y-1">
                     <div>
@@ -466,10 +466,10 @@ export function AdvancedTUIDemo() {
       </div>
 
       {/* Detailed breakdown: How regions work */}
-      <div className="bg-tertiary border-primary space-y-6 border p-6">
-        <h3 className="text-primary text-sm font-bold">Under the Hood: TUI Architecture</h3>
+      <div className="space-y-6">
+        <h3 className="text-primary text-sm font-medium">Under the Hood: TUI Architecture</h3>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <FeatureBox number={1} title="Layout Engine">
             <p className="text-quaternary text-sm">
               The TUI maintains a tree of regions (like a DOM). Each region knows its bounds and can
@@ -493,9 +493,9 @@ export function AdvancedTUIDemo() {
         </div>
 
         {/* Box drawing character reference */}
-        <div className="bg-tertiary border-primary space-y-3 border p-4">
-          <div className="text-primary text-sm font-bold">Box Drawing Characters</div>
-          <div className="grid grid-cols-2 gap-4 font-mono text-sm md:grid-cols-4">
+        <div className="space-y-3">
+          <div className="text-primary text-sm font-medium">Box Drawing Characters</div>
+          <div className="grid grid-cols-2 gap-4 font-mono text-sm lg:grid-cols-4">
             <div className="space-y-1">
               <div className="text-quaternary">Corners</div>
               <div>┌ ┐ └ ┘</div>
@@ -533,15 +533,15 @@ function CursorPositionDemo() {
   const GRID_COLS = 20;
 
   return (
-    <div className="bg-tertiary border-primary space-y-4 border p-6">
-      <h3 className="text-primary text-sm font-bold">Cursor Positioning</h3>
+    <div className="space-y-4">
+      <h3 className="text-primary text-sm font-medium">Cursor Positioning</h3>
       <p className="text-quaternary text-sm">
         The terminal tracks a single cursor position. TUIs constantly move this cursor using escape
         sequences to draw in different regions. Click any cell below to see the escape sequence that
         would move the cursor there.
       </p>
 
-      <div className="flex flex-col gap-6 md:flex-row">
+      <div className="flex flex-col gap-6 lg:flex-row">
         <div className="font-mono text-xs">
           <div
             className="border-primary grid gap-0 border"
@@ -559,9 +559,7 @@ function CursorPositionDemo() {
                         key={`${row}-${col}`}
                         onClick={() => setCursorPos({ row: row + 1, col: col + 1 })}
                         className={`border-primary/30 flex h-5 w-4 cursor-pointer items-center justify-center border-r border-b transition-colors ${
-                          isActive
-                            ? "bg-primary text-white dark:text-neutral-950"
-                            : "hover:bg-tertiary"
+                          isActive ? "bg-primary/10 text-primary" : "hover:bg-tertiary"
                         }`}
                       >
                         {isActive ? "█" : "·"}
@@ -573,13 +571,13 @@ function CursorPositionDemo() {
         </div>
 
         <div className="flex-1 space-y-3">
-          <div className="bg-tertiary p-3 font-mono text-sm">
+          <div className="font-mono text-sm">
             <div className="text-quaternary mb-2 text-xs">Escape sequence to move cursor:</div>
             <div className="text-secondary">
               \x1b[{cursorPos.row};{cursorPos.col}H
             </div>
           </div>
-          <div className="bg-tertiary p-3 font-mono text-sm">
+          <div className="font-mono text-sm">
             <div className="text-quaternary mb-2 text-xs">In code:</div>
             <div className="text-primary">
               <span className="text-secondary">printf</span>

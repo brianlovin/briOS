@@ -401,7 +401,7 @@ export function IconsDemo() {
               {/* Hovered file info */}
               {hoveredFile !== null && (
                 <div className="bg-secondary border-primary absolute right-4 bottom-4 z-10 border text-xs">
-                  <div className="bg-tertiary flex items-center gap-4 rounded p-2">
+                  <div className="flex items-center gap-4 p-2">
                     <div className="bg-secondary border-primary flex h-8 w-8 items-center justify-center rounded border">
                       {renderIcon(FILE_TREE[hoveredFile].icon, FILE_TREE[hoveredFile].color)}
                     </div>
@@ -427,7 +427,7 @@ export function IconsDemo() {
 
         {/* Explanation */}
         <div className="space-y-4">
-          <InfoPanel className="space-y-4 px-4 py-4">
+          <InfoPanel className="space-y-4">
             <div className="flex items-start justify-between gap-4">
               <div className="text-primary text-sm font-medium">{stepContent.title}</div>
               <StepDotsNavigation
@@ -441,7 +441,7 @@ export function IconsDemo() {
 
               {/* Step-specific content */}
               {currentStep === "pua" && (
-                <div className="bg-tertiary space-y-2 p-3 font-mono text-xs">
+                <div className="space-y-2 font-mono text-xs">
                   <div className="text-quaternary">// Unicode Private Use Area ranges</div>
                   <div className="space-y-1">
                     <div>
@@ -464,7 +464,7 @@ export function IconsDemo() {
               )}
 
               {currentStep === "rendering" && (
-                <div className="bg-tertiary space-y-3 p-3">
+                <div className="space-y-3">
                   <div className="flex flex-wrap items-center gap-3 text-sm">
                     <div className="flex flex-col items-center">
                       <span className="text-secondary font-mono text-xs">App outputs</span>
@@ -485,7 +485,7 @@ export function IconsDemo() {
               )}
 
               {currentStep === "fonts" && (
-                <div className="bg-tertiary space-y-2 p-3 text-xs">
+                <div className="space-y-2 text-xs">
                   <div className="text-quaternary">Popular Nerd Fonts:</div>
                   <div className="grid grid-cols-2 gap-2">
                     <div className="text-primary flex items-center gap-2">
@@ -514,13 +514,13 @@ export function IconsDemo() {
       </div>
 
       {/* Icon Gallery */}
-      <div className="bg-tertiary border-primary space-y-6 border p-6">
-        <h3 className="text-primary text-sm font-bold">Nerd Font Icon Gallery</h3>
+      <div className="space-y-6">
+        <h3 className="text-primary text-sm font-medium">Nerd Font Icon Gallery</h3>
         <p className="text-quaternary text-sm">
           Click any icon to see its Unicode codepoint and how to use it in code.
         </p>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           {/* Icon grid by category */}
           <div className="space-y-4">
             {categories.map((category) => (
@@ -547,9 +547,9 @@ export function IconsDemo() {
           </div>
 
           {/* Selected icon details */}
-          <div className="bg-secondary border-primary space-y-3 border p-4">
+          <div className="space-y-3">
             <div className="flex items-center gap-3">
-              <div className="bg-tertiary border-primary flex h-10 w-10 items-center justify-center border">
+              <div className="border-primary flex h-10 w-10 items-center justify-center border">
                 {renderIcon(selectedIcon.icon as IconName, selectedIcon.color)}
               </div>
               <div className="text-primary font-bold">{selectedIcon.name}</div>
@@ -585,8 +585,8 @@ export function IconsDemo() {
       </div>
 
       {/* Technical Deep Dive */}
-      <div className="bg-tertiary border-primary space-y-4 border p-6">
-        <h3 className="text-primary text-sm font-bold">Under the Hood: Why One Cell?</h3>
+      <div className="space-y-4">
+        <h3 className="text-primary text-sm font-medium">Under the Hood: Why One Cell?</h3>
 
         <div className="grid grid-cols-1 gap-4">
           <FeatureBox number={1} title="Single Codepoint">
@@ -612,8 +612,8 @@ export function IconsDemo() {
         </div>
 
         {/* Character width comparison */}
-        <div className="bg-tertiary border-primary space-y-3 border p-4">
-          <div className="text-primary text-sm font-bold">Character Width in Terminals</div>
+        <div className="space-y-3">
+          <div className="text-primary text-sm font-medium">Character Width in Terminals</div>
           <div className="space-y-2 font-mono text-sm">
             <div className="flex items-center gap-4">
               <div className="text-quaternary w-24">Single-width:</div>
@@ -621,7 +621,7 @@ export function IconsDemo() {
                 {["A", "B", "C"].map((char, i) => (
                   <div
                     key={i}
-                    className="border-primary bg-tertiary flex h-6 w-5 items-center justify-center border"
+                    className="border-primary flex h-6 w-5 items-center justify-center border"
                   >
                     {char}
                   </div>
@@ -629,7 +629,7 @@ export function IconsDemo() {
                 {[NERD_GLYPHS.folder, NERD_GLYPHS.file, NERD_GLYPHS.check].map((glyph, i) => (
                   <div
                     key={`icon-${i}`}
-                    className="border-primary bg-tertiary flex h-6 w-5 items-center justify-center border"
+                    className="border-primary flex h-6 w-5 items-center justify-center border"
                   >
                     <NerdIcon glyph={glyph} className="text-primary text-sm" />
                   </div>
@@ -643,7 +643,7 @@ export function IconsDemo() {
                 {["中", "文", "字"].map((char, i) => (
                   <div
                     key={i}
-                    className="border-primary bg-tertiary flex h-6 w-10 items-center justify-center border"
+                    className="border-primary flex h-6 w-10 items-center justify-center border"
                   >
                     {char}
                   </div>
@@ -715,8 +715,8 @@ function IconSetsReference() {
   ];
 
   return (
-    <div className="bg-tertiary border-primary space-y-4 border p-6">
-      <h3 className="text-primary text-sm font-bold">Icon Sets in Nerd Fonts</h3>
+    <div className="space-y-4">
+      <h3 className="text-primary text-sm font-medium">Icon Sets in Nerd Fonts</h3>
       <p className="text-quaternary text-sm">
         Nerd Fonts combines multiple icon sets into one font. Each set occupies a different Unicode
         range.
@@ -724,8 +724,8 @@ function IconSetsReference() {
 
       <div className="divide-primary divide-y">
         {iconSets.map((set) => (
-          <div key={set.name} className="flex flex-col gap-3 py-3 md:flex-row md:items-center">
-            <div className="md:w-32">
+          <div key={set.name} className="flex flex-col gap-3 py-3 lg:flex-row lg:items-center">
+            <div className="lg:w-32">
               <div className="text-primary text-sm font-bold">{set.name}</div>
               <div className="text-secondary font-mono text-xs">{set.range}</div>
             </div>

@@ -50,7 +50,7 @@ export function CellZoom() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col items-start gap-8 md:flex-row">
+      <div className="flex flex-col items-start gap-8 lg:flex-row">
         <TerminalWindow className="flex-shrink-0">
           <div className="flex items-center justify-center p-6">
             <div
@@ -242,7 +242,7 @@ function ColorDepthExplorer() {
   const rgb = hslToRgb(truecolorHue, truecolorSat, truecolorLight);
 
   return (
-    <div className="bg-tertiary border-primary space-y-6 border p-6">
+    <div className="space-y-6">
       <div>
         <h3 className="text-primary mb-2 text-sm font-bold">Color Depth in Terminals</h3>
         <p className="text-tertiary text-sm">
@@ -291,7 +291,7 @@ function ColorDepthExplorer() {
               </div>
             ))}
           </div>
-          <div className="bg-secondary space-y-1 p-3 font-mono text-xs">
+          <div className="space-y-1 font-mono text-xs">
             <div className="text-quaternary">Escape sequence format:</div>
             <div>
               <span className="text-secondary">^[[38;5;</span>
@@ -362,7 +362,7 @@ function ColorDepthExplorer() {
           </div>
 
           {/* Selected color info */}
-          <div className="bg-secondary flex items-center gap-4 p-3">
+          <div className="flex items-center gap-4">
             <div
               className="border-primary h-12 w-12 border"
               style={{ backgroundColor: colors256[selected256] }}
@@ -380,7 +380,7 @@ function ColorDepthExplorer() {
           <SubsectionLabel>24-bit Truecolor (16 Million Colors)</SubsectionLabel>
 
           {/* Color picker */}
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             <div className="space-y-4">
               <div>
                 <label className="text-quaternary mb-1 block text-xs">Hue: {truecolorHue}°</label>

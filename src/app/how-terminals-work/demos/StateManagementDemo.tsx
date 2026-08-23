@@ -187,12 +187,12 @@ export function StateManagementDemo() {
 
         {/* State Inspector */}
         {showStateInspector && (
-          <div className="bg-secondary border-primary space-y-4 border p-4">
-            <div className="text-primary text-sm font-bold">
+          <div className="border-primary space-y-4 border p-4">
+            <div className="text-primary text-sm font-medium">
               State Inspector (What the App Remembers)
             </div>
-            <div className="grid grid-cols-1 gap-4 font-mono text-xs md:grid-cols-2">
-              <div className="bg-tertiary space-y-2 p-3">
+            <div className="grid grid-cols-1 gap-4 font-mono text-xs lg:grid-cols-2">
+              <div className="space-y-2">
                 <div className="text-quaternary">// Current state variables</div>
                 <div>
                   <span className="text-secondary">currentMode</span>:{" "}
@@ -207,7 +207,7 @@ export function StateManagementDemo() {
                   <span className="text-secondary">{history.length}</span>
                 </div>
               </div>
-              <div className="bg-tertiary space-y-2 p-3">
+              <div className="space-y-2">
                 <div className="text-quaternary">// Render output for mode indicator</div>
                 <div className="text-primary">
                   <span className="text-secondary">moveCursor</span>(3, 1);
@@ -229,7 +229,7 @@ export function StateManagementDemo() {
 
       {/* How it works explanation */}
       <div className="space-y-4">
-        <div className="bg-tertiary border-primary space-y-4 border px-4 py-4">
+        <div className="space-y-4">
           <div className="flex items-start justify-between gap-4">
             <div className="text-primary text-sm font-medium">{stepContent.title}</div>
             <StepDotsNavigation
@@ -242,7 +242,7 @@ export function StateManagementDemo() {
             <p className="text-tertiary text-sm leading-relaxed">{stepContent.description}</p>
 
             {currentStep === "memory" && (
-              <div className="bg-tertiary space-y-2 p-3 font-mono text-xs">
+              <div className="space-y-2 font-mono text-xs">
                 <div className="text-quaternary">// App's internal state (in memory)</div>
                 <div className="space-y-1">
                   <div>
@@ -266,7 +266,7 @@ export function StateManagementDemo() {
             )}
 
             {currentStep === "rendering" && (
-              <div className="bg-tertiary space-y-2 p-3 font-mono text-xs">
+              <div className="space-y-2 font-mono text-xs">
                 <div className="text-quaternary">// On mode change:</div>
                 <div className="space-y-1">
                   <div>
@@ -297,7 +297,7 @@ export function StateManagementDemo() {
             )}
 
             {currentStep === "input-handling" && (
-              <div className="bg-tertiary space-y-2 p-3 font-mono text-xs">
+              <div className="space-y-2 font-mono text-xs">
                 <div className="text-quaternary">// Shift+Tab byte sequence</div>
                 <div className="space-y-1">
                   <div>
@@ -325,7 +325,7 @@ export function StateManagementDemo() {
             )}
 
             {currentStep === "persistence" && (
-              <div className="bg-tertiary space-y-2 p-3 font-mono text-xs">
+              <div className="space-y-2 font-mono text-xs">
                 <div className="text-quaternary">// State persistence options</div>
                 <div className="space-y-1">
                   <div>
@@ -350,10 +350,10 @@ export function StateManagementDemo() {
       </div>
 
       {/* The data flow breakdown */}
-      <div className="bg-tertiary border-primary space-y-6 border p-6">
-        <h3 className="text-primary text-sm font-bold">The State Update Cycle</h3>
+      <div className="space-y-6">
+        <h3 className="text-primary text-sm font-medium">The State Update Cycle</h3>
 
-        <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+        <div className="flex flex-col items-start justify-between gap-6 lg:flex-row">
           <FeatureBox number={1} title="Input" className="flex-1">
             <div className="text-quaternary text-sm">User presses Shift+Tab</div>
             <div className="text-secondary mt-2 font-mono text-xs">ESC [ Z</div>

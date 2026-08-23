@@ -89,7 +89,7 @@ export function MouseDemo() {
                           e.preventDefault();
                           handleCellClick(row, col, e);
                         }}
-                        className={`border-primary/80 flex h-5 cursor-crosshair items-center justify-center border-r border-b text-xs transition-colors ${isClicked ? "bg-primary text-white dark:text-neutral-950" : "hover:bg-tertiary"}`}
+                        className={`border-primary/80 flex h-5 cursor-crosshair items-center justify-center border-r border-b text-xs transition-colors ${isClicked ? "bg-primary/10 text-primary" : "hover:bg-tertiary"}`}
                       >
                         {isClicked ? "×" : ""}
                       </div>

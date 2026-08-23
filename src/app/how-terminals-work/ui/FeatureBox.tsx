@@ -9,7 +9,7 @@ interface FeatureBoxProps {
 
 export function FeatureBox({ children, className = "", number, title }: FeatureBoxProps) {
   return (
-    <div className={cn("bg-tertiary space-y-2 p-4", className)}>
+    <div className={cn("space-y-2", className)}>
       {(number !== undefined || title) && (
         <div className="text-primary flex items-center gap-2 text-sm font-medium">
           {number !== undefined && <span className="text-quaternary tabular-nums">{number}</span>}

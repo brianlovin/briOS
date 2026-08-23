@@ -16,7 +16,7 @@ export const metadata: Metadata = createMetadata({
 export default function HowTerminalsWorkPage() {
   return (
     <div data-scrollable className="flex-1 overflow-y-auto">
-      <article className="mx-auto flex max-w-xl flex-1 flex-col gap-16 py-16 leading-[1.6]">
+      <article className="mx-auto flex max-w-3xl flex-1 flex-col gap-16 py-16 leading-[1.6]">
         <Section>
           <PageTitle>{HOW_TERMINALS_WORK_TITLE}</PageTitle>
           <p className="text-secondary text-pretty">{HOW_TERMINALS_WORK_INTRO}</p>

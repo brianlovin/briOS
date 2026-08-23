@@ -6,9 +6,5 @@ interface InfoPanelProps {
 }
 
 export function InfoPanel({ children, className = "" }: InfoPanelProps) {
-  return (
-    <div className={cn("border-primary bg-tertiary border px-4 py-3 text-sm", className)}>
-      {children}
-    </div>
-  );
+  return <div className={cn("text-sm", className)}>{children}</div>;
 }

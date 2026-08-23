@@ -147,7 +147,7 @@ export function AlternateScreenDemo() {
                   </div>
                 ))}
                 {/* Vim status line */}
-                <div className="bg-tertiary absolute right-0 bottom-0 left-0 flex justify-between px-2 text-xs text-white dark:text-neutral-950">
+                <div className="bg-secondary text-primary absolute right-0 bottom-0 left-0 flex justify-between px-2 text-xs">
                   <span>-- INSERT --</span>
                   <span>1,1 All</span>
                 </div>
@@ -166,9 +166,9 @@ export function AlternateScreenDemo() {
                 !isAlternateScreen ? "border-primary bg-primary/5" : "border-primary"
               }`}
             >
-              <div className="mb-2 flex items-center justify-between">
-                <span className="text-primary text-sm font-bold">Enter Alternate Screen</span>
-                <code className="text-secondary text-xs">^[[?1049h</code>
+              <div className="mb-2 flex flex-col gap-0.5">
+                <code className="text-secondary shrink-0 text-xs whitespace-nowrap">^[[?1049h</code>
+                <span className="text-primary text-sm font-medium">Enter Alternate Screen</span>
               </div>
               <p className="text-tertiary text-sm">
                 Saves the current screen, clears display, and switches to the alternate buffer. Sent
@@ -181,9 +181,9 @@ export function AlternateScreenDemo() {
                 isAlternateScreen ? "border-primary bg-primary/5" : "border-primary"
               }`}
             >
-              <div className="mb-2 flex items-center justify-between">
-                <span className="text-secondary text-sm font-bold">Exit Alternate Screen</span>
-                <code className="text-secondary text-xs">^[[?1049l</code>
+              <div className="mb-2 flex flex-col gap-0.5">
+                <code className="text-secondary shrink-0 text-xs whitespace-nowrap">^[[?1049l</code>
+                <span className="text-secondary text-sm font-medium">Exit Alternate Screen</span>
               </div>
               <p className="text-tertiary text-sm">
                 Restores the saved screen buffer. Your previous terminal content reappears exactly
@@ -193,11 +193,11 @@ export function AlternateScreenDemo() {
           </div>
 
           {/* Visual representation of buffer swap */}
-          <div className="bg-tertiary border-primary space-y-3 border p-4">
-            <div className="text-primary text-sm font-bold">Buffer Layout</div>
+          <div className="space-y-3">
+            <div className="text-primary text-sm font-medium">Buffer Layout</div>
             <div className="flex items-center gap-4">
               <div
-                className={`flex-1 border-2 p-3 text-center text-sm transition-all ${
+                className={`flex-1 border p-3 text-center text-sm transition-all ${
                   !isAlternateScreen
                     ? "border-primary bg-primary/5 text-primary"
                     : "border-primary text-quaternary"
@@ -208,7 +208,7 @@ export function AlternateScreenDemo() {
               </div>
               <div className="text-quaternary">⇄</div>
               <div
-                className={`flex-1 border-2 p-3 text-center text-sm transition-all ${
+                className={`flex-1 border p-3 text-center text-sm transition-all ${
                   isAlternateScreen
                     ? "border-primary bg-primary/5 text-secondary"
                     : "border-primary text-quaternary"
@@ -226,7 +226,7 @@ export function AlternateScreenDemo() {
       </div>
 
       {/* Explainer */}
-      <InfoPanel className="space-y-4 p-4">
+      <InfoPanel className="space-y-4">
         <div className="flex items-start justify-between gap-4">
           <div className="text-primary text-sm font-medium">{stepContent.title}</div>
           <StepDotsNavigation
@@ -239,13 +239,13 @@ export function AlternateScreenDemo() {
       </InfoPanel>
 
       {/* Without Alternate Screen */}
-      <div className="bg-tertiary border-primary space-y-4 border p-6">
-        <h3 className="text-primary text-sm font-bold">What Would Happen Without It?</h3>
+      <div className="space-y-4">
+        <h3 className="text-primary text-sm font-medium">What Would Happen Without It?</h3>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
           <div className="space-y-2">
-            <div className="text-primary text-sm font-bold">Without Alternate Screen</div>
-            <div className="bg-secondary border-primary space-y-1 border p-3 font-mono text-xs">
+            <div className="text-primary text-sm font-medium">Without Alternate Screen</div>
+            <div className="space-y-1 font-mono text-xs">
               <div className="text-tertiary">$ ls</div>
               <div className="text-tertiary">file1.txt file2.txt</div>
               <div className="text-tertiary">$ vim README.md</div>
@@ -259,8 +259,8 @@ export function AlternateScreenDemo() {
           </div>
 
           <div className="space-y-2">
-            <div className="text-primary text-sm font-bold">With Alternate Screen</div>
-            <div className="bg-secondary border-primary space-y-1 border p-3 font-mono text-xs">
+            <div className="text-primary text-sm font-medium">With Alternate Screen</div>
+            <div className="space-y-1 font-mono text-xs">
               <div className="text-tertiary">$ ls</div>
               <div className="text-tertiary">file1.txt file2.txt</div>
               <div className="text-tertiary">$ vim README.md</div>

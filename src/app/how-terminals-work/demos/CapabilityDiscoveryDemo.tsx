@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { DA1_CODES, FEATURE_SEQUENCES, TERM_CAPABILITIES } from "../lib/sequences";
-import { SubsectionLabel, TerminalWindow } from "../ui";
+import { Button, SubsectionLabel, TerminalWindow } from "../ui";
 
 const FEATURES = FEATURE_SEQUENCES;
 
@@ -158,7 +158,7 @@ export function CapabilityDiscoveryDemo() {
 
             {/* Response decoder */}
             {(queryPhase === "responding" || queryPhase === "done") && (
-              <div className="bg-secondary border-primary space-y-2 border p-3">
+              <div className="space-y-2">
                 <div className="text-quaternary text-xs uppercase">Response Decoded</div>
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div className="flex items-center gap-2">
@@ -183,14 +183,10 @@ export function CapabilityDiscoveryDemo() {
 
             {/* Query button */}
             <div className="flex justify-center">
-              <button
+              <Button
+                variant="primary"
                 onClick={runQuery}
                 disabled={queryPhase === "sending" || queryPhase === "responding"}
-                className={`px-4 py-2 text-sm font-medium transition-all ${
-                  queryPhase === "sending" || queryPhase === "responding"
-                    ? "bg-tertiary cursor-not-allowed text-white dark:text-neutral-950"
-                    : "bg-primary hover:bg-primary text-white dark:text-neutral-950"
-                }`}
               >
                 {queryPhase === "sending"
                   ? "Sending..."
@@ -199,7 +195,7 @@ export function CapabilityDiscoveryDemo() {
                     : queryPhase === "done"
                       ? "Send Again"
                       : "Send DA1 Query"}
-              </button>
+              </Button>
             </div>
           </div>
         </TerminalWindow>
@@ -239,7 +235,7 @@ export function CapabilityDiscoveryDemo() {
                   </label>
 
                   <code
-                    className={`px-2 py-1 font-mono text-xs ${
+                    className={`shrink-0 px-2 py-1 font-mono text-xs whitespace-nowrap ${
                       isEnabled ? "text-primary bg-primary/5" : "text-quaternary bg-secondary"
                     }`}
                   >

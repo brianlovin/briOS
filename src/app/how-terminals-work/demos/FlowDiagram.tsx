@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { parseAnsiLine } from "../lib/ansi";
-import { TerminalWindow } from "../ui";
+import { Button, TerminalWindow } from "../ui";
 
 type Phase =
   | "idle"
@@ -128,7 +128,7 @@ function renderTerminalLine(line: string) {
       {p.text.includes("▌") ? (
         <>
           {p.text.replace("▌", "")}
-          <span className="cursor-blink bg-primary text-white dark:text-neutral-950">▌</span>
+          <span className="cursor-blink text-primary">▌</span>
         </>
       ) : (
         p.text
@@ -167,9 +167,7 @@ export function FlowDiagram() {
 
   const layerClass = (layer: "keyboard" | "terminal" | "pty" | "shell") =>
     `relative px-4 py-3 border transition-all duration-300 ${
-      currentStep.highlight === layer
-        ? "border-primary bg-primary/5"
-        : "border-primary bg-secondary"
+      currentStep.highlight === layer ? "border-primary bg-primary/5" : "border-primary"
     }`;
 
   return (
@@ -193,7 +191,7 @@ export function FlowDiagram() {
               currentStep.dataDirection === "down" &&
               currentStep.highlight === "keyboard" && (
                 <div className="absolute -bottom-6 left-1/2 z-10 -translate-x-1/2 transform">
-                  <div className="bg-primary px-2 py-1 font-mono text-xs text-white dark:text-neutral-950">
+                  <div className="border-primary bg-secondary text-primary border px-2 py-1 font-mono text-xs">
                     {currentStep.dataPacket}
                   </div>
                 </div>
@@ -219,7 +217,7 @@ export function FlowDiagram() {
               <div
                 className={`absolute ${currentStep.dataDirection === "down" ? "-bottom-6" : "-top-6"} left-1/2 z-10 -translate-x-1/2 transform`}
               >
-                <div className="bg-tertiary px-2 py-1 font-mono text-xs text-white dark:text-neutral-950">
+                <div className="border-primary bg-secondary text-primary border px-2 py-1 font-mono text-xs">
                   {currentStep.dataPacket}
                 </div>
               </div>
@@ -245,7 +243,7 @@ export function FlowDiagram() {
               <div
                 className={`absolute ${currentStep.dataDirection === "down" ? "-bottom-6" : "-top-6"} left-1/2 z-10 -translate-x-1/2 transform`}
               >
-                <div className="bg-tertiary px-2 py-1 font-mono text-xs text-white dark:text-neutral-950">
+                <div className="border-primary bg-secondary text-primary border px-2 py-1 font-mono text-xs">
                   {currentStep.dataPacket}
                 </div>
               </div>
@@ -271,7 +269,7 @@ export function FlowDiagram() {
               currentStep.dataDirection === "up" &&
               currentStep.highlight === "shell" && (
                 <div className="absolute -top-6 left-1/2 z-10 -translate-x-1/2 transform">
-                  <div className="bg-tertiary px-2 py-1 font-mono text-xs text-white dark:text-neutral-950">
+                  <div className="border-primary bg-secondary text-primary border px-2 py-1 font-mono text-xs">
                     {currentStep.dataPacket}
                   </div>
                 </div>
@@ -291,9 +289,9 @@ export function FlowDiagram() {
           </TerminalWindow>
 
           {/* Step info */}
-          <div className="bg-tertiary border-primary border px-4 py-3">
-            <div className="text-primary mb-1 text-sm font-medium">{currentStep.title}</div>
-            <div className="text-tertiary text-sm">{currentStep.description}</div>
+          <div className="space-y-1">
+            <div className="text-primary text-sm font-medium">{currentStep.title}</div>
+            <div className="text-secondary text-sm">{currentStep.description}</div>
           </div>
         </div>
       </div>
@@ -318,31 +316,18 @@ export function FlowDiagram() {
 
       {/* Controls */}
       <div className="flex justify-center gap-3">
-        <button
-          onClick={() => goToStep(Math.max(0, stepIndex - 1))}
-          disabled={stepIndex === 0}
-          className="border-primary text-tertiary hover:border-primary hover:text-primary border px-4 py-2 text-sm transition-all disabled:cursor-not-allowed disabled:opacity-50"
-        >
+        <Button onClick={() => goToStep(Math.max(0, stepIndex - 1))} disabled={stepIndex === 0}>
           Previous
-        </button>
-        <button
-          onClick={startAnimation}
-          disabled={isAnimating}
-          className={`px-5 py-2 text-sm font-medium transition-all ${
-            isAnimating
-              ? "bg-tertiary cursor-not-allowed text-white dark:text-neutral-950"
-              : "bg-primary hover:bg-primary text-white dark:text-neutral-950"
-          }`}
-        >
+        </Button>
+        <Button variant="primary" onClick={startAnimation} disabled={isAnimating}>
           {isAnimating ? "Playing..." : "Play"}
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={() => goToStep(Math.min(STEPS.length - 1, stepIndex + 1))}
           disabled={stepIndex === STEPS.length - 1}
-          className="border-primary text-tertiary hover:border-primary hover:text-primary border px-4 py-2 text-sm transition-all disabled:cursor-not-allowed disabled:opacity-50"
         >
           Next
-        </button>
+        </Button>
       </div>
     </div>
   );
