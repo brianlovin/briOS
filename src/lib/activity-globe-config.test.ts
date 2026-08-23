@@ -1,16 +1,13 @@
 import { describe, expect, test } from "bun:test";
 
 import {
-  cobeMarkerStyle,
-  cssPx,
   DEFAULT_ACTIVITY_GLOBE_CONFIG,
+  focusMarkerColor,
   globeCobeOptions,
   globeThemeColors,
   markerAgeScale,
-  markerDotPxForAge,
-  markerDotPxForSize,
+  markerSizeForAge,
   markerSizeFromCount,
-  rgbCss,
 } from "./activity-globe-config";
 
 describe("activity-globe-config", () => {
@@ -19,12 +16,6 @@ describe("activity-globe-config", () => {
     expect(markerSizeFromCount(1, cfg)).toBeCloseTo(cfg.markerBaseSize);
     expect(markerSizeFromCount(4, cfg)).toBeGreaterThan(markerSizeFromCount(1, cfg));
     expect(markerSizeFromCount(10_000, cfg)).toBeCloseTo(cfg.markerMaxSize);
-  });
-
-  test("markerDotPxForSize scales the CSS dot with visit count", () => {
-    const cfg = DEFAULT_ACTIVITY_GLOBE_CONFIG;
-    expect(markerDotPxForSize(cfg.markerBaseSize, cfg)).toBeCloseTo(cfg.markerDotPx);
-    expect(markerDotPxForSize(cfg.markerBaseSize * 2, cfg)).toBeCloseTo(cfg.markerDotPx * 2);
   });
 
   test("globeThemeColors and globeCobeOptions switch light and dark palettes", () => {
@@ -39,16 +30,6 @@ describe("activity-globe-config", () => {
     );
   });
 
-  test("cobeMarkerStyle matches the official visibility recipe", () => {
-    const style = cobeMarkerStyle("sf", DEFAULT_ACTIVITY_GLOBE_CONFIG);
-    expect(style.positionAnchor).toBe("--cobe-sf");
-    expect(style.left).toBe("anchor(center)");
-    expect(style.top).toBe("anchor(center)");
-    expect(style.opacity).toBe("var(--cobe-visible-sf, 0)");
-    expect(style.filter).toBe("blur(calc((1 - var(--cobe-visible-sf, 0)) * 8px))");
-    expect(String(style.transition)).toContain("opacity 300ms");
-  });
-
   test("markerAgeScale shrinks ~10% per older marker", () => {
     expect(markerAgeScale(0, 0.1)).toBe(1);
     expect(markerAgeScale(1, 0.1)).toBeCloseTo(0.9);
@@ -57,21 +38,22 @@ describe("activity-globe-config", () => {
     expect(markerAgeScale(1, DEFAULT_ACTIVITY_GLOBE_CONFIG.markerAgeShrink)).toBeCloseTo(0.9);
   });
 
-  test("markerDotPxForAge never shrinks below the land-dot floor", () => {
+  test("markerSizeForAge shrinks from markerBaseSize and floors the trail", () => {
     const cfg = DEFAULT_ACTIVITY_GLOBE_CONFIG;
-    expect(markerDotPxForAge(0, cfg, 5)).toBeCloseTo(cfg.markerDotPx);
-    expect(markerDotPxForAge(9, cfg, 5)).toBe(5);
-    expect(markerDotPxForAge(9, cfg, 0)).toBeCloseTo(cfg.markerDotPx * 0.9 ** 9);
+    expect(markerSizeForAge(0, cfg)).toBeCloseTo(cfg.markerBaseSize);
+    expect(markerSizeForAge(1, cfg)).toBeCloseTo(cfg.markerBaseSize * 0.9);
+    expect(markerSizeForAge(2, cfg)).toBeGreaterThan(0);
+    expect(markerSizeForAge(9, cfg)).toBeGreaterThanOrEqual(cfg.markerBaseSize * 0.5);
   });
 
-  test("cssPx rounds floats so SSR and client serialize the same", () => {
-    expect(cssPx(7.8732000000000015)).toBe("7.87px");
-    expect(cssPx(7.873200000000001)).toBe("7.87px");
-    expect(cssPx(12)).toBe("12px");
-    expect(cssPx(Number.NaN)).toBe("0px");
+  test("default mapSamples stays in the 12k–14k band", () => {
+    expect(DEFAULT_ACTIVITY_GLOBE_CONFIG.mapSamples).toBeGreaterThanOrEqual(12000);
+    expect(DEFAULT_ACTIVITY_GLOBE_CONFIG.mapSamples).toBeLessThanOrEqual(14000);
   });
 
-  test("rgbCss emits a hex color", () => {
-    expect(rgbCss(DEFAULT_ACTIVITY_GLOBE_CONFIG.markerColor)).toBe("#fc532a");
+  test("focusMarkerColor stays in 0–1 and is brighter than the base orange", () => {
+    const focused = focusMarkerColor(DEFAULT_ACTIVITY_GLOBE_CONFIG.markerColor);
+    expect(focused.every((channel) => channel >= 0 && channel <= 1)).toBe(true);
+    expect(focused[0]).toBeGreaterThan(DEFAULT_ACTIVITY_GLOBE_CONFIG.markerColor[0]);
   });
 });
