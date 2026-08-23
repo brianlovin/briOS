@@ -1538,6 +1538,9 @@ describe("inferTitleFromPath", () => {
   test("uses a contextual phrase for identifier routes instead of the raw id", () => {
     expect(inferTitleFromPath("/hn/46993596")).toBe("a Hacker News story");
     expect(inferTitleFromPath("/ama/2f2c711c-0ceb-810d-899d-e5feb99e70f4")).toBe("an AMA question");
+    expect(inferTitleFromPath("/computer/2f2c711c-0ceb-810d-899d-e5feb99e70f4")).toBe(
+      "a computer tip",
+    );
     expect(inferTitleFromPath("/bookmarks/2f2c711c-0ceb-810d-899d-e5feb99e70f4")).toBe("Bookmarks");
     expect(inferTitleFromPath("/design-details/2f2c711c0ceb810d899de5feb99e70f4")).toBe(
       "Design Details",
@@ -1568,6 +1571,7 @@ describe("inferTitleFromPath", () => {
     expect(title).not.toMatch(/^https?:/i);
     expect(inferTitleFromPath("https://brianlovin.com/writing/foo")).toBe("foo");
     expect(inferTitleFromPath("https://brianlovin.com/writing")).toBe("Writing");
+    expect(inferTitleFromPath("/computer")).toBe("How to Computer Better");
     expect(inferTitleFromPath("https://1password.com")).not.toBe("Home");
     expect(inferTitleFromPath("https://1password.com")).toBe("");
   });

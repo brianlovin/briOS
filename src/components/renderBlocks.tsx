@@ -26,6 +26,16 @@ function truncateUrl(url: string, maxLength: number = 50): string {
   return displayUrl.slice(0, start) + "..." + displayUrl.slice(-end);
 }
 
+function isInternalHref(href: string): boolean {
+  if (href.startsWith("/") && !href.startsWith("//")) return true;
+  try {
+    const url = new URL(href);
+    return url.hostname === "brianlovin.com" || url.hostname === "www.brianlovin.com";
+  } catch {
+    return false;
+  }
+}
+
 function parseTextWithUrls(text: string): ReactNode[] {
   const parts = text.split(URL_REGEX);
 
@@ -62,7 +72,11 @@ function renderRichText(richText: RichTextContent[]) {
       const isContentUrl = URL_REGEX.test(content);
       URL_REGEX.lastIndex = 0; // Reset regex state after test
 
-      element = (
+      element = isInternalHref(link) ? (
+        <a key={index} href={link} className="link-body" title={link}>
+          {isContentUrl ? truncateUrl(content) : content}
+        </a>
+      ) : (
         <a
           key={index}
           href={link}

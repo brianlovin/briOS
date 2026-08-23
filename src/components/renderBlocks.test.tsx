@@ -71,6 +71,33 @@ describe("renderBlocks", () => {
     expect((markup.match(/<ol/g) ?? []).length).toBe(1);
   });
 
+  test("keeps relative tip links on this site", () => {
+    const markup = html([
+      {
+        id: "p-link",
+        type: "paragraph",
+        content: [
+          {
+            type: "text",
+            text: { content: "Raycast", link: "/computer/raycast-id" },
+            annotations: {
+              bold: false,
+              italic: false,
+              strikethrough: false,
+              underline: false,
+              code: false,
+              color: "default",
+            },
+          },
+        ],
+      },
+    ]);
+
+    expect(markup).toContain('href="/computer/raycast-id"');
+    expect(markup).toContain("Raycast");
+    expect(markup).not.toContain('target="_blank"');
+  });
+
   test("preview mode skips list-run grouping", () => {
     const markup = renderToStaticMarkup(
       <div>

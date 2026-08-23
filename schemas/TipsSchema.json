@@ -1,0 +1,39 @@
+{
+  "props": {
+    "Status": {
+      "id": "status",
+      "name": "Status",
+      "description": null,
+      "type": "select",
+      "select": {
+        "options": [
+          {
+            "id": "published",
+            "name": "Published",
+            "color": "green",
+            "description": null
+          },
+          {
+            "id": "pending",
+            "name": "Pending",
+            "color": "yellow",
+            "description": null
+          },
+          {
+            "id": "rejected",
+            "name": "Rejected",
+            "color": "red",
+            "description": null
+          }
+        ]
+      }
+    },
+    "Name": {
+      "id": "title",
+      "name": "Name",
+      "description": null,
+      "type": "title",
+      "title": {}
+    }
+  }
+}

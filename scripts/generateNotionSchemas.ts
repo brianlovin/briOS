@@ -109,6 +109,7 @@ async function generateSchemas() {
   const databases: DatabaseConfig[] = [
     { varName: "Stack", id: process.env.NOTION_STACK_DATABASE_ID },
     { varName: "AMA", id: process.env.NOTION_AMA_DATABASE_ID },
+    { varName: "Tips", id: process.env.NOTION_TIPS_DATABASE_ID },
     { varName: "Writing", id: process.env.NOTION_WRITING_DATABASE_ID },
     {
       varName: "DesignDetailsEpisodes",

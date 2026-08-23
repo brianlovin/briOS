@@ -261,6 +261,21 @@ export type NotionTilItemWithContent = NotionTilItem & {
   blocks: ProcessedBlock[];
 };
 
+export const COMPUTER_TIP_STATUSES = ["Published", "Pending", "Rejected"] as const;
+export type ComputerTipStatus = (typeof COMPUTER_TIP_STATUSES)[number];
+
+export type NotionComputerItem = {
+  id: string;
+  title: string;
+  status: string;
+  icon?: string;
+  createdTime: string;
+};
+
+export type NotionComputerItemWithContent = NotionComputerItem & {
+  blocks: ProcessedBlock[];
+};
+
 // App Dissection types
 export type NotionAppDissectionItem = {
   id: string;

@@ -44,6 +44,12 @@ describe("PURGE_CONFIG", () => {
       paths: ["/ama", "/api/ama"],
       pagePaths: ["/ama/[id]"],
     });
+    expect(PURGE_CONFIG.computer).toEqual({
+      patterns: ["notion:computer:*"],
+      tags: ["notion:computer"],
+      paths: ["/computer", "/api/computer"],
+      pagePaths: ["/computer/[id]"],
+    });
     expect(PURGE_CONFIG.stack).toEqual({
       patterns: ["notion:stack:*"],
       tags: ["notion:stack"],
@@ -65,7 +71,16 @@ describe("PURGE_CONFIG", () => {
   });
 
   test("includes all as a purge-cache type without its own config row", () => {
-    expect(PURGE_CACHE_TYPES).toEqual(["writing", "til", "ama", "stack", "sites", "hn", "all"]);
+    expect(PURGE_CACHE_TYPES).toEqual([
+      "writing",
+      "til",
+      "ama",
+      "computer",
+      "stack",
+      "sites",
+      "hn",
+      "all",
+    ]);
     expect(PURGE_CACHE_TYPES).toContain("hn");
     expect(PURGE_CONFIG).not.toHaveProperty("all");
   });
@@ -172,6 +187,7 @@ describe("use cache page islands", () => {
       writing: ["page.tsx", "writing/page.tsx", "writing/[slug]/page.tsx"],
       til: ["til/page.tsx", "til/[slug]/page.tsx"],
       ama: ["ama/layout.tsx", "ama/[id]/page.tsx"],
+      computer: ["computer/layout.tsx", "computer/[id]/page.tsx"],
       stack: ["stack/page.tsx"],
       sites: ["sites/page.tsx"],
       hn: ["hn/layout.tsx", "hn/[id]/page.tsx"],

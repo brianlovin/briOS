@@ -1,5 +1,6 @@
 import { HOME_PROJECTS } from "@/components/home/ProjectsList";
 import { getAmaQuestions } from "@/lib/ama";
+import { COMPUTER_INTRO, COMPUTER_TITLE, getComputerTips } from "@/lib/computer";
 import { getDesignDetailsEpisodes } from "@/lib/design-details";
 import { getGoodWebsitesSource } from "@/lib/goodWebsites";
 import { getPostById, getRankedHNPosts } from "@/lib/hn";
@@ -7,6 +8,7 @@ import {
   getAmaItemContent,
   getAppDissectionDatabaseItems,
   getAppDissectionItemBySlug,
+  getComputerItemContent,
   getListeningHistoryDatabaseItems,
   getTilByShortId,
   getWritingPostByShortId,
@@ -338,6 +340,37 @@ async function amaIndexMarkdown(): Promise<MarkdownResult> {
   return md(200, body, ["notion:ama"]);
 }
 
+async function computerIndexMarkdown(): Promise<MarkdownResult> {
+  const tips = isPlaceholderNotionBuild() ? [] : await safe(() => getComputerTips(), []);
+  const body = [
+    `# ${COMPUTER_TITLE}`,
+    "",
+    COMPUTER_INTRO,
+    "",
+    "## Tips",
+    "",
+    tips.length > 0
+      ? linkList(tips.map((item) => ({ title: item.title, href: `/computer/${item.id}` })))
+      : "- Published tips load from Notion when available.",
+  ].join("\n");
+  return md(200, body, ["notion:computer"]);
+}
+
+async function computerItemMarkdown(id: string): Promise<MarkdownResult> {
+  if (isPlaceholderNotionBuild()) return notFoundMarkdown();
+  const item = await safe(() => getComputerItemContent(id), null);
+  if (!item) return notFoundMarkdown();
+
+  const body = [
+    `# ${item.title}`,
+    "",
+    blocksToMarkdown(item.blocks),
+    "",
+    `[All tips](/computer)`,
+  ].join("\n");
+  return md(200, body, ["notion:computer"]);
+}
+
 async function amaItemMarkdown(id: string): Promise<MarkdownResult> {
   if (isPlaceholderNotionBuild()) return notFoundMarkdown();
   const item = await safe(() => getAmaItemContent(id), null);
@@ -515,6 +548,7 @@ export async function renderPageMarkdown(pathname: string): Promise<MarkdownResu
   if (path === "/sites") return sitesMarkdown();
   if (path === "/til") return tilIndexMarkdown();
   if (path === "/ama") return amaIndexMarkdown();
+  if (path === "/computer") return computerIndexMarkdown();
   if (path === "/listening") return listeningMarkdown();
   if (path === "/activity") return activityMarkdown();
   if (path === "/app-dissection") return appDissectionIndexMarkdown();
@@ -533,6 +567,9 @@ export async function renderPageMarkdown(pathname: string): Promise<MarkdownResu
   const ama = path.match(/^\/ama\/([^/]+)$/);
   if (ama) return amaItemMarkdown(ama[1]);
 
+  const computer = path.match(/^\/computer\/([^/]+)$/);
+  if (computer) return computerItemMarkdown(computer[1]);
+
   const dissection = path.match(/^\/app-dissection\/([^/]+)$/);
   if (dissection) return appDissectionMarkdown(dissection[1]);
 
@@ -548,6 +585,7 @@ export function markdownCacheTagsForPath(pathname: string): string[] {
   if (pathname.startsWith("/sites")) return ["notion:good-websites"];
   if (pathname.startsWith("/til")) return ["notion:til"];
   if (pathname.startsWith("/ama")) return ["notion:ama"];
+  if (pathname.startsWith("/computer")) return ["notion:computer"];
   if (pathname.startsWith("/listening")) return ["notion:listening"];
   if (pathname.startsWith("/app-dissection")) return ["notion:app-dissection"];
   if (pathname === "/hn") return ["hn:ranked"];

@@ -20,5 +20,8 @@ describe("homepage content", () => {
     expect(heading).toContain("<h2");
     expect(heading).toContain("Writing");
     expect(projects).toContain('href="/stack"');
+    expect(projects).toContain('href="/computer"');
+    expect(projects).toContain("How to Computer Better");
+    expect(projects).not.toContain("notion.site/how-to-computer-better");
   });
 });

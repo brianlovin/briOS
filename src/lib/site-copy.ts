@@ -20,6 +20,11 @@ export const INDEXABLE_SECTIONS = [
   { title: "Sites", href: "/sites", note: "A curated collection of well-designed websites" },
   { title: "TIL", href: "/til", note: "Short today-I-learned notes" },
   { title: "AMA", href: "/ama", note: "Answered questions" },
+  {
+    title: "How to Computer Better",
+    href: "/computer",
+    note: "Tips for shortcuts, hotkeys, and workflows",
+  },
   { title: "Listening", href: "/listening", note: "Recent music from Spotify" },
   { title: "Activity", href: "/activity", note: "Public likes, visits, and other site events" },
   { title: "App Dissection", href: "/app-dissection", note: "Breakdowns of well-designed apps" },
@@ -61,7 +66,7 @@ export function markdownNotFoundBody(): string {
 export function llmsTxtBody(): string {
   return `# ${SITE_NAME}
 
-> Personal site of ${SITE_NAME} (${SITE_HOST} / ${SITE_PRODUCT}): writing, a tools stack, a sites collection, a Hacker News reader, listening history, an AMA, and a public activity feed. Source: ${SITE_REPO}.
+> Personal site of ${SITE_NAME} (${SITE_HOST} / ${SITE_PRODUCT}): writing, a tools stack, a sites collection, a Hacker News reader, listening history, an AMA, computer tips, and a public activity feed. Source: ${SITE_REPO}.
 
 Prefer public HTML pages, the same URLs with \`Accept: text/markdown\`, RSS feeds, \`/llms.txt\`, and \`/sitemap.xml\`. There is no public API.
 
