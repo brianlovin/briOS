@@ -25,9 +25,7 @@ describe("renderPageMarkdown", () => {
     const result = await renderPageMarkdown("/computer");
     expect(result.status).toBe(200);
     expect(result.body).toContain("# How to Computer Better");
-    expect(result.body).toContain(
-      "This is a living list of tips to use computers better: shortcuts, hotkeys, utility apps, helpful workflows, and so on.",
-    );
+    expect(result.body).toContain("A living list of tips to use your computer better.");
     expect(result.cacheTags).toContain("notion:computer");
   });
 
