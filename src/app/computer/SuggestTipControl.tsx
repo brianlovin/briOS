@@ -12,9 +12,11 @@ export function SuggestTipControl() {
 
   return (
     <div className="flex flex-col gap-3">
-      <Button onClick={() => setShowForm(!showForm)} variant="secondary">
-        Suggest a tip
-      </Button>
+      <div className="self-start">
+        <Button onClick={() => setShowForm(!showForm)} variant="secondary">
+          Suggest a tip
+        </Button>
+      </div>
 
       <AnimatePresence initial={false}>
         {showForm && (
