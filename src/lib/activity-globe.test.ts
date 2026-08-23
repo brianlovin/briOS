@@ -8,13 +8,10 @@ import {
   cobeWebGLMarkers,
   GLOBE_DEVICE_PIXEL_RATIO_CAP,
   GLOBE_HANG,
-  GLOBE_MAP_DOT_CHORD,
   GLOBE_MARKER_TARGET_CSS_PX,
   GLOBE_MESH_MIN,
-  GLOBE_MESH_RADIUS,
   globeAimVisibleBias,
   globeDevicePixelRatio,
-  globeMapDotPx,
   globeMarkerFacing,
   globeMarkersChanged,
   globeMarkerSizingForMesh,
@@ -23,6 +20,7 @@ import {
   latLngToVisibleGlobePose,
   mixRgb,
   projectGlobeMarker,
+  selectGlobeMarkerSizing,
   shortestAngleDelta,
   shouldCommitCobeRootStyle,
   shouldRunGlobeLoop,
@@ -128,14 +126,12 @@ describe("cobeSizeForCssPx", () => {
     expect(markerSizeForAge(0, sizing)).toBeCloseTo(sizing.markerBaseSize);
     expect(markerSizeForAge(9, sizing)).toBeGreaterThanOrEqual(sizing.markerBaseSize * 0.5);
   });
-});
 
-describe("globeMapDotPx", () => {
-  test("matches a facing-center COBE land dot on the mesh", () => {
-    expect(globeMapDotPx(512)).toBeCloseTo(GLOBE_MAP_DOT_CHORD * GLOBE_MESH_RADIUS * 512);
-    expect(globeMapDotPx(1000)).toBeGreaterThan(globeMapDotPx(512));
-    expect(globeMapDotPx(512, 1.2)).toBeCloseTo(globeMapDotPx(512) * 1.2);
-    expect(globeMapDotPx(0)).toBe(2);
+  test("selectGlobeMarkerSizing uses the mesh target live and the slider in sandbox", () => {
+    const live = selectGlobeMarkerSizing(DEFAULT_ACTIVITY_GLOBE_CONFIG, 692, false);
+    expect(cobeCssPxForSize(live.markerBaseSize, 692)).toBeCloseTo(GLOBE_MARKER_TARGET_CSS_PX);
+    const sandbox = selectGlobeMarkerSizing(DEFAULT_ACTIVITY_GLOBE_CONFIG, 692, true);
+    expect(sandbox.markerBaseSize).toBe(DEFAULT_ACTIVITY_GLOBE_CONFIG.markerBaseSize);
   });
 });
 
@@ -183,6 +179,25 @@ describe("cobeWebGLMarkers", () => {
     );
   });
 
+  test("omits id from the GPU payload even when focus or appear sets color", () => {
+    const recent = activityRecentGlobeMarkers(
+      [{ id: "tokyo", meta: { latitude: 35.68, longitude: 139.69 } }],
+      5,
+    );
+    const focused = cobeWebGLMarkers(recent, DEFAULT_ACTIVITY_GLOBE_CONFIG, "tokyo");
+    const faded = cobeWebGLMarkers(
+      recent,
+      DEFAULT_ACTIVITY_GLOBE_CONFIG,
+      null,
+      { [recent[0]!.id]: 0.4 },
+      [1, 1, 1],
+    );
+    expect(focused[0]?.color).toBeDefined();
+    expect(faded[0]?.color).toBeDefined();
+    expect(cobeGpuMarkers(focused).every((marker) => !("id" in marker))).toBe(true);
+    expect(cobeGpuMarkers(faded).every((marker) => !("id" in marker))).toBe(true);
+  });
+
   test("enlarges the focused event without changing other sizes", () => {
     const recent = activityRecentGlobeMarkers(
       [
@@ -217,24 +232,37 @@ describe("cobeWebGLMarkers", () => {
 });
 
 describe("stepMarkerHorizon", () => {
-  test("snaps on first sample and eases after a visibility flip", () => {
+  test("snaps hide immediately; appear still eases", () => {
     const first = stepMarkerHorizon(undefined, 0.8, 0, 300);
     expect(first.visible).toBe(true);
     expect(first.value).toBe(1);
 
     const hidden = stepMarkerHorizon(first, 0, 10, 300);
     expect(hidden.visible).toBe(false);
-    expect(hidden.value).toBe(1);
+    expect(hidden.value).toBe(0);
 
-    const mid = stepMarkerHorizon(hidden, 0, 160, 300);
+    const stillHidden = stepMarkerHorizon(hidden, 0, 160, 300);
+    expect(stillHidden.value).toBe(0);
+
+    const appear = stepMarkerHorizon(hidden, 0.8, 10, 300);
+    expect(appear.visible).toBe(true);
+    expect(appear.value).toBe(0);
+
+    const mid = stepMarkerHorizon(appear, 0.8, 160, 300);
     expect(mid.value).toBeGreaterThan(0);
     expect(mid.value).toBeLessThan(1);
 
-    const done = stepMarkerHorizon(mid, 0, 400, 300);
-    expect(done.value).toBe(0);
+    const done = stepMarkerHorizon(mid, 0.8, 400, 300);
+    expect(done.value).toBe(1);
 
     const reduced = stepMarkerHorizon(first, 0, 10, 0);
     expect(reduced.value).toBe(0);
+  });
+
+  test("first sample facing 0 snaps to 0", () => {
+    const first = stepMarkerHorizon(undefined, 0, 0, 300);
+    expect(first.visible).toBe(false);
+    expect(first.value).toBe(0);
   });
 
   test("mixRgb interpolates toward the fade target", () => {

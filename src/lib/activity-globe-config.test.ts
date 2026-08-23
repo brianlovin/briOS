@@ -43,8 +43,6 @@ describe("activity-globe-config", () => {
     expect(markerSizeForAge(0, cfg)).toBeCloseTo(cfg.markerBaseSize);
     expect(markerSizeForAge(1, cfg)).toBeCloseTo(cfg.markerBaseSize * 0.9);
     expect(markerSizeForAge(2, cfg)).toBeGreaterThan(0);
-    // Newest discs must match the old ~12px CSS + glow weight.
-    expect(markerSizeForAge(0, cfg)).toBeGreaterThanOrEqual(0.06);
     expect(markerSizeForAge(9, cfg)).toBeGreaterThanOrEqual(cfg.markerBaseSize * 0.5);
   });
 

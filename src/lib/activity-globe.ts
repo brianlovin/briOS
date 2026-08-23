@@ -57,19 +57,22 @@ export function rotateGlobePoint(
  * 0 behind the limb, 1 at the camera-facing apex.
  * COBE v2 `--cobe-visible-{id}` is only a boolean (`N` / unset); use this for depth.
  */
-export function globeMarkerFacing(lat: number, lng: number, phi: number, theta: number): number {
-  const [, , rz] = rotateGlobePoint(latLngToGlobePoint(lat, lng), phi, theta);
+export function globeMarkerFacingFromUnit(
+  point: readonly [number, number, number],
+  phi: number,
+  theta: number,
+): number {
+  const [, , rz] = rotateGlobePoint([point[0], point[1], point[2]], phi, theta);
   return Math.min(1, Math.max(0, rz));
+}
+
+export function globeMarkerFacing(lat: number, lng: number, phi: number, theta: number): number {
+  return globeMarkerFacingFromUnit(latLngToGlobePoint(lat, lng), phi, theta);
 }
 
 /** Same mesh radius as cobe@2 (`GLOBE_R`). */
 export const GLOBE_MESH_RADIUS = 0.8;
 export const GLOBE_MARKER_ELEVATION = 0;
-/**
- * COBE land-dot radius in unit-sphere chord length.
- * Fragment shader: `smoothstep(8e-3, 0., distanceToLattice)`.
- */
-export const GLOBE_MAP_DOT_CHORD = 0.008;
 
 /** Fraction of the mesh that hangs past the right and bottom edges. */
 export const GLOBE_HANG = 0.4;
@@ -176,6 +179,29 @@ export function globeMarkerSizingForMesh(
   };
 }
 
+/**
+ * Live path converts 12px+glow at the mesh. Sandbox keeps the raw slider
+ * (`configProp` is set) so DialKit still tunes Cobe units.
+ */
+export function selectGlobeMarkerSizing(
+  config: ActivityGlobeConfig,
+  meshSize: number,
+  sandbox: boolean,
+): Pick<
+  ActivityGlobeConfig,
+  "markerBaseSize" | "markerSizePerLog" | "markerMaxSize" | "markerAgeShrink"
+> {
+  if (sandbox) {
+    return {
+      markerBaseSize: config.markerBaseSize,
+      markerSizePerLog: config.markerSizePerLog,
+      markerMaxSize: config.markerMaxSize,
+      markerAgeShrink: config.markerAgeShrink,
+    };
+  }
+  return globeMarkerSizingForMesh(meshSize, config);
+}
+
 export function globeDevicePixelRatio(
   dpr: number = typeof window === "undefined" ? 1 : window.devicePixelRatio || 1,
 ): number {
@@ -270,13 +296,6 @@ export function muteCobeEmptyRootStyle(style: HTMLStyleElement): void {
   });
 }
 
-/** CSS px of one COBE country-shape dot at the facing center of the mesh. */
-export function globeMapDotPx(meshSize: number, scale = 1): number {
-  if (!Number.isFinite(meshSize) || meshSize <= 0) return 2;
-  const safeScale = Number.isFinite(scale) && scale > 0 ? scale : 1;
-  return Math.max(2, GLOBE_MAP_DOT_CHORD * GLOBE_MESH_RADIUS * meshSize * safeScale);
-}
-
 /**
  * GPU payload for Cobe. Ids stay on {@link GlobeMarkerSnapshot} for identity
  * compares, but are omitted here so Cobe never creates CSS-anchor nodes or
@@ -304,8 +323,8 @@ export type MarkerHorizonState = {
 
 /**
  * Old CSS used `--cobe-visible-{id}` (boolean) + a 300ms opacity/blur ease.
- * First sample snaps so front markers do not grow on load. Later flips ease
- * from the current value so dots fade and size up as they come over the limb.
+ * First sample snaps. Appear eases over `fadeMs`. Hide snaps — Cobe already
+ * culls `z < 0`, so a fade-out would only re-upload an invisible buffer.
  */
 export function stepMarkerHorizon(
   prev: MarkerHorizonState | undefined,
@@ -319,7 +338,7 @@ export function stepMarkerHorizon(
     return { visible, value: to, from: to, to, start: now };
   }
   if (prev.visible !== visible) {
-    if (fadeMs <= 0) return { visible, value: to, from: to, to, start: now };
+    if (fadeMs <= 0 || !visible) return { visible, value: to, from: to, to, start: now };
     return { visible, value: prev.value, from: prev.value, to, start: now };
   }
   if (prev.value === prev.to) return prev;

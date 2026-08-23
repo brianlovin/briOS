@@ -17,19 +17,19 @@ import { type ActivityLatLng, activityRecentGlobeMarkers } from "@/lib/activity-
 import {
   cobeGpuMarkers,
   cobeWebGLMarkers,
-  GLOBE_DEVICE_PIXEL_RATIO_CAP,
   GLOBE_HANG,
   GLOBE_MESH_MIN,
   globeDevicePixelRatio,
   globeDiameterFromHeight,
-  globeMarkerFacing,
+  globeMarkerFacingFromUnit,
   globeMarkersChanged,
-  globeMarkerSizingForMesh,
   type GlobeMarkerSnapshot,
   isGlobePerfQuery,
+  latLngToGlobePoint,
   latLngToVisibleGlobePose,
   type MarkerHorizonState,
   muteCobeEmptyRootStyle,
+  selectGlobeMarkerSizing,
   shortestAngleDelta,
   shouldRunGlobeLoop,
   stepMarkerHorizon,
@@ -52,6 +52,7 @@ const MIN_FEED_WIDTH = 720;
 const AIM_MS_MIN = 600;
 const AIM_MS_MAX = 850;
 const DROPPED_FRAME_MS = 20;
+const GLOBE_PERF_SAMPLE_CAP = 600;
 
 type AimState = {
   fromPhi: number;
@@ -150,6 +151,9 @@ function createGlobePerfTracker(): GlobePerfTracker {
       if (last) dts.push(now - last);
       last = now;
       works.push(workMs);
+      if (dts.length > GLOBE_PERF_SAMPLE_CAP) dts.splice(0, dts.length - GLOBE_PERF_SAMPLE_CAP);
+      if (works.length > GLOBE_PERF_SAMPLE_CAP)
+        works.splice(0, works.length - GLOBE_PERF_SAMPLE_CAP);
       if (cheap) cheapFrames += 1;
     },
     markMarkers() {
@@ -218,7 +222,7 @@ export function ActivityGlobe({
 
   // Sandbox keeps the slider. Live path matches production's 12px + glow at this mesh.
   const markerSizing = useMemo(
-    () => (configProp ? config : globeMarkerSizingForMesh(layout.size, config)),
+    () => selectGlobeMarkerSizing(config, layout.size, Boolean(configProp)),
     [config, configProp, layout.size],
   );
   const markers = useMemo(
@@ -350,25 +354,23 @@ export function ActivityGlobe({
     const size = sizeRef.current;
     const dpr = globeDevicePixelRatio();
     const horizon = new Map<string, MarkerHorizonState>();
-    const initialAppear: Record<string, number> = {};
+    const points = new Map<string, [number, number, number]>();
+    const appearById: Record<string, number> = {};
     const primedAt = performance.now();
     for (const marker of markersRef.current) {
-      const facing = globeMarkerFacing(
-        marker.location[0],
-        marker.location[1],
-        phiRef.current,
-        thetaRef.current,
-      );
+      const point = latLngToGlobePoint(marker.location[0], marker.location[1]);
+      points.set(marker.id, point);
+      const facing = globeMarkerFacingFromUnit(point, phiRef.current, thetaRef.current);
       const state = stepMarkerHorizon(undefined, facing, primedAt, 0);
       horizon.set(marker.id, state);
-      initialAppear[marker.id] = state.value;
+      appearById[marker.id] = state.value;
     }
     const initialTheme = globeThemeColors(themeRef.current.isDark, configRef.current);
     const initialMarkers = cobeWebGLMarkers(
       markersRef.current,
       configRef.current,
       focusIdRef.current,
-      initialAppear,
+      appearById,
       initialTheme.baseColor,
     );
     let sentMarkers: GlobeMarkerSnapshot[] = initialMarkers;
@@ -472,27 +474,35 @@ export function ActivityGlobe({
       const liveMarkers = markersRef.current;
       const fadeMs = themeRef.current.prefersReducedMotion ? 0 : configRef.current.markerFadeMs;
       const now = performance.now();
-      const appearById: Record<string, number> = {};
       let horizonDirty = false;
-      const seen = new Set<string>();
+
+      if (markersDirty) {
+        const liveIds = new Set<string>();
+        for (const marker of liveMarkers) liveIds.add(marker.id);
+        for (const id of horizon.keys()) {
+          if (!liveIds.has(id)) horizon.delete(id);
+        }
+        for (const id of points.keys()) {
+          if (!liveIds.has(id)) points.delete(id);
+        }
+        for (const id of Object.keys(appearById)) {
+          if (!liveIds.has(id)) delete appearById[id];
+        }
+      }
+
       for (const marker of liveMarkers) {
-        seen.add(marker.id);
-        const facing = globeMarkerFacing(
-          marker.location[0],
-          marker.location[1],
-          poseState.phi,
-          poseState.theta,
-        );
+        let point = points.get(marker.id);
+        if (!point) {
+          point = latLngToGlobePoint(marker.location[0], marker.location[1]);
+          points.set(marker.id, point);
+        }
+        const facing = globeMarkerFacingFromUnit(point, poseState.phi, poseState.theta);
         const next = stepMarkerHorizon(horizon.get(marker.id), facing, now, fadeMs);
         const prev = horizon.get(marker.id);
         if (next !== prev) {
           horizon.set(marker.id, next);
           if (next.value !== prev?.value) horizonDirty = true;
         }
-        appearById[marker.id] = next.value;
-      }
-      for (const id of horizon.keys()) {
-        if (!seen.has(id)) horizon.delete(id);
       }
 
       let cheap = true;
@@ -500,6 +510,9 @@ export function ActivityGlobe({
         cheap = false;
         update = { phi: poseState.phi, theta: poseState.theta };
         if (markersDirty || horizonDirty) {
+          for (const marker of liveMarkers) {
+            appearById[marker.id] = horizon.get(marker.id)?.value ?? 1;
+          }
           const theme = globeThemeColors(themeRef.current.isDark, configRef.current);
           const nextMarkers = cobeWebGLMarkers(
             liveMarkers,
@@ -560,6 +573,11 @@ export function ActivityGlobe({
     return () => {
       stop();
       if (perfTimer) window.clearTimeout(perfTimer);
+      if (perf) {
+        const win = window as GlobePerfWindow;
+        delete win.__ACTIVITY_GLOBE_PERF;
+        delete win.__ACTIVITY_GLOBE_PERF_LIVE;
+      }
       document.removeEventListener("visibilitychange", onVisibility);
       io.disconnect();
       globeRef.current = null;
@@ -649,8 +667,6 @@ export function ActivityGlobe({
       >
         <canvas
           ref={canvasRef}
-          width={layout.size * GLOBE_DEVICE_PIXEL_RATIO_CAP}
-          height={layout.size * GLOBE_DEVICE_PIXEL_RATIO_CAP}
           className={cn(
             "pointer-events-auto size-full touch-none select-none",
             grabbing ? "cursor-grabbing" : "cursor-grab",

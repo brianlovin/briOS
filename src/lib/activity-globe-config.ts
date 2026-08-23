@@ -25,9 +25,11 @@ export type ActivityGlobeConfig = {
   markerSizePerLog: number;
   markerMaxSize: number;
 
-  /** Unused by the live WebGL path; kept so sandbox JSON stays stable. */
+  /** Unused leftover from the CSS-dot era. Live dots use Cobe `size`. */
   markerDotPx: number;
+  /** Unused leftover from the CSS-dot era. Live dots use Cobe `size`. */
   markerBlurPx: number;
+  /** Appear ease on the front of the globe. Hide snaps because Cobe culls the back. */
   markerFadeMs: number;
   /** How many recent unique locations stay on the globe. */
   markerRecentCount: number;

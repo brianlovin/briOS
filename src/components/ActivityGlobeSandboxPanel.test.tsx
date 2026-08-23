@@ -11,6 +11,7 @@ describe("ActivityGlobeSandboxPanel", () => {
     );
 
     expect(markup).toContain("Diffuse");
+    expect(markup).toContain("Horizon fade");
     expect(markup).toContain('role="slider"');
     expect(markup).toContain("0.60");
     expect(markup).not.toContain('type="range"');
