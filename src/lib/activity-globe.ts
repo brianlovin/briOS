@@ -1,6 +1,10 @@
 /** COBE camera pose and marker depth. Safe for client components. */
 
-import { type ActivityGlobeConfig, focusMarkerColor } from "./activity-globe-config";
+import {
+  type ActivityGlobeConfig,
+  focusMarkerColor,
+  type RgbTriplet,
+} from "./activity-globe-config";
 
 export type GlobePose = {
   phi: number;
@@ -290,10 +294,56 @@ export function cobeGpuMarkers(
   }));
 }
 
+export type MarkerHorizonState = {
+  visible: boolean;
+  value: number;
+  from: number;
+  to: number;
+  start: number;
+};
+
+/**
+ * Old CSS used `--cobe-visible-{id}` (boolean) + a 300ms opacity/blur ease.
+ * First sample snaps so front markers do not grow on load. Later flips ease
+ * from the current value so dots fade and size up as they come over the limb.
+ */
+export function stepMarkerHorizon(
+  prev: MarkerHorizonState | undefined,
+  facing: number,
+  now: number,
+  fadeMs: number,
+): MarkerHorizonState {
+  const visible = facing > 0;
+  const to = visible ? 1 : 0;
+  if (!prev) {
+    return { visible, value: to, from: to, to, start: now };
+  }
+  if (prev.visible !== visible) {
+    if (fadeMs <= 0) return { visible, value: to, from: to, to, start: now };
+    return { visible, value: prev.value, from: prev.value, to, start: now };
+  }
+  if (prev.value === prev.to) return prev;
+  const t = fadeMs <= 0 ? 1 : Math.min(1, (now - prev.start) / fadeMs);
+  const eased = t >= 1 ? 1 : t * t * (3 - 2 * t);
+  const value = prev.from + (prev.to - prev.from) * eased;
+  if (t >= 1) return { visible, value: to, from: to, to, start: prev.start };
+  return { visible, value, from: prev.from, to, start: prev.start };
+}
+
+export function mixRgb(from: RgbTriplet, to: RgbTriplet, t: number): RgbTriplet {
+  const u = Math.min(1, Math.max(0, t));
+  return [
+    from[0] + (to[0] - from[0]) * u,
+    from[1] + (to[1] - from[1]) * u,
+    from[2] + (to[2] - from[2]) * u,
+  ];
+}
+
 /**
  * WebGL discs from the recent-location trail. Ids are kept for change detection.
- * Focus is a one-shot size/color bump (dirty once on, once off) — not a
- * per-frame pulse, so panning never re-uploads the marker buffer.
+ * Focus is a one-shot size/color bump (dirty once on, once off). Horizon appear
+ * (0–1) scales size and mixes color so dots fade in / size up without CSS anchors.
+ * Recency still owns the base size (newest larger than older).
  */
 export function cobeWebGLMarkers(
   markers: ReadonlyArray<{
@@ -304,15 +354,21 @@ export function cobeWebGLMarkers(
   }>,
   config: Pick<ActivityGlobeConfig, "markerColor" | "focusPulseScale">,
   focusEventId: string | null,
+  appearById?: Readonly<Record<string, number>>,
+  fadeInto?: RgbTriplet,
 ): GlobeMarkerSnapshot[] {
   return markers.map((marker) => {
     const focused = focusEventId !== null && marker.eventId === focusEventId;
-    const size = focused ? marker.size * (1 + config.focusPulseScale) : marker.size;
+    const appear = appearById?.[marker.id] ?? 1;
+    const base = focused ? marker.size * (1 + config.focusPulseScale) : marker.size;
+    const size = base * appear;
+    const fullColor = focused ? focusMarkerColor(config.markerColor) : config.markerColor;
+    const color = appear < 1 && fadeInto ? mixRgb(fadeInto, fullColor, appear) : fullColor;
     return {
       id: marker.id,
       location: marker.location,
       size,
-      ...(focused ? { color: focusMarkerColor(config.markerColor) } : {}),
+      ...(focused || appear < 1 ? { color } : {}),
     };
   });
 }

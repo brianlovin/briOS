@@ -22,20 +22,24 @@ import {
   GLOBE_MESH_MIN,
   globeDevicePixelRatio,
   globeDiameterFromHeight,
+  globeMarkerFacing,
   globeMarkersChanged,
   globeMarkerSizingForMesh,
   type GlobeMarkerSnapshot,
   isGlobePerfQuery,
   latLngToVisibleGlobePose,
+  type MarkerHorizonState,
   muteCobeEmptyRootStyle,
   shortestAngleDelta,
   shouldRunGlobeLoop,
+  stepMarkerHorizon,
   takeNewHeadStyle,
 } from "@/lib/activity-globe";
 import {
   type ActivityGlobeConfig,
   DEFAULT_ACTIVITY_GLOBE_CONFIG,
   globeCobeOptions,
+  globeThemeColors,
 } from "@/lib/activity-globe-config";
 import { cn } from "@/lib/utils";
 
@@ -345,10 +349,27 @@ export function ActivityGlobe({
 
     const size = sizeRef.current;
     const dpr = globeDevicePixelRatio();
+    const horizon = new Map<string, MarkerHorizonState>();
+    const initialAppear: Record<string, number> = {};
+    const primedAt = performance.now();
+    for (const marker of markersRef.current) {
+      const facing = globeMarkerFacing(
+        marker.location[0],
+        marker.location[1],
+        phiRef.current,
+        thetaRef.current,
+      );
+      const state = stepMarkerHorizon(undefined, facing, primedAt, 0);
+      horizon.set(marker.id, state);
+      initialAppear[marker.id] = state.value;
+    }
+    const initialTheme = globeThemeColors(themeRef.current.isDark, configRef.current);
     const initialMarkers = cobeWebGLMarkers(
       markersRef.current,
       configRef.current,
       focusIdRef.current,
+      initialAppear,
+      initialTheme.baseColor,
     );
     let sentMarkers: GlobeMarkerSnapshot[] = initialMarkers;
     const stylesBefore = new Set(document.head.querySelectorAll("style"));
@@ -448,15 +469,44 @@ export function ActivityGlobe({
       poseState.phi = phiRef.current;
       poseState.theta = thetaRef.current;
 
+      const liveMarkers = markersRef.current;
+      const fadeMs = themeRef.current.prefersReducedMotion ? 0 : configRef.current.markerFadeMs;
+      const now = performance.now();
+      const appearById: Record<string, number> = {};
+      let horizonDirty = false;
+      const seen = new Set<string>();
+      for (const marker of liveMarkers) {
+        seen.add(marker.id);
+        const facing = globeMarkerFacing(
+          marker.location[0],
+          marker.location[1],
+          poseState.phi,
+          poseState.theta,
+        );
+        const next = stepMarkerHorizon(horizon.get(marker.id), facing, now, fadeMs);
+        const prev = horizon.get(marker.id);
+        if (next !== prev) {
+          horizon.set(marker.id, next);
+          if (next.value !== prev?.value) horizonDirty = true;
+        }
+        appearById[marker.id] = next.value;
+      }
+      for (const id of horizon.keys()) {
+        if (!seen.has(id)) horizon.delete(id);
+      }
+
       let cheap = true;
-      if (markersDirty || themeDirty) {
+      if (markersDirty || themeDirty || horizonDirty) {
         cheap = false;
         update = { phi: poseState.phi, theta: poseState.theta };
-        if (markersDirty) {
+        if (markersDirty || horizonDirty) {
+          const theme = globeThemeColors(themeRef.current.isDark, configRef.current);
           const nextMarkers = cobeWebGLMarkers(
-            markersRef.current,
+            liveMarkers,
             configRef.current,
             focusIdRef.current,
+            appearById,
+            theme.baseColor,
           );
           if (globeMarkersChanged(sentMarkers, nextMarkers)) {
             update.markers = cobeGpuMarkers(nextMarkers);

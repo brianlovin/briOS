@@ -21,10 +21,12 @@ import {
   isGlobePerfQuery,
   latLngToGlobePose,
   latLngToVisibleGlobePose,
+  mixRgb,
   projectGlobeMarker,
   shortestAngleDelta,
   shouldCommitCobeRootStyle,
   shouldRunGlobeLoop,
+  stepMarkerHorizon,
 } from "./activity-globe";
 import { DEFAULT_ACTIVITY_GLOBE_CONFIG, markerSizeForAge } from "./activity-globe-config";
 
@@ -194,6 +196,49 @@ describe("cobeWebGLMarkers", () => {
     expect(focused[0]?.size).toBeGreaterThan(idle[0]?.size ?? 0);
     expect(focused[1]?.size).toBe(idle[1]?.size);
     expect(focused[0]?.color).toBeDefined();
+  });
+
+  test("scales by horizon appear and keeps the recency size trail", () => {
+    const recent = activityRecentGlobeMarkers(
+      [
+        { id: "tokyo", meta: { latitude: 35.68, longitude: 139.69 } },
+        { id: "london", meta: { latitude: 51.51, longitude: -0.13 } },
+      ],
+      5,
+    );
+    const appear = { [recent[0]!.id]: 0.5, [recent[1]!.id]: 0.5 };
+    const faded = cobeWebGLMarkers(recent, DEFAULT_ACTIVITY_GLOBE_CONFIG, null, appear, [1, 1, 1]);
+    const full = cobeWebGLMarkers(recent, DEFAULT_ACTIVITY_GLOBE_CONFIG, null);
+    expect(faded[0]?.size).toBeCloseTo((full[0]?.size ?? 0) * 0.5);
+    expect(faded[1]?.size).toBeCloseTo((full[1]?.size ?? 0) * 0.5);
+    expect(faded[0]?.size ?? 0).toBeGreaterThan(faded[1]?.size ?? 0);
+    expect(faded[0]?.color).toBeDefined();
+  });
+});
+
+describe("stepMarkerHorizon", () => {
+  test("snaps on first sample and eases after a visibility flip", () => {
+    const first = stepMarkerHorizon(undefined, 0.8, 0, 300);
+    expect(first.visible).toBe(true);
+    expect(first.value).toBe(1);
+
+    const hidden = stepMarkerHorizon(first, 0, 10, 300);
+    expect(hidden.visible).toBe(false);
+    expect(hidden.value).toBe(1);
+
+    const mid = stepMarkerHorizon(hidden, 0, 160, 300);
+    expect(mid.value).toBeGreaterThan(0);
+    expect(mid.value).toBeLessThan(1);
+
+    const done = stepMarkerHorizon(mid, 0, 400, 300);
+    expect(done.value).toBe(0);
+
+    const reduced = stepMarkerHorizon(first, 0, 10, 0);
+    expect(reduced.value).toBe(0);
+  });
+
+  test("mixRgb interpolates toward the fade target", () => {
+    expect(mixRgb([0, 0, 0], [1, 1, 1], 0.5)).toEqual([0.5, 0.5, 0.5]);
   });
 });
 
