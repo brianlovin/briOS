@@ -12,8 +12,7 @@ import { buildSlug, extractShortIdFromSlug } from "@/lib/short-id";
 
 export const COMPUTER_TITLE = "How to Computer Better";
 
-export const COMPUTER_INTRO =
-  "This is a living list of tips to use computers better: shortcuts, hotkeys, utility apps, helpful workflows, and so on.";
+export const COMPUTER_INTRO = "A living list of tips to use your computer better.";
 
 export type ComputerTip = NotionComputerItem;
 

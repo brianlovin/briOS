@@ -27,9 +27,7 @@ function tip(overrides: Partial<ComputerTip> & Pick<ComputerTip, "id" | "title">
 describe("computer copy and links", () => {
   test("keeps the catalog title and intro", () => {
     expect(COMPUTER_TITLE).toBe("How to Computer Better");
-    expect(COMPUTER_INTRO).toBe(
-      "This is a living list of tips to use computers better: shortcuts, hotkeys, utility apps, helpful workflows, and so on.",
-    );
+    expect(COMPUTER_INTRO).toBe("A living list of tips to use your computer better.");
   });
 
   test("reads tip lists from either API envelope", () => {
