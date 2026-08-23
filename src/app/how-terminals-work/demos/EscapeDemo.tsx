@@ -192,9 +192,11 @@ export function EscapeDemo() {
               {CURSOR_SEQUENCES.map((seq) => (
                 <div
                   key={seq.effect}
-                  className="border-primary flex items-center justify-between border px-3 py-2 text-sm"
+                  className="border-primary flex flex-col gap-0.5 border px-3 py-2 text-sm"
                 >
-                  <code className="text-secondary text-xs">{seq.display}</code>
+                  <code className="text-secondary shrink-0 text-xs whitespace-nowrap">
+                    {seq.display}
+                  </code>
                   <span className="text-tertiary">{seq.desc}</span>
                 </div>
               ))}
