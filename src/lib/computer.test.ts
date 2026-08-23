@@ -1,7 +1,13 @@
 import { describe, expect, test } from "bun:test";
 
 import { HOME_PROJECTS } from "@/components/home/ProjectsList";
-import { COMPUTER_INTRO, COMPUTER_TITLE, type ComputerTip, computerTipLinks } from "@/lib/computer";
+import {
+  COMPUTER_INTRO,
+  COMPUTER_TITLE,
+  type ComputerTip,
+  computerTipLinks,
+  computerTipsFromApi,
+} from "@/lib/computer";
 import { INDEXABLE_SECTIONS } from "@/lib/site-copy";
 
 function tip(overrides: Partial<ComputerTip> & Pick<ComputerTip, "id" | "title">): ComputerTip {
@@ -18,6 +24,14 @@ describe("computer copy and links", () => {
     expect(COMPUTER_INTRO).toBe(
       "This is a living list of tips to use computers better: shortcuts, hotkeys, utility apps, helpful workflows, and so on.",
     );
+  });
+
+  test("reads tip lists from either API envelope", () => {
+    const published = [tip({ id: "raycast", title: "Raycast" })];
+    expect(computerTipsFromApi({ items: published })).toEqual(published);
+    expect(computerTipsFromApi(published)).toEqual(published);
+    expect(computerTipsFromApi({ items: "nope" })).toEqual([]);
+    expect(computerTipsFromApi(null)).toEqual([]);
   });
 
   test("lists published tip titles and hrefs", () => {
