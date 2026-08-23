@@ -28,6 +28,13 @@
         ]
       }
     },
+    "Short ID": {
+      "id": "short_id",
+      "name": "Short ID",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
     "Name": {
       "id": "title",
       "name": "Name",

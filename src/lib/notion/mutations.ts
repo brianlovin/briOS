@@ -1,6 +1,11 @@
+import { generateShortId } from "@/lib/short-id";
+
 import { notion } from "./client";
 import { computerTipCreateProperties, paragraphBlocksFromPlainText } from "./computer";
 import { writeMultiSelect, writeRichText, writeSelect, writeTitle, writeUrl } from "./properties";
+import { computerShortIdExists } from "./queries";
+
+const COMPUTER_SHORT_ID_RETRIES = 5;
 
 // ===== Stack Mutations =====
 
@@ -157,13 +162,24 @@ export async function createAmaQuestion(title: string, description?: string) {
 
 // ===== Computer Tip Mutations =====
 
-export async function createComputerTip(data: { title: string; body?: string }) {
+async function uniqueComputerShortId(): Promise<string> {
+  for (let attempt = 0; attempt < COMPUTER_SHORT_ID_RETRIES; attempt++) {
+    const candidate = generateShortId();
+    if (!(await computerShortIdExists(candidate))) {
+      return candidate;
+    }
+  }
+  throw new Error("Failed to generate unique Short ID after maximum retries");
+}
+
+export async function createComputerTip(data: { title: string; body?: string; shortId?: string }) {
   const databaseId = process.env.NOTION_TIPS_DATABASE_ID || "";
   const children = data.body?.trim() ? paragraphBlocksFromPlainText(data.body.trim()) : undefined;
+  const shortId = data.shortId ?? (await uniqueComputerShortId());
 
   return notion.pages.create({
     parent: { database_id: databaseId },
-    properties: computerTipCreateProperties(data.title) as any,
+    properties: computerTipCreateProperties(data.title, shortId) as any,
     ...(children ? { children } : {}),
   } as any);
 }

@@ -38,6 +38,7 @@ export type AMA = z.infer<typeof AMASchema>;
 
 export const TipsSchema = z.object({
   Status: z.enum(["Published", "Pending", "Rejected"]).optional(),
+  "Short ID": z.string().optional(),
   Name: z.string().optional(),
 });
 

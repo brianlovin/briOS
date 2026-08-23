@@ -6,8 +6,8 @@ import { computerTipsFromApi } from "@/lib/computer";
 import { fetcher } from "@/lib/fetcher";
 import type { NotionComputerItem, NotionComputerItemWithContent } from "@/lib/notion";
 
-export function prefetchComputerTip(id: string) {
-  preload(`/api/computer/${id}`, fetcher);
+export function prefetchComputerTip(slug: string) {
+  preload(`/api/computer/${slug}`, fetcher);
 }
 
 export function useComputerTips(fallbackData?: NotionComputerItem[]) {
@@ -27,9 +27,9 @@ export function useComputerTips(fallbackData?: NotionComputerItem[]) {
   };
 }
 
-export function useComputerTip(id: string, fallbackData?: NotionComputerItemWithContent | null) {
+export function useComputerTip(slug: string, fallbackData?: NotionComputerItemWithContent | null) {
   const { data, error, isLoading } = useSWR<NotionComputerItemWithContent | null>(
-    id ? `/api/computer/${id}` : null,
+    slug ? `/api/computer/${slug}` : null,
     fetcher,
     {
       revalidateOnFocus: false,

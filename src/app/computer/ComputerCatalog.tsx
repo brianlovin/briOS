@@ -1,6 +1,6 @@
 import { List, ListItem, ListItemLabel, Section } from "@/components/shared/ListComponents";
 import { PageTitle } from "@/components/Typography";
-import { COMPUTER_INTRO, COMPUTER_TITLE, type ComputerTip } from "@/lib/computer";
+import { COMPUTER_INTRO, COMPUTER_TITLE, type ComputerTip, computerTipLink } from "@/lib/computer";
 
 import { ComputerTipIcon } from "./ComputerTipIcon";
 import { SuggestTipControl } from "./SuggestTipControl";
@@ -16,12 +16,16 @@ export function ComputerCatalog({ tips }: { tips: ComputerTip[] }) {
         </Section>
         <Section>
           <List>
-            {tips.map((tip) => (
-              <ListItem key={tip.id} href={`/computer/${tip.id}`}>
-                <ComputerTipIcon icon={tip.icon} />
-                <ListItemLabel className="line-clamp-none">{tip.title}</ListItemLabel>
-              </ListItem>
-            ))}
+            {tips.map((tip) => {
+              const link = computerTipLink(tip);
+              if (!link) return null;
+              return (
+                <ListItem key={tip.id} href={link.href}>
+                  <ComputerTipIcon icon={tip.icon} />
+                  <ListItemLabel className="line-clamp-none">{tip.title}</ListItemLabel>
+                </ListItem>
+              );
+            })}
           </List>
         </Section>
       </div>

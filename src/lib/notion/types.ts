@@ -270,6 +270,7 @@ export type NotionComputerItem = {
   status: string;
   icon?: string;
   createdTime: string;
+  shortId?: string;
 };
 
 export type NotionComputerItemWithContent = NotionComputerItem & {
