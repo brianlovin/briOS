@@ -80,12 +80,6 @@ export const HOME_PROJECTS = [
     external: true,
   },
   {
-    name: "How Terminals Work",
-    href: "/how-terminals-work",
-    description: "A visual guide to understand terminals",
-    external: false,
-  },
-  {
     name: "HN CLI",
     href: "https://github.com/brianlovin/hn-cli",
     description: "Hacker News in your terminal",
