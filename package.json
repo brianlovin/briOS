@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@tailwindcss/typography": "^0.5.16",
+    "@tailwindcss/typography": "^0.5.20",
     "@types/bun": "^1.3.14",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^26",
