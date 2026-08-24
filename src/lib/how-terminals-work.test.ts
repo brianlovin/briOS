@@ -37,9 +37,8 @@ describe("how terminals work copy", () => {
 
 describe("indexable section", () => {
   test("omits /how-terminals-work from public section lists", () => {
-    expect(INDEXABLE_SECTIONS.some((section) => section.href === "/how-terminals-work")).toBe(
-      false,
-    );
+    const hrefs: string[] = INDEXABLE_SECTIONS.map((section) => section.href);
+    expect(hrefs).not.toContain("/how-terminals-work");
   });
 });
 
