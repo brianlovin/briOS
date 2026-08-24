@@ -81,9 +81,9 @@ export const HOME_PROJECTS = [
   },
   {
     name: "How Terminals Work",
-    href: "https://how-terminals-work.vercel.app/",
+    href: "/how-terminals-work",
     description: "A visual guide to understand terminals",
-    external: true,
+    external: false,
   },
   {
     name: "HN CLI",

@@ -342,6 +342,7 @@ const KNOWN_PATH_TITLES: Record<string, string> = {
   "/sites": "Sites",
   "/ama": "AMA",
   "/computer": "How to Computer Better",
+  "/how-terminals-work": "How Terminals Work",
   "/listening": "Listening",
   "/hn": "Hacker News",
   "/app-dissection": "App Dissection",

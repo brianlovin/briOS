@@ -11,6 +11,7 @@ describe("buildSitemapEntries", () => {
     expect(urls).toContain(`${SITE_CONFIG.url}/`);
     expect(urls).toContain(`${SITE_CONFIG.url}/writing`);
     expect(urls).toContain(`${SITE_CONFIG.url}/about`);
+    expect(urls).toContain(`${SITE_CONFIG.url}/how-terminals-work`);
     expect(urls).toContain(`${SITE_CONFIG.url}/computer`);
     expect(urls).toContain(`${SITE_CONFIG.url}/llms.txt`);
     expect(urls).not.toContain(`${SITE_CONFIG.url}/contact`);

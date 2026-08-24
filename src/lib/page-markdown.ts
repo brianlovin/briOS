@@ -12,6 +12,11 @@ import { getDesignDetailsEpisodes } from "@/lib/design-details";
 import { getGoodWebsitesSource } from "@/lib/goodWebsites";
 import { getPostById, getRankedHNPosts } from "@/lib/hn";
 import {
+  HOW_TERMINALS_WORK_INTRO,
+  HOW_TERMINALS_WORK_SECTIONS,
+  HOW_TERMINALS_WORK_TITLE,
+} from "@/lib/how-terminals-work";
+import {
   getAmaItemContent,
   getAppDissectionDatabaseItems,
   getAppDissectionItemBySlug,
@@ -524,6 +529,25 @@ async function designDetailsMarkdown(id: string): Promise<MarkdownResult> {
   return md(200, body);
 }
 
+async function howTerminalsWorkMarkdown(): Promise<MarkdownResult> {
+  const body = [
+    `# ${HOW_TERMINALS_WORK_TITLE}`,
+    "",
+    HOW_TERMINALS_WORK_INTRO,
+    "",
+    "## Sections",
+    "",
+    ...HOW_TERMINALS_WORK_SECTIONS.flatMap((section) => [
+      `### ${section.number}. ${section.title}`,
+      "",
+      section.insight,
+      "",
+    ]),
+    "[Home](/)",
+  ].join("\n");
+  return md(200, body);
+}
+
 async function numbersMarkdown(): Promise<MarkdownResult> {
   const body = [
     `# Numbers`,
@@ -559,6 +583,7 @@ export async function renderPageMarkdown(pathname: string): Promise<MarkdownResu
   if (path === "/activity") return activityMarkdown();
   if (path === "/app-dissection") return appDissectionIndexMarkdown();
   if (path === "/design-details") return designDetailsIndexMarkdown();
+  if (path === "/how-terminals-work") return howTerminalsWorkMarkdown();
   if (path === "/numbers") return numbersMarkdown();
 
   const writing = path.match(/^\/writing\/([^/]+)$/);

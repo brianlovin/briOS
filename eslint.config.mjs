@@ -32,6 +32,13 @@ const eslintConfig = [
       "@typescript-eslint/no-unused-vars": "error",
     },
   },
+  {
+    files: ["src/app/how-terminals-work/demos/**/*.tsx"],
+    rules: {
+      "react/no-unescaped-entities": "off",
+      "react/jsx-no-comment-textnodes": "off",
+    },
+  },
 ];
 
 export default eslintConfig;

@@ -29,6 +29,15 @@ describe("renderPageMarkdown", () => {
     expect(result.cacheTags).toContain("notion:computer");
   });
 
+  test("how-terminals-work markdown includes the guide title and sections", async () => {
+    const result = await renderPageMarkdown("/how-terminals-work");
+    expect(result.status).toBe(200);
+    expect(result.body).toContain("# How Terminals Work");
+    expect(result.body).toContain("An interactive guide to understanding terminals");
+    expect(result.body).toContain("The Grid Model");
+    expect(result.body).toContain("Terminal Vocabulary");
+  });
+
   test("unknown paths return 404 markdown", async () => {
     const result = await renderPageMarkdown("/some-path-that-does-not-exist");
     expect(result.status).toBe(404);
