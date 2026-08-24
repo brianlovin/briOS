@@ -134,7 +134,7 @@ export default function About() {
 
             <Section>
               <SectionHeading>Projects</SectionHeading>
-              <ProjectsList exclude={["How Terminals Work"]} />
+              <ProjectsList />
             </Section>
 
             <Section>

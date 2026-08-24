@@ -10,6 +10,8 @@ describe("renderPageMarkdown", () => {
     expect(result.body).toContain(`# ${SITE_NAME}`);
     expect(result.body).toContain("## Writing");
     expect(result.body).toContain("/writing");
+    expect(result.body).not.toContain("/how-terminals-work");
+    expect(result.body).not.toContain("How Terminals Work");
     expect(result.cacheTags).toContain("notion:writing");
   });
 

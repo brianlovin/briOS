@@ -36,19 +36,16 @@ describe("how terminals work copy", () => {
 });
 
 describe("indexable section", () => {
-  test("includes /how-terminals-work in public section lists", () => {
-    expect(INDEXABLE_SECTIONS.some((section) => section.href === "/how-terminals-work")).toBe(true);
+  test("omits /how-terminals-work from public section lists", () => {
+    expect(INDEXABLE_SECTIONS.some((section) => section.href === "/how-terminals-work")).toBe(
+      false,
+    );
   });
 });
 
 describe("homepage project", () => {
-  test("points How Terminals Work at the native /how-terminals-work route", () => {
-    const project = HOME_PROJECTS.find((item) => item.name === "How Terminals Work");
-    expect(project).toEqual({
-      name: "How Terminals Work",
-      href: "/how-terminals-work",
-      description: "A visual guide to understand terminals",
-      external: false,
-    });
+  test("omits How Terminals Work from the homepage projects list", () => {
+    expect(HOME_PROJECTS.find((item) => item.name === "How Terminals Work")).toBeUndefined();
+    expect(HOME_PROJECTS.some((item) => item.href === "/how-terminals-work")).toBe(false);
   });
 });
