@@ -1,4 +1,29 @@
-import { afterEach, beforeEach, describe, expect, test } from "bun:test";
+import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
+import { NextResponse } from "next/server";
+
+const afterMock = mock(() => {});
+const generateStamp = mock(async () => {
+  throw new Error("generateStamp should not run before the webhook ack");
+});
+const composeFieldNotePoster = mock(async () => {
+  throw new Error("composeFieldNotePoster should not run before the webhook ack");
+});
+
+mock.module("next/server", () => ({
+  NextResponse,
+  after: afterMock,
+}));
+
+mock.module("./stamp", () => ({
+  generateStamp,
+  STAMP_MODEL: "test",
+  referencePhotoForStamp: mock(),
+}));
+
+mock.module("./compose", () => ({
+  composeFieldNotePoster,
+  preparePhotoBuffer: mock(async (buffer: Buffer) => buffer),
+}));
 
 import { POST } from "./route";
 
@@ -20,6 +45,9 @@ describe("POST /api/webhooks/illustrate-journal", () => {
 
   beforeEach(() => {
     process.env.NOTION_WEBHOOK_VERIFICATION_SECRET = TEST_SECRET;
+    afterMock.mockClear();
+    generateStamp.mockClear();
+    composeFieldNotePoster.mockClear();
   });
 
   afterEach(() => {
@@ -34,11 +62,13 @@ describe("POST /api/webhooks/illustrate-journal", () => {
     const res = await POST(webhookRequest({ data: { id: "page-1" } }));
     expect(res.status).toBe(401);
     expect(await res.json()).toEqual({ error: "Unauthorized" });
+    expect(afterMock).not.toHaveBeenCalled();
   });
 
   test("returns 401 for a mismatched webhook secret", async () => {
     const res = await POST(webhookRequest({ data: { id: "page-1" } }, "wrong-secret"));
     expect(res.status).toBe(401);
+    expect(afterMock).not.toHaveBeenCalled();
   });
 
   test("returns 400 when data.id is missing", async () => {
@@ -47,5 +77,16 @@ describe("POST /api/webhooks/illustrate-journal", () => {
     expect(await res.json()).toEqual({
       error: "Missing required field: data.id (pageId)",
     });
+    expect(afterMock).not.toHaveBeenCalled();
+  });
+
+  test("acks immediately and schedules illustrate work with after()", async () => {
+    const res = await POST(webhookRequest({ data: { id: "page-1" } }, TEST_SECRET));
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ accepted: true, pageId: "page-1" });
+    expect(afterMock).toHaveBeenCalledTimes(1);
+    expect(generateStamp).not.toHaveBeenCalled();
+    expect(composeFieldNotePoster).not.toHaveBeenCalled();
   });
 });
