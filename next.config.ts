@@ -67,6 +67,9 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.resolve(__dirname),
   },
+  outputFileTracingIncludes: {
+    "/api/webhooks/illustrate-journal": ["./src/app/api/webhooks/illustrate-journal/fonts/**/*"],
+  },
   images: {
     qualities: [100, 75],
     remotePatterns: [
