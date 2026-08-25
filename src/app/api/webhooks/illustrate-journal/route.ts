@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 
 import { errorResponse, safeCompare } from "@/lib/api-utils";
 import { isFullPage, notion } from "@/lib/notion";
@@ -101,22 +101,8 @@ async function illustrateImageBlock(
   return { blockId: media.id, status: "processed", url: r2Url };
 }
 
-export async function POST(request: Request) {
+async function illustrateJournalPage(pageId: string): Promise<void> {
   try {
-    const webhookSecret = process.env.NOTION_WEBHOOK_VERIFICATION_SECRET;
-    const providedSecret = request.headers.get("x-webhook-secret");
-    if (!safeCompare(providedSecret, webhookSecret)) {
-      return errorResponse("Unauthorized", 401);
-    }
-
-    const body = await request.json();
-    const pageId = body.data?.id;
-
-    if (!pageId) {
-      console.error("Missing required field: data.id (pageId)", body);
-      return errorResponse("Missing required field: data.id (pageId)", 400);
-    }
-
     console.log(`\n🖼  Illustrating journal photos for page ${pageId}\n`);
 
     const page = await notion.pages.retrieve({ page_id: pageId });
@@ -158,17 +144,33 @@ export async function POST(request: Request) {
       }
     }
 
-    return NextResponse.json({
-      success: true,
-      processed,
-      skipped: skipped.length,
-      failed,
-      remaining,
+    console.log(
+      `✅ Journal illustrate complete: processed=${processed} skipped=${skipped.length} failed=${failed} remaining=${remaining}`,
       results,
-    });
+    );
   } catch (error) {
     console.error("Error illustrating journal images", error);
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    return errorResponse(`Failed to illustrate journal images: ${errorMessage}`, 500, error);
   }
+}
+
+export async function POST(request: Request) {
+  const webhookSecret = process.env.NOTION_WEBHOOK_VERIFICATION_SECRET;
+  const providedSecret = request.headers.get("x-webhook-secret");
+  if (!safeCompare(providedSecret, webhookSecret)) {
+    return errorResponse("Unauthorized", 401);
+  }
+
+  const body = await request.json();
+  const pageId = body.data?.id;
+
+  if (!pageId) {
+    console.error("Missing required field: data.id (pageId)", body);
+    return errorResponse("Missing required field: data.id (pageId)", 400);
+  }
+
+  after(() => {
+    void illustrateJournalPage(pageId);
+  });
+
+  return NextResponse.json({ accepted: true, pageId });
 }

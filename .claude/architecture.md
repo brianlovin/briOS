@@ -63,7 +63,7 @@ Webhook endpoints called by Notion database automations (button properties). All
 
 - `/api/webhooks/generate-short-id` — Generates a unique 7-char Short ID for writing posts
 - `/api/webhooks/optimize-writing-images` — Optimizes and uploads blog images to R2
-- `/api/webhooks/illustrate-journal` — Replaces Journal page photos in place with 4:3 rubber-stamp field-note posters
+- `/api/webhooks/illustrate-journal` — Acks immediately, then replaces Journal page photos in place with 4:3 rubber-stamp field-note posters
 - `/api/webhooks/process-stack-icon` — Optimizes existing stack page icons to R2
 - `/api/webhooks/update-site-icon` — Fetches and optimizes favicons for good websites
 
@@ -73,7 +73,7 @@ Webhook endpoints called by Notion database automations (button properties). All
 2. URL: `https://brianlovin.com/api/webhooks/illustrate-journal`
 3. Header: `x-webhook-secret` = `NOTION_WEBHOOK_VERIFICATION_SECRET`
 4. Body: the automation page payload, `{ "data": { "id": "{{id}}" } }`
-5. Each run walks image blocks (max 8), skips captions already marked `field-note`, and replaces the block URL with the poster. Videos are ignored. Do not keep originals.
+5. The route returns 200 immediately (`{ accepted: true, pageId }`) so Notion does not time out. Gemini + Sharp + R2 run after the response via Next.js `after()` (`maxDuration` 300). Each run walks image blocks (max 8), skips captions already marked `field-note`, and replaces the block URL with the poster. Videos are ignored. Do not keep originals.
 
 **Cache purge buttons** (same `CACHE_PURGE_SECRET` as `/api/purge-cache`):
 
