@@ -63,8 +63,17 @@ Webhook endpoints called by Notion database automations (button properties). All
 
 - `/api/webhooks/generate-short-id` — Generates a unique 7-char Short ID for writing posts
 - `/api/webhooks/optimize-writing-images` — Optimizes and uploads blog images to R2
+- `/api/webhooks/illustrate-journal` — Replaces Journal page photos in place with 4:3 rubber-stamp field-note posters
 - `/api/webhooks/process-stack-icon` — Optimizes existing stack page icons to R2
 - `/api/webhooks/update-site-icon` — Fetches and optimizes favicons for good websites
+
+**Illustrate Journal button** (Journal database; share the DB with the Notion integration after merge):
+
+1. Add a button property (or automation) that sends a webhook
+2. URL: `https://brianlovin.com/api/webhooks/illustrate-journal`
+3. Header: `x-webhook-secret` = `NOTION_WEBHOOK_VERIFICATION_SECRET`
+4. Body: the automation page payload, `{ "data": { "id": "{{id}}" } }`
+5. Each run walks image blocks (max 8), skips captions already marked `field-note`, and replaces the block URL with the poster. Videos are ignored. Do not keep originals.
 
 **Cache purge buttons** (same `CACHE_PURGE_SECRET` as `/api/purge-cache`):
 
