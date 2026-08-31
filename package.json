@@ -18,7 +18,7 @@
     "@aws-sdk/client-s3": "^3.1090.0",
     "@base-ui/react": "^1.1.0",
     "@notionhq/client": "^5.19.0",
-    "@paper-design/shaders-react": "^0.0.78",
+    "@paper-design/shaders-react": "^0.0.80",
     "@sentry/nextjs": "^10.70.0",
     "@tanstack/react-virtual": "^3.13.18",
     "@upstash/qstash": "^2.11.3",
