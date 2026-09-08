@@ -33,6 +33,11 @@ type BatchLikesContextType = {
 
 export const BatchLikesContext = createContext<BatchLikesContextType | null>(null);
 
+/** Individual GET key. Null inside BatchLikesContext so SWR does not request `/api/likes/:id`. */
+export function individualLikesKey(pageId: string, inBatch: boolean): string | null {
+  return pageId && !inBatch ? `/api/likes/${pageId}` : null;
+}
+
 function persistViewerLike(pageId: string, data: LikeData) {
   if (!isViewerLikeData(data) || !Number.isFinite(data.count) || !Number.isFinite(data.userLikes)) {
     return;
@@ -56,19 +61,19 @@ export function useLikes(pageId: string, target: LikeActivityTarget = {}) {
   );
   const storedHint = storedViewerHint(stored, pageId);
 
-  const { data, error } = useSWR<LikeData>(
-    pageId ? `/api/likes/${pageId}` : null,
-    inBatch ? null : fetcher,
-    {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      revalidateIfStale: false,
-    },
-  );
+  // Null fetcher does not disable the request: SWR does `fn || config.fetcher`,
+  // and the app-wide SWRConfig supplies `fetcher`. Disable with a null key.
+  const { data, error } = useSWR<LikeData>(individualLikesKey(pageId, inBatch), fetcher, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    revalidateIfStale: false,
+  });
 
   const { count, userLikes, viewerKnown } = resolveLikeState(
     countOnly,
-    batchContext?.viewer?.[pageId] ?? storedHint,
+    // This-tab store is written on like; prefer it over a stale batch snapshot
+    // so list pages still update after POST without a per-id GET.
+    storedHint ?? batchContext?.viewer?.[pageId],
     data,
   );
 
@@ -82,52 +87,66 @@ export function useLikes(pageId: string, target: LikeActivityTarget = {}) {
     if (!payload) return;
 
     const optimisticData = optimisticAddLike(count, userLikes);
+    const rollbackViewer = storedHint ?? batchContext?.viewer?.[pageId];
+    if (inBatch) persistViewerLike(pageId, optimisticData);
 
-    await mutate(
-      `/api/likes/${pageId}`,
-      async () => {
-        const res = await fetch(`/api/likes/${pageId}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-        if (!res.ok) {
-          throw new Error("Failed to like");
-        }
-        const next = (await res.json()) as LikeData;
-        persistViewerLike(pageId, next);
-        return next;
-      },
-      {
-        optimisticData,
-        rollbackOnError: true,
-        revalidate: false,
-      },
-    );
+    try {
+      await mutate(
+        `/api/likes/${pageId}`,
+        async () => {
+          const res = await fetch(`/api/likes/${pageId}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          if (!res.ok) {
+            throw new Error("Failed to like");
+          }
+          const next = (await res.json()) as LikeData;
+          persistViewerLike(pageId, next);
+          return next;
+        },
+        {
+          optimisticData,
+          rollbackOnError: true,
+          revalidate: false,
+        },
+      );
+    } catch (error) {
+      if (inBatch && rollbackViewer) persistViewerLike(pageId, rollbackViewer);
+      throw error;
+    }
   };
 
   const removeLike = async () => {
     if (userLikes <= 0) return;
 
     const optimisticData = optimisticRemoveLike(count, userLikes);
+    const rollbackViewer = storedHint ?? batchContext?.viewer?.[pageId];
+    if (inBatch) persistViewerLike(pageId, optimisticData);
 
-    await mutate(
-      `/api/likes/${pageId}`,
-      async () => {
-        const res = await fetch(`/api/likes/${pageId}`, { method: "DELETE" });
-        if (!res.ok) {
-          throw new Error("Failed to remove like");
-        }
-        const next = (await res.json()) as LikeData;
-        persistViewerLike(pageId, next);
-        return next;
-      },
-      {
-        optimisticData,
-        rollbackOnError: true,
-        revalidate: false,
-      },
-    );
+    try {
+      await mutate(
+        `/api/likes/${pageId}`,
+        async () => {
+          const res = await fetch(`/api/likes/${pageId}`, { method: "DELETE" });
+          if (!res.ok) {
+            throw new Error("Failed to remove like");
+          }
+          const next = (await res.json()) as LikeData;
+          persistViewerLike(pageId, next);
+          return next;
+        },
+        {
+          optimisticData,
+          rollbackOnError: true,
+          revalidate: false,
+        },
+      );
+    } catch (error) {
+      if (inBatch && rollbackViewer) persistViewerLike(pageId, rollbackViewer);
+      throw error;
+    }
   };
 
   return {
