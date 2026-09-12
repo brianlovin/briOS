@@ -136,9 +136,8 @@ describe("purgeContentType", () => {
       revalidateTag.mockClear();
       await purgeContentType(type);
       expect(revalidateTag).toHaveBeenCalled();
-      for (const call of revalidateTag.mock.calls) {
-        expect(call[1]).toEqual({ expire: 0 });
-        expect(call[1]).not.toBe("max");
+      for (const tag of PURGE_CONFIG[type].tags) {
+        expect(revalidateTag).toHaveBeenCalledWith(tag, { expire: 0 });
       }
     }
   });
