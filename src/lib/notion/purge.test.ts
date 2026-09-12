@@ -99,7 +99,7 @@ describe("purgeContentType", () => {
     await expect(purgeContentType("writing")).resolves.toBe(4);
     expect(invalidate).toHaveBeenCalledTimes(1);
     expect(invalidate).toHaveBeenCalledWith("notion:writing:*");
-    expect(revalidateTag).toHaveBeenCalledWith("notion:writing", "max");
+    expect(revalidateTag).toHaveBeenCalledWith("notion:writing", { expire: 0 });
     expect(revalidatePath).toHaveBeenCalledTimes(3);
     expect(revalidatePath).toHaveBeenCalledWith("/writing");
     expect(revalidatePath).toHaveBeenCalledWith("/api/writing");
@@ -111,7 +111,7 @@ describe("purgeContentType", () => {
 
     await expect(purgeContentType("sites")).resolves.toBe(2);
     expect(invalidate).toHaveBeenCalledWith("notion:good-websites:*");
-    expect(revalidateTag).toHaveBeenCalledWith("notion:good-websites", "max");
+    expect(revalidateTag).toHaveBeenCalledWith("notion:good-websites", { expire: 0 });
     expect(revalidatePath).toHaveBeenCalledTimes(2);
     expect(revalidatePath).toHaveBeenCalledWith("/sites");
     expect(revalidatePath).toHaveBeenCalledWith("/api/sites");
@@ -122,10 +122,24 @@ describe("purgeContentType", () => {
 
     await expect(purgeContentType("stack")).resolves.toBe(1);
     expect(invalidate).toHaveBeenCalledWith("notion:stack:*");
-    expect(revalidateTag).toHaveBeenCalledWith("notion:stack", "max");
+    expect(revalidateTag).toHaveBeenCalledWith("notion:stack", { expire: 0 });
     expect(revalidatePath).toHaveBeenCalledTimes(2);
     expect(revalidatePath).toHaveBeenCalledWith("/stack");
     expect(revalidatePath).toHaveBeenCalledWith("/api/stacks");
+  });
+
+  test("expires every content-type tag immediately instead of SWR max", async () => {
+    spyOn(cache, "invalidateNotionCache").mockResolvedValue(1);
+    spyOn(hnCache, "clearHnCache").mockResolvedValue(1);
+
+    for (const type of PURGEABLE_CONTENT_TYPES) {
+      revalidateTag.mockClear();
+      await purgeContentType(type);
+      expect(revalidateTag).toHaveBeenCalled();
+      for (const tag of PURGE_CONFIG[type].tags) {
+        expect(revalidateTag).toHaveBeenCalledWith(tag, { expire: 0 });
+      }
+    }
   });
 
   test("clears HN Redis and Next tags/paths without touching Notion Redis", async () => {
@@ -136,9 +150,9 @@ describe("purgeContentType", () => {
     expect(clearHn).toHaveBeenCalledTimes(1);
     expect(invalidate).not.toHaveBeenCalled();
     expect(revalidateTag).toHaveBeenCalledTimes(3);
-    expect(revalidateTag).toHaveBeenCalledWith("hn:post-ids", "max");
-    expect(revalidateTag).toHaveBeenCalledWith("hn:post", "max");
-    expect(revalidateTag).toHaveBeenCalledWith("hn:ranked", "max");
+    expect(revalidateTag).toHaveBeenCalledWith("hn:post-ids", { expire: 0 });
+    expect(revalidateTag).toHaveBeenCalledWith("hn:post", { expire: 0 });
+    expect(revalidateTag).toHaveBeenCalledWith("hn:ranked", { expire: 0 });
     expect(revalidatePath).toHaveBeenCalledTimes(2);
     expect(revalidatePath).toHaveBeenCalledWith("/hn");
     expect(revalidatePath).toHaveBeenCalledWith("/hn/[id]", "page");
