@@ -67,7 +67,7 @@ interface CachedNotionQueryOptions {
 /**
  * Derive a coarse cache tag from a key like `notion:writing:content:v2:<id>`.
  * Returns the first two segments so a whole content type can be invalidated
- * at once via `revalidateTag("notion:writing", "max")`.
+ * at once via `revalidateTag("notion:writing", { expire: 0 })`.
  */
 function deriveTag(key: string): string {
   return key.split(":").slice(0, 2).join(":");

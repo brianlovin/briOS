@@ -98,11 +98,13 @@ export async function purgeContentType(type: PurgeableContentType): Promise<numb
     }
   }
 
-  // Next 16 requires a cacheLife profile as the second arg; "max" gives
-  // stale-while-revalidate behavior (serve existing cached data while
-  // regenerating in the background).
+  // Next 16 `revalidateTag(tag, "max")` is stale-while-revalidate: the next
+  // hit can serve the existing use-cache entry (e.g. the days-long sites list)
+  // while a background regen reshuffles that same stale array without Notion.
+  // Route Handlers cannot use `updateTag`. `{ expire: 0 }` expires the tag
+  // immediately so the next GET is a blocking cache miss / fresh refetch.
   for (const tag of config.tags) {
-    revalidateTag(tag, "max");
+    revalidateTag(tag, { expire: 0 });
   }
 
   for (const path of config.paths) {
