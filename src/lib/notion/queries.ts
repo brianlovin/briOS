@@ -47,6 +47,29 @@ import {
   richTextPlainText,
 } from "./types";
 
+type DataSourceQueryArgs = Parameters<typeof notion.dataSources.query>[0];
+type DataSourceQueryResults = Awaited<ReturnType<typeof notion.dataSources.query>>["results"];
+
+async function queryAllDataSourcePages(
+  args: Omit<DataSourceQueryArgs, "start_cursor" | "page_size">,
+): Promise<DataSourceQueryResults> {
+  const results: DataSourceQueryResults = [];
+  let cursor: string | undefined;
+
+  do {
+    const response = await notion.dataSources.query({
+      ...args,
+      page_size: 100,
+      ...(cursor ? { start_cursor: cursor } : {}),
+    });
+
+    results.push(...response.results);
+    cursor = response.has_more ? (response.next_cursor ?? undefined) : undefined;
+  } while (cursor);
+
+  return results;
+}
+
 export async function getDataSourceId(databaseId: string): Promise<string> {
   return cachedNotionQuery(
     `notion:datasource:${databaseId}`,
@@ -344,7 +367,7 @@ export async function getGoodWebsitesDatabaseItems(): Promise<GoodWebsiteItem[]>
     async () => {
       const databaseId = process.env.NOTION_GOOD_WEBSITES_DATABASE_ID || "";
       const dataSourceId = await getDataSourceId(databaseId);
-      const response = await notion.dataSources.query({
+      const results = await queryAllDataSourcePages({
         data_source_id: dataSourceId,
         sorts: [
           {
@@ -354,7 +377,7 @@ export async function getGoodWebsitesDatabaseItems(): Promise<GoodWebsiteItem[]>
         ],
       });
 
-      return response.results
+      return results
         .map(mapGoodWebsiteItem)
         .filter((item): item is GoodWebsiteItem => item !== null);
     },
@@ -368,7 +391,7 @@ export async function getGoodWebsitesDatabaseItemsForRss(): Promise<GoodWebsiteI
     async () => {
       const databaseId = process.env.NOTION_GOOD_WEBSITES_DATABASE_ID || "";
       const dataSourceId = await getDataSourceId(databaseId);
-      const response = await notion.dataSources.query({
+      const results = await queryAllDataSourcePages({
         data_source_id: dataSourceId,
         sorts: [
           {
@@ -378,7 +401,7 @@ export async function getGoodWebsitesDatabaseItemsForRss(): Promise<GoodWebsiteI
         ],
       });
 
-      return response.results
+      return results
         .map(mapGoodWebsiteItemWithDate)
         .filter((item): item is GoodWebsiteItemWithDate => item !== null);
     },
