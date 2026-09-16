@@ -13,7 +13,8 @@ export type { LikeCount, LikeData } from "./likes-constants";
  * (Next.js uses the minimum revalidate across all layers of a route).
  *
  * Client-side batch fetch inside BatchLikesProvider overlays viewer state
- * after hydration, so the server-rendered count lagging by up to 1h is acceptable.
+ * (`userLikes` only when this snapshot already stamped totals) after hydration,
+ * so the server-rendered count lagging by up to 1h is acceptable.
  */
 const LIKES_REVALIDATE = 3600;
 

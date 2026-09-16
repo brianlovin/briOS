@@ -1,8 +1,14 @@
 "use client";
 
-import { ReactNode, useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { ReactNode, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 
 import { BatchLikesContext, type LikeCount, type LikeData } from "@/lib/hooks/useLikes";
+import {
+  hydrateViewerBatch,
+  likesBatchRequestUrl,
+  planLikesBatchRequests,
+} from "@/lib/likes-batch";
+import { type ViewerLikeOverlay } from "@/lib/likes-constants";
 import {
   getServerViewerLikesSnapshot,
   getStoredViewerLikesSnapshot,
@@ -29,32 +35,56 @@ export function BatchLikesProvider({ pageIds, initialData, children }: BatchLike
     () => storedViewerHints(stored, pageIdsKey ? pageIdsKey.split(",") : []),
     [stored, pageIdsKey],
   );
+  const fetchedIdsRef = useRef<Set<string>>(new Set());
+  const inFlightIdsRef = useRef<Set<string>>(new Set());
+  const viewerRef = useRef(viewer);
+  const initialDataRef = useRef(initialData);
+  viewerRef.current = viewer;
+  initialDataRef.current = initialData;
 
-  // Always fetch viewer overlay client-side (SSR only provides counts)
+  // Viewer overlay only for IDs not yet fetched. SSR totals are not re-GET.
   useEffect(() => {
     if (!pageIdsKey) return;
 
-    const controller = new AbortController();
+    const ids = pageIdsKey.split(",").filter((id) => id.length > 0);
+    const alreadyFetched = new Set([...fetchedIdsRef.current, ...inFlightIdsRef.current]);
+    const requests = planLikesBatchRequests(ids, {
+      alreadyFetched,
+      initialLikes: initialDataRef.current,
+    });
+    if (requests.length === 0) return;
+
+    const requestedIds = requests.flatMap((request) => request.ids);
+    requestedIds.forEach((id) => inFlightIdsRef.current.add(id));
 
     const fetchBatchLikes = async () => {
       try {
-        const res = await fetch(`/api/likes/batch?ids=${pageIdsKey}`, {
-          signal: controller.signal,
+        const payloads = await Promise.all(
+          requests.map(async (request) => {
+            const res = await fetch(likesBatchRequestUrl(request));
+            if (!res.ok) {
+              throw new Error(`Failed to fetch batch likes (${res.status})`);
+            }
+            return (await res.json()) as Record<string, ViewerLikeOverlay>;
+          }),
+        );
+        const incoming = Object.assign({}, ...payloads) as Record<string, ViewerLikeOverlay>;
+        const hydrated = hydrateViewerBatch(incoming, {
+          existingViewer: viewerRef.current,
+          stored: getStoredViewerLikesSnapshot(),
+          initialLikes: initialDataRef.current,
         });
-        if (res.ok) {
-          const data: Record<string, LikeData> = await res.json();
-          writeStoredViewerLikes(data);
-          setViewer(data);
-        }
+        writeStoredViewerLikes(hydrated);
+        setViewer((prev) => ({ ...(prev ?? {}), ...hydrated }));
+        requestedIds.forEach((id) => fetchedIdsRef.current.add(id));
       } catch (error) {
-        if (error instanceof Error && error.name === "AbortError") return;
         console.error("Error fetching batch likes:", error);
+      } finally {
+        requestedIds.forEach((id) => inFlightIdsRef.current.delete(id));
       }
     };
 
-    fetchBatchLikes();
-
-    return () => controller.abort();
+    void fetchBatchLikes();
   }, [pageIdsKey]);
 
   const contextValue = useMemo(

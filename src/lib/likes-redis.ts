@@ -26,6 +26,21 @@ const TOTAL_PREFIX = "likes:total:";
 const USER_LIKES_PREFIX = "likes:user:";
 const RATE_LIMIT_PREFIX = "ratelimit:likes:";
 
+/** Redis keys for public totals. One MGET, not N GETs. */
+export function batchTotalLikeKeys(pageIds: string[]): string[] {
+  return pageIds.map((id) => `${TOTAL_PREFIX}${id}`);
+}
+
+/** Redis keys for one viewer's likes. One MGET, not N GETs. */
+export function batchViewerLikeKeys(userId: string, pageIds: string[]): string[] {
+  return pageIds.map((id) => `${USER_LIKES_PREFIX}${userId}:${id}`);
+}
+
+/** Full batch still needs totals + viewer keys (2 MGETs). */
+export function batchUserLikeRedisKeys(userId: string, pageIds: string[]): string[] {
+  return [...batchTotalLikeKeys(pageIds), ...batchViewerLikeKeys(userId, pageIds)];
+}
+
 // Historical `likes:users:{pageId}` sets are abandoned (not scanned or deleted).
 // Viewer state is `likes:user:{userId}:{pageId}` (hash of IP + LIKES_HASH_SALT).
 
@@ -211,7 +226,7 @@ export async function getBatchLikeCounts(pageIds: string[]): Promise<Map<string,
   if (!client || pageIds.length === 0) return counts;
 
   try {
-    const keys = pageIds.map((id) => `${TOTAL_PREFIX}${id}`);
+    const keys = batchTotalLikeKeys(pageIds);
     const values = await client.mget<(number | null)[]>(...keys);
 
     pageIds.forEach((pageId, index) => {
@@ -226,7 +241,43 @@ export async function getBatchLikeCounts(pageIds: string[]): Promise<Map<string,
 }
 
 /**
- * Batch get viewer like data for multiple pages (2N: totals + per-user counts).
+ * Batch get viewer like counts only (1 MGET of user keys).
+ * Use when SSR already stamped public totals.
+ */
+export async function getBatchViewerLikeData(
+  userId: string,
+  pageIds: string[],
+): Promise<Map<string, number>> {
+  const client = getLikesRedis();
+  const result = new Map<string, number>();
+
+  if (!client || pageIds.length === 0) {
+    pageIds.forEach((id) => {
+      result.set(id, 0);
+    });
+    return result;
+  }
+
+  try {
+    const keys = batchViewerLikeKeys(userId, pageIds);
+    const values = await client.mget<(number | null)[]>(...keys);
+
+    pageIds.forEach((pageId, index) => {
+      result.set(pageId, values[index] ?? 0);
+    });
+
+    return result;
+  } catch (error) {
+    console.error("[Likes] Error getting batch viewer like data:", error);
+    pageIds.forEach((id) => {
+      result.set(id, 0);
+    });
+    return result;
+  }
+}
+
+/**
+ * Batch get viewer like data for multiple pages (2 MGETs: totals + per-user).
  * Returns a Map of pageId -> { count, userLikes }
  */
 export async function getBatchUserLikeData(
@@ -244,24 +295,16 @@ export async function getBatchUserLikeData(
   }
 
   try {
-    const pipeline = client.pipeline();
-
-    for (const pageId of pageIds) {
-      pipeline.get(`${TOTAL_PREFIX}${pageId}`);
-    }
-
-    for (const pageId of pageIds) {
-      pipeline.get(`${USER_LIKES_PREFIX}${userId}:${pageId}`);
-    }
-
-    const results = await pipeline.exec();
-    const n = pageIds.length;
+    const [totals, userLikes] = await Promise.all([
+      client.mget<(number | null)[]>(...batchTotalLikeKeys(pageIds)),
+      client.mget<(number | null)[]>(...batchViewerLikeKeys(userId, pageIds)),
+    ]);
 
     pageIds.forEach((pageId, index) => {
-      const count = (results[index] as number | null) ?? 0;
-      const userLikes = (results[n + index] as number | null) ?? 0;
-
-      result.set(pageId, { count, userLikes });
+      result.set(pageId, {
+        count: totals[index] ?? 0,
+        userLikes: userLikes[index] ?? 0,
+      });
     });
 
     return result;

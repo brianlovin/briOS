@@ -4,6 +4,7 @@ import {
   isViewerLikeData,
   type LikeCount,
   type LikeData,
+  LIKES_BATCH_MAX_IDS,
   LIKES_SERVER_CACHE_TAG,
   optimisticAddLike,
   optimisticRemoveLike,
@@ -13,6 +14,12 @@ import {
 describe("LIKES_SERVER_CACHE_TAG", () => {
   test("is the public count cache tag busted on write", () => {
     expect(LIKES_SERVER_CACHE_TAG).toBe("likes:server");
+  });
+});
+
+describe("LIKES_BATCH_MAX_IDS", () => {
+  test("is the batch route cap the client chunks to", () => {
+    expect(LIKES_BATCH_MAX_IDS).toBe(100);
   });
 });
 
@@ -64,6 +71,14 @@ describe("resolveLikeState", () => {
   test("overlays viewer likes on the SSR count", () => {
     expect(resolveLikeState({ count: 7 }, { count: 8, userLikes: 2 })).toEqual({
       count: 8,
+      userLikes: 2,
+      viewerKnown: true,
+    });
+  });
+
+  test("keeps the SSR count when the viewer overlay has userLikes only", () => {
+    expect(resolveLikeState({ count: 506 }, { userLikes: 2 })).toEqual({
+      count: 506,
       userLikes: 2,
       viewerKnown: true,
     });
