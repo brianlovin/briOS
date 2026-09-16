@@ -5,6 +5,9 @@
 
 export const MAX_LIKES_PER_USER = 16;
 
+/** Max page IDs accepted by `/api/likes/batch`. Client chunks larger lists. */
+export const LIKES_BATCH_MAX_IDS = 100;
+
 /** `unstable_cache` tag for public like counts. Bust on POST/DELETE. */
 export const LIKES_SERVER_CACHE_TAG = "likes:server";
 
@@ -19,6 +22,12 @@ export interface LikeData {
   userLikes: number;
 }
 
+/** Viewer overlay. `count` is omitted when SSR already stamped the total. */
+export interface ViewerLikeOverlay {
+  userLikes: number;
+  count?: number;
+}
+
 export function isViewerLikeData(data: LikeCount | LikeData): data is LikeData {
   return "userLikes" in data;
 }
@@ -30,8 +39,8 @@ export function isViewerLikeData(data: LikeCount | LikeData): data is LikeData {
  */
 export function resolveLikeState(
   countOnly: LikeCount | undefined,
-  viewer: LikeData | undefined,
-  overlay?: LikeData,
+  viewer: ViewerLikeOverlay | undefined,
+  overlay?: ViewerLikeOverlay,
 ): { count: number | undefined; userLikes: number; viewerKnown: boolean } {
   const likeData = overlay ?? viewer;
   return {
