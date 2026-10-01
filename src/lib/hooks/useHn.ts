@@ -1,7 +1,8 @@
 "use client";
 
-import useSWR, { preload } from "swr";
+import useSWR from "swr";
 
+import { prefetch } from "@/lib/prefetch";
 import { HackerNewsPost } from "@/types/hackernews";
 
 const fetcher = async (url: string) => {
@@ -11,7 +12,7 @@ const fetcher = async (url: string) => {
 };
 
 export function prefetchHNPost(id: string) {
-  preload(`/api/hn/${id}`, fetcher);
+  prefetch(`/api/hn/${id}`, fetcher);
 }
 
 export function useHNPosts(fallbackData?: HackerNewsPost[]) {
