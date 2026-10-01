@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, test } from "bun:test";
+import { preload } from "swr";
 
 import { prefetch } from "@/lib/prefetch";
 
@@ -52,5 +53,16 @@ describe("prefetch", () => {
     expect(() =>
       prefetch(`/api/ama/prefetch-ok-${Date.now()}`, async () => ({ ok: true })),
     ).not.toThrow();
+  });
+
+  test("keeps the rejected preload so a later SWR subscriber still sees the error", async () => {
+    const key = `/api/computer/prefetch-cached-${Date.now()}`;
+    const error = new Error("HTTP error! status: 504");
+
+    prefetch(key, () => Promise.reject(error));
+
+    await expect(preload(key, async () => ({ unused: true }))).rejects.toThrow(
+      "HTTP error! status: 504",
+    );
   });
 });
