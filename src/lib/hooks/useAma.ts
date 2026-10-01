@@ -1,12 +1,13 @@
 "use client";
 
-import useSWR, { preload } from "swr";
+import useSWR from "swr";
 
 import { fetcher } from "@/lib/fetcher";
 import { NotionAmaItemWithContent } from "@/lib/notion";
+import { prefetch } from "@/lib/prefetch";
 
 export function prefetchAmaQuestion(id: string) {
-  preload(`/api/ama/${id}`, fetcher);
+  prefetch(`/api/ama/${id}`, fetcher);
 }
 
 export function useAmaQuestion(id: string, fallbackData?: NotionAmaItemWithContent | null) {

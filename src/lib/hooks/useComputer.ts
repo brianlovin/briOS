@@ -1,13 +1,14 @@
 "use client";
 
-import useSWR, { preload } from "swr";
+import useSWR from "swr";
 
 import { computerTipsFromApi } from "@/lib/computer";
 import { fetcher } from "@/lib/fetcher";
 import type { NotionComputerItem, NotionComputerItemWithContent } from "@/lib/notion";
+import { prefetch } from "@/lib/prefetch";
 
 export function prefetchComputerTip(slug: string) {
-  preload(`/api/computer/${slug}`, fetcher);
+  prefetch(`/api/computer/${slug}`, fetcher);
 }
 
 export function useComputerTips(fallbackData?: NotionComputerItem[]) {
