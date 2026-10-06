@@ -115,7 +115,7 @@ test("receipt refs cannot contain abbreviated SHAs or ref injection", () => {
 });
 
 test("policy digest uses committed verification inputs and rejects missing policy files", (t) => {
-  const cwd = mkdtempSync(path.join(os.tmpdir(), "shiori-receipt-"));
+  const cwd = mkdtempSync(path.join(os.tmpdir(), "brios-receipt-"));
   t.after(() => rmSync(cwd, { recursive: true, force: true }));
   const git = (...args) =>
     execFileSync("git", args, { cwd, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] }).trim();

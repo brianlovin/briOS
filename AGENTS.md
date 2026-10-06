@@ -15,7 +15,7 @@ This repository is a Next.js 16 project built with TypeScript and Tailwind CSS. 
 
 - **Package manager:** use [Bun](https://bun.sh/) (`bun install`, `bun add package-name`). Do not use npm or yarn commands.
 - **Styling:** Tailwind CSS is used exclusively. Keep styles in class names or in `globals.css`. Do not add CSS modules or other styling frameworks.
-- **Linting:** run `bun run lint` before committing. The project uses ESLint with Prettier, simple-import-sort and unused-imports rules (see `eslint.config.mjs`). Fix lint errors before submitting.
+- **Linting:** configured Macs run `bun run lint` through committed-snapshot pre-push verification; cloud and unconfigured sessions run it before committing. The project uses ESLint with Prettier, simple-import-sort and unused-imports rules (see `eslint.config.mjs`). Fix lint errors before submitting.
 - **TypeScript:** use strict TypeScript. Path alias `@/*` maps to the `src` directory (`tsconfig.json`). Prefer explicit types for function parameters and return values when the type is not obvious.
 
 ## Coding Conventions
@@ -65,7 +65,7 @@ In cloud sessions and on unconfigured machines, before submitting changes run:
 bun run lint
 ```
 
-Commit only when the linter passes.
+Configured Macs must pass the committed-snapshot linter before pushing. Elsewhere, commit only when the linter passes.
 
 ## Additional Notes
 

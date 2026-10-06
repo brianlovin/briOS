@@ -10,7 +10,7 @@ import { checkReceipt } from "./check-receipt.mjs";
 import { createReceipt, policyDigest, receiptRef } from "./receipt.mjs";
 
 function fixture(t) {
-  const root = mkdtempSync(path.join(os.tmpdir(), "shiori-check-receipt-"));
+  const root = mkdtempSync(path.join(os.tmpdir(), "brios-check-receipt-"));
   t.after(() => rmSync(root, { recursive: true, force: true }));
   const cwd = path.join(root, "work");
   const origin = path.join(root, "origin.git");

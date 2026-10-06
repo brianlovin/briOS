@@ -184,7 +184,6 @@ export function runLocal({
         const verifyEnv = {
           ...env,
           CI: "true",
-          MIGRATION_IMMUTABILITY_BASE: base,
         };
         delete verifyEnv.SSH_AUTH_SOCK;
         run("bun", ["--no-env-file", "install", "--frozen-lockfile"], {

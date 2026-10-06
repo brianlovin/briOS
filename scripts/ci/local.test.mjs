@@ -11,7 +11,7 @@ import { policyDigest, receiptRef, verifyReceipt } from "./receipt.mjs";
 
 const github = "git@github.com:brianlovin/briOS.git";
 function fixture(t) {
-  const root = mkdtempSync(join(tmpdir(), "shiori-push-test-"));
+  const root = mkdtempSync(join(tmpdir(), "brios-push-test-"));
   t.after(() => rmSync(root, { recursive: true, force: true }));
   const cwd = join(root, "source");
   const remote = join(root, "remote.git");
@@ -70,7 +70,6 @@ function fixture(t) {
       assert.deepEqual(args, ["scripts/ci/verify.mjs", "all"]);
       assert.equal(readFileSync(join(options.cwd, "feature"), "utf8"), "committed\n");
       assert.equal(existsSync(join(options.cwd, ".env.local")), false);
-      assert.equal(options.env.MIGRATION_IMMUTABILITY_BASE, base);
       assert.equal(options.env.HOME, process.env.HOME);
       assert.equal(options.env.SSH_AUTH_SOCK, undefined);
       if (failVerification) throw new Error("fixture verification failed");
@@ -135,7 +134,7 @@ test("remote matching rejects lookalike hosts and repositories", () => {
   assert.equal(isRepositoryRemote(github, "brianlovin/briOS"), true);
   for (const url of [
     "https://github.com.evil/brianlovin/briOS",
-    "git@github.com:other/shiori.git",
+    "git@github.com:other/brios.git",
     "https://github.com/brianlovin/briOS.git/evil",
   ])
     assert.equal(isRepositoryRemote(url, "brianlovin/briOS"), false);
@@ -153,7 +152,7 @@ test("cloud and unconfigured pre-push defer to remote CI", () => {
     [],
   );
   assert.deepEqual(
-    runLocal({ command: "pre-push", platform: "darwin", configPath: "/nonexistent/shiori-config" }),
+    runLocal({ command: "pre-push", platform: "darwin", configPath: "/nonexistent/brios-config" }),
     [],
   );
 });
