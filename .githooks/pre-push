@@ -1,0 +1,6 @@
+#!/bin/sh
+set -eu
+# Older worktrees in this repository keep remote CI until updated.
+if [ -f scripts/ci/local.mjs ]; then
+  exec node scripts/ci/local.mjs pre-push "$@"
+fi

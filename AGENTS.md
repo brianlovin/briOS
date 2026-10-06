@@ -1,6 +1,6 @@
 # AGENT INSTRUCTIONS
 
-This repository is a Next.js 15 project built with TypeScript and Tailwind CSS. The following conventions should be followed when contributing code or updating documentation.
+This repository is a Next.js 16 project built with TypeScript and Tailwind CSS. The following conventions should be followed when contributing code or updating documentation.
 
 ## Repository Overview
 
@@ -15,7 +15,7 @@ This repository is a Next.js 15 project built with TypeScript and Tailwind CSS. 
 
 - **Package manager:** use [Bun](https://bun.sh/) (`bun install`, `bun add package-name`). Do not use npm or yarn commands.
 - **Styling:** Tailwind CSS is used exclusively. Keep styles in class names or in `globals.css`. Do not add CSS modules or other styling frameworks.
-- **Linting:** run `bunx next lint` before committing. The project uses ESLint with Prettier, simple-import-sort and unused-imports rules (see `eslint.config.mjs`). Fix lint errors before submitting.
+- **Linting:** run `bun run lint` before committing. The project uses ESLint with Prettier, simple-import-sort and unused-imports rules (see `eslint.config.mjs`). Fix lint errors before submitting.
 - **TypeScript:** use strict TypeScript. Path alias `@/*` maps to the `src` directory (`tsconfig.json`). Prefer explicit types for function parameters and return values when the type is not obvious.
 
 ## Coding Conventions
@@ -57,10 +57,12 @@ If a design change has no logic or copy to assert, skip the unit test and verify
 
 ## Programmatic Checks
 
-Before submitting changes run:
+On a configured Mac, commit and push normally: the pre-push hook verifies the exact committed snapshot. Use `bun run ci:verify` to verify early; the next push reuses its signed result. Do not repeat the full suite in the working tree. See `docs/local-ci.md`.
+
+In cloud sessions and on unconfigured machines, before submitting changes run:
 
 ```bash
-bunx next lint
+bun run lint
 ```
 
 Commit only when the linter passes.
