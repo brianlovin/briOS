@@ -8,7 +8,7 @@
         "@ai-sdk/gateway": "^4.0.64",
         "@aws-sdk/client-s3": "^3.1090.0",
         "@base-ui/react": "^1.1.0",
-        "@notionhq/client": "^5.19.0",
+        "@notionhq/client": "^5.26.0",
         "@paper-design/shaders-react": "^0.0.78",
         "@sentry/nextjs": "^10.70.0",
         "@tanstack/react-virtual": "^3.13.18",
@@ -317,7 +317,7 @@
 
     "@nolyfill/is-core-module": ["@nolyfill/is-core-module@1.0.39", "", {}, "sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA=="],
 
-    "@notionhq/client": ["@notionhq/client@5.19.0", "", {}, "sha512-9R93Yt6/OB3MP5h29WhnvIBWYVq4mzxOYn9oh0Ut642NWxOTTouv7vkwKnMj5LGAYTlot0fhmL8OK5Su5zEzCw=="],
+    "@notionhq/client": ["@notionhq/client@5.26.0", "", {}, "sha512-Oc3438nQ5YmZkVO7YJG8fcTYl0V46CirdCvO33azZ9f7ZfD2rsHE4fUVANJiBB9Xf1sqpCs82nd8oKPxeXLmMg=="],
 
     "@opentelemetry/api": ["@opentelemetry/api@1.9.1", "", {}, "sha512-gLyJlPHPZYdAk1JENA9LeHejZe1Ti77/pTeFm/nMXmQH/HFZlcS/O2XJB+L8fkbrNSqhdtlvjBVjxwUYanNH5Q=="],
 
