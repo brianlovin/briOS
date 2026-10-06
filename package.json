@@ -11,7 +11,11 @@
     "lint:fix": "eslint --fix .",
     "test": "bun test",
     "test:coverage": "bun test --coverage",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "prepare": "node scripts/ci/install-hooks.mjs",
+    "ci:setup": "node scripts/ci/setup.mjs",
+    "ci:verify": "node scripts/ci/local.mjs verify",
+    "ci:all": "node scripts/ci/verify.mjs all"
   },
   "dependencies": {
     "@ai-sdk/gateway": "^4.0.64",

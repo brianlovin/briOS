@@ -160,10 +160,11 @@ describe("purgeContentType", () => {
 });
 
 describe("webhook callers", () => {
-  test("every webhook that writes Notion calls purgeContentType", () => {
+  test("every webhook that writes public Notion content calls purgeContentType", () => {
     const webhooksDir = join(import.meta.dir, "../../app/api/webhooks");
+    // Personal journal images are not published or cached by this site.
     const routes = readdirSync(webhooksDir, { withFileTypes: true })
-      .filter((entry) => entry.isDirectory())
+      .filter((entry) => entry.isDirectory() && entry.name !== "illustrate-journal")
       .map((entry) => join(webhooksDir, entry.name, "route.ts"));
 
     expect(routes.length).toBeGreaterThan(0);
