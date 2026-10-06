@@ -65,4 +65,19 @@ describe("prefetch", () => {
       "HTTP error! status: 504",
     );
   });
+
+  test("reuses a successful prefetch without fetching again", async () => {
+    const key = `/api/computer/prefetch-reuse-${Date.now()}`;
+    const value = { ok: true };
+    let calls = 0;
+    const fetcher = async () => {
+      calls += 1;
+      return value;
+    };
+
+    prefetch(key, fetcher);
+
+    expect(await preload(key, fetcher)).toBe(value);
+    expect(calls).toBe(1);
+  });
 });
