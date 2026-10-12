@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 
+import { logger } from "@/lib/logger";
 import { getFullContent } from "@/lib/notion";
+import { withAxiom } from "@/lib/observability/axiom-route";
 
-export async function GET(request: Request, context: { params: Promise<{ id: string }> }) {
+async function getHandler(request: Request, context: { params: Promise<{ id: string }> }) {
   const { id } = await Promise.resolve(await context.params);
 
   try {
@@ -13,7 +15,9 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
       },
     });
   } catch (error) {
-    console.error("Error fetching content:", error);
+    logger.error("Error fetching content", error);
     return NextResponse.json({ error: "Failed to fetch content" }, { status: 500 });
   }
 }
+
+export const GET = withAxiom(getHandler, { name: "/api/notion/content/[id]" });

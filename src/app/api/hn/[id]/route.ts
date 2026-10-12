@@ -4,8 +4,10 @@ import { NextResponse } from "next/server";
 import { cachedResponse, errorResponse } from "@/lib/api-utils";
 import { HN_BOTID_ADVANCED_OPTIONS } from "@/lib/botid";
 import { getPostById } from "@/lib/hn";
+import { logger } from "@/lib/logger";
+import { withAxiom } from "@/lib/observability/axiom-route";
 
-export async function GET(
+async function getHandler(
   _request: Request,
   props: { params: Promise<{ id: string }> },
 ): Promise<NextResponse> {
@@ -28,7 +30,9 @@ export async function GET(
     // Cache for 1 hour
     return cachedResponse(post, 3600);
   } catch (error) {
-    console.error("Error fetching HN post:", error);
+    logger.error("Error fetching HN post", error);
     return errorResponse("Failed to fetch post");
   }
 }
+
+export const GET = withAxiom(getHandler, { name: "/api/hn/[id]" });

@@ -1,5 +1,7 @@
 import { Redis } from "@upstash/redis";
 
+import { logger } from "@/lib/logger";
+
 // Telemetry event structure from CLI
 export interface TelemetryEvent {
   event: string;
@@ -50,7 +52,7 @@ export async function trackUser(userId: string): Promise<void> {
   try {
     await client.sadd(USERS_KEY, userId);
   } catch (error) {
-    console.error("[HN-CLI Telemetry] Error tracking user:", error);
+    logger.error("[HN-CLI Telemetry] Error tracking user", error);
   }
 }
 
@@ -87,7 +89,7 @@ export async function storeEvents(
 
     await pipeline.exec();
   } catch (error) {
-    console.error("[HN-CLI Telemetry] Error storing events:", error);
+    logger.error("[HN-CLI Telemetry] Error storing events", error);
   }
 }
 
@@ -101,7 +103,7 @@ export async function getUniqueUserCount(): Promise<number> {
   try {
     return await client.scard(USERS_KEY);
   } catch (error) {
-    console.error("[HN-CLI Telemetry] Error getting user count:", error);
+    logger.error("[HN-CLI Telemetry] Error getting user count", error);
     return 0;
   }
 }
@@ -138,7 +140,7 @@ export async function getEventCounts(
 
     return counts;
   } catch (error) {
-    console.error("[HN-CLI Telemetry] Error getting event counts:", error);
+    logger.error("[HN-CLI Telemetry] Error getting event counts", error);
     return counts;
   }
 }

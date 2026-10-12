@@ -3,22 +3,25 @@
 import { useAtom } from "jotai";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useMemo, useState } from "react";
+import { Suspense, useCallback, useMemo, useState } from "react";
 
 import {
   getNextTableSort,
   getTableSortDirection,
   sitesTableSortAtom,
+  type SitesTableSortColumn,
 } from "@/atoms/likesSortOrder";
 import { sitesViewModeAtom } from "@/atoms/sitesViewMode";
+import { outboundItemAttributes, trackOutbound } from "@/components/analytics/OutboundLinkTracker";
 import { GoodWebsiteGalleryItem } from "@/components/good-websites/GoodWebsiteGalleryItem";
 import { GoodWebsitesFilters } from "@/components/good-websites/GoodWebsitesFilters";
-import { ViewToggle } from "@/components/good-websites/ViewToggle";
+import { type ViewMode, ViewToggle } from "@/components/good-websites/ViewToggle";
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { LikeButton } from "@/components/likes/LikeButton";
 import { ListDetailWrapper } from "@/components/ListDetailWrapper";
 import { LoadingSpinner, PreviewCardProvider, PreviewCardTrigger } from "@/components/ui";
 import { TableSortHeader } from "@/components/ui/TableSortHeader";
+import { trackClientEvent } from "@/lib/client-events";
 import type { GoodWebsiteItem } from "@/lib/goodWebsites";
 import { useGoodWebsites } from "@/lib/hooks/useGoodWebsites";
 import type { LikeCount } from "@/lib/hooks/useLikes";
@@ -57,8 +60,26 @@ function GoodWebsitesPageBody({ initialData, initialLikes, tag = "" }: GoodWebsi
     initialData,
     tag,
   );
-  const [viewMode, setViewMode] = useAtom(sitesViewModeAtom);
+  const [viewMode, setViewModeAtom] = useAtom(sitesViewModeAtom);
   const [tableSort, setTableSort] = useAtom(sitesTableSortAtom);
+
+  const setViewMode = useCallback(
+    (view: ViewMode) => {
+      setViewModeAtom(view);
+      trackClientEvent("filter.changed", { surface: "sites", filter: "view", value: view });
+    },
+    [setViewModeAtom],
+  );
+
+  const toggleSort = (column: SitesTableSortColumn, initialDirection: "asc" | "desc") => {
+    const next = getNextTableSort(tableSort, column, initialDirection);
+    setTableSort(next);
+    trackClientEvent("filter.changed", {
+      surface: "sites",
+      filter: "sort",
+      value: `${column}:${next.direction}`,
+    });
+  };
 
   // Collect all page IDs for batch likes fetching
   const pageIds = useMemo(() => goodWebsites.map((item) => item.id), [goodWebsites]);
@@ -143,22 +164,14 @@ function GoodWebsitesPageBody({ initialData, initialLikes, tag = "" }: GoodWebsi
                         <TableSortHeader
                           label="Name"
                           direction={getTableSortDirection(tableSort, "name")}
-                          onToggle={() =>
-                            setTableSort((currentSort) =>
-                              getNextTableSort(currentSort, "name", "asc"),
-                            )
-                          }
+                          onToggle={() => toggleSort("name", "asc")}
                         />
                       </div>
                       <div className="col-span-3 text-left">
                         <TableSortHeader
                           label="Site"
                           direction={getTableSortDirection(tableSort, "site")}
-                          onToggle={() =>
-                            setTableSort((currentSort) =>
-                              getNextTableSort(currentSort, "site", "asc"),
-                            )
-                          }
+                          onToggle={() => toggleSort("site", "asc")}
                         />
                       </div>
                       <div className="col-span-1" />
@@ -166,11 +179,7 @@ function GoodWebsitesPageBody({ initialData, initialLikes, tag = "" }: GoodWebsi
                         <TableSortHeader
                           label="Likes"
                           direction={getTableSortDirection(tableSort, "likes")}
-                          onToggle={() =>
-                            setTableSort((currentSort) =>
-                              getNextTableSort(currentSort, "likes", "desc"),
-                            )
-                          }
+                          onToggle={() => toggleSort("likes", "desc")}
                         />
                       </div>
                     </div>
@@ -230,7 +239,9 @@ function GoodWebsiteItemComponent({ item }: { item: GoodWebsiteItem }) {
   const handleRowClick = (e: React.MouseEvent) => {
     // Don't navigate if user clicked on an interactive element
     if ((e.target as HTMLElement).closest("a, button")) return;
-    if (item.url) window.open(item.url, "_blank", "noopener,noreferrer");
+    if (!item.url) return;
+    trackOutbound(item.url, e.currentTarget);
+    window.open(item.url, "_blank", "noopener,noreferrer");
   };
 
   const content = (
@@ -336,6 +347,7 @@ function GoodWebsiteItemComponent({ item }: { item: GoodWebsiteItem }) {
     <div
       className="border-secondary hover:bg-secondary group relative cursor-pointer border-b md:dark:hover:bg-white/5"
       onClick={handleRowClick}
+      {...outboundItemAttributes({ type: "site", id: item.id, name: item.name })}
     >
       <PreviewCardTrigger
         payload={{

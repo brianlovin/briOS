@@ -1,6 +1,8 @@
 import { ServerClient } from "postmark";
 
+import { toErrorMessage, track, trackStep } from "@/lib/axiom";
 import { DigestPost } from "@/lib/digest";
+import { logger } from "@/lib/logger";
 
 import { generateUnsubscribeToken } from "./jwt";
 import { buildUnsubscribeUrl } from "./urls";
@@ -84,19 +86,40 @@ export async function sendHNDigestEmailBatch(
     }));
 
     try {
-      const results = await postmarkClient.sendEmailBatchWithTemplates(messages);
-      for (const result of results) {
+      const results = await trackStep(
+        "hn.digest.batch",
+        { batch_offset: i, batch_size: batch.length },
+        () => postmarkClient.sendEmailBatchWithTemplates(messages),
+      );
+      results.forEach((result, index) => {
         if (result.ErrorCode === 0) {
           successCount++;
-        } else {
-          console.error(`Failed to send to ${result.To}: ${result.Message}`);
-          failureCount++;
+          return;
         }
-      }
+        failureCount++;
+        const email = result.To ?? batch[index]?.to ?? "unknown";
+        console.error(`Failed to send to ${email}: ${result.Message}`);
+        track("hn.digest.send_failed", {
+          email,
+          postmark_error_code: result.ErrorCode,
+          postmark_message: result.Message,
+        });
+      });
       console.log(`Sent batch of ${results.length} HN digest emails`);
     } catch (err) {
-      console.error(`Error sending email batch (offset ${i}):`, err);
+      logger.error(`Error sending email batch (offset ${i})`, err, { batch_size: batch.length });
       failureCount += batch.length;
+      const postmarkError = err as { code?: unknown; statusCode?: unknown };
+      for (const email of batch) {
+        track("hn.digest.send_failed", {
+          email: email.to,
+          postmark_error_code:
+            typeof postmarkError.code === "number" ? postmarkError.code : undefined,
+          postmark_message: toErrorMessage(err),
+          http_status:
+            typeof postmarkError.statusCode === "number" ? postmarkError.statusCode : undefined,
+        });
+      }
     }
   }
 

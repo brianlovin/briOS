@@ -17,6 +17,17 @@ export function toDigestPost(post: Pick<HackerNewsPost, keyof DigestPost>): Dige
   };
 }
 
+/** Outcome of one digest cron run, from subscriber and delivery counts. */
+export function digestRunStatus(
+  total: number,
+  sent: number,
+  failed: number,
+): "success" | "partial" | "failed" {
+  if (failed === 0) return "success";
+  if (sent === 0 && total > 0) return "failed";
+  return "partial";
+}
+
 export function toDigestPosts(posts: Pick<HackerNewsPost, keyof DigestPost>[]): DigestPost[] {
   return posts.map(toDigestPost);
 }

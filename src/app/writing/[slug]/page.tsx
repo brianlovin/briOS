@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { cacheLife, cacheTag } from "next/cache";
 import { notFound, redirect } from "next/navigation";
 
+import { TrackContentView } from "@/components/analytics/TrackContentView";
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { LikeButton } from "@/components/likes/LikeButton";
 import { renderBlocks } from "@/components/renderBlocks";
@@ -178,6 +179,7 @@ function WritingPostView({
           <div className="notion-blocks flex min-w-0 flex-col gap-4 text-lg">
             {renderBlocks(blocks)}
           </div>
+          <TrackContentView contentType="writing" contentId={canonicalSlug} trackReadComplete />
         </div>
 
         <FancySeparator />

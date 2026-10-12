@@ -1,5 +1,7 @@
 import { Redis } from "@upstash/redis";
 
+import { logger } from "@/lib/logger";
+
 import { type LikeData, MAX_LIKES_PER_USER } from "./likes-constants";
 
 export type { LikeData };
@@ -59,7 +61,7 @@ export async function getLikeCount(pageId: string): Promise<number> {
     const count = await client.get<number>(`${TOTAL_PREFIX}${pageId}`);
     return count ?? 0;
   } catch (error) {
-    console.error("[Likes] Error getting like count:", error);
+    logger.error("[Likes] Error getting like count", error);
     return 0;
   }
 }
@@ -75,7 +77,7 @@ export async function getUserLikeCount(userId: string, pageId: string): Promise<
     const count = await client.get<number>(`${USER_LIKES_PREFIX}${userId}:${pageId}`);
     return count ?? 0;
   } catch (error) {
-    console.error("[Likes] Error getting user like count:", error);
+    logger.error("[Likes] Error getting user like count", error);
     return 0;
   }
 }
@@ -102,7 +104,7 @@ export async function addLike(userId: string, pageId: string): Promise<number> {
     // First result is the new total count
     return (results[0] as number) ?? 0;
   } catch (error) {
-    console.error("[Likes] Error adding like:", error);
+    logger.error("[Likes] Error adding like", error);
     return 0;
   }
 }
@@ -141,7 +143,7 @@ export async function removeLike(
 
     return { count: newCount, userLikes: newUserLikes };
   } catch (error) {
-    console.error("[Likes] Error removing like:", error);
+    logger.error("[Likes] Error removing like", error);
     return { count: 0, userLikes: 0 };
   }
 }
@@ -165,7 +167,7 @@ export async function checkRateLimit(ip: string): Promise<boolean> {
 
     return count > RATE_LIMIT_MAX;
   } catch (error) {
-    console.error("[Likes] Error checking rate limit:", error);
+    logger.error("[Likes] Error checking rate limit", error);
     return false; // Allow on error
   }
 }
@@ -203,7 +205,7 @@ export async function getAllLikeCounts(): Promise<Map<string, number>> {
 
     return counts;
   } catch (error) {
-    console.error("[Likes] Error getting all like counts:", error);
+    logger.error("[Likes] Error getting all like counts", error);
     return counts;
   }
 }
@@ -235,7 +237,7 @@ export async function getBatchLikeCounts(pageIds: string[]): Promise<Map<string,
 
     return counts;
   } catch (error) {
-    console.error("[Likes] Error getting batch like counts:", error);
+    logger.error("[Likes] Error getting batch like counts", error);
     return counts;
   }
 }
@@ -268,7 +270,7 @@ export async function getBatchViewerLikeData(
 
     return result;
   } catch (error) {
-    console.error("[Likes] Error getting batch viewer like data:", error);
+    logger.error("[Likes] Error getting batch viewer like data", error);
     pageIds.forEach((id) => {
       result.set(id, 0);
     });
@@ -309,7 +311,7 @@ export async function getBatchUserLikeData(
 
     return result;
   } catch (error) {
-    console.error("[Likes] Error getting batch user like data:", error);
+    logger.error("[Likes] Error getting batch user like data", error);
     pageIds.forEach((id) => {
       result.set(id, { count: 0, userLikes: 0 });
     });

@@ -1,3 +1,5 @@
+import { logger } from "@/lib/logger";
+
 import { notion } from "./client";
 import { writeMultiSelect, writeRichText, writeSelect, writeTitle, writeUrl } from "./properties";
 
@@ -62,7 +64,7 @@ export async function createStackItem(data: {
 
     return response;
   } catch (error) {
-    console.error("Error creating stack item:", error);
+    logger.error("Error creating stack item", error);
     throw error;
   }
 }
@@ -130,7 +132,7 @@ export async function updateStackItem(
 
     return response;
   } catch (error) {
-    console.error("Error updating stack item:", error);
+    logger.error("Error updating stack item", error);
     throw error;
   }
 }
@@ -167,7 +169,7 @@ export async function updateWritingShortId(pageId: string, shortId: string) {
 
     return response;
   } catch (error) {
-    console.error(`Error updating short ID for page ${pageId}:`, error);
+    logger.error(`Error updating short ID for page ${pageId}`, error);
     throw error;
   }
 }

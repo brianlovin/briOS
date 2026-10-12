@@ -1,5 +1,7 @@
 import { after } from "next/server";
 
+import { logger } from "@/lib/logger";
+
 import { type ActivityStore } from "./activity";
 import { getActivityStore } from "./activity-redis";
 
@@ -7,9 +9,11 @@ export function afterActivity(record: (store: ActivityStore) => Promise<unknown>
   const store = getActivityStore();
   if (!store) return;
 
-  after(() => {
-    void record(store).catch((error) => {
-      console.error("[activity] ingest failed", error);
-    });
+  after(async () => {
+    try {
+      await record(store);
+    } catch (error) {
+      logger.error("[activity] ingest failed", error);
+    }
   });
 }

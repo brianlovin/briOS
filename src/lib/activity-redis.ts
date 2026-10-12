@@ -1,5 +1,7 @@
 import { Redis } from "@upstash/redis";
 
+import { logger } from "@/lib/logger";
+
 import {
   type ActivityEvent,
   type ActivityFeedPayload,
@@ -273,7 +275,7 @@ export async function getActivityPageData(): Promise<ActivityFeedPayload> {
   try {
     return await buildActivityFeed(getActivityStore());
   } catch (error) {
-    console.error("[activity] failed to read feed", error);
+    logger.error("[activity] failed to read feed", error);
     return { events: [], count: 0 };
   }
 }

@@ -2,8 +2,10 @@ import { NextResponse } from "next/server";
 
 import { errorResponse, safeCompare } from "@/lib/api-utils";
 import { optimizeWritingImage } from "@/lib/image-processing/optimize";
+import { logger } from "@/lib/logger";
 import { notion } from "@/lib/notion";
 import { purgeContentType } from "@/lib/notion/purge";
+import { annotate, withAxiom } from "@/lib/observability/axiom-route";
 import { uploadBufferToR2 } from "@/lib/r2/storage";
 
 import {
@@ -65,7 +67,7 @@ async function getAllBlocks(blockId: string): Promise<BlockWithChildren[]> {
       cursor = response.next_cursor || undefined;
     } while (cursor);
   } catch (error) {
-    console.error(`Error fetching blocks for ${blockId}:`, error);
+    logger.error("Error fetching blocks", error, { block_id: blockId });
   }
 
   return blocks;
@@ -128,12 +130,12 @@ async function optimizeMediaBlock(media: MediaView): Promise<MediaResult> {
 
     return result;
   } catch (error) {
-    console.error(`  ❌ Error optimizing ${media.kind} block:`, error);
+    logger.error(`Error optimizing ${media.kind} block`, error, { block_id: media.id });
     return failedMediaResult(media.kind, error instanceof Error ? error.message : "Unknown error");
   }
 }
 
-export async function POST(request: Request) {
+async function postHandler(request: Request) {
   try {
     // Verify webhook secret
     const webhookSecret = process.env.NOTION_WEBHOOK_VERIFICATION_SECRET;
@@ -149,10 +151,12 @@ export async function POST(request: Request) {
 
     // Validate required fields
     if (!pageId) {
-      console.error("Missing required field: data.id (pageId)", body);
+      logger.warn("Missing required field: data.id (pageId)");
+      annotate({ outcome: "invalid_payload" });
       return errorResponse("Missing required field: data.id (pageId)", 400);
     }
 
+    annotate({ page_id: pageId });
     console.log(`\n🚀 Starting media optimization for page ${pageId}\n`);
 
     // Step 1: Fetch all blocks from the page
@@ -167,6 +171,7 @@ export async function POST(request: Request) {
     console.log(`Found ${imageCount} image blocks, ${videoCount} video blocks\n`);
 
     if (media.length === 0) {
+      annotate({ outcome: "no_media" });
       return NextResponse.json(
         {
           success: true,
@@ -196,6 +201,13 @@ export async function POST(request: Request) {
     }
 
     const stats = summarizeMediaResults(results);
+    annotate({
+      outcome: stats.failed > 0 ? "partial" : "optimized",
+      images_optimized: stats.images.successful,
+      images_failed: stats.images.failed,
+      videos_uploaded: stats.videos.successful,
+      videos_failed: stats.videos.failed,
+    });
 
     // Same writing purge as /api/purge-cache (widens Redis from content:* to writing:*)
     await purgeContentType("writing");
@@ -228,8 +240,13 @@ export async function POST(request: Request) {
       { status: 200 },
     );
   } catch (error) {
-    console.error("Error optimizing writing images", error);
+    logger.error("Error optimizing writing images", error);
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return errorResponse(`Failed to optimize writing images: ${errorMessage}`, 500, error);
   }
 }
+
+export const POST = withAxiom(postHandler, {
+  name: "notion.optimize-writing-images",
+  kind: "webhook",
+});

@@ -1,7 +1,10 @@
 import { after, NextResponse } from "next/server";
 
 import { errorResponse, safeCompare } from "@/lib/api-utils";
+import { flushEvents, toErrorMessage, track } from "@/lib/axiom";
+import { logger } from "@/lib/logger";
 import { isFullPage, notion } from "@/lib/notion";
+import { annotate, withAxiom } from "@/lib/observability/axiom-route";
 import { uploadBufferToR2 } from "@/lib/r2/storage";
 
 import { getMediaUrl } from "../optimize-writing-images/media";
@@ -51,7 +54,7 @@ async function getAllBlocks(blockId: string): Promise<BlockWithChildren[]> {
       cursor = response.next_cursor || undefined;
     } while (cursor);
   } catch (error) {
-    console.error(`Error fetching blocks for ${blockId}:`, error);
+    logger.error("Error fetching blocks", error, { block_id: blockId });
   }
 
   return blocks;
@@ -102,6 +105,8 @@ async function illustrateImageBlock(
 }
 
 async function illustrateJournalPage(pageId: string): Promise<void> {
+  const start = performance.now();
+  const counts = { processed: 0, skipped: 0, failed: 0, remaining: 0 };
   try {
     console.log(`\n🖼  Illustrating journal photos for page ${pageId}\n`);
 
@@ -140,7 +145,7 @@ async function illustrateJournalPage(pageId: string): Promise<void> {
         failed += 1;
         const message = error instanceof Error ? error.message : "Unknown error";
         results.push({ blockId: media.id, status: "failed", error: message });
-        console.error(`  ❌ ${message}\n`);
+        logger.error("Journal photo illustration failed", error, { block_id: media.id });
       }
     }
 
@@ -148,12 +153,26 @@ async function illustrateJournalPage(pageId: string): Promise<void> {
       `✅ Journal illustrate complete: processed=${processed} skipped=${skipped.length} failed=${failed} remaining=${remaining}`,
       results,
     );
+    Object.assign(counts, { processed, skipped: skipped.length, failed, remaining });
+    track("journal.illustrated", {
+      ...counts,
+      page_id: pageId,
+      status: "success",
+      duration_ms: Math.round(performance.now() - start),
+    });
   } catch (error) {
-    console.error("Error illustrating journal images", error);
+    logger.error("Error illustrating journal images", error, { page_id: pageId });
+    track("journal.illustrated", {
+      ...counts,
+      page_id: pageId,
+      status: "error",
+      duration_ms: Math.round(performance.now() - start),
+      error: toErrorMessage(error),
+    });
   }
 }
 
-export async function POST(request: Request) {
+async function postHandler(request: Request) {
   const webhookSecret = process.env.NOTION_WEBHOOK_VERIFICATION_SECRET;
   const providedSecret = request.headers.get("x-webhook-secret");
   if (!safeCompare(providedSecret, webhookSecret)) {
@@ -164,13 +183,18 @@ export async function POST(request: Request) {
   const pageId = body.data?.id;
 
   if (!pageId) {
-    console.error("Missing required field: data.id (pageId)", body);
+    logger.warn("Missing required field: data.id (pageId)");
+    annotate({ outcome: "invalid_payload" });
     return errorResponse("Missing required field: data.id (pageId)", 400);
   }
 
-  after(() => {
-    void illustrateJournalPage(pageId);
+  annotate({ page_id: pageId, outcome: "accepted" });
+  after(async () => {
+    await illustrateJournalPage(pageId);
+    await flushEvents();
   });
 
   return NextResponse.json({ accepted: true, pageId });
 }
+
+export const POST = withAxiom(postHandler, { name: "notion.illustrate-journal", kind: "webhook" });

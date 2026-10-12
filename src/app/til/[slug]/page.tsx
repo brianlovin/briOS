@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { cacheLife, cacheTag } from "next/cache";
 import { notFound } from "next/navigation";
 
+import { TrackContentView } from "@/components/analytics/TrackContentView";
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { LikeButton } from "@/components/likes/LikeButton";
 import { renderBlocks } from "@/components/renderBlocks";
@@ -122,6 +123,7 @@ function TilEntryView({
           <div className="notion-blocks flex min-w-0 flex-col gap-4 text-lg">
             {renderBlocks(content.blocks)}
           </div>
+          <TrackContentView contentType="til" contentId={canonicalSlug} trackReadComplete />
           <BatchLikesProvider pageIds={[content.id]} initialData={initialLikes}>
             <div className="w-fit">
               <LikeButton

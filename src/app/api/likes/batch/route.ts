@@ -4,6 +4,8 @@ import { z } from "zod";
 import { errorResponse } from "@/lib/api-utils";
 import { LIKES_BATCH_MAX_IDS } from "@/lib/likes-constants";
 import { checkRateLimit, getBatchUserLikeData, getBatchViewerLikeData } from "@/lib/likes-redis";
+import { logger } from "@/lib/logger";
+import { withAxiom } from "@/lib/observability/axiom-route";
 import { getClientIp, hashUserIp } from "@/lib/user-hash";
 
 const querySchema = z.object({
@@ -11,7 +13,7 @@ const querySchema = z.object({
   fields: z.enum(["viewer"]).optional(),
 });
 
-export async function GET(request: Request) {
+async function getHandler(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const { ids, fields } = querySchema.parse({
@@ -55,7 +57,9 @@ export async function GET(request: Request) {
     if (error instanceof z.ZodError) {
       return errorResponse("Invalid request parameters", 400);
     }
-    console.error("Error fetching batch likes:", error);
+    logger.error("Error fetching batch likes", error);
     return errorResponse("Failed to fetch likes");
   }
 }
+
+export const GET = withAxiom(getHandler, { name: "/api/likes/batch" });

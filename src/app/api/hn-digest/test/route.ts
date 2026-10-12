@@ -4,13 +4,15 @@ import { errorResponse } from "@/lib/api-utils";
 import { toDigestPosts } from "@/lib/digest";
 import { BASE_EMAIL, generateUnsubscribeUrl, sendHNDigestEmail } from "@/lib/email";
 import { getHNPostsForDigest } from "@/lib/hn";
+import { logger } from "@/lib/logger";
+import { withAxiom } from "@/lib/observability/axiom-route";
 import { formatDigestDate } from "@/lib/urls";
 
 /**
  * Test endpoint for sending a sample HN digest email
  * Usage: http://localhost:3000/api/hn-digest/test?email=your@email.com
  */
-export async function GET(request: Request) {
+async function getHandler(request: Request) {
   try {
     // Only allow in development
     if (process.env.NODE_ENV === "production") {
@@ -49,7 +51,9 @@ export async function GET(request: Request) {
       },
     });
   } catch (error) {
-    console.error("Error sending test digest:", error);
+    logger.error("Error sending test digest", error);
     return errorResponse("Failed to send test digest");
   }
 }
+
+export const GET = withAxiom(getHandler, { name: "/api/hn-digest/test" });

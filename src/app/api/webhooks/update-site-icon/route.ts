@@ -5,8 +5,10 @@ import { titleFromNotionPage } from "@/lib/activity-from-notion";
 import { afterActivity } from "@/lib/activity-schedule";
 import { errorResponse, safeCompare } from "@/lib/api-utils";
 import { optimizeSiteIcon } from "@/lib/image-processing/optimize";
+import { logger } from "@/lib/logger";
 import { notion } from "@/lib/notion";
 import { purgeContentType } from "@/lib/notion/purge";
+import { annotate, withAxiom } from "@/lib/observability/axiom-route";
 import { uploadBufferToR2 } from "@/lib/r2/storage";
 import { getBestFaviconUrl, isDataUrl, parseDataUrl } from "@/lib/utils/favicon";
 
@@ -24,7 +26,7 @@ import { getBestFaviconUrl, isDataUrl, parseDataUrl } from "@/lib/utils/favicon"
  * 5. Upload to R2 storage
  * 6. Update Notion page icon with R2 URL
  */
-export async function POST(request: Request) {
+async function postHandler(request: Request) {
   try {
     // Verify webhook secret
     const webhookSecret = process.env.NOTION_WEBHOOK_VERIFICATION_SECRET;
@@ -41,12 +43,15 @@ export async function POST(request: Request) {
 
     // Validate required fields
     if (!pageId) {
-      console.error("Missing required field: data.id (pageId)", body);
+      logger.warn("Missing required field: data.id (pageId)");
+      annotate({ outcome: "invalid_payload" });
       return errorResponse("Missing required field: data.id (pageId)", 400);
     }
 
+    annotate({ page_id: pageId });
     if (!urlProperty) {
-      console.error("Missing required field: data.properties.URL", body);
+      logger.warn("Missing required field: data.properties.URL", { page_id: pageId });
+      annotate({ outcome: "invalid_payload" });
       return errorResponse("Missing required field: data.properties.URL", 400);
     }
 
@@ -54,7 +59,8 @@ export async function POST(request: Request) {
     const url = typeof urlProperty === "string" ? urlProperty : urlProperty.url;
 
     if (!url) {
-      console.error("URL property is empty or invalid", body);
+      logger.warn("URL property is empty or invalid", { page_id: pageId });
+      annotate({ outcome: "invalid_payload" });
       return errorResponse("URL property is empty or invalid", 400);
     }
 
@@ -62,14 +68,17 @@ export async function POST(request: Request) {
     try {
       new URL(url);
     } catch {
-      console.error("Invalid URL format", url, body);
+      logger.warn("Invalid URL format", { page_id: pageId, url });
+      annotate({ outcome: "invalid_payload", url });
       return errorResponse("Invalid URL format", 400);
     }
 
     // Step 1: Get best favicon URL (may be HTTP URL or data URL)
+    annotate({ url });
     const iconUrl = await getBestFaviconUrl(url);
     if (!iconUrl) {
-      console.error("Failed to fetch favicon", url, body);
+      logger.error("Failed to fetch favicon", undefined, { page_id: pageId, url });
+      annotate({ outcome: "failed", failed_step: "find_favicon" });
       return errorResponse("Failed to fetch favicon", 500);
     }
 
@@ -80,7 +89,8 @@ export async function POST(request: Request) {
       // Parse base64 data URL directly
       const parsed = parseDataUrl(iconUrl);
       if (!parsed) {
-        console.error("Failed to parse data URL favicon", url, body);
+        logger.error("Failed to parse data URL favicon", undefined, { page_id: pageId, url });
+        annotate({ outcome: "failed", failed_step: "parse_data_url" });
         return errorResponse("Failed to parse data URL favicon", 500);
       }
       faviconBuffer = parsed.buffer;
@@ -88,7 +98,12 @@ export async function POST(request: Request) {
       // Download favicon from HTTP URL
       const faviconResponse = await fetch(iconUrl);
       if (!faviconResponse.ok) {
-        console.error("Failed to download favicon", url, body);
+        logger.error("Failed to download favicon", undefined, {
+          page_id: pageId,
+          url,
+          http_status: faviconResponse.status,
+        });
+        annotate({ outcome: "failed", failed_step: "download_favicon" });
         return errorResponse("Failed to download favicon", 500);
       }
 
@@ -116,6 +131,7 @@ export async function POST(request: Request) {
     });
 
     await purgeContentType("sites");
+    annotate({ outcome: "updated" });
 
     const page = await notion.pages.retrieve({ page_id: pageId });
     afterActivity((store) =>
@@ -131,8 +147,10 @@ export async function POST(request: Request) {
       { status: 200 },
     );
   } catch (error) {
-    console.error("Error updating good website icon", error);
+    logger.error("Error updating good website icon", error);
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return errorResponse(`Failed to update good website icon: ${errorMessage}`, 500, error);
   }
 }
+
+export const POST = withAxiom(postHandler, { name: "notion.update-site-icon", kind: "webhook" });

@@ -8,6 +8,8 @@
 import { Client } from "@upstash/qstash";
 import { NextRequest, NextResponse } from "next/server";
 
+import { logger } from "@/lib/logger";
+import { annotate, withAxiom } from "@/lib/observability/axiom-route";
 import { captureError, withErrorCapture } from "@/lib/observability/sentry";
 import { fetchRecentSpotifyItems, recentUniqueItems } from "@/lib/spotify/sync";
 
@@ -32,6 +34,7 @@ async function syncTracks() {
   });
 
   await Promise.all(promises);
+  annotate({ tracks_fetched: items.length, tracks_queued: uniqueItems.length });
 
   return NextResponse.json({
     success: true,
@@ -44,7 +47,7 @@ async function postHandler() {
   try {
     return await syncTracks();
   } catch (error: unknown) {
-    console.error("Error triggering sync:", error);
+    logger.error("Error triggering Spotify sync", error, { trigger: "manual" });
     captureError(error, { feature: "spotify-sync", trigger: "manual" });
     return NextResponse.json(
       {
@@ -59,7 +62,7 @@ async function postHandler() {
   }
 }
 
-export const POST = withErrorCapture(postHandler);
+export const POST = withAxiom(withErrorCapture(postHandler), { name: "/api/spotify/sync" });
 
 // Handle GET requests (cron job)
 async function getHandler(req: NextRequest) {
@@ -79,7 +82,7 @@ async function getHandler(req: NextRequest) {
 
     return await syncTracks();
   } catch (error: unknown) {
-    console.error("Error in cron sync:", error);
+    logger.error("Error in Spotify cron sync", error, { trigger: "cron" });
     captureError(error, { feature: "spotify-sync", trigger: "cron" });
     return NextResponse.json(
       {
@@ -94,4 +97,4 @@ async function getHandler(req: NextRequest) {
   }
 }
 
-export const GET = withErrorCapture(getHandler);
+export const GET = withAxiom(withErrorCapture(getHandler), { name: "spotify-sync", kind: "cron" });

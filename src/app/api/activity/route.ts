@@ -5,13 +5,15 @@ import { type ActivityIngestInput, ingestActivityEvent } from "@/lib/activity";
 import { getActivityStore } from "@/lib/activity-redis";
 import { ACTIVITY_BODY_MAX_BYTES } from "@/lib/activity-shared";
 import { errorResponse, safeCompare } from "@/lib/api-utils";
+import { track } from "@/lib/axiom";
+import { withAxiom } from "@/lib/observability/axiom-route";
 
 /**
  * HMAC ingest for external producers.
  * (source, type) must be in the activity registry. In-repo producers
  * (likes, first-party visits) call ingestActivityEvent directly.
  */
-export async function POST(request: Request) {
+async function postHandler(request: Request) {
   const secret = process.env.ACTIVITY_INGEST_HMAC_SECRET;
   if (!secret) {
     return errorResponse("Activity ingest is not configured", 503);
@@ -45,5 +47,13 @@ export async function POST(request: Request) {
     return errorResponse(result.error, result.status);
   }
 
+  track("activity.ingested", {
+    producer: "hmac",
+    source: body.source,
+    type: body.type,
+    duplicate: result.duplicate,
+  });
   return NextResponse.json({ id: result.id, duplicate: result.duplicate });
 }
+
+export const POST = withAxiom(postHandler, { name: "/api/activity", kind: "webhook" });

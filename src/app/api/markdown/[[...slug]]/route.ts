@@ -1,5 +1,6 @@
 import { cacheLife, cacheTag } from "next/cache";
 
+import { withAxiom } from "@/lib/observability/axiom-route";
 import { markdownCacheTagsForPath, renderPageMarkdown } from "@/lib/page-markdown";
 import { markdownResponse } from "@/lib/page-markdown-response";
 
@@ -17,9 +18,11 @@ function pathnameFromSlug(slug?: string[]): string {
   return `/${slug.join("/")}`;
 }
 
-export async function GET(_request: Request, context: { params: Promise<{ slug?: string[] }> }) {
+async function getHandler(_request: Request, context: { params: Promise<{ slug?: string[] }> }) {
   const { slug } = await context.params;
   const pathname = pathnameFromSlug(slug);
   const result = await getCachedMarkdown(pathname);
   return markdownResponse(result);
 }
+
+export const GET = withAxiom(getHandler, { name: "/api/markdown/[[...slug]]" });

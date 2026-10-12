@@ -1,5 +1,9 @@
 import { afterEach, describe, expect, mock, test } from "bun:test";
 
+import { installAxiomMock } from "@/lib/axiom-test-utils";
+
+const axiomMock = installAxiomMock();
+
 const revalidateTag = mock(() => {});
 
 mock.module("next/cache", () => ({
@@ -97,5 +101,59 @@ describe("POST/DELETE /api/likes/[id]", () => {
     const res = await GET(likesRequest("GET"), params);
     expect(res.status).toBe(200);
     expect(revalidateTag).not.toHaveBeenCalled();
+  });
+});
+
+describe("like events", () => {
+  afterEach(() => axiomMock.disable());
+
+  test("liking an item emits like.added with the item and new counts", async () => {
+    axiomMock.enable();
+    getUserLikeCount.mockResolvedValueOnce(0);
+
+    await POST(
+      likesRequest("POST", "page-1", { title: "Cursor", href: "/stack", content_type: "stack" }),
+      params,
+    );
+
+    const [added] = axiomMock.events("like.added");
+    expect(added).toMatchObject({
+      item_id: "page-1",
+      item_type: "stack",
+      item_title: "Cursor",
+      item_href: "/stack",
+      count: 507,
+      user_likes: 1,
+    });
+    expect(JSON.stringify(added)).not.toContain("1.2.3.4");
+  });
+
+  test("unliking with an item body emits like.removed with the item type", async () => {
+    axiomMock.enable();
+    getUserLikeCount.mockResolvedValueOnce(1);
+
+    await DELETE(likesRequest("DELETE", "page-1", { content_type: "writing" }), params);
+
+    expect(axiomMock.events("like.removed")[0]).toMatchObject({
+      item_id: "page-1",
+      item_type: "writing",
+      count: 506,
+      user_likes: 0,
+    });
+  });
+
+  test("rejected likes emit like.rejected with the reason", async () => {
+    axiomMock.enable();
+    checkRateLimit.mockResolvedValueOnce(true);
+    await POST(likesRequest("POST", "page-1", {}), params);
+
+    getUserLikeCount.mockResolvedValueOnce(16);
+    await POST(likesRequest("POST", "page-1", {}), params);
+
+    expect(axiomMock.events("like.rejected").map((event) => event.reason)).toEqual([
+      "rate_limited",
+      "max_likes",
+    ]);
+    expect(axiomMock.events("like.added")).toHaveLength(0);
   });
 });

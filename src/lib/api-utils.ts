@@ -1,6 +1,8 @@
 import { createHash, timingSafeEqual } from "crypto";
 import { NextResponse } from "next/server";
 
+import { logger } from "@/lib/logger";
+
 /**
  * Parse `cursor` and `limit` pagination query params from a request URL.
  */
@@ -69,7 +71,7 @@ export async function withErrorHandling<T>(
     const result = await handler();
     return NextResponse.json(result);
   } catch (error) {
-    console.error(errorMessage, error);
+    logger.error(errorMessage, error);
     return errorResponse(errorMessage, 500);
   }
 }

@@ -1,8 +1,9 @@
 import { getGoodWebsitesForRss } from "@/lib/goodWebsites";
 import { SITE_CONFIG } from "@/lib/metadata";
+import { withAxiom } from "@/lib/observability/axiom-route";
 import { addRssItem, createRssFeed, rssErrorResponse, rssResponse } from "@/lib/rss";
 
-export async function GET() {
+async function getHandler() {
   try {
     const feed = createRssFeed({
       title: "Good Websites",
@@ -40,3 +41,5 @@ export async function GET() {
     return rssErrorResponse("Good Websites", error);
   }
 }
+
+export const GET = withAxiom(getHandler, { name: "/sites/rss.xml" });
