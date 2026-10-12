@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 
 import { type ContentType, trackClientEvent } from "@/lib/client-events";
@@ -21,18 +22,32 @@ export function TrackContentView({
   trackReadComplete = false,
 }: TrackContentViewProps) {
   const markerRef = useRef<HTMLDivElement>(null);
+  // On client navigation this effect can run before the router updates window.location.
+  const pathname = usePathname();
 
   useEffect(() => {
-    trackClientEvent("content.viewed", { content_type: contentType, content_id: contentId });
-  }, [contentType, contentId]);
+    trackClientEvent(
+      "content.viewed",
+      { content_type: contentType, content_id: contentId },
+      pathname,
+    );
+  }, [contentType, contentId, pathname]);
 
   useEffect(() => {
     const marker = markerRef.current;
     if (!trackReadComplete || !marker || typeof IntersectionObserver === "undefined") return;
 
     const start = performance.now();
+    let firstCallback = true;
     const observer = new IntersectionObserver((entries) => {
-      if (!entries.some((entry) => entry.isIntersecting)) return;
+      const visible = entries.some((entry) => entry.isIntersecting);
+      // Content that fits on screen without scrolling is a view, not a read.
+      if (firstCallback && visible) {
+        observer.disconnect();
+        return;
+      }
+      firstCallback = false;
+      if (!visible) return;
       observer.disconnect();
       trackClientEvent("content.read_complete", {
         content_type: contentType,

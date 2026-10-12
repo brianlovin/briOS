@@ -71,11 +71,12 @@ function externalReferrer(): string | undefined {
 export function trackClientEvent<E extends ClientEventName>(
   event: E,
   data: ClientEventFieldMap[E],
+  path?: string,
 ): void {
   if (typeof window === "undefined") return;
 
   const envelope: ClientEventEnvelope = {
-    path: window.location.pathname,
+    path: path ?? window.location.pathname,
     referrer: externalReferrer(),
   };
   const body = JSON.stringify({ event, data, ...envelope });
