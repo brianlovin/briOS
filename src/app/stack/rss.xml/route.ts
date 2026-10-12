@@ -1,8 +1,9 @@
 import { SITE_CONFIG } from "@/lib/metadata";
+import { withAxiom } from "@/lib/observability/axiom-route";
 import { addRssItem, createRssFeed, rssErrorResponse, rssResponse } from "@/lib/rss";
 import { getStacks } from "@/lib/stack";
 
-export async function GET() {
+async function getHandler() {
   try {
     const feed = createRssFeed({
       title: "Stack",
@@ -33,3 +34,5 @@ export async function GET() {
     return rssErrorResponse("Stack", error);
   }
 }
+
+export const GET = withAxiom(getHandler, { name: "/stack/rss.xml" });

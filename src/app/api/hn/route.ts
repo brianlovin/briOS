@@ -4,8 +4,10 @@ import { NextResponse } from "next/server";
 import { cachedResponse, errorResponse } from "@/lib/api-utils";
 import { HN_BOTID_ADVANCED_OPTIONS } from "@/lib/botid";
 import { getRankedHNPosts } from "@/lib/hn";
+import { logger } from "@/lib/logger";
+import { withAxiom } from "@/lib/observability/axiom-route";
 
-export async function GET(): Promise<NextResponse> {
+async function getHandler(): Promise<NextResponse> {
   try {
     const verification = await checkBotId({
       advancedOptions: HN_BOTID_ADVANCED_OPTIONS,
@@ -19,7 +21,9 @@ export async function GET(): Promise<NextResponse> {
     // Cache for 1 hour - filtered high-signal posts from last 24 hours
     return cachedResponse(posts, 3600);
   } catch (error) {
-    console.error("Error fetching HN posts:", error);
+    logger.error("Error fetching HN posts", error);
     return errorResponse("Failed to fetch Hacker News posts");
   }
 }
+
+export const GET = withAxiom(getHandler, { name: "/api/hn" });

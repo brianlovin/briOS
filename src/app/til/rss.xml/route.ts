@@ -1,11 +1,12 @@
 import { SITE_CONFIG } from "@/lib/metadata";
 import { getTilItemContent } from "@/lib/notion/queries";
 import { extractPreviewText } from "@/lib/notion/types";
+import { withAxiom } from "@/lib/observability/axiom-route";
 import { addRssItem, createRssFeed, rssErrorResponse, rssResponse } from "@/lib/rss";
 import { buildSlug } from "@/lib/short-id";
 import { getAllTilEntries } from "@/lib/til";
 
-export async function GET() {
+async function getHandler() {
   try {
     const feed = createRssFeed({
       title: "TIL",
@@ -58,3 +59,5 @@ export async function GET() {
     return rssErrorResponse("TIL", error);
   }
 }
+
+export const GET = withAxiom(getHandler, { name: "/til/rss.xml" });

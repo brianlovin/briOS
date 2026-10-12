@@ -2,9 +2,10 @@ import { getAmaQuestions } from "@/lib/ama";
 import { SITE_CONFIG } from "@/lib/metadata";
 import { getAmaItemContent } from "@/lib/notion/queries";
 import { extractPreviewText } from "@/lib/notion/types";
+import { withAxiom } from "@/lib/observability/axiom-route";
 import { addRssItem, createRssFeed, rssErrorResponse, rssResponse } from "@/lib/rss";
 
-export async function GET() {
+async function getHandler() {
   try {
     const feed = createRssFeed({
       title: "AMA",
@@ -59,3 +60,5 @@ export async function GET() {
     return rssErrorResponse("AMA", error);
   }
 }
+
+export const GET = withAxiom(getHandler, { name: "/ama/rss.xml" });

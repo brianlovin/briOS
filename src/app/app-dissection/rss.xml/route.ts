@@ -1,9 +1,10 @@
 import { SITE_CONFIG } from "@/lib/metadata";
 import { getAppDissectionDatabaseItems, getAppDissectionItemBySlug } from "@/lib/notion/queries";
 import { extractPreviewText } from "@/lib/notion/types";
+import { withAxiom } from "@/lib/observability/axiom-route";
 import { addRssItem, createRssFeed, rssErrorResponse, rssResponse } from "@/lib/rss";
 
-export async function GET() {
+async function getHandler() {
   try {
     const items = await getAppDissectionDatabaseItems();
 
@@ -55,3 +56,5 @@ export async function GET() {
     return rssErrorResponse("App Dissection", error);
   }
 }
+
+export const GET = withAxiom(getHandler, { name: "/app-dissection/rss.xml" });

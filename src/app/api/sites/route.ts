@@ -1,8 +1,10 @@
 import { cachedResponse, errorResponse } from "@/lib/api-utils";
 import { filterGoodWebsites, GOOD_WEBSITES_SHUFFLE_INTERVAL_SECONDS } from "@/lib/goodWebsites";
 import { getCachedShuffledGoodWebsites } from "@/lib/goodWebsites-cached";
+import { logger } from "@/lib/logger";
+import { withAxiom } from "@/lib/observability/axiom-route";
 
-export async function GET(request: Request) {
+async function getHandler(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const tag = searchParams.get("tag") || "";
@@ -14,7 +16,9 @@ export async function GET(request: Request) {
 
     return cachedResponse(filteredItems, GOOD_WEBSITES_SHUFFLE_INTERVAL_SECONDS);
   } catch (error) {
-    console.error("Error fetching good website items:", error);
+    logger.error("Error fetching good website items", error);
     return errorResponse("Failed to fetch good website items");
   }
 }
+
+export const GET = withAxiom(getHandler, { name: "/api/sites" });

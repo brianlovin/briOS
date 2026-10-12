@@ -3,6 +3,8 @@ import type {
   RichTextItemResponse,
 } from "@notionhq/client/build/src/api-endpoints";
 
+import { logger } from "@/lib/logger";
+
 import { notion } from "./client";
 import {
   isTableRowBlock,
@@ -165,7 +167,7 @@ export function processBlockFromResponse(block: BlockObjectResponse): ProcessedB
       }
     }
   } catch (error) {
-    console.error(`Error processing block ${block.id}:`, error);
+    logger.error(`Error processing block ${block.id}`, error);
     return null;
   }
 }
@@ -213,7 +215,7 @@ export async function getAllBlocks(pageId: string): Promise<ProcessedBlock[]> {
             .map((childBlock) => processBlockFromResponse(childBlock as BlockObjectResponse))
             .filter((row): row is TableRowBlock => row !== null && isTableRowBlock(row));
         } catch (error) {
-          console.error(`Error fetching table children for ${blockObj.id}:`, error);
+          logger.error(`Error fetching table children for ${blockObj.id}`, error);
         }
       }
 
@@ -230,7 +232,7 @@ export async function getAllBlocks(pageId: string): Promise<ProcessedBlock[]> {
             .map((childBlock) => processBlockFromResponse(childBlock as BlockObjectResponse))
             .filter((child): child is ProcessedBlock => child !== null);
         } catch (error) {
-          console.error(`Error fetching list children for ${blockObj.id}:`, error);
+          logger.error(`Error fetching list children for ${blockObj.id}`, error);
         }
       }
     }
@@ -239,7 +241,7 @@ export async function getAllBlocks(pageId: string): Promise<ProcessedBlock[]> {
       .map(({ processed: p }) => p)
       .filter((block): block is ProcessedBlock => block !== null);
   } catch (error) {
-    console.error(`Error fetching blocks for page ${pageId}:`, error);
+    logger.error(`Error fetching blocks for page ${pageId}`, error);
     return [];
   }
 }

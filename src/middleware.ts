@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextFetchEvent, NextRequest, NextResponse } from "next/server";
 
 import {
   appendVaryAccept,
@@ -8,6 +8,7 @@ import {
   notAcceptableBody,
   preferredType,
 } from "@/lib/accept-markdown";
+import { flushEvents, track } from "@/lib/axiom";
 import { checkHnRateLimit, shouldApplyHnRedisRateLimit } from "@/lib/hn-ratelimit";
 
 function getIP(request: NextRequest): string {
@@ -36,7 +37,10 @@ function notAcceptable(): Response {
   });
 }
 
-async function handleHnGuards(request: NextRequest): Promise<Response | null> {
+async function handleHnGuards(
+  request: NextRequest,
+  event: NextFetchEvent,
+): Promise<Response | null> {
   const { pathname } = request.nextUrl;
   if (!pathname.startsWith("/hn") && !pathname.startsWith("/api/hn")) {
     return null;
@@ -56,6 +60,12 @@ async function handleHnGuards(request: NextRequest): Promise<Response | null> {
 
   const decision = await checkHnRateLimit(ip);
   if (!decision.allowed) {
+    track("hn.rate_limited", {
+      path: pathname,
+      limit: decision.limit,
+      country: request.headers.get("x-vercel-ip-country") ?? undefined,
+    });
+    event.waitUntil(flushEvents());
     return NextResponse.json(
       { error: "Too many requests" },
       {
@@ -73,8 +83,8 @@ async function handleHnGuards(request: NextRequest): Promise<Response | null> {
   return null;
 }
 
-export async function middleware(request: NextRequest) {
-  const hnGuard = await handleHnGuards(request);
+export async function middleware(request: NextRequest, event: NextFetchEvent) {
+  const hnGuard = await handleHnGuards(request, event);
   if (hnGuard) return hnGuard;
 
   const { pathname } = request.nextUrl;

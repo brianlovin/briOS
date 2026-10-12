@@ -1,6 +1,8 @@
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import crypto from "crypto";
 
+import { logger } from "@/lib/logger";
+
 const s3Client = new S3Client({
   region: "auto",
   endpoint: process.env.R2_S3_API_URL,
@@ -66,10 +68,7 @@ export async function uploadBufferToR2(
 
     return r2Url;
   } catch (error) {
-    console.error("Error uploading buffer to R2:", error);
-    if (error instanceof Error) {
-      console.error("Error details:", error.message);
-    }
+    logger.error("Error uploading buffer to R2", error);
     throw error;
   }
 }
