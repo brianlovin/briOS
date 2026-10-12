@@ -1,6 +1,7 @@
 import { Axiom } from "@axiomhq/js";
 
 import type { ClientEventEnvelope, ClientEventFieldMap } from "@/lib/client-events";
+import type { HnBotBlockReason } from "@/lib/hn-bot-block";
 import type { RequestContextFields } from "@/lib/request-context";
 
 const DATASET = process.env.AXIOM_DATASET ?? "brios";
@@ -123,6 +124,12 @@ export interface EventFieldMap extends ClientEvents {
     limit: number;
     country?: string;
   };
+  /** BotID rejected a `/api/hn` read. Expected for scrapers; not an error. */
+  "hn.bot_blocked": {
+    path: string;
+    reason: HnBotBlockReason;
+    verified_bot_name?: string;
+  } & RequestContextFields;
   "hn_cli.telemetry_received": {
     event_count: number;
     event_names: string[];
@@ -136,7 +143,13 @@ export interface EventFieldMap extends ClientEvents {
     action: "add" | "remove";
     reason: "rate_limited" | "max_likes" | "no_likes";
   } & RequestContextFields;
-  "likes.synced": { synced: number; failed: number; total: number };
+  "likes.synced": {
+    synced: number;
+    unchanged: number;
+    skipped: number;
+    failed: number;
+    total: number;
+  };
 
   // --- AMA ---
   "ama.question_asked": {
