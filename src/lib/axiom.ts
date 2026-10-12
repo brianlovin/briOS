@@ -46,6 +46,7 @@ export function toErrorMessage(error: unknown): string {
 
 interface RouteOutcomeFields {
   route: string;
+  path: string;
   method: string;
   status: number;
   duration_ms: number;
