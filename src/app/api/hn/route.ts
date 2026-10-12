@@ -8,14 +8,14 @@ import { rejectHnBot } from "@/lib/hn-bot-block";
 import { logger } from "@/lib/logger";
 import { withAxiom } from "@/lib/observability/axiom-route";
 
-async function getHandler(request: Request): Promise<NextResponse> {
+async function getHandler(): Promise<NextResponse> {
   try {
     const verification = await checkBotId({
       advancedOptions: HN_BOTID_ADVANCED_OPTIONS,
     });
 
     if (verification.isBot) {
-      return rejectHnBot(request, verification);
+      return rejectHnBot();
     }
 
     const posts = await getRankedHNPosts();

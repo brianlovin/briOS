@@ -15,10 +15,10 @@ type PageProperties = Record<string, { type: string; number?: number | null }>;
 /**
  * Mirror one Redis like count onto its Notion page.
  *
- * Likes are keyed by page ID across every likeable content type, but only some
- * databases (Stack, Writing, AMA, Good Websites, TIL) have a numeric `Likes`
- * column. Tips (`/computer`) does not, so the page is read first and skipped
- * when the property is missing instead of throwing a validation error.
+ * Likes are keyed by page ID across every likeable content type, and a content
+ * database can be likeable before it has a numeric `Likes` column. The page is
+ * read first and skipped when the property is missing instead of throwing a
+ * validation error.
  */
 export async function syncPageLikes(pageId: string, count: number): Promise<LikesSyncOutcome> {
   let properties: PageProperties;

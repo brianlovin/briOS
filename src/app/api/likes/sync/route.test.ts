@@ -10,22 +10,19 @@ import { notion } from "@/lib/notion/client";
 
 const STACK_PAGE = "stack-page";
 const TIPS_PAGE = "tips-page";
+const NO_LIKES_PAGE = "no-likes-page";
+
+function page(id: string, properties: Record<string, unknown>) {
+  return { object: "page", id, in_trash: false, url: "", properties };
+}
 
 const pages: Record<string, unknown> = {
-  [STACK_PAGE]: {
-    object: "page",
-    id: STACK_PAGE,
-    in_trash: false,
-    url: "",
-    properties: { Likes: { type: "number", number: 1 } },
-  },
-  [TIPS_PAGE]: {
-    object: "page",
-    id: TIPS_PAGE,
-    in_trash: false,
-    url: "",
-    properties: { Name: { type: "title", title: [] } },
-  },
+  [STACK_PAGE]: page(STACK_PAGE, { Likes: { type: "number", number: 1 } }),
+  [TIPS_PAGE]: page(TIPS_PAGE, {
+    "Short ID": { type: "rich_text", rich_text: [] },
+    Likes: { type: "number", number: null },
+  }),
+  [NO_LIKES_PAGE]: page(NO_LIKES_PAGE, { Name: { type: "title", title: [] } }),
 };
 
 const previousToken = process.env.LIKES_SYNC_TOKEN;
@@ -38,6 +35,7 @@ beforeEach(() => {
     new Map([
       [STACK_PAGE, 5],
       [TIPS_PAGE, 2],
+      [NO_LIKES_PAGE, 3],
     ]),
   );
   spyOn(notion.pages, "retrieve").mockImplementation(
@@ -54,28 +52,32 @@ afterEach(() => {
 });
 
 describe("GET /api/likes/sync", () => {
-  test("syncs pages with a Likes column and skips Tips pages without logging an error", async () => {
+  test("writes Likes wherever the column exists and skips pages without it, without logging an error", async () => {
     const res = await GET(new Request("https://brianlovin.com/api/likes/sync?token=sync-token"));
     const body = await res.json();
 
     expect(res.status).toBe(200);
     expect(body).toMatchObject({
-      synced: 1,
+      synced: 2,
       unchanged: 0,
       failed: 0,
-      total: 2,
-      skipped: { no_likes_property: [TIPS_PAGE] },
+      total: 3,
+      skipped: { no_likes_property: [NO_LIKES_PAGE] },
     });
     expect(body.errors).toBeUndefined();
-    expect(update).toHaveBeenCalledTimes(1);
+    expect(update).toHaveBeenCalledTimes(2);
     expect(update).toHaveBeenCalledWith({
       page_id: STACK_PAGE,
       properties: { Likes: { number: 5 } },
     });
+    expect(update).toHaveBeenCalledWith({
+      page_id: TIPS_PAGE,
+      properties: { Likes: { number: 2 } },
+    });
 
     expect(axiomMock.events("log")).toEqual([]);
     expect(axiomMock.events("likes.synced")).toEqual([
-      expect.objectContaining({ synced: 1, unchanged: 0, skipped: 1, failed: 0, total: 2 }),
+      expect.objectContaining({ synced: 2, unchanged: 0, skipped: 1, failed: 0, total: 3 }),
     ]);
   });
 

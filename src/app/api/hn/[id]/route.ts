@@ -9,7 +9,7 @@ import { logger } from "@/lib/logger";
 import { withAxiom } from "@/lib/observability/axiom-route";
 
 async function getHandler(
-  request: Request,
+  _request: Request,
   props: { params: Promise<{ id: string }> },
 ): Promise<NextResponse> {
   const verification = await checkBotId({
@@ -17,7 +17,7 @@ async function getHandler(
   });
 
   if (verification.isBot) {
-    return rejectHnBot(request, verification);
+    return rejectHnBot();
   }
 
   const params = await props.params;

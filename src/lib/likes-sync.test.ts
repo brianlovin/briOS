@@ -13,10 +13,9 @@ const stackPage = page({
   Likes: { type: "number", number: 4 },
 });
 
-const tipsPage = page({
+const noLikesPage = page({
   Name: { type: "title", title: [] },
   Status: { type: "status", status: null },
-  "Short ID": { type: "rich_text", rich_text: [] },
 });
 
 function notionError(code: APIErrorCode, status: number) {
@@ -57,8 +56,17 @@ describe("syncPageLikes", () => {
     expect(update).not.toHaveBeenCalled();
   });
 
-  test("skips pages whose database has no Likes property (Tips)", async () => {
-    retrieve.mockResolvedValue(tipsPage as never);
+  test("fills a newly added, empty Likes column", async () => {
+    retrieve.mockResolvedValue(page({ Likes: { type: "number", number: null } }) as never);
+    expect(await syncPageLikes("page-1", 3)).toEqual({ status: "synced" });
+    expect(update).toHaveBeenCalledWith({
+      page_id: "page-1",
+      properties: { Likes: { number: 3 } },
+    });
+  });
+
+  test("skips pages whose database has no Likes property", async () => {
+    retrieve.mockResolvedValue(noLikesPage as never);
     expect(await syncPageLikes("page-1", 3)).toEqual({
       status: "skipped",
       reason: "no_likes_property",
