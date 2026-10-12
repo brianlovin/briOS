@@ -3,8 +3,8 @@ import { NextResponse } from "next/server";
 import { errorResponse, safeCompare } from "@/lib/api-utils";
 import { track } from "@/lib/axiom";
 import { getAllLikeCounts } from "@/lib/likes-redis";
+import { syncPageLikes } from "@/lib/likes-sync";
 import { logger } from "@/lib/logger";
-import { notion } from "@/lib/notion/client";
 import { annotate, withAxiom } from "@/lib/observability/axiom-route";
 
 async function getHandler(request: Request) {
@@ -25,49 +25,62 @@ async function getHandler(request: Request) {
     }
 
     const errors: string[] = [];
+    const skipped: Record<string, string[]> = {};
     const entries = Array.from(likeCounts.entries());
 
     // Process in concurrent batches of 3 to respect Notion's ~3 req/sec rate limit
     const CONCURRENCY = 3;
     let synced = 0;
+    let unchanged = 0;
+    let skippedCount = 0;
 
     for (let i = 0; i < entries.length; i += CONCURRENCY) {
       const batch = entries.slice(i, i + CONCURRENCY);
-      const results = await Promise.allSettled(
-        batch.map(([pageId, count]) =>
-          notion.pages
-            .update({
-              page_id: pageId,
-              properties: {
-                Likes: { number: count },
-              } as Parameters<typeof notion.pages.update>[0]["properties"],
-            })
-            .then(() => ({ pageId, success: true as const }))
-            .catch((error) => {
-              logger.error("[Likes Sync] Failed to sync page", error, { page_id: pageId });
-              return { pageId, success: false as const };
-            }),
-        ),
+      const results = await Promise.all(
+        batch.map(async ([pageId, count]) => ({
+          pageId,
+          outcome: await syncPageLikes(pageId, count),
+        })),
       );
 
-      for (const result of results) {
-        const value =
-          result.status === "fulfilled" ? result.value : { pageId: "unknown", success: false };
-        if (value.success) {
-          synced++;
-        } else {
-          errors.push(value.pageId);
+      for (const { pageId, outcome } of results) {
+        switch (outcome.status) {
+          case "synced":
+            synced++;
+            break;
+          case "unchanged":
+            unchanged++;
+            break;
+          case "skipped":
+            skippedCount++;
+            (skipped[outcome.reason] ??= []).push(pageId);
+            break;
+          case "failed":
+            logger.error("[Likes Sync] Failed to sync page", outcome.error, { page_id: pageId });
+            errors.push(pageId);
+            break;
         }
       }
     }
 
-    track("likes.synced", { synced, failed: errors.length, total: likeCounts.size });
-    annotate({ synced, failed: errors.length, total: likeCounts.size });
+    if (skippedCount > 0) {
+      logger.info("[Likes Sync] Skipped pages with nowhere to write Likes", { skipped });
+    }
+
+    const summary = {
+      synced,
+      unchanged,
+      skipped: skippedCount,
+      failed: errors.length,
+      total: likeCounts.size,
+    };
+    track("likes.synced", summary);
+    annotate(summary);
 
     return NextResponse.json({
       message: "Likes synced to Notion",
-      synced,
-      total: likeCounts.size,
+      ...summary,
+      skipped: skippedCount > 0 ? skipped : undefined,
       errors: errors.length > 0 ? errors : undefined,
     });
   } catch (error) {
