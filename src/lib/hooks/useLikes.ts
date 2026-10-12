@@ -121,6 +121,10 @@ export function useLikes(pageId: string, target: LikeActivityTarget = {}) {
   const removeLike = async () => {
     if (userLikes <= 0) return;
 
+    const payload = likeActivityPayload(target, {
+      title: document.title,
+      href: window.location.pathname,
+    });
     const optimisticData = optimisticRemoveLike(count, userLikes);
     const rollbackViewer = storedHint ?? batchContext?.viewer?.[pageId];
     if (inBatch) persistViewerLike(pageId, optimisticData);
@@ -129,7 +133,13 @@ export function useLikes(pageId: string, target: LikeActivityTarget = {}) {
       await mutate(
         `/api/likes/${pageId}`,
         async () => {
-          const res = await fetch(`/api/likes/${pageId}`, { method: "DELETE" });
+          const res = await fetch(`/api/likes/${pageId}`, {
+            method: "DELETE",
+            ...(payload && {
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            }),
+          });
           if (!res.ok) {
             throw new Error("Failed to remove like");
           }
