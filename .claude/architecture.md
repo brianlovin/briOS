@@ -95,3 +95,7 @@ These scripts were used for one-time data migrations and are rarely needed:
 - `backfillStacksToNotion.ts` — Migrated JSON stack data to Notion
 - `backfillAmaToNotion.ts` — Migrated AMA questions to Notion
 - `migrateSimplecast.ts` — Mirrored podcast episodes to S3
+
+## Observability
+
+Server events and warn/error logs go to Axiom (dataset `brios`) through `track()` in `src/lib/axiom.ts` and `logger` in `src/lib/logger.ts`. Every route handler is wrapped in `withAxiom` (`src/lib/observability/axiom-route.ts`), and client interactions beacon to `POST /api/events`. With no `AXIOM_TOKEN`, all of it is a no-op. See `.claude/skills/observability/SKILL.md`.
