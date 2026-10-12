@@ -9,7 +9,9 @@ import {
   getNextTableSort,
   getTableSortDirection,
   stackTableSortAtom,
+  type StackTableSortColumn,
 } from "@/atoms/likesSortOrder";
+import { outboundItemAttributes, trackOutbound } from "@/components/analytics/OutboundLinkTracker";
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { LikeButton } from "@/components/likes/LikeButton";
 import { ListDetailWrapper } from "@/components/ListDetailWrapper";
@@ -17,6 +19,7 @@ import { StackFilters } from "@/components/stack/StackFilters";
 import { LoadingSpinner, PreviewCardProvider, PreviewCardTrigger } from "@/components/ui";
 import { PlatformBadge } from "@/components/ui/PlatformBadge";
 import { TableSortHeader } from "@/components/ui/TableSortHeader";
+import { trackClientEvent } from "@/lib/client-events";
 import type { LikeCount } from "@/lib/hooks/useLikes";
 import { useStacks } from "@/lib/hooks/useStacks";
 import type { StackItem as StackItemType } from "@/lib/stack";
@@ -68,8 +71,23 @@ function StackPageBody({
   const [tableSort, setTableSort] = useAtom(stackTableSortAtom);
   const router = useRouter();
 
+  const toggleSort = (column: StackTableSortColumn, initialDirection: "asc" | "desc") => {
+    const next = getNextTableSort(tableSort, column, initialDirection);
+    setTableSort(next);
+    trackClientEvent("filter.changed", {
+      surface: "stack",
+      filter: "sort",
+      value: `${column}:${next.direction}`,
+    });
+  };
+
   const handlePlatformFilter = (nextPlatform: string, e: React.MouseEvent) => {
     e.stopPropagation();
+    trackClientEvent("filter.changed", {
+      surface: "stack",
+      filter: "platform",
+      value: nextPlatform,
+    });
     const params = new URLSearchParams();
     if (status) params.set("status", status);
     params.set("platform", nextPlatform);
@@ -168,42 +186,28 @@ function StackPageBody({
                     <TableSortHeader
                       label="Name"
                       direction={getTableSortDirection(tableSort, "name")}
-                      onToggle={() =>
-                        setTableSort((currentSort) => getNextTableSort(currentSort, "name", "asc"))
-                      }
+                      onToggle={() => toggleSort("name", "asc")}
                     />
                   </div>
                   <div className="col-span-5 text-left">
                     <TableSortHeader
                       label="Description"
                       direction={getTableSortDirection(tableSort, "description")}
-                      onToggle={() =>
-                        setTableSort((currentSort) =>
-                          getNextTableSort(currentSort, "description", "asc"),
-                        )
-                      }
+                      onToggle={() => toggleSort("description", "asc")}
                     />
                   </div>
                   <div className="col-span-3 text-left">
                     <TableSortHeader
                       label="Platforms"
                       direction={getTableSortDirection(tableSort, "platforms")}
-                      onToggle={() =>
-                        setTableSort((currentSort) =>
-                          getNextTableSort(currentSort, "platforms", "asc"),
-                        )
-                      }
+                      onToggle={() => toggleSort("platforms", "asc")}
                     />
                   </div>
                   <div className="col-span-1 text-left">
                     <TableSortHeader
                       label="Likes"
                       direction={getTableSortDirection(tableSort, "likes")}
-                      onToggle={() =>
-                        setTableSort((currentSort) =>
-                          getNextTableSort(currentSort, "likes", "desc"),
-                        )
-                      }
+                      onToggle={() => toggleSort("likes", "desc")}
                     />
                   </div>
                 </div>
@@ -259,7 +263,9 @@ function StackItemComponent({ item, onPlatformClick }: StackItemComponentProps) 
   const handleRowClick = (e: React.MouseEvent) => {
     // Don't navigate if user clicked on an interactive element
     if ((e.target as HTMLElement).closest("a, button")) return;
-    if (item.url) window.open(item.url, "_blank", "noopener,noreferrer");
+    if (!item.url) return;
+    trackOutbound(item.url, e.currentTarget);
+    window.open(item.url, "_blank", "noopener,noreferrer");
   };
 
   const content = (
@@ -361,6 +367,7 @@ function StackItemComponent({ item, onPlatformClick }: StackItemComponentProps) 
     <div
       className="border-secondary hover:bg-secondary group relative cursor-pointer border-b md:dark:hover:bg-white/5"
       onClick={handleRowClick}
+      {...outboundItemAttributes({ type: "stack", id: item.id, name: item.name })}
     >
       <PreviewCardTrigger
         payload={{

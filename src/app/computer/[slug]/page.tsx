@@ -3,6 +3,7 @@ import { cacheLife, cacheTag } from "next/cache";
 import { notFound, redirect } from "next/navigation";
 
 import ComputerDetail from "@/app/computer/ComputerDetail";
+import { TrackContentView } from "@/components/analytics/TrackContentView";
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { COMPUTER_TITLE, computerSlugRedirect, resolveComputerTipFromSlug } from "@/lib/computer";
 import { getServerLikes } from "@/lib/likes-server";
@@ -52,6 +53,7 @@ export default async function ComputerDetailPage(props: { params: Promise<{ slug
   return (
     <BatchLikesProvider pageIds={[item.id]} initialData={initialLikes}>
       <ComputerDetail initialTip={item} />
+      <TrackContentView contentType="computer" contentId={params.slug} />
     </BatchLikesProvider>
   );
 }

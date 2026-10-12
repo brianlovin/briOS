@@ -7,11 +7,13 @@ import React from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
 import { getAllNavigationItems } from "@/config/navigation";
+import { trackClientEvent } from "@/lib/client-events";
 import { MOD_KEY } from "@/lib/keyboard";
 
 export function CommandMenu() {
   const [value, setValue] = React.useState("linear");
   const [open, setOpen] = React.useState(false);
+  const [query, setQuery] = React.useState("");
   const inputRef = React.useRef<HTMLInputElement | null>(null);
   const listRef = React.useRef<HTMLDivElement | null>(null);
   const router = useRouter();
@@ -50,6 +52,8 @@ export function CommandMenu() {
     if (open) {
       // Reset value when opening
       setValue("linear");
+      setQuery("");
+      trackClientEvent("command_menu.opened", {});
       // Focus input after a brief delay to ensure modal is rendered
       setTimeout(() => {
         inputRef.current?.focus();
@@ -58,6 +62,7 @@ export function CommandMenu() {
   }, [open]);
 
   const handleNavigate = (href: string) => {
+    trackClientEvent("command_menu.selected", { query: query.trim(), destination: href });
     router.push(href);
     setOpen(false);
   };
@@ -72,6 +77,8 @@ export function CommandMenu() {
             <Command value={value} onValueChange={(v: string) => setValue(v)} className="w-full">
               <Command.Input
                 ref={inputRef}
+                value={query}
+                onValueChange={setQuery}
                 placeholder="Jump to..."
                 className="text-secondary w-full border-b bg-transparent p-3 text-sm placeholder-neutral-500 focus:outline-none"
               />

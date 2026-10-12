@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/Select";
+import { trackClientEvent } from "@/lib/client-events";
 
 import { LoadingSpinner } from "../ui";
 
@@ -42,6 +43,7 @@ export function GoodWebsitesFilters({ isLoading, tag = "" }: GoodWebsitesFilters
     // Update local state immediately for instant UI feedback
     setCurrentTag(value);
     pushTag(value);
+    trackClientEvent("filter.changed", { surface: "sites", filter: "tag", value });
   };
 
   const currentTagLabel =

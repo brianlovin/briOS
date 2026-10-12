@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/Select";
+import { trackClientEvent } from "@/lib/client-events";
 
 import { LoadingSpinner } from "../ui";
 
@@ -51,6 +52,7 @@ export function StackFilters({ isLoading, status = "active", platform = "" }: St
     // Update local state immediately for instant UI feedback
     setCurrentStatus(value);
     pushFilters(value, currentPlatform);
+    trackClientEvent("filter.changed", { surface: "stack", filter: "status", value });
   };
 
   const handlePlatformChange = (value: string | null) => {
@@ -58,6 +60,7 @@ export function StackFilters({ isLoading, status = "active", platform = "" }: St
     // Update local state immediately for instant UI feedback
     setCurrentPlatform(value);
     pushFilters(currentStatus, value);
+    trackClientEvent("filter.changed", { surface: "stack", filter: "platform", value });
   };
 
   const currentStatusLabel = STATUS_OPTIONS.find((opt) => opt.value === currentStatus)?.label;
