@@ -1,6 +1,8 @@
 import { Receiver } from "@upstash/qstash";
 import { NextRequest, NextResponse } from "next/server";
 
+import { logger } from "@/lib/logger";
+import { annotate, withAxiom } from "@/lib/observability/axiom-route";
 import { captureError, withErrorCapture } from "@/lib/observability/sentry";
 import {
   addTrackToNotion,
@@ -23,14 +25,14 @@ async function postHandler(req: NextRequest) {
 
     const signature = req.headers.get("upstash-signature");
     if (!signature) {
-      console.error("[Worker] Missing Upstash-Signature header");
+      logger.warn("[Worker] Missing Upstash-Signature header");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Verify signature
     const isValid = await receiver.verify({ signature, body: rawBody });
     if (!isValid) {
-      console.error("[Worker] Invalid QStash signature");
+      logger.warn("[Worker] Invalid QStash signature");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -39,19 +41,22 @@ async function postHandler(req: NextRequest) {
     try {
       item = JSON.parse(rawBody);
     } catch (parseError) {
-      console.error("[Worker] Failed to parse request body:", parseError);
+      logger.error("[Worker] Failed to parse request body", parseError);
       return NextResponse.json({ error: "Invalid JSON payload" }, { status: 400 });
     }
 
     if (!item || !item.track || !item.played_at) {
-      console.error("[Worker] Invalid payload structure received from QStash:", item);
+      logger.error("[Worker] Invalid payload structure received from QStash");
       return NextResponse.json({ error: "Invalid payload structure" }, { status: 400 });
     }
+
+    annotate({ track_id: item.track.id, track_name: item.track.name, played_at: item.played_at });
 
     // Check if track already exists in Notion
     const exists = await notionTrackExists(item.track.id, item.played_at);
     if (exists) {
       console.log(`[Worker] Track already exists, skipping.`);
+      annotate({ outcome: "skipped" });
       return NextResponse.json({ success: true, status: "skipped" });
     }
 
@@ -60,10 +65,12 @@ async function postHandler(req: NextRequest) {
 
     // Add track to Notion
     await addTrackToNotion(item);
+    annotate({ outcome: "added" });
 
     return NextResponse.json({ success: true, status: "added" });
   } catch (error: unknown) {
-    console.error("[Worker] Error processing track:", error);
+    logger.error("[Worker] Error processing track", error);
+    annotate({ outcome: "failed" });
     captureError(error, { feature: "spotify-sync", trigger: "worker" });
     return NextResponse.json(
       {
@@ -75,4 +82,7 @@ async function postHandler(req: NextRequest) {
   }
 }
 
-export const POST = withErrorCapture(postHandler);
+export const POST = withAxiom(withErrorCapture(postHandler), {
+  name: "spotify.worker",
+  kind: "webhook",
+});

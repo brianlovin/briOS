@@ -5,8 +5,10 @@ import { titleFromNotionPage } from "@/lib/activity-from-notion";
 import { afterActivity } from "@/lib/activity-schedule";
 import { errorResponse, safeCompare } from "@/lib/api-utils";
 import { optimizeSiteIcon } from "@/lib/image-processing/optimize";
+import { logger } from "@/lib/logger";
 import { notion } from "@/lib/notion";
 import { purgeContentType } from "@/lib/notion/purge";
+import { annotate, withAxiom } from "@/lib/observability/axiom-route";
 import { uploadBufferToR2 } from "@/lib/r2/storage";
 
 /**
@@ -23,7 +25,7 @@ import { uploadBufferToR2 } from "@/lib/r2/storage";
  * 5. Upload to R2 storage
  * 6. Update Notion page icon with R2 URL
  */
-export async function POST(request: Request) {
+async function postHandler(request: Request) {
   try {
     // Verify webhook secret
     const webhookSecret = process.env.NOTION_WEBHOOK_VERIFICATION_SECRET;
@@ -39,9 +41,12 @@ export async function POST(request: Request) {
 
     // Validate required fields
     if (!pageId) {
-      console.error("Missing required field: data.id (pageId)", body);
+      logger.warn("Missing required field: data.id (pageId)");
+      annotate({ outcome: "invalid_payload" });
       return errorResponse("Missing required field: data.id (pageId)", 400);
     }
+
+    annotate({ page_id: pageId });
 
     // Step 1: Fetch the page from Notion to get the current icon
     const page = await notion.pages.retrieve({ page_id: pageId });
@@ -57,7 +62,8 @@ export async function POST(request: Request) {
     }
 
     if (!iconUrl) {
-      console.error("Page has no icon to process", pageId, body);
+      logger.warn("Page has no icon to process", { page_id: pageId });
+      annotate({ outcome: "no_icon" });
       return errorResponse("Page has no icon to process", 400);
     }
 
@@ -66,7 +72,11 @@ export async function POST(request: Request) {
     // Step 2: Download the icon
     const iconResponse = await fetch(iconUrl);
     if (!iconResponse.ok) {
-      console.error("Failed to download icon", iconUrl, body);
+      logger.error("Failed to download icon", undefined, {
+        page_id: pageId,
+        http_status: iconResponse.status,
+      });
+      annotate({ outcome: "failed", failed_step: "download_icon" });
       return errorResponse("Failed to download icon", 500);
     }
 
@@ -94,6 +104,7 @@ export async function POST(request: Request) {
 
     // Invalidate stack cache so the updated icon is picked up
     await purgeContentType("stack");
+    annotate({ outcome: "updated", savings_pct: Math.round(optimized.savings) });
 
     afterActivity((store) =>
       recordStackAdded({ id: pageId, title: titleFromNotionPage(page) }, store),
@@ -111,8 +122,10 @@ export async function POST(request: Request) {
       { status: 200 },
     );
   } catch (error) {
-    console.error("Error processing stack icon", error);
+    logger.error("Error processing stack icon", error);
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return errorResponse(`Failed to process stack icon: ${errorMessage}`, 500, error);
   }
 }
+
+export const POST = withAxiom(postHandler, { name: "notion.process-stack-icon", kind: "webhook" });

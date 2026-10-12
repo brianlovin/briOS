@@ -1,10 +1,13 @@
 import { NextResponse } from "next/server";
 
 import { errorResponse, safeCompare } from "@/lib/api-utils";
+import { track } from "@/lib/axiom";
 import { getAllLikeCounts } from "@/lib/likes-redis";
+import { logger } from "@/lib/logger";
 import { notion } from "@/lib/notion/client";
+import { annotate, withAxiom } from "@/lib/observability/axiom-route";
 
-export async function GET(request: Request) {
+async function getHandler(request: Request) {
   try {
     // Verify sync token
     const { searchParams } = new URL(request.url);
@@ -41,7 +44,7 @@ export async function GET(request: Request) {
             })
             .then(() => ({ pageId, success: true as const }))
             .catch((error) => {
-              console.error(`[Likes Sync] Failed to sync page ${pageId}:`, error);
+              logger.error("[Likes Sync] Failed to sync page", error, { page_id: pageId });
               return { pageId, success: false as const };
             }),
         ),
@@ -58,6 +61,9 @@ export async function GET(request: Request) {
       }
     }
 
+    track("likes.synced", { synced, failed: errors.length, total: likeCounts.size });
+    annotate({ synced, failed: errors.length, total: likeCounts.size });
+
     return NextResponse.json({
       message: "Likes synced to Notion",
       synced,
@@ -65,7 +71,9 @@ export async function GET(request: Request) {
       errors: errors.length > 0 ? errors : undefined,
     });
   } catch (error) {
-    console.error("[Likes Sync] Error syncing likes:", error);
+    logger.error("[Likes Sync] Error syncing likes", error);
     return errorResponse("Failed to sync likes");
   }
 }
+
+export const GET = withAxiom(getHandler, { name: "likes-sync", kind: "cron" });

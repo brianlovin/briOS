@@ -4,6 +4,9 @@ import { type ActivityStore, recordCaffeine } from "@/lib/activity";
 import { getActivityStore } from "@/lib/activity-redis";
 import { ACTIVITY_BODY_MAX_BYTES, CAFFEINE_DRINK_MAX_LENGTH } from "@/lib/activity-shared";
 import { errorResponse, safeCompare } from "@/lib/api-utils";
+import { track } from "@/lib/axiom";
+import { logger } from "@/lib/logger";
+import { withAxiom } from "@/lib/observability/axiom-route";
 
 function providedToken(request: Request): string | null {
   const headerToken = request.headers.get("x-activity-token");
@@ -65,13 +68,16 @@ export async function handleCaffeinePost(
     if (!result.ok) {
       return errorResponse(result.error, result.status);
     }
+    track("activity.ingested", { producer: "caffeine", type: "caffeine" });
     return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error("[activity] caffeine ingest failed", error);
+    logger.error("[activity] caffeine ingest failed", error);
     return NextResponse.json({ ok: true });
   }
 }
 
-export async function POST(request: Request) {
+async function postHandler(request: Request) {
   return handleCaffeinePost(request, getActivityStore());
 }
+
+export const POST = withAxiom(postHandler, { name: "/api/activity/caffeine", kind: "webhook" });
