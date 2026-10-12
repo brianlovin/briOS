@@ -1,6 +1,10 @@
-import { expect, mock, test } from "bun:test";
+import { afterEach, beforeEach, expect, mock, spyOn, test } from "bun:test";
 
-// Mock the Notion singleton + getDataSourceId helper.
+import { notion } from "@/lib/notion/client";
+import * as notionQueries from "@/lib/notion/queries";
+
+// Spy on the shared Notion singleton instead of `mock.module`: module mocks are
+// process-wide in Bun and would replace the real client for every later test file.
 // `updateCalls` records every pages.update() so tests can assert on them
 // (e.g. that an expired token page is archived).
 const notionPage = {
@@ -14,22 +18,19 @@ const notionPage = {
 
 let updateCalls: unknown[] = [];
 
-const mockNotion = {
-  dataSources: {
-    query: async () => ({ results: [notionPage] }),
-  },
-  pages: {
-    update: async (args: unknown) => {
-      updateCalls.push(args);
-    },
-    create: async () => ({}),
-  },
-};
+beforeEach(() => {
+  spyOn(notionQueries, "getDataSourceId").mockResolvedValue("ds1");
+  spyOn(notion.dataSources, "query").mockResolvedValue({ results: [notionPage] } as never);
+  spyOn(notion.pages, "update").mockImplementation(async (args) => {
+    updateCalls.push(args);
+    return {} as never;
+  });
+  spyOn(notion.pages, "create").mockResolvedValue({} as never);
+});
 
-mock.module("@/lib/notion/client", () => ({ notion: mockNotion }));
-mock.module("@/lib/notion/queries", () => ({
-  getDataSourceId: async () => "ds1",
-}));
+afterEach(() => {
+  mock.restore();
+});
 
 // Mock fetch for the Spotify token endpoint. Each test sets `fetchResponder`
 // to control the response, and `fetchCalls` counts network hits.
