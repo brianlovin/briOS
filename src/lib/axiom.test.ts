@@ -45,7 +45,7 @@ describe("track with AXIOM_TOKEN", () => {
     axiomMock.enable();
     process.env.VERCEL_GIT_COMMIT_SHA = "abc123";
 
-    track("likes.synced", { synced: 3, failed: 1, total: 4 });
+    track("likes.synced", { synced: 3, unchanged: 0, skipped: 0, failed: 1, total: 4 });
 
     const [event] = axiomMock.events();
     expect(event).toMatchObject({
