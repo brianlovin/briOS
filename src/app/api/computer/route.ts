@@ -1,8 +1,10 @@
 import { cachedResponse, errorResponse } from "@/lib/api-utils";
 import { computerTipLink, publicComputerTips } from "@/lib/computer";
+import { logger } from "@/lib/logger";
 import { getComputerDatabaseItems } from "@/lib/notion";
+import { withAxiom } from "@/lib/observability/axiom-route";
 
-export async function GET() {
+async function getHandler() {
   try {
     const items = publicComputerTips(await getComputerDatabaseItems()).map((item) => ({
       ...item,
@@ -10,7 +12,9 @@ export async function GET() {
     }));
     return cachedResponse({ items }, 86400);
   } catch (error) {
-    console.error("Error fetching computer tips:", error);
+    logger.error("Error fetching computer tips", error);
     return errorResponse("Failed to fetch computer tips");
   }
 }
+
+export const GET = withAxiom(getHandler, { name: "/api/computer" });

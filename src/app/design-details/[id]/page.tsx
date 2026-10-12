@@ -1,6 +1,7 @@
 import { cacheLife } from "next/cache";
 import { notFound } from "next/navigation";
 
+import { TrackContentView } from "@/components/analytics/TrackContentView";
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { LikeButton } from "@/components/likes/LikeButton";
 import { renderBlocks } from "@/components/renderBlocks";
@@ -84,6 +85,7 @@ function EpisodeView({
         </BatchLikesProvider>
       </div>
       <div className="notion-blocks flex flex-col gap-6">{renderBlocks(blocks)}</div>
+      <TrackContentView contentType="design_details" contentId={id} trackReadComplete />
     </div>
   );
 }

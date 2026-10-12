@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { cacheLife, cacheTag } from "next/cache";
 import { notFound } from "next/navigation";
 
+import { TrackContentView } from "@/components/analytics/TrackContentView";
 import { createArticleJsonLd, createMetadata, truncateDescription } from "@/lib/metadata";
 import { isPlaceholderNotionBuild } from "@/lib/notion";
 import { getAppDissectionDatabaseItems, getAppDissectionItemBySlug } from "@/lib/notion/queries";
@@ -73,6 +74,7 @@ async function AppDissectionPostContent({ slug }: { slug: string }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
       <AppDissectionDetail post={post} allItems={allItems} />
+      <TrackContentView contentType="app_dissection" contentId={post.slug} />
     </>
   );
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { TrackContentView } from "@/components/analytics/TrackContentView";
 import { Section } from "@/components/shared/ListComponents";
 import { PageTitle } from "@/components/Typography";
 import { HOW_TERMINALS_WORK_INTRO, HOW_TERMINALS_WORK_TITLE } from "@/lib/how-terminals-work";
@@ -22,6 +23,7 @@ export default function HowTerminalsWorkPage() {
           <p className="text-secondary text-pretty">{HOW_TERMINALS_WORK_INTRO}</p>
         </Section>
         <HowTerminalsWorkGuide />
+        <TrackContentView contentType="guide" contentId="how-terminals-work" trackReadComplete />
       </article>
     </div>
   );

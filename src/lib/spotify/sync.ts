@@ -5,6 +5,8 @@
  * • Obeys Notion rate limits (400 ms between writes).
  */
 
+import { logger } from "@/lib/logger";
+
 import { getSpotifyToken } from "./auth";
 import {
   addTrackToNotion,
@@ -77,14 +79,14 @@ export async function syncRecentTracks(limit = 10): Promise<void> {
         processed.add(key);
         added++;
       } catch (err) {
-        console.error(`Error processing track ${item.track.name}:`, err);
+        logger.error(`Error processing track ${item.track.name}`, err);
         continue;
       }
     }
 
     console.log(`Done. Added ${added} · Skipped ${skipped}`);
   } catch (err) {
-    console.error("Error syncing recent tracks:", err);
+    logger.error("Error syncing recent tracks", err);
     throw err;
   }
 }

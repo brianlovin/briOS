@@ -1,6 +1,9 @@
 import { Redis } from "@upstash/redis";
 import { unstable_cache } from "next/cache";
 
+import { toErrorMessage } from "@/lib/axiom";
+import { logger } from "@/lib/logger";
+
 // Lazy-initialize Redis to avoid errors during build if env vars aren't set
 let redis: Redis | null = null;
 
@@ -97,7 +100,7 @@ async function upstashBackedQuery<T>(
   try {
     cached = await client.get<CachedEntry<T>>(key);
   } catch (error) {
-    console.warn(`[Notion Cache] Redis read error for ${key}:`, error);
+    logger.warn("[Notion Cache] Redis read error", { key, error_message: toErrorMessage(error) });
   }
 
   const now = Date.now();
@@ -114,16 +117,20 @@ async function upstashBackedQuery<T>(
     try {
       await client.set(key, entry, { ex: REDIS_KEY_TTL });
     } catch (error) {
-      console.warn(`[Notion Cache] Redis write error for ${key}:`, error);
+      logger.warn("[Notion Cache] Redis write error", {
+        key,
+        error_message: toErrorMessage(error),
+      });
     }
 
     return data;
   } catch (fetchError) {
     if (cached) {
-      console.warn(
-        `[Notion Cache] Notion fetch failed for ${key}, serving stale cache from ${new Date(cached.cachedAt).toISOString()}:`,
-        fetchError,
-      );
+      logger.warn("[Notion Cache] Notion fetch failed, serving stale cache", {
+        key,
+        cached_at: new Date(cached.cachedAt).toISOString(),
+        error_message: toErrorMessage(fetchError),
+      });
       return cached.data;
     }
 
@@ -190,7 +197,7 @@ export async function invalidateNotionCache(pattern: string): Promise<number> {
     console.log(`[Notion Cache] Invalidated ${deleted} keys matching ${pattern}`);
     return deleted;
   } catch (error) {
-    console.error(`[Notion Cache] Error invalidating cache for ${pattern}:`, error);
+    logger.error(`[Notion Cache] Error invalidating cache for ${pattern}`, error);
     return 0;
   }
 }

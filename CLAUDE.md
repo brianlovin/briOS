@@ -15,6 +15,7 @@ Personal website built with Next.js and Notion as CMS.
 
 - [Architecture](.claude/architecture.md) — Data flow, UI patterns, tech stack
 - [Commands](.claude/commands.md) — All available scripts and their usage
+- [Observability](.claude/skills/observability/SKILL.md) — Axiom events, logger, route wrapper, APL queries
 
 ## Testing
 

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { withAxiom } from "@/lib/observability/axiom-route";
 import { withErrorCapture } from "@/lib/observability/sentry";
 import { getSpotifyAuthUrl } from "@/lib/spotify/auth";
 
@@ -10,4 +11,4 @@ async function getHandler() {
   return NextResponse.redirect(getSpotifyAuthUrl());
 }
 
-export const GET = withErrorCapture(getHandler);
+export const GET = withAxiom(withErrorCapture(getHandler), { name: "/api/spotify/login" });

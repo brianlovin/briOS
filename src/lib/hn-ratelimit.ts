@@ -1,5 +1,7 @@
 import { Redis } from "@upstash/redis";
 
+import { logger } from "@/lib/logger";
+
 /**
  * Cheap fixed-window limiter for HN JSON APIs.
  *
@@ -45,7 +47,7 @@ export function getHnRateLimitRedis(): HnRateLimitRedis | null {
     });
     return redis;
   } catch (error) {
-    console.error("[HN RateLimit] Failed to initialize Redis; failing open:", error);
+    logger.error("[HN RateLimit] Failed to initialize Redis; failing open", error);
     redis = null;
     return null;
   }
@@ -119,7 +121,7 @@ export async function checkHnRateLimit(
     return { allowed: true };
   } catch (error) {
     // incr/expire throw when Redis is down or suspended (budget limit); fail open.
-    console.error("[HN RateLimit] Error checking rate limit; failing open:", error);
+    logger.error("[HN RateLimit] Error checking rate limit; failing open", error);
     return { allowed: true };
   }
 }

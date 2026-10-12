@@ -4,6 +4,8 @@ import { z } from "zod";
 import { getRequestGeo, recordVisit } from "@/lib/activity";
 import { getActivityStore } from "@/lib/activity-redis";
 import { errorResponse } from "@/lib/api-utils";
+import { logger } from "@/lib/logger";
+import { withAxiom } from "@/lib/observability/axiom-route";
 
 const bodySchema = z
   .object({
@@ -12,7 +14,7 @@ const bodySchema = z
   })
   .strict();
 
-export async function POST(request: Request) {
+async function postHandler(request: Request) {
   try {
     const body = bodySchema.parse(await request.json());
     const store = getActivityStore();
@@ -34,7 +36,9 @@ export async function POST(request: Request) {
     if (error instanceof z.ZodError) {
       return errorResponse("Invalid body", 400);
     }
-    console.error("[activity] visit failed", error);
+    logger.error("[activity] visit failed", error);
     return NextResponse.json({ ok: true, skipped: true });
   }
 }
+
+export const POST = withAxiom(postHandler, { name: "/api/activity/visit", quiet: true });

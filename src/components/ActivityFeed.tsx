@@ -53,6 +53,7 @@ import {
   isHomeLikeTitle,
   resolveActivitySourceHref,
 } from "@/lib/activity-shared";
+import { trackClientEvent } from "@/lib/client-events";
 import { useActivity } from "@/lib/hooks/useActivity";
 import { cn } from "@/lib/utils";
 
@@ -216,16 +217,24 @@ function isAbsoluteHttpUrl(href: string): boolean {
 
 function ActivityContextLink({ href, children }: { href: string; children: ReactNode }) {
   const className = "text-tertiary hover:text-primary underline-offset-2 hover:underline";
-  if (isAbsoluteHttpUrl(href)) {
+  const external = isAbsoluteHttpUrl(href);
+  const onClick = () => trackClientEvent("activity.item_clicked", { href, external });
+  if (external) {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={className}
+        onClick={onClick}
+      >
         {children}
       </a>
     );
   }
 
   return (
-    <Link href={href} className={className}>
+    <Link href={href} className={className} onClick={onClick}>
       {children}
     </Link>
   );

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { cacheLife, cacheTag } from "next/cache";
 
+import { TrackContentView } from "@/components/analytics/TrackContentView";
 import { getPostById } from "@/lib/hn";
 import { createMetadata, truncateDescription } from "@/lib/metadata";
 import { stripHtmlTags } from "@/lib/utils";
@@ -57,5 +58,10 @@ async function HNPostContent({ id }: { id: string }) {
   const post = await getPostById(id, true);
 
   // Pass server-fetched data to client as initialData to avoid double-fetch
-  return <HNPostPageClient initialPost={post} />;
+  return (
+    <>
+      <HNPostPageClient initialPost={post} />
+      <TrackContentView contentType="hn_post" contentId={id} />
+    </>
+  );
 }

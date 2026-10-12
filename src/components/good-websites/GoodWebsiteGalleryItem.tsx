@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 
+import { outboundItemAttributes, trackOutbound } from "@/components/analytics/OutboundLinkTracker";
 import { LikeButton } from "@/components/likes/LikeButton";
 import { PlaceholderShader } from "@/components/ui/PlaceholderShader";
 import type { GoodWebsiteItem } from "@/lib/goodWebsites";
@@ -47,14 +48,17 @@ export function GoodWebsiteGalleryItem({ item }: GoodWebsiteGalleryItemProps) {
     };
   }, [item.previewImage, isCached]);
 
-  const handleClick = () => {
-    if (item.url?.trim()) window.open(item.url, "_blank", "noopener,noreferrer");
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!item.url?.trim()) return;
+    trackOutbound(item.url, e.currentTarget);
+    window.open(item.url, "_blank", "noopener,noreferrer");
   };
 
   return (
     <div
       className="group rounded-px relative cursor-pointer overflow-hidden"
       onClick={handleClick}
+      {...outboundItemAttributes({ type: "site", id: item.id, name: item.name })}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

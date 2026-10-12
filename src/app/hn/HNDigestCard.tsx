@@ -5,6 +5,7 @@ import { useState } from "react";
 import { hnCliCopiedAtom, hnSubscribedAtom } from "@/atoms/hnSubscription";
 import { Close } from "@/components/icons/Close";
 import { Triangle } from "@/components/icons/Triangle";
+import { trackClientEvent } from "@/lib/client-events";
 import { cn } from "@/lib/utils";
 
 import { SubscribeForm } from "./SubscribeForm";
@@ -18,6 +19,7 @@ export function HNCLIUpsell({ className }: { className?: string }) {
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(CLI_COMMAND);
+    trackClientEvent("hn.cli_command_copied", {});
     setShowCopied(true);
     setTimeout(() => {
       setShowCopied(false);

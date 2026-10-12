@@ -3,9 +3,11 @@ import { NextResponse } from "next/server";
 import { recordWritingPublished } from "@/lib/activity";
 import { afterActivity } from "@/lib/activity-schedule";
 import { errorResponse, safeCompare } from "@/lib/api-utils";
+import { logger } from "@/lib/logger";
 import { updateWritingShortId } from "@/lib/notion/mutations";
 import { purgeContentType } from "@/lib/notion/purge";
 import { getWritingPostByShortId, getWritingPostContent } from "@/lib/notion/queries";
+import { annotate, withAxiom } from "@/lib/observability/axiom-route";
 import { buildSlug, generateShortId, isValidShortId } from "@/lib/short-id";
 
 /**
@@ -23,7 +25,7 @@ import { buildSlug, generateShortId, isValidShortId } from "@/lib/short-id";
 
 const MAX_RETRIES = 5;
 
-export async function POST(request: Request) {
+async function postHandler(request: Request) {
   try {
     // Verify webhook secret
     const webhookSecret = process.env.NOTION_WEBHOOK_VERIFICATION_SECRET;
@@ -38,20 +40,24 @@ export async function POST(request: Request) {
     const pageId = body.data?.id;
 
     if (!pageId) {
-      console.error("Missing required field: data.id (pageId)", body);
+      logger.warn("Missing required field: data.id (pageId)");
+      annotate({ outcome: "invalid_payload" });
       return errorResponse("Missing required field: data.id (pageId)", 400);
     }
 
+    annotate({ page_id: pageId });
     console.log(`\n🔑 Generating Short ID for page ${pageId}\n`);
 
     // Check if page already has a Short ID
     const content = await getWritingPostContent(pageId);
     if (!content) {
+      annotate({ outcome: "not_found" });
       return errorResponse("Page not found", 404);
     }
 
     if (content.metadata.shortId && isValidShortId(content.metadata.shortId)) {
       console.log(`Page already has Short ID: ${content.metadata.shortId}`);
+      annotate({ outcome: "already_set", short_id: content.metadata.shortId });
       return NextResponse.json(
         {
           success: true,
@@ -80,6 +86,7 @@ export async function POST(request: Request) {
     }
 
     if (!shortId) {
+      annotate({ outcome: "collisions_exhausted" });
       return errorResponse("Failed to generate unique Short ID after maximum retries", 500);
     }
 
@@ -94,6 +101,7 @@ export async function POST(request: Request) {
     const slug = content.metadata.slug || buildSlug(title, shortId);
     afterActivity((store) => recordWritingPublished({ id: pageId, title, slug }, store));
 
+    annotate({ outcome: "created", short_id: shortId });
     console.log(`✅ Successfully generated Short ID: ${shortId} for "${content.metadata.title}"\n`);
 
     return NextResponse.json(
@@ -106,8 +114,10 @@ export async function POST(request: Request) {
       { status: 200 },
     );
   } catch (error) {
-    console.error("Error generating Short ID:", error);
+    logger.error("Error generating Short ID", error);
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return errorResponse(`Failed to generate Short ID: ${errorMessage}`, 500, error);
   }
 }
+
+export const POST = withAxiom(postHandler, { name: "notion.generate-short-id", kind: "webhook" });

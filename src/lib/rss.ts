@@ -1,5 +1,6 @@
 import { Feed, type Item } from "feed";
 
+import { logger } from "@/lib/logger";
 import { SITE_CONFIG } from "@/lib/metadata";
 
 const RSS_AUTHOR = {
@@ -65,6 +66,6 @@ export function rssResponse(feed: Feed): Response {
  * Log the error and return the standard RSS error `Response`.
  */
 export function rssErrorResponse(label: string, error: unknown): Response {
-  console.error(`Error generating ${label} RSS feed:`, error);
+  logger.error(`Error generating ${label} RSS feed`, error);
   return new Response("Error generating RSS feed", { status: 500 });
 }

@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { ingestActivityFromContentPurge } from "@/lib/activity-from-notion";
 import { afterActivity } from "@/lib/activity-schedule";
 import { errorResponse, safeCompare } from "@/lib/api-utils";
+import { track } from "@/lib/axiom";
 import {
   type NotionPurgeableContentType,
   PURGE_CACHE_TYPES,
@@ -11,6 +12,7 @@ import {
   type PurgeCacheType,
   purgeContentType,
 } from "@/lib/notion/purge";
+import { withAxiom } from "@/lib/observability/axiom-route";
 
 async function readNotionPageId(request: Request): Promise<string | undefined> {
   if (request.method !== "POST") return undefined;
@@ -51,6 +53,12 @@ async function purgeCache(request: Request): Promise<NextResponse> {
   }
 
   console.log(`[Cache Purge] Purged type=${type}:`, results);
+  track("cache.purged", {
+    type,
+    trigger: request.method === "POST" ? "notion" : "manual",
+    page_id: pageId,
+    keys_purged: Object.values(results).reduce((sum, count) => sum + count, 0),
+  });
 
   return NextResponse.json({
     success: true,
@@ -60,5 +68,5 @@ async function purgeCache(request: Request): Promise<NextResponse> {
 }
 
 /** GET for browser/curl, POST for Notion webhook buttons */
-export const GET = purgeCache;
-export const POST = purgeCache;
+export const GET = withAxiom(purgeCache, { name: "/api/purge-cache", kind: "webhook" });
+export const POST = withAxiom(purgeCache, { name: "/api/purge-cache", kind: "webhook" });

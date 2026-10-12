@@ -1,6 +1,8 @@
 import type { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import exifr from "exifr";
 
+import { toErrorMessage } from "@/lib/axiom";
+import { logger } from "@/lib/logger";
 import { dateStart, richText, select, title } from "@/lib/notion/properties";
 
 export const NOMINATIM_USER_AGENT = "brianlovin.com illustrate-journal";
@@ -154,10 +156,9 @@ export async function resolveLocation(
     try {
       return await reverseGeocode(exif.latitude, exif.longitude);
     } catch (error) {
-      console.error(
-        "Reverse-geocode failed; not falling back to Journal City",
-        error instanceof Error ? error.message : error,
-      );
+      logger.warn("Reverse-geocode failed; not falling back to Journal City", {
+        error_message: toErrorMessage(error),
+      });
       return undefined;
     }
   }

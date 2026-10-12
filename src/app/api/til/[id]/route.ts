@@ -1,7 +1,9 @@
 import { cachedResponse, errorResponse } from "@/lib/api-utils";
+import { logger } from "@/lib/logger";
 import { getTilItemContent } from "@/lib/notion";
+import { withAxiom } from "@/lib/observability/axiom-route";
 
-export async function GET(request: Request, props: { params: Promise<{ id: string }> }) {
+async function getHandler(request: Request, props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const id = params.id;
 
@@ -14,7 +16,9 @@ export async function GET(request: Request, props: { params: Promise<{ id: strin
 
     return cachedResponse(item, 86400); // 24 hour cache
   } catch (error) {
-    console.error(`Error fetching TIL entry ${id}:`, error);
+    logger.error(`Error fetching TIL entry ${id}:`, error);
     return errorResponse("Failed to fetch TIL entry");
   }
 }
+
+export const GET = withAxiom(getHandler, { name: "/api/til/[id]" });

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { logger } from "@/lib/logger";
+import { annotate, withAxiom } from "@/lib/observability/axiom-route";
 import { withErrorCapture } from "@/lib/observability/sentry";
 import { exchangeCodeForToken } from "@/lib/spotify/auth";
 
@@ -10,6 +12,7 @@ async function getHandler(req: NextRequest) {
   const error_description = searchParams.get("error_description");
 
   if (error) {
+    annotate({ outcome: "oauth_error", oauth_error: error });
     return NextResponse.json(
       {
         error: "OAuth error",
@@ -21,6 +24,7 @@ async function getHandler(req: NextRequest) {
   }
 
   if (!code) {
+    annotate({ outcome: "missing_code" });
     return NextResponse.json(
       {
         error: "Missing authorization code",
@@ -33,9 +37,10 @@ async function getHandler(req: NextRequest) {
 
   try {
     await exchangeCodeForToken(code);
+    annotate({ outcome: "authorized" });
     return NextResponse.redirect(new URL("/", req.url));
   } catch (error: unknown) {
-    console.error("Error exchanging code for token:", error);
+    logger.error("Error exchanging Spotify code for token", error);
     return NextResponse.json(
       {
         error: "Failed to exchange code for token",
@@ -50,4 +55,7 @@ async function getHandler(req: NextRequest) {
   }
 }
 
-export const GET = withErrorCapture(getHandler);
+export const GET = withAxiom(withErrorCapture(getHandler), {
+  name: "spotify.oauth-callback",
+  kind: "webhook",
+});

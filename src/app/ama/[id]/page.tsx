@@ -3,6 +3,7 @@ import { cacheLife, cacheTag } from "next/cache";
 import { notFound } from "next/navigation";
 
 import AMADetail from "@/app/ama/AMADetail";
+import { TrackContentView } from "@/components/analytics/TrackContentView";
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { getServerLikes } from "@/lib/likes-server";
 import { createMetadata, truncateDescription } from "@/lib/metadata";
@@ -51,6 +52,7 @@ export default async function AMADetailPage(props: { params: Promise<{ id: strin
   return (
     <BatchLikesProvider pageIds={[item.id]} initialData={initialLikes}>
       <AMADetail initialQuestion={item} />
+      <TrackContentView contentType="ama" contentId={item.id} />
     </BatchLikesProvider>
   );
 }

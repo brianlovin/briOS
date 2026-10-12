@@ -2,7 +2,10 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { errorResponse } from "@/lib/api-utils";
+import { track } from "@/lib/axiom";
 import { storeEvents, trackUser } from "@/lib/hn-cli-telemetry-redis";
+import { logger } from "@/lib/logger";
+import { withAxiom } from "@/lib/observability/axiom-route";
 
 const eventSchema = z.object({
   event: z.string().min(1).max(50),
@@ -16,7 +19,7 @@ const bodySchema = z.object({
   events: z.array(eventSchema).min(1).max(100),
 });
 
-export async function POST(request: Request) {
+async function postHandler(request: Request) {
   try {
     const body = await request.json();
     const parsed = bodySchema.safeParse(body);
@@ -29,10 +32,17 @@ export async function POST(request: Request) {
 
     await trackUser(userId);
     await storeEvents(userId, events, version);
+    track("hn_cli.telemetry_received", {
+      event_count: events.length,
+      event_names: [...new Set(events.map((event) => event.event))],
+      version,
+    });
 
     return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error("[HN-CLI Telemetry] Error processing request:", error);
+    logger.error("[HN-CLI Telemetry] Error processing request", error);
     return errorResponse("Failed to process telemetry", 500);
   }
 }
+
+export const POST = withAxiom(postHandler, { name: "/api/hn-cli/telemetry" });
