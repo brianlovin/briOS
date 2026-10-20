@@ -4,10 +4,10 @@ import { errorResponse, safeCompare } from "@/lib/api-utils";
 import { flushEvents, toErrorMessage, track } from "@/lib/axiom";
 import { logger } from "@/lib/logger";
 import { isFullPage, notion } from "@/lib/notion";
+import { getMediaUrl } from "@/lib/notion/media";
 import { annotate, withAxiom } from "@/lib/observability/axiom-route";
 import { uploadBufferToR2 } from "@/lib/r2/storage";
 
-import { getMediaUrl } from "../optimize-writing-images/media";
 import { collectJournalImages, fieldNoteBlockUpdate, type MediaBlockLike } from "./collect";
 import { composeFieldNotePoster, preparePhotoBuffer } from "./compose";
 import {

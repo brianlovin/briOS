@@ -6,6 +6,7 @@ import type {
 import { logger } from "@/lib/logger";
 
 import { notion } from "./client";
+import { persistBlockMedia } from "./persist-images";
 import {
   isTableRowBlock,
   type ProcessedBlock,
@@ -237,9 +238,11 @@ export async function getAllBlocks(pageId: string): Promise<ProcessedBlock[]> {
       }
     }
 
-    return processed
-      .map(({ processed: p }) => p)
-      .filter((block): block is ProcessedBlock => block !== null);
+    return persistBlockMedia(
+      processed
+        .map(({ processed: p }) => p)
+        .filter((block): block is ProcessedBlock => block !== null),
+    );
   } catch (error) {
     logger.error(`Error fetching blocks for page ${pageId}`, error);
     return [];

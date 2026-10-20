@@ -2,6 +2,12 @@
   "name": "brios-v2",
   "version": "0.1.0",
   "private": true,
+  "imports": {
+    "#notion-image-store": {
+      "browser": "./src/lib/notion/image-store.browser.ts",
+      "default": "./src/lib/notion/image-store.ts"
+    }
+  },
   "scripts": {
     "generate-schemas": "bun scripts/generateNotionSchemas.ts",
     "dev": "next dev --turbopack",
