@@ -2,11 +2,9 @@ import type { PageObjectResponse } from "@notionhq/client/build/src/api-endpoint
 import crypto from "crypto";
 
 import { toErrorMessage } from "@/lib/axiom";
-import { optimizeWritingImage } from "@/lib/image-processing/optimize";
 import { logger } from "@/lib/logger";
-import { missingR2EnvVars, r2ObjectExists, r2PublicUrl, uploadBufferToR2 } from "@/lib/r2/storage";
+import { defaultPersistImageDeps } from "#notion-image-store";
 
-import { isPlaceholderNotionBuild } from "./cache";
 import { isFullPage, type PageResponse, type ProcessedBlock } from "./types";
 
 export type NotionMediaKind = "image" | "video";
@@ -101,55 +99,6 @@ export function persistedImageKey(ref: Pick<NotionFileRef, "url" | "sourceId" | 
   return `${KEY_PREFIX}/${compactId(ref.sourceId)}/${safeSegment(ref.slot)}-${hash}${extensionFromPath(parsed.pathname)}`;
 }
 
-async function downloadFile(url: string): Promise<DownloadedFile> {
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`Download failed with HTTP ${response.status}`);
-  }
-  return {
-    body: Buffer.from(await response.arrayBuffer()),
-    contentType: response.headers.get("content-type") || "application/octet-stream",
-  };
-}
-
-/** Same compression as the writing-images webhook; GIF/SVG pass through untouched. */
-async function optimizeFile(file: DownloadedFile): Promise<DownloadedFile> {
-  if (!file.contentType.startsWith("image/")) return file;
-  if (file.contentType === "image/gif" || file.contentType === "image/svg+xml") return file;
-  try {
-    const optimized = await optimizeWritingImage(file.body);
-    if (optimized.optimizedSize >= file.body.length) return file;
-    return { body: optimized.buffer, contentType: optimized.contentType };
-  } catch (error) {
-    logger.warn("[Notion images] Optimize failed, uploading original", {
-      error_message: toErrorMessage(error),
-    });
-    return file;
-  }
-}
-
-let warnedMissingR2 = false;
-
-const defaultDeps: PersistImageDeps = {
-  store: {
-    exists: r2ObjectExists,
-    put: (key, body, contentType) => uploadBufferToR2(body, contentType, key),
-    publicUrl: r2PublicUrl,
-  },
-  download: downloadFile,
-  optimize: optimizeFile,
-  isEnabled() {
-    if (isPlaceholderNotionBuild()) return false;
-    const missing = missingR2EnvVars();
-    if (missing.length === 0) return true;
-    if (!warnedMissingR2) {
-      warnedMissingR2 = true;
-      logger.warn("[Notion images] R2 not configured; serving Notion URLs", { missing });
-    }
-    return false;
-  },
-};
-
 /** One upload per key per process, even when several renders race. */
 const inflight = new Map<string, Promise<string>>();
 
@@ -173,7 +122,7 @@ async function uploadOnce(
  */
 export async function persistNotionImage(
   ref: NotionFileRef,
-  deps: PersistImageDeps = defaultDeps,
+  deps: PersistImageDeps = defaultPersistImageDeps,
 ): Promise<string> {
   if (!isNotionTemporaryUrl(ref.url)) return ref.url;
   if (!deps.isEnabled()) return ref.url;

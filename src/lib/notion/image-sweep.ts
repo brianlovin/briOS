@@ -1,3 +1,4 @@
+import { APIErrorCode, APIResponseError } from "@notionhq/client";
 import type { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 
 import { toErrorMessage } from "@/lib/axiom";
@@ -289,7 +290,16 @@ export async function sweepNotionImages(options: SweepOptions): Promise<SweepSum
     } catch (error) {
       result.complete = false;
       result.error = toErrorMessage(error);
-      logger.error("[Notion images] Database sweep failed", error, { database: database.envKey });
+      if (
+        APIResponseError.isAPIResponseError(error) &&
+        error.code === APIErrorCode.ObjectNotFound
+      ) {
+        logger.warn("[Notion images] Database not shared with the integration", {
+          database: database.envKey,
+        });
+      } else {
+        logger.error("[Notion images] Database sweep failed", error, { database: database.envKey });
+      }
     }
 
     summary.databases.push(result);
