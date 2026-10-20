@@ -2,7 +2,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 
 import { clearHnCache } from "@/lib/hn-cache";
 
-import { invalidateNotionCache } from "./cache";
+import { invalidateNotionCache, listNotionCacheTags } from "./cache";
 
 export const PURGEABLE_CONTENT_TYPES = [
   "writing",
@@ -112,6 +112,30 @@ export async function purgeContentType(type: PurgeableContentType): Promise<numb
   }
   for (const path of config.pagePaths) {
     revalidatePath(path, "page");
+  }
+
+  return deleted;
+}
+
+/**
+ * Purge every Notion-backed cache: each `PURGE_CONFIG` type, plus any other
+ * `notion:<collection>` tag found in Redis (app dissection, listening, …).
+ * Used after a sweep rewrites files across several databases at once.
+ */
+export async function purgeAllNotionContent(): Promise<number> {
+  let deleted = 0;
+  const purgedTags = new Set<string>();
+
+  for (const type of PURGEABLE_CONTENT_TYPES) {
+    if (type === "hn") continue;
+    deleted += await purgeContentType(type);
+    for (const tag of PURGE_CONFIG[type].tags) purgedTags.add(tag);
+  }
+
+  for (const tag of await listNotionCacheTags()) {
+    if (purgedTags.has(tag) || tag === "notion:datasource") continue;
+    deleted += await invalidateNotionCache(`${tag}:*`);
+    revalidateTag(tag, { expire: 0 });
   }
 
   return deleted;

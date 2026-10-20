@@ -9,6 +9,10 @@
     {
       "path": "/api/spotify/sync",
       "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/notion/persist-images",
+      "schedule": "30 9 * * *"
     }
   ]
 }
