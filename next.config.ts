@@ -57,6 +57,11 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/computer/:path(rss|RSS|Rss|feed|Feed)",
+        destination: "/computer/rss.xml",
+        permanent: true,
+      },
+      {
         source: "/api/hn/unsubscribe",
         destination: "/api/hn-digest/unsubscribe",
         permanent: true,

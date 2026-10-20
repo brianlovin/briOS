@@ -1,60 +1,24 @@
-import { SITE_CONFIG } from "@/lib/metadata";
-import { getTilItemContent } from "@/lib/notion/queries";
-import { extractPreviewText } from "@/lib/notion/types";
+import { cacheLife, cacheTag } from "next/cache";
+
+import { isPlaceholderNotionBuild } from "@/lib/notion";
 import { withAxiom } from "@/lib/observability/axiom-route";
-import { addRssItem, createRssFeed, rssErrorResponse, rssResponse } from "@/lib/rss";
-import { buildSlug } from "@/lib/short-id";
-import { getAllTilEntries } from "@/lib/til";
+import { rssErrorResponse, rssXmlResponse } from "@/lib/rss";
+import { buildTilFeed, loadTilFeedEntries } from "@/lib/rss-feeds";
+
+async function getCachedFeedXml(): Promise<string> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("notion:til");
+  if (isPlaceholderNotionBuild()) return buildTilFeed([]).rss2();
+
+  const { entries, complete } = await loadTilFeedEntries();
+  if (!complete) cacheLife("minutes");
+  return buildTilFeed(entries).rss2();
+}
 
 async function getHandler() {
   try {
-    const feed = createRssFeed({
-      title: "TIL",
-      description: "Today I Learned - Quick notes and discoveries",
-      path: "/til",
-    });
-
-    const entries = await getAllTilEntries();
-    const entriesWithShortId = entries.filter((entry) => entry.shortId);
-
-    // Fetch content for all entries in parallel (gracefully handle failures)
-    const entriesWithContent = await Promise.all(
-      entriesWithShortId.map(async (entry) => {
-        try {
-          const content = await getTilItemContent(entry.id);
-          return { entry, content };
-        } catch {
-          return { entry, content: null };
-        }
-      }),
-    );
-
-    entriesWithContent.forEach(({ entry, content }) => {
-      const entryUrl = `${SITE_CONFIG.url}/til/${buildSlug(entry.title, entry.shortId!)}`;
-      const publishDate = new Date(entry.published);
-
-      // Build description with first paragraph and view link
-      const descriptionParts: string[] = [];
-      if (content?.blocks) {
-        const previewText = extractPreviewText(content.blocks, { maxBlocks: 1 });
-        if (previewText) {
-          descriptionParts.push(previewText);
-        }
-      }
-      descriptionParts.push(`View post: ${entryUrl}`);
-      const description = descriptionParts.join("\n\n");
-
-      addRssItem(feed, {
-        title: entry.title,
-        id: entry.id,
-        link: entryUrl,
-        description,
-        date: publishDate,
-        published: publishDate,
-      });
-    });
-
-    return rssResponse(feed);
+    return rssXmlResponse(await getCachedFeedXml());
   } catch (error) {
     return rssErrorResponse("TIL", error);
   }

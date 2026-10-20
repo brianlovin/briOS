@@ -362,6 +362,8 @@ async function computerIndexMarkdown(): Promise<MarkdownResult> {
     "## Tips",
     "",
     links.length > 0 ? linkList(links) : "- Published tips load from Notion when available.",
+    "",
+    `[RSS](/computer/rss.xml)`,
   ].join("\n");
   return md(200, body, ["notion:computer"]);
 }
