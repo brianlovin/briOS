@@ -1,65 +1,24 @@
-import { SITE_CONFIG } from "@/lib/metadata";
-import { getWritingPostContent } from "@/lib/notion/queries";
-import { extractPreviewText } from "@/lib/notion/types";
+import { cacheLife, cacheTag } from "next/cache";
+
+import { isPlaceholderNotionBuild } from "@/lib/notion";
 import { withAxiom } from "@/lib/observability/axiom-route";
-import { addRssItem, createRssFeed, rssErrorResponse, rssResponse } from "@/lib/rss";
-import { buildSlug } from "@/lib/short-id";
-import { getAllWritingPosts } from "@/lib/writing";
+import { rssErrorResponse, rssXmlResponse } from "@/lib/rss";
+import { buildWritingFeed, loadWritingFeedEntries } from "@/lib/rss-feeds";
+
+async function getCachedFeedXml(): Promise<string> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("notion:writing");
+  if (isPlaceholderNotionBuild()) return buildWritingFeed([]).rss2();
+
+  const { entries, complete } = await loadWritingFeedEntries();
+  if (!complete) cacheLife("minutes");
+  return buildWritingFeed(entries).rss2();
+}
 
 async function getHandler() {
   try {
-    const feed = createRssFeed({
-      title: "Writing",
-      description: "Essays, guides, and thoughts on design, engineering, and product development",
-      path: "/writing",
-    });
-
-    // Fetch all writing posts
-    const posts = await getAllWritingPosts();
-    const postsWithShortId = posts.filter((post) => post.shortId);
-
-    // Fetch content for all posts in parallel (gracefully handle failures)
-    const postsWithContent = await Promise.all(
-      postsWithShortId.map(async (post) => {
-        try {
-          const content = await getWritingPostContent(post.id);
-          return { post, content };
-        } catch {
-          return { post, content: null };
-        }
-      }),
-    );
-
-    // Add each post to the feed
-    postsWithContent.forEach(({ post, content }) => {
-      const postUrl = `${SITE_CONFIG.url}/writing/${buildSlug(post.title, post.shortId!)}`;
-      const publishDate = new Date(post.published || post.createdTime);
-
-      // Build description with content preview and view link
-      const descriptionParts: string[] = [];
-      if (content?.blocks) {
-        const previewText = extractPreviewText(content.blocks, { maxBlocks: 2 });
-        if (previewText) {
-          descriptionParts.push(previewText);
-        }
-      } else if (post.excerpt) {
-        descriptionParts.push(post.excerpt);
-      }
-      descriptionParts.push(`View post: ${postUrl}`);
-      const description = descriptionParts.join("\n\n");
-
-      addRssItem(feed, {
-        title: post.title,
-        id: post.id,
-        link: postUrl,
-        description,
-        date: publishDate,
-        published: publishDate,
-        image: post.featureImage,
-      });
-    });
-
-    return rssResponse(feed);
+    return rssXmlResponse(await getCachedFeedXml());
   } catch (error) {
     return rssErrorResponse("Writing", error);
   }

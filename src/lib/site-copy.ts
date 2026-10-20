@@ -82,6 +82,7 @@ ${INDEXABLE_SECTIONS.map((section) => `- [${section.title}](${section.href}): ${
 - [Sites RSS](/sites/rss.xml)
 - [AMA RSS](/ama/rss.xml)
 - [App Dissection RSS](/app-dissection/rss.xml)
+- [Computer Tips RSS](/computer/rss.xml)
 
 ## Source
 

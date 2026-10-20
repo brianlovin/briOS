@@ -341,7 +341,7 @@ export async function getStackDatabaseItems(): Promise<NotionStackItem[]> {
     async () => {
       const databaseId = process.env.NOTION_STACK_DATABASE_ID || "";
       const dataSourceId = await getDataSourceId(databaseId);
-      const response = await notion.dataSources.query({
+      const results = await queryAllDataSourcePages({
         data_source_id: dataSourceId,
         sorts: [
           {
@@ -351,9 +351,7 @@ export async function getStackDatabaseItems(): Promise<NotionStackItem[]> {
         ],
       });
 
-      return response.results
-        .map(mapStackItem)
-        .filter((item): item is NotionStackItem => item !== null);
+      return results.map(mapStackItem).filter((item): item is NotionStackItem => item !== null);
     },
     { ttl: CACHE_TTLS.LIST },
   );
@@ -784,7 +782,7 @@ export async function getAppDissectionDatabaseItems(): Promise<NotionAppDissecti
     async () => {
       const databaseId = process.env.NOTION_APP_DISSECTION_DATABASE_ID || "";
       const dataSourceId = await getDataSourceId(databaseId);
-      const response = await notion.dataSources.query({
+      const results = await queryAllDataSourcePages({
         data_source_id: dataSourceId,
         filter: {
           property: "Status",
@@ -800,7 +798,7 @@ export async function getAppDissectionDatabaseItems(): Promise<NotionAppDissecti
         ],
       });
 
-      return response.results
+      return results
         .map(mapAppDissectionItem)
         .filter((item): item is NotionAppDissectionItem => item !== null);
     },

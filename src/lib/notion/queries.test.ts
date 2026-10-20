@@ -2,7 +2,12 @@ import { afterEach, describe, expect, mock, spyOn, test } from "bun:test";
 
 import * as cache from "./cache";
 import { notion } from "./client";
-import { getGoodWebsitesDatabaseItems, getGoodWebsitesDatabaseItemsForRss } from "./queries";
+import {
+  getAppDissectionDatabaseItems,
+  getGoodWebsitesDatabaseItems,
+  getGoodWebsitesDatabaseItemsForRss,
+  getStackDatabaseItems,
+} from "./queries";
 import type { PageResponse } from "./types";
 
 function richTextItem(content: string) {
@@ -211,6 +216,62 @@ describe("getGoodWebsitesDatabaseItemsForRss", () => {
     expect(query.mock.calls[1]?.[0]).toMatchObject({
       start_cursor: "rss-page-2",
       page_size: 100,
+    });
+  });
+});
+
+function namedPage(id: string, name: string): PageResponse {
+  return {
+    object: "page",
+    id,
+    created_time: "2024-01-01T00:00:00.000Z",
+    icon: null,
+    properties: {
+      Name: { id: "title", type: "title", title: [richTextItem(name)] },
+    },
+  } as PageResponse;
+}
+
+function stubDataSource() {
+  spyOn(cache, "cachedNotionQuery").mockImplementation(async (_key, fetcher) => fetcher());
+  spyOn(notion.databases, "retrieve").mockResolvedValue({
+    data_sources: [{ id: "ds" }],
+  } as never);
+}
+
+function twoPageQuery() {
+  return spyOn(notion.dataSources, "query").mockImplementation(async (args) => {
+    if (!args.start_cursor) {
+      return queryPage([namedPage("1", "First")], { hasMore: true, nextCursor: "page-2" }) as never;
+    }
+    return queryPage([namedPage("2", "Second")]) as never;
+  });
+}
+
+describe("feed list queries past the 100-row Notion page", () => {
+  test("getStackDatabaseItems follows start_cursor", async () => {
+    stubDataSource();
+    const query = twoPageQuery();
+
+    const items = await getStackDatabaseItems();
+
+    expect(items.map((item) => item.name)).toEqual(["First", "Second"]);
+    expect(query).toHaveBeenCalledTimes(2);
+    expect(query.mock.calls[1]?.[0]).toMatchObject({ start_cursor: "page-2", page_size: 100 });
+  });
+
+  test("getAppDissectionDatabaseItems follows start_cursor", async () => {
+    stubDataSource();
+    const query = twoPageQuery();
+
+    const items = await getAppDissectionDatabaseItems();
+
+    expect(items.map((item) => item.name)).toEqual(["First", "Second"]);
+    expect(query).toHaveBeenCalledTimes(2);
+    expect(query.mock.calls[1]?.[0]).toMatchObject({
+      start_cursor: "page-2",
+      page_size: 100,
+      filter: { property: "Status", select: { equals: "Published" } },
     });
   });
 });
