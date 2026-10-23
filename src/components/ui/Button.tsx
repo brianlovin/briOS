@@ -57,7 +57,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className: cn(combinedClassName, childProps.className as string | undefined),
         ...props,
       });
-      // eslint-disable-next-line react-hooks/refs -- forwarding ref object, not reading .current
       return React.cloneElement(children as React.ReactElement<Record<string, unknown>>, {
         ...mergedProps,
         ref,

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/Select";
 import { trackClientEvent } from "@/lib/client-events";
@@ -27,15 +27,18 @@ export function StackFilters({ isLoading, status = "active", platform = "" }: St
   const urlPlatform = platform || "all-platforms";
   const [currentStatus, setCurrentStatus] = useState(status);
   const [currentPlatform, setCurrentPlatform] = useState(urlPlatform);
+  const [syncedStatus, setSyncedStatus] = useState(status);
+  const [syncedPlatform, setSyncedPlatform] = useState(urlPlatform);
 
   // Sync local state with URL params (for back/forward navigation)
-  useEffect(() => {
+  if (status !== syncedStatus) {
+    setSyncedStatus(status);
     setCurrentStatus(status);
-  }, [status]);
-
-  useEffect(() => {
+  }
+  if (urlPlatform !== syncedPlatform) {
+    setSyncedPlatform(urlPlatform);
     setCurrentPlatform(urlPlatform);
-  }, [urlPlatform]);
+  }
 
   const pushFilters = (nextStatus: string, nextPlatform: string) => {
     const params = new URLSearchParams();
