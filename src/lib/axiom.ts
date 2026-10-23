@@ -136,7 +136,13 @@ export interface EventFieldMap extends ClientEvents {
     action: "add" | "remove";
     reason: "rate_limited" | "max_likes" | "no_likes";
   } & RequestContextFields;
-  "likes.synced": { synced: number; failed: number; total: number };
+  "likes.synced": {
+    synced: number;
+    unchanged: number;
+    skipped: number;
+    failed: number;
+    total: number;
+  };
 
   // --- AMA ---
   "ama.question_asked": {
