@@ -55,7 +55,7 @@ export async function optimizeImage(
       compressionLevel: 9,
       effort: 10,
     });
-  } else if (metadata.format === "jpeg" || metadata.format === "jpg") {
+  } else if (metadata.format === "jpeg") {
     processedImage = processedImage.jpeg({
       quality,
       mozjpeg: true,

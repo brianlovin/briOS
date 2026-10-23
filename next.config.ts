@@ -69,6 +69,8 @@ const nextConfig: NextConfig = {
     ];
   },
   devIndicators: false,
+  // AGENTS.md is hand-maintained; stop `next dev` from appending its managed block.
+  agentRules: false,
   turbopack: {
     root: path.resolve(__dirname),
   },
