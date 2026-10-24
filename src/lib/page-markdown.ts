@@ -80,7 +80,7 @@ async function homeMarkdown(): Promise<MarkdownResult> {
   const body = [
     `# ${SITE_NAME}`,
     "",
-    `${SITE_NAME}'s personal site (${SITE_HOST} / ${SITE_PRODUCT}). Designer and software engineer in San Francisco.`,
+    `${SITE_NAME}'s personal site (${SITE_HOST} / ${SITE_PRODUCT}). Software designer in New York.`,
     "",
     joinParagraphs(HOME_BIO_PARAGRAPHS),
     "",
