@@ -19,8 +19,7 @@ export function HomeHero() {
       </h1>
 
       <p className="text-secondary text-2xl font-semibold text-pretty">
-        I&apos;m a software designer living in San Francisco, currently making AI products at
-        Notion.
+        I&apos;m a software designer living in New York, currently making AI products at Notion.
       </p>
     </Section>
   );

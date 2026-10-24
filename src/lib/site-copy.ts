@@ -31,11 +31,11 @@ export const INDEXABLE_SECTIONS = [
 ] as const;
 
 export const HOME_BIO_PARAGRAPHS = [
-  "I'm a software designer living in San Francisco, currently making AI products at Notion.",
+  "I'm a software designer living in New York, currently making AI products at Notion.",
 ] as const;
 
 export const ABOUT_BIO_PARAGRAPHS = [
-  "I'm a designer and software engineer living in San Francisco.",
+  "I'm a software designer living in New York.",
   "I'm currently designing AI products at Notion. Before Notion, I was the co-founder of Campsite, an app that combined posts, docs, calls, and chat to enable thoughtful team collaboration.",
   "Before Campsite, I spent four years designing the GitHub Mobile apps. I joined GitHub after they acquired my first startup, Spectrum, a platform for branded communities to have better public conversations.",
   "Before Spectrum, I designed payments experiences at Facebook, working across Facebook, Messenger, WhatsApp, and Instagram. I originally cut my teeth as the first product designer at Buffer.",
