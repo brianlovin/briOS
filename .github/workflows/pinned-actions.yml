@@ -1,0 +1,26 @@
+name: Pinned actions
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/**"
+      - "scripts/ci/check-pinned-actions*.mjs"
+  pull_request:
+    paths:
+      - ".github/**"
+      - "scripts/ci/check-pinned-actions*.mjs"
+
+permissions:
+  contents: read
+
+jobs:
+  pinned-actions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Require every action to be pinned to a commit SHA
+        run: node scripts/ci/check-pinned-actions.mjs
