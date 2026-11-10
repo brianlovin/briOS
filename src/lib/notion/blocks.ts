@@ -1,5 +1,6 @@
 import type {
   BlockObjectResponse,
+  ListBlockChildrenResponse,
   RichTextItemResponse,
 } from "@notionhq/client/build/src/api-endpoints";
 
@@ -176,24 +177,17 @@ export function processBlockFromResponse(block: BlockObjectResponse): ProcessedB
 // Fetch all blocks from a page with pagination support
 export async function getAllBlocks(pageId: string): Promise<ProcessedBlock[]> {
   try {
-    const blocksResponse = await notion.blocks.children.list({
-      block_id: pageId,
-      page_size: 100,
-    });
-
-    // Handle pagination if there are more than 100 blocks
-    let allBlocks = [...blocksResponse.results];
-    let nextCursor = blocksResponse.next_cursor;
-
-    while (nextCursor) {
-      const nextPage = await notion.blocks.children.list({
+    const allBlocks: ListBlockChildrenResponse["results"] = [];
+    let cursor: string | null = null;
+    do {
+      const page: ListBlockChildrenResponse = await notion.blocks.children.list({
         block_id: pageId,
         page_size: 100,
-        start_cursor: nextCursor,
+        start_cursor: cursor,
       });
-      allBlocks = [...allBlocks, ...nextPage.results];
-      nextCursor = nextPage.next_cursor;
-    }
+      allBlocks.push(...page.results);
+      cursor = page.next_cursor;
+    } while (cursor);
 
     // Process all blocks synchronously first (no API calls)
     const processed: { block: BlockObjectResponse; processed: ProcessedBlock | null }[] =

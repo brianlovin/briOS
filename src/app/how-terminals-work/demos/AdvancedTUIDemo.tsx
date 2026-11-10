@@ -27,11 +27,7 @@ const SIDEBAR_ITEMS = [
 const TABS = ["Continuous", "Integration", "Logging"];
 
 type ExplainerStep =
-  | "overview"
-  | "layout-system"
-  | "focus-management"
-  | "resize-handling"
-  | "rendering";
+  "overview" | "layout-system" | "focus-management" | "resize-handling" | "rendering";
 
 interface StepContent {
   title: string;

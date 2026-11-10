@@ -1,5 +1,8 @@
 import { APIErrorCode, APIResponseError } from "@notionhq/client";
-import type { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import type {
+  ListBlockChildrenResponse,
+  PageObjectResponse,
+} from "@notionhq/client/build/src/api-endpoints";
 
 import { toErrorMessage } from "@/lib/axiom";
 import { logger } from "@/lib/logger";
@@ -339,12 +342,12 @@ async function* listDatabasePages(databaseId: string): AsyncIterable<PageObjectR
 
 async function listBlockTree(blockId: string): Promise<MediaBlockLike[]> {
   const blocks: MediaBlockLike[] = [];
-  let cursor: string | undefined;
+  let cursor: string | null = null;
   do {
-    const response = await notion.blocks.children.list({
+    const response: ListBlockChildrenResponse = await notion.blocks.children.list({
       block_id: blockId,
       page_size: 100,
-      ...(cursor ? { start_cursor: cursor } : {}),
+      start_cursor: cursor,
     });
     for (const block of response.results) {
       if (!("type" in block)) continue;
@@ -353,7 +356,7 @@ async function listBlockTree(blockId: string): Promise<MediaBlockLike[]> {
         blocks.push(...(await listBlockTree(block.id)));
       }
     }
-    cursor = response.has_more ? (response.next_cursor ?? undefined) : undefined;
+    cursor = response.next_cursor;
   } while (cursor);
   return blocks;
 }

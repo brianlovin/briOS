@@ -26,11 +26,7 @@ interface CursorPosition {
 }
 
 type ExplainerStep =
-  | "overview"
-  | "terminal-selection"
-  | "cursor-positioning"
-  | "option-click"
-  | "why-different";
+  "overview" | "terminal-selection" | "cursor-positioning" | "option-click" | "why-different";
 
 const EXPLAINER_STEPS: Record<ExplainerStep, { title: string; description: string }> = {
   overview: {
