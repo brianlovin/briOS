@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { cachedResponse, errorResponse } from "@/lib/api-utils";
 import { HN_BOTID_ADVANCED_OPTIONS } from "@/lib/botid";
 import { getPostById } from "@/lib/hn";
+import { rejectHnBot } from "@/lib/hn-bot-block";
 import { logger } from "@/lib/logger";
 import { withAxiom } from "@/lib/observability/axiom-route";
 
@@ -16,7 +17,7 @@ async function getHandler(
   });
 
   if (verification.isBot) {
-    return errorResponse("Access denied", 403);
+    return rejectHnBot();
   }
 
   const params = await props.params;
