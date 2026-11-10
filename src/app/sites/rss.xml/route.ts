@@ -1,42 +1,22 @@
-import { getGoodWebsitesForRss } from "@/lib/goodWebsites";
-import { SITE_CONFIG } from "@/lib/metadata";
+import { cacheLife, cacheTag } from "next/cache";
+
+import { isPlaceholderNotionBuild } from "@/lib/notion";
 import { withAxiom } from "@/lib/observability/axiom-route";
-import { addRssItem, createRssFeed, rssErrorResponse, rssResponse } from "@/lib/rss";
+import { rssErrorResponse, rssXmlResponse } from "@/lib/rss";
+import { buildGoodWebsitesFeed, loadGoodWebsitesFeedItems } from "@/lib/rss-feeds";
+
+async function getCachedFeedXml(): Promise<string> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("notion:good-websites");
+  return buildGoodWebsitesFeed(
+    isPlaceholderNotionBuild() ? [] : await loadGoodWebsitesFeedItems(),
+  ).rss2();
+}
 
 async function getHandler() {
   try {
-    const feed = createRssFeed({
-      title: "Good Websites",
-      description: "A curated collection of inspirational good websites",
-      path: "/sites",
-    });
-
-    const websites = await getGoodWebsitesForRss();
-
-    websites.forEach((website) => {
-      const publishDate = new Date(website.createdTime);
-
-      // Build description with view link and tags
-      const descriptionParts: string[] = [];
-      if (website.url) {
-        descriptionParts.push(`View: ${website.url}`);
-      }
-      if (website.tags?.length) {
-        descriptionParts.push(`Tags: ${website.tags.join(", ")}`);
-      }
-      const description = descriptionParts.join("\n\n") || "A good website";
-
-      addRssItem(feed, {
-        title: website.name,
-        id: website.id,
-        link: website.url || `${SITE_CONFIG.url}/sites`,
-        description,
-        date: publishDate,
-        published: publishDate,
-      });
-    });
-
-    return rssResponse(feed);
+    return rssXmlResponse(await getCachedFeedXml());
   } catch (error) {
     return rssErrorResponse("Good Websites", error);
   }

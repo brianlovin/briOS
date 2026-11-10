@@ -136,8 +136,7 @@ export function InfiniteScrollList<T>({
           ref={loadMoreRef as React.Ref<HTMLLIElement> & React.Ref<HTMLDivElement>}
           className="flex h-4 items-center justify-center"
         >
-          {(isLoadingMore || isRequestingMore.current) &&
-            (loadingComponent || defaultLoadingComponent)}
+          {isLoadingMore && (loadingComponent || defaultLoadingComponent)}
         </LoadMoreElement>
       )}
     </List>

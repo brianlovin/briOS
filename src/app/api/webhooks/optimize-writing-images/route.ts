@@ -4,10 +4,6 @@ import { errorResponse, safeCompare } from "@/lib/api-utils";
 import { optimizeWritingImage } from "@/lib/image-processing/optimize";
 import { logger } from "@/lib/logger";
 import { notion } from "@/lib/notion";
-import { purgeContentType } from "@/lib/notion/purge";
-import { annotate, withAxiom } from "@/lib/observability/axiom-route";
-import { uploadBufferToR2 } from "@/lib/r2/storage";
-
 import {
   collectMedia,
   failedMediaResult,
@@ -16,7 +12,10 @@ import {
   type MediaResult,
   type MediaView,
   summarizeMediaResults,
-} from "./media";
+} from "@/lib/notion/media";
+import { purgeContentType } from "@/lib/notion/purge";
+import { annotate, withAxiom } from "@/lib/observability/axiom-route";
+import { uploadBufferToR2 } from "@/lib/r2/storage";
 
 /**
  * Webhook endpoint to optimize writing page media and upload to R2

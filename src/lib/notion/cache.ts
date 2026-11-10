@@ -7,7 +7,7 @@ import { logger } from "@/lib/logger";
 // Lazy-initialize Redis to avoid errors during build if env vars aren't set
 let redis: Redis | null = null;
 
-function getRedis(): Redis | null {
+export function getNotionCacheRedis(): Redis | null {
   if (redis) return redis;
 
   if (!process.env.UPSTASH_NOTION_CACHE_REST_URL || !process.env.UPSTASH_NOTION_CACHE_REST_TOKEN) {
@@ -72,7 +72,7 @@ interface CachedNotionQueryOptions {
  * Returns the first two segments so a whole content type can be invalidated
  * at once via `revalidateTag("notion:writing", { expire: 0 })`.
  */
-function deriveTag(key: string): string {
+export function deriveTag(key: string): string {
   return key.split(":").slice(0, 2).join(":");
 }
 
@@ -90,7 +90,7 @@ async function upstashBackedQuery<T>(
   fetcher: () => Promise<T>,
   options: CachedNotionQueryOptions,
 ): Promise<T> {
-  const client = getRedis();
+  const client = getNotionCacheRedis();
 
   if (!client) {
     return fetcher();
@@ -173,7 +173,7 @@ export async function cachedNotionQuery<T>(
  * Uses Redis SCAN to find and delete matching keys.
  */
 export async function invalidateNotionCache(pattern: string): Promise<number> {
-  const client = getRedis();
+  const client = getNotionCacheRedis();
   if (!client) return 0;
 
   try {
@@ -200,4 +200,29 @@ export async function invalidateNotionCache(pattern: string): Promise<number> {
     logger.error(`[Notion Cache] Error invalidating cache for ${pattern}`, error);
     return 0;
   }
+}
+
+/**
+ * Every `notion:<collection>` tag that currently has Redis entries, so a
+ * site-wide purge also reaches collections without a `PURGE_CONFIG` entry.
+ */
+export async function listNotionCacheTags(): Promise<string[]> {
+  const client = getNotionCacheRedis();
+  if (!client) return [];
+
+  const tags = new Set<string>();
+  try {
+    let cursor = "0";
+    do {
+      const [next, keys]: [string, string[]] = await client.scan(cursor, {
+        match: "notion:*",
+        count: 500,
+      });
+      cursor = next;
+      for (const key of keys) tags.add(deriveTag(key));
+    } while (cursor !== "0");
+  } catch (error) {
+    logger.warn("[Notion Cache] Tag scan failed", { error_message: toErrorMessage(error) });
+  }
+  return [...tags].sort();
 }

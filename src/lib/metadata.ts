@@ -6,8 +6,7 @@ import type { Metadata } from "next";
 export const SITE_CONFIG = {
   name: "Brian Lovin",
   title: "Brian Lovin",
-  description:
-    "Designer and software engineer living in San Francisco. Currently designing AI products at Notion.",
+  description: "Software designer living in New York. Currently designing AI products at Notion.",
   url: "https://brianlovin.com",
   author: {
     name: "Brian Lovin",

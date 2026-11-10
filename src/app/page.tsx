@@ -20,7 +20,7 @@ import { getAllWritingPosts, recentWritingLinks } from "@/lib/writing";
 export const metadata: Metadata = createMetadata({
   title: "Brian Lovin",
   description:
-    "Brian Lovin is a designer and software engineer living in San Francisco, currently designing AI products at Notion.",
+    "Brian Lovin is a software designer living in New York, currently designing AI products at Notion.",
   path: "/",
 });
 

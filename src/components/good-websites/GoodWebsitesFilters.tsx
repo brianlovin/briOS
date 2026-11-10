@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/Select";
 import { trackClientEvent } from "@/lib/client-events";
@@ -23,11 +23,13 @@ export function GoodWebsitesFilters({ isLoading, tag = "" }: GoodWebsitesFilters
 
   const urlTag = tag || "all";
   const [currentTag, setCurrentTag] = useState(urlTag);
+  const [syncedTag, setSyncedTag] = useState(urlTag);
 
   // Sync local state with URL params (for back/forward navigation)
-  useEffect(() => {
+  if (urlTag !== syncedTag) {
+    setSyncedTag(urlTag);
     setCurrentTag(urlTag);
-  }, [urlTag]);
+  }
 
   const pushTag = (value: string) => {
     const params = new URLSearchParams();

@@ -10,11 +10,12 @@
 
 ## Code Quality
 
-| Command            | Description               |
-| ------------------ | ------------------------- |
-| `bun run lint`     | Run ESLint                |
-| `bun run lint:fix` | Run ESLint with auto-fix  |
-| `bun run format`   | Format code with Prettier |
+| Command                | Description                                               |
+| ---------------------- | --------------------------------------------------------- |
+| `bun run lint`         | Run ESLint                                                |
+| `bun run lint:fix`     | Run ESLint with auto-fix                                  |
+| `bun run lint:actions` | Fail if any GitHub Actions `uses:` is not pinned to a SHA |
+| `bun run format`       | Format code with Prettier                                 |
 
 ## Data
 

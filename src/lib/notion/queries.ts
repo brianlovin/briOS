@@ -10,6 +10,7 @@ import {
   mapComputerItem,
   rewriteComputerTipLinks,
 } from "./computer";
+import { persistPageImages } from "./persist-images";
 import {
   createdTime,
   dateStart,
@@ -48,7 +49,21 @@ import {
 } from "./types";
 
 type DataSourceQueryArgs = Parameters<typeof notion.dataSources.query>[0];
-type DataSourceQueryResults = Awaited<ReturnType<typeof notion.dataSources.query>>["results"];
+type DataSourceQueryResponse = Awaited<ReturnType<typeof notion.dataSources.query>>;
+type DataSourceQueryResults = DataSourceQueryResponse["results"];
+
+/** Every page read goes through here so Notion-hosted files come back as R2 URLs. */
+async function queryDataSource(args: DataSourceQueryArgs): Promise<DataSourceQueryResponse> {
+  const response = await notion.dataSources.query(args);
+  return {
+    ...response,
+    results: await Promise.all(response.results.map((page) => persistPageImages(page))),
+  };
+}
+
+async function retrievePage(pageId: string): Promise<PageResponse> {
+  return persistPageImages(await notion.pages.retrieve({ page_id: pageId }));
+}
 
 async function queryAllDataSourcePages(
   args: Omit<DataSourceQueryArgs, "start_cursor" | "page_size">,
@@ -57,7 +72,7 @@ async function queryAllDataSourcePages(
   let cursor: string | undefined;
 
   do {
-    const response = await notion.dataSources.query({
+    const response = await queryDataSource({
       ...args,
       page_size: 100,
       ...(cursor ? { start_cursor: cursor } : {}),
@@ -321,7 +336,7 @@ export async function getFullContent(
   return cachedNotionQuery(
     notionContentCacheKey(null, pageId),
     async () => {
-      const page = await notion.pages.retrieve({ page_id: pageId });
+      const page = await retrievePage(pageId);
       const metadata = mapGenericItem(page);
       if (!metadata) return null;
 
@@ -341,7 +356,7 @@ export async function getStackDatabaseItems(): Promise<NotionStackItem[]> {
     async () => {
       const databaseId = process.env.NOTION_STACK_DATABASE_ID || "";
       const dataSourceId = await getDataSourceId(databaseId);
-      const response = await notion.dataSources.query({
+      const results = await queryAllDataSourcePages({
         data_source_id: dataSourceId,
         sorts: [
           {
@@ -351,9 +366,7 @@ export async function getStackDatabaseItems(): Promise<NotionStackItem[]> {
         ],
       });
 
-      return response.results
-        .map(mapStackItem)
-        .filter((item): item is NotionStackItem => item !== null);
+      return results.map(mapStackItem).filter((item): item is NotionStackItem => item !== null);
     },
     { ttl: CACHE_TTLS.LIST },
   );
@@ -420,7 +433,7 @@ export async function getWritingDatabaseItems(
     async () => {
       const databaseId = process.env.NOTION_WRITING_DATABASE_ID || "";
       const dataSourceId = await getDataSourceId(databaseId);
-      const response = await notion.dataSources.query({
+      const response = await queryDataSource({
         data_source_id: dataSourceId,
         page_size: pageSize,
         ...(cursor ? { start_cursor: cursor } : {}),
@@ -455,7 +468,7 @@ export async function getWritingPostContent(
   return cachedNotionQuery(
     notionContentCacheKey("writing", pageId),
     async () => {
-      const page = await notion.pages.retrieve({ page_id: pageId });
+      const page = await retrievePage(pageId);
       const metadata = mapWritingItem(page);
       if (!metadata) return null;
 
@@ -475,7 +488,7 @@ export async function getWritingPostContentBySlug(
     async () => {
       const databaseId = process.env.NOTION_WRITING_DATABASE_ID || "";
       const dataSourceId = await getDataSourceId(databaseId);
-      const response = await notion.dataSources.query({
+      const response = await queryDataSource({
         data_source_id: dataSourceId,
         filter: {
           property: "Slug",
@@ -506,7 +519,7 @@ export async function getWritingPostByShortId(
     async () => {
       const databaseId = process.env.NOTION_WRITING_DATABASE_ID || "";
       const dataSourceId = await getDataSourceId(databaseId);
-      const response = await notion.dataSources.query({
+      const response = await queryDataSource({
         data_source_id: dataSourceId,
         filter: {
           property: "Short ID",
@@ -535,7 +548,7 @@ export async function getAmaItemContent(pageId: string): Promise<NotionAmaItemWi
   return cachedNotionQuery(
     notionContentCacheKey("ama", pageId),
     async () => {
-      const page = await notion.pages.retrieve({ page_id: pageId });
+      const page = await retrievePage(pageId);
       const item = mapAmaItem(page);
       if (!item) return null;
 
@@ -565,7 +578,7 @@ export async function getAmaDatabaseItems(
     async () => {
       const databaseId = process.env.NOTION_AMA_DATABASE_ID || "";
       const dataSourceId = await getDataSourceId(databaseId);
-      const response = await notion.dataSources.query({
+      const response = await queryDataSource({
         data_source_id: dataSourceId,
         page_size: pageSize,
         ...(cursor ? { start_cursor: cursor } : {}),
@@ -605,7 +618,7 @@ export async function getListeningHistoryDatabaseItems(
     async () => {
       const databaseId = process.env.NOTION_MUSIC_DATABASE_ID || "";
       const dataSourceId = await getDataSourceId(databaseId);
-      const response = await notion.dataSources.query({
+      const response = await queryDataSource({
         data_source_id: dataSourceId,
         page_size: pageSize,
         ...(cursor ? { start_cursor: cursor } : {}),
@@ -639,7 +652,7 @@ export async function getDesignDetailsEpisodeDatabaseItems(
     async () => {
       const databaseId = process.env.NOTION_DESIGN_DETAILS_EPISODES_DATABASE_ID || "";
       const dataSourceId = await getDataSourceId(databaseId);
-      const response = await notion.dataSources.query({
+      const response = await queryDataSource({
         data_source_id: dataSourceId,
         page_size: pageSize,
         ...(cursor ? { start_cursor: cursor } : {}),
@@ -670,7 +683,7 @@ export async function getSpeakingItems(): Promise<NotionSpeakingItem[]> {
     async () => {
       const databaseId = process.env.NOTION_SPEAKING_DATABASE_ID || "";
       const dataSourceId = await getDataSourceId(databaseId);
-      const response = await notion.dataSources.query({
+      const response = await queryDataSource({
         data_source_id: dataSourceId,
         sorts: [
           {
@@ -699,7 +712,7 @@ export async function getTilDatabaseItems(
     async () => {
       const databaseId = process.env.NOTION_TIL_DATABASE_ID || "";
       const dataSourceId = await getDataSourceId(databaseId);
-      const response = await notion.dataSources.query({
+      const response = await queryDataSource({
         data_source_id: dataSourceId,
         page_size: pageSize,
         ...(cursor ? { start_cursor: cursor } : {}),
@@ -732,7 +745,7 @@ export async function getTilItemContent(pageId: string): Promise<NotionTilItemWi
   return cachedNotionQuery(
     notionContentCacheKey("til", pageId),
     async () => {
-      const page = await notion.pages.retrieve({ page_id: pageId });
+      const page = await retrievePage(pageId);
       const item = mapTilItem(page);
       if (!item) return null;
 
@@ -753,7 +766,7 @@ export async function getTilByShortId(shortId: string): Promise<NotionTilItemWit
     async () => {
       const databaseId = process.env.NOTION_TIL_DATABASE_ID || "";
       const dataSourceId = await getDataSourceId(databaseId);
-      const response = await notion.dataSources.query({
+      const response = await queryDataSource({
         data_source_id: dataSourceId,
         filter: {
           property: "Short ID",
@@ -784,7 +797,7 @@ export async function getAppDissectionDatabaseItems(): Promise<NotionAppDissecti
     async () => {
       const databaseId = process.env.NOTION_APP_DISSECTION_DATABASE_ID || "";
       const dataSourceId = await getDataSourceId(databaseId);
-      const response = await notion.dataSources.query({
+      const results = await queryAllDataSourcePages({
         data_source_id: dataSourceId,
         filter: {
           property: "Status",
@@ -800,7 +813,7 @@ export async function getAppDissectionDatabaseItems(): Promise<NotionAppDissecti
         ],
       });
 
-      return response.results
+      return results
         .map(mapAppDissectionItem)
         .filter((item): item is NotionAppDissectionItem => item !== null);
     },
@@ -816,7 +829,7 @@ export async function getAppDissectionItemBySlug(
     async () => {
       const databaseId = process.env.NOTION_APP_DISSECTION_DATABASE_ID || "";
       const dataSourceId = await getDataSourceId(databaseId);
-      const response = await notion.dataSources.query({
+      const response = await queryDataSource({
         data_source_id: dataSourceId,
         filter: {
           and: [
@@ -871,7 +884,7 @@ export async function getComputerDatabaseItems(): Promise<NotionComputerItem[]> 
       let cursor: string | undefined;
 
       do {
-        const response = await notion.dataSources.query({
+        const response = await queryDataSource({
           data_source_id: dataSourceId,
           page_size: 100,
           ...(cursor ? { start_cursor: cursor } : {}),
@@ -899,7 +912,7 @@ export async function getComputerItemContent(
   return cachedNotionQuery(
     notionContentCacheKey("computer", pageId),
     async () => {
-      const page = await notion.pages.retrieve({ page_id: pageId });
+      const page = await retrievePage(pageId);
       const item = mapComputerItem(page);
       if (!item || !isPublishedComputerTip(item)) return null;
 
@@ -927,7 +940,7 @@ export async function getComputerTipByShortId(
       if (!databaseId) return null;
 
       const dataSourceId = await getDataSourceId(databaseId);
-      const response = await notion.dataSources.query({
+      const response = await queryDataSource({
         data_source_id: dataSourceId,
         filter: {
           property: "Short ID",

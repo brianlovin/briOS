@@ -7,7 +7,7 @@ import {
   type ComputerTip,
   publicComputerTips,
 } from "@/lib/computer";
-import { createMetadata } from "@/lib/metadata";
+import { createMetadata, SITE_CONFIG } from "@/lib/metadata";
 import { getComputerDatabaseItems, isPlaceholderNotionBuild } from "@/lib/notion";
 
 import { ComputerCatalog } from "./ComputerCatalog";
@@ -16,6 +16,7 @@ export const metadata: Metadata = createMetadata({
   title: COMPUTER_TITLE,
   description: COMPUTER_INTRO,
   path: "/computer",
+  rss: `${SITE_CONFIG.url}/computer/rss.xml`,
 });
 
 export default async function ComputerPage() {

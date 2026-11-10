@@ -21,12 +21,20 @@ export function CommandMenu() {
   // Memoize navigation items to avoid recomputing on every render
   const navigationItems = React.useMemo(() => getAllNavigationItems(), []);
 
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (nextOpen && !open) {
+      setValue("linear");
+      setQuery("");
+    }
+    setOpen(nextOpen);
+  };
+
   // Global hotkey to open command menu
   useHotkeys(
     `${MOD_KEY}+k`,
     (e) => {
       e.preventDefault();
-      setOpen(!open);
+      handleOpenChange(!open);
     },
     {
       enableOnFormTags: true,
@@ -50,9 +58,6 @@ export function CommandMenu() {
 
   React.useEffect(() => {
     if (open) {
-      // Reset value when opening
-      setValue("linear");
-      setQuery("");
       trackClientEvent("command_menu.opened", {});
       // Focus input after a brief delay to ensure modal is rendered
       setTimeout(() => {
@@ -68,7 +73,7 @@ export function CommandMenu() {
   };
 
   return (
-    <Dialog.Root open={open} onOpenChange={setOpen}>
+    <Dialog.Root open={open} onOpenChange={handleOpenChange}>
       <Dialog.Portal>
         <Dialog.Backdrop className="fixed inset-0 z-50 bg-white/80 transition-opacity duration-150 data-[ending-style]:opacity-0 data-[starting-style]:opacity-0 dark:bg-black/80" />
         <Dialog.Popup className="fixed top-16 left-1/2 z-50 w-full max-w-xl -translate-x-1/2 transform transition-[transform,opacity] duration-150 data-[ending-style]:scale-95 data-[ending-style]:opacity-0 data-[starting-style]:scale-95 data-[starting-style]:opacity-0">

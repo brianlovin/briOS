@@ -57,6 +57,11 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/computer/:path(rss|RSS|Rss|feed|Feed)",
+        destination: "/computer/rss.xml",
+        permanent: true,
+      },
+      {
         source: "/api/hn/unsubscribe",
         destination: "/api/hn-digest/unsubscribe",
         permanent: true,
@@ -64,6 +69,8 @@ const nextConfig: NextConfig = {
     ];
   },
   devIndicators: false,
+  // AGENTS.md is hand-maintained; stop `next dev` from appending its managed block.
+  agentRules: false,
   turbopack: {
     root: path.resolve(__dirname),
   },

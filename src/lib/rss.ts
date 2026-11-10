@@ -54,7 +54,14 @@ export function addRssItem(feed: Feed, item: Omit<Item, "author">): void {
  * Serialize a feed into an RSS 2.0 `Response` with the standard headers.
  */
 export function rssResponse(feed: Feed): Response {
-  return new Response(feed.rss2(), {
+  return rssXmlResponse(feed.rss2());
+}
+
+/**
+ * Wrap already-serialized RSS 2.0 XML (e.g. from a `"use cache"` function) in a `Response`.
+ */
+export function rssXmlResponse(xml: string): Response {
+  return new Response(xml, {
     headers: {
       "Content-Type": "application/rss+xml; charset=utf-8",
       "Cache-Control": RSS_CACHE_CONTROL,

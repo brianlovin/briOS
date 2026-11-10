@@ -18,7 +18,7 @@ import { createMetadata, createPersonJsonLd } from "@/lib/metadata";
 export const metadata: Metadata = createMetadata({
   title: "About",
   description:
-    "Brian Lovin is a designer and software engineer living in San Francisco, currently designing AI products at Notion.",
+    "Brian Lovin is a software designer living in New York, currently designing AI products at Notion.",
   path: "/about",
 });
 
@@ -46,7 +46,7 @@ export default function About() {
               />
 
               <p className="text-secondary text-2xl font-medium text-pretty">
-                I&apos;m a designer and software engineer living in San Francisco.
+                I&apos;m a software designer living in New York.
               </p>
 
               <p className="text-secondary text-2xl font-medium">

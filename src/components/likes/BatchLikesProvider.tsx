@@ -39,8 +39,12 @@ export function BatchLikesProvider({ pageIds, initialData, children }: BatchLike
   const inFlightIdsRef = useRef<Set<string>>(new Set());
   const viewerRef = useRef(viewer);
   const initialDataRef = useRef(initialData);
-  viewerRef.current = viewer;
-  initialDataRef.current = initialData;
+
+  // Must stay above the fetch effect so it reads this commit's values.
+  useEffect(() => {
+    viewerRef.current = viewer;
+    initialDataRef.current = initialData;
+  });
 
   // Viewer overlay only for IDs not yet fetched. SSR totals are not re-GET.
   useEffect(() => {

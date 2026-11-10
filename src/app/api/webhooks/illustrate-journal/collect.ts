@@ -1,8 +1,4 @@
-import {
-  collectMedia,
-  type MediaBlockLike,
-  type MediaView,
-} from "../optimize-writing-images/media";
+import { collectMedia, type MediaBlockLike, type MediaView } from "@/lib/notion/media";
 
 export type { MediaBlockLike, MediaView };
 
