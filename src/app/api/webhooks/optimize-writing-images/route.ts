@@ -45,7 +45,7 @@ async function getAllBlocks(blockId: string): Promise<BlockWithChildren[]> {
   const blocks: BlockWithChildren[] = [];
 
   try {
-    let cursor: string | undefined;
+    let cursor: string | null = null;
     do {
       const response: any = await notion.blocks.children.list({
         block_id: blockId,
@@ -63,7 +63,7 @@ async function getAllBlocks(blockId: string): Promise<BlockWithChildren[]> {
         }
       }
 
-      cursor = response.next_cursor || undefined;
+      cursor = response.next_cursor;
     } while (cursor);
   } catch (error) {
     logger.error("Error fetching blocks", error, { block_id: blockId });
