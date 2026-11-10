@@ -17,7 +17,6 @@ Object.assign(env, {
   UPSTASH_REDIS_REST_TOKEN: "build-placeholder",
   JWT_SIGNING_KEY: "build-placeholder-secret-key-min-32-chars",
   NOTION_TOKEN: "build-placeholder",
-  HN_TOKEN: "build-placeholder",
   ...Object.fromEntries(
     ["STACK", "AMA", "WRITING", "DESIGN_DETAILS_EPISODES", "MUSIC"].map((name) => [
       `NOTION_${name}_DATABASE_ID`,
