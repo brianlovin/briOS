@@ -18,6 +18,7 @@
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
+    "lint:actions": "node scripts/ci/check-pinned-actions.mjs",
     "test": "bun test",
     "test:coverage": "bun test --coverage",
     "format": "prettier --write .",
