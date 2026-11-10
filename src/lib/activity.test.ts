@@ -2948,6 +2948,19 @@ describe("shouldRecordVisit / likeMetaFromRequest", () => {
     expect(shouldRecordLike("/stack/1password", "1Password")).toBe(true);
     expect(shouldRecordLike("https://1password.com", "1Password")).toBe(true);
     expect(shouldRecordLike("https://1password.com", "Home")).toBe(false);
+  });
+
+  test("rejects like and visit hrefs that resolve off-site", () => {
+    for (const href of [
+      "//evil.example/x",
+      "/\\evil.example",
+      "javascript:alert(1)",
+      "evil.example",
+    ]) {
+      expect(shouldRecordLike(href, "Read this")).toBe(false);
+      expect(shouldRecordVisit(href)).toBe(false);
+    }
+    expect(shouldRecordVisit("https://evil.example/x")).toBe(false);
 
     expect(likeMetaFromRequest(new Request("https://brianlovin.com/api/likes/1"))).toBeNull();
     expect(
