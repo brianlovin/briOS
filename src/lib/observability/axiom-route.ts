@@ -15,11 +15,21 @@ interface WithAxiomOptions {
 }
 
 const annotations = new AsyncLocalStorage<Record<string, unknown>>();
+const expectedRejections = new WeakSet<Record<string, unknown>>();
 
 /** Attach fields to the current route's summary event (api.request / cron / webhook). */
 export function annotate(fields: Record<string, unknown>): void {
   const store = annotations.getStore();
   if (store) Object.assign(store, fields);
+}
+
+/**
+ * Mark this request's 4xx as intended (e.g. a bot block) so it does not emit a
+ * failed `api.request`. Track a dedicated event with the reason instead.
+ */
+export function markExpectedRejection(): void {
+  const store = annotations.getStore();
+  if (store) expectedRejections.add(store);
 }
 
 /**
@@ -94,7 +104,9 @@ export function withAxiom<Args extends unknown[], R extends Response>(
         const method = request?.method ?? "GET";
         const status = response?.status ?? 500;
 
-        if (shouldEmit(kind, method, status, quiet)) {
+        const expected = expectedRejections.has(fields) && status >= 400 && status < 500;
+
+        if (!expected && shouldEmit(kind, method, status, quiet)) {
           const error =
             thrown !== undefined
               ? toErrorMessage(thrown)
