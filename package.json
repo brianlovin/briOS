@@ -34,7 +34,7 @@
     "@base-ui/react": "^1.9.0",
     "@notionhq/client": "^5.28.0",
     "@paper-design/shaders-react": "^0.0.82",
-    "@sentry/nextjs": "^10.76.2",
+    "@sentry/nextjs": "^11.9.0",
     "@tanstack/react-virtual": "^3.14.23",
     "@upstash/qstash": "^2.12.1",
     "@upstash/redis": "^1.40.0",
