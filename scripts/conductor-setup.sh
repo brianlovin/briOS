@@ -3,13 +3,8 @@ set -e
 
 echo "Setting up Conductor..."
 
-# Copy environment variables
-if [ -f "$CONDUCTOR_ROOT_PATH/.env.local" ]; then
-    cp "$CONDUCTOR_ROOT_PATH/.env.local" .env.local
-    echo "Copied .env.local"
-else
-    echo "No .env.local found in root repo"
-fi
+# Copy environment variables from the main checkout (a 1Password-mounted pipe)
+bash ./scripts/conductor-sync-env.sh
 
 # Install dependencies
 echo "Installing dependencies..."
