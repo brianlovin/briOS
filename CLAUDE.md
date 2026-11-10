@@ -8,6 +8,7 @@ Personal website built with Next.js and Notion as CMS.
 - **Dev server**: Always running on port 3000 (do not start)
 - **Build**: `bun run build`
 - **Lint**: `bun run lint` / `bun run lint:fix`
+- **Actions pinning**: `bun run lint:actions` (every `uses:` must be a full commit SHA; see `AGENTS.md`)
 - **Format**: `bun run format`
 - **Generate schemas**: `bun run generate-schemas`
 

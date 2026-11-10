@@ -67,6 +67,12 @@ bun run lint
 
 Configured Macs must pass the committed-snapshot linter before pushing. Elsewhere, commit only when the linter passes.
 
+### GitHub Actions pinning
+
+Every `uses:` under `.github/` must reference a full 40-character commit SHA, with the version kept as a trailing comment so Dependabot can update it: `uses: actions/checkout@<sha> # v4`. Tags and branches (`@v4`, `@main`) are mutable and are rejected. Local `./` actions are allowed; `docker://` images must use an `@sha256:` digest. Resolve a tag with `git ls-remote https://github.com/<owner>/<repo> 'refs/tags/<tag>' 'refs/tags/<tag>^{}'` (prefer the `^{}` commit when present).
+
+`bun run lint:actions` runs the check (Node only, no install or secrets). It also runs in the `Pinned actions` workflow on PRs touching `.github/**`, and through its test file in `bun run ci:all`.
+
 ## Additional Notes
 
 - Keep environment specific values (API keys, etc.) in `.env` files which are git‑ignored.
