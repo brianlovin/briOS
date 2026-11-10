@@ -328,6 +328,51 @@ function parseAppDissectionDetails(blocks: ProcessedBlock[]): {
   return { introBlocks, details };
 }
 
+// ===== Read scoping =====
+//
+// Public routes look pages up by a caller-supplied id, slug, or Short ID. The
+// Notion integration can read more than the site's public databases, so every
+// public read checks which database the page lives in, and that the post is
+// published where that matters.
+
+function normalizeNotionId(id: string): string {
+  return id.replace(/-/g, "").toLowerCase();
+}
+
+/** Database a page belongs to, from its `database_id` or `data_source_id` parent. */
+export function pageDatabaseId(page: PageResponse): string | null {
+  if (!isFullPage(page)) return null;
+  const parent = page.parent as { type?: string; database_id?: string };
+  if (parent.type !== "database_id" && parent.type !== "data_source_id") return null;
+  return parent.database_id ? normalizeNotionId(parent.database_id) : null;
+}
+
+/** True when the page's parent database is one of the given configured databases. */
+export function isPageInDatabases(page: PageResponse, databaseIds: Array<string | undefined>) {
+  const parentId = pageDatabaseId(page);
+  if (!parentId) return false;
+  return databaseIds.some((id) => !!id && normalizeNotionId(id) === parentId);
+}
+
+function hasPublishedDate(page: PageResponse): boolean {
+  return isFullPage(page) && !!dateStart(page.properties, "Published");
+}
+
+/** Databases whose pages are public content. The Spotify token DB is never listed. */
+function publicContentDatabaseIds(): Array<string | undefined> {
+  return [
+    process.env.NOTION_WRITING_DATABASE_ID,
+    process.env.NOTION_TIL_DATABASE_ID,
+    process.env.NOTION_AMA_DATABASE_ID,
+    process.env.NOTION_STACK_DATABASE_ID,
+    process.env.NOTION_GOOD_WEBSITES_DATABASE_ID,
+    process.env.NOTION_TIPS_DATABASE_ID,
+    process.env.NOTION_DESIGN_DETAILS_EPISODES_DATABASE_ID,
+    process.env.NOTION_SPEAKING_DATABASE_ID,
+    process.env.NOTION_APP_DISSECTION_DATABASE_ID,
+  ];
+}
+
 // ===== Generic Content Retrieval =====
 
 export async function getFullContent(
@@ -337,6 +382,7 @@ export async function getFullContent(
     notionContentCacheKey(null, pageId),
     async () => {
       const page = await retrievePage(pageId);
+      if (!isPageInDatabases(page, publicContentDatabaseIds())) return null;
       const metadata = mapGenericItem(page);
       if (!metadata) return null;
 
@@ -469,6 +515,7 @@ export async function getWritingPostContent(
     notionContentCacheKey("writing", pageId),
     async () => {
       const page = await retrievePage(pageId);
+      if (!isPageInDatabases(page, [process.env.NOTION_WRITING_DATABASE_ID])) return null;
       const metadata = mapWritingItem(page);
       if (!metadata) return null;
 
@@ -491,10 +538,10 @@ export async function getWritingPostContentBySlug(
       const response = await queryDataSource({
         data_source_id: dataSourceId,
         filter: {
-          property: "Slug",
-          rich_text: {
-            equals: slug,
-          },
+          and: [
+            { property: "Slug", rich_text: { equals: slug } },
+            { property: "Published", date: { is_not_empty: true } },
+          ],
         },
       });
 
@@ -522,10 +569,10 @@ export async function getWritingPostByShortId(
       const response = await queryDataSource({
         data_source_id: dataSourceId,
         filter: {
-          property: "Short ID",
-          rich_text: {
-            equals: shortId,
-          },
+          and: [
+            { property: "Short ID", rich_text: { equals: shortId } },
+            { property: "Published", date: { is_not_empty: true } },
+          ],
         },
       });
 
@@ -542,6 +589,21 @@ export async function getWritingPostByShortId(
   );
 }
 
+/**
+ * Whether any Writing row (published or draft) already uses this Short ID.
+ * Used for collision checks; the public lookup above only sees published posts.
+ */
+export async function writingShortIdExists(shortId: string): Promise<boolean> {
+  const databaseId = process.env.NOTION_WRITING_DATABASE_ID || "";
+  const dataSourceId = await getDataSourceId(databaseId);
+  const response = await queryDataSource({
+    data_source_id: dataSourceId,
+    page_size: 1,
+    filter: { property: "Short ID", rich_text: { equals: shortId } },
+  });
+  return response.results.length > 0;
+}
+
 // ===== AMA Database =====
 
 export async function getAmaItemContent(pageId: string): Promise<NotionAmaItemWithContent | null> {
@@ -549,6 +611,8 @@ export async function getAmaItemContent(pageId: string): Promise<NotionAmaItemWi
     notionContentCacheKey("ama", pageId),
     async () => {
       const page = await retrievePage(pageId);
+      // Unanswered questions stay readable by id: the activity feed links to them.
+      if (!isPageInDatabases(page, [process.env.NOTION_AMA_DATABASE_ID])) return null;
       const item = mapAmaItem(page);
       if (!item) return null;
 
@@ -746,6 +810,8 @@ export async function getTilItemContent(pageId: string): Promise<NotionTilItemWi
     notionContentCacheKey("til", pageId),
     async () => {
       const page = await retrievePage(pageId);
+      if (!isPageInDatabases(page, [process.env.NOTION_TIL_DATABASE_ID])) return null;
+      if (!hasPublishedDate(page)) return null;
       const item = mapTilItem(page);
       if (!item) return null;
 
@@ -769,10 +835,10 @@ export async function getTilByShortId(shortId: string): Promise<NotionTilItemWit
       const response = await queryDataSource({
         data_source_id: dataSourceId,
         filter: {
-          property: "Short ID",
-          rich_text: {
-            equals: shortId,
-          },
+          and: [
+            { property: "Short ID", rich_text: { equals: shortId } },
+            { property: "Published", date: { is_not_empty: true } },
+          ],
         },
       });
 
@@ -913,6 +979,7 @@ export async function getComputerItemContent(
     notionContentCacheKey("computer", pageId),
     async () => {
       const page = await retrievePage(pageId);
+      if (!isPageInDatabases(page, [process.env.NOTION_TIPS_DATABASE_ID])) return null;
       const item = mapComputerItem(page);
       if (!item || !isPublishedComputerTip(item)) return null;
 

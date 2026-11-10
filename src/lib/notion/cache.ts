@@ -44,8 +44,10 @@ export const CACHE_TTLS = {
 /**
  * Bumped when the serialized ProcessedBlock shape changes so Next (24h) and
  * Redis (7d) cannot serve the old grab-bag payload as the new union.
+ * v3: content reads now check database and published state, so entries cached
+ * before that check must not be served.
  */
-export const CONTENT_CACHE_VERSION = "v2";
+export const CONTENT_CACHE_VERSION = "v3";
 
 /**
  * Cache key for processed page content.

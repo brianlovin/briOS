@@ -1,12 +1,21 @@
 import { afterEach, describe, expect, mock, spyOn, test } from "bun:test";
 
+import * as blocks from "./blocks";
 import * as cache from "./cache";
 import { notion } from "./client";
 import {
+  getAmaItemContent,
   getAppDissectionDatabaseItems,
+  getFullContent,
   getGoodWebsitesDatabaseItems,
   getGoodWebsitesDatabaseItemsForRss,
   getStackDatabaseItems,
+  getTilItemContent,
+  getWritingPostByShortId,
+  getWritingPostContent,
+  getWritingPostContentBySlug,
+  isPageInDatabases,
+  pageDatabaseId,
 } from "./queries";
 import type { PageResponse } from "./types";
 
@@ -273,5 +282,104 @@ describe("feed list queries past the 100-row Notion page", () => {
       page_size: 100,
       filter: { property: "Status", select: { equals: "Published" } },
     });
+  });
+});
+
+describe("public content reads are scoped to their database", () => {
+  const WRITING_DB = "11111111-1111-1111-1111-111111111111";
+  const AMA_DB = "22222222-2222-2222-2222-222222222222";
+  const TIL_DB = "33333333-3333-3333-3333-333333333333";
+  const PRIVATE_DB = "99999999-9999-9999-9999-999999999999";
+
+  function contentPage(
+    databaseId: string | null,
+    properties: Record<string, unknown> = {},
+  ): PageResponse {
+    return {
+      object: "page",
+      id: "page-1",
+      created_time: "2024-01-01T00:00:00.000Z",
+      icon: null,
+      cover: null,
+      parent: databaseId
+        ? { type: "data_source_id", data_source_id: "ds-x", database_id: databaseId }
+        : { type: "workspace", workspace: true },
+      properties: {
+        Name: { id: "title", type: "title", title: [richTextItem("Page")] },
+        Title: { id: "title2", type: "title", title: [richTextItem("Page")] },
+        ...properties,
+      },
+    } as unknown as PageResponse;
+  }
+
+  function stubContent(page: PageResponse) {
+    process.env.NOTION_WRITING_DATABASE_ID = WRITING_DB;
+    process.env.NOTION_AMA_DATABASE_ID = AMA_DB;
+    process.env.NOTION_TIL_DATABASE_ID = TIL_DB;
+    spyOn(cache, "cachedNotionQuery").mockImplementation(async (_key, fetcher) => fetcher());
+    spyOn(notion.pages, "retrieve").mockResolvedValue(page as never);
+    spyOn(blocks, "getAllBlocks").mockResolvedValue([]);
+  }
+
+  const published = {
+    Published: { id: "pub", type: "date", date: { start: "2024-02-01", end: null } },
+  };
+
+  test("pageDatabaseId reads data_source and database parents, dash-insensitive", () => {
+    expect(pageDatabaseId(contentPage(WRITING_DB))).toBe(WRITING_DB.replace(/-/g, ""));
+    expect(pageDatabaseId(contentPage(null))).toBeNull();
+    expect(isPageInDatabases(contentPage(WRITING_DB), [WRITING_DB.replace(/-/g, "")])).toBe(true);
+    expect(isPageInDatabases(contentPage(PRIVATE_DB), [WRITING_DB, undefined])).toBe(false);
+  });
+
+  test("getFullContent returns null for pages outside the public databases", async () => {
+    stubContent(contentPage(PRIVATE_DB));
+    expect(await getFullContent("page-1")).toBeNull();
+    expect(blocks.getAllBlocks).not.toHaveBeenCalled();
+  });
+
+  test("getFullContent still serves pages from a public database", async () => {
+    stubContent(contentPage(WRITING_DB));
+    expect(await getFullContent("page-1")).not.toBeNull();
+  });
+
+  test("getAmaItemContent only reads AMA pages, answered or not", async () => {
+    stubContent(contentPage(PRIVATE_DB));
+    expect(await getAmaItemContent("page-1")).toBeNull();
+    mock.restore();
+    stubContent(contentPage(AMA_DB));
+    expect(await getAmaItemContent("page-1")).not.toBeNull();
+  });
+
+  test("getTilItemContent requires the TIL database and a Published date", async () => {
+    stubContent(contentPage(TIL_DB));
+    expect(await getTilItemContent("page-1")).toBeNull();
+    mock.restore();
+    stubContent(contentPage(TIL_DB, published));
+    expect(await getTilItemContent("page-1")).not.toBeNull();
+    mock.restore();
+    stubContent(contentPage(PRIVATE_DB, published));
+    expect(await getTilItemContent("page-1")).toBeNull();
+  });
+
+  test("getWritingPostContent rejects pages from other databases", async () => {
+    stubContent(contentPage(PRIVATE_DB, published));
+    expect(await getWritingPostContent("page-1")).toBeNull();
+  });
+
+  test("writing slug and Short ID lookups filter on Published", async () => {
+    stubContent(contentPage(WRITING_DB, published));
+    spyOn(notion.databases, "retrieve").mockResolvedValue({
+      data_sources: [{ id: "ds-writing" }],
+    } as never);
+    const query = spyOn(notion.dataSources, "query").mockResolvedValue(queryPage([]) as never);
+
+    await getWritingPostContentBySlug("draft-post");
+    await getWritingPostByShortId("abc1234");
+
+    for (const call of query.mock.calls) {
+      expect(JSON.stringify(call[0])).toContain('"Published"');
+    }
+    expect(query).toHaveBeenCalledTimes(2);
   });
 });
