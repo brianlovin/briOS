@@ -2,9 +2,10 @@ import type {
   BlockObjectResponse,
   RichTextItemResponse,
 } from "@notionhq/client/build/src/api-endpoints";
-import { describe, expect, test } from "bun:test";
+import { afterEach, describe, expect, mock, spyOn, test } from "bun:test";
 
-import { processBlockFromResponse } from "./blocks";
+import { getAllBlocks, processBlockFromResponse } from "./blocks";
+import { notion } from "./client";
 import { extractPreviewText } from "./types";
 
 function richTextItem(content: string): RichTextItemResponse {
@@ -27,6 +28,41 @@ function richTextItem(content: string): RichTextItemResponse {
 function asBlock(block: object): BlockObjectResponse {
   return block as BlockObjectResponse;
 }
+
+describe("getAllBlocks", () => {
+  afterEach(() => {
+    mock.restore();
+  });
+
+  function paragraph(id: string, text: string) {
+    return asBlock({
+      id,
+      type: "paragraph",
+      has_children: false,
+      paragraph: { rich_text: [richTextItem(text)] },
+    });
+  }
+
+  test("follows next_cursor until Notion runs out of pages", async () => {
+    const list = spyOn(notion.blocks.children, "list").mockImplementation(async (args) => {
+      if (!args.start_cursor) {
+        return {
+          results: [paragraph("p1", "First")],
+          has_more: true,
+          next_cursor: "page-2",
+        } as never;
+      }
+      return { results: [paragraph("p2", "Second")], has_more: false, next_cursor: null } as never;
+    });
+
+    const blocks = await getAllBlocks("page-id");
+
+    expect(blocks.map((block) => block.id)).toEqual(["p1", "p2"]);
+    expect(list).toHaveBeenCalledTimes(2);
+    expect(list.mock.calls[0]?.[0]).toMatchObject({ block_id: "page-id", start_cursor: null });
+    expect(list.mock.calls[1]?.[0]).toMatchObject({ block_id: "page-id", start_cursor: "page-2" });
+  });
+});
 
 describe("processBlockFromResponse", () => {
   test("maps a paragraph to rich text content", () => {

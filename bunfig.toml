@@ -1,0 +1,4 @@
+[install]
+# Refuse npm versions published less than 14 days ago (value is in seconds).
+# A cooldown gives the registry and maintainers time to catch hijacked releases.
+minimumReleaseAge = 1209600

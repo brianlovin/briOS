@@ -9,7 +9,12 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
+    # Matches `minimumReleaseAge` in bunfig.toml.
+    cooldown:
+      default-days: 14
   - package-ecosystem: "github-actions"
     directory: "/" # Scans .github/workflows
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 14

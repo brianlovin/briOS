@@ -10,9 +10,8 @@ const axiomMock = installAxiomMock();
 type BatchResult = { ErrorCode: number; Message: string; To?: string };
 type BatchMessage = { To: string };
 
-const sendEmailBatchWithTemplates = mock(
-  async (messages: BatchMessage[]): Promise<BatchResult[]> =>
-    messages.map((message) => ({ ErrorCode: 0, Message: "OK", To: message.To })),
+const sendEmailBatchWithTemplates = mock(async (messages: BatchMessage[]): Promise<BatchResult[]> =>
+  messages.map((message) => ({ ErrorCode: 0, Message: "OK", To: message.To })),
 );
 
 mock.module("postmark", () => ({
