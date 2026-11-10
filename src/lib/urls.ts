@@ -19,6 +19,10 @@ export function formatDigestDate(date: Date = new Date()): string {
  * Build the HN digest unsubscribe URL for a signed token.
  * Path is `/api/hn-digest/unsubscribe?token=` (old `/api/hn/unsubscribe` redirects).
  */
+export function buildSubscribeConfirmUrl(token: string): string {
+  return `${BASE_URL}/api/hn-digest/confirm?token=${encodeURIComponent(token)}`;
+}
+
 export function buildUnsubscribeUrl(token: string): string {
   return `${BASE_URL}/api/hn-digest/unsubscribe?token=${token}`;
 }

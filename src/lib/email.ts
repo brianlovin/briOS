@@ -125,3 +125,24 @@ export async function sendHNDigestEmailBatch(
 
   return { successCount, failureCount };
 }
+
+/**
+ * Send the double opt-in email. The digest only starts after the recipient
+ * clicks `confirmUrl`, so a typed-in third-party address never gets digests.
+ */
+export async function sendHNConfirmationEmail(to: string, confirmUrl: string) {
+  await postmarkClient.sendEmail({
+    From: BASE_EMAIL,
+    To: to,
+    Subject: "Confirm your Hacker News digest subscription",
+    TextBody: [
+      "Someone (hopefully you) asked to get a daily Hacker News digest from brianlovin.com.",
+      "",
+      `Confirm your subscription: ${confirmUrl}`,
+      "",
+      "If this wasn't you, ignore this email and you won't hear from us again.",
+    ].join("\n"),
+    HtmlBody: `<p>Someone (hopefully you) asked to get a daily Hacker News digest from brianlovin.com.</p><p><a href="${confirmUrl}">Confirm your subscription</a></p><p>If this wasn't you, ignore this email and you won't hear from us again.</p>`,
+    MessageStream: "outbound",
+  });
+}

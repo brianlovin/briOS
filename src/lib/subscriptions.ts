@@ -22,6 +22,30 @@ const redis = new Redis({
 // Redis key for HN subscribers set
 const HN_SUBSCRIBERS_KEY = "hn:subscribers";
 
+/** Canonical form used for storage and lookups. */
+export function normalizeEmail(email: string): string {
+  return email.trim().toLowerCase();
+}
+
+/** Whether this exact (normalized) address is already subscribed. */
+export async function isSubscribed(email: string): Promise<boolean> {
+  return (await redis.sismember(HN_SUBSCRIBERS_KEY, email)) === 1;
+}
+
+const CONFIRMATION_COOLDOWN_SECONDS = 60 * 60;
+
+/**
+ * Reserve the right to send one confirmation email to this address per hour,
+ * so the signup form cannot be used to flood someone's inbox.
+ */
+export async function claimConfirmationSend(email: string): Promise<boolean> {
+  const result = await redis.set(`hn:confirm-sent:${email}`, "1", {
+    nx: true,
+    ex: CONFIRMATION_COOLDOWN_SECONDS,
+  });
+  return result === "OK";
+}
+
 /**
  * Fetch all email subscribers for Hacker News digest
  */

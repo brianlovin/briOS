@@ -111,6 +111,7 @@ export function SubscribeForm({ onComplete, className }: SubscribeFormProps) {
           </button>
         </div>
 
+        {success && <div className="text-secondary text-sm">Check your email to confirm.</div>}
         {error && <div className="text-sm text-red-500">{error}</div>}
       </div>
     </form>

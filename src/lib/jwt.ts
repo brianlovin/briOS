@@ -32,7 +32,7 @@ export function generateUnsubscribeToken(email: string): string {
  */
 export function verifyUnsubscribeToken(token: string): string | null {
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET, { algorithms: ["HS256"] });
     const result = UnsubscribeTokenSchema.safeParse(decoded);
 
     if (!result.success) {
@@ -43,6 +43,35 @@ export function verifyUnsubscribeToken(token: string): string | null {
     return result.data.email;
   } catch (error) {
     console.error("Error verifying JWT token:", error);
+    return null;
+  }
+}
+
+const SUBSCRIBE_CONFIRM_PURPOSE = "hn-subscribe-confirm";
+
+const SubscribeConfirmTokenSchema = z.object({
+  email: z.string(),
+  purpose: z.literal(SUBSCRIBE_CONFIRM_PURPOSE),
+});
+
+/**
+ * Short-lived token mailed to a new subscriber. Only someone who can read
+ * that inbox can present it, which is what proves the address is theirs.
+ */
+export function generateSubscribeConfirmToken(email: string): string {
+  return jwt.sign({ email, purpose: SUBSCRIBE_CONFIRM_PURPOSE }, JWT_SECRET, {
+    algorithm: "HS256",
+    expiresIn: "2d",
+  });
+}
+
+/** Email from a valid, unexpired confirmation token, or null. */
+export function verifySubscribeConfirmToken(token: string): string | null {
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET, { algorithms: ["HS256"] });
+    const result = SubscribeConfirmTokenSchema.safeParse(decoded);
+    return result.success ? result.data.email : null;
+  } catch {
     return null;
   }
 }
