@@ -8,6 +8,7 @@
 import { Client } from "@upstash/qstash";
 import { NextRequest, NextResponse } from "next/server";
 
+import { safeCompare } from "@/lib/api-utils";
 import { logger } from "@/lib/logger";
 import { annotate, withAxiom } from "@/lib/observability/axiom-route";
 import { captureError, withErrorCapture } from "@/lib/observability/sentry";
@@ -42,9 +43,32 @@ async function syncTracks() {
   });
 }
 
+// Both the cron (GET) and manual triggers (POST) must present
+// `Authorization: Bearer <CRON_SECRET>`. safeCompare fails closed when the
+// secret is unset.
+function isAuthorized(req: NextRequest): boolean {
+  const secret = process.env.CRON_SECRET;
+  return safeCompare(req.headers.get("authorization"), secret ? `Bearer ${secret}` : undefined);
+}
+
+function unauthorizedResponse() {
+  return NextResponse.json(
+    {
+      error: "Unauthorized",
+      details: "Invalid or missing authorization token",
+      code: "INVALID_AUTH",
+    },
+    { status: 401 },
+  );
+}
+
 // Handle POST requests (manual triggers)
-async function postHandler() {
+async function postHandler(req: NextRequest) {
   try {
+    if (!isAuthorized(req)) {
+      return unauthorizedResponse();
+    }
+
     return await syncTracks();
   } catch (error: unknown) {
     logger.error("Error triggering Spotify sync", error, { trigger: "manual" });
@@ -67,17 +91,8 @@ export const POST = withAxiom(withErrorCapture(postHandler), { name: "/api/spoti
 // Handle GET requests (cron job)
 async function getHandler(req: NextRequest) {
   try {
-    // Verify cron secret
-    const authHeader = req.headers.get("authorization");
-    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-      return NextResponse.json(
-        {
-          error: "Unauthorized",
-          details: "Invalid or missing authorization token",
-          code: "INVALID_AUTH",
-        },
-        { status: 401 },
-      );
+    if (!isAuthorized(req)) {
+      return unauthorizedResponse();
     }
 
     return await syncTracks();

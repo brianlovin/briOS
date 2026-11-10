@@ -277,9 +277,20 @@ function isAssetLikePath(pathname: string): boolean {
   return VISIT_ASSET_EXTENSION_RE.test(pathname);
 }
 
+const SAME_SITE_PATH_RE = /^\/(?![/\\])/;
+
+/**
+ * Site-relative path with a single leading slash. Rejects protocol-relative
+ * (`//host`), backslash (`/\host`), and scheme values, which browsers resolve
+ * off-site.
+ */
+export function isSameSitePath(value: string | undefined): boolean {
+  return typeof value === "string" && SAME_SITE_PATH_RE.test(value);
+}
+
 export function shouldRecordVisit(pathname: string): boolean {
   const path = pathname.split("?")[0] ?? pathname;
-  if (!path || path.startsWith("/api/") || path.startsWith("/_next/")) {
+  if (!isSameSitePath(path) || path.startsWith("/api/") || path.startsWith("/_next/")) {
     return false;
   }
   if (isDevPath(path) || isAssetLikePath(path) || isCrawlerProbePath(path)) {
@@ -309,9 +320,16 @@ export function isSiteHomeLikeHref(href: string | undefined): boolean {
   return path === "/";
 }
 
-/** Ingest gate for likes — skip home, empty href, and activity paths. */
+/**
+ * Ingest gate for likes — skip home, empty href, activity paths, and hrefs
+ * that are neither a same-site path nor an absolute http(s) URL. Absolute URLs
+ * from anonymous clients must still be resolved server-side
+ * (`resolveTrustedLikeHref`) before they reach the public feed.
+ */
 export function shouldRecordLike(href: string | undefined, title?: string): boolean {
   if (isSiteHomeLikeHref(href)) return false;
+  const trimmed = href!.trim();
+  if (!isSameSitePath(trimmed) && !isAbsoluteHttpUrl(trimmed)) return false;
   if (isActivityPath(href!)) return false;
   if (title !== undefined && isHomeLikeTitle(title)) return false;
   return true;

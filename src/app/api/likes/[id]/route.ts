@@ -3,6 +3,7 @@ import { after, NextResponse } from "next/server";
 import { z } from "zod";
 
 import { getRequestGeo, likeMetaFromRequest, recordLike } from "@/lib/activity";
+import { resolveTrustedLikeHref } from "@/lib/activity-like-href";
 import { getActivityStore } from "@/lib/activity-redis";
 import { errorResponse } from "@/lib/api-utils";
 import { track } from "@/lib/axiom";
@@ -122,12 +123,17 @@ async function postHandler(request: Request, props: { params: Promise<{ id: stri
     if (meta) {
       const store = getActivityStore();
       if (store) {
-        after(() => {
-          void recordLike({ ...meta, pageId: id, ...getRequestGeo(request.headers) }, store).catch(
-            (error) => {
-              logger.error("[activity] like ingest failed", error);
-            },
-          );
+        after(async () => {
+          try {
+            const href = await resolveTrustedLikeHref(id, meta.href);
+            if (!href) return;
+            await recordLike(
+              { ...meta, href, pageId: id, ...getRequestGeo(request.headers) },
+              store,
+            );
+          } catch (error) {
+            logger.error("[activity] like ingest failed", error);
+          }
         });
       }
     }

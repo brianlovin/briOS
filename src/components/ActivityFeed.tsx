@@ -219,6 +219,11 @@ function ActivityContextLink({ href, children }: { href: string; children: React
   const className = "text-tertiary hover:text-primary underline-offset-2 hover:underline";
   const external = isAbsoluteHttpUrl(href);
   const onClick = () => trackClientEvent("activity.item_clicked", { href, external });
+  // Older feed events may hold a protocol-relative or scheme href from before
+  // ingest validated it. Render those as plain text instead of a link.
+  if (!external && !/^\/(?![/\\])/.test(href)) {
+    return <span className="text-tertiary">{children}</span>;
+  }
   if (external) {
     return (
       <a
