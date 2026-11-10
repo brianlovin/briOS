@@ -1,52 +1,38 @@
-import { afterEach, describe, expect, test } from "bun:test";
-import { preload } from "swr";
+import { describe, expect, test } from "bun:test";
 
 import { prefetch } from "@/lib/prefetch";
 
-function waitForEventLoop() {
-  return new Promise<void>((resolve) => setTimeout(resolve, 0));
-}
-
 describe("prefetch", () => {
-  let onUnhandled: ((reason: unknown) => void) | undefined;
-
-  afterEach(() => {
-    if (onUnhandled) {
-      process.off("unhandledRejection", onUnhandled);
-      onUnhandled = undefined;
-    }
-  });
-
   test("settles a failed preload so it is not an unhandled rejection", async () => {
-    const unhandled: unknown[] = [];
-    onUnhandled = (reason: unknown) => {
-      unhandled.push(reason);
-    };
-    process.on("unhandledRejection", onUnhandled);
+    const result = await runInBrowser(`
+      const unhandled = [];
+      process.on("unhandledRejection", (reason) => unhandled.push(String(reason)));
+      let calls = 0;
+      prefetch("/api/computer/prefetch-fail", () => {
+        calls += 1;
+        return Promise.reject(new Error("HTTP error! status: 504"));
+      });
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      return { unhandled, calls };
+    `);
 
-    prefetch(`/api/computer/prefetch-fail-${Date.now()}`, () =>
-      Promise.reject(new Error("HTTP error! status: 504")),
-    );
-
-    await waitForEventLoop();
-
-    expect(unhandled).toEqual([]);
+    expect(result).toEqual({ unhandled: [], calls: 1 });
   });
 
   test("settles a network-style preload failure", async () => {
-    const unhandled: unknown[] = [];
-    onUnhandled = (reason: unknown) => {
-      unhandled.push(reason);
-    };
-    process.on("unhandledRejection", onUnhandled);
+    const result = await runInBrowser(`
+      const unhandled = [];
+      process.on("unhandledRejection", (reason) => unhandled.push(String(reason)));
+      let calls = 0;
+      prefetch("/api/hn/prefetch-fail", () => {
+        calls += 1;
+        return Promise.reject(new TypeError("Failed to fetch"));
+      });
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      return { unhandled, calls };
+    `);
 
-    prefetch(`/api/hn/prefetch-fail-${Date.now()}`, () =>
-      Promise.reject(new TypeError("Failed to fetch")),
-    );
-
-    await waitForEventLoop();
-
-    expect(unhandled).toEqual([]);
+    expect(result).toEqual({ unhandled: [], calls: 1 });
   });
 
   test("does not throw when the fetcher succeeds", () => {
@@ -56,28 +42,56 @@ describe("prefetch", () => {
   });
 
   test("keeps the rejected preload so a later SWR subscriber still sees the error", async () => {
-    const key = `/api/computer/prefetch-cached-${Date.now()}`;
-    const error = new Error("HTTP error! status: 504");
+    const result = await runInBrowser(`
+      prefetch("/api/computer/prefetch-cached", () =>
+        Promise.reject(new Error("HTTP error! status: 504")),
+      );
+      try {
+        await preload("/api/computer/prefetch-cached", async () => ({ unused: true }));
+        return { error: null };
+      } catch (error) {
+        return { error: error.message };
+      }
+    `);
 
-    prefetch(key, () => Promise.reject(error));
-
-    await expect(preload(key, async () => ({ unused: true }))).rejects.toThrow(
-      "HTTP error! status: 504",
-    );
+    expect(result).toEqual({ error: "HTTP error! status: 504" });
   });
 
   test("reuses a successful prefetch without fetching again", async () => {
-    const key = `/api/computer/prefetch-reuse-${Date.now()}`;
-    const value = { ok: true };
-    let calls = 0;
-    const fetcher = async () => {
-      calls += 1;
-      return value;
-    };
+    const result = await runInBrowser(`
+      let calls = 0;
+      const fetcher = async () => {
+        calls += 1;
+        return { ok: true };
+      };
+      prefetch("/api/computer/prefetch-reuse", fetcher);
+      const value = await preload("/api/computer/prefetch-reuse", fetcher);
+      return { value, calls };
+    `);
 
-    prefetch(key, fetcher);
-
-    expect(await preload(key, fetcher)).toBe(value);
-    expect(calls).toBe(1);
+    expect(result).toEqual({ value: { ok: true }, calls: 1 });
   });
 });
+
+/**
+ * SWR only caches preloads in the browser and decides that once, when the module
+ * loads. Test files share one module registry, so run in a fresh process with
+ * `window` defined before SWR is imported.
+ */
+async function runInBrowser(body: string): Promise<unknown> {
+  const script = `
+    globalThis.window = globalThis;
+    const { preload } = await import("swr");
+    const { prefetch } = await import(${JSON.stringify(`${import.meta.dir}/prefetch.ts`)});
+    const result = await (async () => { ${body} })();
+    console.log(JSON.stringify(result));
+  `;
+  const proc = Bun.spawn([process.execPath, "-e", script], { stdout: "pipe", stderr: "pipe" });
+  const [stdout, stderr, exitCode] = await Promise.all([
+    new Response(proc.stdout).text(),
+    new Response(proc.stderr).text(),
+    proc.exited,
+  ]);
+  if (exitCode !== 0) throw new Error(stderr);
+  return JSON.parse(stdout);
+}

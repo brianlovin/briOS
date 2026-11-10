@@ -11,8 +11,7 @@ import { safeCompare } from "./api-utils";
 const GITHUB_BOT_LOGINS = new Set(["dependabot[bot]", "cursor[bot]", "github-actions[bot]"]);
 
 export type GithubActivityDecision =
-  | { status: "ingest"; input: ActivityIngestInput }
-  | { status: "ignore"; reason: string };
+  { status: "ingest"; input: ActivityIngestInput } | { status: "ignore"; reason: string };
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
