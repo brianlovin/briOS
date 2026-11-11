@@ -59,36 +59,6 @@ export const WritingSchema = z.object({
 
 export type Writing = z.infer<typeof WritingSchema>;
 
-export const DesignDetailsEpisodesSchema = z.object({
-  "Analytics Fetched": z.boolean().optional(),
-  Status: z.enum(["draft", "published", "scheduled", "private"]).optional(),
-  Description: z.string().optional(),
-  "Top Country": z.string().optional(),
-  "Top Country Downloads": z.number().optional(),
-  Slug: z.string().optional(),
-  "Total Downloads": z.number().optional(),
-  "Analytics Error": z.string().optional(),
-  "Duration (formatted)": z.string().optional(),
-  "Duration (seconds)": z.number().optional(),
-  "Published Date": z.string().optional(),
-  "Has Description Content": z.boolean().optional(),
-  "Episode transcripts": z.array(z.object({ id: z.string() })).optional(),
-  "Content Migrated": z.boolean().optional(),
-  "Audio URL (S3)": z.string().optional(),
-  "Episode Number": z.number().optional(),
-  "Downloads Last Updated": z.string().optional(),
-  "Simplecast ID": z.string().optional(),
-  "Original Audio URL": z.string().optional(),
-  "Image URL": z.string().optional(),
-  "Migration Status": z
-    .enum(["pending", "downloading", "uploading", "completed", "failed"])
-    .optional(),
-  "Has Long Description": z.boolean().optional(),
-  Name: z.string().optional(),
-});
-
-export type DesignDetailsEpisodes = z.infer<typeof DesignDetailsEpisodesSchema>;
-
 export const MusicSchema = z.object({
   "Spotify ID": z.string().optional(),
   Duration: z.number().optional(),

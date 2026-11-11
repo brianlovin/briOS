@@ -18,7 +18,7 @@ Object.assign(env, {
   JWT_SIGNING_KEY: "build-placeholder-secret-key-min-32-chars",
   NOTION_TOKEN: "build-placeholder",
   ...Object.fromEntries(
-    ["STACK", "AMA", "WRITING", "DESIGN_DETAILS_EPISODES", "MUSIC"].map((name) => [
+    ["STACK", "AMA", "WRITING", "MUSIC"].map((name) => [
       `NOTION_${name}_DATABASE_ID`,
       "build-placeholder",
     ]),

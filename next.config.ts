@@ -12,6 +12,12 @@ const nextConfig: NextConfig = {
     return [
       // Legacy Overthought blog URLs now land on the current writing index.
       ...overthoughtRedirects,
+      // The Design Details episode pages were removed; send old links to the podcast site.
+      {
+        source: "/design-details/:path*",
+        destination: "https://designdetails.fm",
+        permanent: true,
+      },
       // Legacy brianlovin.ai (formerly the brios-api project) now redirects
       // to the main site. Both apex and www hosts, preserving the path.
       {

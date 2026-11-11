@@ -8,7 +8,6 @@ import {
   getComputerTips,
   resolveComputerTipFromSlug,
 } from "@/lib/computer";
-import { getDesignDetailsEpisodes } from "@/lib/design-details";
 import { getGoodWebsitesSource } from "@/lib/goodWebsites";
 import { getPostById, getRankedHNPosts } from "@/lib/hn";
 import {
@@ -492,45 +491,6 @@ async function appDissectionMarkdown(slug: string): Promise<MarkdownResult> {
   return md(200, body, ["notion:app-dissection"]);
 }
 
-async function designDetailsIndexMarkdown(): Promise<MarkdownResult> {
-  const episodes = isPlaceholderNotionBuild()
-    ? []
-    : await safe(() => getDesignDetailsEpisodes(), []);
-  const body = [
-    `# Design Details`,
-    "",
-    `Episode notes from the Design Details podcast. ${SITE_NAME} was a co-host for nine years.`,
-    "",
-    "## Episodes",
-    "",
-    episodes.length > 0
-      ? linkList(
-          episodes.map((item) => ({
-            title: item.title,
-            href: `/design-details/${item.id}`,
-          })),
-        )
-      : "- Episodes load from Notion when available.",
-  ].join("\n");
-  return md(200, body);
-}
-
-async function designDetailsMarkdown(id: string): Promise<MarkdownResult> {
-  if (isPlaceholderNotionBuild()) return notFoundMarkdown();
-  const episodes = await safe(() => getDesignDetailsEpisodes(), []);
-  const episode = episodes.find((item) => item.id === id);
-  if (!episode) return notFoundMarkdown();
-
-  const body = [
-    `# ${episode.title}`,
-    "",
-    episode.description || `A Design Details episode.`,
-    episode.audioUrl ? `\n[Audio](${episode.audioUrl})\n` : "",
-    `[All episodes](/design-details)`,
-  ].join("\n");
-  return md(200, body);
-}
-
 async function howTerminalsWorkMarkdown(): Promise<MarkdownResult> {
   const body = [
     `# ${HOW_TERMINALS_WORK_TITLE}`,
@@ -584,7 +544,6 @@ export async function renderPageMarkdown(pathname: string): Promise<MarkdownResu
   if (path === "/listening") return listeningMarkdown();
   if (path === "/activity") return activityMarkdown();
   if (path === "/app-dissection") return appDissectionIndexMarkdown();
-  if (path === "/design-details") return designDetailsIndexMarkdown();
   if (path === "/how-terminals-work") return howTerminalsWorkMarkdown();
   if (path === "/numbers") return numbersMarkdown();
 
@@ -605,9 +564,6 @@ export async function renderPageMarkdown(pathname: string): Promise<MarkdownResu
 
   const dissection = path.match(/^\/app-dissection\/([^/]+)$/);
   if (dissection) return appDissectionMarkdown(dissection[1]);
-
-  const details = path.match(/^\/design-details\/([^/]+)$/);
-  if (details) return designDetailsMarkdown(details[1]);
 
   return notFoundMarkdown();
 }

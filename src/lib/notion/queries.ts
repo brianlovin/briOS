@@ -16,7 +16,6 @@ import {
   dateStart,
   iconUrl,
   multiSelect,
-  number,
   previewStatus,
   richText,
   select,
@@ -35,7 +34,6 @@ import {
   type NotionAppDissectionItemWithContent,
   type NotionComputerItem,
   type NotionComputerItemWithContent,
-  type NotionDesignDetailsEpisodeItem,
   type NotionItem,
   type NotionListeningHistoryItem,
   type NotionSpeakingItem,
@@ -214,22 +212,6 @@ function mapListeningHistoryItem(page: PageResponse): NotionListeningHistoryItem
   };
 }
 
-function mapDesignDetailsEpisode(page: PageResponse): NotionDesignDetailsEpisodeItem | null {
-  if (!isFullPage(page)) return null;
-  const properties = page.properties;
-
-  return {
-    id: page.id,
-    title: title(properties, "Name") ?? "Untitled",
-    slug: richText(properties, "Slug") ?? "",
-    description: richText(properties, "Description"),
-    episodeNumber: number(properties, "Episode Number"),
-    publishedDate: dateStart(properties, "Published Date"),
-    imageUrl: url(properties, "Image URL"),
-    audioUrl: url(properties, "Audio URL (S3)"),
-  };
-}
-
 function mapSpeakingItem(page: PageResponse): NotionSpeakingItem | null {
   if (!isFullPage(page)) return null;
   const properties = page.properties;
@@ -367,7 +349,6 @@ function publicContentDatabaseIds(): Array<string | undefined> {
     process.env.NOTION_STACK_DATABASE_ID,
     process.env.NOTION_GOOD_WEBSITES_DATABASE_ID,
     process.env.NOTION_TIPS_DATABASE_ID,
-    process.env.NOTION_DESIGN_DETAILS_EPISODES_DATABASE_ID,
     process.env.NOTION_SPEAKING_DATABASE_ID,
     process.env.NOTION_APP_DISSECTION_DATABASE_ID,
   ];
@@ -698,40 +679,6 @@ export async function getListeningHistoryDatabaseItems(
         items: response.results
           .map(mapListeningHistoryItem)
           .filter((item): item is NotionListeningHistoryItem => item !== null),
-        nextCursor: response.has_more ? (response.next_cursor as string) : null,
-      };
-    },
-    { ttl: CACHE_TTLS.LIST },
-  );
-}
-
-// ===== Design Details Episodes Database =====
-
-export async function getDesignDetailsEpisodeDatabaseItems(
-  cursor?: string,
-  pageSize: number = 20,
-): Promise<{ items: NotionDesignDetailsEpisodeItem[]; nextCursor: string | null }> {
-  return cachedNotionQuery(
-    `notion:design-details:list:${cursor || "start"}:${pageSize}`,
-    async () => {
-      const databaseId = process.env.NOTION_DESIGN_DETAILS_EPISODES_DATABASE_ID || "";
-      const dataSourceId = await getDataSourceId(databaseId);
-      const response = await queryDataSource({
-        data_source_id: dataSourceId,
-        page_size: pageSize,
-        ...(cursor ? { start_cursor: cursor } : {}),
-        sorts: [
-          {
-            property: "Episode Number",
-            direction: "descending",
-          },
-        ],
-      });
-
-      return {
-        items: response.results
-          .map(mapDesignDetailsEpisode)
-          .filter((item): item is NotionDesignDetailsEpisodeItem => item !== null),
         nextCursor: response.has_more ? (response.next_cursor as string) : null,
       };
     },
