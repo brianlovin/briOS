@@ -81,6 +81,24 @@ describe("GET /api/likes/sync", () => {
     ]);
   });
 
+  test("accepts the sync token as a Bearer header", async () => {
+    const res = await GET(
+      new Request("https://brianlovin.com/api/likes/sync", {
+        headers: { authorization: "Bearer sync-token" },
+      }),
+    );
+    expect(res.status).toBe(200);
+  });
+
+  test("rejects a wrong Bearer token", async () => {
+    const res = await GET(
+      new Request("https://brianlovin.com/api/likes/sync", {
+        headers: { authorization: "Bearer nope" },
+      }),
+    );
+    expect(res.status).toBe(401);
+  });
+
   test("rejects requests without the sync token", async () => {
     const res = await GET(new Request("https://brianlovin.com/api/likes/sync?token=nope"));
     expect(res.status).toBe(401);

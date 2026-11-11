@@ -9,9 +9,10 @@ import { annotate, withAxiom } from "@/lib/observability/axiom-route";
 
 async function getHandler(request: Request) {
   try {
-    // Verify sync token
-    const { searchParams } = new URL(request.url);
-    const token = searchParams.get("token");
+    // Verify sync token. Prefer the Authorization header, which stays out of
+    // request logs; ?token= is still accepted for older callers.
+    const bearer = request.headers.get("authorization")?.match(/^Bearer (.+)$/)?.[1];
+    const token = bearer ?? new URL(request.url).searchParams.get("token");
 
     if (!safeCompare(token, process.env.LIKES_SYNC_TOKEN)) {
       return errorResponse("Unauthorized", 401);
