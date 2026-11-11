@@ -4,6 +4,7 @@ import { recordSiteAdded } from "@/lib/activity";
 import { titleFromNotionPage } from "@/lib/activity-from-notion";
 import { afterActivity } from "@/lib/activity-schedule";
 import { errorResponse, safeCompare } from "@/lib/api-utils";
+import { fetchWithTimeout, readBodyWithLimit } from "@/lib/bounded-fetch";
 import { optimizeSiteIcon } from "@/lib/image-processing/optimize";
 import { logger } from "@/lib/logger";
 import { notion } from "@/lib/notion";
@@ -96,7 +97,7 @@ async function postHandler(request: Request) {
       faviconBuffer = parsed.buffer;
     } else {
       // Download favicon from HTTP URL
-      const faviconResponse = await fetch(iconUrl);
+      const faviconResponse = await fetchWithTimeout(iconUrl, 10_000);
       if (!faviconResponse.ok) {
         logger.error("Failed to download favicon", undefined, {
           page_id: pageId,
@@ -107,8 +108,7 @@ async function postHandler(request: Request) {
         return errorResponse("Failed to download favicon", 500);
       }
 
-      const faviconArrayBuffer = await faviconResponse.arrayBuffer();
-      faviconBuffer = Buffer.from(faviconArrayBuffer);
+      faviconBuffer = await readBodyWithLimit(faviconResponse, 5 * 1024 * 1024);
     }
 
     // Step 3: Optimize the favicon (resize to max 80x80px, compress)

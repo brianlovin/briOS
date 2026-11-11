@@ -1,3 +1,5 @@
+import { fetchWithTimeout, readBodyWithLimit } from "@/lib/bounded-fetch";
+
 /**
  * Favicon extraction utilities
  * Fetches and parses favicons from URLs with multiple fallback strategies
@@ -72,7 +74,7 @@ async function fetchBasicMetadata(url: string): Promise<{
 }> {
   try {
     // Use a simple fetch with headers that mimic a browser
-    const response = await fetch(url, {
+    const response = await fetchWithTimeout(url, 10_000, {
       headers: {
         "User-Agent":
           "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
@@ -90,7 +92,7 @@ async function fetchBasicMetadata(url: string): Promise<{
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
 
-    const html = await response.text();
+    const html = (await readBodyWithLimit(response, 2 * 1024 * 1024)).toString("utf8");
 
     // Extract just the head section to minimize parsing
     const headMatch = html.match(/<head[^>]*>([\s\S]*?)<\/head>/i);
