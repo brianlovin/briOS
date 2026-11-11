@@ -12,6 +12,9 @@ import {
   RecentlyPlayedItem,
 } from "@/lib/spotify/sync";
 
+// Must match the URL the sync route publishes to (same env var and default).
+const WORKER_URL = process.env.SPOTIFY_WORKER_URL ?? "https://brianlovin.com/api/spotify/worker";
+
 // Initialize QStash Receiver for signature verification
 const receiver = new Receiver({
   currentSigningKey: process.env.QSTASH_CURRENT_SIGNING_KEY!,
@@ -30,7 +33,9 @@ async function postHandler(req: NextRequest) {
     }
 
     // Verify signature
-    const isValid = await receiver.verify({ signature, body: rawBody });
+    // Bind the signature to this endpoint so a message QStash signed for
+    // another destination on the same account is rejected.
+    const isValid = await receiver.verify({ signature, body: rawBody, url: WORKER_URL });
     if (!isValid) {
       logger.warn("[Worker] Invalid QStash signature");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

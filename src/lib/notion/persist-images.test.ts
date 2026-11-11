@@ -67,6 +67,16 @@ describe("isNotionTemporaryUrl", () => {
     );
     expect(isNotionTemporaryUrl("https://i.scdn.co/image/ab67616d0000b273")).toBe(false);
     expect(isNotionTemporaryUrl("https://my-bucket.s3.amazonaws.com/photo.png")).toBe(false);
+    // Look-alike buckets: bucket names may contain dots.
+    expect(
+      isNotionTemporaryUrl("https://prod-files-secure.attacker.s3.amazonaws.com/photo.png"),
+    ).toBe(false);
+    expect(
+      isNotionTemporaryUrl("https://my-bucket.s3.amazonaws.com/secure.notion-static.com/x.png"),
+    ).toBe(false);
+    expect(
+      isNotionTemporaryUrl("https://secure.notion-static.com.s3.amazonaws.com/abc/image.png"),
+    ).toBe(true);
     expect(isNotionTemporaryUrl("not a url")).toBe(false);
     expect(isNotionTemporaryUrl(undefined)).toBe(false);
   });
