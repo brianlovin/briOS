@@ -16,4 +16,6 @@ jobs:
         env:
           LIKES_SYNC_TOKEN: ${{ secrets.LIKES_SYNC_TOKEN }}
         # Send the token as a header so it is not recorded in URL request logs.
-        run: curl --fail-with-body -H "Authorization: Bearer $LIKES_SYNC_TOKEN" "https://brianlovin.com/api/likes/sync"
+        # Block scalar: an inline value containing "Authorization: " is invalid YAML.
+        run: |
+          curl --fail-with-body -H "Authorization: Bearer $LIKES_SYNC_TOKEN" "https://brianlovin.com/api/likes/sync"
