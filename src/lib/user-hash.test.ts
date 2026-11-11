@@ -23,13 +23,20 @@ function requestWith(headers: Record<string, string>): Request {
 }
 
 describe("getClientIp", () => {
-  test("prefers the Cloudflare header", () => {
+  test("prefers Vercel's x-real-ip and ignores a client-sent cf-connecting-ip", () => {
     const req = requestWith({
       "cf-connecting-ip": "9.9.9.9",
       "x-forwarded-for": "1.1.1.1",
       "x-real-ip": "2.2.2.2",
     });
-    expect(getClientIp(req)).toBe("9.9.9.9");
+    expect(getClientIp(req)).toBe("2.2.2.2");
+  });
+
+  test("a rotating cf-connecting-ip does not change the identity", () => {
+    const a = requestWith({ "cf-connecting-ip": "9.9.9.1", "x-real-ip": "2.2.2.2" });
+    const b = requestWith({ "cf-connecting-ip": "9.9.9.2", "x-real-ip": "2.2.2.2" });
+    expect(hashUserIp(getClientIp(a))).toBe(hashUserIp(getClientIp(b)));
+    expect(getClientIp(requestWith({ "cf-connecting-ip": "9.9.9.9" }))).toBe("unknown");
   });
 
   test("falls back to the first x-forwarded-for entry", () => {
@@ -57,15 +64,15 @@ describe("getClientIpFromHeaders", () => {
     return { get: (name: string) => map[name] ?? null };
   }
 
-  test("prefers the Cloudflare header", () => {
+  test("ignores cf-connecting-ip", () => {
     const headers = headersFrom({
       "cf-connecting-ip": "9.9.9.9",
       "x-forwarded-for": "1.1.1.1",
     });
-    expect(getClientIpFromHeaders(headers)).toBe("9.9.9.9");
+    expect(getClientIpFromHeaders(headers)).toBe("1.1.1.1");
   });
 
-  test("falls back through x-forwarded-for then x-real-ip", () => {
+  test("falls back through x-real-ip then x-forwarded-for", () => {
     expect(getClientIpFromHeaders(headersFrom({ "x-forwarded-for": "1.1.1.1, 2.2.2.2" }))).toBe(
       "1.1.1.1",
     );

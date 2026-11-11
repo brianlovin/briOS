@@ -1,19 +1,36 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-import { recordDigestSubscribed } from "@/lib/activity";
-import { afterActivity } from "@/lib/activity-schedule";
 import { errorResponse } from "@/lib/api-utils";
 import { track } from "@/lib/axiom";
+import { sendHNConfirmationEmail } from "@/lib/email";
+import { generateSubscribeConfirmToken } from "@/lib/jwt";
 import { logger } from "@/lib/logger";
 import { withAxiom } from "@/lib/observability/axiom-route";
 import { requestContext } from "@/lib/request-context";
-import { createSubscription } from "@/lib/subscriptions";
+import { claimConfirmationSend, isSubscribed, normalizeEmail } from "@/lib/subscriptions";
+import { buildSubscribeConfirmUrl } from "@/lib/urls";
 
 // Request body schema with email validation
 const SubscribeSchema = z.object({
-  email: z.string().regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email address"),
+  email: z
+    .string()
+    .trim()
+    .max(254)
+    .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email address"),
 });
+
+/**
+ * Same response whether the address is new, already subscribed, or recently
+ * sent a confirmation, so the endpoint cannot be used to test membership.
+ */
+function pendingResponse() {
+  return NextResponse.json({
+    success: true,
+    pending: true,
+    message: "Check your email to confirm your subscription",
+  });
+}
 
 async function handler(request: Request) {
   const context = requestContext(request);
@@ -26,28 +43,25 @@ async function handler(request: Request) {
       return errorResponse("Invalid email address", 400, result.error.issues);
     }
 
-    const { email } = result.data;
-    const { success, alreadyExists } = await createSubscription(email);
+    const email = normalizeEmail(result.data.email);
 
-    if (alreadyExists) {
+    if (await isSubscribed(email)) {
       track("hn.subscribe_rejected", { ...context, reason: "already_subscribed", email });
-      return errorResponse("This email is already subscribed", 409);
+      return pendingResponse();
     }
 
-    if (!success) {
-      track("hn.subscribe_rejected", { ...context, reason: "store_error", email });
-      return errorResponse("Failed to subscribe. Please try again.", 500);
+    if (!(await claimConfirmationSend(email))) {
+      track("hn.subscribe_rejected", { ...context, reason: "confirmation_throttled", email });
+      return pendingResponse();
     }
 
-    track("hn.subscribed", { ...context, email, source: "web" });
-    afterActivity((store) => recordDigestSubscribed({ email }, store));
+    await sendHNConfirmationEmail(
+      email,
+      buildSubscribeConfirmUrl(generateSubscribeConfirmToken(email)),
+    );
+    track("hn.subscribe_pending", { ...context, email, source: "web" });
 
-    console.log("✅ New HN digest subscription");
-
-    return NextResponse.json({
-      success: true,
-      message: "Successfully subscribed to HN digest",
-    });
+    return pendingResponse();
   } catch (error) {
     logger.error("Error in subscribe route", error);
     return errorResponse("Failed to subscribe");

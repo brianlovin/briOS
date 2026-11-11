@@ -6,7 +6,7 @@ import { errorResponse, safeCompare } from "@/lib/api-utils";
 import { logger } from "@/lib/logger";
 import { updateWritingShortId } from "@/lib/notion/mutations";
 import { purgeContentType } from "@/lib/notion/purge";
-import { getWritingPostByShortId, getWritingPostContent } from "@/lib/notion/queries";
+import { getWritingPostContent, writingShortIdExists } from "@/lib/notion/queries";
 import { annotate, withAxiom } from "@/lib/observability/axiom-route";
 import { buildSlug, generateShortId, isValidShortId } from "@/lib/short-id";
 
@@ -75,7 +75,7 @@ async function postHandler(request: Request) {
       const candidate = generateShortId();
       console.log(`Attempt ${attempt + 1}: Generated candidate ${candidate}`);
 
-      const existing = await getWritingPostByShortId(candidate);
+      const existing = await writingShortIdExists(candidate);
 
       if (!existing) {
         shortId = candidate;

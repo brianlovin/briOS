@@ -3,7 +3,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { logger } from "@/lib/logger";
 import { annotate, withAxiom } from "@/lib/observability/axiom-route";
 import { withErrorCapture } from "@/lib/observability/sentry";
-import { exchangeCodeForToken } from "@/lib/spotify/auth";
+import { exchangeCodeForToken, SpotifyOwnerMismatchError } from "@/lib/spotify/auth";
+import { isValidSpotifyState, SPOTIFY_STATE_COOKIE } from "@/lib/spotify/oauth-state";
+
+function clearStateCookie(response: NextResponse): NextResponse {
+  response.cookies.set(SPOTIFY_STATE_COOKIE, "", { path: "/api/spotify", maxAge: 0 });
+  return response;
+}
 
 async function getHandler(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
@@ -35,22 +41,46 @@ async function getHandler(req: NextRequest) {
     );
   }
 
+  // The callback must come from the browser that started /api/spotify/login.
+  const state = searchParams.get("state");
+  if (!isValidSpotifyState(state, req.cookies.get(SPOTIFY_STATE_COOKIE)?.value)) {
+    annotate({ outcome: "invalid_state" });
+    return clearStateCookie(
+      NextResponse.json(
+        {
+          error: "Invalid OAuth state",
+          details: "Start the Spotify sign-in again from /api/spotify/login",
+          code: "INVALID_STATE",
+        },
+        { status: 400 },
+      ),
+    );
+  }
+
   try {
     await exchangeCodeForToken(code);
     annotate({ outcome: "authorized" });
-    return NextResponse.redirect(new URL("/", req.url));
+    return clearStateCookie(NextResponse.redirect(new URL("/", req.url)));
   } catch (error: unknown) {
+    if (error instanceof SpotifyOwnerMismatchError) {
+      annotate({ outcome: "owner_mismatch" });
+      return clearStateCookie(
+        NextResponse.json(
+          { error: "Forbidden", details: error.message, code: "OWNER_MISMATCH" },
+          { status: 403 },
+        ),
+      );
+    }
     logger.error("Error exchanging Spotify code for token", error);
-    return NextResponse.json(
-      {
-        error: "Failed to exchange code for token",
-        details:
-          error instanceof Error
-            ? error.message
-            : "An unexpected error occurred during authentication",
-        code: "TOKEN_EXCHANGE_FAILED",
-      },
-      { status: 500 },
+    return clearStateCookie(
+      NextResponse.json(
+        {
+          error: "Failed to exchange code for token",
+          details: "An unexpected error occurred during authentication",
+          code: "TOKEN_EXCHANGE_FAILED",
+        },
+        { status: 500 },
+      ),
     );
   }
 }

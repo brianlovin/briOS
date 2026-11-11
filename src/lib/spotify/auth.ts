@@ -38,22 +38,13 @@ export async function getSpotifyToken(): Promise<string> {
   }
 
   // Get the stored refresh token from Notion
-  const dataSourceId = await getDataSourceId(process.env.SPOTIFY_TOKEN_DATABASE_ID!);
-  const response = await notion.dataSources.query({
-    data_source_id: dataSourceId,
-    filter: {
-      property: "Name",
-      title: {
-        equals: "Spotify Refresh Token",
-      },
-    },
-  });
+  const results = await queryTokenPages();
 
-  if (!response.results.length) {
+  if (!results.length) {
     throw new Error("No Spotify refresh token found in Notion");
   }
 
-  const page = response.results[0];
+  const page = results[0];
   if (!("properties" in page)) {
     throw new Error("Invalid page response from Notion");
   }
@@ -139,7 +130,45 @@ export async function getSpotifyToken(): Promise<string> {
   return data.access_token;
 }
 
-export function getSpotifyAuthUrl(): string {
+const TOKEN_PAGE_TITLE = "Spotify Refresh Token";
+
+/** Stored token pages, most recently edited first. */
+async function queryTokenPages() {
+  const dataSourceId = await getDataSourceId(process.env.SPOTIFY_TOKEN_DATABASE_ID!);
+  const response = await notion.dataSources.query({
+    data_source_id: dataSourceId,
+    filter: {
+      property: "Name",
+      title: {
+        equals: TOKEN_PAGE_TITLE,
+      },
+    },
+    sorts: [{ timestamp: "last_edited_time", direction: "descending" }],
+  });
+  return response.results;
+}
+
+/** Thrown when the account that completed OAuth is not the configured owner. */
+export class SpotifyOwnerMismatchError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "SpotifyOwnerMismatchError";
+  }
+}
+
+async function fetchSpotifyUserId(accessToken: string): Promise<string> {
+  const response = await fetch("https://api.spotify.com/v1/me", {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to read Spotify profile: ${response.status}`);
+  }
+  const profile = (await response.json()) as { id?: string };
+  if (!profile.id) throw new Error("Spotify profile has no id");
+  return profile.id;
+}
+
+export function getSpotifyAuthUrl(state: string): string {
   const scopes = ["user-read-recently-played", "user-top-read", "user-read-playback-state"].join(
     " ",
   );
@@ -149,6 +178,7 @@ export function getSpotifyAuthUrl(): string {
     response_type: "code",
     redirect_uri: SPOTIFY_REDIRECT_URI,
     scope: scopes,
+    state,
   });
 
   return `https://accounts.spotify.com/authorize?${params.toString()}`;
@@ -179,30 +209,44 @@ export async function exchangeCodeForToken(code: string): Promise<void> {
 
   const data: SpotifyTokenResponse = await response.json();
 
-  // Store the refresh token in Notion
-  const pageData = {
-    parent: { database_id: process.env.SPOTIFY_TOKEN_DATABASE_ID! },
-    properties: {
-      Name: {
-        title: [
-          {
-            text: {
-              content: "Spotify Refresh Token",
-            },
-          },
-        ],
+  // Only the site owner's Spotify account may become the synced account.
+  // Without a configured owner id, refuse rather than store any account.
+  const ownerId = process.env.SPOTIFY_OWNER_ID?.trim();
+  if (!ownerId) {
+    throw new SpotifyOwnerMismatchError("SPOTIFY_OWNER_ID is not configured");
+  }
+  const userId = await fetchSpotifyUserId(data.access_token);
+  if (userId !== ownerId) {
+    throw new SpotifyOwnerMismatchError("Authorized Spotify account is not the site owner");
+  }
+
+  const value = {
+    rich_text: [
+      {
+        text: {
+          content: data.refresh_token,
+        },
       },
-      Value: {
-        rich_text: [
-          {
-            text: {
-              content: data.refresh_token,
-            },
-          },
-        ],
-      },
-    },
+    ],
   };
 
-  await notion.pages.create(pageData as any);
+  // Keep a single token page: update the newest one, archive any extras.
+  const [current, ...extras] = await queryTokenPages();
+  await Promise.all(
+    extras.map((page) => notion.pages.update({ page_id: page.id, archived: true })),
+  );
+  cachedToken = null;
+
+  if (current) {
+    await notion.pages.update({ page_id: current.id, properties: { Value: value } });
+    return;
+  }
+
+  await notion.pages.create({
+    parent: { database_id: process.env.SPOTIFY_TOKEN_DATABASE_ID! },
+    properties: {
+      Name: { title: [{ text: { content: TOKEN_PAGE_TITLE } }] },
+      Value: value,
+    },
+  } as Parameters<typeof notion.pages.create>[0]);
 }

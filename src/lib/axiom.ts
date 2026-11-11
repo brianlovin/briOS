@@ -86,9 +86,11 @@ export interface EventFieldMap extends ClientEvents {
   // --- HN digest ---
   "hn.subscribed": { email: string; source: "web" } & RequestContextFields;
   "hn.subscribe_rejected": {
-    reason: "invalid_email" | "already_subscribed" | "store_error";
+    reason: "invalid_email" | "already_subscribed" | "store_error" | "confirmation_throttled";
     email?: string;
   } & RequestContextFields;
+  "hn.subscribe_pending": { email: string; source: "web" } & RequestContextFields;
+  "hn.subscribe_confirm_failed": { reason: "invalid_token" | "store_error" };
   "hn.unsubscribed": {
     email: string;
     source: "email_link";
