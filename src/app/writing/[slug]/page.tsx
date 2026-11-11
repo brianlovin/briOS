@@ -9,6 +9,7 @@ import { renderBlocks } from "@/components/renderBlocks";
 import { List, ListItem, ListItemLabel } from "@/components/shared/ListComponents";
 import { PageTitle } from "@/components/Typography";
 import { FancySeparator } from "@/components/ui/FancySeparator";
+import { serializeJsonLd } from "@/lib/json-ld";
 import { getServerLikes, type LikeCount } from "@/lib/likes-server";
 import { createArticleJsonLd, createMetadata, truncateDescription } from "@/lib/metadata";
 import {
@@ -157,7 +158,7 @@ function WritingPostView({
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(articleJsonLd) }}
       />
       <div className="min-w-0 flex-1">
         <div className="mx-auto flex max-w-3xl flex-1 flex-col gap-8 px-4 py-12 md:px-6 lg:px-8 lg:py-16 xl:py-20">

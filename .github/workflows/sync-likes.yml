@@ -5,9 +5,15 @@ on:
     - cron: "0 * * * *" # Every hour
   workflow_dispatch:
 
+# The job only calls the site; it needs no GITHUB_TOKEN scopes.
+permissions: {}
+
 jobs:
   sync-likes:
     runs-on: ubuntu-latest
     steps:
       - name: sync likes to notion
-        run: curl "https://brianlovin.com/api/likes/sync?token=${{ secrets.LIKES_SYNC_TOKEN }}"
+        env:
+          LIKES_SYNC_TOKEN: ${{ secrets.LIKES_SYNC_TOKEN }}
+        # Send the token as a header so it is not recorded in URL request logs.
+        run: curl --fail-with-body -H "Authorization: Bearer $LIKES_SYNC_TOKEN" "https://brianlovin.com/api/likes/sync"

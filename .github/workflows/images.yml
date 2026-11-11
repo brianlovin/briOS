@@ -8,6 +8,11 @@ on:
       - "**.jpeg"
       - "**.png"
       - "**.webp"
+# image-actions commits compressed images to the PR branch and comments on it.
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   build:
     # Only run on Pull Requests within the same repository, and not from forks.

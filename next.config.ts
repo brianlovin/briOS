@@ -96,6 +96,8 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "s3.us-west-2.amazonaws.com",
+        // Only Notion's legacy bucket, not every public bucket in the region.
+        pathname: "/secure.notion-static.com/**",
       },
       // R2 public bucket for optimized images
       {

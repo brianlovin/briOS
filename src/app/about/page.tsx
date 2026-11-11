@@ -13,6 +13,7 @@ import {
   Section,
   SectionHeading,
 } from "@/components/shared/ListComponents";
+import { serializeJsonLd } from "@/lib/json-ld";
 import { createMetadata, createPersonJsonLd } from "@/lib/metadata";
 
 export const metadata: Metadata = createMetadata({
@@ -29,7 +30,7 @@ export default function About() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(personJsonLd) }}
       />
       <div className="flex flex-1 flex-col">
         <div className="flex-1 overflow-y-auto">

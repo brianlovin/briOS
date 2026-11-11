@@ -45,6 +45,10 @@ const UPLOAD_CONCURRENCY = 4;
  * Public assets (`public.notion-static.com` custom emoji, `/images/page-cover`)
  * do not expire and are left alone.
  */
+const NOTION_S3_VIRTUAL_HOST_RE =
+  /^(?:prod-files-secure|secure\.notion-static\.com)\.s3[.-](?:[a-z0-9-]+\.)?amazonaws\.com$/;
+const S3_PATH_STYLE_HOST_RE = /^s3[.-](?:[a-z0-9-]+\.)?amazonaws\.com$|^s3\.amazonaws\.com$/;
+
 export function isNotionTemporaryUrl(value: string | null | undefined): boolean {
   if (!value) return false;
   let url: URL;
@@ -57,9 +61,10 @@ export function isNotionTemporaryUrl(value: string | null | undefined): boolean 
   const host = url.hostname.toLowerCase();
   if (host === "file.notion.so") return true;
   if (host.endsWith(".notionusercontent.com")) return true;
-  if (host.endsWith(".amazonaws.com")) {
-    if (host.startsWith("prod-files-secure.")) return true;
-    if (host.startsWith("secure.notion-static.com.")) return true;
+  // Match Notion's own buckets exactly. Bucket names may contain dots, so a
+  // prefix check would also accept someone else's `prod-files-secure.x` bucket.
+  if (NOTION_S3_VIRTUAL_HOST_RE.test(host)) return true;
+  if (S3_PATH_STYLE_HOST_RE.test(host)) {
     return url.pathname.startsWith("/secure.notion-static.com/");
   }
   return false;
