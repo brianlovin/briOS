@@ -12,7 +12,6 @@ const likePages = [
   "til/[slug]/page.tsx",
   "writing/[slug]/page.tsx",
   "ama/[id]/page.tsx",
-  "design-details/[id]/page.tsx",
 ];
 
 describe("likes stay outside days-cached islands", () => {

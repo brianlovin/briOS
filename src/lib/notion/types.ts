@@ -229,18 +229,6 @@ export type NotionListeningHistoryItem = {
   image?: string;
 };
 
-// Design Details episode item type
-export type NotionDesignDetailsEpisodeItem = {
-  id: string;
-  title: string;
-  slug: string;
-  description?: string;
-  episodeNumber?: number;
-  publishedDate?: string;
-  imageUrl?: string;
-  audioUrl?: string;
-};
-
 // Speaking item type
 export type NotionSpeakingItem = {
   id: string;

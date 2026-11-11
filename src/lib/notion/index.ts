@@ -21,7 +21,6 @@ export type {
   NotionAppDissectionItemWithContent,
   NotionComputerItem,
   NotionComputerItemWithContent,
-  NotionDesignDetailsEpisodeItem,
   NotionItem,
   NotionListeningHistoryItem,
   NotionSpeakingItem,
@@ -77,8 +76,6 @@ export {
   getComputerDatabaseItems,
   getComputerItemContent,
   getComputerTipByShortId,
-  // Design Details
-  getDesignDetailsEpisodeDatabaseItems,
   // Generic
   getFullContent,
   // Good Websites

@@ -38,7 +38,6 @@ export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
   const staticEntries: MetadataRoute.Sitemap = [
     ...INDEXABLE_SECTIONS.map((section) => entry(section.href, now)),
     entry("/llms.txt", now),
-    entry("/design-details", now),
   ];
 
   // INDEXABLE_SECTIONS already includes /app-dissection — don't duplicate.
