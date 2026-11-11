@@ -1,4 +1,5 @@
 import { toErrorMessage } from "@/lib/axiom";
+import { fetchWithTimeout, readBodyWithLimit } from "@/lib/bounded-fetch";
 import { optimizeWritingImage } from "@/lib/image-processing/optimize";
 import { logger } from "@/lib/logger";
 import { missingR2EnvVars, r2ObjectExists, r2PublicUrl, uploadBufferToR2 } from "@/lib/r2/storage";
@@ -13,13 +14,17 @@ import type { DownloadedFile, PersistImageDeps } from "./persist-images";
  * browser bundles resolve `image-store.browser.ts` instead.
  */
 
+// Persisting runs on anonymous cache-miss renders, so bound each download.
+const DOWNLOAD_MAX_BYTES = 50 * 1024 * 1024;
+const DOWNLOAD_TIMEOUT_MS = 30_000;
+
 async function downloadFile(url: string): Promise<DownloadedFile> {
-  const response = await fetch(url);
+  const response = await fetchWithTimeout(url, DOWNLOAD_TIMEOUT_MS);
   if (!response.ok) {
     throw new Error(`Download failed with HTTP ${response.status}`);
   }
   return {
-    body: Buffer.from(await response.arrayBuffer()),
+    body: await readBodyWithLimit(response, DOWNLOAD_MAX_BYTES),
     contentType: response.headers.get("content-type") || "application/octet-stream",
   };
 }

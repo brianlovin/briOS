@@ -14,8 +14,9 @@ import { formatDigestDate } from "@/lib/urls";
  */
 async function getHandler(request: Request) {
   try {
-    // Only allow in development
-    if (process.env.NODE_ENV === "production") {
+    // Local development only. It mails a digest to any ?email= without auth,
+    // so also refuse on any Vercel deployment, whatever its NODE_ENV.
+    if (process.env.NODE_ENV === "production" || process.env.VERCEL) {
       return errorResponse("Test endpoint only available in development", 403);
     }
 

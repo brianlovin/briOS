@@ -4,6 +4,7 @@ import { recordStackAdded } from "@/lib/activity";
 import { titleFromNotionPage } from "@/lib/activity-from-notion";
 import { afterActivity } from "@/lib/activity-schedule";
 import { errorResponse, safeCompare } from "@/lib/api-utils";
+import { fetchWithTimeout, readBodyWithLimit } from "@/lib/bounded-fetch";
 import { optimizeSiteIcon } from "@/lib/image-processing/optimize";
 import { logger } from "@/lib/logger";
 import { notion } from "@/lib/notion";
@@ -70,7 +71,7 @@ async function postHandler(request: Request) {
     console.log(`Processing icon for page ${pageId}: ${iconUrl}`);
 
     // Step 2: Download the icon
-    const iconResponse = await fetch(iconUrl);
+    const iconResponse = await fetchWithTimeout(iconUrl, 10_000);
     if (!iconResponse.ok) {
       logger.error("Failed to download icon", undefined, {
         page_id: pageId,
@@ -80,8 +81,7 @@ async function postHandler(request: Request) {
       return errorResponse("Failed to download icon", 500);
     }
 
-    const iconArrayBuffer = await iconResponse.arrayBuffer();
-    const iconBuffer = Buffer.from(iconArrayBuffer);
+    const iconBuffer = await readBodyWithLimit(iconResponse, 5 * 1024 * 1024);
 
     // Step 3: Optimize the icon (resize to max 80x80px, compress)
     const optimized = await optimizeSiteIcon(iconBuffer);
