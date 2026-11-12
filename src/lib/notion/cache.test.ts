@@ -3,18 +3,18 @@ import { describe, expect, test } from "bun:test";
 import { CONTENT_CACHE_VERSION, isPlaceholderNotionBuild, notionContentCacheKey } from "./cache";
 
 describe("notionContentCacheKey", () => {
-  test("bumps processed content keys to v3", () => {
-    expect(CONTENT_CACHE_VERSION).toBe("v3");
-    expect(notionContentCacheKey(null, "page-1")).toBe("notion:content:v3:page-1");
-    expect(notionContentCacheKey("writing", "page-1")).toBe("notion:writing:content:v3:page-1");
+  test("bumps processed content keys to v4", () => {
+    expect(CONTENT_CACHE_VERSION).toBe("v4");
+    expect(notionContentCacheKey(null, "page-1")).toBe("notion:content:v4:page-1");
+    expect(notionContentCacheKey("writing", "page-1")).toBe("notion:writing:content:v4:page-1");
     expect(notionContentCacheKey("writing", "slug", "hello")).toBe(
-      "notion:writing:content:v3:slug:hello",
+      "notion:writing:content:v4:slug:hello",
     );
     expect(notionContentCacheKey("til", "shortid", "abc1234")).toBe(
-      "notion:til:content:v3:shortid:abc1234",
+      "notion:til:content:v4:shortid:abc1234",
     );
     expect(notionContentCacheKey("app-dissection", "instagram")).toBe(
-      "notion:app-dissection:content:v3:instagram",
+      "notion:app-dissection:content:v4:instagram",
     );
   });
 });

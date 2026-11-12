@@ -46,8 +46,9 @@ export const CACHE_TTLS = {
  * Redis (7d) cannot serve the old grab-bag payload as the new union.
  * v3: content reads now check database and published state, so entries cached
  * before that check must not be served.
+ * v4: trashed rows are no longer served by ID.
  */
-export const CONTENT_CACHE_VERSION = "v3";
+export const CONTENT_CACHE_VERSION = "v4";
 
 /**
  * Cache key for processed page content.
