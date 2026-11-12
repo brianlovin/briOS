@@ -144,19 +144,6 @@ export function richTextPlainText(content: RichTextContent[]): string {
   return content.map((c) => c.text.content).join("");
 }
 
-// Generic page metadata for getFullContent / useNotion. Collection-specific
-// records (writing, stack, …) live in their own types below.
-export type NotionItem = {
-  id: string;
-  title: string;
-  category: string;
-  status: string;
-  createdTime: string;
-  published?: string;
-  source?: string;
-  slug?: string;
-};
-
 export type NotionWritingItem = {
   id: string;
   title: string;

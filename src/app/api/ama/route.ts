@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { recordAmaAsked } from "@/lib/activity";
 import { afterActivity } from "@/lib/activity-schedule";
+import { checkAmaRateLimit, getClientIp } from "@/lib/ama-ratelimit";
 import { cachedResponse, errorResponse, parsePaginationParams } from "@/lib/api-utils";
 import { track } from "@/lib/axiom";
 import { logger } from "@/lib/logger";
@@ -36,6 +37,11 @@ async function getHandler(request: Request) {
 
 async function postHandler(request: Request) {
   try {
+    if (!(await checkAmaRateLimit(getClientIp(request.headers)))) {
+      track("ama.question_rejected", { ...requestContext(request), reason: "rate_limited" });
+      return errorResponse("Too many questions. Try again later.", 429);
+    }
+
     const body = await request.json();
     const validatedData = createQuestionSchema.parse(body);
 

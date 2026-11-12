@@ -6,7 +6,6 @@ import { notion } from "./client";
 import {
   getAmaItemContent,
   getAppDissectionDatabaseItems,
-  getFullContent,
   getGoodWebsitesDatabaseItems,
   getGoodWebsitesDatabaseItemsForRss,
   getStackDatabaseItems,
@@ -332,15 +331,17 @@ describe("public content reads are scoped to their database", () => {
     expect(isPageInDatabases(contentPage(PRIVATE_DB), [WRITING_DB, undefined])).toBe(false);
   });
 
-  test("getFullContent returns null for pages outside the public databases", async () => {
-    stubContent(contentPage(PRIVATE_DB));
-    expect(await getFullContent("page-1")).toBeNull();
+  test("content reads skip pages from other databases without fetching blocks", async () => {
+    stubContent(contentPage(PRIVATE_DB, published));
+    expect(await getWritingPostContent("page-1")).toBeNull();
     expect(blocks.getAllBlocks).not.toHaveBeenCalled();
   });
 
-  test("getFullContent still serves pages from a public database", async () => {
-    stubContent(contentPage(WRITING_DB));
-    expect(await getFullContent("page-1")).not.toBeNull();
+  test("trashed rows are not served even from the right database", async () => {
+    const trashed = { ...contentPage(TIL_DB, published), in_trash: true } as PageResponse;
+    expect(isPageInDatabases(trashed, [TIL_DB])).toBe(false);
+    stubContent(trashed);
+    expect(await getTilItemContent("page-1")).toBeNull();
   });
 
   test("getAmaItemContent only reads AMA pages, answered or not", async () => {

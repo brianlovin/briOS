@@ -34,7 +34,6 @@ import {
   type NotionAppDissectionItemWithContent,
   type NotionComputerItem,
   type NotionComputerItemWithContent,
-  type NotionItem,
   type NotionListeningHistoryItem,
   type NotionSpeakingItem,
   type NotionStackItem,
@@ -100,22 +99,6 @@ export async function getDataSourceId(databaseId: string): Promise<string> {
     },
     { ttl: CACHE_TTLS.DATA_SOURCE },
   );
-}
-
-function mapGenericItem(page: PageResponse): NotionItem | null {
-  if (!isFullPage(page)) return null;
-  const properties = page.properties;
-
-  return {
-    id: page.id,
-    title: title(properties, "Name") ?? "Untitled",
-    category: select(properties, "Category") ?? "Uncategorized",
-    status: select(properties, "Status") ?? "Draft",
-    createdTime: page.created_time,
-    published: dateStart(properties, "Published") || page.created_time,
-    source: url(properties, "Source")?.replace("https://", ""),
-    slug: richText(properties, "Slug") ?? "",
-  };
 }
 
 function mapStackItem(page: PageResponse): NotionStackItem | null {
@@ -324,6 +307,8 @@ function normalizeNotionId(id: string): string {
 /** Database a page belongs to, from its `database_id` or `data_source_id` parent. */
 export function pageDatabaseId(page: PageResponse): string | null {
   if (!isFullPage(page)) return null;
+  // Trashed rows still come back from pages.retrieve by ID.
+  if (page.in_trash === true) return null;
   const parent = page.parent as { type?: string; database_id?: string };
   if (parent.type !== "database_id" && parent.type !== "data_source_id") return null;
   return parent.database_id ? normalizeNotionId(parent.database_id) : null;
@@ -338,41 +323,6 @@ export function isPageInDatabases(page: PageResponse, databaseIds: Array<string 
 
 function hasPublishedDate(page: PageResponse): boolean {
   return isFullPage(page) && !!dateStart(page.properties, "Published");
-}
-
-/** Databases whose pages are public content. The Spotify token DB is never listed. */
-function publicContentDatabaseIds(): Array<string | undefined> {
-  return [
-    process.env.NOTION_WRITING_DATABASE_ID,
-    process.env.NOTION_TIL_DATABASE_ID,
-    process.env.NOTION_AMA_DATABASE_ID,
-    process.env.NOTION_STACK_DATABASE_ID,
-    process.env.NOTION_GOOD_WEBSITES_DATABASE_ID,
-    process.env.NOTION_TIPS_DATABASE_ID,
-    process.env.NOTION_SPEAKING_DATABASE_ID,
-    process.env.NOTION_APP_DISSECTION_DATABASE_ID,
-  ];
-}
-
-// ===== Generic Content Retrieval =====
-
-export async function getFullContent(
-  pageId: string,
-): Promise<{ blocks: ProcessedBlock[]; metadata: NotionItem } | null> {
-  return cachedNotionQuery(
-    notionContentCacheKey(null, pageId),
-    async () => {
-      const page = await retrievePage(pageId);
-      if (!isPageInDatabases(page, publicContentDatabaseIds())) return null;
-      const metadata = mapGenericItem(page);
-      if (!metadata) return null;
-
-      const blocks = await getAllBlocks(pageId);
-
-      return { blocks, metadata };
-    },
-    { ttl: CACHE_TTLS.CONTENT },
-  );
 }
 
 // ===== Stack Database =====

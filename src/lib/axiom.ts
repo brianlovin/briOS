@@ -152,7 +152,7 @@ export interface EventFieldMap extends ClientEvents {
     title_length: number;
     has_description: boolean;
   } & RequestContextFields;
-  "ama.question_rejected": { reason: "validation" } & RequestContextFields;
+  "ama.question_rejected": { reason: "validation" | "rate_limited" } & RequestContextFields;
 
   // --- Notion content operations ---
   "cache.purged": {
