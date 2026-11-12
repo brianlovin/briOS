@@ -1,3 +1,4 @@
+import { APIErrorCode, isNotionClientError } from "@notionhq/client";
 import type { DatabaseObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 
 import { getAllBlocks } from "./blocks";
@@ -6,6 +7,7 @@ import { notion } from "./client";
 import {
   COMPUTER_LIST_SORTS,
   COMPUTER_PUBLISHED_FILTER,
+  isNotionPageIdParam,
   isPublishedComputerTip,
   mapComputerItem,
   rewriteComputerTipLinks,
@@ -58,8 +60,19 @@ async function queryDataSource(args: DataSourceQueryArgs): Promise<DataSourceQue
   };
 }
 
-async function retrievePage(pageId: string): Promise<PageResponse> {
-  return persistPageImages(await notion.pages.retrieve({ page_id: pageId }));
+/** Null when Notion has no page for this ID (or the integration can't see it). */
+async function retrievePage(pageId: string): Promise<PageResponse | null> {
+  try {
+    return persistPageImages(await notion.pages.retrieve({ page_id: pageId }));
+  } catch (error) {
+    if (
+      isNotionClientError(error) &&
+      (error.code === APIErrorCode.ObjectNotFound || error.code === APIErrorCode.ValidationError)
+    ) {
+      return null;
+    }
+    throw error;
+  }
 }
 
 async function queryAllDataSourcePages(
@@ -442,11 +455,13 @@ export async function getWritingDatabaseItems(
 export async function getWritingPostContent(
   pageId: string,
 ): Promise<{ blocks: ProcessedBlock[]; metadata: NotionWritingItem } | null> {
+  // Malformed IDs from URLs never reach Notion or the cache.
+  if (!isNotionPageIdParam(pageId)) return null;
   return cachedNotionQuery(
     notionContentCacheKey("writing", pageId),
     async () => {
       const page = await retrievePage(pageId);
-      if (!isPageInDatabases(page, [process.env.NOTION_WRITING_DATABASE_ID])) return null;
+      if (!page || !isPageInDatabases(page, [process.env.NOTION_WRITING_DATABASE_ID])) return null;
       const metadata = mapWritingItem(page);
       if (!metadata) return null;
 
@@ -538,12 +553,14 @@ export async function writingShortIdExists(shortId: string): Promise<boolean> {
 // ===== AMA Database =====
 
 export async function getAmaItemContent(pageId: string): Promise<NotionAmaItemWithContent | null> {
+  // Malformed IDs from URLs never reach Notion or the cache.
+  if (!isNotionPageIdParam(pageId)) return null;
   return cachedNotionQuery(
     notionContentCacheKey("ama", pageId),
     async () => {
       const page = await retrievePage(pageId);
       // Unanswered questions stay readable by id: the activity feed links to them.
-      if (!isPageInDatabases(page, [process.env.NOTION_AMA_DATABASE_ID])) return null;
+      if (!page || !isPageInDatabases(page, [process.env.NOTION_AMA_DATABASE_ID])) return null;
       const item = mapAmaItem(page);
       if (!item) return null;
 
@@ -703,11 +720,13 @@ export async function getTilDatabaseItems(
 }
 
 export async function getTilItemContent(pageId: string): Promise<NotionTilItemWithContent | null> {
+  // Malformed IDs from URLs never reach Notion or the cache.
+  if (!isNotionPageIdParam(pageId)) return null;
   return cachedNotionQuery(
     notionContentCacheKey("til", pageId),
     async () => {
       const page = await retrievePage(pageId);
-      if (!isPageInDatabases(page, [process.env.NOTION_TIL_DATABASE_ID])) return null;
+      if (!page || !isPageInDatabases(page, [process.env.NOTION_TIL_DATABASE_ID])) return null;
       if (!hasPublishedDate(page)) return null;
       const item = mapTilItem(page);
       if (!item) return null;
@@ -872,11 +891,13 @@ export async function getComputerDatabaseItems(): Promise<NotionComputerItem[]> 
 export async function getComputerItemContent(
   pageId: string,
 ): Promise<NotionComputerItemWithContent | null> {
+  // Malformed IDs from URLs never reach Notion or the cache.
+  if (!isNotionPageIdParam(pageId)) return null;
   return cachedNotionQuery(
     notionContentCacheKey("computer", pageId),
     async () => {
       const page = await retrievePage(pageId);
-      if (!isPageInDatabases(page, [process.env.NOTION_TIPS_DATABASE_ID])) return null;
+      if (!page || !isPageInDatabases(page, [process.env.NOTION_TIPS_DATABASE_ID])) return null;
       const item = mapComputerItem(page);
       if (!item || !isPublishedComputerTip(item)) return null;
 
