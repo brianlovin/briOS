@@ -1,3 +1,4 @@
+import { APIErrorCode, APIResponseError } from "@notionhq/client";
 import { afterEach, describe, expect, mock, spyOn, test } from "bun:test";
 
 import * as blocks from "./blocks";
@@ -289,6 +290,7 @@ describe("public content reads are scoped to their database", () => {
   const AMA_DB = "22222222-2222-2222-2222-222222222222";
   const TIL_DB = "33333333-3333-3333-3333-333333333333";
   const PRIVATE_DB = "99999999-9999-9999-9999-999999999999";
+  const PAGE_ID = "415c711c-0ceb-81d0-84e8-d6f8f42c20ea";
 
   function contentPage(
     databaseId: string | null,
@@ -333,7 +335,7 @@ describe("public content reads are scoped to their database", () => {
 
   test("content reads skip pages from other databases without fetching blocks", async () => {
     stubContent(contentPage(PRIVATE_DB, published));
-    expect(await getWritingPostContent("page-1")).toBeNull();
+    expect(await getWritingPostContent(PAGE_ID)).toBeNull();
     expect(blocks.getAllBlocks).not.toHaveBeenCalled();
   });
 
@@ -341,31 +343,67 @@ describe("public content reads are scoped to their database", () => {
     const trashed = { ...contentPage(TIL_DB, published), in_trash: true } as PageResponse;
     expect(isPageInDatabases(trashed, [TIL_DB])).toBe(false);
     stubContent(trashed);
-    expect(await getTilItemContent("page-1")).toBeNull();
+    expect(await getTilItemContent(PAGE_ID)).toBeNull();
+  });
+
+  function notionError(code: APIErrorCode, status: number) {
+    return new APIResponseError({
+      code,
+      status,
+      message: code,
+      headers: new Headers(),
+      rawBodyText: "",
+      additional_data: undefined,
+      request_id: undefined,
+    });
+  }
+
+  test("malformed IDs return null without calling Notion or the cache", async () => {
+    stubContent(contentPage(TIL_DB, published));
+    expect(await getTilItemContent("not-a-real-id")).toBeNull();
+    expect(await getAmaItemContent("../../etc")).toBeNull();
+    expect(notion.pages.retrieve).not.toHaveBeenCalled();
+    expect(cache.cachedNotionQuery).not.toHaveBeenCalled();
+  });
+
+  test("pages Notion can't find return null instead of throwing", async () => {
+    stubContent(contentPage(TIL_DB, published));
+    spyOn(notion.pages, "retrieve").mockRejectedValue(
+      notionError(APIErrorCode.ObjectNotFound, 404),
+    );
+    expect(await getTilItemContent(PAGE_ID)).toBeNull();
+  });
+
+  test("other Notion failures still throw so stale cache can cover them", async () => {
+    stubContent(contentPage(TIL_DB, published));
+    spyOn(notion.pages, "retrieve").mockRejectedValue(
+      notionError(APIErrorCode.InternalServerError, 500),
+    );
+    await expect(getTilItemContent(PAGE_ID)).rejects.toThrow();
   });
 
   test("getAmaItemContent only reads AMA pages, answered or not", async () => {
     stubContent(contentPage(PRIVATE_DB));
-    expect(await getAmaItemContent("page-1")).toBeNull();
+    expect(await getAmaItemContent(PAGE_ID)).toBeNull();
     mock.restore();
     stubContent(contentPage(AMA_DB));
-    expect(await getAmaItemContent("page-1")).not.toBeNull();
+    expect(await getAmaItemContent(PAGE_ID)).not.toBeNull();
   });
 
   test("getTilItemContent requires the TIL database and a Published date", async () => {
     stubContent(contentPage(TIL_DB));
-    expect(await getTilItemContent("page-1")).toBeNull();
+    expect(await getTilItemContent(PAGE_ID)).toBeNull();
     mock.restore();
     stubContent(contentPage(TIL_DB, published));
-    expect(await getTilItemContent("page-1")).not.toBeNull();
+    expect(await getTilItemContent(PAGE_ID)).not.toBeNull();
     mock.restore();
     stubContent(contentPage(PRIVATE_DB, published));
-    expect(await getTilItemContent("page-1")).toBeNull();
+    expect(await getTilItemContent(PAGE_ID)).toBeNull();
   });
 
   test("getWritingPostContent rejects pages from other databases", async () => {
     stubContent(contentPage(PRIVATE_DB, published));
-    expect(await getWritingPostContent("page-1")).toBeNull();
+    expect(await getWritingPostContent(PAGE_ID)).toBeNull();
   });
 
   test("writing slug and Short ID lookups filter on Published", async () => {
