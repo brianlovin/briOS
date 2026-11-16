@@ -11,7 +11,12 @@ import { PageTitle } from "@/components/Typography";
 import { FancySeparator } from "@/components/ui/FancySeparator";
 import { serializeJsonLd } from "@/lib/json-ld";
 import { getServerLikes, type LikeCount } from "@/lib/likes-server";
-import { createArticleJsonLd, createMetadata, truncateDescription } from "@/lib/metadata";
+import {
+  createArticleJsonLd,
+  createMetadata,
+  SITE_CONFIG,
+  truncateDescription,
+} from "@/lib/metadata";
 import {
   getWritingPostByShortId,
   getWritingPostContentBySlug,
@@ -60,6 +65,7 @@ export async function generateMetadata(props: {
     type: "article",
     publishedTime: metadata.published || metadata.createdTime,
     modifiedTime: metadata.createdTime,
+    rss: `${SITE_CONFIG.url}/writing/rss.xml`,
   });
 }
 

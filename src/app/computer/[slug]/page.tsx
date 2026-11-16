@@ -7,7 +7,7 @@ import { TrackContentView } from "@/components/analytics/TrackContentView";
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { COMPUTER_TITLE, computerSlugRedirect, resolveComputerTipFromSlug } from "@/lib/computer";
 import { getServerLikes } from "@/lib/likes-server";
-import { createMetadata, truncateDescription } from "@/lib/metadata";
+import { createMetadata, SITE_CONFIG, truncateDescription } from "@/lib/metadata";
 import { isPlaceholderNotionBuild, type NotionComputerItemWithContent } from "@/lib/notion";
 import { computerTipPublicPath } from "@/lib/notion/computer";
 import { extractPreviewText } from "@/lib/notion/types";
@@ -37,6 +37,7 @@ export async function generateMetadata(props: {
       title: item.title,
       description: truncateDescription(description),
       path,
+      rss: `${SITE_CONFIG.url}/computer/rss.xml`,
     });
   } catch {
     return {
