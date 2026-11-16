@@ -14,7 +14,7 @@ import {
   SectionHeading,
 } from "@/components/shared/ListComponents";
 import { serializeJsonLd } from "@/lib/json-ld";
-import { createMetadata, createPersonJsonLd } from "@/lib/metadata";
+import { createMetadata, createPersonJsonLd, SITE_CONFIG } from "@/lib/metadata";
 import { isPlaceholderNotionBuild } from "@/lib/notion";
 import { getAllWritingPosts, recentWritingLinks } from "@/lib/writing";
 
@@ -23,6 +23,7 @@ export const metadata: Metadata = createMetadata({
   description:
     "Brian Lovin is a software designer living in New York, currently designing AI products at Notion.",
   path: "/",
+  rss: `${SITE_CONFIG.url}/writing/rss.xml`,
 });
 
 export default async function Home() {

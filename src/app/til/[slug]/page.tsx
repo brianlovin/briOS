@@ -9,7 +9,12 @@ import { renderBlocks } from "@/components/renderBlocks";
 import { PageTitle } from "@/components/Typography";
 import { serializeJsonLd } from "@/lib/json-ld";
 import { getServerLikes, type LikeCount } from "@/lib/likes-server";
-import { createArticleJsonLd, createMetadata, truncateDescription } from "@/lib/metadata";
+import {
+  createArticleJsonLd,
+  createMetadata,
+  SITE_CONFIG,
+  truncateDescription,
+} from "@/lib/metadata";
 import {
   getTilByShortId,
   isPlaceholderNotionBuild,
@@ -44,6 +49,7 @@ export async function generateMetadata(props: {
     path: `/til/${canonicalSlug}`,
     type: "article",
     publishedTime: content.published,
+    rss: `${SITE_CONFIG.url}/til/rss.xml`,
   });
 }
 
