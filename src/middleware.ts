@@ -5,7 +5,6 @@ import {
   isMarkdownNegotiablePath,
   isNextInternalRequest,
   markdownRewritePath,
-  notAcceptableBody,
   preferredType,
 } from "@/lib/accept-markdown";
 import { flushEvents, track } from "@/lib/axiom";
@@ -25,16 +24,6 @@ function rewriteToMarkdown(request: NextRequest, pathname: string): NextResponse
   const rewritten = NextResponse.rewrite(url);
   appendVaryAccept(rewritten.headers);
   return rewritten;
-}
-
-function notAcceptable(): Response {
-  return new Response(notAcceptableBody(), {
-    status: 406,
-    headers: {
-      "Content-Type": "text/plain; charset=utf-8",
-      Vary: "Accept",
-    },
-  });
 }
 
 async function handleHnGuards(
@@ -97,15 +86,13 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
     return rewriteToMarkdown(request, pathname);
   }
 
-  const acceptHeader = request.headers.get("accept");
-  const chosen = preferredType(acceptHeader);
-
-  if (chosen === "text/markdown") {
+  // Only switch to markdown when the client prefers it. Anything else —
+  // including Accept headers we can't satisfy, like a feed reader probing a
+  // page with `application/rss+xml, application/xml` — gets HTML, which is
+  // where the <link rel="alternate"> feed declarations live. Returning 406
+  // here broke feed autodiscovery (RFC 9110 §12.5.1 allows ignoring Accept).
+  if (preferredType(request.headers.get("accept")) === "text/markdown") {
     return rewriteToMarkdown(request, pathname);
-  }
-
-  if (chosen === null && acceptHeader) {
-    return notAcceptable();
   }
 
   const res = NextResponse.next();
