@@ -56,7 +56,7 @@ function matches(entry: AcceptEntry, candidate: string): boolean {
 
 /**
  * Pick the preferred representation among {@link MARKDOWN_PRODUCES}.
- * Missing/empty Accept → text/html. Exclusive unsupported types → null (406).
+ * Missing/empty Accept → text/html. Exclusive unsupported types → null (caller serves HTML).
  */
 export function preferredType(header: string | null | undefined): string | null {
   if (!header || header.trim() === "") return MARKDOWN_PRODUCES[0];
@@ -126,8 +126,4 @@ export function markdownRewritePath(pathname: string): string {
   const stripped = pathname.endsWith(".md") ? pathname.slice(0, -3) || "/" : pathname;
   const normalized = stripped === "" ? "/" : stripped;
   return `/api/markdown${normalized === "/" ? "" : normalized}`;
-}
-
-export function notAcceptableBody(): string {
-  return "Not Acceptable\n\nAvailable: text/html, text/markdown\n";
 }

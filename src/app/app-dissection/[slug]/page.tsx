@@ -4,7 +4,12 @@ import { notFound } from "next/navigation";
 
 import { TrackContentView } from "@/components/analytics/TrackContentView";
 import { serializeJsonLd } from "@/lib/json-ld";
-import { createArticleJsonLd, createMetadata, truncateDescription } from "@/lib/metadata";
+import {
+  createArticleJsonLd,
+  createMetadata,
+  SITE_CONFIG,
+  truncateDescription,
+} from "@/lib/metadata";
 import { isPlaceholderNotionBuild } from "@/lib/notion";
 import { getAppDissectionDatabaseItems, getAppDissectionItemBySlug } from "@/lib/notion/queries";
 import { extractPreviewText } from "@/lib/notion/types";
@@ -33,6 +38,7 @@ export async function generateMetadata(props: {
     path: `/app-dissection/${post.slug}`,
     type: "article",
     publishedTime: post.published,
+    rss: `${SITE_CONFIG.url}/app-dissection/rss.xml`,
   });
 }
 

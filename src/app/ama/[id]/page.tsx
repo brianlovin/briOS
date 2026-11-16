@@ -6,7 +6,7 @@ import AMADetail from "@/app/ama/AMADetail";
 import { TrackContentView } from "@/components/analytics/TrackContentView";
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
 import { getServerLikes } from "@/lib/likes-server";
-import { createMetadata, truncateDescription } from "@/lib/metadata";
+import { createMetadata, SITE_CONFIG, truncateDescription } from "@/lib/metadata";
 import {
   getAmaItemContent,
   isPlaceholderNotionBuild,
@@ -36,6 +36,7 @@ export async function generateMetadata(props: {
       title: item.title,
       description: truncateDescription(description),
       path: `/ama/${id}`,
+      rss: `${SITE_CONFIG.url}/ama/rss.xml`,
     });
   } catch {
     return {
