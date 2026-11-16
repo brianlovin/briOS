@@ -1,4 +1,4 @@
-import { withSentryConfig } from "@sentry/nextjs";
+import { withSentryConfig } from "@sentry/nextjs/config";
 import { withBotId } from "botid/next/config";
 import type { NextConfig } from "next";
 import path from "path";
@@ -116,7 +116,7 @@ const nextConfig: NextConfig = {
 
 export default withSentryConfig(withBotId(nextConfig), {
   // For all available options, see:
-  // https://www.npmjs.com/package/@sentry/webpack-plugin#options
+  // https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/build/
   org: "brianlovin",
   project: "brios",
 
@@ -128,10 +128,4 @@ export default withSentryConfig(withBotId(nextConfig), {
 
   // Route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.
   tunnelRoute: "/monitoring",
-
-  // Automatically tree-shake Sentry logger statements to reduce bundle size
-  disableLogger: true,
-
-  // Enables automatic instrumentation of Vercel Cron Monitors. (Does not yet work with App Router route handlers.)
-  automaticVercelMonitors: true,
 });

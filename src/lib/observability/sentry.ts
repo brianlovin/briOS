@@ -1,29 +1,8 @@
 import * as Sentry from "@sentry/nextjs";
 import { NextRequest } from "next/server";
 
-let initialized = false;
-
-export function initSentry() {
-  if (initialized) return;
-  const dsn = process.env.NEXT_PUBLIC_SENTRY_DSN;
-  if (!dsn) return; // disabled locally
-
-  // No need to initialize Sentry here as it's already initialized by Next.js
-  // Just set our custom configuration
-  Sentry.setTag("environment", process.env.VERCEL_ENV || process.env.NODE_ENV || "local");
-  if (process.env.VERCEL_GIT_COMMIT_SHA) {
-    Sentry.setTag("release", process.env.VERCEL_GIT_COMMIT_SHA);
-  }
-  initialized = true;
-}
-
 export function captureError(err: unknown, tags?: Record<string, string>) {
-  if (!initialized) initSentry();
-  if (tags) {
-    Sentry.captureException(err, { tags });
-  } else {
-    Sentry.captureException(err);
-  }
+  Sentry.captureException(err, tags ? { tags } : undefined);
 }
 
 export function withErrorCapture<
