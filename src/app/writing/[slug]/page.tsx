@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { cacheLife, cacheTag } from "next/cache";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import { TrackContentView } from "@/components/analytics/TrackContentView";
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
@@ -103,15 +103,10 @@ async function getCachedWritingPost(slug: string): Promise<CachedWritingPost> {
   const shortId = extractShortIdFromSlug(slug);
   let content = shortId ? await getWritingPostByShortId(shortId) : null;
 
-  // Fallback to legacy slug lookup
+  // Legacy slugs are redirected in the proxy; a redirect here would stream after
+  // the shell and become a client-side navigation.
   if (!content) {
     content = await getWritingPostContentBySlug(slug);
-
-    // If found via legacy lookup and has a Short ID, redirect to canonical URL
-    if (content && content.metadata.shortId) {
-      const canonicalSlug = buildSlug(content.metadata.title, content.metadata.shortId);
-      redirect(`/writing/${canonicalSlug}`);
-    }
   }
 
   if (!content) {

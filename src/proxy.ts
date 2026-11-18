@@ -7,8 +7,10 @@ import {
   markdownRewritePath,
   preferredType,
 } from "@/lib/accept-markdown";
-import { flushEvents, track } from "@/lib/axiom";
+import { flushEvents, toErrorMessage, track } from "@/lib/axiom";
+import { resolveCanonicalRedirect } from "@/lib/canonical-redirect";
 import { checkHnRateLimit, shouldApplyHnRedisRateLimit } from "@/lib/hn-ratelimit";
+import { logger } from "@/lib/logger";
 
 function getIP(request: NextRequest): string {
   return (
@@ -72,9 +74,37 @@ async function handleHnGuards(
   return null;
 }
 
-export async function middleware(request: NextRequest, event: NextFetchEvent) {
+async function canonicalRedirect(
+  request: NextRequest,
+  event: NextFetchEvent,
+): Promise<Response | null> {
+  if (request.method !== "GET" && request.method !== "HEAD") return null;
+
+  let destination: string | null;
+  try {
+    destination = await resolveCanonicalRedirect(request.nextUrl.pathname);
+  } catch (error) {
+    // The page still renders the post at this URL with a canonical link tag.
+    logger.warn("[proxy] canonical redirect lookup failed", {
+      path: request.nextUrl.pathname,
+      error_message: toErrorMessage(error),
+    });
+    event.waitUntil(flushEvents());
+    return null;
+  }
+  if (!destination) return null;
+
+  const url = request.nextUrl.clone();
+  url.pathname = destination;
+  return NextResponse.redirect(url, 308);
+}
+
+export async function proxy(request: NextRequest, event: NextFetchEvent) {
   const hnGuard = await handleHnGuards(request, event);
   if (hnGuard) return hnGuard;
+
+  const redirect = await canonicalRedirect(request, event);
+  if (redirect) return redirect;
 
   const { pathname } = request.nextUrl;
 
