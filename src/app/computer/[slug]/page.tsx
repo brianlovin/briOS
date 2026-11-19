@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { cacheLife, cacheTag } from "next/cache";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import ComputerDetail from "@/app/computer/ComputerDetail";
 import { TrackContentView } from "@/components/analytics/TrackContentView";
 import { BatchLikesProvider } from "@/components/likes/BatchLikesProvider";
-import { COMPUTER_TITLE, computerSlugRedirect, resolveComputerTipFromSlug } from "@/lib/computer";
+import { COMPUTER_TITLE, resolveComputerTipFromSlug } from "@/lib/computer";
 import { getServerLikes } from "@/lib/likes-server";
 import { createMetadata, SITE_CONFIG, truncateDescription } from "@/lib/metadata";
 import { isPlaceholderNotionBuild, type NotionComputerItemWithContent } from "@/lib/notion";
@@ -72,10 +72,7 @@ async function getCachedComputerDetail(slug: string): Promise<NotionComputerItem
     notFound();
   }
 
-  const canonicalRedirect = computerSlugRedirect(slug, item);
-  if (canonicalRedirect) {
-    redirect(`/computer/${canonicalRedirect}`);
-  }
-
+  // Non-canonical slugs are redirected in the proxy; a redirect here would
+  // stream after the shell and become a client-side navigation.
   return item;
 }
