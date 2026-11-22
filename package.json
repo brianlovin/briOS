@@ -28,7 +28,7 @@
     "ci:all": "node scripts/ci/verify.mjs all"
   },
   "dependencies": {
-    "@ai-sdk/gateway": "^4.0.132",
+    "@ai-sdk/gateway": "^4.0.138",
     "@aws-sdk/client-s3": "^3.1161.0",
     "@axiomhq/js": "^2.0.0",
     "@base-ui/react": "^1.9.0",
