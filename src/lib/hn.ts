@@ -3,10 +3,12 @@ import { cache } from "react";
 
 import { externalFetcher } from "@/lib/fetcher";
 import {
+  getCachedComments,
   getCachedPost,
   getCachedPosts,
   getCachedTopIds,
-  setCachedPost,
+  postWithoutComments,
+  setCachedComments,
   setCachedPosts,
   setCachedTopIds,
 } from "@/lib/hn-cache";
@@ -88,6 +90,33 @@ export function processPost(data: HackerNewsPost, includeComments: boolean): Hac
   return projected;
 }
 
+/** Trimmed thread stored for a single-post read. Same cut as `processPost(..., true)`. */
+export function commentsForCache(data: HackerNewsPost): HackerNewsComment[] {
+  return processPost(data, true).comments ?? [];
+}
+
+function rememberCachedPosts(
+  posts: Map<string, HackerNewsPost>,
+  comments: Map<string, HackerNewsComment[]>,
+): void {
+  // Sidecars first so a post-key hit is not visible before the comment write
+  // has been attempted. Redis errors are logged inside the cache helpers.
+  setCachedComments(comments)
+    .then(() => setCachedPosts(posts))
+    .catch(() => {});
+}
+
+function rememberFetchedPost(id: string, data: HackerNewsPost): void {
+  const posts = new Map<string, HackerNewsPost>([[id, postWithoutComments(data)]]);
+  const comments = new Map<string, HackerNewsComment[]>();
+  try {
+    comments.set(id, commentsForCache(data));
+  } catch (error) {
+    console.error(`[HN] Skipping comment cache for ${id}:`, error);
+  }
+  rememberCachedPosts(posts, comments);
+}
+
 // Fetch post from external API (no caching)
 async function fetchPostFromApi(id: string): Promise<HackerNewsPost | null> {
   try {
@@ -113,7 +142,8 @@ async function getBatchPosts(
   ids.forEach((id, index) => {
     const cached = cachedPosts.get(id);
     if (cached) {
-      results[index] = processPost(cached, includeComments);
+      // Batch values are comment-free list rows. Do not turn a hit into `comments: []`.
+      results[index] = processPost(cached, false);
     } else {
       missedIds.push({ index, id });
     }
@@ -129,19 +159,25 @@ async function getBatchPosts(
     });
     const fetched = await Promise.all(fetchPromises);
 
-    // Collect posts to batch-write to cache
+    // List/digest rows stay comment-free. Trimmed threads go to a sidecar
+    // that only the single-post read touches.
     const toCache = new Map<string, HackerNewsPost>();
+    const toComments = new Map<string, HackerNewsComment[]>();
 
     fetched.forEach(({ index, id, data }) => {
       if (data) {
         results[index] = processPost(data, includeComments);
-        toCache.set(id, data);
+        toCache.set(id, postWithoutComments(data));
+        try {
+          toComments.set(id, commentsForCache(data));
+        } catch (error) {
+          console.error(`[HN] Skipping comment cache for ${id}:`, error);
+        }
       }
     });
 
-    // Fire-and-forget batch cache write
     if (toCache.size > 0) {
-      setCachedPosts(toCache).catch(() => {});
+      rememberCachedPosts(toCache, toComments);
     }
   } else {
     log(`[HN] Batch cache: ${ids.length} hits, 0 misses`);
@@ -152,21 +188,26 @@ async function getBatchPosts(
 
 const fetchPostById = unstable_cache(
   async (id: string, includeComments: boolean): Promise<HackerNewsPost | null> => {
-    // Try Redis cache first
     const cached = await getCachedPost(id);
-    if (cached) {
+
+    if (!cached) {
+      log(`[HN] Cache miss for post ${id}`);
+    } else if (!includeComments) {
       log(`[HN] Cache hit for post ${id}`);
-      return processPost(cached, includeComments);
+      return processPost(cached, false);
+    } else {
+      const comments = await getCachedComments(id);
+      if (comments !== null) {
+        log(`[HN] Cache hit for post ${id}`);
+        return { ...processPost(postWithoutComments(cached), false), comments };
+      }
+      log(`[HN] Comment cache miss for post ${id}`);
     }
 
-    log(`[HN] Cache miss for post ${id}`);
     const data = await fetchPostFromApi(id);
-
     if (!data) return null;
 
-    // Fire-and-forget cache write
-    setCachedPost(id, data).catch(() => {});
-
+    rememberFetchedPost(id, data);
     return processPost(data, includeComments);
   },
   ["hn:post"],
