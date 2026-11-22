@@ -2,7 +2,8 @@ import { describe, expect, test } from "bun:test";
 import { readFileSync } from "fs";
 import { resolve } from "path";
 
-import { hnPostLinks, processPost, selectHNPostsForDigest } from "@/lib/hn";
+import { commentsForCache, hnPostLinks, processPost, selectHNPostsForDigest } from "@/lib/hn";
+import { postWithoutComments } from "@/lib/hn-cache";
 import { HackerNewsComment, HackerNewsPost } from "@/types/hackernews";
 
 function makePost(overrides: Partial<HackerNewsPost> = {}): HackerNewsPost {
@@ -65,6 +66,89 @@ describe("processPost", () => {
 
     expect(post.comments).toHaveLength(1);
     expect(post.comments?.[0]?.id).toBe(3);
+  });
+});
+
+describe("HN cache projection", () => {
+  test("a comment-free payload projects to the same list post", () => {
+    const raw = makePost({
+      id: 9,
+      title: "Cache me",
+      points: 80,
+      comments_count: 4,
+      time: 1_700_000_100,
+      content: "<p>body</p><script>alert(1)</script>",
+      comments: [makeComment({ id: 3, content: "<p>thread</p>" })],
+    });
+
+    const fromCache = processPost(postWithoutComments(raw), false);
+    const fromApi = processPost(raw, false);
+
+    expect(fromCache).toEqual(fromApi);
+    expect(fromCache).not.toHaveProperty("comments");
+    expect(fromCache.points).toBe(80);
+    expect(fromCache.comments_count).toBe(4);
+    expect(fromCache.time).toBe(raw.time);
+    expect(fromCache.type).toBe("link");
+  });
+
+  test("sidecar comments match a detail fetch, including the trim", () => {
+    const deep = makeComment({
+      id: 1,
+      level: 0,
+      comments: [makeComment({ id: 2, level: 4, content: "<p>dropped</p>" })],
+    });
+    const extra = Array.from({ length: 13 }, (_, index) =>
+      makeComment({ id: 100 + index, level: 0, content: `<p>top ${index}</p>` }),
+    );
+    const raw = makePost({
+      content: "<p>ask</p><script>alert(1)</script>",
+      domain: null,
+      url: "https://news.ycombinator.com/item?id=1",
+      comments: [deep, ...extra],
+      comments_count: 14,
+    });
+
+    const detail = processPost(raw, true);
+    const fromCache = {
+      ...processPost(postWithoutComments(raw), false),
+      comments: commentsForCache(raw),
+    };
+
+    expect(detail).toEqual(fromCache);
+    expect(fromCache.comments).toHaveLength(12);
+    expect(fromCache.url).toBe("https://brianlovin.com/hn/1");
+  });
+
+  test("digest selection is unchanged when comments are removed", () => {
+    const now = 1_800_000_000;
+    const hour = 60 * 60;
+    const raw = [
+      makePost({
+        id: 1,
+        title: "lower",
+        points: 10,
+        time: now - hour,
+        comments: [makeComment()],
+        comments_count: 30,
+      }),
+      makePost({
+        id: 2,
+        title: "higher",
+        points: 50,
+        time: now - hour,
+        comments: [makeComment({ id: 8 })],
+        comments_count: 1,
+      }),
+      makePost({ id: 3, title: "job", points: 99, time: now - hour, type: "job" }),
+    ];
+    const fromCache = raw.map((post) => processPost(postWithoutComments(post), false));
+    const fromApi = raw.map((post) => processPost(post, false));
+
+    expect(selectHNPostsForDigest(fromCache, now).map((post) => post.id)).toEqual(
+      selectHNPostsForDigest(fromApi, now).map((post) => post.id),
+    );
+    expect(selectHNPostsForDigest(fromCache, now).map((post) => post.id)).toEqual([2, 1]);
   });
 });
 
